@@ -32,6 +32,7 @@ import org.uiautomation.ios.ide.controllers.ResourceController;
 import org.uiautomation.ios.ide.controllers.StartController;
 import org.uiautomation.ios.ide.controllers.StopController;
 import org.uiautomation.ios.ide.controllers.UserActionController;
+import org.uiautomation.ios.ide.controllers.getLanguagesController;
 import org.uiautomation.ios.ide.views.JSTreeJSON;
 import org.uiautomation.ios.ide.views.View;
 import org.uiautomation.ios.server.servlet.UIAScriptProxyBasedServlet;
@@ -62,6 +63,7 @@ public class IDEServlet extends UIAScriptProxyBasedServlet {
     controllers.add(new UserActionController(model));
     controllers.add(new BeginController(model, getServerConfig()));
     controllers.add(new DebugController(model));
+    controllers.add(new getLanguagesController(model));
 
     controllers.add(new NoActionController(model, "/tree", new JSTreeJSON(model)));
 
