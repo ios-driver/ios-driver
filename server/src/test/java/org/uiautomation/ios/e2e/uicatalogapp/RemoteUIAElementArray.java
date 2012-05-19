@@ -55,7 +55,7 @@ public class RemoteUIAElementArray extends RemoteTestsBase {
       }
     }
   }
-  
+
   @Test
   public void findElementsOnMyArray() {
     RemoteUIADriver driver = null;
@@ -64,6 +64,26 @@ public class RemoteUIAElementArray extends RemoteTestsBase {
       RemoteUIAWindow win = getMainWindow(driver);
       UIAElementArray<UIAElement> cells = win.findElements(new ClassCriteria(UIATableCell.class));
       UIAElementArray<UIAElement> cells2 = cells.getAll(new ClassCriteria(UIATableCell.class));
+      Assert.assertEquals(cells.size(), cells2.size());
+
+    } finally {
+      if (driver != null) {
+        driver.quit();
+      }
+    }
+  }
+
+  @Test
+  public void findElementsOnNativeArray() {
+    RemoteUIADriver driver = null;
+    try {
+
+      driver = getDriver();
+      RemoteUIAWindow win = getMainWindow(driver);
+      UIATableView tv = (UIATableView) win.findElement(new ClassCriteria(UIATableView.class));
+      UIAElementArray<UIATableCell> cells = tv.getCells();
+
+      UIAElementArray<UIATableCell> cells2 = cells.getAll(new ClassCriteria(UIATableCell.class));
       Assert.assertEquals(cells.size(), cells2.size());
 
     } finally {
