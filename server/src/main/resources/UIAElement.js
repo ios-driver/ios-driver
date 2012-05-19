@@ -8,6 +8,38 @@ UIAElementArray.prototype.reference = function() {
 	}
 	return this.id;
 }
+
+
+UIAElementArray.prototype.elements2 = function(depth,criteria) {
+	log("elements2");
+	var all = this.toArray();
+	var res = new Array();
+	for (var i=0;i<all.length;i++){
+		var element = all[i];
+		log("working on "+element)
+		if (element.matches(criteria)) {
+			res.push(element);
+		}
+	}
+	return new MyUIAElementArray(res);
+}
+
+UIAElementArray.prototype.element = function(depth,criteria) {
+	log("element");
+	var all = this.toArray();
+	for (var i=0;i<all.length;i++){
+		var element = all[i];
+		log("working on "+element)
+		if (element.matches(criteria)) {
+			log("about to return "+element)
+			return element;
+		}
+	}
+	throw new UIAutomationException("cannot find element for criteria :"
+			+ JSON.stringify(criteria), 7);
+}
+
+
 /**
  * returns the class for the element, as per
  * http://developer.apple.com/library/ios/#documentation/DeveloperTools/Reference/UIAutomationRef
@@ -162,6 +194,7 @@ var getKeys = function(obj) {
 	return keys;
 }
 
+
 UIAElement.prototype.matches = function(criteria) {
 	if (!criteria) {
 		return true;
@@ -275,5 +308,8 @@ function MyUIAElementArray(elements) {
 		}
 		return this.id;
 	}
+	
+	this.element = UIAElementArray.prototype.element;
+	this.elements2 = UIAElementArray.prototype.elements2;
 
 }
