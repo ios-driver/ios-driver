@@ -2,6 +2,10 @@ UIAElementArray.prototype.type = function() {
 	return "UIAElementArray";
 }
 
+UIAElementArray.prototype.isStale = function() {
+	return false;
+}
+
 UIAElementArray.prototype.reference = function() {
 	if (!this.id) {
 		UIAutomation.cache.store(this);
@@ -309,6 +313,7 @@ function MyUIAElementArray(elements) {
 		return this.id;
 	}
 	
+	this.isStale = UIAElementArray.prototype.isStale;
 	this.element = UIAElementArray.prototype.element;
 	this.elements2 = UIAElementArray.prototype.elements2;
 
