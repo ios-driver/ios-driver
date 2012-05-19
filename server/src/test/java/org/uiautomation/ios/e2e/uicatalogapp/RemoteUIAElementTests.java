@@ -1,21 +1,12 @@
 package org.uiautomation.ios.e2e.uicatalogapp;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 
-import javax.naming.InvalidNameException;
-import javax.naming.Name;
-
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.UIAModels.UIAButton;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIAElementArray;
-import org.uiautomation.ios.UIAModels.UIARect;
 import org.uiautomation.ios.UIAModels.UIATableCell;
 import org.uiautomation.ios.UIAModels.UIATableView;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
@@ -23,40 +14,17 @@ import org.uiautomation.ios.UIAModels.predicate.ClassCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.EmptyCriteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAApplication;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIATarget;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAWindow;
 import org.uiautomation.ios.exceptions.ElementNotVisibleException;
 import org.uiautomation.ios.exceptions.NoSuchElementException;
 import org.uiautomation.ios.exceptions.StaleReferenceException;
-import org.uiautomation.ios.server.IOSServer;
-import org.uiautomation.ios.server.IOSServerConfiguration;
-import org.uiautomation.ios.server.tmp.SampleApps;
 
 public class RemoteUIAElementTests extends RemoteTestsBase {
 
 
 
-  @Test
-  public void canGetMainWindow() throws InterruptedException {
-    RemoteUIADriver driver = null;
-    try {
-
-      driver = getDriver();
-      RemoteUIAWindow win = getMainWindow(driver);
-
-      UIARect size = win.getRect();
-      Assert.assertEquals(size.getX(), 0);
-      Assert.assertEquals(size.getY(), 0);
-      Assert.assertEquals(size.getHeight(), 480);
-      Assert.assertEquals(size.getWidth(), 320);
-    } finally {
-      if (driver != null) {
-        driver.quit();
-      }
-    }
-  }
+ 
 
 
   @Test

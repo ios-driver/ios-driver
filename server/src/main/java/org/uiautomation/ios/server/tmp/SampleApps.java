@@ -52,7 +52,7 @@ public class SampleApps {
 
   public static IOSCapabilities cap() {
     IOSCapabilities c = IOSCapabilities.iphone(SampleApps.getUICatalogApp());
-    c.setCapability(IOSCapabilities.TIME_HACK, false);
+    c.setCapability(IOSCapabilities.TIME_HACK, true);
     return c;
   }
 }
