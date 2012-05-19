@@ -58,16 +58,31 @@ public class RemoteUIAElementArray<T extends UIAElement> extends RemoteObject
   }
   
   
+  @SuppressWarnings("unchecked")
   @Override
   public T getFirst(Criteria c) {
-    // TODO Auto-generated method stub
-    return null;
+    try {
+      JSONObject payload = new JSONObject();
+      payload.put("depth", -1);
+      payload.put("criteria", c.getJSONRepresentation());
+      return (T) getRemoteObject(WebDriverLikeCommand.ELEMENT, payload);
+    } catch (JSONException e) {
+      throw new IOSAutomationException(e);
+    }
+   
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public UIAElementArray<T> getAll(Criteria c) {
-    // TODO Auto-generated method stub
-    return null;
+    try {
+      JSONObject payload = new JSONObject();
+      payload.put("depth", -1);
+      payload.put("criteria", c.getJSONRepresentation());
+      return (UIAElementArray<T>) getRemoteObject(WebDriverLikeCommand.ELEMENTS, payload);
+    } catch (JSONException e) {
+      throw new IOSAutomationException(e);
+    }
   }
   
   @Deprecated
