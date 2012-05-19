@@ -34,30 +34,9 @@ import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
 import org.uiautomation.ios.server.tmp.SampleApps;
 
-public class RemoteUIAElementTests {
+public class RemoteUIAElementTests extends RemoteTestsBase {
 
-  private IOSServer server;
-  private static String[] args = {"-port", "5555", "-host", "localhost"};
-  private static IOSServerConfiguration config = IOSServerConfiguration.create(args);
-  private String url = "http://" + config.getHost() + ":" + config.getPort() + "/wd/hub";
 
-  @BeforeClass
-  public void startServer() throws Exception {
-    server = new IOSServer(config);
-    server.start();
-  }
-
-  private RemoteUIADriver getDriver() {
-    return new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",
-        SampleApps.cap());
-  }
-
-  private RemoteUIAWindow getWindow(RemoteUIADriver driver) {
-    RemoteUIATarget target = driver.getLocalTarget();
-    RemoteUIAApplication app = target.getFrontMostApp();
-    RemoteUIAWindow window = app.getMainWindow();
-    return window;
-  }
 
   @Test
   public void canGetMainWindow() throws InterruptedException {
@@ -65,7 +44,7 @@ public class RemoteUIAElementTests {
     try {
 
       driver = getDriver();
-      RemoteUIAWindow win = getWindow(driver);
+      RemoteUIAWindow win = getMainWindow(driver);
 
       UIARect size = win.getRect();
       Assert.assertEquals(size.getX(), 0);
@@ -86,7 +65,7 @@ public class RemoteUIAElementTests {
     try {
       String name = "Buttons, Various uses of UIButton";
       driver = getDriver();
-      RemoteUIAWindow win = getWindow(driver);
+      RemoteUIAWindow win = getMainWindow(driver);
       Criteria c1 = new ClassCriteria(UIATableCell.class);
       Criteria c2 = new NameCriteria(name);
       Criteria c = new AndCriteria(c1, c2);
@@ -106,7 +85,7 @@ public class RemoteUIAElementTests {
     try {
       String name = "I don't exist.";
       driver = getDriver();
-      RemoteUIAWindow win = getWindow(driver);
+      RemoteUIAWindow win = getMainWindow(driver);
       Criteria c1 = new ClassCriteria(UIATableCell.class);
       Criteria c2 = new NameCriteria(name);
       Criteria c = new AndCriteria(c1, c2);
@@ -124,7 +103,7 @@ public class RemoteUIAElementTests {
     RemoteUIADriver driver = null;
     try {
       driver = getDriver();
-      RemoteUIAWindow win = getWindow(driver);
+      RemoteUIAWindow win = getMainWindow(driver);
       UIAElementArray<UIAElement> elements = win.findElements(new EmptyCriteria());
       Assert.assertEquals(elements.size(), 31);
     } finally {
@@ -141,7 +120,7 @@ public class RemoteUIAElementTests {
     RemoteUIADriver driver = null;
     try {
       driver = getDriver();
-      RemoteUIAWindow win = getWindow(driver);
+      RemoteUIAWindow win = getMainWindow(driver);
       Criteria c = new ClassCriteria(UIATableCell.class);
       UIAElementArray<UIAElement> elements = win.findElements(c);
       Assert.assertEquals(elements.size(), 12);
@@ -161,7 +140,7 @@ public class RemoteUIAElementTests {
 
     try {
       driver = getDriver();
-      RemoteUIAWindow win = getWindow(driver);
+      RemoteUIAWindow win = getMainWindow(driver);
 
       Criteria c = new ClassCriteria(UIATableView.class);
       UIAElementArray<UIAElement> elements = win.findElements(c);
@@ -204,7 +183,7 @@ public class RemoteUIAElementTests {
 
     try {
       driver = getDriver();
-      RemoteUIAWindow win = getWindow(driver);
+      RemoteUIAWindow win = getMainWindow(driver);
       Criteria invisibleOne =
           new AndCriteria(new NameCriteria("Buttons, Various uses of UIButton"), new ClassCriteria(
               UIATableCell.class));
@@ -221,13 +200,13 @@ public class RemoteUIAElementTests {
 
   // need to find a test for that.
   // visible doesn't mean visible, but "can be visible after scrolling )
-  @Test(expectedExceptions = ElementNotVisibleException.class,groups="broken",enabled=false)
+  @Test(expectedExceptions = ElementNotVisibleException.class, groups = "broken", enabled = false)
   public void cannotClickInvisibleElement() {
     RemoteUIADriver driver = null;
 
     try {
       driver = getDriver();
-      RemoteUIAWindow win = getWindow(driver);
+      RemoteUIAWindow win = getMainWindow(driver);
 
       Criteria invisibleOne =
           new AndCriteria(new NameCriteria("Transitions, Shows UIViewAnimationTransitions"),
@@ -250,7 +229,7 @@ public class RemoteUIAElementTests {
     try {
       String name = "Buttons, Various uses of UIButton";
       driver = getDriver();
-      RemoteUIAWindow win = getWindow(driver);
+      RemoteUIAWindow win = getMainWindow(driver);
       Criteria c1 = new ClassCriteria(UIATableCell.class);
       Criteria c2 = new NameCriteria(name);
       Criteria c = new AndCriteria(c1, c2);
@@ -269,8 +248,5 @@ public class RemoteUIAElementTests {
   }
 
 
-  @AfterClass
-  public void stopServer() throws Exception {
-    server.stop();
-  }
+
 }
