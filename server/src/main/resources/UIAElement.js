@@ -15,12 +15,10 @@ UIAElementArray.prototype.reference = function() {
 
 
 UIAElementArray.prototype.elements2 = function(depth,criteria) {
-	log("elements2");
 	var all = this.toArray();
 	var res = new Array();
 	for (var i=0;i<all.length;i++){
 		var element = all[i];
-		log("working on "+element)
 		if (element.matches(criteria)) {
 			res.push(element);
 		}
@@ -29,13 +27,10 @@ UIAElementArray.prototype.elements2 = function(depth,criteria) {
 }
 
 UIAElementArray.prototype.element = function(depth,criteria) {
-	log("element");
 	var all = this.toArray();
 	for (var i=0;i<all.length;i++){
 		var element = all[i];
-		log("working on "+element)
 		if (element.matches(criteria)) {
-			log("about to return "+element)
 			return element;
 		}
 	}
