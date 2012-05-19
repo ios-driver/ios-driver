@@ -28,6 +28,8 @@ import org.uiautomation.ios.exceptions.IOSAutomationException;
 
 public class IOSCapabilities {
 
+
+
   public static final String DEVICE = "device";
   public static final String SDK_VERSION = "sdkVersion";
   public static final String IOS_SWITCHES = "ios.switches";
@@ -40,7 +42,7 @@ public class IOSCapabilities {
 
   public static IOSCapabilities iphone(String app) {
     IOSCapabilities res = new IOSCapabilities();
-    res.setCapability(DEVICE, IOSDevice.iPhone);
+    res.setCapability(DEVICE, IOSDevice.iPhoneSimulator);
     res.setCapability(LANGUAGE, "en");
     res.setCapability(LOCALE, "en_GB");
     res.setCapability(AUT, app);
@@ -91,12 +93,7 @@ public class IOSCapabilities {
 
   public IOSDevice getDevice() {
     Object o = raw.get(DEVICE);
-    if (o instanceof String) {
-      return IOSDevice.valueOf((String) o);
-    } else if (o instanceof IOSDevice) {
-      return (IOSDevice) o;
-    }
-    throw new IOSAutomationException("Cannot cast " + (o == null ? "null" : o.getClass())+" to IOSDevice");
+    return IOSDevice.valueOf(o);
   }
 
   public String getSDKVersion() {

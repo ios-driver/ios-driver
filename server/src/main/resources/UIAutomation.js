@@ -124,10 +124,10 @@ var UIAutomation = {
 		result.locale = app.preferencesValueForKey("AppleLocale");
 		result.version = app.version();
 		result.bundleid = app.bundleID();
-		result.model = target.model();
+		result.device = target.model();
 		result.name = target.name();
 		result.systemName = target.systemName();
-		result.systemVersion = target.systemVersion();
+		result.sdkVersion = target.systemVersion();
 		result.rect = target.rect();
 		return JSON.stringify(result);
 	},

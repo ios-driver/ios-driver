@@ -64,7 +64,7 @@ public class BeginView implements View{
     b.append("<form action='start' method='GET'>");
 
     b.append("<input  type='text' name='" + IOSCapabilities.DEVICE
-        + "' value= '" + IOSDevice.iPhone + "' />");
+        + "' value= '" + IOSDevice.iPhoneSimulator + "' />");
 
 
     b.append(select(IOSCapabilities.LOCALE, getLocales()));

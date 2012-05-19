@@ -62,7 +62,7 @@ public class SessionsManager {
   private IOSCapabilities completeWithDefaults(IOSCapabilities cap)
       throws IOSAutomationSetupException {
     if (cap.getDevice() == null) {
-      cap.setDevice(IOSDevice.iPhone);
+      cap.setDevice(IOSDevice.getDefault());
     }
     if (cap.getSDKVersion() == null) {
       List<String> sdks = ClassicCommands.getInstalledSDKs();

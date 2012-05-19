@@ -13,10 +13,12 @@
  */
 package org.uiautomation.ios.communication;
 
+import org.uiautomation.ios.exceptions.IOSAutomationException;
+
 public enum IOSDevice {
 
-  // TODO freynaud simulator vs device.
-  iPhone("iPhone"), iPad("iPad"), retina("iPhone (Retina)");
+
+  iPhoneSimulator("iPhone Simulator"), iPadSimulator("iPad Simulator"), retina("iPhone (Retina)");
 
 
   // name from result of :
@@ -29,5 +31,34 @@ public enum IOSDevice {
 
   public String getName() {
     return name;
+  }
+
+  @Override
+  public String toString() {
+    return getName();
+  }
+
+
+  public IOSDevice get(String s) {
+    return iPadSimulator;
+  }
+
+  public static IOSDevice valueOf(Object o) {
+    if (o instanceof IOSDevice) {
+      return (IOSDevice) o;
+    } else if (o instanceof String) {
+      for (IOSDevice device : IOSDevice.values()) {
+        if (device.name.equals(o)) {
+          return device;
+        }
+      }
+    }
+    throw new IOSAutomationException("Cannot cast " + (o == null ? "null" : o.getClass())
+        + " to IOSDevice");
+
+  }
+
+  public static IOSDevice getDefault() {
+    return iPhoneSimulator;
   }
 }
