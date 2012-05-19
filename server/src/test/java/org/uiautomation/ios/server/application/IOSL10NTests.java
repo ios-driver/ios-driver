@@ -77,6 +77,19 @@ public class IOSL10NTests {
     app.translate(results.get(0), Localizable.es);
   }
 
+  @Test
+  public void complex() throws IOSAutomationException {
+    // %@ items found in %@
+    String content = "Mountain 1 was first climbed on 29 May 1953 and has a height of 8,848 meters";
+    List<ContentResult> results = app.getDictionary(en).getPotentialMatches(content);
+    Assert.assertEquals(results.size(), 1);
+    ContentResult res = results.get(0);
+    System.out.println(res);
+    String french = app.getDictionary(fr).translate(res);
+   // returns "Bien que Mountain 1 de haut, 29 May 1953 aient été montés la première fois 8,848 meters."
+  }
+  
+ 
 
 
 }

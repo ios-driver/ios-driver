@@ -41,8 +41,8 @@ import org.uiautomation.ios.server.instruments.Command;
  */
 public class LanguageDictionary {
 
-  //TODO freynaud
-  //public final Form normalizer = Form.NFD;
+  // TODO freynaud
+  // public final Form normalizer = Form.NFD;
   public static final Form norme = Form.NFKC;
   private final Localizable language;
   private final boolean legacyFormat;
@@ -77,9 +77,37 @@ public class LanguageDictionary {
       boolean match = match(string, original);
       if (match) {
         ContentResult r = new ContentResult(language, key, original, string);
+        for (String s : r.getArgs()) {
+          List<ContentResult> rec = getPotentialMatches(s);
+          if (!rec.isEmpty()) {
+            // TODO freynaud an argument can be l10ned too....
+            System.out.println("recursion is found..." + getPotentialMatches(s));
+          }
+        }
         res.add(r);
       }
     }
+
+    // if 2 strings are
+    // 1) %@ meters
+    // and 2) %@ climbed mountain %@ that is %@ meters,
+    // the real match is 2.1) is just noise from another sentence.
+    if (res.size() > 1) {
+      int maxVariable = 0;
+      for (ContentResult r : res) {
+        if (r.getArgs().size() > maxVariable) {
+          maxVariable = r.getArgs().size();
+        }
+      }
+      List<ContentResult> res2 = new ArrayList<ContentResult>();
+      for (ContentResult r : res) {
+        if (r.getArgs().size() == maxVariable) {
+          res2.add(r);
+        }
+      }
+      return res2;
+    }
+
     return res;
   }
 
@@ -101,6 +129,9 @@ public class LanguageDictionary {
   // "Shipping from: %@": "Versand ab: %@",
   public static String getRegexPattern(String original) {
     String res = original.replace("%@", "(.*){1}");
+    res = res.replaceAll("%1\\$@", "(.*){1}");
+    res = res.replaceAll("%2\\$@", "(.*){1}");
+    res = res.replaceAll("%3\\$@", "(.*){1}");
     res = res.replaceAll("%d", "(.*){1}");
     return res;
   }
@@ -170,7 +201,7 @@ public class LanguageDictionary {
     String name = extractLanguageName(f);
     LanguageDictionary res = new LanguageDictionary(name);
     // and load the content.
-    JSONObject content= res.readContentFromBinaryFile(f);
+    JSONObject content = res.readContentFromBinaryFile(f);
     res.addJSONContent(content);
     return res;
   }
@@ -272,6 +303,9 @@ public class LanguageDictionary {
   public String translate(ContentResult res) {
     String languageTemplate = content.get(res.getKey());
     String format = languageTemplate.replaceAll("%@", "%s");
+    format = format.replaceAll("%1\\$@", "%s");
+    format = format.replaceAll("%2\\$@", "%s");
+    format = format.replaceAll("%3\\$@", "%s");
     format = format.replaceAll("%d", "%s");
     String r = String.format(format, res.getArgs().toArray());
     return r;

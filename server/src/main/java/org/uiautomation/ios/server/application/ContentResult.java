@@ -74,11 +74,16 @@ public class ContentResult {
         args.add(arg);
         content = content.substring(start + s.length());
       }
+
+    }
+    if (content.length() != 0) {
+      args.add(content);
+    }
+
+    // each arg can potentialy be a translated snipet.
+    for (String arg : args) {
       
     }
-   if (content.length() !=0){
-     args.add(content);
-   }
 
   }
 
