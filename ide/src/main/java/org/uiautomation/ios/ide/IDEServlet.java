@@ -41,7 +41,6 @@ import org.uiautomation.ios.server.servlet.UIAScriptProxyBasedServlet;
 public class IDEServlet extends UIAScriptProxyBasedServlet {
 
   // TODO freynaud
-  String remoteURL = "http://192.168.0.8:5555/wd/hub";
   String path;
   String url;
   // JSONObject cache = null;
