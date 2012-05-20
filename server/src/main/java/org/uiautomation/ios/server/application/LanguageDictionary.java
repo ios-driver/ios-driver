@@ -75,13 +75,14 @@ public class LanguageDictionary {
       String original = content.get(key);
 
       boolean match = match(string, original);
-      if (match) {
+      boolean tooGeneric = key.equals("%@ %d of %d") || key.equals("%@ at %@");
+      if (match && !tooGeneric) {
         ContentResult r = new ContentResult(language, key, original, string);
         for (String s : r.getArgs()) {
           List<ContentResult> rec = getPotentialMatches(s);
           if (!rec.isEmpty()) {
             // TODO freynaud an argument can be l10ned too....
-            System.out.println("recursion is found..." + getPotentialMatches(s));
+            // System.out.println("recursion is found..." + getPotentialMatches(s));
           }
         }
         res.add(r);
@@ -152,12 +153,17 @@ public class LanguageDictionary {
       }
     });
     for (File f : files) {
-      File resource = new File(f, "Localizable.strings");
-      if (!resource.exists()) {
-        throw new IOSAutomationException("expected a l10n file here : " + resource);
-      } else {
-        res.add(resource);
+      File[] all = f.listFiles();
+      for (File potential : all) {
+        if (potential.getAbsoluteFile().getAbsolutePath().endsWith(".strings")) {
+          res.add(potential);
+        }
       }
+      /*
+       * File resource = new File(f, "Localizable.strings"); if (!resource.exists()) { throw new
+       * IOSAutomationException("expected a l10n file here : " + resource); } else {
+       * res.add(resource); }
+       */
     }
     return res;
   }
@@ -169,7 +175,6 @@ public class LanguageDictionary {
    * @throws JSONException
    */
   public void addJSONContent(JSONObject content) throws JSONException {
-    this.content.clear();
     this.content.putAll(convertToMap(content));
   }
 
@@ -220,7 +225,7 @@ public class LanguageDictionary {
    * @return
    * @throws Exception
    */
-  private JSONObject readContentFromBinaryFile(File binaryFile) throws Exception {
+  public JSONObject readContentFromBinaryFile(File binaryFile) throws Exception {
     File tmp = File.createTempFile("tmp1234", ".tmp");
     convertL10NFile(binaryFile, tmp);
     JSONObject res = readJSONFile(tmp);
@@ -300,25 +305,31 @@ public class LanguageDictionary {
     return true;
   }
 
- 
-  
+
+
   public String translate(ContentResult res) {
     String languageTemplate = content.get(res.getKey());
-    String format = languageTemplate.replaceAll("%@", "%s");
-    format = format.replaceAll("%1\\$@", "%s");
-    format = format.replaceAll("%2\\$@", "%s");
-    format = format.replaceAll("%3\\$@", "%s");
-    format = format.replaceAll("%d", "%s");
-    String r = String.format(format, res.getArgs().toArray());
-    return r;
+    try {
+
+      String format = languageTemplate.replaceAll("%@", "%s");
+      format = format.replaceAll("%1\\$@", "%s");
+      format = format.replaceAll("%2\\$@", "%s");
+      format = format.replaceAll("%3\\$@", "%s");
+      format = format.replaceAll("%d", "%s");
+      String r = String.format(format, res.getArgs().toArray());
+      return r;
+    } catch (Exception e) {
+      System.err.println("err on " + languageTemplate);
+      return "parse error";
+    }
+
   }
 
   public String getContentForKey(String key) {
     String value = content.get(key);
     return value;
   }
-  
-  
+
 
 
 }
