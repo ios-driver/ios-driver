@@ -16,7 +16,11 @@ package org.uiautomation.ios.server.application;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,13 +57,13 @@ public class IOSApplication {
    * @throws Exception
    */
   public List<Localizable> getSupportedLanguages() throws Exception {
-    List<Localizable> res = new ArrayList<Localizable>();
+    Set<Localizable> res = new HashSet<Localizable>();
     List<File> l10ns = LanguageDictionary.getL10NFiles(app);
     for (File f : l10ns) {
       String name = LanguageDictionary.extractLanguageName(f);
       res.add(new LanguageDictionary(name).getLanguage());
     }
-    return res;
+    return new ArrayList<Localizable>(res);
   }
 
 
@@ -84,16 +88,28 @@ public class IOSApplication {
     if (!dictionaries.isEmpty()) {
       throw new IOSAutomationException("Content already present.");
     }
+    Map<String, LanguageDictionary> dicts = new HashMap<String, LanguageDictionary>();
+
     List<File> l10nFiles = LanguageDictionary.getL10NFiles(app);
     for (File f : l10nFiles) {
-      LanguageDictionary dict;
-      try {
-        dict = LanguageDictionary.createFromFile(f);
-      } catch (Exception e) {
-        throw new IOSAutomationException("Cannot load language translation for " + f, e);
+      String name = LanguageDictionary.extractLanguageName(f);
+      LanguageDictionary res = dicts.get(name);
+      if (res == null) {
+        res = new LanguageDictionary(name);
+        dicts.put(name, res);
       }
-      dictionaries.add(dict);
+      try {
+        // and load the content.
+        JSONObject content = res.readContentFromBinaryFile(f);
+        res.addJSONContent(content);
+      } catch (Exception e) {
+        throw new IOSAutomationException("error loading content for l10n", e);
+      }
+
+     
     }
+    dictionaries.addAll(dicts.values());
+    
   }
 
 
