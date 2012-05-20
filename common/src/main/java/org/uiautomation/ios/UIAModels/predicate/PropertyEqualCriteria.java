@@ -20,16 +20,30 @@ public abstract class PropertyEqualCriteria implements Criteria {
 
   private final String propertyName;
   private final String value;
+  private final MatchingStrategy strategy;
+
 
   public PropertyEqualCriteria(String propertyName, String value) {
+    this(propertyName, value, MatchingStrategy.exact);
+  }
+
+  public PropertyEqualCriteria(String propertyName, String value, MatchingStrategy strategy) {
     this.propertyName = propertyName;
     this.value = value;
+    this.strategy = strategy;
   }
 
   public JSONObject getJSONRepresentation() throws JSONException {
     JSONObject res = new JSONObject();
     res.put(propertyName, value);
+    res.put("strategy", strategy);
     return res;
   }
 
+
+}
+
+
+enum MatchingStrategy {
+  exact, regex, clientL10N, serverL10N;
 }
