@@ -17,4 +17,8 @@ public class LabelCriteria extends PropertyEqualCriteria {
   public LabelCriteria(String value) {
     super("value", value);
   }
+
+  public LabelCriteria(String value, MatchingStrategy strategy) {
+    super("name", value, strategy);
+  }
 }

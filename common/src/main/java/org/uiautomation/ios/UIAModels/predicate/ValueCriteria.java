@@ -18,4 +18,8 @@ public class ValueCriteria extends PropertyEqualCriteria {
   public ValueCriteria(String value) {
     super("value", value);
   }
+
+  public ValueCriteria(String value, MatchingStrategy strategy) {
+    super("name", value, strategy);
+  }
 }

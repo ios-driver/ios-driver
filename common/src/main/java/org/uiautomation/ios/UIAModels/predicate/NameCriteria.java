@@ -19,4 +19,8 @@ public class NameCriteria extends PropertyEqualCriteria {
   public NameCriteria(String value) {
     super("name", value);
   }
+  
+  public NameCriteria(String value, MatchingStrategy strategy) {
+    super("name", value, strategy);
+  }
 }
