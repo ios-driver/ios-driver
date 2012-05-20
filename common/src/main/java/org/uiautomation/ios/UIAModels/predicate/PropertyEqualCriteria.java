@@ -40,10 +40,9 @@ public abstract class PropertyEqualCriteria implements Criteria {
     return res;
   }
 
+  public MatchingStrategy getMatchingStrategy() {
+    return strategy;
+  }
 
-}
-
-
-enum MatchingStrategy {
-  exact, regex, clientL10N, serverL10N;
+ 
 }
