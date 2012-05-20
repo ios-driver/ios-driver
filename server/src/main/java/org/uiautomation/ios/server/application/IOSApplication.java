@@ -112,14 +112,26 @@ public class IOSApplication {
       try {
         List<ContentResult> results = getPotentialMatches(name);
 
-        l10n.put("matches", results.size());
+        int size = results.size();
+        if (size != 0) {
+          l10n.put("matches", size);
+          l10n.put("key", results.get(0).getKey());
+        }
+
+
+        JSONArray langs = new JSONArray();
         for (Localizable language : getSupportedLanguages()) {
           JSONArray possibleMatches = new JSONArray();
+
           for (ContentResult res : results) {
             possibleMatches.put(translate(res, language));
           }
-          l10n.put(language.getName(), possibleMatches);
+          JSONObject match = new JSONObject();
+          match.put(language.toString(), possibleMatches);
+          langs.put(match);
+
         }
+        l10n.put("langs", langs);
 
       } catch (Exception e) {
         e.printStackTrace();
@@ -128,7 +140,8 @@ public class IOSApplication {
     return l10n;
   }
 
-
+  // TODO freynaud return a single resutl and throw when multiple are found would simplify
+  // everything
   private List<ContentResult> getPotentialMatches(String name) throws IOSAutomationException {
     LanguageDictionary dict = getDictionary(currentLanguage);
     List<ContentResult> res = dict.getPotentialMatches(name);

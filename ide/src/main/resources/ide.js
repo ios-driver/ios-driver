@@ -25,14 +25,14 @@ $(document)
 
 					tree.bind("select_node.jstree", function(e, data) {
 
-					})
+					});
 
 					tree.bind("hover_node.jstree", function(e, data) {
 						if (!lock) {
 							setSelected(data);
 						}
 
-					})
+					});
 
 					var root;
 					tree.bind("loaded.jstree", function(event, data) {
@@ -101,28 +101,34 @@ $(document)
 						$('#highlight').css("background-color", color);
 					}
 
-					showDetails = function(type, ref, na, label, value, rect,
-							l10n) {
+									
+					showDetails = function(type, ref, na, label, value, rect, l10n) {
 						var prettyL10N = "";
-
-						if (l10n) {
+				
+						if(l10n) {
 							prettyL10N = "\n<b>L10N : </b>"
-							for (name in l10n) {
-								prettyL10N += "\n" + name + " : " + l10n[name];
+							var matches = l10n.matches;
+							prettyL10N += "\nmatch: " + matches;
+				
+							if(matches > 0) {
+								prettyL10N += "\nKEY: " + l10n.key;
+								var langs = l10n.langs;
+								for(var name in langs) {
+									var result = langs[name];
+									for (var a in result){
+										prettyL10N += "\n" + a + " : " + result[a];
+									}
+									
+								}
 							}
+				
 						} else {
-							prettyL10N = "no l10n for --" + name + "--"
+							prettyL10N = "no l10n for --" + name + "--";
 						}
-
-						$('#details').html(
-								"<u>Details</u><pre>type:" + type
-										+ "\nreference:" + ref + "\nname:" + na
-										+ "\nlabel:" + label + "\nvalue:"
-										+ value + "\nrect: x=" + rect.x + ",y="
-										+ rect.y + ",h=" + rect.h + "w="
-										+ rect.w + prettyL10N + "</pre>");
-
-					}
+				
+						$('#details').html("<u>Details</u><pre>type:" + type + "\nreference:" + ref + "\nname:" + na + "\nlabel:" + label + "\nvalue:" + value + "\nrect: x=" + rect.x + ",y=" + rect.y + ",h=" + rect.h + "w=" + rect.w + prettyL10N + "</pre>");
+				
+					};
 
 					var root;
 					$("#mouseOver")
@@ -131,7 +137,7 @@ $(document)
 										if (!lock) {
 											var x = e.pageX - offsetX;
 											var y = e.pageY - offsetY;
-											console.log(x+" - "+y);
+											
 
 											var finder = new CandidateFinder(x,
 													y, root);
@@ -159,7 +165,7 @@ $(document)
 					var lock = false;
 					toggleLock = function() {
 						lock = !lock;
-					}
+					};
 
 					function CandidateFinder(x, y, rootNode) {
 						this.x = x;
@@ -181,12 +187,12 @@ $(document)
 									&& (this.x <= (currentX + currentW))) {
 								if ((currentY <= this.y)
 										&& (this.y <= (currentY + currentH))) {
-									return true
+									return true;
 								}
 							}
 							return false;
 
-						}
+						};
 						this._assignIfBetterCandidate = function(newNode) {
 							if (this._hasCorrectPosition(newNode)) {
 								var surface = (newNode.metadata.rect.h * newNode.metadata.rect.w);
@@ -200,12 +206,12 @@ $(document)
 									this.candidate = newNode;
 								}
 							}
-						}
+						};
 
 						this.getNode = function() {
 							this._getCandidate(this.rootNode);
 							return this.candidate;
-						}
+						};
 
 						this._getCandidate = function(from) {
 							this._assignIfBetterCandidate(from);
@@ -215,7 +221,7 @@ $(document)
 									this._getCandidate(child);
 								}
 							}
-						}
+						};
 
 					}
 
