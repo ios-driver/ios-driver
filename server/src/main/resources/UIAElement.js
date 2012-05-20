@@ -210,6 +210,7 @@ UIAElement.prototype.matches = function(criteria) {
 		return true;
 	}
 
+	// AND, OR , NOT + array of criteria to apply
 	if (keys.length == 1) {
 		var key = keys[0];
 		if (key === "AND") {
@@ -231,13 +232,65 @@ UIAElement.prototype.matches = function(criteria) {
 		} else if (key === "NOT") {
 			return !this.matches(criteria[key]);
 		} else {
-			var current = this[key]();
-			var expected = criteria[key];
-			return current == expected;
+			throw new UIAutomationException("not a valid criteria, -> "
+					+ JSON.stringify(criteria),32);
 		}
-	} else {
-		UIALogger.logMessage("not a valid criteria " + keys.length + " , ->"
+	} 
+	// property match
+	else if (keys.length == 3){
+		var method = keys['method'];
+		var expected = keys['expected'];
+		var strategy = keys['strategy'];
+		log("method:"+method+",expected:"++expected+",strategy:"+strategy);
+		
+		var current = this[method]();
+		var expected = criteria[method];
+		switch (strategy)
+		{
+		case 'exact':
+			return current == expected;
+		case '':
+		  
+		  break;
+		case 'Sunday':
+		  
+		  break;
+		default:
+			throw new UIAutomationException("not a valid strategy, -> "
+					+ JSON.stringify(criteria),32);
+		}
+		
+	}
+	
+	else {
+		throw new UIAutomationException("not a valid criteria, -> "
 				+ JSON.stringify(criteria),32);
+	}
+	
+	
+	
+	if (method === "AND") {
+		var array = criteria[method];
+		for ( var c in array) {
+			if (!this.matches(array[c])) {
+				return false;
+			}
+		}
+		return true;
+	} else if (method === "OR") {
+		var array = criteria[method];
+		for ( var c in array) {
+			if (this.matches(array[c])) {
+				return true;
+			}
+		}
+		return false;
+	} else if (method === "NOT") {
+		return !this.matches(criteria[key]);
+	} else {
+		var current = this[method]();
+		var expected = criteria[method];
+		return current == expected;
 	}
 }
 /**

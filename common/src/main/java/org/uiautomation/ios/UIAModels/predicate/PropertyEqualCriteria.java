@@ -35,7 +35,8 @@ public abstract class PropertyEqualCriteria implements Criteria {
 
   public JSONObject getJSONRepresentation() throws JSONException {
     JSONObject res = new JSONObject();
-    res.put(propertyName, value);
+    res.put("method", propertyName);
+    res.put("expected", value);
     res.put("strategy", strategy);
     return res;
   }

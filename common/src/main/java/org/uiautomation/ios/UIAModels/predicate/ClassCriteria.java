@@ -13,22 +13,12 @@
  */
 package org.uiautomation.ios.UIAModels.predicate;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
-public class ClassCriteria implements Criteria {
+public class ClassCriteria extends PropertyEqualCriteria {
 
-  private final Class<?> classToMatch;
 
   public ClassCriteria(Class<?> classToMatch) {
-    this.classToMatch = classToMatch;
+    super("type",classToMatch.getSimpleName(),MatchingStrategy.exact);
   }
 
-
-
-  public JSONObject getJSONRepresentation() throws JSONException {
-    JSONObject res = new JSONObject();
-    res.put("type", classToMatch.getSimpleName());
-    return res;
-  }
 }
