@@ -49,8 +49,8 @@ UIAElement.prototype.tap2 = function() {
 		var x = rect.origin.x + (rect.size.width / 2);
 		var y = rect.origin.y + (rect.size.height / 2);
 		var point = {
-			'x' : x,
-			'y' : y
+			'x' : Math.floor( x ),
+			'y' : Math.floor( y )
 		};
 		UIATarget.localTarget().tap(point);
 	} else {
