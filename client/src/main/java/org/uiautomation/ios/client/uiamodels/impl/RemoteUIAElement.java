@@ -23,6 +23,7 @@ import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.exceptions.NoSuchElementException;
+import org.uiautomation.ios.exceptions.StaleReferenceException;
 
 /**
  * Main object for all the UIAutomation stuff. Implement part of the Apple API. Some methods are not
@@ -151,8 +152,13 @@ public class RemoteUIAElement extends RemoteObject implements UIAElement {
 
   @Override
   public boolean isValid() {
-    Boolean stale = getObject(WebDriverLikeCommand.IS_STALE);
-    return !stale;
+    try {
+      Boolean stale = getObject(WebDriverLikeCommand.IS_STALE);
+      return !stale;
+    } catch (StaleReferenceException e) {
+     return false;
+    }
+    
   }
 
   @Override
