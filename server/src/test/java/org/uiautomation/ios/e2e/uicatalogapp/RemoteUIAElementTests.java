@@ -102,7 +102,7 @@ public class RemoteUIAElementTests extends RemoteTestsBase {
     }
   }
 
-  @Test
+  @Test(groups ="broken")
   public void isVisibleTests() {
     RemoteUIADriver driver = null;
 
