@@ -252,6 +252,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   private File getGlobalPreferenceFile() {
     File folder = new File(contentAndSettingsFolder + "/Library/Preferences/");
     File global = new File(folder, ".GlobalPreferences.plist");
+    System.out.println(global);
     return global;
   }
 

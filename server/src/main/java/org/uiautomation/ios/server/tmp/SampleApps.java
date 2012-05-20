@@ -18,8 +18,9 @@ import java.net.URL;
 
 import org.testng.Assert;
 import org.uiautomation.ios.IOSCapabilities;
+import org.uiautomation.ios.server.application.Localizable;
 
-//TODO freynaud move to tests
+// TODO freynaud move to tests
 public class SampleApps {
 
 
@@ -50,8 +51,15 @@ public class SampleApps {
     return getFromClassPath(intlMountains).getAbsolutePath();
   }
 
-  public static IOSCapabilities cap() {
+  public static IOSCapabilities uiCatalogCap() {
     IOSCapabilities c = IOSCapabilities.iphone(SampleApps.getUICatalogApp());
+    c.setCapability(IOSCapabilities.TIME_HACK, true);
+    return c;
+  }
+
+  public static IOSCapabilities intlMountainsCap(Localizable l) {
+    IOSCapabilities c = IOSCapabilities.iphone(SampleApps.getIntlMountainsApp());
+    c.setLanguage(l.getName());
     c.setCapability(IOSCapabilities.TIME_HACK, true);
     return c;
   }

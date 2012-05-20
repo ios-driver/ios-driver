@@ -20,7 +20,7 @@ import org.uiautomation.ios.exceptions.ElementNotVisibleException;
 import org.uiautomation.ios.exceptions.NoSuchElementException;
 import org.uiautomation.ios.exceptions.StaleReferenceException;
 
-public class RemoteUIAElementTests extends RemoteTestsBase {
+public class RemoteUIAElementTests extends UICatalogTestsBase {
 
 
 

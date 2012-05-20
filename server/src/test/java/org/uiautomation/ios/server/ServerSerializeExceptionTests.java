@@ -29,7 +29,7 @@ public class ServerSerializeExceptionTests {
   public void clientGetsServerException() throws IOSAutomationSetupException {
     RemoteUIADriver driver = null;
     try {
-      IOSCapabilities cap = SampleApps.cap();
+      IOSCapabilities cap = SampleApps.uiCatalogCap();
       cap.setSDKVersion("1234");
       driver = new RemoteUIADriver(url, cap);
 

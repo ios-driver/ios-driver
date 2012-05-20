@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.exceptions.InvalidCriteriaException;
 
@@ -26,14 +25,19 @@ public abstract class AbstractCriteria implements Criteria {
 
 
 
-  @SuppressWarnings("unchecked")
   public static <T extends Criteria> T parse(JSONObject serialized) throws Exception {
+    return parse(serialized, null);
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T extends Criteria> T parse(JSONObject serialized, CriteriaDecorator decorator)
+      throws Exception {
     int nbKeys = serialized.length();
     switch (nbKeys) {
       case KEYS_IN_COMPOSED_CRITERIA:
         String key = (String) serialized.keys().next();
         CompositionType type = CompositionType.valueOf(key);
-        return (T) buildComposedCriteria(serialized, type);
+        return (T) buildComposedCriteria(serialized, type, decorator);
       case KEYS_IN_PROPERTY_CRITERIA:
         String method = serialized.getString("method");
         String tmp =
@@ -41,7 +45,7 @@ public abstract class AbstractCriteria implements Criteria {
         String clazz = AbstractCriteria.class.getPackage().getName() + "." + tmp;
         Class<? extends PropertyEqualCriteria> c =
             (Class<? extends PropertyEqualCriteria>) Class.forName(clazz);
-        return (T) buildPropertyBaseCriteria(serialized, c);
+        return (T) buildPropertyBaseCriteria(serialized, c, decorator);
       default:
         throw new InvalidCriteriaException("can't find the type : " + serialized.toString());
     }
@@ -52,8 +56,8 @@ public abstract class AbstractCriteria implements Criteria {
   private static final int KEYS_IN_PROPERTY_CRITERIA = 3;
 
 
-  private static ComposedCriteria buildComposedCriteria(JSONObject serialized, CompositionType type)
-      throws Exception {
+  private static ComposedCriteria buildComposedCriteria(JSONObject serialized,
+      CompositionType type, CriteriaDecorator decorator) throws Exception {
     JSONArray array = serialized.getJSONArray(type.toString());
     if (type == CompositionType.NOT && array.length() != 1) {
       throw new InvalidCriteriaException("negative criteria apply to 1 criteria only " + serialized);
@@ -62,7 +66,7 @@ public abstract class AbstractCriteria implements Criteria {
 
     for (int i = 0; i < array.length(); i++) {
       JSONObject c = array.getJSONObject(i);
-      Criteria crit = parse(c);
+      Criteria crit = parse(c, decorator);
       criterias.add(crit);
     }
 
@@ -71,11 +75,13 @@ public abstract class AbstractCriteria implements Criteria {
 
     Constructor<?> c = type.getAssociatedClass().getConstructor(argsClass);
     ComposedCriteria crit = (ComposedCriteria) c.newInstance(args);
+    crit.addDecorator(decorator);
+    crit.decorate();
     return crit;
   }
 
   private static PropertyEqualCriteria buildPropertyBaseCriteria(JSONObject serialized,
-      Class<? extends PropertyEqualCriteria> clazz) throws Exception {
+      Class<? extends PropertyEqualCriteria> clazz, CriteriaDecorator decorator) throws Exception {
     String expected = serialized.getString("expected");
     String strategy = serialized.getString("strategy");
 
@@ -84,6 +90,8 @@ public abstract class AbstractCriteria implements Criteria {
 
     Constructor<?> c = clazz.getConstructor(argsClass);
     PropertyEqualCriteria crit = (PropertyEqualCriteria) c.newInstance(args);
+    crit.addDecorator(decorator);
+    crit.decorate();
     return crit;
   }
 }

@@ -5,8 +5,13 @@ import java.util.Iterator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.uiautomation.ios.UIAModels.predicate.AbstractCriteria;
+import org.uiautomation.ios.UIAModels.predicate.Criteria;
+import org.uiautomation.ios.UIAModels.predicate.CriteriaDecorator;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
+import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.ServerSideL10NDecorator;
 import org.uiautomation.ios.server.command.Handler;
 import org.uiautomation.ios.server.command.impl.CustomUIAScriptHandler;
 import org.uiautomation.ios.server.command.impl.DefaultUIAScriptHandler;
@@ -119,13 +124,13 @@ public enum CommandMapping {
     throw new RuntimeException("not mapped : " + wdlc);
   }
   
-  public String jsMethod(JSONObject payload) {
+  public String jsMethod(JSONObject payload,IOSApplication aut) {
     if (jsMethod == null) {
       throw new RuntimeException("JS method missing from mapping.");
     }
 
     if (payload != null) {
-      payload = serverSidePayloadChanges(payload);
+      payload = serverSidePayloadChanges(payload,aut);
       String res = jsMethod;
       Iterator<String> iter = payload.keys();
       while (iter.hasNext()) {
@@ -143,13 +148,18 @@ public enum CommandMapping {
   }
 
  
+  private CriteriaDecorator getDecorator(IOSApplication aut){
+    ServerSideL10NDecorator decorator = new ServerSideL10NDecorator(aut);
+    return decorator;
+  }
 
-  private JSONObject serverSidePayloadChanges(JSONObject payload) {
-    System.out.println(payload.toString());
-    if (payload.has("stategy")){
+  private JSONObject serverSidePayloadChanges(JSONObject payload, IOSApplication aut) {
+    if (payload.has("criteria")){
       try {
-        System.out.println("got "+payload.getString("strategy"));
-      } catch (JSONException e) {
+        JSONObject json = payload.getJSONObject("criteria");
+        Criteria decorated = AbstractCriteria.parse(json,getDecorator(aut));
+        payload.put("criteria", decorated.getJSONRepresentation().toString());
+      } catch (Exception e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }

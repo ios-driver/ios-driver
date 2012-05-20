@@ -22,7 +22,9 @@ public abstract class DecorableCriteria extends AbstractCriteria {
 
   @Override
   public void addDecorator(CriteriaDecorator decorator) {
-    decorators.add(decorator);
+    if (decorator != null) {
+      decorators.add(decorator);
+    }
   }
 
   @Override

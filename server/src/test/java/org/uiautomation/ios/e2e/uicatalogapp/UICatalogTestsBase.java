@@ -10,7 +10,7 @@ import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
 import org.uiautomation.ios.server.tmp.SampleApps;
 
-public abstract class RemoteTestsBase {
+public abstract class UICatalogTestsBase {
 
   private IOSServer server;
   private static String[] args = {"-port", "4444", "-host", "localhost"};
@@ -29,7 +29,7 @@ public abstract class RemoteTestsBase {
 
   protected RemoteUIADriver getDriver() {
     return new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",
-        SampleApps.cap());
+        SampleApps.uiCatalogCap());
   }
 
   protected RemoteUIAWindow getMainWindow(RemoteUIADriver driver) {

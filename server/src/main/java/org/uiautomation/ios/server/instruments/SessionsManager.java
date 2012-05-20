@@ -22,11 +22,18 @@ import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.IOSDevice;
 import org.uiautomation.ios.communication.Session;
 import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
+import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.LanguageDictionary;
+import org.uiautomation.ios.server.application.Localizable;
 
 
 public class SessionsManager {
 
   private Session currentSession;
+  private IOSApplication currentApplication;
+
+
+
   private InstrumentsManager instrumentsManager;
 
   public SessionsManager() throws IOSAutomationSetupException {
@@ -43,6 +50,12 @@ public class SessionsManager {
 
   public void createSession(IOSCapabilities cap) throws IOSAutomationSetupException {
     IOSCapabilities v = completeWithDefaults(cap);
+
+    Localizable language = new LanguageDictionary(v.getLanguage()).getLanguage();
+    String aut = v.getApplication();
+    currentApplication = new IOSApplication(language, aut);
+    currentApplication.loadAllContent();
+
     createSession(v.getDevice(), v.getSDKVersion(), v.getLocale(), v.getLanguage(),
         new File(v.getApplication()), v.isTimeHack(), v.getExtraSwitches());
   }
@@ -101,6 +114,9 @@ public class SessionsManager {
     currentSession = null;
   }
 
+  public IOSApplication getCurrentApplication() {
+    return currentApplication;
+  }
 
   public void forceStop() {
     instrumentsManager.forceStop();

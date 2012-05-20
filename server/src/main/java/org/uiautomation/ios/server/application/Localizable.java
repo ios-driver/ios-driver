@@ -53,7 +53,7 @@ public enum Localizable {
 
   public static Localizable createFromNewName(String name) throws IOSAutomationException {
     for (Localizable l10n : Localizable.values()) {
-      if (l10n.newFormat.equals(name)) {
+      if (l10n.newFormat.equals(name) || l10n.toString().equals(name)) {
         return l10n;
       }
     }
@@ -64,7 +64,7 @@ public enum Localizable {
   // ISO-639-1 (two-letter) or ISO-639-2 (three-letter)
   public static boolean isNewName(String name) {
     for (Localizable l10n : Localizable.values()) {
-      if (l10n.newFormat.equals(name)) {
+      if (l10n.newFormat.equals(name) || l10n.toString().equals(name)) {
         return true;
       }
     }

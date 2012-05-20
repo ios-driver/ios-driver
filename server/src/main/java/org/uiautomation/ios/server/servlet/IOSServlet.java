@@ -27,6 +27,7 @@ import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.server.CommandMapping;
+import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.command.Handler;
 
 public class IOSServlet extends UIAScriptProxyBasedServlet {

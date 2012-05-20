@@ -25,6 +25,7 @@ import org.uiautomation.ios.UIAModels.UIAWindow;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.CommandMapping;
+import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 import org.uiautomation.ios.server.instruments.SessionsManager;
 
@@ -67,6 +68,10 @@ public class DefaultUIAScriptHandler extends UIAScriptHandler {
     return false;
   }
 
+  private IOSApplication getAUT() {
+    return getSessionsManager().getCurrentApplication();
+  }
+
   // TODO freynaud extract.
   private static final String stringTemplate =
       "var target = UIAutomation.cache.get(:reference);var myStringResult = target:jsMethod ;UIAutomation.createJSONResponse(':sessionId',0,myStringResult)";
@@ -80,7 +85,7 @@ public class DefaultUIAScriptHandler extends UIAScriptHandler {
   private String jsForRemoteObject(JSONObject payload) {
     WebDriverLikeCommand command = getRequest().getGenericCommand();
     CommandMapping mapping = CommandMapping.get(command);
-    String method = mapping.jsMethod(payload);
+    String method = mapping.jsMethod(payload, getAUT());
 
     String js =
         objectTemplate.replace(":jsMethod", method)
@@ -96,7 +101,7 @@ public class DefaultUIAScriptHandler extends UIAScriptHandler {
   private String jsForString(JSONObject payload) {
     WebDriverLikeCommand command = getRequest().getGenericCommand();
     CommandMapping mapping = CommandMapping.get(command);
-    String method = mapping.jsMethod(payload);
+    String method = mapping.jsMethod(payload, getAUT());
 
     String js =
         stringTemplate.replace(":jsMethod", method)
@@ -116,7 +121,7 @@ public class DefaultUIAScriptHandler extends UIAScriptHandler {
   private String jsForVoid(JSONObject payload) {
     WebDriverLikeCommand command = getRequest().getGenericCommand();
     CommandMapping mapping = CommandMapping.get(command);
-    String method = mapping.jsMethod(payload);
+    String method = mapping.jsMethod(payload, getAUT());
 
     String js =
         voidTemplate.replace(":jsMethod", method)
