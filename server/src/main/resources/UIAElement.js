@@ -237,7 +237,7 @@ UIAElement.prototype.matches = function(criteria) {
 		}
 	} else {
 		UIALogger.logMessage("not a valid criteria " + keys.length + " , ->"
-				+ JSON.stringify(criteria));
+				+ JSON.stringify(criteria),32);
 	}
 }
 /**
