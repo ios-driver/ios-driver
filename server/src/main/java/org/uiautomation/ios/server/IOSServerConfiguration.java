@@ -39,8 +39,8 @@ public class IOSServerConfiguration {
 
   private final String APPS_FILE = "/supportedApps.txt";
 
-  private int port;
-  private String host;
+  private int port = 4444;
+  private String host = "localhost";
 
   /**
    * Returns a IOSServerConfiguration instance of the server configuration, from the given args
