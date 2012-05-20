@@ -311,5 +311,11 @@ public class LanguageDictionary {
     return r;
   }
 
+  public String getContentForKey(String key) {
+    String value = content.get(key);
+    return value;
+
+  }
+
 
 }

@@ -152,4 +152,9 @@ public class IOSApplication {
   public void addDictionary(LanguageDictionary dict) {
     dictionaries.add(dict);
   }
+
+
+  public Localizable getCurrentLanguage() {
+    return currentLanguage;
+  }
 }
