@@ -51,9 +51,10 @@ public class ClassicCommands {
       com.executeAndWait();
     }
 
-    if (isRunning(processName)) {
+    // TODO freynaud what is that's too fast? 
+    /*if (isRunning(processName)) {
       throw new IOSAutomationSetupException("couldn't kill " + processName);
-    }
+    }*/
   }
 
   public static List<String> getInstalledSDKs() throws IOSAutomationSetupException {
