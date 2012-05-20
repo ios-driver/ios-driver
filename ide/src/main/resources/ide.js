@@ -106,7 +106,7 @@ $(document)
 						var prettyL10N = "";
 				
 						if(l10n) {
-							prettyL10N = "\n<b>L10N : </b>"
+							prettyL10N = "\n<b>L10N : </b>";
 							var matches = l10n.matches;
 							prettyL10N += "\nmatch: " + matches;
 				
