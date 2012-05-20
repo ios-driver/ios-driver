@@ -7,38 +7,34 @@ UIAElementArray.prototype.isStale = function() {
 }
 
 UIAElementArray.prototype.reference = function() {
-	if (!this.id) {
+	if(!this.id) {
 		UIAutomation.cache.store(this);
 	}
 	return this.id;
 }
 
-
-UIAElementArray.prototype.elements2 = function(depth,criteria) {
+UIAElementArray.prototype.elements2 = function(depth, criteria) {
 	var all = this.toArray();
 	var res = new Array();
-	for (var i=0;i<all.length;i++){
+	for(var i = 0; i < all.length; i++) {
 		var element = all[i];
-		if (element.matches(criteria)) {
+		if(element.matches(criteria)) {
 			res.push(element);
 		}
 	}
 	return new MyUIAElementArray(res);
 }
 
-UIAElementArray.prototype.element = function(depth,criteria) {
+UIAElementArray.prototype.element = function(depth, criteria) {
 	var all = this.toArray();
-	for (var i=0;i<all.length;i++){
+	for(var i = 0; i < all.length; i++) {
 		var element = all[i];
-		if (element.matches(criteria)) {
+		if(element.matches(criteria)) {
 			return element;
 		}
 	}
-	throw new UIAutomationException("cannot find element for criteria :"
-			+ JSON.stringify(criteria), 7);
+	throw new UIAutomationException("cannot find element for criteria :" + JSON.stringify(criteria), 7);
 }
-
-
 /**
  * returns the class for the element, as per
  * http://developer.apple.com/library/ios/#documentation/DeveloperTools/Reference/UIAutomationRef
@@ -48,7 +44,7 @@ UIAElement.prototype.type = function() {
 }
 
 UIAElement.prototype.tap2 = function() {
-	if (this.isVisible()) {
+	if(this.isVisible()) {
 		var rect = this.rect();
 		var x = rect.origin.x + (rect.size.width / 2);
 		var y = rect.origin.y + (rect.size.height / 2);
@@ -65,27 +61,24 @@ UIAElement.prototype.tap2 = function() {
 }
 
 UIAElement.prototype.reference = function() {
-	if (!this.id) {
+	if(!this.id) {
 		UIAutomation.cache.store(this);
 	}
 	return this.id;
 }
-
 /**
  * can't find a way to detect stale object. CheckIsValid doesn't do it properly.
  * Trying to scroll to the element seems like a valid approximation.
  */
 UIAElement.prototype.isStale = function() {
-	if (this.checkIsValid() == false) {
+	if(this.checkIsValid() == false) {
 		return true;
 	} else {
 		try {
 			this.scrollToVisible();
 			return false;
 		} catch (err) {
-			if (err.message
-					&& err.message
-							.indexOf('scrollToVisible cannot be used') != -1) {
+			if(err.message && err.message.indexOf('scrollToVisible cannot be used') != -1) {
 				return true;
 			}
 		}
@@ -97,23 +90,22 @@ UIAElement.prototype.element = function(depth, criteria) {
 	var all = this.getChildren(depth);
 	var res = new Array();
 
-	for ( var i = 0; i < all.length; i++) {
+	for(var i = 0; i < all.length; i++) {
 		var element = all[i];
-		if (element.matches(criteria)) {
+		if(element.matches(criteria)) {
 			return element;
 		}
 	}
-	throw new UIAutomationException("cannot find element for criteria :"
-			+ JSON.stringify(criteria), 7);
+	throw new UIAutomationException("cannot find element for criteria :" + JSON.stringify(criteria), 7);
 }
 
 UIAElement.prototype.elements2 = function(depth, criteria) {
 	var all = this.getChildren(depth);
 	var res = new Array();
-	if (criteria) {
-		for ( var i = 0; i < all.length; i++) {
+	if(criteria) {
+		for(var i = 0; i < all.length; i++) {
 			var element = all[i];
-			if (element.matches(criteria)) {
+			if(element.matches(criteria)) {
 				res.push(element);
 			}
 		}
@@ -142,16 +134,15 @@ UIAElement.prototype.tree = function(path) {
 	var buildNode = function(element) {
 		var res = element.asNode();
 		var children = element.elements();
-		if (children.length > 0) {
+		if(children.length > 0) {
 			var array = new Array();
-			for ( var i = 0; i < children.length; i++) {
+			for(var i = 0; i < children.length; i++) {
 				array.push(buildNode(children[i]));
 			}
 			res.children = array;
 		}
 		return res;
 	}
-
 	var res = buildNode(this);
 	UIATarget.localTarget().captureScreenWithName('current');
 	var result = {
@@ -167,16 +158,16 @@ UIAElement.prototype.tree = function(path) {
 UIAElement.prototype.getChildren = function(depth) {
 	var res = new Array();
 
-	if (!depth) {
+	if(!depth) {
 		depth = -1;
 	}
 	var getChildren = function(depth, element) {
 		res.push(element);
 		var d = depth - 1;
-		if (d > 0 || d !== -1) {
+		if(d > 0 || d !== -1) {
 			var children = element.elements();
 			var size = children.length;
-			for ( var i = 0; i < size; i++) {
+			for(var i = 0; i < size; i++) {
 				var child = children[i];
 				getChildren(d, child);
 			}
@@ -187,15 +178,14 @@ UIAElement.prototype.getChildren = function(depth) {
 }
 var getKeys = function(obj) {
 	var keys = [];
-	for ( var key in obj) {
+	for(var key in obj) {
 		keys.push(key);
 	}
 	return keys;
 }
 
-
 UIAElement.prototype.matches = function(criteria) {
-	if (!criteria) {
+	if(!criteria) {
 		return true;
 	}
 	// criteria only have one field.It's either :
@@ -206,96 +196,60 @@ UIAElement.prototype.matches = function(criteria) {
 	var keys = getKeys(criteria);
 
 	// empty filder matches all.
-	if (keys == 0) {
+	if(keys == 0) {
 		return true;
 	}
 
 	// AND, OR , NOT + array of criteria to apply
-	if (keys.length == 1) {
+	if(keys.length == 1) {
 		var key = keys[0];
-		if (key === "AND") {
+		if(key === "AND") {
 			var array = criteria[key];
-			for ( var c in array) {
-				if (!this.matches(array[c])) {
+			for(var c in array) {
+				if(!this.matches(array[c])) {
 					return false;
 				}
 			}
 			return true;
-		} else if (key === "OR") {
+		} else if(key === "OR") {
 			var array = criteria[key];
-			for ( var c in array) {
-				if (this.matches(array[c])) {
+			for(var c in array) {
+				if(this.matches(array[c])) {
 					return true;
 				}
 			}
 			return false;
-		} else if (key === "NOT") {
+		} else if(key === "NOT") {
 			return !this.matches(criteria[key]);
 		} else {
-			throw new UIAutomationException("not a valid criteria, -> "
-					+ JSON.stringify(criteria),32);
+			throw new UIAutomationException("not a valid criteria, -> " + JSON.stringify(criteria), 32);
 		}
-	} 
+	}
 	// property match
-	else if (keys.length == 3){
-		var method = keys['method'];
-		var expected = keys['expected'];
-		var strategy = keys['strategy'];
-		log("method:"+method+",expected:"++expected+",strategy:"+strategy);
-		
+	else if(keys.length == 3) {
+		var method = criteria['method'];
+		var expected = criteria['expected'];
+		var strategy = criteria['strategy'];
 		var current = this[method]();
-		var expected = criteria[method];
-		switch (strategy)
-		{
-		case 'exact':
-			return current == expected;
-		case '':
-		  
-		  break;
-		case 'Sunday':
-		  
-		  break;
-		default:
-			throw new UIAutomationException("not a valid strategy, -> "
-					+ JSON.stringify(criteria),32);
+
+		switch (strategy) {
+			case 'exact':
+				return current == expected;
+			case 'regex':
+				var regex = new RegExp(expected,'g');
+				return regex.test(current);
+				break;
+			default:
+				throw new UIAutomationException("not a valid strategy, -> " + JSON.stringify(criteria), 32);
 		}
-		
-	}
-	
-	else {
-		throw new UIAutomationException("not a valid criteria, -> "
-				+ JSON.stringify(criteria),32);
-	}
-	
-	
-	
-	if (method === "AND") {
-		var array = criteria[method];
-		for ( var c in array) {
-			if (!this.matches(array[c])) {
-				return false;
-			}
-		}
-		return true;
-	} else if (method === "OR") {
-		var array = criteria[method];
-		for ( var c in array) {
-			if (this.matches(array[c])) {
-				return true;
-			}
-		}
-		return false;
-	} else if (method === "NOT") {
-		return !this.matches(criteria[key]);
+
 	} else {
-		var current = this[method]();
-		var expected = criteria[method];
-		return current == expected;
+		throw new UIAutomationException("not a valid criteria, -> " + JSON.stringify(criteria), 32);
 	}
 }
 /**
  * create something similar to UIAelement array from a list of elements
- * 
+ *
  * @param elements
  *            an array of native UIAElements.
  */
@@ -315,15 +269,14 @@ function MyUIAElementArray(elements) {
 	}
 
 	this.firstWithName = function(name) {
-		for (i = 0; i < this.elements.length; i++) {
+		for( i = 0; i < this.elements.length; i++) {
 			var current = elements[i];
 			log("element with name : " + current.name());
-			if (current.name() === name) {
+			if(current.name() === name) {
 				return current;
 			}
 		}
-		throw new UIAutomationException("cannot find an element with name="
-				+ name);
+		throw new UIAutomationException("cannot find an element with name=" + name);
 	}
 
 	this.buttons = function() {
@@ -339,11 +292,11 @@ function MyUIAElementArray(elements) {
 	}
 
 	this._getElementsOfType = function(type) {
-		if (type) {
+		if(type) {
 			var res = new Array();
-			for (i = 0; i < this.all.length; i++) {
+			for( i = 0; i < this.all.length; i++) {
 				var current = this.all[i];
-				if (current.type() === type) {
+				if(current.type() === type) {
 					res.push(current);
 				}
 			}
@@ -355,12 +308,12 @@ function MyUIAElementArray(elements) {
 	}
 
 	this.reference = function() {
-		if (!this.id) {
+		if(!this.id) {
 			UIAutomation.cache.store(this);
 		}
 		return this.id;
 	}
-	
+
 	this.isStale = UIAElementArray.prototype.isStale;
 	this.element = UIAElementArray.prototype.element;
 	this.elements2 = UIAElementArray.prototype.elements2;

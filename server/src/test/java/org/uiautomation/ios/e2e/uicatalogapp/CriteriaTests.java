@@ -35,4 +35,24 @@ public class CriteriaTests extends RemoteTestsBase {
       }
     }
   }
+  
+  @Test
+  public void regexMatch() {
+    RemoteUIADriver driver = null;
+    try {
+      String name =  "Buttons, Various uses of UIButton";
+      String regex = "Buttons, V[a-z]* uses of UIButton";
+      driver = getDriver();
+      RemoteUIAWindow win = getMainWindow(driver);
+      Criteria c1 = new ClassCriteria(UIATableCell.class);
+      PropertyEqualCriteria c2 = new NameCriteria(regex,MatchingStrategy.regex);
+      Criteria c = new AndCriteria(c1, c2);
+      UIAElement element = win.findElement(c);
+      Assert.assertEquals(element.getName(), name);
+    } finally {
+      if (driver != null) {
+        driver.quit();
+      }
+    }
+  }
 }
