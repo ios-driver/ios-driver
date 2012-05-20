@@ -85,7 +85,7 @@ public class IOSServer {
   public IOSServer(IOSServerConfiguration config) throws IOSAutomationSetupException {
     this.config = config;
     this.port = config.getPort();
-    server = new Server(new InetSocketAddress(config.getHost(), config.getPort()));
+    server = new Server(new InetSocketAddress("0.0.0.0", config.getPort()));
   }
 
   private Class<Servlet> getIDEServlet() {
