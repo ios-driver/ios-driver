@@ -17,7 +17,8 @@ public enum ExceptionStatus {
   NoSuchElement(7, NoSuchElementException.class), 
   StaleElementReference(10,StaleReferenceException.class),
   ElementNotVisible(11, ElementNotVisibleException.class), 
-  UnknownError(13,IOSAutomationException.class);
+  UnknownError(13,IOSAutomationException.class),
+  InvalidSelector(32,InvalidCriteriaException.class);
 
   private final Class<? extends Exception> ex;
   private final int status;
