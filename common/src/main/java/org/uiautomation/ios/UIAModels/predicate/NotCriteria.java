@@ -13,10 +13,20 @@
  */
 package org.uiautomation.ios.UIAModels.predicate;
 
+import java.util.List;
+
 
 public class NotCriteria extends ComposedCriteria {
 
   public NotCriteria(Criteria c) {
+    super(CompositionType.NOT, c);
+  }
+  
+  /**
+   * for reflection only. List size must be 1.
+   * @param c
+   */
+  public NotCriteria(List<Criteria> c) {
     super(CompositionType.NOT, c);
   }
 }
