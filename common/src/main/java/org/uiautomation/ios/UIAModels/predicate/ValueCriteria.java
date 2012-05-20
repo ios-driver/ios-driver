@@ -13,7 +13,6 @@
  */
 package org.uiautomation.ios.UIAModels.predicate;
 
-import java.util.Map;
 
 public class ValueCriteria extends PropertyEqualCriteria {
 
@@ -24,7 +23,5 @@ public class ValueCriteria extends PropertyEqualCriteria {
   public ValueCriteria(String value, MatchingStrategy strategy) {
     super("name", value, strategy);
   }
-  public ValueCriteria(String value, MatchingStrategy strategy, Map<String, String> content) {
-    super("value", value, strategy, content);
-  }
+
 }

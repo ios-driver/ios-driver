@@ -20,14 +20,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class OrCriteria implements Criteria {
+public class OrCriteria extends DecorableCriteria {
 
   private final List<Criteria> criterias;
 
 
-  public OrCriteria(Criteria ... criterias) {
+  public OrCriteria(Criteria... criterias) {
     this.criterias = Arrays.asList(criterias);
   }
+
   public OrCriteria(List<Criteria> criterias) {
     this.criterias = criterias;
   }
@@ -43,5 +44,6 @@ public class OrCriteria implements Criteria {
     res.put("OR", or);
     return res;
   }
+
 
 }

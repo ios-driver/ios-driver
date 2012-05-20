@@ -13,39 +13,30 @@
  */
 package org.uiautomation.ios.UIAModels.predicate;
 
-import java.util.Map;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 
-public abstract class PropertyEqualCriteria implements Criteria {
+public abstract class PropertyEqualCriteria extends DecorableCriteria {
 
   private final String propertyName;
   private String value;
   private MatchingStrategy strategy;
-  private Map<String, String> clientSideL10N = null;
 
+  
 
   public PropertyEqualCriteria(String propertyName, String value) {
     this(propertyName, value, MatchingStrategy.exact);
   }
 
-  public PropertyEqualCriteria(String propertyName, String value, MatchingStrategy strategy) {
-    this(propertyName, value, strategy, null);
-  }
 
-  public PropertyEqualCriteria(String propertyName, String value, MatchingStrategy strategy,
-      Map<String, String> contentByKey) {
+
+  public PropertyEqualCriteria(String propertyName, String value, MatchingStrategy strategy) {
     this.propertyName = propertyName;
     this.value = value;
     this.strategy = strategy;
-    this.clientSideL10N = contentByKey;
-
-    if (strategy == MatchingStrategy.clientL10N) {
-      localize(MatchingStrategy.exact);
-    }
   }
+
+
 
   public JSONObject getJSONRepresentation() throws JSONException {
     JSONObject res = new JSONObject();
@@ -55,25 +46,23 @@ public abstract class PropertyEqualCriteria implements Criteria {
     return res;
   }
 
-  private void localize(MatchingStrategy newStrategy) {
-    value = localizeString(value);
-    strategy = newStrategy;
-  }
 
-  private String localizeString(String value) {
-    if (clientSideL10N == null) {
-      throw new IOSAutomationException("you need to provide client side content to use " + strategy);
-    }
-    String res = clientSideL10N.get(value);
-    if (res == null) {
-      throw new IOSAutomationException("no client side content provided for " + value);
-    } else {
-      return res;
-    }
-  }
+ 
 
-  public String getExpected() {
+  public String getValue() {
     return value;
+  }
+
+  public MatchingStrategy getStrategy() {
+    return strategy;
+  }
+
+  public void setStrategy(MatchingStrategy strategy) {
+    this.strategy = strategy;
+  }
+
+  public void setValue(String value) {
+    this.value = value;
   }
 
   public MatchingStrategy getMatchingStrategy() {

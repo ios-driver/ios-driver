@@ -15,8 +15,9 @@ package org.uiautomation.ios.UIAModels.predicate;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.uiautomation.ios.exceptions.IOSAutomationException;
 
-public class NotCriteria implements Criteria {
+public class NotCriteria extends DecorableCriteria {
 
   private final Criteria c;
 
@@ -29,6 +30,5 @@ public class NotCriteria implements Criteria {
     res.put("NOT", c.getJSONRepresentation());
     return res;
   }
-
 
 }

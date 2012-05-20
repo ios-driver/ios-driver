@@ -11,14 +11,14 @@ import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.uiautomation.ios.UIAModels.predicate.CriteriaFactory;
 import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
+import org.uiautomation.ios.client.uiamodels.impl.ClientSideCriteriaFactory;
 
 
 public class ClientSideCriteriaTests {
 
-  CriteriaFactory factory;
+  ClientSideCriteriaFactory factory;
 
   @BeforeClass
   public void setup() throws IOException, JSONException {
@@ -34,19 +34,15 @@ public class ClientSideCriteriaTests {
       content.put(key, entry.getString(key));
     }
 
-    factory = new CriteriaFactory();
-    factory.addClientSideContent(content);
+    factory = new ClientSideCriteriaFactory(content);
 
   }
 
   @Test
   public void clienSideMapping() throws JSONException {
-
     NameCriteria c = factory.nameCriteria("abc", MatchingStrategy.clientL10N);
     Assert.assertEquals(c.getMatchingStrategy(), MatchingStrategy.exact);
-    Assert.assertEquals(c.getExpected(), "abc localisé.");
-    
-    
+    Assert.assertEquals(c.getValue(), "abc localisé.");
   }
 
 }

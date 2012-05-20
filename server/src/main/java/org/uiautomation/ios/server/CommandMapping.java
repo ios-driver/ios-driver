@@ -3,6 +3,7 @@ package org.uiautomation.ios.server;
 import java.lang.reflect.Constructor;
 import java.util.Iterator;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
@@ -124,6 +125,7 @@ public enum CommandMapping {
     }
 
     if (payload != null) {
+      payload = serverSidePayloadChanges(payload);
       String res = jsMethod;
       Iterator<String> iter = payload.keys();
       while (iter.hasNext()) {
@@ -131,10 +133,28 @@ public enum CommandMapping {
         Object value = payload.opt(key);
         res = res.replace(":" + key, value.toString());
       }
+      
+      
+      
       return res;
     } else {
       return jsMethod;
     }
+  }
+
+ 
+
+  private JSONObject serverSidePayloadChanges(JSONObject payload) {
+    System.out.println(payload.toString());
+    if (payload.has("stategy")){
+      try {
+        System.out.println("got "+payload.getString("strategy"));
+      } catch (JSONException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+    return payload;
   }
 
   public Handler createHandler(SessionsManager instruments,WebDriverLikeRequest request) throws Exception{

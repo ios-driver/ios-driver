@@ -15,16 +15,23 @@ package org.uiautomation.ios.UIAModels.predicate;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.uiautomation.ios.exceptions.IOSAutomationException;
 
 /**
  * matches all
- *
+ * 
  */
-public class EmptyCriteria implements Criteria {
+public class EmptyCriteria extends DecorableCriteria {
 
   public JSONObject getJSONRepresentation() throws JSONException {
     JSONObject res = new JSONObject();
     return res;
+  }
+
+  @Override
+  public void addDecorator(CriteriaDecorator decorator) {
+    throw new IOSAutomationException("NI");
+
   }
 
 }

@@ -20,7 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class AndCriteria implements Criteria {
+public class AndCriteria extends DecorableCriteria {
   private final List<Criteria> criterias;
 
   public AndCriteria(Criteria... criterias) {
@@ -43,4 +43,6 @@ public class AndCriteria implements Criteria {
     res.put("AND", and);
     return res;
   }
+
+
 }

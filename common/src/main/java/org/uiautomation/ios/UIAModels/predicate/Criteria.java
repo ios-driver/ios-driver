@@ -17,5 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public interface Criteria {
+  public void decorate();
+  public void addDecorator(CriteriaDecorator decorator);
   public JSONObject getJSONRepresentation() throws JSONException;
 }
