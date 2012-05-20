@@ -14,7 +14,6 @@
 package org.uiautomation.ios.UIAModels.predicate;
 
 import java.util.Map;
-import java.util.Properties;
 
 
 public class NameCriteria extends PropertyEqualCriteria {

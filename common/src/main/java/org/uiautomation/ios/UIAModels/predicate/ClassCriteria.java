@@ -13,7 +13,6 @@
  */
 package org.uiautomation.ios.UIAModels.predicate;
 
-import java.util.Properties;
 
 
 public class ClassCriteria extends PropertyEqualCriteria {
