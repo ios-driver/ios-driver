@@ -13,36 +13,21 @@
  */
 package org.uiautomation.ios.UIAModels.predicate;
 
-import java.util.Arrays;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+public class AndCriteria extends ComposedCriteria {
 
-public class AndCriteria extends DecorableCriteria {
-  private final List<Criteria> criterias;
 
   public AndCriteria(Criteria... criterias) {
-    this.criterias = Arrays.asList(criterias);
+    super(CompositionType.AND, criterias);
   }
 
   public AndCriteria(List<Criteria> criterias) {
-    this.criterias = criterias;
+    super(CompositionType.AND, criterias);
   }
 
 
 
-  public JSONObject getJSONRepresentation() throws JSONException {
-    JSONObject res = new JSONObject();
-
-    JSONArray and = new JSONArray();
-    for (Criteria c : criterias) {
-      and.put(c.getJSONRepresentation());
-    }
-    res.put("AND", and);
-    return res;
-  }
-
+ 
 
 }

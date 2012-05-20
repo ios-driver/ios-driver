@@ -3,7 +3,7 @@ package org.uiautomation.ios.UIAModels.predicate;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class DecorableCriteria implements Criteria {
+public abstract class DecorableCriteria extends AbstractCriteria {
 
   private List<CriteriaDecorator> decorators = new ArrayList<CriteriaDecorator>();
 

@@ -13,22 +13,10 @@
  */
 package org.uiautomation.ios.UIAModels.predicate;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 
-public class NotCriteria extends DecorableCriteria {
-
-  private final Criteria c;
+public class NotCriteria extends ComposedCriteria {
 
   public NotCriteria(Criteria c) {
-    this.c = c;
+    super(CompositionType.NOT, c);
   }
-
-  public JSONObject getJSONRepresentation() throws JSONException {
-    JSONObject res = new JSONObject();
-    res.put("NOT", c.getJSONRepresentation());
-    return res;
-  }
-
 }

@@ -220,7 +220,7 @@ UIAElement.prototype.matches = function(criteria) {
 			}
 			return false;
 		} else if(key === "NOT") {
-			return !this.matches(criteria[key]);
+			return !this.matches(criteria[key][0]);
 		} else {
 			throw new UIAutomationException("not a valid criteria, -> " + JSON.stringify(criteria), 32);
 		}

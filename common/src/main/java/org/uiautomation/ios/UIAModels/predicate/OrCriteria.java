@@ -13,37 +13,15 @@
  */
 package org.uiautomation.ios.UIAModels.predicate;
 
-import java.util.Arrays;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-public class OrCriteria extends DecorableCriteria {
-
-  private final List<Criteria> criterias;
-
+public class OrCriteria extends ComposedCriteria {
 
   public OrCriteria(Criteria... criterias) {
-    this.criterias = Arrays.asList(criterias);
+    super(CompositionType.OR, criterias);
   }
 
   public OrCriteria(List<Criteria> criterias) {
-    this.criterias = criterias;
+    super(CompositionType.OR, criterias);
   }
-
-
-
-  public JSONObject getJSONRepresentation() throws JSONException {
-    JSONObject res = new JSONObject();
-    JSONArray or = new JSONArray();
-    for (Criteria c : criterias) {
-      or.put(c.getJSONRepresentation());
-    }
-    res.put("OR", or);
-    return res;
-  }
-
-
 }

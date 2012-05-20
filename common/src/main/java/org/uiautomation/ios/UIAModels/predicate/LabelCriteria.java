@@ -16,7 +16,7 @@ package org.uiautomation.ios.UIAModels.predicate;
 
 public class LabelCriteria extends PropertyEqualCriteria {
   public LabelCriteria(String value) {
-    super("value", value);
+    super("label", value);
   }
 
   public LabelCriteria(String value, MatchingStrategy strategy) {
