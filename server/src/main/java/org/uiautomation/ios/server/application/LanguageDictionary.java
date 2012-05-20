@@ -300,6 +300,8 @@ public class LanguageDictionary {
     return true;
   }
 
+ 
+  
   public String translate(ContentResult res) {
     String languageTemplate = content.get(res.getKey());
     String format = languageTemplate.replaceAll("%@", "%s");
@@ -314,8 +316,9 @@ public class LanguageDictionary {
   public String getContentForKey(String key) {
     String value = content.get(key);
     return value;
-
   }
+  
+  
 
 
 }

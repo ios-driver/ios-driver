@@ -56,4 +56,26 @@ public class ServerSideL10N {
     NameCriteria c = factory.nameCriteria("rootViewNavTitle");
     Assert.assertEquals(c.getValue(), "山");
   }
+
+
+  @Test
+  public void nameWithParametersEN() {
+    ServerSideL10NFactory factory = create(Localizable.en);
+    NameCriteria c = factory.nameCriteria("footFormat");
+    Assert.assertEquals(c.getValue(), "(.*){1} feet");
+  }
+
+  @Test
+  public void nameWithParametersFR() {
+    ServerSideL10NFactory factory = create(Localizable.fr);
+    NameCriteria c = factory.nameCriteria("footFormat");
+    Assert.assertEquals(c.getValue(), "(.*){1} pieds");
+  }
+
+  @Test
+  public void nameWithParametersZH() {
+    ServerSideL10NFactory factory = create(Localizable.zh);
+    NameCriteria c = factory.nameCriteria("footFormat");
+    Assert.assertEquals(c.getValue(), "(.*){1}英尺");
+  }
 }

@@ -45,8 +45,8 @@ public class ServerSideL10NFactory {
         throw new InvalidCriteriaException("No entry for key " + oldValue + " in dictionary for "
             + app.getCurrentLanguage());
       }
-      // TODO freynaud make it regex
-      criteria.setValue(newValue);
+   
+      criteria.setValue(LanguageDictionary.getRegexPattern(newValue));
       criteria.setStrategy(MatchingStrategy.regex);
     }
 
