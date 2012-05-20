@@ -79,7 +79,15 @@ public class IOSServlet extends UIAScriptProxyBasedServlet {
     if (req.getGenericCommand() == WebDriverLikeCommand.NEW_SESSION) {
       response.setStatus(301);
       String session = resp.getSessionId();
-      response.setHeader("location", "/session/" + session);
+      
+      String scheme = request.getScheme();             // http
+      String serverName = request.getServerName();     // hostname.com
+      int serverPort = request.getServerPort();        // 80
+      String contextPath = request.getContextPath();   // /mywebapp
+      
+      // Reconstruct original requesting URL
+      String url = scheme+"://"+serverName+":"+serverPort+contextPath;
+      response.setHeader("location", url+"/session/" + session);
     } else {
       response.setStatus(200);
     }
