@@ -24,4 +24,5 @@ ide/.DS_Store
 ide/.project
 .project
 .settings
-.DS_Store
+.DS_Storeserver/uiamasterscript.js
+ide/uiamasterscript.js
