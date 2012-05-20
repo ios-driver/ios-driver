@@ -15,10 +15,19 @@ package org.uiautomation.ios.UIAModels.predicate;
 
 
 
-public class ClassCriteria extends PropertyEqualCriteria {
+public class TypeCriteria extends PropertyEqualCriteria {
 
 
-  public ClassCriteria(Class<?> classToMatch) {
+  /**
+   * for reflection
+   * 
+   * @param clazz
+   */
+  public TypeCriteria(String clazz, MatchingStrategy strategy) {
+    super("type", clazz, strategy);
+  }
+
+  public TypeCriteria(Class<?> classToMatch) {
     super("type", classToMatch.getSimpleName(), MatchingStrategy.exact);
   }
 

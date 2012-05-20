@@ -10,7 +10,7 @@ import org.uiautomation.ios.UIAModels.UIAElementArray;
 import org.uiautomation.ios.UIAModels.UIATableCell;
 import org.uiautomation.ios.UIAModels.UIATableView;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
-import org.uiautomation.ios.UIAModels.predicate.ClassCriteria;
+import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.EmptyCriteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
@@ -34,7 +34,7 @@ public class RemoteUIAElementTests extends RemoteTestsBase {
       String name = "Buttons, Various uses of UIButton";
       driver = getDriver();
       RemoteUIAWindow win = getMainWindow(driver);
-      Criteria c1 = new ClassCriteria(UIATableCell.class);
+      Criteria c1 = new TypeCriteria(UIATableCell.class);
       Criteria c2 = new NameCriteria(name);
       Criteria c = new AndCriteria(c1, c2);
       UIAElement element = win.findElement(c);
@@ -54,7 +54,7 @@ public class RemoteUIAElementTests extends RemoteTestsBase {
       String name = "I don't exist.";
       driver = getDriver();
       RemoteUIAWindow win = getMainWindow(driver);
-      Criteria c1 = new ClassCriteria(UIATableCell.class);
+      Criteria c1 = new TypeCriteria(UIATableCell.class);
       Criteria c2 = new NameCriteria(name);
       Criteria c = new AndCriteria(c1, c2);
       UIAElement element = win.findElement(c);
@@ -89,7 +89,7 @@ public class RemoteUIAElementTests extends RemoteTestsBase {
     try {
       driver = getDriver();
       RemoteUIAWindow win = getMainWindow(driver);
-      Criteria c = new ClassCriteria(UIATableCell.class);
+      Criteria c = new TypeCriteria(UIATableCell.class);
       UIAElementArray<UIAElement> elements = win.findElements(c);
       Assert.assertEquals(elements.size(), 12);
       for (UIAElement el : elements) {
@@ -110,7 +110,7 @@ public class RemoteUIAElementTests extends RemoteTestsBase {
       driver = getDriver();
       RemoteUIAWindow win = getMainWindow(driver);
 
-      Criteria c = new ClassCriteria(UIATableView.class);
+      Criteria c = new TypeCriteria(UIATableView.class);
       UIAElementArray<UIAElement> elements = win.findElements(c);
 
       UIATableView tableView = (UIATableView) elements.get(0);
@@ -153,7 +153,7 @@ public class RemoteUIAElementTests extends RemoteTestsBase {
       driver = getDriver();
       RemoteUIAWindow win = getMainWindow(driver);
       Criteria invisibleOne =
-          new AndCriteria(new NameCriteria("Buttons, Various uses of UIButton"), new ClassCriteria(
+          new AndCriteria(new NameCriteria("Buttons, Various uses of UIButton"), new TypeCriteria(
               UIATableCell.class));
       UIAElement element = win.findElement(invisibleOne);
 
@@ -178,7 +178,7 @@ public class RemoteUIAElementTests extends RemoteTestsBase {
 
       Criteria invisibleOne =
           new AndCriteria(new NameCriteria("Transitions, Shows UIViewAnimationTransitions"),
-              new ClassCriteria(UIATableCell.class));
+              new TypeCriteria(UIATableCell.class));
       UIAElement element = win.findElement(invisibleOne);
 
       element.tap();
@@ -198,7 +198,7 @@ public class RemoteUIAElementTests extends RemoteTestsBase {
       String name = "Buttons, Various uses of UIButton";
       driver = getDriver();
       RemoteUIAWindow win = getMainWindow(driver);
-      Criteria c1 = new ClassCriteria(UIATableCell.class);
+      Criteria c1 = new TypeCriteria(UIATableCell.class);
       Criteria c2 = new NameCriteria(name);
       Criteria c = new AndCriteria(c1, c2);
       UIAElement element = win.findElement(c);

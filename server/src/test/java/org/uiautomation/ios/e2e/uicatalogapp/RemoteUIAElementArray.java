@@ -6,7 +6,7 @@ import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIAElementArray;
 import org.uiautomation.ios.UIAModels.UIATableCell;
 import org.uiautomation.ios.UIAModels.UIATableView;
-import org.uiautomation.ios.UIAModels.predicate.ClassCriteria;
+import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAWindow;
@@ -21,7 +21,7 @@ public class RemoteUIAElementArray extends RemoteTestsBase {
       String name = "Buttons, Various uses of UIButton";
       driver = getDriver();
       RemoteUIAWindow win = getMainWindow(driver);
-      UIAElementArray<UIAElement> cells = win.findElements(new ClassCriteria(UIATableCell.class));
+      UIAElementArray<UIAElement> cells = win.findElements(new TypeCriteria(UIATableCell.class));
       UIATableCell cell = (UIATableCell) cells.getFirst(new NameCriteria(name));
       Assert.assertEquals(cell.getName(), name);
 
@@ -41,7 +41,7 @@ public class RemoteUIAElementArray extends RemoteTestsBase {
       driver = getDriver();
       RemoteUIAWindow win = getMainWindow(driver);
       UIAElementArray<UIAElement> elements =
-          win.findElements(new ClassCriteria(UIATableView.class));
+          win.findElements(new TypeCriteria(UIATableView.class));
 
       UIATableView tableView = (UIATableView) elements.get(0);
       UIAElementArray<UIATableCell> cells = tableView.getCells();
@@ -62,8 +62,8 @@ public class RemoteUIAElementArray extends RemoteTestsBase {
     try {
       driver = getDriver();
       RemoteUIAWindow win = getMainWindow(driver);
-      UIAElementArray<UIAElement> cells = win.findElements(new ClassCriteria(UIATableCell.class));
-      UIAElementArray<UIAElement> cells2 = cells.getAll(new ClassCriteria(UIATableCell.class));
+      UIAElementArray<UIAElement> cells = win.findElements(new TypeCriteria(UIATableCell.class));
+      UIAElementArray<UIAElement> cells2 = cells.getAll(new TypeCriteria(UIATableCell.class));
       Assert.assertEquals(cells.size(), cells2.size());
 
     } finally {
@@ -80,10 +80,10 @@ public class RemoteUIAElementArray extends RemoteTestsBase {
 
       driver = getDriver();
       RemoteUIAWindow win = getMainWindow(driver);
-      UIATableView tv = (UIATableView) win.findElement(new ClassCriteria(UIATableView.class));
+      UIATableView tv = (UIATableView) win.findElement(new TypeCriteria(UIATableView.class));
       UIAElementArray<UIATableCell> cells = tv.getCells();
 
-      UIAElementArray<UIATableCell> cells2 = cells.getAll(new ClassCriteria(UIATableCell.class));
+      UIAElementArray<UIATableCell> cells2 = cells.getAll(new TypeCriteria(UIATableCell.class));
       Assert.assertEquals(cells.size(), cells2.size());
 
     } finally {

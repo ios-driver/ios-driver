@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIATableCell;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
-import org.uiautomation.ios.UIAModels.predicate.ClassCriteria;
+import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
@@ -23,7 +23,7 @@ public class CriteriaTests extends RemoteTestsBase {
       String name = "Buttons, Various uses of UIButton";
       driver = getDriver();
       RemoteUIAWindow win = getMainWindow(driver);
-      Criteria c1 = new ClassCriteria(UIATableCell.class);
+      Criteria c1 = new TypeCriteria(UIATableCell.class);
       PropertyEqualCriteria c2 = new NameCriteria(name);
       Assert.assertEquals(c2.getMatchingStrategy(), MatchingStrategy.exact);
       Criteria c = new AndCriteria(c1, c2);
@@ -44,7 +44,7 @@ public class CriteriaTests extends RemoteTestsBase {
       String regex = "Buttons, V[a-z]* uses of UIButton";
       driver = getDriver();
       RemoteUIAWindow win = getMainWindow(driver);
-      Criteria c1 = new ClassCriteria(UIATableCell.class);
+      Criteria c1 = new TypeCriteria(UIATableCell.class);
       PropertyEqualCriteria c2 = new NameCriteria(regex,MatchingStrategy.regex);
       Criteria c = new AndCriteria(c1, c2);
       UIAElement element = win.findElement(c);

@@ -3,8 +3,10 @@ package org.uiautomation.ios.communication;
 import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.predicate.AbstractCriteria;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
+import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.UIAModels.predicate.LabelCriteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.NotCriteria;
@@ -14,7 +16,18 @@ import org.uiautomation.ios.UIAModels.predicate.ValueCriteria;
 public class CriteriaSerialization {
 
 
+  @Test
+  public void uiclass() throws Exception {
+    TypeCriteria name = new TypeCriteria(UIAElement.class);
+    JSONObject o = name.getJSONRepresentation();
 
+    TypeCriteria c = AbstractCriteria.parse(o);
+
+    Assert.assertEquals(name.getClass(), c.getClass());
+    Assert.assertEquals(name.getValue(), c.getValue());
+    Assert.assertEquals(name.getMatchingStrategy(), c.getMatchingStrategy());
+  }
+  
   @Test
   public void name() throws Exception {
     NameCriteria name = new NameCriteria("the name");
