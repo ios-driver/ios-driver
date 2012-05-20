@@ -13,12 +13,18 @@
  */
 package org.uiautomation.ios.UIAModels.predicate;
 
+import java.util.Map;
+
 public class LabelCriteria extends PropertyEqualCriteria {
   public LabelCriteria(String value) {
     super("value", value);
   }
 
   public LabelCriteria(String value, MatchingStrategy strategy) {
-    super("name", value, strategy);
+    super("label", value, strategy);
+  }
+
+  public LabelCriteria(String value, MatchingStrategy strategy, Map<String, String> content) {
+    super("label", value, strategy, content);
   }
 }

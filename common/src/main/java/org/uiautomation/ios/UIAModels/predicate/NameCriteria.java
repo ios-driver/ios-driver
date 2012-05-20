@@ -13,14 +13,21 @@
  */
 package org.uiautomation.ios.UIAModels.predicate;
 
+import java.util.Map;
+import java.util.Properties;
+
 
 public class NameCriteria extends PropertyEqualCriteria {
 
   public NameCriteria(String value) {
     super("name", value);
   }
-  
+
   public NameCriteria(String value, MatchingStrategy strategy) {
     super("name", value, strategy);
+  }
+
+  public NameCriteria(String value, MatchingStrategy strategy, Map<String, String> contentByKey) {
+    super("name", value, strategy,  contentByKey);
   }
 }

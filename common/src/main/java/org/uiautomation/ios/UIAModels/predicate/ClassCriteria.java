@@ -13,12 +13,14 @@
  */
 package org.uiautomation.ios.UIAModels.predicate;
 
+import java.util.Properties;
+
 
 public class ClassCriteria extends PropertyEqualCriteria {
 
 
   public ClassCriteria(Class<?> classToMatch) {
-    super("type",classToMatch.getSimpleName(),MatchingStrategy.exact);
+    super("type", classToMatch.getSimpleName(), MatchingStrategy.exact);
   }
 
 }

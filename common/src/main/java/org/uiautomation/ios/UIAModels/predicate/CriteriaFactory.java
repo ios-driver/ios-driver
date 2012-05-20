@@ -15,16 +15,24 @@ package org.uiautomation.ios.UIAModels.predicate;
 
 import java.util.Map;
 
-public class ValueCriteria extends PropertyEqualCriteria {
+public class CriteriaFactory {
 
-  public ValueCriteria(String value) {
-    super("value", value);
+  private Map<String, String> clientSideL10n;
+
+  public void addClientSideContent(Map<String, String> contentByKey) {
+    this.clientSideL10n = contentByKey;
   }
 
-  public ValueCriteria(String value, MatchingStrategy strategy) {
-    super("name", value, strategy);
+  public NameCriteria nameCriteria(String expected, MatchingStrategy startegy) {
+    return new NameCriteria(expected, startegy, clientSideL10n);
   }
-  public ValueCriteria(String value, MatchingStrategy strategy, Map<String, String> content) {
-    super("value", value, strategy, content);
+
+  public LabelCriteria labelCriteria(String expected, MatchingStrategy startegy) {
+    return new LabelCriteria(expected, startegy, clientSideL10n);
   }
+
+  public ValueCriteria valueCriteria(String expected, MatchingStrategy startegy) {
+    return new ValueCriteria(expected, startegy, clientSideL10n);
+  }
+
 }

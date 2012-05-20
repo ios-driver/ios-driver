@@ -29,7 +29,6 @@ public class AndCriteria implements Criteria {
 
   public AndCriteria(List<Criteria> criterias) {
     this.criterias = criterias;
-
   }
 
 
