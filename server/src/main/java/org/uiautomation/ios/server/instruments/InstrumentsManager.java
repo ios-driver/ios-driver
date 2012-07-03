@@ -116,6 +116,8 @@ public class InstrumentsManager {
   private List<String> createInstrumentCommand() throws IOSAutomationSetupException {
     List<String> command = new ArrayList<String>();
     command.add("instruments");
+    //command.add("-w");
+    //command.add("d1ce6333af579e27d166349dc8a1989503ba5b4f");
     command.add("-t");
     command.add(template.getAbsolutePath());
     command.add(application.getAbsolutePath());
