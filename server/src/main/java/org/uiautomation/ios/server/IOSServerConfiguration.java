@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import org.uiautomation.ios.server.servlet.CustomMessage;
 
 import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameter;
 
 /*
  * Class IOSServerConfiguration Configures with the given configurable arguments: -port <port> #
@@ -39,8 +40,31 @@ public class IOSServerConfiguration {
 
   private final String APPS_FILE = "/supportedApps.txt";
 
-  private int port = 4444;
-  private String host = "localhost";
+  @Parameter(description = "port the server will listen on.", names = "-port")
+  private int port = 5555;
+
+  @Parameter(description = "if specified, will send a registration request to the given url. Example : http://localhost:4444/grid/register", names = "-hub")
+  private String registrationURL = null;
+
+  @Parameter(description = "location of the application under test.Absolute path expected.", names = {
+      "-app", "-aut"}, required = true)
+  private String absoluteAppPath;
+
+  @Parameter(description = "host of the node.Needs to be specified, as guessing can be wrong complex ntw configs", names = "-host")
+  private String serverHost;
+
+
+  public String getRegistrationURL() {
+    return registrationURL;
+  }
+
+  public String getAbsoluteAppPath() {
+    return absoluteAppPath;
+  }
+
+  public String serverHost() {
+    return serverHost;
+  }
 
   /**
    * Returns a IOSServerConfiguration instance of the server configuration, from the given args
@@ -67,7 +91,7 @@ public class IOSServerConfiguration {
   }
 
   public void setHost(String host) {
-    this.host = host;
+    this.serverHost = host;
   }
 
   /**
@@ -141,6 +165,6 @@ public class IOSServerConfiguration {
   }
 
   public String getHost() {
-    return this.host;
+    return this.serverHost;
   }
 }
