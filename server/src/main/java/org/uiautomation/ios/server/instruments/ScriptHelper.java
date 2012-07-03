@@ -26,15 +26,18 @@ import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
 
 public class ScriptHelper {
 
-  private final String main = "/wip.js";
-  private final String json = "/json2.js";
-  private final String lib1 = "/UIAutomation.js";
-  private final String lib2 = "/UIAelement.js";
+  private final String main = "wip.js";
+  private final String json = "json2.js";
+  private final String lib1 = "UIAutomation.js";
+  private final String lib2 = "UIAElement.js";
 
   public ScriptHelper() {}
 
   private String load(String resource) throws IOException {
-    InputStream is = ScriptHelper.class.getResourceAsStream(resource);
+    InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
+    if (is ==null){
+      throw new IOSAutomationSetupException("cannot load : "+resource);
+    }
     StringWriter writer = new StringWriter();
     IOUtils.copy(is, writer, "UTF-8");
     String content = writer.toString();
