@@ -12,7 +12,7 @@ public class IDETests {
 
   public static void main(String[] args) throws Exception {
     server = new IOSServer(config);
-    server.init(config);
+    server.init();
     server.start();
     System.out.println("started");
   }
