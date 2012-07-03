@@ -21,10 +21,13 @@ import javax.servlet.Servlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
+import org.uiautomation.ios.server.grid.RegistrationRequest;
 import org.uiautomation.ios.server.instruments.SessionsManager;
 import org.uiautomation.ios.server.servlet.IOSServlet;
 import org.uiautomation.ios.server.servlet.UIAScriptProxyRegister;
 import org.uiautomation.ios.server.servlet.UIAScriptServlet;
+
+import com.beust.jcommander.JCommander;
 
 public class IOSServer {
 
@@ -35,16 +38,27 @@ public class IOSServer {
   private final Server server;
   public static int port;
   public static final boolean debugMode = true;
-  private IOSServerConfiguration config;
+  private IOSServerConfiguration options;
 
 
   public static void main(String[] args) throws Exception {
-    IOSServerConfiguration command_line_configuration = IOSServerConfiguration.create(args);
-    IOSServer server = new IOSServer(command_line_configuration);
+    IOSServerConfiguration options = new IOSServerConfiguration();
+    new JCommander(options, args);
+
+    IOSServer server = new IOSServer(options);
     server.start();
+    if (options.getRegistrationURL() != null) {
+      RegistrationRequest request =
+          new RegistrationRequest(options.getRegistrationURL(), options.getHost(),
+              options.getPort(), options.getAbsoluteAppPath());
+      request.registerToHub();
+    }
+
+
+
   }
 
-  public void init(IOSServerConfiguration config) throws IOSAutomationSetupException {
+  public void init() throws IOSAutomationSetupException {
     ServletContextHandler servletContextHandler =
         new ServletContextHandler(server, "/wd/hub", true, false);
     servletContextHandler.addServlet(UIAScriptProxyRegister.class, "/uiascriptproxy/register/*");
@@ -57,7 +71,7 @@ public class IOSServer {
     }
 
     servletContextHandler.setAttribute(SESSIONS_MGR, new SessionsManager());
-    servletContextHandler.setAttribute(SERVER_CONFIG, this.config);
+    servletContextHandler.setAttribute(SERVER_CONFIG, this.options);
     Runtime.getRuntime().addShutdownHook(new Thread() {
       public void run() {
         try {
@@ -71,7 +85,7 @@ public class IOSServer {
   }
 
   public void start() throws Exception {
-    init(config);
+    init();
     if (!server.isRunning()) {
       server.start();
     }
@@ -82,10 +96,10 @@ public class IOSServer {
     server.stop();
   }
 
-  public IOSServer(IOSServerConfiguration config) throws IOSAutomationSetupException {
-    this.config = config;
-    this.port = config.getPort();
-    server = new Server(new InetSocketAddress("0.0.0.0", config.getPort()));
+  public IOSServer(IOSServerConfiguration options) throws IOSAutomationSetupException {
+    this.options = options;
+    this.port = options.getPort();
+    server = new Server(new InetSocketAddress("0.0.0.0", options.getPort()));
   }
 
   private Class<Servlet> getIDEServlet() {
