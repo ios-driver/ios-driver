@@ -20,60 +20,60 @@ import org.uiautomation.ios.exceptions.NoSuchElementException;
 
 public class UIAKeyboardTests extends UICatalogTestsBase {
 
-	@Test(expectedExceptions = NoSuchElementException.class)
-	public void throwsIfKeyboardNotPresent() {
-		RemoteUIADriver driver = null;
-		try {
-			driver = getDriver();
-			RemoteUIATarget target = driver.getLocalTarget();
-			RemoteUIAApplication app = target.getFrontMostApp();
-			app.getKeyboard();
+  @Test(expectedExceptions = NoSuchElementException.class)
+  public void throwsIfKeyboardNotPresent() {
+    RemoteUIADriver driver = null;
+    try {
+      driver = getDriver();
+      RemoteUIATarget target = driver.getLocalTarget();
+      RemoteUIAApplication app = target.getFrontMostApp();
+      app.getKeyboard();
 
-		} finally {
-			if (driver != null) {
-				driver.quit();
-			}
-		}
-	}
+    } finally {
+      if (driver != null) {
+        driver.quit();
+      }
+    }
+  }
 
-	private UIATextField getTextField(RemoteUIAWindow win) {
-		String name = "TextFields, Uses of UITextField";
-		Criteria c1 = new TypeCriteria(UIATableCell.class);
-		Criteria c2 = new NameCriteria(name);
-		Criteria c = new AndCriteria(c1, c2);
-		UIAElement element = win.findElement(c);
-		element.tap();
-		Criteria fieldC = new AndCriteria(new TypeCriteria(UIATextField.class),
-				new NameCriteria("Normal"));
-		UIATextField textfield = (UIATextField) win.findElement(fieldC);
-		return textfield;
-	}
+  private UIATextField getTextField(RemoteUIAWindow win) {
+    String name = "TextFields, Uses of UITextField";
+    Criteria c1 = new TypeCriteria(UIATableCell.class);
+    Criteria c2 = new NameCriteria(name);
+    Criteria c = new AndCriteria(c1, c2);
+    UIAElement element = win.findElement(c);
+    element.tap();
+    Criteria fieldC =
+        new AndCriteria(new TypeCriteria(UIATextField.class), new NameCriteria("Normal"));
+    UIATextField textfield = (UIATextField) win.findElement(fieldC);
+    return textfield;
+  }
 
-	@Test
-	public void canFindKeyboard() {
-		RemoteUIADriver driver = null;
-		try {
+  @Test
+  public void canFindKeyboard() {
+    RemoteUIADriver driver = null;
+    try {
 
-			driver = getDriver();
-			RemoteUIATarget target = driver.getLocalTarget();
-			RemoteUIAApplication app = target.getFrontMostApp();
-			RemoteUIAWindow win = app.getMainWindow();
+      driver = getDriver();
+      RemoteUIATarget target = driver.getLocalTarget();
+      RemoteUIAApplication app = target.getFrontMostApp();
+      RemoteUIAWindow win = app.getMainWindow();
 
-			UIATextField textfield = getTextField(win);
-			textfield.tap();
+      UIATextField textfield = getTextField(win);
+      textfield.tap();
 
-			UIAKeyboard keyboard = app.getKeyboard();
+      UIAKeyboard keyboard = app.getKeyboard();
 
-			UIAElementArray<UIAKey> keys = app.getKeyboard().getKeys();
-			Assert.assertEquals(keys.size(), 28);
-			// GB, should be a qwerty
-			Assert.assertEquals(keys.get(0).getName(), "Q");
+      UIAElementArray<UIAKey> keys = app.getKeyboard().getKeys();
+      Assert.assertEquals(keys.size(), 28);
+      // GB, should be a qwerty
+      Assert.assertEquals(keys.get(0).getName(), "Q");
 
-		} finally {
-			if (driver != null) {
-				driver.quit();
-			}
-		}
-	}
+    } finally {
+      if (driver != null) {
+        driver.quit();
+      }
+    }
+  }
 
 }
