@@ -46,6 +46,9 @@ public enum CommandMapping {
   // UIAApplication
   MAIN_WINDOW(DefaultUIAScriptHandler.class,".mainWindow()"),
   WINDOWS(DefaultUIAScriptHandler.class,".windows()"),
+  KEYBOARD(DefaultUIAScriptHandler.class,".keyboard2()"), 
+  KEYBOARD_KEYS(DefaultUIAScriptHandler.class,".keys()"), 
+  KEYBOARD_BUTTONS (DefaultUIAScriptHandler.class,".buttons()"),
    
     // UIAHost
    PERFORM_TASK_WITH_PATH_ARGUMENTS_TIMEOUT(null,null),
