@@ -26,3 +26,6 @@ ide/.project
 .settings
 .DS_Storeserver/uiamasterscript.js
 ide/uiamasterscript.js
+server/uiamasterscript.js
+server/ss.png
+instruments*
