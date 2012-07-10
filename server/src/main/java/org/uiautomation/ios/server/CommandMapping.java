@@ -31,7 +31,7 @@ public enum CommandMapping {
   LOCAL_TARGET(LocalTarget.class,".localTarget()"),
   HOST(null,null),
   TREE(DefaultUIAScriptHandler.class,".tree(:lastScreenshotPath)"),
-  MODEL(DefaultUIAScriptHandler.class,".tree()"),
+  MODEL(DefaultUIAScriptHandler.class,".model()"),
   TARGET_RECT(DefaultUIAScriptHandler.class,".rect()"),
   TARGET_TAP(CustomUIAScriptHandler.class,"complex..."),
   TARGET_NAME(DefaultUIAScriptHandler.class,".name()"),
