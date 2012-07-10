@@ -1,3 +1,12 @@
+UIAApplication.prototype.keyboard2 = function(){
+	var keyboard = this.keyboard();
+	if (keyboard.toString() == "[object UIAElementNil]"){
+		throw new UIAutomationException("cannot find keyboard", 7);
+	} else {
+		return keyboard;
+	}
+}
+
 UIAElementArray.prototype.type = function() {
 	return "UIAElementArray";
 }
@@ -43,6 +52,9 @@ UIAElement.prototype.type = function() {
 	return this.toString().replace('[object ', '').replace(']', '');
 }
 
+// TODO freynaud check why this is necessary. key extends elements.
+UIAKey.prototype.type = UIAElement.prototype.type;
+
 UIAElement.prototype.tap2 = function() {
 	if(this.isVisible()) {
 		var rect = this.rect();
@@ -66,6 +78,7 @@ UIAElement.prototype.reference = function() {
 	}
 	return this.id;
 }
+UIAKey.prototype.reference = UIAElement.prototype.reference;
 /**
  * can't find a way to detect stale object. CheckIsValid doesn't do it properly.
  * Trying to scroll to the element seems like a valid approximation.

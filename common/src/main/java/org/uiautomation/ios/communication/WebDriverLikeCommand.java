@@ -18,6 +18,8 @@ import org.uiautomation.ios.UIAModels.UIAApplication;
 import org.uiautomation.ios.UIAModels.UIAButton;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIAElementArray;
+import org.uiautomation.ios.UIAModels.UIAKey;
+import org.uiautomation.ios.UIAModels.UIAKeyboard;
 import org.uiautomation.ios.UIAModels.UIAPoint;
 import org.uiautomation.ios.UIAModels.UIARect;
 import org.uiautomation.ios.UIAModels.UIATarget;
@@ -69,6 +71,11 @@ public enum WebDriverLikeCommand {
   LINKS("GET" , "/session/:sessionId/uiaElement/:reference/links",UIAElementArray.class),
   NAVIGATION_BAR("GET" , "/session/:sessionId/uiaElement/:reference/navigationBar",UIAElement.class),
   NAVIGATION_BARS("GET" , "/session/:sessionId/uiaElement/:reference/navigationBars",UIAElementArray.class),
+  
+  //UIAKeyboard
+  KEYBOARD("GET" , "/session/:sessionId/uiaApplication/:reference/keyboard",UIAKeyboard.class),
+  KEYBOARD_BUTTONS("GET","/session/:sessionId/uiaKeyboard/:reference/buttons",UIAElementArray.class),
+  KEYBOARD_KEYS("GET","/session/:sessionId/uiaKeyboard/:reference/keys",UIAElementArray.class),
   
   IS_VISIBLE("GET" , "/session/:sessionId/uiaElement/:reference/isVisible",Boolean.class),
   IS_STALE("GET" , "/session/:sessionId/uiaElement/:reference/isStale",Boolean.class),

@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import org.uiautomation.ios.UIAModels.UIAApplication;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIAElementArray;
+import org.uiautomation.ios.UIAModels.UIAKeyboard;
 import org.uiautomation.ios.UIAModels.UIARect;
 import org.uiautomation.ios.UIAModels.UIATarget;
 import org.uiautomation.ios.UIAModels.UIAWindow;
@@ -65,6 +66,7 @@ public class DefaultUIAScriptHandler extends UIAScriptHandler {
     if (type == UIAWindow.class) return true;
     if (type == UIAElement.class) return true;
     if (type == UIAElementArray.class) return true;
+    if (type == UIAKeyboard.class)return true; 
     return false;
   }
 

@@ -87,11 +87,14 @@ var UIAutomation = {
 				res.ref = value.reference();
 				res.type = value.type();
 				res.length = value.length;
+				log("array : "+  JSON.stringify(value));
+				log("[3] : "+  value[3].name());
 			} else if (value && value.type) {
 				res.ref = value.reference();
 				res.type = value.type();
 			} else {
 				res = value;
+				log("value: "+value);
 			}
 			result.value = res;
 		} catch (err) {
