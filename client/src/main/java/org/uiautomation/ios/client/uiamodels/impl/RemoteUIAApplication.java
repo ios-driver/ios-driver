@@ -16,6 +16,7 @@ package org.uiautomation.ios.client.uiamodels.impl;
 import org.json.JSONObject;
 import org.uiautomation.ios.UIAModels.UIAApplication;
 import org.uiautomation.ios.UIAModels.UIAElementArray;
+import org.uiautomation.ios.UIAModels.UIAKeyboard;
 import org.uiautomation.ios.UIAModels.UIAWindow;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 
@@ -34,6 +35,11 @@ public class RemoteUIAApplication extends RemoteObject implements UIAApplication
   public RemoteUIAWindow getMainWindow() {
     return (RemoteUIAWindow)getRemoteObject(WebDriverLikeCommand.MAIN_WINDOW);
   }
+
+@Override
+public UIAKeyboard getKeyboard() {
+	return (UIAKeyboard) getRemoteObject(WebDriverLikeCommand.KEYBOARD);
+}
 
 
 
