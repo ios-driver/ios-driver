@@ -53,7 +53,7 @@ public abstract class AbstractCriteria implements Criteria {
   }
 
   private static final int KEYS_IN_COMPOSED_CRITERIA = 1;
-  private static final int KEYS_IN_PROPERTY_CRITERIA = 3;
+  private static final int KEYS_IN_PROPERTY_CRITERIA = 4;
 
 
   private static ComposedCriteria buildComposedCriteria(JSONObject serialized,
@@ -83,10 +83,12 @@ public abstract class AbstractCriteria implements Criteria {
   private static PropertyEqualCriteria buildPropertyBaseCriteria(JSONObject serialized,
       Class<? extends PropertyEqualCriteria> clazz, CriteriaDecorator decorator) throws Exception {
     String expected = serialized.getString("expected");
-    String strategy = serialized.getString("strategy");
+    String matching = serialized.getString("matching");
+    String l10n = serialized.getString("l10n");
+    
 
-    Object[] args = new Object[] {expected, L10NStrategy.valueOf(strategy)};
-    Class<?>[] argsClass = new Class[] {String.class, L10NStrategy.class};
+    Object[] args = new Object[] {expected, L10NStrategy.valueOf(l10n),MatchingStrategy.valueOf(matching)};
+    Class<?>[] argsClass = new Class[] {String.class, L10NStrategy.class,MatchingStrategy.class};
 
     Constructor<?> c = clazz.getConstructor(argsClass);
     PropertyEqualCriteria crit = (PropertyEqualCriteria) c.newInstance(args);

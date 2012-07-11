@@ -240,10 +240,10 @@ UIAElement.prototype.matches = function(criteria) {
 		}
 	}
 	// property match
-	else if(keys.length == 3) {
+	else if(keys.length == 4) {
 		var method = criteria['method'];
 		var expected = criteria['expected'];
-		var strategy = criteria['strategy'];
+		var strategy = criteria['matching'];
 		var current = this[method]();
 
 		switch (strategy) {

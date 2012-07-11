@@ -20,34 +20,7 @@ public abstract class PropertyEqualCriteria extends DecorableCriteria {
 
   private final String propertyName;
   private String value;
-  public L10NStrategy getL10nstrategy() {
-    return l10nstrategy;
-  }
-
-
-
-  public void setL10nstrategy(L10NStrategy l10nstrategy) {
-    this.l10nstrategy = l10nstrategy;
-  }
-
-
-
-  public MatchingStrategy getMatchingStrategy() {
-    return matchingStrategy;
-  }
-
-
-
-  public void setMatchingStrategy(MatchingStrategy matchingStrategy) {
-    this.matchingStrategy = matchingStrategy;
-  }
-
-
-
-  public String getPropertyName() {
-    return propertyName;
-  }
-
+  
 
 
   private L10NStrategy l10nstrategy;
@@ -80,6 +53,33 @@ public abstract class PropertyEqualCriteria extends DecorableCriteria {
     return res;
   }
 
+  public L10NStrategy getL10nstrategy() {
+    return l10nstrategy;
+  }
+
+
+
+  public void setL10nstrategy(L10NStrategy l10nstrategy) {
+    this.l10nstrategy = l10nstrategy;
+  }
+
+
+
+  public MatchingStrategy getMatchingStrategy() {
+    return matchingStrategy;
+  }
+
+
+
+  public void setMatchingStrategy(MatchingStrategy matchingStrategy) {
+    this.matchingStrategy = matchingStrategy;
+  }
+
+
+
+  public String getPropertyName() {
+    return propertyName;
+  }
 
 
   public String getValue() {
