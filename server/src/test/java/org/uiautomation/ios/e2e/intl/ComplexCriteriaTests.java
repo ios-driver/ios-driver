@@ -39,7 +39,8 @@ public class ComplexCriteriaTests extends IntlMountainTestsBase {
       UIAElement element = win.findElement(c1);
       element.tap();
 
-      NameCriteria criteria = new NameCriteria("sentenceFormat", L10NStrategy.serverL10N,MatchingStrategy.regex);
+      NameCriteria criteria =
+          new NameCriteria("sentenceFormat", L10NStrategy.serverL10N, MatchingStrategy.regex);
       UIAElement text = win.findElement(criteria);
       String actual = text.getName();
       Assert.assertEquals(actual, expectedContent);
@@ -49,4 +50,29 @@ public class ComplexCriteriaTests extends IntlMountainTestsBase {
       }
     }
   }
+
+  @Test(dataProvider = "intlMountain")
+  public void containsServerSide(Localizable l, String expectedContent) {
+    RemoteUIADriver driver = null;
+    try {
+
+      driver = getDriver(l);
+      RemoteUIAWindow win = getMainWindow(driver);
+      Criteria c1 = new TypeCriteria(UIATableCell.class);
+      UIAElement element = win.findElement(c1);
+      element.tap();
+
+      NameCriteria criteria =
+          new NameCriteria("meterFormat", L10NStrategy.serverL10N, MatchingStrategy.contains);
+      UIAElement text = win.findElement(criteria);
+      String actual = text.getName();
+      Assert.assertEquals(actual, expectedContent);
+    } finally {
+      if (driver != null) {
+        driver.quit();
+      }
+    }
+  }
+
+
 }
