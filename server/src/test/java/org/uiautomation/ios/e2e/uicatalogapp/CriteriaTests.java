@@ -7,7 +7,7 @@ import org.uiautomation.ios.UIAModels.UIATableCell;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
-import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
+import org.uiautomation.ios.UIAModels.predicate.L10NStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.PropertyEqualCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
@@ -25,7 +25,7 @@ public class CriteriaTests extends UICatalogTestsBase {
       RemoteUIAWindow win = getMainWindow(driver);
       Criteria c1 = new TypeCriteria(UIATableCell.class);
       PropertyEqualCriteria c2 = new NameCriteria(name);
-      Assert.assertEquals(c2.getMatchingStrategy(), MatchingStrategy.exact);
+      Assert.assertEquals(c2.getMatchingStrategy(), L10NStrategy.exact);
       Criteria c = new AndCriteria(c1, c2);
       UIAElement element = win.findElement(c);
       Assert.assertEquals(element.getName(), name);
@@ -45,7 +45,7 @@ public class CriteriaTests extends UICatalogTestsBase {
       driver = getDriver();
       RemoteUIAWindow win = getMainWindow(driver);
       Criteria c1 = new TypeCriteria(UIATableCell.class);
-      PropertyEqualCriteria c2 = new NameCriteria(regex,MatchingStrategy.regex);
+      PropertyEqualCriteria c2 = new NameCriteria(regex,L10NStrategy.regex);
       Criteria c = new AndCriteria(c1, c2);
       UIAElement element = win.findElement(c);
       Assert.assertEquals(element.getName(), name);

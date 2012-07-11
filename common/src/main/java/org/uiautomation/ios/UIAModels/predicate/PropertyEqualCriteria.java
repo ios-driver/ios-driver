@@ -20,20 +20,53 @@ public abstract class PropertyEqualCriteria extends DecorableCriteria {
 
   private final String propertyName;
   private String value;
-  private MatchingStrategy strategy;
-
-  
-
-  public PropertyEqualCriteria(String propertyName, String value) {
-    this(propertyName, value, MatchingStrategy.exact);
+  public L10NStrategy getL10nstrategy() {
+    return l10nstrategy;
   }
 
 
 
-  public PropertyEqualCriteria(String propertyName, String value, MatchingStrategy strategy) {
+  public void setL10nstrategy(L10NStrategy l10nstrategy) {
+    this.l10nstrategy = l10nstrategy;
+  }
+
+
+
+  public MatchingStrategy getMatchingStrategy() {
+    return matchingStrategy;
+  }
+
+
+
+  public void setMatchingStrategy(MatchingStrategy matchingStrategy) {
+    this.matchingStrategy = matchingStrategy;
+  }
+
+
+
+  public String getPropertyName() {
+    return propertyName;
+  }
+
+
+
+  private L10NStrategy l10nstrategy;
+  private MatchingStrategy matchingStrategy;
+
+
+
+  public PropertyEqualCriteria(String propertyName, String value) {
+    this(propertyName, value, L10NStrategy.none, MatchingStrategy.exact);
+  }
+
+
+
+  public PropertyEqualCriteria(String propertyName, String value, L10NStrategy l10nStrategy,
+      MatchingStrategy matchingStrategy) {
     this.propertyName = propertyName;
     this.value = value;
-    this.strategy = strategy;
+    this.l10nstrategy = l10nStrategy;
+    this.matchingStrategy = matchingStrategy;
   }
 
 
@@ -42,32 +75,24 @@ public abstract class PropertyEqualCriteria extends DecorableCriteria {
     JSONObject res = new JSONObject();
     res.put("method", propertyName);
     res.put("expected", value);
-    res.put("strategy", strategy);
+    res.put("l10n", l10nstrategy);
+    res.put("matching", matchingStrategy);
     return res;
   }
 
 
- 
 
   public String getValue() {
     return value;
   }
 
-  public MatchingStrategy getStrategy() {
-    return strategy;
-  }
-
-  public void setStrategy(MatchingStrategy strategy) {
-    this.strategy = strategy;
-  }
+  
 
   public void setValue(String value) {
     this.value = value;
   }
 
-  public MatchingStrategy getMatchingStrategy() {
-    return strategy;
-  }
+ 
 
 
 }

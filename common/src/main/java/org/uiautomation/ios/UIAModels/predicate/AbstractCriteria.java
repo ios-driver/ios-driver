@@ -85,8 +85,8 @@ public abstract class AbstractCriteria implements Criteria {
     String expected = serialized.getString("expected");
     String strategy = serialized.getString("strategy");
 
-    Object[] args = new Object[] {expected, MatchingStrategy.valueOf(strategy)};
-    Class<?>[] argsClass = new Class[] {String.class, MatchingStrategy.class};
+    Object[] args = new Object[] {expected, L10NStrategy.valueOf(strategy)};
+    Class<?>[] argsClass = new Class[] {String.class, L10NStrategy.class};
 
     Constructor<?> c = clazz.getConstructor(argsClass);
     PropertyEqualCriteria crit = (PropertyEqualCriteria) c.newInstance(args);

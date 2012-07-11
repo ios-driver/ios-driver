@@ -14,14 +14,6 @@
 package org.uiautomation.ios.UIAModels.predicate;
 
 
-
-public class NameCriteria extends PropertyEqualCriteria {
-
-  public NameCriteria(String value) {
-    super("name", value);
-  }
-
-  public NameCriteria(String value, L10NStrategy l10nStrategy, MatchingStrategy matchingStrategy) {
-    super("name", value, l10nStrategy,matchingStrategy);
-  }
+public enum L10NStrategy {
+  none, clientL10N, serverL10N;
 }

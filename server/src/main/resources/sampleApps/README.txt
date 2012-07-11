@@ -4,3 +4,4 @@ UICatalog  xcodebuild -target "UICatalog"  -sdk iphonesimulator5.0 ARCHS='i386' 
 
 sources :
 https://developer.apple.com/library/ios/#samplecode/UICatalog/Introduction/Intro.html
+ 

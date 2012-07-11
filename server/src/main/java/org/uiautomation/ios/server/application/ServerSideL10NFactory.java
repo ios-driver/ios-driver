@@ -1,6 +1,6 @@
 package org.uiautomation.ios.server.application;
 
-import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
+import org.uiautomation.ios.UIAModels.predicate.L10NStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 
 public class ServerSideL10NFactory {
@@ -12,7 +12,7 @@ public class ServerSideL10NFactory {
   }
 
   public NameCriteria nameCriteria(String serverKey) {
-    NameCriteria criteria = new NameCriteria(serverKey, MatchingStrategy.serverL10N);
+    NameCriteria criteria = new NameCriteria(serverKey, L10NStrategy.serverL10N);
     criteria.addDecorator(decorator);
     criteria.decorate();
     return criteria;

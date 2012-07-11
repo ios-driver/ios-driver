@@ -13,20 +13,21 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAWindow;
 import org.uiautomation.ios.server.application.Localizable;
 
-public class ServerSideL10NTests extends IntlMountainTestsBase {
+public class ComplexCriteriaTests extends IntlMountainTestsBase {
 
 
 
-  @DataProvider(name = "intlMountain",parallel=false)
+  @DataProvider(name = "intlMountain", parallel = false)
   public Object[][] createDataPerLocale() {
     return new Object[][] {
-        {Localizable.en, "Mountain 1 was first climbed on 29 May 1953 and has a height of 8,848 meters"},
-        {Localizable.fr,"Bien que 8,848 mètres de haut, Montagne 1 aient été montés la première fois 29 May 1953."}, 
-        {Localizable.zh, "山 1 是8,848米高。它第一次攀登了在29 May 1953。"}
-        };
+        {Localizable.en,
+            "Mountain 1 was first climbed on 29 May 1953 and has a height of 8,848 meters"},
+        {Localizable.fr,
+            "Bien que 8,848 mètres de haut, Montagne 1 aient été montés la première fois 29 May 1953."},
+        {Localizable.zh, "山 1 是8,848米高。它第一次攀登了在29 May 1953。"}};
   }
 
-  @Test(dataProvider="intlMountain")
+  @Test(dataProvider = "intlMountain")
   public void selectAndValidateServerSideL10NedContent(Localizable l, String expectedContent) {
     RemoteUIADriver driver = null;
     try {
@@ -47,6 +48,4 @@ public class ServerSideL10NTests extends IntlMountainTestsBase {
       }
     }
   }
-
-
 }

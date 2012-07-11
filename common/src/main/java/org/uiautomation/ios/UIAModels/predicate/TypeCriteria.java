@@ -23,12 +23,12 @@ public class TypeCriteria extends PropertyEqualCriteria {
    * 
    * @param clazz
    */
-  public TypeCriteria(String clazz, MatchingStrategy strategy) {
-    super("type", clazz, strategy);
+  public TypeCriteria(String clazz, L10NStrategy l10nStrategy, MatchingStrategy matchingStrategy) {
+    super("type", clazz, l10nStrategy, matchingStrategy);
   }
 
   public TypeCriteria(Class<?> classToMatch) {
-    super("type", classToMatch.getSimpleName(), MatchingStrategy.exact);
+    super("type", classToMatch.getSimpleName(), L10NStrategy.none, MatchingStrategy.exact);
   }
 
 }

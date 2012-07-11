@@ -2,7 +2,7 @@ package org.uiautomation.ios.server.application;
 
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.CriteriaDecorator;
-import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
+import org.uiautomation.ios.UIAModels.predicate.L10NStrategy;
 import org.uiautomation.ios.UIAModels.predicate.PropertyEqualCriteria;
 import org.uiautomation.ios.exceptions.InvalidCriteriaException;
 
@@ -29,14 +29,14 @@ public class ServerSideL10NDecorator implements CriteriaDecorator {
     }
 
     criteria.setValue(LanguageDictionary.getRegexPattern(newValue));
-    criteria.setStrategy(MatchingStrategy.regex);
+    criteria.setStrategy(L10NStrategy.regex);
   }
 
 
   private boolean isElligible(Criteria c) {
     if (c instanceof PropertyEqualCriteria) {
       PropertyEqualCriteria crit = (PropertyEqualCriteria) c;
-      return crit.getMatchingStrategy() == MatchingStrategy.serverL10N;
+      return crit.getMatchingStrategy() == L10NStrategy.serverL10N;
     }
     return false;
   }

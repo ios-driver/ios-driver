@@ -18,6 +18,7 @@ import java.util.Map;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.CriteriaDecorator;
 import org.uiautomation.ios.UIAModels.predicate.LabelCriteria;
+import org.uiautomation.ios.UIAModels.predicate.L10NStrategy;
 import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.PropertyEqualCriteria;
@@ -32,23 +33,26 @@ public class ClientSideCriteriaFactory {
     decorator = new ClientSideL10NDecorator(contentByKey);
   }
 
-  public NameCriteria nameCriteria(String expected, MatchingStrategy startegy) {
-    NameCriteria c = new NameCriteria(expected, startegy);
+  public NameCriteria nameCriteria(String expected, L10NStrategy l10nStrategy,
+      MatchingStrategy matchingStrategy) {
+    NameCriteria c = new NameCriteria(expected, l10nStrategy, matchingStrategy);
     c.addDecorator(decorator);
     c.decorate();
     return c;
 
   }
 
-  public LabelCriteria labelCriteria(String expected, MatchingStrategy startegy) {
-    LabelCriteria c = new LabelCriteria(expected, startegy);
+  public LabelCriteria labelCriteria(String expected, L10NStrategy l10nStrategy,
+      MatchingStrategy matchingStrategy) {
+    LabelCriteria c = new LabelCriteria(expected, l10nStrategy, matchingStrategy);
     c.addDecorator(decorator);
     c.decorate();
     return c;
   }
 
-  public ValueCriteria valueCriteria(String expected, MatchingStrategy startegy) {
-    ValueCriteria c = new ValueCriteria(expected, startegy);
+  public ValueCriteria valueCriteria(String expected, L10NStrategy l10nStrategy,
+      MatchingStrategy matchingStrategy) {
+    ValueCriteria c = new ValueCriteria(expected, l10nStrategy, matchingStrategy);
     c.addDecorator(decorator);
     c.decorate();
     return c;
@@ -70,7 +74,7 @@ public class ClientSideCriteriaFactory {
 
         String newValue = localizeString(criteria.getValue());
         criteria.setValue(newValue);
-        criteria.setStrategy(MatchingStrategy.exact);
+        criteria.setL10nstrategy(L10NStrategy.none);
       }
     }
 
@@ -91,8 +95,8 @@ public class ClientSideCriteriaFactory {
   private boolean requiresDecoration(Criteria c) {
     if (c instanceof PropertyEqualCriteria) {
       PropertyEqualCriteria crit = (PropertyEqualCriteria) c;
-      MatchingStrategy strategy = crit.getMatchingStrategy();
-      if (strategy == MatchingStrategy.clientL10N) {
+      L10NStrategy strategy = crit.getL10nstrategy();
+      if (strategy == L10NStrategy.clientL10N) {
         return true;
       }
     }

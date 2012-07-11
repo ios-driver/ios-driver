@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
+import org.uiautomation.ios.UIAModels.predicate.L10NStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.ClientSideCriteriaFactory;
 
@@ -40,8 +40,8 @@ public class ClientSideCriteriaTests {
 
   @Test
   public void clienSideMapping() throws JSONException {
-    NameCriteria c = factory.nameCriteria("abc", MatchingStrategy.clientL10N);
-    Assert.assertEquals(c.getMatchingStrategy(), MatchingStrategy.exact);
+    NameCriteria c = factory.nameCriteria("abc", L10NStrategy.clientL10N);
+    Assert.assertEquals(c.getMatchingStrategy(), L10NStrategy.exact);
     Assert.assertEquals(c.getValue(), "abc localisé.");
   }
 
