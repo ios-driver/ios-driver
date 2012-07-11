@@ -15,24 +15,34 @@ package org.uiautomation.ios.client.uiamodels.impl;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.uiautomation.ios.UIAModels.UIATextField;
+import org.uiautomation.ios.UIAModels.UIATextView;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 
-public class RemoteUIATextField extends RemoteUIAElement implements UIATextField {
+public class RemoteUIATextView extends RemoteUIAElement implements UIATextView {
 
-  public RemoteUIATextField(RemoteUIADriver driver, String reference) {
+  public RemoteUIATextView(RemoteUIADriver driver, String reference) {
     super(driver, reference);
   }
 
+  @Override
   public void setValue(String value) {
     JSONObject payload = new JSONObject();
     try {
+      value = value.replaceAll("\\\\", "\\\\\\\\");
+      value = value.replaceAll("\\n", "\\\\n");
+      value = value.replaceAll("\\t", "\\\\t");
       payload.put("value", "'" + value + "'");
     } catch (JSONException e) {
       throw new IOSAutomationException(e);
     }
     execute(WebDriverLikeCommand.SET_VALUE, payload);
+  }
+  
+  public static void main(String[] args) {
+    String value = "\\";
+    value = value.replaceAll("\\\\", "\\\\\\\\");
+    System.out.println(value);
   }
 
 }
