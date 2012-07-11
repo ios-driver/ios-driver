@@ -16,6 +16,8 @@ package org.uiautomation.ios.client.uiamodels.impl;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.UIAModels.UIATextField;
+import org.uiautomation.ios.UIAModels.predicate.Criteria;
+import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 
@@ -28,6 +30,7 @@ public class RemoteUIATextField extends RemoteUIAElement implements UIATextField
   public void setValue(String value) {
     JSONObject payload = new JSONObject();
     try {
+      Criteria c = new NameCriteria(value);
       payload.put("value", "'" + value + "'");
     } catch (JSONException e) {
       throw new IOSAutomationException(e);

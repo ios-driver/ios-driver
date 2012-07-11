@@ -11,6 +11,7 @@ UIAElementArray.prototype.type = function() {
 	return "UIAElementArray";
 }
 
+
 UIAElementArray.prototype.isStale = function() {
 	return false;
 }

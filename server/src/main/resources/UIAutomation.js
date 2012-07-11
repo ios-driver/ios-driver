@@ -92,7 +92,6 @@ var UIAutomation = {
 				res.type = value.type();
 			} else {
 				res = value;
-				log("value: "+value);
 			}
 			result.value = res;
 		} catch (err) {

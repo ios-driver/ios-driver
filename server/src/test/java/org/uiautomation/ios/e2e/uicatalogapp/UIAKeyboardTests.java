@@ -75,5 +75,35 @@ public class UIAKeyboardTests extends UICatalogTestsBase {
       }
     }
   }
+  
+  @Test
+  public void typeBasic() {
+    RemoteUIADriver driver = null;
+    try {
 
+      driver = getDriver();
+      RemoteUIATarget target = driver.getLocalTarget();
+      RemoteUIAApplication app = target.getFrontMostApp();
+      RemoteUIAWindow win = app.getMainWindow();
+
+      UIATextField textfield = getTextField(win);
+      textfield.setValue("François");
+      textfield.tap();
+
+      UIAKeyboard keyboard = app.getKeyboard();
+      
+      keyboard.typeString("F");
+      keyboard.typeString("r");
+      keyboard.typeString("ç");
+      
+
+     
+      System.err.println(textfield.getValue());
+
+    } finally {
+      if (driver != null) {
+        driver.quit();
+      }
+    }
+  }
 }

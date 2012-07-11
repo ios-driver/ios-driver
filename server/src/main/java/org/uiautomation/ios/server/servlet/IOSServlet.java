@@ -16,11 +16,13 @@ package org.uiautomation.ios.server.servlet;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.uiautomation.ios.communication.FailedWebDriverLikeResponse;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
@@ -102,14 +104,9 @@ public class IOSServlet extends UIAScriptProxyBasedServlet {
     String path = request.getPathInfo();
     String json = null;
     if (request.getInputStream() != null) {
-      BufferedReader rd = new BufferedReader(new InputStreamReader(request.getInputStream()));
-      StringBuilder s = new StringBuilder();
-      String line;
-      while ((line = rd.readLine()) != null) {
-        s.append(line);
-      }
-      rd.close();
-      json = s.toString();
+      StringWriter w = new StringWriter();
+      IOUtils.copy(request.getInputStream(), w, "UTF-8");
+      json = w.toString();
     }
     JSONObject o = new JSONObject();
     if (json != null && !json.isEmpty()) {

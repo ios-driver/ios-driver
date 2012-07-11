@@ -49,6 +49,7 @@ public enum CommandMapping {
   KEYBOARD(DefaultUIAScriptHandler.class,".keyboard2()"), 
   KEYBOARD_KEYS(DefaultUIAScriptHandler.class,".keys()"), 
   KEYBOARD_BUTTONS (DefaultUIAScriptHandler.class,".buttons()"),
+  TYPE_STRING(DefaultUIAScriptHandler.class,".typeString(:string)"),
    
     // UIAHost
    PERFORM_TASK_WITH_PATH_ARGUMENTS_TIMEOUT(null,null),

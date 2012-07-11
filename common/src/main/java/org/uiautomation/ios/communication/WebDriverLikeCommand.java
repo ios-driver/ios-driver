@@ -76,6 +76,7 @@ public enum WebDriverLikeCommand {
   KEYBOARD("GET" , "/session/:sessionId/uiaApplication/:reference/keyboard",UIAKeyboard.class),
   KEYBOARD_BUTTONS("GET","/session/:sessionId/uiaKeyboard/:reference/buttons",UIAElementArray.class),
   KEYBOARD_KEYS("GET","/session/:sessionId/uiaKeyboard/:reference/keys",UIAElementArray.class),
+  TYPE_STRING("POST","/session/:sessionId/uiaKeyboard/:reference",Void.class),
   
   IS_VISIBLE("GET" , "/session/:sessionId/uiaElement/:reference/isVisible",Boolean.class),
   IS_STALE("GET" , "/session/:sessionId/uiaElement/:reference/isStale",Boolean.class),

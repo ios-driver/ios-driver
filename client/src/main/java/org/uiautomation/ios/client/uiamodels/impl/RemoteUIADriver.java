@@ -15,6 +15,8 @@ package org.uiautomation.ios.client.uiamodels.impl;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
 import java.util.Map;
 
 import org.apache.http.HttpHost;
@@ -131,7 +133,8 @@ public class RemoteUIADriver implements UIADriver {
       BasicHttpEntityEnclosingRequest r =
           new BasicHttpEntityEnclosingRequest(request.getMethod(), url);
       if (request.hasPayload()) {
-        r.setEntity(new StringEntity(request.getPayload().toString()));
+        //String normalizedOriginalText = Normalizer.normalize(request.getPayload().toString(), Form.NFC);
+        r.setEntity(new StringEntity(request.getPayload().toString(),"UTF-8"));
       }
 
       HttpHost h = new HttpHost(host, port);
