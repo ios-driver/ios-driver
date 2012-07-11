@@ -84,7 +84,8 @@ public class ServerSideL10NDecorator implements CriteriaDecorator {
       if (crit.getMatchingStrategy() == MatchingStrategy.regex) {
         return false;
       }
-
+    } else {
+      return false;
     }
     return true;
   }
