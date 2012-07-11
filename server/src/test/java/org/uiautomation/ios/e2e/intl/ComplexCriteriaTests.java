@@ -7,6 +7,7 @@ import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIATableCell;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.L10NStrategy;
+import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
@@ -38,7 +39,7 @@ public class ComplexCriteriaTests extends IntlMountainTestsBase {
       UIAElement element = win.findElement(c1);
       element.tap();
 
-      NameCriteria criteria = new NameCriteria("sentenceFormat", L10NStrategy.serverL10N);
+      NameCriteria criteria = new NameCriteria("sentenceFormat", L10NStrategy.serverL10N,MatchingStrategy.regex);
       UIAElement text = win.findElement(criteria);
       String actual = text.getName();
       Assert.assertEquals(actual, expectedContent);
