@@ -29,3 +29,4 @@ ide/uiamasterscript.js
 server/uiamasterscript.js
 server/ss.png
 instruments*
+server/src/test/resources/fr.json
