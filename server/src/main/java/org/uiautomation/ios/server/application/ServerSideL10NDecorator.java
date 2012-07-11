@@ -29,14 +29,14 @@ public class ServerSideL10NDecorator implements CriteriaDecorator {
     }
 
     criteria.setValue(LanguageDictionary.getRegexPattern(newValue));
-    criteria.setStrategy(L10NStrategy.regex);
+    criteria.setL10nstrategy(L10NStrategy.none);
   }
 
 
   private boolean isElligible(Criteria c) {
     if (c instanceof PropertyEqualCriteria) {
       PropertyEqualCriteria crit = (PropertyEqualCriteria) c;
-      return crit.getMatchingStrategy() == L10NStrategy.serverL10N;
+      return crit.getL10nstrategy() == L10NStrategy.serverL10N;
     }
     return false;
   }

@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIATableCell;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
+import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.L10NStrategy;
@@ -25,7 +26,7 @@ public class CriteriaTests extends UICatalogTestsBase {
       RemoteUIAWindow win = getMainWindow(driver);
       Criteria c1 = new TypeCriteria(UIATableCell.class);
       PropertyEqualCriteria c2 = new NameCriteria(name);
-      Assert.assertEquals(c2.getMatchingStrategy(), L10NStrategy.exact);
+      Assert.assertEquals(c2.getMatchingStrategy(), MatchingStrategy.exact);
       Criteria c = new AndCriteria(c1, c2);
       UIAElement element = win.findElement(c);
       Assert.assertEquals(element.getName(), name);
@@ -35,17 +36,17 @@ public class CriteriaTests extends UICatalogTestsBase {
       }
     }
   }
-  
+
   @Test
   public void regexMatch() {
     RemoteUIADriver driver = null;
     try {
-      String name =  "Buttons, Various uses of UIButton";
+      String name = "Buttons, Various uses of UIButton";
       String regex = "Buttons, V[a-z]* uses of UIButton";
       driver = getDriver();
       RemoteUIAWindow win = getMainWindow(driver);
       Criteria c1 = new TypeCriteria(UIATableCell.class);
-      PropertyEqualCriteria c2 = new NameCriteria(regex,L10NStrategy.regex);
+      PropertyEqualCriteria c2 = new NameCriteria(regex, MatchingStrategy.regex);
       Criteria c = new AndCriteria(c1, c2);
       UIAElement element = win.findElement(c);
       Assert.assertEquals(element.getName(), name);
@@ -55,6 +56,6 @@ public class CriteriaTests extends UICatalogTestsBase {
       }
     }
   }
-  
-  
+
+
 }
