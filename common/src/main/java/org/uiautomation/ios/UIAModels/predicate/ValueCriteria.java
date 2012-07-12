@@ -23,5 +23,13 @@ public class ValueCriteria extends PropertyEqualCriteria {
   public ValueCriteria(String value, L10NStrategy l10nStrategy, MatchingStrategy matchingStrategy) {
     super("value", value, l10nStrategy,matchingStrategy);
   }
+  
+  public ValueCriteria(String value, MatchingStrategy matchingStrategy) {
+    super("value", value, L10NStrategy.none, matchingStrategy);
+  }
+
+  public ValueCriteria(String value, L10NStrategy l10nStrategy) {
+    super("value", value, l10nStrategy, MatchingStrategy.exact);
+  }
 
 }
