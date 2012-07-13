@@ -44,14 +44,14 @@ public class AttachController extends BaseController {
   public View handle(HttpServletRequest req) throws IOSAutomationException, Exception {
     String session = req.getParameter("sessionId");
     // TODO freynaud
-    URL u = new URL("http://localhost:5555/wd/hub");
+    URL u = new URL("http://localhost:4444/wd/hub");
     RemoteUIADriver d = new RemoteUIADriver(u, new Session(session));
     getModel().setDriver(d);
 
     IOSCapabilities cap = d.getCapabilities();
 
     Localizable current = Localizable.valueOf(cap.getLanguage());
-    IOSApplication app = new IOSApplication(current, SampleApps.getUICatalogApp());
+    IOSApplication app = new IOSApplication(current, cap.getApplication());
     app.loadAllContent();
     getModel().setAUT(app);
     getModel().refresh();

@@ -44,11 +44,12 @@ public class ScriptHelper {
     return content;
   }
 
-  private String generateScriptContent(int port) throws IOException {
+  private String generateScriptContent(int port,String aut) throws IOException {
     StringBuilder scriptContent = new StringBuilder();
 
     String c = load(lib1);
     c = c.replace("$PORT", String.format("%d", port));
+    c = c.replace("$AUT", String.format("%s", aut));
 
     scriptContent.append(load(json));
     scriptContent.append(c);
@@ -70,10 +71,10 @@ public class ScriptHelper {
 
   }
 
-  public File getScript(int port) throws IOSAutomationSetupException {
+  public File getScript(int port,String aut) throws IOSAutomationSetupException {
 
     try {
-      String content = generateScriptContent(port);
+      String content = generateScriptContent(port,aut);
       return createTmpScript(content);
     } catch (Exception e) {
       throw new IOSAutomationSetupException("cannot generate the script for instrument.", e);

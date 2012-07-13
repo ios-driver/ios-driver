@@ -123,7 +123,7 @@ public class InstrumentsManager {
     command.add(application.getAbsolutePath());
     command.add("-e");
     command.add("UIASCRIPT");
-    File uiscript = new ScriptHelper().getScript(IOSServer.port);
+    File uiscript = new ScriptHelper().getScript(IOSServer.port,application.getAbsolutePath());
 
     command.add(uiscript.getAbsolutePath());
     command.add("-e");

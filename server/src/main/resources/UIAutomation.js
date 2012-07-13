@@ -128,6 +128,7 @@ var UIAutomation = {
 		result.name = target.name();
 		result.systemName = target.systemName();
 		result.sdkVersion = target.systemVersion();
+		result.aut = "$AUT";
 		result.rect = target.rect();
 		return JSON.stringify(result);
 	},

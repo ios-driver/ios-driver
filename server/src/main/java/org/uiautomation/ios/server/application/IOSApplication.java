@@ -106,10 +106,10 @@ public class IOSApplication {
         throw new IOSAutomationException("error loading content for l10n", e);
       }
 
-     
+
     }
     dictionaries.addAll(dicts.values());
-    
+
   }
 
 
@@ -172,5 +172,10 @@ public class IOSApplication {
 
   public Localizable getCurrentLanguage() {
     return currentLanguage;
+  }
+
+
+  public File getApplicationPath() {
+    return app;
   }
 }
