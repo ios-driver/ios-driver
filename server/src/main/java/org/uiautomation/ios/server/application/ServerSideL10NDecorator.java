@@ -39,6 +39,7 @@ public class ServerSideL10NDecorator implements CriteriaDecorator {
 
     criteria.setValue(LanguageDictionary.getRegexPattern(newValue));
     criteria.setL10nstrategy(L10NStrategy.none);
+    criteria.setMatchingStrategy(MatchingStrategy.regex);
   }
 
   private void decorateMatching(Criteria c) {
