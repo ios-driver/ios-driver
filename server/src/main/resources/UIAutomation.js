@@ -24,26 +24,27 @@ var Cache = function() {
 
 	this.get = function(reference) {
 		var res = this.storage[reference];
-		if (!res) {
-			throw new UIAutomationException("can't find " + reference
-					+ " in cache.");
+		// target and app aren't stale.
+		if(!res) {
+			throw new UIAutomationException("can't find " + reference + " in cache.");
+			// window an apps aren't stale ?
+		} else if(res.type && (res.type() == "UIAWindow" || res.type() == "UIAApplication")) {
+			return res;
 			// on arrays, stale doesn't make sense.
-		}else if (res.isStale && res.isStale()){
-			throw new UIAutomationException("elements ref:" + reference
-					+ " is stale",10);
-		}else {
+		} else if(res.isStale && res.isStale()) {
+			throw new UIAutomationException("elements ref:" + reference + " is stale", 10);
+		} else {
 			return res;
 		}
-		
+
 	};
 
 	this.clear = function() {
 		this.storage = {};
 		this.storage[0] = UIATarget.localTarget().frontMostApp().mainWindow();
 	};
-	
+
 	this.clear();
-	
 
 }
 /**
@@ -58,36 +59,30 @@ var UIAutomation = {
 
 	register : function() {
 		log("registering to " + this.REGISTER);
-		var result = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [
-				this.REGISTER, "-d", "params" ], 90);
-		if (result.exitCode != 0) {
-			throw new UIAutomationException("error registering. exit code : "
-					+ result.exitCode);
+		var result = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.REGISTER, "-d", "params"], 90);
+		if(result.exitCode != 0) {
+			throw new UIAutomationException("error registering. exit code : " + result.exitCode);
 		}
 	},
-
 	getNextCommand : function() {
-		var result = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL,
-				[ this.COMMAND ], 3600);
-		if (result.exitCode != 0) {
-			throw new UIAutomationException(
-					"error getting new command. exit code : " + result.exitCode);
+		var result = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.COMMAND], 3600);
+		if(result.exitCode != 0) {
+			throw new UIAutomationException("error getting new command. exit code : " + result.exitCode);
 		}
 		log("command : " + result.stdout);
 		return result.stdout;
 	},
-
 	createJSONResponse : function(sessionId, status, value) {
 		var result = {};
 		result.sessionId = sessionId;
 		result.status = status;
 		var res = {};
 		try {
-			if (value && value.type && (value.type() === "UIAElementArray")) {
+			if(value && value.type && (value.type() === "UIAElementArray")) {
 				res.ref = value.reference();
 				res.type = value.type();
 				res.length = value.length;
-			} else if (value && value.type) {
+			} else if(value && value.type) {
 				res.ref = value.reference();
 				res.type = value.type();
 			} else {
@@ -101,18 +96,14 @@ var UIAutomation = {
 		var json = JSON.stringify(result);
 		return json;
 	},
-
 	sendResponse : function(jsonResponse) {
 		log("response : " + jsonResponse);
-		var result = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [
-				this.COMMAND, "--data-binary", jsonResponse ], 90);
-		if (result.exitCode != 0) {
-			throw new UIAutomationException(
-					"error sending response. exit code : " + result.exitCode);
+		var result = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.COMMAND, "--data-binary", jsonResponse], 90);
+		if(result.exitCode != 0) {
+			throw new UIAutomationException("error sending response. exit code : " + result.exitCode);
 		}
 		return result;
 	},
-
 	getCapabilities : function() {
 		var result = new Object();
 		var target = UIATarget.localTarget();
@@ -132,14 +123,12 @@ var UIAutomation = {
 		result.rect = target.rect();
 		return JSON.stringify(result);
 	},
-
 	commandLoop : function() {
-		while (true) {
+		while(true) {
 			try {
 				var request = this.getNextCommand();
-				if (request === "stop") {
-					var response = this
-							.createJSONResponse("sessionId", 0, "ok");
+				if(request === "stop") {
+					var response = this.createJSONResponse("sessionId", 0, "ok");
 					this.sendResponse(response);
 					return;
 				} else {
@@ -148,8 +137,7 @@ var UIAutomation = {
 						response = eval(request);
 					} catch (err) {
 						log("err : " + JSON.stringify(err));
-						response = this.createJSONResponse("sessionId",
-								err.status, err);
+						response = this.createJSONResponse("sessionId", err.status, err);
 					}
 					this.sendResponse(response);
 				}
