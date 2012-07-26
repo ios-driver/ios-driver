@@ -29,6 +29,7 @@ public interface UIAElement {
   public UIAElement getParent();
 
   public UIAElement findElement(Criteria c) throws NoSuchElementException;
+  public <T> T findElement(Class<T> type,Criteria c) throws NoSuchElementException;
 
   public UIAElementArray<UIAElement> findElements(Criteria c);
 
