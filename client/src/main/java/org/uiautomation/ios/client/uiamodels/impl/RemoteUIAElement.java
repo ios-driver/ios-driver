@@ -19,7 +19,9 @@ import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIAElementArray;
 import org.uiautomation.ios.UIAModels.UIAPoint;
 import org.uiautomation.ios.UIAModels.UIARect;
+import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
+import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.exceptions.NoSuchElementException;
@@ -56,6 +58,14 @@ public class RemoteUIAElement extends RemoteObject implements UIAElement {
 
   // TODO freynaud
   private final long timeout = 30000;
+
+  @Override
+  public <T> T findElement(Class<T> type, Criteria c) throws NoSuchElementException {
+    Criteria newOne = new AndCriteria(new TypeCriteria(type), c);
+    return (T) findElement(newOne);
+  }
+
+
 
   @Override
   public UIAElement findElement(Criteria c) throws NoSuchElementException {
@@ -156,9 +166,9 @@ public class RemoteUIAElement extends RemoteObject implements UIAElement {
       Boolean stale = getObject(WebDriverLikeCommand.IS_STALE);
       return !stale;
     } catch (StaleReferenceException e) {
-     return false;
+      return false;
     }
-    
+
   }
 
   @Override
@@ -188,6 +198,7 @@ public class RemoteUIAElement extends RemoteObject implements UIAElement {
     builder.append(",label:" + getLabel());
     return builder.toString();
   }
+
 
 
 }
