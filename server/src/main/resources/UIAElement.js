@@ -1,6 +1,6 @@
-UIAApplication.prototype.keyboard2 = function(){
+UIAApplication.prototype.keyboard2 = function() {
 	var keyboard = this.keyboard();
-	if (keyboard.toString() == "[object UIAElementNil]"){
+	if(keyboard.toString() == "[object UIAElementNil]") {
 		throw new UIAutomationException("cannot find keyboard", 7);
 	} else {
 		return keyboard;
@@ -10,7 +10,6 @@ UIAApplication.prototype.keyboard2 = function(){
 UIAElementArray.prototype.type = function() {
 	return "UIAElementArray";
 }
-
 
 UIAElementArray.prototype.isStale = function() {
 	return false;
@@ -22,8 +21,6 @@ UIAElementArray.prototype.reference = function() {
 	}
 	return this.id;
 }
-
-
 
 UIAElementArray.prototype.elements2 = function(depth, criteria) {
 	var all = this.toArray();
@@ -54,7 +51,6 @@ UIAElementArray.prototype.element = function(depth, criteria) {
 UIAElement.prototype.type = function() {
 	return this.toString().replace('[object ', '').replace(']', '');
 }
-
 // TODO freynaud check why this is necessary. key extends elements.
 UIAKey.prototype.type = UIAElement.prototype.type;
 
@@ -64,8 +60,8 @@ UIAElement.prototype.tap2 = function() {
 		var x = rect.origin.x + (rect.size.width / 2);
 		var y = rect.origin.y + (rect.size.height / 2);
 		var point = {
-			'x' : Math.floor( x ),
-			'y' : Math.floor( y )
+			'x' : Math.floor(x),
+			'y' : Math.floor(y)
 		};
 		UIATarget.localTarget().tap(point);
 	} else {
@@ -101,8 +97,20 @@ UIAElement.prototype.isStale = function() {
 	}
 	return false;
 }
+/*UIAElement.prototype.element = function(depth, criteria) {
+ var all = this.getChildren(depth);
+ var res = new Array();
 
-UIAElement.prototype.element = function(depth, criteria) {
+ for(var i = 0; i < all.length; i++) {
+ var element = all[i];
+ if(element.matches(criteria)) {
+ return element;
+ }
+ }
+ throw new UIAutomationException("cannot find element for criteria :" + JSON.stringify(criteria), 7);
+ }*/
+
+UIAElement.prototype.element_or = function(depth, criteria) {
 	var all = this.getChildren(depth);
 	var res = new Array();
 
@@ -113,6 +121,26 @@ UIAElement.prototype.element = function(depth, criteria) {
 		}
 	}
 	throw new UIAutomationException("cannot find element for criteria :" + JSON.stringify(criteria), 7);
+}
+
+UIAElement.prototype.element = function(depth, criteria) {
+	// if a criteria contains a OR, first run the search on the whole tree on each criteria in the OR so that A or B returns A, and B or A returns B.
+	var keys = getKeys(criteria);
+	
+	if(keys.length == 1 && keys[0] === "OR") {
+		var array = criteria[keys[0]];
+		for(var c in array) {
+			var orCriteria = array[c];
+			try {
+				return this.element(depth, orCriteria);
+			} catch (err) {
+				// nothing found
+			}
+		}
+		throw new UIAutomationException("cannot find element for criteria :" + JSON.stringify(criteria), 7);
+	} else {
+		return this.element_or(depth, criteria);
+	}
 }
 
 UIAElement.prototype.elements2 = function(depth, criteria) {
@@ -252,7 +280,7 @@ UIAElement.prototype.matches = function(criteria) {
 			case 'exact':
 				return current == expected;
 			case 'regex':
-				var regex = new RegExp(expected,'g');
+				var regex = new RegExp(expected, 'g');
 				return regex.test(current);
 				break;
 			default:
