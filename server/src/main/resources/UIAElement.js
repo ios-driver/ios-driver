@@ -23,6 +23,8 @@ UIAElementArray.prototype.reference = function() {
 	return this.id;
 }
 
+
+
 UIAElementArray.prototype.elements2 = function(depth, criteria) {
 	var all = this.toArray();
 	var res = new Array();
@@ -34,7 +36,7 @@ UIAElementArray.prototype.elements2 = function(depth, criteria) {
 	}
 	return new MyUIAElementArray(res);
 }
-
+// TODO freynaud convert to the new OR strategy.
 UIAElementArray.prototype.element = function(depth, criteria) {
 	var all = this.toArray();
 	for(var i = 0; i < all.length; i++) {
