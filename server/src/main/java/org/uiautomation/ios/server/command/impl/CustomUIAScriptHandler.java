@@ -27,9 +27,15 @@ public class CustomUIAScriptHandler extends UIAScriptHandler {
   private static final String capabilities =
       "var json = UIAutomation.getCapabilities() ;UIAutomation.createJSONResponse(':sessionId',0,json)";
 
-
   private static final String targetTap =
       "UIATarget.localTarget().tap({x::x,y::y});getJsonResult(':sessionId',0,'')";
+  
+  private static final String getTimeout =
+      "var json = UIAutomation.getCapabilities() ;UIAutomation.createJSONResponse(':sessionId',0,json)";
+
+  private static final String setTimeout =
+      "UIAutomation.setTimeout(:timeout);UIAutomation.createJSONResponse(':sessionId',0,'')";
+
 
   public CustomUIAScriptHandler(SessionsManager instruments, WebDriverLikeRequest request)
       throws Exception {
@@ -43,6 +49,9 @@ public class CustomUIAScriptHandler extends UIAScriptHandler {
     switch (r.getGenericCommand()) {
       case GET_SESSION:
         s = capabilities.replace(":sessionId", instruments.getCurrentSessionId());
+        return s;
+      case SET_TIMEOUT:
+        s = setTimeout.replace(":timeout", String.format("%d", r.getPayload().getInt("timeout")));
         return s;
       case TARGET_TAP:
         JSONObject payload = getRequest().getPayload();
