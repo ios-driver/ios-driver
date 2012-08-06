@@ -31,7 +31,7 @@ public class CustomUIAScriptHandler extends UIAScriptHandler {
       "UIATarget.localTarget().tap({x::x,y::y});getJsonResult(':sessionId',0,'')";
   
   private static final String getTimeout =
-      "var json = UIAutomation.getCapabilities() ;UIAutomation.createJSONResponse(':sessionId',0,json)";
+      "var timeout = UIAutomation.TIMEOUT_IN_SEC;UIAutomation.createJSONResponse(':sessionId',0,timeout)";
 
   private static final String setTimeout =
       "UIAutomation.setTimeout(:timeout);UIAutomation.createJSONResponse(':sessionId',0,'')";
@@ -53,6 +53,8 @@ public class CustomUIAScriptHandler extends UIAScriptHandler {
       case SET_TIMEOUT:
         s = setTimeout.replace(":timeout", String.format("%d", r.getPayload().getInt("timeout")));
         return s;
+      case GET_TIMEOUT:
+        return getTimeout;
       case TARGET_TAP:
         JSONObject payload = getRequest().getPayload();
         s =
