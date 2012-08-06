@@ -33,6 +33,8 @@ public enum WebDriverLikeCommand {
   NEW_SESSION("POST","/session",String.class),
   GET_SESSION("GET", "/session/:sessionId",JSONObject.class),
   DELETE_SESSION("DELETE","/session/:sessionId",null),
+  SET_TIMEOUT("POST", "/session/:sessionId/timeout",Void.class),
+  GET_TIMEOUT("GET", "/session/:sessionId/timeout",Integer.class),
   
   // UIATarget
   LOCAL_TARGET("GET","/session/:sessionId/localTarget",UIATarget.class),
@@ -119,6 +121,7 @@ public enum WebDriverLikeCommand {
   TABLE_GROUPS("GET","/session/:sessionId/uiaElement/:reference/getGroups",UIAElementArray.class), 
   TABLE_CELLS("GET","/session/:sessionId/uiaElement/:reference/getCells",UIAElementArray.class),
   TABLE_VISIBLE_CELLS("GET","/session/:sessionId/uiaElement/:reference/getVisibleCells",UIAElementArray.class);
+ 
   
   
   

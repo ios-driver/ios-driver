@@ -26,6 +26,8 @@ public enum CommandMapping {
   NEW_SESSION(NewSession.class,null),
   GET_SESSION(CustomUIAScriptHandler.class,"complex..."),
   DELETE_SESSION(StopSession.class,null),
+  SET_TIMEOUT(CustomUIAScriptHandler.class,""),
+  GET_TIMEOUT(CustomUIAScriptHandler.class,""),
   
   // UIATarget
   LOCAL_TARGET(LocalTarget.class,".localTarget()"),
