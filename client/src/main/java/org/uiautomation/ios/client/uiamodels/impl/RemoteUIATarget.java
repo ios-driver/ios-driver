@@ -128,17 +128,11 @@ public class RemoteUIATarget extends RemoteObject implements UIATarget {
     JSONObject to = new JSONObject();
     try {
       to.put("timeout", timeoutInSeconds);
-      WebDriverLikeCommand command = WebDriverLikeCommand.SET_TIMEOUT;
-      Path p = new Path(command).withSession(getSessionId());
-
-      WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, to);
-      getDriver().execute(request);
+      execute(WebDriverLikeCommand.SET_TIMEOUT, to);
     } catch (JSONException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-
-
   }
 
 

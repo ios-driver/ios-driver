@@ -18,7 +18,6 @@ import org.uiautomation.ios.UIAModels.UIAApplication;
 import org.uiautomation.ios.UIAModels.UIAButton;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIAElementArray;
-import org.uiautomation.ios.UIAModels.UIAKey;
 import org.uiautomation.ios.UIAModels.UIAKeyboard;
 import org.uiautomation.ios.UIAModels.UIAPoint;
 import org.uiautomation.ios.UIAModels.UIARect;
@@ -33,8 +32,8 @@ public enum WebDriverLikeCommand {
   NEW_SESSION("POST","/session",String.class),
   GET_SESSION("GET", "/session/:sessionId",JSONObject.class),
   DELETE_SESSION("DELETE","/session/:sessionId",null),
-  SET_TIMEOUT("POST", "/session/:sessionId/timeout",Void.class),
-  GET_TIMEOUT("GET", "/session/:sessionId/timeout",Integer.class),
+  SET_TIMEOUT("POST", "/session/:sessionId/target/:reference/timeout",Void.class),
+  GET_TIMEOUT("GET", "/session/:sessionId/target/:reference/timeout",Integer.class),
   
   // UIATarget
   LOCAL_TARGET("GET","/session/:sessionId/localTarget",UIATarget.class),
@@ -122,9 +121,6 @@ public enum WebDriverLikeCommand {
   TABLE_CELLS("GET","/session/:sessionId/uiaElement/:reference/getCells",UIAElementArray.class),
   TABLE_VISIBLE_CELLS("GET","/session/:sessionId/uiaElement/:reference/getVisibleCells",UIAElementArray.class);
  
-  
-  
-  
   
   private final String method;
   private final String path;
