@@ -29,7 +29,7 @@ public class CustomUIAScriptHandler extends UIAScriptHandler {
 
   private static final String targetTap =
       "UIATarget.localTarget().tap({x::x,y::y});getJsonResult(':sessionId',0,'')";
-  
+
   private static final String getTimeout =
       "var timeout = UIAutomation.TIMEOUT_IN_SEC;UIAutomation.createJSONResponse(':sessionId',0,timeout)";
 
