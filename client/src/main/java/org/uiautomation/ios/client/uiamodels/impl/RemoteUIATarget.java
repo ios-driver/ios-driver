@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import org.uiautomation.ios.UIAModels.UIAApplication;
 import org.uiautomation.ios.UIAModels.UIARect;
 import org.uiautomation.ios.UIAModels.UIATarget;
+import org.uiautomation.ios.communication.Path;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
@@ -102,7 +103,7 @@ public class RemoteUIATarget extends RemoteObject implements UIATarget {
 
   @Override
   public RemoteUIAApplication getFrontMostApp() {
-    return (RemoteUIAApplication)getRemoteObject(WebDriverLikeCommand.FONT_MOST_APP);
+    return (RemoteUIAApplication) getRemoteObject(WebDriverLikeCommand.FONT_MOST_APP);
   }
 
   @Override
@@ -118,5 +119,32 @@ public class RemoteUIATarget extends RemoteObject implements UIATarget {
 
 
 
+  }
+
+
+
+  @Override
+  public void setTimeout(int timeoutInSeconds) {
+    JSONObject to = new JSONObject();
+    try {
+      to.put("timeout", timeoutInSeconds);
+      WebDriverLikeCommand command = WebDriverLikeCommand.SET_TIMEOUT;
+      Path p = new Path(command).withSession(getSessionId());
+
+      WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, to);
+      getDriver().execute(request);
+    } catch (JSONException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+
+  }
+
+
+
+  @Override
+  public int getTimeout() {
+    return getObject(WebDriverLikeCommand.GET_TIMEOUT);
   }
 }
