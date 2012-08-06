@@ -34,5 +34,7 @@ public interface UIATarget {
 
   public UIAApplication getFrontMostApp();
 
+  public void setTimeout(int timeoutInSecnds);
 
+  public int getTimeout(); 
 }
