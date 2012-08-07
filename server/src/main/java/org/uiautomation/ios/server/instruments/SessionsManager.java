@@ -22,6 +22,7 @@ import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.IOSDevice;
 import org.uiautomation.ios.communication.Session;
 import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
+import org.uiautomation.ios.server.IOSServerConfiguration;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.application.LanguageDictionary;
 import org.uiautomation.ios.server.application.Localizable;
@@ -31,13 +32,15 @@ public class SessionsManager {
 
   private Session currentSession;
   private IOSApplication currentApplication;
+  private IOSServerConfiguration config;
 
 
 
   private InstrumentsManager instrumentsManager;
 
-  public SessionsManager() throws IOSAutomationSetupException {
+  public SessionsManager(IOSServerConfiguration config) throws IOSAutomationSetupException {
     instrumentsManager = new InstrumentsManager();
+    this.config = config;
 
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
@@ -121,5 +124,10 @@ public class SessionsManager {
   public void forceStop() {
     instrumentsManager.forceStop();
     currentSession = null;
+  }
+
+
+  public IOSServerConfiguration getServerConfig() {
+    return config;
   }
 }
