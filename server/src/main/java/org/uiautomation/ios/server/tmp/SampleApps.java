@@ -16,7 +16,6 @@ package org.uiautomation.ios.server.tmp;
 import java.io.File;
 import java.net.URL;
 
-import org.testng.Assert;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.server.application.Localizable;
 
@@ -38,7 +37,7 @@ public class SampleApps {
     }
 
     if (res == null || !res.exists()) {
-      Assert.fail("Cannot load test app from " + url);
+      throw new RuntimeException("Cannot load test app from " + url);
     }
     return res;
   }
