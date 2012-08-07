@@ -120,7 +120,6 @@ public enum WebDriverLikeCommand {
   TABLE_GROUPS("GET","/session/:sessionId/uiaElement/:reference/getGroups",UIAElementArray.class), 
   TABLE_CELLS("GET","/session/:sessionId/uiaElement/:reference/getCells",UIAElementArray.class),
   TABLE_VISIBLE_CELLS("GET","/session/:sessionId/uiaElement/:reference/getVisibleCells",UIAElementArray.class);
- 
   
   private final String method;
   private final String path;
