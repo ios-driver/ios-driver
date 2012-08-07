@@ -32,7 +32,7 @@ public class TimeoutTests extends UICatalogTestsBase {
     }
   }
 
-  @Test
+  //@Test
   public void getElement() throws InterruptedException {
     RemoteUIADriver driver = null;
     try {
@@ -44,11 +44,8 @@ public class TimeoutTests extends UICatalogTestsBase {
       Criteria c1 = new TypeCriteria(UIATableCell.class);
       Criteria c2 = new NameCriteria(name);
       Criteria c = new AndCriteria(c1, c2);
-      System.err.println("START");
       UIAElement element = win.findElement(c);
-
     } finally {
-      System.err.println("END");
       if (driver != null) {
         driver.quit();
       }
