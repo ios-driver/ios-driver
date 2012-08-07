@@ -38,6 +38,19 @@ public class TimeSpeeder implements HorribleHack {
   public synchronized boolean isActive() {
     return active;
   }
+  
+  /**
+   * if the time goes faster on the computer, needs to compensate 
+   * for the timeout to have something close to what the use wants.
+   * @return
+   */
+  public synchronized float getSecondDuration(){
+    if (isActive()){
+      return 300/23;
+    }else {
+      return 1;
+    }
+  }
 
   public void start() {
     if (on) {
