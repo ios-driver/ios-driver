@@ -56,8 +56,6 @@ public class RemoteUIAElement extends RemoteObject implements UIAElement {
     return getObject(WebDriverLikeCommand.VALUE);
   }
 
-  // TODO freynaud
-  private final long timeout = 30000;
 
   @Override
   public <T> T findElement(Class<T> type, Criteria c) throws NoSuchElementException {
@@ -69,24 +67,15 @@ public class RemoteUIAElement extends RemoteObject implements UIAElement {
 
   @Override
   public UIAElement findElement(Criteria c) throws NoSuchElementException {
-    long deadline = System.currentTimeMillis() + timeout;
-
-    while (System.currentTimeMillis() < deadline) {
-      try {
-        JSONObject payload = new JSONObject();
-        payload.put("depth", -1);
-        payload.put("criteria", c.getJSONRepresentation());
-        return (UIAElement) getRemoteObject(WebDriverLikeCommand.ELEMENT, payload);
-      } catch (JSONException e) {
-        throw new IOSAutomationException(e);
-      } catch (NoSuchElementException ignore) {}
-    }
     try {
-      throw new NoSuchElementException("timeout after " + timeout + " trying to find "
-          + c.getJSONRepresentation().toString());
+      JSONObject payload = new JSONObject();
+      payload.put("depth", -1);
+      payload.put("criteria", c.getJSONRepresentation());
+      return (UIAElement) getRemoteObject(WebDriverLikeCommand.ELEMENT, payload);
     } catch (JSONException e) {
       throw new IOSAutomationException(e);
     }
+
   }
 
   @Override
