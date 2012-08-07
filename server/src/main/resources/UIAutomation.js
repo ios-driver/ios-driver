@@ -56,7 +56,7 @@ var UIAutomation = {
 	REGISTER : "http://localhost:$PORT/wd/hub/uiascriptproxy/register",
 	COMMAND : "http://localhost:$PORT/wd/hub/uiascriptproxy",
 	HOST : UIATarget.localTarget().host(),
-	TIMEOUT_IN_SEC : 5,
+	TIMEOUT_IN_SEC : 0,
 
 	register : function() {
 		log("registering to " + this.REGISTER);
