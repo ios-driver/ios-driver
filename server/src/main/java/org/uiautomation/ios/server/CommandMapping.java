@@ -3,6 +3,7 @@ package org.uiautomation.ios.server;
 import java.lang.reflect.Constructor;
 import java.util.Iterator;
 
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.UIAModels.predicate.AbstractCriteria;
@@ -17,6 +18,7 @@ import org.uiautomation.ios.server.command.impl.CustomUIAScriptHandler;
 import org.uiautomation.ios.server.command.impl.DefaultUIAScriptHandler;
 import org.uiautomation.ios.server.command.impl.LocalTarget;
 import org.uiautomation.ios.server.command.impl.PostTargetScreenshotWithName;
+import org.uiautomation.ios.server.command.impl.ServerStatus;
 import org.uiautomation.ios.server.command.impl.session.NewSession;
 import org.uiautomation.ios.server.command.impl.session.StopSession;
 import org.uiautomation.ios.server.instruments.SessionsManager;
@@ -107,7 +109,9 @@ public enum CommandMapping {
   //UIATableView
   TABLE_GROUPS(DefaultUIAScriptHandler.class,".groups()"),
   TABLE_CELLS(DefaultUIAScriptHandler.class,".cells()"),
-  TABLE_VISIBLE_CELLS(DefaultUIAScriptHandler.class,".visibleCells()");
+  TABLE_VISIBLE_CELLS(DefaultUIAScriptHandler.class,".visibleCells()"),
+  
+  STATUS(ServerStatus.class,"");
   
   private WebDriverLikeCommand command;
   private final Class<? extends Handler> handlerClass;
