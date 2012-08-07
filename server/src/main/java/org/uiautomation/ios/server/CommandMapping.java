@@ -54,6 +54,9 @@ public enum CommandMapping {
   KEYBOARD_KEYS(DefaultUIAScriptHandler.class,".keys()"), 
   KEYBOARD_BUTTONS (DefaultUIAScriptHandler.class,".buttons()"),
   TYPE_STRING(DefaultUIAScriptHandler.class,".typeString(:string)"),
+  BUNDLE_ID(DefaultUIAScriptHandler.class,".bundleID()"),
+  VERSION(DefaultUIAScriptHandler.class,".version()"),
+  BUNDLE_VERSION(DefaultUIAScriptHandler.class,".bundleVersion()"),
    
     // UIAHost
    PERFORM_TASK_WITH_PATH_ARGUMENTS_TIMEOUT(null,null),
