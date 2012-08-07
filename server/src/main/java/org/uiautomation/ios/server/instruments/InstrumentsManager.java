@@ -130,7 +130,10 @@ public class InstrumentsManager {
     command.add("UIARESULTSPATH");
     command.add(output.getAbsolutePath());
     command.addAll(extraEnvtParams);
+    
     return command;
+    
+    
   }
 
   private File createTmpOutputFolder() throws IOException {

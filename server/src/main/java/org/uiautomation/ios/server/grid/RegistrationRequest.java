@@ -22,23 +22,22 @@ public class RegistrationRequest {
 
   private String hubURL;
   private String nodeHost;
-  private String appAbsolutePath;
 
   private List<Map<String, Object>> capabilities = new ArrayList<Map<String, Object>>();
   private Map<String, Object> configuration = new HashMap<String, Object>();
 
 
-  public RegistrationRequest(String hub, String nodeHost,int port, String appAbsolutePath) {
+  public RegistrationRequest(String hub, String nodeHost, int port, List<String> supportedApps) {
     this.hubURL = hub;
     this.nodeHost = nodeHost;
-    this.appAbsolutePath = appAbsolutePath;
 
-    IOSCapabilities cap = IOSCapabilities.iphone(appAbsolutePath);
-    cap.setCapability("browserName", "IOS Simulator");
-    capabilities.add(cap.getRawCapabilities());
+    for (String app : supportedApps) {
+      IOSCapabilities cap = IOSCapabilities.iphone(app);
+      cap.setCapability("browserName", "IOS Simulator");
+      capabilities.add(cap.getRawCapabilities());
+    }
 
-
-    configuration.put("remoteHost", "http://" + nodeHost + ":"+port);
+    configuration.put("remoteHost", "http://" + nodeHost + ":" + port);
     configuration.put("maxSession", 1);
   }
 
@@ -51,11 +50,11 @@ public class RegistrationRequest {
 
       BasicHttpEntityEnclosingRequest r =
           new BasicHttpEntityEnclosingRequest("POST", registration.toExternalForm());
-      
+
       System.out.println(getJSONRequest().toString(2));
-      
+
       String json = getJSONRequest().toString();
-      
+
       r.setEntity(new StringEntity(json));
 
       HttpHost host = new HttpHost(registration.getHost(), registration.getPort());

@@ -21,7 +21,9 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
+import org.testng.annotations.Parameters;
 import org.uiautomation.ios.server.servlet.CustomMessage;
 
 import com.beust.jcommander.JCommander;
@@ -38,7 +40,6 @@ import com.beust.jcommander.Parameter;
  */
 public class IOSServerConfiguration {
 
-  private final String APPS_FILE = "/supportedApps.txt";
 
   @Parameter(description = "port the server will listen on.", names = "-port")
   private int port = 5555;
@@ -46,20 +47,20 @@ public class IOSServerConfiguration {
   @Parameter(description = "if specified, will send a registration request to the given url. Example : http://localhost:4444/grid/register", names = "-hub")
   private String registrationURL = null;
 
-  @Parameter(description = "location of the application under test.Absolute path expected.", names = {
-      "-app", "-aut"}, required = true)
-  private String absoluteAppPath;
 
   @Parameter(description = "host of the node.Needs to be specified, as guessing can be wrong complex ntw configs", names = "-host")
   private String serverHost;
 
+  @Parameter(description = "location of the application under test.Absolute path expected.", names = {
+      "-app", "-aut"}, required = true)
+  private List<String> supportedApps = new ArrayList<String>();
 
   public String getRegistrationURL() {
     return registrationURL;
   }
 
-  public String getAbsoluteAppPath() {
-    return absoluteAppPath;
+  public List<String> getSupportedApps() {
+    return supportedApps;
   }
 
   public String serverHost() {
@@ -76,13 +77,10 @@ public class IOSServerConfiguration {
    * @see ServerConfigurationCommands
    */
   public static IOSServerConfiguration create(String[] args) {
-    ServerConfigurationCommands command_handler = new ServerConfigurationCommands();
-    new JCommander(command_handler).parse(args);
-
     IOSServerConfiguration res = new IOSServerConfiguration();
-    res.setHost(command_handler.getHost());
-    res.setPort(command_handler.getPort());
+    new JCommander(res).parse(args);
 
+    
     return res;
   }
 
@@ -94,17 +92,7 @@ public class IOSServerConfiguration {
     this.serverHost = host;
   }
 
-  /**
-   * Returns the names for the supported app names.<br>
-   * Using the {@link #ReadAppsFrom(String) ReadAppsFrom} helper method.
-   * 
-   * @param void
-   * @return A table with the supported application names.
-   * @see ReadAppsFrom
-   */
-  public String[] getSupportedApps() throws Exception {
-    return ReadAppsFrom(getAppsReference());
-  }
+  
 
   /**
    * Returns the names for the supported app names into a <br>
@@ -154,10 +142,6 @@ public class IOSServerConfiguration {
       throw new CustomMessage("Couldn't locate the file from " + url.toString(), "error");
     }
     return res;
-  }
-
-  public String getAppsReference() throws Exception {
-    return getFromClassPath(APPS_FILE).getAbsolutePath();
   }
 
   public int getPort() {

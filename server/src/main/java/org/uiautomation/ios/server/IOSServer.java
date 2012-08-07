@@ -14,6 +14,7 @@
 
 package org.uiautomation.ios.server;
 
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
 import javax.servlet.Servlet;
@@ -50,7 +51,7 @@ public class IOSServer {
     if (options.getRegistrationURL() != null) {
       RegistrationRequest request =
           new RegistrationRequest(options.getRegistrationURL(), options.getHost(),
-              options.getPort(), options.getAbsoluteAppPath());
+              options.getPort(), options.getSupportedApps());
       request.registerToHub();
     }
 
@@ -70,7 +71,7 @@ public class IOSServer {
       servletContextHandler.addServlet(ide, "/ide/*");
     }
 
-    servletContextHandler.setAttribute(SESSIONS_MGR, new SessionsManager());
+    servletContextHandler.setAttribute(SESSIONS_MGR, new SessionsManager(this.options));
     servletContextHandler.setAttribute(SERVER_CONFIG, this.options);
     Runtime.getRuntime().addShutdownHook(new Thread() {
       public void run() {
@@ -100,7 +101,10 @@ public class IOSServer {
     this.options = options;
     this.port = options.getPort();
     server = new Server(new InetSocketAddress("0.0.0.0", options.getPort()));
+    
   }
+  
+  
 
   private Class<Servlet> getIDEServlet() {
     try {

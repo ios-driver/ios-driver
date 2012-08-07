@@ -11,6 +11,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.IOSCapabilities;
+import org.uiautomation.ios.UIAModels.UIAApplication;
 import org.uiautomation.ios.UIAModels.UIARect;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAApplication;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
@@ -23,7 +24,8 @@ import org.uiautomation.ios.server.tmp.SampleApps;
 public class EndToEndTests {
 
   private IOSServer server;
-  private static String[] args = {"-port", "4444", "-host", "localhost"};
+  private static String[] args = {"-port", "4444", "-host", "localhost", "-aut",
+      SampleApps.getUICatalogApp()};
   private static IOSServerConfiguration config = IOSServerConfiguration.create(args);
 
   @BeforeClass
@@ -79,6 +81,11 @@ public class EndToEndTests {
       Assert.assertEquals(rect.getX(), 0);
       Assert.assertEquals(rect.getHeight(), 480);
       Assert.assertEquals(rect.getWidth(), 320);
+
+      UIAApplication app = target.getFrontMostApp();
+      Assert.assertNull(app.getVersion());
+      Assert.assertEquals(app.getBundleId(), "com.yourcompany.UICatalog");
+      Assert.assertEquals(app.getBundleVersion(), "2.10");
 
     } finally {
       if (driver != null) {

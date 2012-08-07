@@ -16,6 +16,7 @@ package org.uiautomation.ios.server.application;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -26,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
+import org.uiautomation.ios.server.instruments.Command;
 
 public class IOSApplication {
 
@@ -177,5 +179,58 @@ public class IOSApplication {
 
   public File getApplicationPath() {
     return app;
+  }
+
+  /**
+   * 
+   * @return null if the value cannot be found
+   */
+  public String getBundleVersion() {
+    return getValueFromInfoPlist("CFBundleVersion");
+  }
+
+  /**
+   * 
+   * @return null if the value cannot be found
+   */
+  public String getBundleId() {
+    return getValueFromInfoPlist("CFBundleIdentifier");
+  }
+
+  /**
+   * 
+   * @return null if the value cannot be found
+   */
+  public String getVersion() {
+    return getValueFromInfoPlist("CFVersion");
+  }
+  
+  /**
+   * 
+   * @return null if the value cannot be found
+   */
+  public String getName() {
+    return getValueFromInfoPlist("CFBundleDisplayName");
+  }
+
+
+  private String getValueFromInfoPlist(String key) {
+    File plist = new File(app, "Info");
+    List<String> args = new ArrayList<String>();
+    args.addAll(Arrays.asList(new String[] {"defaults", "read", plist.getAbsolutePath(), key}));
+    Command c = new Command(args, true);
+    try {
+      c.executeAndWait();
+      List<String> outs = c.getStdOut();
+      if (outs.size() != 1) {
+        throw new IOSAutomationException("couldn't find bundleId" + outs);
+      } else {
+        return outs.get(0);
+      }
+    } catch (Exception e) {
+      // if the key doesn't exist.
+      return null;
+    }
+
   }
 }
