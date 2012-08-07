@@ -23,7 +23,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.testng.annotations.Parameters;
 import org.uiautomation.ios.server.servlet.CustomMessage;
 
 import com.beust.jcommander.JCommander;
