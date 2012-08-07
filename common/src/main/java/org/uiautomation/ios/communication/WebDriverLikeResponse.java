@@ -58,6 +58,9 @@ public class WebDriverLikeResponse {
   public String stringify() throws JSONException {
     JSONObject o = new JSONObject();
     o.put("sessionId", sessionId);
+    if (sessionId==null){
+      o.put("sessionId", JSONObject.NULL);
+    }
     o.put("status", status);
     o.put("value", value);
     return o.toString(2);
