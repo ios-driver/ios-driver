@@ -124,6 +124,24 @@ UIAElement.prototype.element_or = function(depth, criteria) {
 }
 
 UIAElement.prototype.element = function(depth, criteria) {
+	var timeout = UIAutomation.TIMEOUT_IN_SEC;
+	var limit = new Date().getTime() + (1000 * timeout);
+	
+	while (new Date().getTime() < limit ){
+		try {
+			var res = this._element(depth, criteria);
+			return res;
+		}catch (err){
+			// nothing found.
+			UIATarget.localTarget().delay(1);
+		}
+	}
+	throw new UIAutomationException("Timeout after "+timeout+" seconds.Cannot find element for criteria :" + JSON.stringify(criteria), 7);
+
+	
+}
+	
+UIAElement.prototype._element = function(depth, criteria) {
 	// if a criteria contains a OR, first run the search on the whole tree on each criteria in the OR so that A or B returns A, and B or A returns B.
 	var keys = getKeys(criteria);
 	
