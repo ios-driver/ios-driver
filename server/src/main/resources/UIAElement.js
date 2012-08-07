@@ -97,18 +97,15 @@ UIAElement.prototype.isStale = function() {
 	}
 	return false;
 }
-/*UIAElement.prototype.element = function(depth, criteria) {
- var all = this.getChildren(depth);
- var res = new Array();
-
- for(var i = 0; i < all.length; i++) {
- var element = all[i];
- if(element.matches(criteria)) {
- return element;
- }
- }
- throw new UIAutomationException("cannot find element for criteria :" + JSON.stringify(criteria), 7);
- }*/
+/*
+ * UIAElement.prototype.element = function(depth, criteria) { var all =
+ * this.getChildren(depth); var res = new Array();
+ * 
+ * for(var i = 0; i < all.length; i++) { var element = all[i];
+ * if(element.matches(criteria)) { return element; } } throw new
+ * UIAutomationException("cannot find element for criteria :" +
+ * JSON.stringify(criteria), 7); }
+ */
 
 UIAElement.prototype.element_or = function(depth, criteria) {
 	var all = this.getChildren(depth);
@@ -124,25 +121,33 @@ UIAElement.prototype.element_or = function(depth, criteria) {
 }
 
 UIAElement.prototype.element = function(depth, criteria) {
-	var timeout = UIAutomation.TIMEOUT_IN_SEC;
-	var limit = new Date().getTime() + (1000 * timeout);
 	
-	while (new Date().getTime() < limit ){
-		try {
-			var res = this._element(depth, criteria);
-			return res;
-		}catch (err){
-			// nothing found.
-			UIATarget.localTarget().delay(1);
+	if (UIAutomation.TIMEOUT_IN_SEC == 0){
+		return this._element(depth, criteria);
+	}else {
+		var timeout = UIAutomation.TIMEOUT_IN_SEC;
+		var limit = new Date().getTime() + (1000 * timeout);
+		
+		while (new Date().getTime() < limit ){
+			try {
+				var res = this._element(depth, criteria);
+				return res;
+			}catch (err){
+				// nothing found.
+				UIATarget.localTarget().delay(1);
+			}
 		}
-	}
-	throw new UIAutomationException("Timeout after "+timeout+" seconds.Cannot find element for criteria :" + JSON.stringify(criteria), 7);
+		throw new UIAutomationException("Timeout after "+timeout+" seconds.Cannot find element for criteria :" + JSON.stringify(criteria), 7);
 
+	}
+	
+	
 	
 }
 	
 UIAElement.prototype._element = function(depth, criteria) {
-	// if a criteria contains a OR, first run the search on the whole tree on each criteria in the OR so that A or B returns A, and B or A returns B.
+	// if a criteria contains a OR, first run the search on the whole tree on
+	// each criteria in the OR so that A or B returns A, and B or A returns B.
 	var keys = getKeys(criteria);
 	
 	if(keys.length == 1 && keys[0] === "OR") {
@@ -311,7 +316,7 @@ UIAElement.prototype.matches = function(criteria) {
 }
 /**
  * create something similar to UIAelement array from a list of elements
- *
+ * 
  * @param elements
  *            an array of native UIAElements.
  */
