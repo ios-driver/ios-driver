@@ -56,6 +56,9 @@ public enum WebDriverLikeCommand {
   // UIAApplication
   MAIN_WINDOW("GET" , "/session/:sessionId/uiaApplication/:reference/mainWindow",UIAWindow.class),
   WINDOWS("GET" , "/session/:sessionId/uiaTarget/:reference/windows",UIAElementArray.class),
+  BUNDLE_ID("GET" , "/session/:sessionId/uiaApplication/:reference/bundleId",String.class),
+  VERSION("GET" , "/session/:sessionId/uiaApplication/:reference/version",String.class),
+  BUNDLE_VERSION("GET" , "/session/:sessionId/uiaApplication/:reference/bundleVersion",String.class),
   
   // UIAElement
   HIT_POINT("GET" , "/session/:sessionId/uiaElement/:reference/hitPoint",UIAPoint.class),
