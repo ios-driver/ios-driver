@@ -42,9 +42,7 @@ public class BeginController extends BaseController {
       view = new BeginView(new CustomMessage("Successfully load the resources!", "notice"), config.getSupportedApps());
     } catch (IOSAutomationException e1) {
         // e.printStackTrace();
-    } catch (CustomMessage ex) {
-      view = new BeginView(ex);
-    } catch (Exception e2) {
+    }  catch (Exception e2) {
         // TODO Auto-generated catch block
       e2.printStackTrace();
     }
