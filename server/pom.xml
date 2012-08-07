@@ -9,10 +9,6 @@
 	</parent>
 	<artifactId>ios-server</artifactId>
 
-	<properties>
-		<build.version>${project.version}-r${buildNumber}</build.version>
-	</properties>
-
 	<scm>
 		<url>scm:git:git://github.com/freynaud/ios-driver.git</url>
 		<connection>scm:git:git://github.com/freynaud/ios-driver.git</connection>
