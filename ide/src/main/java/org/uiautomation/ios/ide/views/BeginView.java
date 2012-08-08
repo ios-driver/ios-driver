@@ -30,12 +30,12 @@ public class BeginView implements View{
 
   private List<String> supportedApps = new ArrayList<String>();
   private CustomMessage msg = null;
-  public BeginView( CustomMessage msg, String... apps) throws IOSAutomationException {
-    if (apps.length == 0) {
+  public BeginView( CustomMessage msg, List<String> apps) throws IOSAutomationException {
+    if (apps.size() == 0) {
       throw new IOSAutomationException("no app specified.");
     }
     this.msg = msg;
-    supportedApps.addAll(Arrays.asList(apps));
+    supportedApps = apps;
   }
   
   public BeginView(CustomMessage msg){
