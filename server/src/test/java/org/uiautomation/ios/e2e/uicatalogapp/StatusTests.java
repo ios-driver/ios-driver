@@ -1,12 +1,16 @@
 package org.uiautomation.ios.e2e.uicatalogapp;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
+import org.json.JSONArray;
 import org.json.JSONObject;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -37,7 +41,38 @@ public class StatusTests {
       HttpResponse response = client.execute(h, r);
 
       JSONObject o = Helper.extractObject(response);
-      System.out.println(o.toString(2));
+      JSONArray array = o.getJSONObject("value").getJSONArray("supportedApps");
+      Assert.assertEquals(array.length(), 2);
+
+      JSONObject uicatalog = array.getJSONObject(0);
+      Assert.assertEquals(uicatalog.get("bundleDisplayName"), "UICatalog");
+      Assert.assertEquals(uicatalog.get("bundleId"), "com.yourcompany.UICatalog");
+      Assert.assertEquals(uicatalog.get("bundleName"), "UICatalog");
+      Assert.assertEquals(uicatalog.get("bundleVersion"), "2.10");
+      Assert.assertEquals(uicatalog.get("path"), SampleApps.getUICatalogApp());
+
+      JSONArray locales1 = uicatalog.getJSONArray("locales");
+      Assert.assertEquals(locales1.length(), 1);
+      Assert.assertEquals(locales1.get(0), "en");
+
+      JSONObject intMount = array.getJSONObject(1);
+      Assert.assertEquals(intMount.get("bundleId"), "com.yourcompany.InternationalMountains");
+      Assert.assertEquals(intMount.get("bundleName"), "InternationalMountains");
+      Assert.assertEquals(intMount.get("bundleVersion"), "1.1");
+      Assert.assertEquals(intMount.get("path"), SampleApps.getIntlMountainsApp());
+
+      JSONArray locales2 = intMount.getJSONArray("locales");
+      Assert.assertEquals(locales2.length(), 3);
+      List<String> all = new ArrayList<String>();
+      all.add(locales2.getString(0));
+      all.add(locales2.getString(1));
+      all.add(locales2.getString(2));
+
+      Assert.assertTrue(all.contains("en"));
+      Assert.assertTrue(all.contains("zh"));
+      Assert.assertTrue(all.contains("fr"));
+
+
     } catch (Exception e) {
       throw new IOSAutomationException(e);
     }
