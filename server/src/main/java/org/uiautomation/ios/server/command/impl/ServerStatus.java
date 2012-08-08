@@ -60,9 +60,11 @@ public class ServerStatus extends BaseCommandHandler {
    res.put("supportedApps",supportedApps);
     
    res.put("build",new JSONObject()
+       .put("version", BuildInfo.getAttribute("version"))
+       .put("time", BuildInfo.getAttribute("buildTimestamp"))
        .put("revision", BuildInfo.getAttribute("sha")));
    
-   
+
     
     
     return new WebDriverLikeResponse(null, 0, res);

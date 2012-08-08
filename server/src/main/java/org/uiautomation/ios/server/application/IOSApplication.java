@@ -202,7 +202,7 @@ public class IOSApplication {
    * @return null if the value cannot be found
    */
   public String getVersion() {
-    return getValueFromInfoPlist("CFVersion");
+    return getValueFromInfoPlist("CFBundleShortVersionString");
   }
   
   /**
