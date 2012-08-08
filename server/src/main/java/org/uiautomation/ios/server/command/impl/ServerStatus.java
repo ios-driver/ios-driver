@@ -50,7 +50,8 @@ public class ServerStatus extends BaseCommandHandler {
       IOSApplication a = new IOSApplication(null, path);
       
       app.put("locales",a.getSupportedLanguages());
-      app.put("name",a.getName());
+      app.put("bundleName",a.getBundleName());
+      app.put("bundleDisplayName",a.getBundleDisplayName());
       app.put("bundleId",a.getBundleId());
       app.put("bundleVersion",a.getBundleVersion());
       app.put("version",a.getVersion());
