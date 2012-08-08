@@ -204,14 +204,24 @@ public class IOSApplication {
   public String getVersion() {
     return getValueFromInfoPlist("CFBundleShortVersionString");
   }
+
+  /**
+   * 
+   * @return null if the value cannot be found
+   */
+  public String getBundleDisplayName() {
+    return getValueFromInfoPlist("CFBundleDisplayName");
+  }
   
   /**
    * 
    * @return null if the value cannot be found
    */
-  public String getName() {
-    return getValueFromInfoPlist("CFBundleDisplayName");
+  public String getBundleName() {
+    return getValueFromInfoPlist("CFBundleName");
   }
+  
+  
 
 
   private String getValueFromInfoPlist(String key) {
@@ -231,6 +241,7 @@ public class IOSApplication {
       // if the key doesn't exist.
       return null;
     }
-
   }
+
+
 }
