@@ -14,7 +14,6 @@
 
 package org.uiautomation.ios.server;
 
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
 import javax.servlet.Servlet;
@@ -22,9 +21,11 @@ import javax.servlet.Servlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
+import org.uiautomation.ios.server.application.ResourceCache;
 import org.uiautomation.ios.server.grid.RegistrationRequest;
 import org.uiautomation.ios.server.instruments.SessionsManager;
 import org.uiautomation.ios.server.servlet.IOSServlet;
+import org.uiautomation.ios.server.servlet.ResourceServlet;
 import org.uiautomation.ios.server.servlet.UIAScriptProxyRegister;
 import org.uiautomation.ios.server.servlet.UIAScriptServlet;
 
@@ -36,6 +37,7 @@ public class IOSServer {
 
   public static final String SESSIONS_MGR = SessionsManager.class.getName();
   public static final String SERVER_CONFIG = IOSServerConfiguration.class.getName();
+  public static final String RESOURCES = ResourceCache.class.getName();
   private final Server server;
   public static int port;
   public static final boolean debugMode = true;
@@ -65,14 +67,22 @@ public class IOSServer {
     servletContextHandler.addServlet(UIAScriptProxyRegister.class, "/uiascriptproxy/register/*");
     servletContextHandler.addServlet(UIAScriptServlet.class, "/uiascriptproxy/*");
     servletContextHandler.addServlet(IOSServlet.class, "/*");
+    servletContextHandler.addServlet(ResourceServlet.class, "/resources/*");
 
     Class<Servlet> ide = getIDEServlet();
     if (ide != null) {
       servletContextHandler.addServlet(ide, "/ide/*");
     }
 
-    servletContextHandler.setAttribute(SESSIONS_MGR, new SessionsManager(this.options));
+    SessionsManager manager = new SessionsManager(this.options);
+    servletContextHandler.setAttribute(SESSIONS_MGR, manager);
     servletContextHandler.setAttribute(SERVER_CONFIG, this.options);
+    
+    
+    for (String app : this.options.getSupportedApps()){
+      manager.getResourceCache().cacheResource(app);
+    }
+    
     Runtime.getRuntime().addShutdownHook(new Thread() {
       public void run() {
         try {

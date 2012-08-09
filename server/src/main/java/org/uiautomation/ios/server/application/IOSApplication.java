@@ -213,12 +213,17 @@ public class IOSApplication {
     return getValueFromInfoPlist("CFBundleDisplayName");
   }
   
+ 
+  public String getBundleName() {
+    return getValueFromInfoPlist("CFBundleName");
+  }
+  
   /**
    * 
    * @return null if the value cannot be found
    */
-  public String getBundleName() {
-    return getValueFromInfoPlist("CFBundleName");
+  public String getIcon() {
+    return getValueFromInfoPlist("CFBundleIconFile");
   }
   
   
@@ -242,6 +247,9 @@ public class IOSApplication {
       return null;
     }
   }
+
+
+  
 
 
 }

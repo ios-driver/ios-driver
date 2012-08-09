@@ -26,6 +26,7 @@ import org.uiautomation.ios.server.IOSServerConfiguration;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.application.LanguageDictionary;
 import org.uiautomation.ios.server.application.Localizable;
+import org.uiautomation.ios.server.application.ResourceCache;
 
 
 public class SessionsManager {
@@ -33,6 +34,7 @@ public class SessionsManager {
   private Session currentSession;
   private IOSApplication currentApplication;
   private IOSServerConfiguration config;
+  private ResourceCache cache;
 
 
 
@@ -41,6 +43,7 @@ public class SessionsManager {
   public SessionsManager(IOSServerConfiguration config) throws IOSAutomationSetupException {
     instrumentsManager = new InstrumentsManager();
     this.config = config;
+    this.cache = new ResourceCache();
 
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
@@ -50,6 +53,10 @@ public class SessionsManager {
     });
   }
 
+  
+  public ResourceCache getResourceCache(){
+    return cache;
+  }
 
   public void createSession(IOSCapabilities cap) throws IOSAutomationSetupException {
     IOSCapabilities v = completeWithDefaults(cap);

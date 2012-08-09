@@ -55,6 +55,7 @@ public class ServerStatus extends BaseCommandHandler {
       app.put("bundleId",a.getBundleId());
       app.put("bundleVersion",a.getBundleVersion());
       app.put("version",a.getVersion());
+      app.put("icon",getSessionsManager().getResourceCache().getKeyForApplication(path));
       supportedApps.put(app);
     }
     
