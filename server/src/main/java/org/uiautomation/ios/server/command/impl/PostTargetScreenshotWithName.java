@@ -22,28 +22,34 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
+import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.instruments.SessionsManager;
 
-public class PostTargetScreenshotWithName extends DefaultUIAScriptHandler {
+public class PostTargetScreenshotWithName extends DecoratedScriptHandler {
 
 
-  public PostTargetScreenshotWithName(SessionsManager instruments, WebDriverLikeRequest request) {
-    super(instruments, request);
+  public PostTargetScreenshotWithName(final SessionsManager instruments,
+      WebDriverLikeRequest request) {
+    super(instruments, request, new ResponseDecorator() {
+      @Override
+      public void decorate(WebDriverLikeResponse original) {
+        try {
+          String path = instruments.getCurrentSessionOutputFolder() + "/Run 1/tmpScreenshot.png";
+          File tmp = waitForFileToAppearOnDisk(path);
+          JSONObject value = new JSONObject();
+          value.put("64encoded", to64encodedString(tmp));
+          tmp.delete();
+          original.setValue(value);
+        } catch (Exception e) {
+          throw new IOSAutomationException("error decorating the response ", e);
+        }
+
+      }
+    });
   }
 
-  @Override
-  public WebDriverLikeResponse handle() throws Exception {
-    WebDriverLikeResponse r = super.handle();
-    String path = getSessionsManager().getCurrentSessionOutputFolder() + "/Run 1/tmpScreenshot.png";
-    File tmp = waitForFileToAppearOnDisk(path);
-    JSONObject value = new JSONObject();
-    value.put("64encoded", to64encodedString(tmp));
-    tmp.delete();
-    r.setValue(value);
-    return r;
-  }
 
-  private File waitForFileToAppearOnDisk(String path) throws Exception {
+  private static File waitForFileToAppearOnDisk(String path) throws Exception {
     File f = new File(path);
     int cpt = 0;
     while (!f.exists()) {
@@ -56,14 +62,10 @@ public class PostTargetScreenshotWithName extends DefaultUIAScriptHandler {
     return f;
   }
 
-  private String to64encodedString(File from) throws Exception {
+  private static String to64encodedString(File from) throws Exception {
     FileInputStream is = new FileInputStream(from);
     byte[] img = IOUtils.toByteArray(is);
     String s = Base64.encodeBase64String(img);
     return s;
-
   }
-
-
-
 }
