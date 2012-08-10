@@ -55,7 +55,8 @@ public class Model {
 
 
   public void refresh() throws IOSAutomationException {
-    cache = driver.logElementTree();
+    
+    cache = driver.logElementTree(null);
   }
 
   public InputStream getLastScreenshotInputStream() throws IOSAutomationException {

@@ -1,5 +1,6 @@
 package org.uiautomation.ios.ide.model;
 
+import java.io.File;
 import java.net.URL;
 
 import org.json.JSONException;
@@ -10,24 +11,33 @@ import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.application.IOSApplication;
 
 public class IDESessionModel {
-  
+
+
+
   private final Session session;
   private final RemoteUIADriver driver;
   private IOSApplication app;
-  
+  private File screenshot;
+
   private JSONObject elementTree;
-  
-  public IDESessionModel(Session session,URL remoteURL){
+
+  public IDESessionModel(Session session, URL remoteURL) {
     this.session = session;
-    driver =  new RemoteUIADriver(remoteURL, session);
+    this.screenshot = new File(session.getSessionId() + ".png");
+    driver = new RemoteUIADriver(remoteURL, session);
   }
-  
+
   public void refresh() throws IOSAutomationException {
-    elementTree = driver.logElementTree();
+    screenshot.delete();
+    elementTree = driver.logElementTree(screenshot);
+    System.out.println(screenshot.getAbsolutePath());
   }
 
   public Session getSession() {
-   return session;
+    return session;
   }
 
+  public File getScreenshot() {
+    return screenshot;
+  }
 }

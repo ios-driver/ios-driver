@@ -13,19 +13,30 @@
  */
 package org.uiautomation.ios.ide.controllers;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import javax.imageio.stream.FileImageInputStream;
 import javax.servlet.http.HttpServletRequest;
 
+import org.uiautomation.ios.communication.Session;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.ide.IDEServlet;
 import org.uiautomation.ios.ide.Model;
+import org.uiautomation.ios.ide.model.Cache;
+import org.uiautomation.ios.ide.model.IDESessionModel;
 import org.uiautomation.ios.ide.views.ResourceView;
 import org.uiautomation.ios.ide.views.View;
 
 public class ResourceController implements IDECommandController {
 
+  private final Cache cache;
 
+  public ResourceController(Cache cache) {
+    this.cache = cache;
+  }
+  
   public boolean canHandle(String pathInfo) {
     return pathInfo.contains("resources");
   }
@@ -38,8 +49,15 @@ public class ResourceController implements IDECommandController {
     String resource = path.substring(end);
 
     InputStream is = null;
-    if (resource.endsWith("lastScreen.png")) {
-      //is = getModel().getLastScreenshotInputStream();
+    if (resource.endsWith("screenshot.png")) {
+      String session = extractSession(req.getPathInfo());
+      IDESessionModel model = cache.getModel(new Session(session));
+      try {
+        is = new FileInputStream(model.getScreenshot());
+      } catch (FileNotFoundException e) {
+        is = null;
+      }
+      
     } else {
       is = IDEServlet.class.getResourceAsStream("/" + resource);
     }
@@ -65,6 +83,20 @@ public class ResourceController implements IDECommandController {
       return "image/gif";
     }
     throw new IOSAutomationException("mime type NI" + resource);
+  }
+  
+  private String extractSession(String pathInfo) {
+    
+    if (pathInfo.startsWith("/resources/session/")) {
+      String tmp = pathInfo.replace("/resources/session/", "");
+      if (tmp.contains("/")) {
+        return tmp.split("/")[0];
+      } else {
+        return tmp;
+      }
+    } else {
+      throw new IOSAutomationException("cannot extract session id from " + pathInfo);
+    }
   }
 
 }

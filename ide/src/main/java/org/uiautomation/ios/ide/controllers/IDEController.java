@@ -11,6 +11,12 @@ import org.uiautomation.ios.ide.views.View;
 
 public class IDEController implements IDECommandController {
 
+  private final Cache cache;
+
+  public IDEController(Cache cache) {
+    this.cache = cache;
+  }
+
   @Override
   public boolean canHandle(String pathInfo) {
     return pathInfo.startsWith("/session/");
@@ -19,7 +25,6 @@ public class IDEController implements IDECommandController {
   @Override
   public View handle(HttpServletRequest req) throws IOSAutomationException, Exception {
     final Session s = new Session(extractSession(req.getPathInfo()));
-    Cache cache = new Cache();
     IDESessionModel model = cache.getModel(s);
     return new IDEMainView(model);
   }

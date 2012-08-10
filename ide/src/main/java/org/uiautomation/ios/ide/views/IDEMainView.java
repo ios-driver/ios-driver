@@ -37,8 +37,8 @@ public class IDEMainView implements View {
 
       b.append("<div id='frame' ><img src='" + getResource("frame.png") + " '/></div>");
       b.append("<div id='mouseOver' ></div>");
-      b.append("<div id='screen' ><img src='" + "/session/"+model.getSession().getSessionId()+"/resources/lastScreen.png' /></div>");
-
+      b.append("<div id='screen' ><img src='/ide/resources/session/"+model.getSession().getSessionId()+"/screenshot.png' /></div>");
+      
 
       b.append("<div id ='tree' ></div>");
 

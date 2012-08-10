@@ -21,21 +21,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.uiautomation.ios.ide.controllers.AttachController;
-import org.uiautomation.ios.ide.controllers.BeginController;
-import org.uiautomation.ios.ide.controllers.DebugController;
-import org.uiautomation.ios.ide.controllers.HomeController;
 import org.uiautomation.ios.ide.controllers.IDECommandController;
 import org.uiautomation.ios.ide.controllers.IDEController;
-import org.uiautomation.ios.ide.controllers.NoActionController;
 import org.uiautomation.ios.ide.controllers.NotImplementedIDEController;
-import org.uiautomation.ios.ide.controllers.RefreshController;
 import org.uiautomation.ios.ide.controllers.ResourceController;
-import org.uiautomation.ios.ide.controllers.StartController;
-import org.uiautomation.ios.ide.controllers.StopController;
-import org.uiautomation.ios.ide.controllers.UserActionController;
-import org.uiautomation.ios.ide.controllers.getLanguagesController;
-import org.uiautomation.ios.ide.views.JSTreeJSON;
+import org.uiautomation.ios.ide.model.Cache;
 import org.uiautomation.ios.ide.views.View;
 import org.uiautomation.ios.server.servlet.UIAScriptProxyBasedServlet;
 
@@ -56,8 +46,9 @@ public class IDEServlet extends UIAScriptProxyBasedServlet {
   public void init() throws ServletException {
     super.init();
 
-    controllers.add(new IDEController());
-    controllers.add(new ResourceController());
+    Cache cache = new Cache();
+    controllers.add(new IDEController(cache));
+    controllers.add(new ResourceController(cache));
     /*controllers.add(new HomeController());
     
     controllers.add(new AttachController(model));
