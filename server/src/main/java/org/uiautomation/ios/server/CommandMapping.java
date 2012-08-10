@@ -17,6 +17,7 @@ import org.uiautomation.ios.server.command.Handler;
 import org.uiautomation.ios.server.command.impl.CustomUIAScriptHandler;
 import org.uiautomation.ios.server.command.impl.DefaultUIAScriptHandler;
 import org.uiautomation.ios.server.command.impl.LocalTarget;
+import org.uiautomation.ios.server.command.impl.LogElementTreeDecorated;
 import org.uiautomation.ios.server.command.impl.PostTargetScreenshotWithName;
 import org.uiautomation.ios.server.command.impl.ServerStatus;
 import org.uiautomation.ios.server.command.impl.TranslationDecoratorScriptHandler;
@@ -35,7 +36,9 @@ public enum CommandMapping {
   // UIATarget
   LOCAL_TARGET(LocalTarget.class,".localTarget()"),
   HOST(null,null),
-  TREE(TranslationDecoratorScriptHandler.class,".tree(:lastScreenshotPath)"),
+  //TREE(TranslationDecoratorScriptHandler.class,".tree(:attachScreenshot)"),
+  TREE(LogElementTreeDecorated.class,".tree(:attachScreenshot)"),
+  
   MODEL(DefaultUIAScriptHandler.class,".model()"),
   TARGET_RECT(DefaultUIAScriptHandler.class,".rect()"),
   TARGET_TAP(CustomUIAScriptHandler.class,"complex..."),

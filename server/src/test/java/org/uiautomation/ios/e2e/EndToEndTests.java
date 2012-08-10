@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -132,7 +134,47 @@ public class EndToEndTests {
       }
     }
   }
+  
+  @Test
+  public void logElementTreeWithScreenshot() throws InterruptedException, JSONException {
+    RemoteUIADriver driver = null;
+    try {
 
+      driver =
+          new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",
+              SampleApps.uiCatalogCap());
+
+      File f = new File("logElementTreeTmp");
+      f.delete();
+      JSONObject object = driver.logElementTree(f);
+     
+      Assert.assertTrue(f.exists());
+      f.delete();
+    } finally {
+      if (driver != null) {
+        driver.quit();
+      }
+    }
+  }
+
+  
+  @Test
+  public void logElementTreeNoScreenshot() throws InterruptedException, JSONException {
+    RemoteUIADriver driver = null;
+    try {
+
+      driver =
+          new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",
+              SampleApps.uiCatalogCap());
+
+      JSONObject object = driver.logElementTree(null);
+      Assert.assertTrue(object.has("tree"));
+    } finally {
+      if (driver != null) {
+        driver.quit();
+      }
+    }
+  }
   @Test
   public void mainWindow() throws InterruptedException {
     RemoteUIADriver driver = null;

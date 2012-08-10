@@ -197,7 +197,7 @@ UIAElement.prototype.asNode = function() {
 	}
 }
 
-UIAElement.prototype.tree = function(path) {
+UIAElement.prototype.tree = function(attachScreenshot) {
 	var buildNode = function(element) {
 		var res = element.asNode();
 		var children = element.elements();
@@ -210,12 +210,18 @@ UIAElement.prototype.tree = function(path) {
 		}
 		return res;
 	}
+	var result = {};
+	
+	if (attachScreenshot){
+		UIATarget.localTarget().captureScreenWithName('tmpScreenshot');
+		result.screenshot = true;
+	}else {
+		result.screenshot = false;
+	}
+	
 	var res = buildNode(this);
-	UIATarget.localTarget().captureScreenWithName('current');
-	var result = {
-		tree : res,
-		path : path
-	};
+	result.tree = res;
+	
 	return result;
 }
 /**

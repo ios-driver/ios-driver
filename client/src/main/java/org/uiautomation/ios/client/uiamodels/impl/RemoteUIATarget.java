@@ -88,13 +88,13 @@ public class RemoteUIATarget extends RemoteObject implements UIATarget {
       // TODO freynaud use getObject ?
       JSONObject res = getJSONResult(WebDriverLikeCommand.SCREENSHOT_WITH_NAME);
       String content = res.getString("64encoded");
-      createFileFromSctring(new File(path), content);
+      createFileFrom64EncodedString(new File(path), content);
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
-  private void createFileFromSctring(File f, String encoded64) throws IOException {
+  public static  void createFileFrom64EncodedString(File f, String encoded64) throws IOException {
     byte[] img64 = Base64.decodeBase64(encoded64);
     FileOutputStream os = new FileOutputStream(f);
     os.write(img64);

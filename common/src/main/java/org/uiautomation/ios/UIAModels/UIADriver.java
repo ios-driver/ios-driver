@@ -13,6 +13,8 @@
  */
 package org.uiautomation.ios.UIAModels;
 
+import java.io.File;
+
 import org.json.JSONObject;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.Session;
@@ -27,7 +29,7 @@ public interface UIADriver {
 
   public IOSCapabilities getCapabilities() throws Exception;
 
-  public JSONObject logElementTree() throws IOSAutomationException;
+  public JSONObject logElementTree(File screenshot) throws IOSAutomationException;
 
   public void quit();
 

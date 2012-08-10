@@ -49,7 +49,7 @@ public class PostTargetScreenshotWithName extends DecoratedScriptHandler {
   }
 
 
-  private static File waitForFileToAppearOnDisk(String path) throws Exception {
+  public static File waitForFileToAppearOnDisk(String path) throws Exception {
     File f = new File(path);
     int cpt = 0;
     while (!f.exists()) {
@@ -62,7 +62,7 @@ public class PostTargetScreenshotWithName extends DecoratedScriptHandler {
     return f;
   }
 
-  private static String to64encodedString(File from) throws Exception {
+  public static String to64encodedString(File from) throws Exception {
     FileInputStream is = new FileInputStream(from);
     byte[] img = IOUtils.toByteArray(is);
     String s = Base64.encodeBase64String(img);
