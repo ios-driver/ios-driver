@@ -13,6 +13,8 @@
  */
 package org.uiautomation.ios.UIAModels;
 
+import java.io.File;
+
 import org.json.JSONObject;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.exceptions.NoSuchElementException;
@@ -90,6 +92,6 @@ public interface UIAElement {
 
 
 
-  public JSONObject logElementTree() throws Exception;
+  public JSONObject logElementTree(File screenshot) throws Exception;
 
 }

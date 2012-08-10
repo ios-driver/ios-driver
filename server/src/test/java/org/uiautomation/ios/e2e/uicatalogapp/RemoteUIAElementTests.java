@@ -1,8 +1,10 @@
 package org.uiautomation.ios.e2e.uicatalogapp;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.UIAModels.UIAElement;
@@ -39,6 +41,53 @@ public class RemoteUIAElementTests extends UICatalogTestsBase {
       Criteria c = new AndCriteria(c1, c2);
       UIAElement element = win.findElement(c);
       Assert.assertEquals(element.getName(), name);
+    } finally {
+      if (driver != null) {
+        driver.quit();
+      }
+    }
+  }
+  
+  
+  @Test
+  public void logElementTreeNoScreenshot() throws Exception {
+    RemoteUIADriver driver = null;
+    try {
+      String name = "Buttons, Various uses of UIButton";
+      driver = getDriver();
+      RemoteUIAWindow win = getMainWindow(driver);
+      Criteria c1 = new TypeCriteria(UIATableCell.class);
+      Criteria c2 = new NameCriteria(name);
+      Criteria c = new AndCriteria(c1, c2);
+      UIAElement element = win.findElement(c);
+      Assert.assertEquals(element.getName(), name);
+      JSONObject tree = element.logElementTree(null);
+      Assert.assertTrue(tree.has("tree"));
+    } finally {
+      if (driver != null) {
+        driver.quit();
+      }
+    }
+  }
+  
+  @Test
+  public void logElementTreeWithScreenshot() throws Exception {
+    RemoteUIADriver driver = null;
+    try {
+      String name = "Buttons, Various uses of UIButton";
+      driver = getDriver();
+      RemoteUIAWindow win = getMainWindow(driver);
+      Criteria c1 = new TypeCriteria(UIATableCell.class);
+      Criteria c2 = new NameCriteria(name);
+      Criteria c = new AndCriteria(c1, c2);
+      UIAElement element = win.findElement(c);
+      Assert.assertEquals(element.getName(), name);
+      File f = new File("logElementTreeWithScreenshotTmp");
+      f.delete();
+      JSONObject tree = element.logElementTree(f);
+      Assert.assertTrue(tree.has("tree"));
+      Assert.assertTrue(f.exists());
+      f.delete();
     } finally {
       if (driver != null) {
         driver.quit();

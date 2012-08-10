@@ -13,6 +13,8 @@
  */
 package org.uiautomation.ios.client.uiamodels.impl;
 
+import java.io.File;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.UIAModels.UIAElement;
@@ -22,7 +24,10 @@ import org.uiautomation.ios.UIAModels.UIARect;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
+import org.uiautomation.ios.communication.Path;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
+import org.uiautomation.ios.communication.WebDriverLikeRequest;
+import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.exceptions.NoSuchElementException;
 import org.uiautomation.ios.exceptions.StaleReferenceException;
@@ -134,8 +139,41 @@ public class RemoteUIAElement extends RemoteObject implements UIAElement {
   }
 
   @Override
-  public JSONObject logElementTree() throws Exception {
-    return getObject(WebDriverLikeCommand.TREE);
+  public JSONObject logElementTree(File screenshot) throws Exception {
+    try {
+      WebDriverLikeCommand command = WebDriverLikeCommand.TREE;
+      Path p = new Path(command).withSession(getSessionId()).withReference(getReference());
+      JSONObject payload = new JSONObject();
+      if (screenshot == null) {
+        payload.put("attachScreenshot", false);
+      } else {
+        payload.put("attachScreenshot", true);
+      }
+
+      WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, payload);
+      WebDriverLikeResponse response = getDriver().execute(request);
+      if (response.getValue() == JSONObject.NULL) {
+        return null;
+      } else {
+        Object v = response.getValue();
+        if (v instanceof String) {
+          return new JSONObject((String) v);
+        } else if (v instanceof JSONObject) {
+          JSONObject res = (JSONObject) v;
+          if (screenshot != null) {
+            JSONObject screen = res.getJSONObject("screenshot");
+            String content = screen.getString("64encoded");
+            RemoteUIATarget.createFileFrom64EncodedString(screenshot, content);
+          }
+          res.remove("screenshot");
+          return res;
+        } else {
+          throw new IOSAutomationException("can't guess type, got " + v.getClass());
+        }
+      }
+    } catch (Exception e) {
+      throw new IOSAutomationException(e);
+    }
   }
 
   // TODO freynaud fix that server side.
