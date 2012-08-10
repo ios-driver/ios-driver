@@ -19,6 +19,7 @@ import org.uiautomation.ios.server.command.impl.DefaultUIAScriptHandler;
 import org.uiautomation.ios.server.command.impl.LocalTarget;
 import org.uiautomation.ios.server.command.impl.PostTargetScreenshotWithName;
 import org.uiautomation.ios.server.command.impl.ServerStatus;
+import org.uiautomation.ios.server.command.impl.TranslationDecoratorScriptHandler;
 import org.uiautomation.ios.server.command.impl.session.NewSession;
 import org.uiautomation.ios.server.command.impl.session.StopSession;
 import org.uiautomation.ios.server.instruments.SessionsManager;
@@ -34,7 +35,7 @@ public enum CommandMapping {
   // UIATarget
   LOCAL_TARGET(LocalTarget.class,".localTarget()"),
   HOST(null,null),
-  TREE(DefaultUIAScriptHandler.class,".tree(:lastScreenshotPath)"),
+  TREE(TranslationDecoratorScriptHandler.class,".tree(:lastScreenshotPath)"),
   MODEL(DefaultUIAScriptHandler.class,".model()"),
   TARGET_RECT(DefaultUIAScriptHandler.class,".rect()"),
   TARGET_TAP(CustomUIAScriptHandler.class,"complex..."),

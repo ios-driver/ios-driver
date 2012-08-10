@@ -26,6 +26,7 @@ import org.uiautomation.ios.ide.controllers.BeginController;
 import org.uiautomation.ios.ide.controllers.DebugController;
 import org.uiautomation.ios.ide.controllers.HomeController;
 import org.uiautomation.ios.ide.controllers.IDECommandController;
+import org.uiautomation.ios.ide.controllers.IDEController;
 import org.uiautomation.ios.ide.controllers.NoActionController;
 import org.uiautomation.ios.ide.controllers.NotImplementedIDEController;
 import org.uiautomation.ios.ide.controllers.RefreshController;
@@ -55,19 +56,21 @@ public class IDEServlet extends UIAScriptProxyBasedServlet {
   public void init() throws ServletException {
     super.init();
 
-    controllers.add(new HomeController());
+    controllers.add(new IDEController());
+    controllers.add(new ResourceController());
+    /*controllers.add(new HomeController());
     
     controllers.add(new AttachController(model));
     controllers.add(new StartController(model));
     controllers.add(new RefreshController(model));
-    controllers.add(new ResourceController(model));
+   
     controllers.add(new StopController(model));
     controllers.add(new UserActionController(model));
     controllers.add(new BeginController(model, getServerConfig()));
     controllers.add(new DebugController(model));
     controllers.add(new getLanguagesController(model));
 
-    controllers.add(new NoActionController(model, "/tree", new JSTreeJSON(model)));
+    controllers.add(new NoActionController(model, "/tree", new JSTreeJSON(model)));*/
 
   }
 

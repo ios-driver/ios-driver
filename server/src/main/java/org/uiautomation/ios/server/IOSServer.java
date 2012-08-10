@@ -110,7 +110,7 @@ public class IOSServer {
   public IOSServer(IOSServerConfiguration options) throws IOSAutomationSetupException {
     this.options = options;
     this.port = options.getPort();
-    server = new Server(new InetSocketAddress("0.0.0.0", options.getPort()));
+    server = new Server(new InetSocketAddress("localhost", options.getPort()));
     
   }
   

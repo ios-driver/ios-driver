@@ -23,11 +23,8 @@ import org.uiautomation.ios.ide.Model;
 import org.uiautomation.ios.ide.views.ResourceView;
 import org.uiautomation.ios.ide.views.View;
 
-public class ResourceController extends BaseController {
+public class ResourceController implements IDECommandController {
 
-  public ResourceController(Model model) {
-    super(model);
-  }
 
   public boolean canHandle(String pathInfo) {
     return pathInfo.contains("resources");
@@ -42,7 +39,7 @@ public class ResourceController extends BaseController {
 
     InputStream is = null;
     if (resource.endsWith("lastScreen.png")) {
-      is = getModel().getLastScreenshotInputStream();
+      //is = getModel().getLastScreenshotInputStream();
     } else {
       is = IDEServlet.class.getResourceAsStream("/" + resource);
     }

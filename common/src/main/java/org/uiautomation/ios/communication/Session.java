@@ -62,13 +62,9 @@ public class Session {
     return actualCapabilities;
   }
 
-  
-
-  
-
-
-  
-
-
+  @Override
+  public String toString() {
+    return opaqueKey;
+  }
 
 }

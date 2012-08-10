@@ -46,7 +46,7 @@ public class ServerStatus extends BaseCommandHandler {
     JSONArray supportedApps = new JSONArray();
     for (String path : config.getSupportedApps()){
       JSONObject app = new JSONObject();
-      app.put("path", path);
+      app.put("applicationPath", path);
       IOSApplication a = new IOSApplication(null, path);
       
       app.put("locales",a.getSupportedLanguages());
@@ -66,8 +66,8 @@ public class ServerStatus extends BaseCommandHandler {
        .put("time", BuildInfo.getAttribute("buildTimestamp"))
        .put("revision", BuildInfo.getAttribute("sha")));
    
-
-    
+   String currentSession = getSessionsManager().getCurrentSessionId();
+   res.put("currentSession",currentSession == null ? JSONObject.NULL : currentSession);
     
     return new WebDriverLikeResponse(null, 0, res);
      }

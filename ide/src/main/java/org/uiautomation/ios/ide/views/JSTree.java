@@ -53,7 +53,7 @@ public class JSTree {
     metadata.put("label", from.getString("label"));
     metadata.put("name", from.getString("name"));
     metadata.put("value", from.getString("value"));
-    metadata.put("l10n", app.getTranslations(from.getString("name")));
+    metadata.put("l10n", from.getJSONObject("l10n"));
 
 
     node.put("metadata", metadata);

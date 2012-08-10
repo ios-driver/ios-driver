@@ -59,7 +59,7 @@ public class SampleApps {
   public static IOSCapabilities intlMountainsCap(Localizable l) {
     IOSCapabilities c = IOSCapabilities.iphone(SampleApps.getIntlMountainsApp());
     c.setLanguage(l.getName());
-    c.setCapability(IOSCapabilities.TIME_HACK, true);
+    c.setCapability(IOSCapabilities.TIME_HACK, false);
     return c;
   }
 }

@@ -24,15 +24,16 @@ import org.uiautomation.ios.exceptions.IOSAutomationException;
 public class Helper {
 
   public static JSONObject extractObject(HttpResponse resp) {
+    String str = "";
     try {
       InputStream is = resp.getEntity().getContent();
       StringWriter writer = new StringWriter();
       IOUtils.copy(is, writer, "UTF-8");
 
-      String str = writer.toString();
+      str = writer.toString();
       return new JSONObject(str);
     } catch (Exception e) {
-      throw new IOSAutomationException(e);
+      throw new IOSAutomationException(str, e);
     }
   }
 }
