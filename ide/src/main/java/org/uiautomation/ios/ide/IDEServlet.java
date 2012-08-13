@@ -25,6 +25,7 @@ import org.uiautomation.ios.ide.controllers.IDECommandController;
 import org.uiautomation.ios.ide.controllers.IDEController;
 import org.uiautomation.ios.ide.controllers.NotImplementedIDEController;
 import org.uiautomation.ios.ide.controllers.ResourceController;
+import org.uiautomation.ios.ide.controllers.TreeController;
 import org.uiautomation.ios.ide.model.Cache;
 import org.uiautomation.ios.ide.views.View;
 import org.uiautomation.ios.server.servlet.UIAScriptProxyBasedServlet;
@@ -49,6 +50,7 @@ public class IDEServlet extends UIAScriptProxyBasedServlet {
     Cache cache = new Cache();
     controllers.add(new IDEController(cache));
     controllers.add(new ResourceController(cache));
+    controllers.add(new TreeController(cache));
     /*controllers.add(new HomeController());
     
     controllers.add(new AttachController(model));

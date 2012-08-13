@@ -19,7 +19,8 @@ public class IDEController implements IDECommandController {
 
   @Override
   public boolean canHandle(String pathInfo) {
-    return pathInfo.startsWith("/session/");
+    boolean ok =  pathInfo.startsWith("/session/") && pathInfo.endsWith("/home");
+    return ok;
   }
 
   @Override

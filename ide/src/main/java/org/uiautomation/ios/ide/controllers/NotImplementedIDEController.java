@@ -34,7 +34,8 @@ public class NotImplementedIDEController extends BaseController {
 
   public View handle(HttpServletRequest req) throws IOSAutomationException {
     System.err.println("no controller for that " + req.getPathInfo());
-    return new DefaultView(getModel());
+    // return new DefaultView(getModel());
+    throw new RuntimeException("no controller for " + req.getPathInfo());
   }
 
 }
