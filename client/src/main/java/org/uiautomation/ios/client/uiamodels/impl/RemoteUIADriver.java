@@ -29,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.UIADriver;
+import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.communication.FailedWebDriverLikeResponse;
 import org.uiautomation.ios.communication.Helper;
 import org.uiautomation.ios.communication.HttpClientFactory;
@@ -180,42 +181,11 @@ public class RemoteUIADriver implements UIADriver {
   }
 
   @Override
-  public JSONObject logElementTree(File screenshot,boolean translation) throws IOSAutomationException {
-    try {
-      WebDriverLikeCommand command = WebDriverLikeCommand.TREE;
-      Path p = new Path(command).withSession(session.getSessionId()).withoutReference();
-      JSONObject payload = new JSONObject();
-      if (screenshot == null) {
-        payload.put("attachScreenshot", false);
-      } else {
-        payload.put("attachScreenshot", true);
-      }
-      payload.put("translation", translation);
-
-      WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, payload);
-      WebDriverLikeResponse response = execute(request);
-      if (response.getValue() == JSONObject.NULL) {
-        return null;
-      } else {
-        Object v = response.getValue();
-        if (v instanceof String) {
-          return new JSONObject((String) v);
-        } else if (v instanceof JSONObject) {
-          JSONObject res = (JSONObject) v;
-          if (screenshot != null) {
-            JSONObject screen = res.getJSONObject("screenshot");
-            String content = screen.getString("64encoded");
-            RemoteUIATarget.createFileFrom64EncodedString(screenshot, content);
-          }
-          res.remove("screenshot");
-          return res;
-        } else {
-          throw new IOSAutomationException("can't guess type, got " + v.getClass());
-        }
-      }
-    } catch (Exception e) {
-      throw new IOSAutomationException(e);
-    }
+  public JSONObject logElementTree(File screenshot, boolean translation)
+      throws IOSAutomationException {
+    WebDriverLikeCommand command = WebDriverLikeCommand.TREE;
+    Path p = new Path(command).withSession(session.getSessionId()).withoutReference();
+    return RemoteUIAElement.logElementTree(screenshot, translation, p, command, this);
   }
 
   @Override

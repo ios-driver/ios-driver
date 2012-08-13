@@ -92,6 +92,6 @@ public interface UIAElement {
 
 
 
-  public JSONObject logElementTree(File screenshot) throws Exception;
+  public JSONObject logElementTree(File screenshot,boolean translation) throws Exception;
 
 }

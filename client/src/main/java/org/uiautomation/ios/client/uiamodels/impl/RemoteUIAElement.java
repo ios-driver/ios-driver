@@ -139,19 +139,27 @@ public class RemoteUIAElement extends RemoteObject implements UIAElement {
   }
 
   @Override
-  public JSONObject logElementTree(File screenshot) throws Exception {
+  public JSONObject logElementTree(File screenshot,boolean translation) throws Exception {
+    WebDriverLikeCommand command = WebDriverLikeCommand.TREE;
+    Path p = new Path(command).withSession(getSessionId()).withReference(getReference());
+    return RemoteUIAElement.logElementTree(screenshot, translation, p, command, getDriver());
+  }
+
+
+  static JSONObject logElementTree(File screenshot, boolean translation, Path path,
+      WebDriverLikeCommand command, RemoteUIADriver driver) {
     try {
-      WebDriverLikeCommand command = WebDriverLikeCommand.TREE;
-      Path p = new Path(command).withSession(getSessionId()).withReference(getReference());
+
       JSONObject payload = new JSONObject();
       if (screenshot == null) {
         payload.put("attachScreenshot", false);
       } else {
         payload.put("attachScreenshot", true);
       }
+      payload.put("translation", translation);
 
-      WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, payload);
-      WebDriverLikeResponse response = getDriver().execute(request);
+      WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), path, payload);
+      WebDriverLikeResponse response = driver.execute(request);
       if (response.getValue() == JSONObject.NULL) {
         return null;
       } else {
