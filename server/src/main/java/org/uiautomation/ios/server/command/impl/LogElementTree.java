@@ -10,7 +10,6 @@ import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
-import org.uiautomation.ios.server.command.impl.decorators.FileTo64EncodedStringUtils;
 import org.uiautomation.ios.server.instruments.SessionsManager;
 
 public class LogElementTree extends DefaultUIAScriptHandler {

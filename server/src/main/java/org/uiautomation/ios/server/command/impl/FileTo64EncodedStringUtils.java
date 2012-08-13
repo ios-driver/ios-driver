@@ -1,4 +1,4 @@
-package org.uiautomation.ios.server.command.impl.decorators;
+package org.uiautomation.ios.server.command.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
