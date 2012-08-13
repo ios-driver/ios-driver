@@ -41,6 +41,8 @@ public class StatusTests {
       HttpResponse response = client.execute(h, r);
 
       JSONObject o = Helper.extractObject(response);
+      
+      System.out.println(o.toString(2));
       JSONArray array = o.getJSONObject("value").getJSONArray("supportedApps");
       Assert.assertEquals(array.length(), 2);
 
@@ -49,7 +51,7 @@ public class StatusTests {
       Assert.assertEquals(uicatalog.get("bundleId"), "com.yourcompany.UICatalog");
       Assert.assertEquals(uicatalog.get("bundleName"), "UICatalog");
       Assert.assertEquals(uicatalog.get("bundleVersion"), "2.10");
-      Assert.assertEquals(uicatalog.get("path"), SampleApps.getUICatalogApp());
+      Assert.assertEquals(uicatalog.get("applicationPath"), SampleApps.getUICatalogApp());
 
       JSONArray locales1 = uicatalog.getJSONArray("locales");
       Assert.assertEquals(locales1.length(), 1);
@@ -59,7 +61,7 @@ public class StatusTests {
       Assert.assertEquals(intMount.get("bundleId"), "com.yourcompany.InternationalMountains");
       Assert.assertEquals(intMount.get("bundleName"), "InternationalMountains");
       Assert.assertEquals(intMount.get("bundleVersion"), "1.1");
-      Assert.assertEquals(intMount.get("path"), SampleApps.getIntlMountainsApp());
+      Assert.assertEquals(intMount.get("applicationPath"), SampleApps.getIntlMountainsApp());
 
       JSONArray locales2 = intMount.getJSONArray("locales");
       Assert.assertEquals(locales2.length(), 3);

@@ -61,7 +61,7 @@ public class RemoteUIAElementTests extends UICatalogTestsBase {
       Criteria c = new AndCriteria(c1, c2);
       UIAElement element = win.findElement(c);
       Assert.assertEquals(element.getName(), name);
-      JSONObject tree = element.logElementTree(null);
+      JSONObject tree = element.logElementTree(null,false);
       Assert.assertTrue(tree.has("tree"));
     } finally {
       if (driver != null) {
@@ -84,7 +84,7 @@ public class RemoteUIAElementTests extends UICatalogTestsBase {
       Assert.assertEquals(element.getName(), name);
       File f = new File("logElementTreeWithScreenshotTmp");
       f.delete();
-      JSONObject tree = element.logElementTree(f);
+      JSONObject tree = element.logElementTree(f,true);
       Assert.assertTrue(tree.has("tree"));
       Assert.assertTrue(f.exists());
       f.delete();
