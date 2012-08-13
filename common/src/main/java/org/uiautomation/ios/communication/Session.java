@@ -67,4 +67,26 @@ public class Session {
     return opaqueKey;
   }
 
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((opaqueKey == null) ? 0 : opaqueKey.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
+    Session other = (Session) obj;
+    if (opaqueKey == null) {
+      if (other.opaqueKey != null) return false;
+    } else if (!opaqueKey.equals(other.opaqueKey)) return false;
+    return true;
+  }
+  
+  
+
 }
