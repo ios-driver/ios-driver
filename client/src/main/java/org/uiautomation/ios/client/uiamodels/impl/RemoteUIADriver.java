@@ -13,6 +13,7 @@
  */
 package org.uiautomation.ios.client.uiamodels.impl;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.Normalizer;
@@ -133,8 +134,9 @@ public class RemoteUIADriver implements UIADriver {
       BasicHttpEntityEnclosingRequest r =
           new BasicHttpEntityEnclosingRequest(request.getMethod(), url);
       if (request.hasPayload()) {
-        //String normalizedOriginalText = Normalizer.normalize(request.getPayload().toString(), Form.NFC);
-        r.setEntity(new StringEntity(request.getPayload().toString(),"UTF-8"));
+        // String normalizedOriginalText = Normalizer.normalize(request.getPayload().toString(),
+        // Form.NFC);
+        r.setEntity(new StringEntity(request.getPayload().toString(), "UTF-8"));
       }
 
       HttpHost h = new HttpHost(host, port);
@@ -178,12 +180,18 @@ public class RemoteUIADriver implements UIADriver {
   }
 
   @Override
-  public JSONObject logElementTree() throws IOSAutomationException {
+  public JSONObject logElementTree(File screenshot) throws IOSAutomationException {
     try {
       WebDriverLikeCommand command = WebDriverLikeCommand.TREE;
       Path p = new Path(command).withSession(session.getSessionId()).withoutReference();
-      WebDriverLikeRequest request =
-          new WebDriverLikeRequest(command.method(), p, new JSONObject());
+      JSONObject payload = new JSONObject();
+      if (screenshot == null) {
+        payload.put("attachScreenshot", false);
+      } else {
+        payload.put("attachScreenshot", true);
+      }
+
+      WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, payload);
       WebDriverLikeResponse response = execute(request);
       if (response.getValue() == JSONObject.NULL) {
         return null;
@@ -192,7 +200,14 @@ public class RemoteUIADriver implements UIADriver {
         if (v instanceof String) {
           return new JSONObject((String) v);
         } else if (v instanceof JSONObject) {
-          return (JSONObject) v;
+          JSONObject res = (JSONObject) v;
+          if (screenshot != null) {
+            JSONObject screen = res.getJSONObject("screenshot");
+            String content = screen.getString("64encoded");
+            RemoteUIATarget.createFileFrom64EncodedString(screenshot, content);
+          }
+          res.remove("screenshot");
+          return res;
         } else {
           throw new IOSAutomationException("can't guess type, got " + v.getClass());
         }
