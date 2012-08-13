@@ -17,6 +17,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +32,8 @@ import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.server.CommandMapping;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.command.Handler;
+import org.uiautomation.ios.server.command.PostHandleDecorator;
+import org.uiautomation.ios.server.command.PreHandleDecorator;
 
 public class IOSServlet extends UIAScriptProxyBasedServlet {
 
@@ -121,8 +124,10 @@ public class IOSServlet extends UIAScriptProxyBasedServlet {
   private WebDriverLikeResponse getResponse(WebDriverLikeRequest request) {
     try {
       WebDriverLikeCommand wdlc = request.getGenericCommand();
+      List<PreHandleDecorator> pres=null;
+      List<PostHandleDecorator> posts=null;
       Handler h = CommandMapping.get(wdlc).createHandler(getSessionsManager(), request);
-      return h.handle();
+      return h.handleAndRunDecorators();
     } catch (Exception e) {
       e.printStackTrace();
       return new FailedWebDriverLikeResponse(getSessionsManager().getCurrentSessionId(), e);

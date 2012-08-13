@@ -180,7 +180,7 @@ public class RemoteUIADriver implements UIADriver {
   }
 
   @Override
-  public JSONObject logElementTree(File screenshot) throws IOSAutomationException {
+  public JSONObject logElementTree(File screenshot,boolean translation) throws IOSAutomationException {
     try {
       WebDriverLikeCommand command = WebDriverLikeCommand.TREE;
       Path p = new Path(command).withSession(session.getSessionId()).withoutReference();
@@ -190,6 +190,7 @@ public class RemoteUIADriver implements UIADriver {
       } else {
         payload.put("attachScreenshot", true);
       }
+      payload.put("translation", translation);
 
       WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, payload);
       WebDriverLikeResponse response = execute(request);

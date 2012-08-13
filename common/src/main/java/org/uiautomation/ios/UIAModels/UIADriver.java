@@ -29,7 +29,7 @@ public interface UIADriver {
 
   public IOSCapabilities getCapabilities() throws Exception;
 
-  public JSONObject logElementTree(File screenshot) throws IOSAutomationException;
+  public JSONObject logElementTree(File screenshot,boolean translation) throws IOSAutomationException;
 
   public void quit();
 

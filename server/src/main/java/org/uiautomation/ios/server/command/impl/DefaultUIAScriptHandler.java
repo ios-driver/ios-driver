@@ -13,8 +13,6 @@
  */
 package org.uiautomation.ios.server.command.impl;
 
-import java.io.File;
-
 import org.json.JSONObject;
 import org.uiautomation.ios.UIAModels.UIAApplication;
 import org.uiautomation.ios.UIAModels.UIAElement;
@@ -31,29 +29,47 @@ import org.uiautomation.ios.server.command.UIAScriptHandler;
 import org.uiautomation.ios.server.instruments.SessionsManager;
 
 /**
- * execute the command on instruments, and returns a String.
+ * execute the command on instruments, and returns the result cast based on the expected result.
  * 
  */
 public class DefaultUIAScriptHandler extends UIAScriptHandler {
 
+  // TODO freynaud extract?
+  private static final String stringTemplate = 
+      "var parent = UIAutomation.cache.get(:reference);" +
+      "var myStringResult = parent:jsMethod ;" +
+      "UIAutomation.createJSONResponse(':sessionId',0,myStringResult)";
+
+  private static final String objectTemplate =
+      "var parent = UIAutomation.cache.get(:reference);" +
+      "var myObjectResult = parent:jsMethod;" +
+      "var k=UIAutomation.cache.store(myObjectResult);" +
+      "UIAutomation.createJSONResponse(':sessionId',0,myObjectResult)";
+
+  private static final String voidTemplate =
+      "var parent = UIAutomation.cache.get(:reference);" +
+      "parent:jsMethod;UIAutomation.createJSONResponse(':sessionId',0,'')";
 
 
   public DefaultUIAScriptHandler(SessionsManager instruments, WebDriverLikeRequest request) {
     super(instruments, request);
-    setJS(computeJS(request.getPayload()));
+    setJS(computeJS());
   }
 
-
-
-  private String computeJS(JSONObject payload) {
+  private String computeJS() {
     Class<?> returnType = getRequest().getGenericCommand().returnType();
+    String template = findTemplate(returnType);
+    return getFinalJS(template);
+  }
+
+  private String findTemplate(Class<?> returnType) {
     if (returnType == String.class || returnType == UIARect.class || returnType == Integer.class
         || returnType == Boolean.class) {
-      return jsForString(payload);
+      return stringTemplate;
     } else if (isAUIASimpleObject(returnType)) {
-      return jsForRemoteObject(payload);
+      return objectTemplate;
     } else if (returnType == Void.class) {
-      return jsForVoid(payload);
+      return voidTemplate;
     } else {
       return null;
     }
@@ -66,7 +82,7 @@ public class DefaultUIAScriptHandler extends UIAScriptHandler {
     if (type == UIAWindow.class) return true;
     if (type == UIAElement.class) return true;
     if (type == UIAElementArray.class) return true;
-    if (type == UIAKeyboard.class)return true; 
+    if (type == UIAKeyboard.class) return true;
     return false;
   }
 
@@ -74,63 +90,19 @@ public class DefaultUIAScriptHandler extends UIAScriptHandler {
     return getSessionsManager().getCurrentApplication();
   }
 
-  // TODO freynaud extract.
-  private static final String stringTemplate =
-      "var target = UIAutomation.cache.get(:reference);var myStringResult = target:jsMethod ;UIAutomation.createJSONResponse(':sessionId',0,myStringResult)";
 
-  private static final String objectTemplate =
-      "var parent = UIAutomation.cache.get(:reference);var myObjectResult = parent:jsMethod;var k=UIAutomation.cache.store(myObjectResult);UIAutomation.createJSONResponse(':sessionId',0,myObjectResult)";
-
-  private static final String voidTemplate =
-      "var parent = UIAutomation.cache.get(:reference);parent:jsMethod;UIAutomation.createJSONResponse(':sessionId',0,'')";
-
-  private String jsForRemoteObject(JSONObject payload) {
+  private String getFinalJS(String template) {
     WebDriverLikeCommand command = getRequest().getGenericCommand();
     CommandMapping mapping = CommandMapping.get(command);
-    String method = mapping.jsMethod(payload, getAUT());
+    String method = mapping.jsMethod(getRequest().getPayload(), getAUT());
 
     String js =
-        objectTemplate.replace(":jsMethod", method)
+        template.replace(":jsMethod", method)
             .replace(":sessionId", getSessionsManager().getCurrentSessionId())
             .replace(":reference", getRequest().getVariableValue(":reference"));
-
-
     return js;
   }
 
 
-
-  private String jsForString(JSONObject payload) {
-    WebDriverLikeCommand command = getRequest().getGenericCommand();
-    CommandMapping mapping = CommandMapping.get(command);
-    String method = mapping.jsMethod(payload, getAUT());
-
-    String js =
-        stringTemplate.replace(":jsMethod", method)
-            .replace(":sessionId", getSessionsManager().getCurrentSessionId())
-            .replace(":reference", getRequest().getVariableValue(":reference"));
-
-
-    if (js.contains(":lastScreenshotPath")) {
-      String path = getSessionsManager().getCurrentSessionOutputFolder() + "/Run 1/current.png";
-      new File(path).delete();
-      js = js.replace(":lastScreenshotPath", "'" + path + "'");
-    }
-
-    return js;
-  }
-
-  private String jsForVoid(JSONObject payload) {
-    WebDriverLikeCommand command = getRequest().getGenericCommand();
-    CommandMapping mapping = CommandMapping.get(command);
-    String method = mapping.jsMethod(payload, getAUT());
-
-    String js =
-        voidTemplate.replace(":jsMethod", method)
-            .replace(":sessionId", getSessionsManager().getCurrentSessionId())
-            .replace(":reference", getRequest().getVariableValue(":reference"));
-
-    return js;
-  }
 
 }

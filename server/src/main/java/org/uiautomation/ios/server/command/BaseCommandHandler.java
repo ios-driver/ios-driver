@@ -14,22 +14,39 @@
 
 package org.uiautomation.ios.server.command;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
+import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
 import org.uiautomation.ios.server.instruments.SessionsManager;
 
 public abstract class BaseCommandHandler implements Handler {
 
-  private final SessionsManager sessionsManager;
+  private final SessionsManager context;
   private final WebDriverLikeRequest request;
+  private final List<PreHandleDecorator> preDecorators = new ArrayList<PreHandleDecorator>();
+  private final List<PostHandleDecorator> postDecorators = new ArrayList<PostHandleDecorator>();
 
   public BaseCommandHandler(SessionsManager sessionsManager, WebDriverLikeRequest request) {
-    this.sessionsManager = sessionsManager;
+    this.context = sessionsManager;
     this.request = request;
+  }
+  
+  @Override
+  public void addDecorator(PostHandleDecorator decorator) {
+    postDecorators.add(decorator);
+    
+  }
+  
+  @Override
+  public void addDecorator(PreHandleDecorator decorator) {
+    preDecorators.add(decorator);
   }
 
   protected SessionsManager getSessionsManager() {
-    return sessionsManager;
+    return context;
   }
 
 
@@ -39,6 +56,18 @@ public abstract class BaseCommandHandler implements Handler {
 
   public CommunicationChannel communication() {
     return getSessionsManager().getInstrumentManager().communicate();
+  }
+  
+  @Override
+  public WebDriverLikeResponse handleAndRunDecorators() throws Exception  {
+    for (PreHandleDecorator pre : preDecorators){
+      pre.decorate(request);
+    }
+    WebDriverLikeResponse response = handle();
+    for (PostHandleDecorator post : postDecorators){
+      post.decorate(response);
+    }
+    return response;
   }
 
 }

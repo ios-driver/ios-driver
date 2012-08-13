@@ -19,4 +19,10 @@ import org.uiautomation.ios.communication.WebDriverLikeResponse;
 public interface Handler {
 
   public WebDriverLikeResponse handle() throws Exception;
+  
+  public void addDecorator(PreHandleDecorator decorator);
+  public void addDecorator(PostHandleDecorator decorator);
+  
+  public WebDriverLikeResponse handleAndRunDecorators() throws Exception;
+  
 }

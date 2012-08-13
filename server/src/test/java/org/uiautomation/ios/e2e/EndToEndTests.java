@@ -108,6 +108,8 @@ public class EndToEndTests {
       RemoteUIATarget target = driver.getLocalTarget();
 
       File to = new File("ss.png");
+      to.delete();
+      Assert.assertFalse(to.exists());
       target.takeScreenshot(to.getAbsolutePath());
       Assert.assertTrue(to.exists());
     } finally {
@@ -146,8 +148,9 @@ public class EndToEndTests {
 
       File f = new File("logElementTreeTmp");
       f.delete();
-      JSONObject object = driver.logElementTree(f);
+      JSONObject object = driver.logElementTree(f,true);
      
+      System.out.println(object.toString(2));
       Assert.assertTrue(f.exists());
       f.delete();
     } finally {
@@ -167,7 +170,7 @@ public class EndToEndTests {
           new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",
               SampleApps.uiCatalogCap());
 
-      JSONObject object = driver.logElementTree(null);
+      JSONObject object = driver.logElementTree(null,false);
       Assert.assertTrue(object.has("tree"));
     } finally {
       if (driver != null) {

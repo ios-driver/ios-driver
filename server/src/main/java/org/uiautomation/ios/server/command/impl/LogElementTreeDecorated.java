@@ -27,11 +27,11 @@ public class LogElementTreeDecorated extends DecoratedScriptHandler {
           boolean screenshot = value.getBoolean("screenshot");
           if (screenshot) {
             String path = instruments.getCurrentSessionOutputFolder() + "/Run 1/tmpScreenshot.png";
-            File tmp = PostTargetScreenshotWithName.waitForFileToAppearOnDisk(path);
+            //File tmp = PostTargetScreenshotWithName.waitForFileToAppearOnDisk(path);
 
             JSONObject ss = new JSONObject();
-            ss.put("64encoded", PostTargetScreenshotWithName.to64encodedString(tmp));
-            tmp.delete();
+            //ss.put("64encoded", PostTargetScreenshotWithName.to64encodedString(tmp));
+            //tmp.delete();
             value.put("screenshot", ss);
           }
         } catch (Exception e) {

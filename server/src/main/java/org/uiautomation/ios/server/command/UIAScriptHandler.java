@@ -32,7 +32,6 @@ public abstract class UIAScriptHandler extends BaseCommandHandler {
 
   public UIAScriptHandler(SessionsManager instruments, WebDriverLikeRequest request) {
     super(instruments, request);
-
   }
 
   protected void setJS(String js) {
