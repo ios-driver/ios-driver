@@ -116,9 +116,6 @@ public class RemoteUIATarget extends RemoteObject implements UIATarget {
     } catch (JSONException e) {
       throw new RuntimeException("TODO", e);
     }
-
-
-
   }
 
 
