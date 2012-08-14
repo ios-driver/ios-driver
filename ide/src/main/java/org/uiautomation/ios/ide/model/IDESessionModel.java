@@ -3,13 +3,11 @@ package org.uiautomation.ios.ide.model;
 import java.io.File;
 import java.net.URL;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.communication.Session;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.application.IOSApplication;
-import org.uiautomation.ios.server.command.impl.LogElementTreeDecorated;
 
 public class IDESessionModel {
 
@@ -30,7 +28,7 @@ public class IDESessionModel {
 
   public void refresh() throws IOSAutomationException {
     screenshot.delete();
-    elementTree = driver.logElementTree(screenshot);
+    elementTree = driver.logElementTree(screenshot,true);
     System.out.println(screenshot.getAbsolutePath());
   }
 
