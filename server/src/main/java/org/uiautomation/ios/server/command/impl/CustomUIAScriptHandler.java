@@ -23,39 +23,25 @@ import org.uiautomation.ios.server.instruments.SessionsManager;
 // TODO should go away eventually.
 public class CustomUIAScriptHandler extends UIAScriptHandler {
 
-	private static final String capabilities = "var json = UIAutomation.getCapabilities() ;UIAutomation.createJSONResponse(':sessionId',0,json)";
+  private static final String capabilities =
+      "var json = UIAutomation.getCapabilities() ;UIAutomation.createJSONResponse(':sessionId',0,json)";
 
-	private static final String getTimeout = "var timeout = UIAutomation.TIMEOUT_IN_SEC / :correction;UIAutomation.createJSONResponse(':sessionId',0,timeout)";
+  public CustomUIAScriptHandler(SessionsManager instruments, WebDriverLikeRequest request)
+      throws Exception {
+    super(instruments, request);
+    String s = getScript(instruments, request);
+    setJS(s);
+  }
 
-	private static final String setTimeout = "UIAutomation.setTimeout(:timeout);UIAutomation.createJSONResponse(':sessionId',0,'')";
+  private String getScript(SessionsManager instruments, WebDriverLikeRequest r) throws Exception {
+    String s = "N/A";
+    switch (r.getGenericCommand()) {
+      case GET_SESSION:
+        s = capabilities.replace(":sessionId", instruments.getCurrentSessionId());
+        return s;
 
-	public CustomUIAScriptHandler(SessionsManager instruments,
-			WebDriverLikeRequest request) throws Exception {
-		super(instruments, request);
-		String s = getScript(instruments, request);
-		setJS(s);
-	}
-
-	private String getScript(SessionsManager instruments, WebDriverLikeRequest r)
-			throws Exception {
-		String s = "N/A";
-		switch (r.getGenericCommand()) {
-		case GET_SESSION:
-			s = capabilities.replace(":sessionId",
-					instruments.getCurrentSessionId());
-			return s;
-		case SET_TIMEOUT:
-			s = setTimeout.replace(
-					":timeout",
-					String.format("%f", r.getPayload().getInt("timeout")
-							* TimeSpeeder.getInstance().getSecondDuration()));
-			return s;
-		case GET_TIMEOUT:
-			s = getTimeout.replace(":correction", String.format("%f",
-					TimeSpeeder.getInstance().getSecondDuration()));
-			return s;
-		default:
-			throw new IOSAutomationException("NI");
-		}
-	}
+      default:
+        throw new IOSAutomationException("NI");
+    }
+  }
 }

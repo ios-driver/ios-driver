@@ -15,9 +15,11 @@ import org.uiautomation.ios.server.command.Handler;
 import org.uiautomation.ios.server.command.NotImplementedHandler;
 import org.uiautomation.ios.server.command.impl.CustomUIAScriptHandler;
 import org.uiautomation.ios.server.command.impl.DefaultUIAScriptHandler;
+import org.uiautomation.ios.server.command.impl.GetTimeoutCommandHandler;
 import org.uiautomation.ios.server.command.impl.LocalTarget;
 import org.uiautomation.ios.server.command.impl.LogElementTree;
 import org.uiautomation.ios.server.command.impl.ServerStatus;
+import org.uiautomation.ios.server.command.impl.SetTimeoutCommandHandler;
 import org.uiautomation.ios.server.command.impl.TakeScreenshot;
 import org.uiautomation.ios.server.command.impl.session.NewSession;
 import org.uiautomation.ios.server.command.impl.session.StopSession;
@@ -28,8 +30,8 @@ public enum CommandMapping {
   NEW_SESSION(NewSession.class),
   GET_SESSION(CustomUIAScriptHandler.class),
   DELETE_SESSION(StopSession.class),
-  SET_TIMEOUT(CustomUIAScriptHandler.class),
-  GET_TIMEOUT(CustomUIAScriptHandler.class),
+  SET_TIMEOUT(SetTimeoutCommandHandler.class),
+  GET_TIMEOUT(GetTimeoutCommandHandler.class),
   
   // UIATarget
   LOCAL_TARGET(LocalTarget.class),
@@ -38,7 +40,6 @@ public enum CommandMapping {
   
   MODEL(".model()"),
   TARGET_RECT(".rect()"),
-  //TARGET_TAP(CustomUIAScriptHandler.class),
   TARGET_TAP(".tap({x::x,y::y})"),
   TARGET_NAME(".name()"),
   SYSTEM_NAME(".systemName()"),
