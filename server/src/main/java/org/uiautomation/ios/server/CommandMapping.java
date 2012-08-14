@@ -13,8 +13,8 @@ import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.application.ServerSideL10NDecorator;
 import org.uiautomation.ios.server.command.Handler;
 import org.uiautomation.ios.server.command.NotImplementedHandler;
-import org.uiautomation.ios.server.command.impl.CustomUIAScriptHandler;
 import org.uiautomation.ios.server.command.impl.DefaultUIAScriptHandler;
+import org.uiautomation.ios.server.command.impl.GetCapabilitiesCommandHandler;
 import org.uiautomation.ios.server.command.impl.GetTimeoutCommandHandler;
 import org.uiautomation.ios.server.command.impl.LocalTarget;
 import org.uiautomation.ios.server.command.impl.LogElementTree;
@@ -28,7 +28,7 @@ import org.uiautomation.ios.server.instruments.SessionsManager;
 public enum CommandMapping {
 
   NEW_SESSION(NewSession.class),
-  GET_SESSION(CustomUIAScriptHandler.class),
+  GET_SESSION(GetCapabilitiesCommandHandler.class),
   DELETE_SESSION(StopSession.class),
   SET_TIMEOUT(SetTimeoutCommandHandler.class),
   GET_TIMEOUT(GetTimeoutCommandHandler.class),
