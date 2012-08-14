@@ -13,7 +13,6 @@
  */
 package org.uiautomation.ios.server.command.impl;
 
-import org.json.JSONObject;
 import org.uiautomation.ios.UIAModels.UIAApplication;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIAElementArray;
