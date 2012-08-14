@@ -38,7 +38,8 @@ public enum CommandMapping {
   
   MODEL(".model()"),
   TARGET_RECT(".rect()"),
-  TARGET_TAP(CustomUIAScriptHandler.class),
+  //TARGET_TAP(CustomUIAScriptHandler.class),
+  TARGET_TAP(".tap({x::x,y::y})"),
   TARGET_NAME(".name()"),
   SYSTEM_NAME(".systemName()"),
   SYSTEM_VERSION(".systemVersion()"),
