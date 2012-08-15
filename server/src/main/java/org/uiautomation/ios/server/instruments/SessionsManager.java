@@ -70,6 +70,7 @@ public class SessionsManager {
         new File(v.getApplication()), v.isTimeHack(), v.getExtraSwitches());
   }
 
+
   public void createSession(IOSDevice device, String sdkVersion, String locale, String language,
       File application, boolean timeHack, List<String> envtParams)
       throws IOSAutomationSetupException {
