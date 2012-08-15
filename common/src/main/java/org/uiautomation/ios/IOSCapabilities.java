@@ -24,7 +24,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.communication.IOSDevice;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 
 public class IOSCapabilities {
 

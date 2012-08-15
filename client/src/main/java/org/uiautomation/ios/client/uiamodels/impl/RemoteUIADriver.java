@@ -16,8 +16,6 @@ package org.uiautomation.ios.client.uiamodels.impl;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.Normalizer;
-import java.text.Normalizer.Form;
 import java.util.Map;
 
 import org.apache.http.HttpHost;
@@ -29,7 +27,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.UIADriver;
-import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.communication.FailedWebDriverLikeResponse;
 import org.uiautomation.ios.communication.Helper;
 import org.uiautomation.ios.communication.HttpClientFactory;
