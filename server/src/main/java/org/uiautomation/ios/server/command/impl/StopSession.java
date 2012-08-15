@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.uiautomation.ios.server.command.impl.session;
+package org.uiautomation.ios.server.command.impl;
 
 import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;

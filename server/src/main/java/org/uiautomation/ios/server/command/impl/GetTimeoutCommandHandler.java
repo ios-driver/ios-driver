@@ -1,12 +1,11 @@
 package org.uiautomation.ios.server.command.impl;
 
-import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
-import org.uiautomation.ios.server.command.impl.session.hack.TimeSpeeder;
+import org.uiautomation.ios.server.command.impl.hack.TimeSpeeder;
 import org.uiautomation.ios.server.instruments.SessionsManager;
 
 public class GetTimeoutCommandHandler extends UIAScriptHandler {

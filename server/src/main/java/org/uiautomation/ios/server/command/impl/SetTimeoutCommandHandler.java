@@ -5,7 +5,7 @@ import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.command.PreHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
-import org.uiautomation.ios.server.command.impl.session.hack.TimeSpeeder;
+import org.uiautomation.ios.server.command.impl.hack.TimeSpeeder;
 import org.uiautomation.ios.server.instruments.SessionsManager;
 
 public class SetTimeoutCommandHandler extends UIAScriptHandler {

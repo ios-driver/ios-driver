@@ -12,7 +12,7 @@
  * the License.
  */
 
-package org.uiautomation.ios.server.command.impl.session.hack;
+package org.uiautomation.ios.server.command.impl.hack;
 
 public interface HorribleHack {
 

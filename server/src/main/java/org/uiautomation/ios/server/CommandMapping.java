@@ -18,11 +18,11 @@ import org.uiautomation.ios.server.command.impl.GetCapabilitiesCommandHandler;
 import org.uiautomation.ios.server.command.impl.GetTimeoutCommandHandler;
 import org.uiautomation.ios.server.command.impl.LocalTarget;
 import org.uiautomation.ios.server.command.impl.LogElementTree;
+import org.uiautomation.ios.server.command.impl.NewSession;
 import org.uiautomation.ios.server.command.impl.ServerStatus;
 import org.uiautomation.ios.server.command.impl.SetTimeoutCommandHandler;
+import org.uiautomation.ios.server.command.impl.StopSession;
 import org.uiautomation.ios.server.command.impl.TakeScreenshot;
-import org.uiautomation.ios.server.command.impl.session.NewSession;
-import org.uiautomation.ios.server.command.impl.session.StopSession;
 import org.uiautomation.ios.server.instruments.SessionsManager;
 
 public enum CommandMapping {
