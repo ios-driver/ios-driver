@@ -4,7 +4,7 @@ import org.testng.annotations.Test;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIATarget;
 
-public class LocalTargetTests extends UICatalogTestsBase {
+public class LocalTargetTest extends UICatalogTestsBase {
 
 	@Test
 	public void accessLocalTarget() throws InterruptedException {

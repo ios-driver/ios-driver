@@ -5,7 +5,6 @@ import org.testng.annotations.Test;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIATableCell;
 import org.uiautomation.ios.UIAModels.UIATextField;
-import org.uiautomation.ios.UIAModels.UIATextView;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
@@ -15,19 +14,20 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIATarget;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAWindow;
 
-public class UIATextViewTests extends UICatalogTestsBase {
+public class TextFieldTest extends UICatalogTestsBase {
 
 
-  private UIATextView getTextView(RemoteUIAWindow win) {
-    String name = "TextView, Use of UITextField";
+  private UIATextField getTextField(RemoteUIAWindow win) {
+    String name = "TextFields, Uses of UITextField";
     Criteria c1 = new TypeCriteria(UIATableCell.class);
     Criteria c2 = new NameCriteria(name);
     Criteria c = new AndCriteria(c1, c2);
     UIAElement element = win.findElement(c);
     element.tap();
-    Criteria fieldC = new TypeCriteria(UIATextView.class);
-    UIATextView res = (UIATextView) win.findElement(fieldC);
-    return res;
+    Criteria fieldC =
+        new AndCriteria(new TypeCriteria(UIATextField.class), new NameCriteria("Normal"));
+    UIATextField textfield = (UIATextField) win.findElement(fieldC);
+    return textfield;
   }
 
 
@@ -41,24 +41,19 @@ public class UIATextViewTests extends UICatalogTestsBase {
       RemoteUIAApplication app = target.getFrontMostApp();
       RemoteUIAWindow win = app.getMainWindow();
 
-      UIATextView textview = getTextView(win);
-
+      UIATextField textfield = getTextField(win);
+      
       String v = "ABC";
-      textview.setValue(v);
-      Assert.assertEquals(textview.getValue(), v);
+      textfield.setValue(v);
+      Assert.assertEquals(textfield.getValue(), v);
       
-      v = "ABC\nLine 2\nthanks,\nFrançois";
-      textview.setValue(v);
-      Assert.assertEquals(textview.getValue(), v);
+      v = "aBc";
+      textfield.setValue(v);
+      Assert.assertEquals(textfield.getValue(), v);
       
-      v = "ABC\tLine 2\tthanks,\tFrançois";
-      textview.setValue(v);
-      Assert.assertEquals(textview.getValue(), v);
-
-      v = "A\\B ";
-      textview.setValue(v);
-      Assert.assertEquals(textview.getValue(), v);
-
+      v = "François";
+      textfield.setValue(v);
+      Assert.assertEquals(textfield.getValue(), v);
 
     } finally {
       if (driver != null) {
@@ -66,6 +61,5 @@ public class UIATextViewTests extends UICatalogTestsBase {
       }
     }
   }
-
 
 }

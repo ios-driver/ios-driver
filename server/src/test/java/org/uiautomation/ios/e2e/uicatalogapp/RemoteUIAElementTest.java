@@ -22,7 +22,7 @@ import org.uiautomation.ios.exceptions.ElementNotVisibleException;
 import org.uiautomation.ios.exceptions.NoSuchElementException;
 import org.uiautomation.ios.exceptions.StaleReferenceException;
 
-public class RemoteUIAElementTests extends UICatalogTestsBase {
+public class RemoteUIAElementTest extends UICatalogTestsBase {
 
 
 
@@ -115,7 +115,8 @@ public class RemoteUIAElementTests extends UICatalogTestsBase {
     }
   }
 
-  @Test
+  // sometimes 29, sometimes 31 depending on the timing.
+  @Test(groups="broken")
   public void findAllElements() throws InterruptedException {
     RemoteUIADriver driver = null;
     try {

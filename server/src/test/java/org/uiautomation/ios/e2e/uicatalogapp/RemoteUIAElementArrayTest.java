@@ -11,7 +11,7 @@ import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAWindow;
 
-public class RemoteUIAElementArray extends UICatalogTestsBase {
+public class RemoteUIAElementArrayTest extends UICatalogTestsBase {
 
 
   @Test

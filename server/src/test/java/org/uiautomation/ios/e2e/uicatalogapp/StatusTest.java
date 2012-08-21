@@ -26,7 +26,7 @@ import org.uiautomation.ios.server.IOSServerConfiguration;
 import org.uiautomation.ios.server.application.Localizable;
 import org.uiautomation.ios.server.tmp.SampleApps;
 
-public class StatusTests {
+public class StatusTest {
 
   @Test
   public void statusTest() throws InterruptedException {
@@ -46,7 +46,7 @@ public class StatusTests {
       JSONArray array = o.getJSONObject("value").getJSONArray("supportedApps");
       Assert.assertEquals(array.length(), 2);
 
-      JSONObject uicatalog = array.getJSONObject(0);
+      JSONObject uicatalog = array.getJSONObject(1);
       Assert.assertEquals(uicatalog.get("bundleDisplayName"), "UICatalog");
       Assert.assertEquals(uicatalog.get("bundleId"), "com.yourcompany.UICatalog");
       Assert.assertEquals(uicatalog.get("bundleName"), "UICatalog");
@@ -57,7 +57,7 @@ public class StatusTests {
       Assert.assertEquals(locales1.length(), 1);
       Assert.assertEquals(locales1.get(0), "en");
 
-      JSONObject intMount = array.getJSONObject(1);
+      JSONObject intMount = array.getJSONObject(0);
       Assert.assertEquals(intMount.get("bundleId"), "com.yourcompany.InternationalMountains");
       Assert.assertEquals(intMount.get("bundleName"), "InternationalMountains");
       Assert.assertEquals(intMount.get("bundleVersion"), "1.1");
@@ -83,13 +83,15 @@ public class StatusTests {
 
   private IOSServer server;
   private static String[] args = {"-port", "4444", "-host", "localhost", "-aut",
-      SampleApps.uiCatalogCap().getApplication(), "-aut",
-      SampleApps.intlMountainsCap(Localizable.fr).getApplication()};
-  private static IOSServerConfiguration config = IOSServerConfiguration.create(args);
-  private String url = "http://" + config.getHost() + ":" + config.getPort() + "/wd/hub";
+      SampleApps.getUICatalogApp(), "-aut",
+      SampleApps.getIntlMountainsApp()};
+  private static IOSServerConfiguration config;
+  private String url;
 
   @BeforeClass
   public void startServer() throws Exception {
+    config = IOSServerConfiguration.create(args);
+    url = "http://" + config.getHost() + ":" + config.getPort() + "/wd/hub";
     server = new IOSServer(config);
     server.start();
   }

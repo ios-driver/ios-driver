@@ -11,7 +11,7 @@ import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAWindow;
 
-public class TimeoutTests extends UICatalogTestsBase {
+public class TimeoutTest extends UICatalogTestsBase {
 
 
   @Test

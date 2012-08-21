@@ -18,7 +18,7 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteUIATarget;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAWindow;
 import org.uiautomation.ios.exceptions.NoSuchElementException;
 
-public class UIAKeyboardTests extends UICatalogTestsBase {
+public class UIAKeyboardTest extends UICatalogTestsBase {
 
   @Test(expectedExceptions = NoSuchElementException.class)
   public void throwsIfKeyboardNotPresent() {
@@ -76,7 +76,8 @@ public class UIAKeyboardTests extends UICatalogTestsBase {
     }
   }
   
-  @Test
+  // some timing issues here.Need a change server side.
+  @Test(groups="broken")
   public void typeBasic() {
     RemoteUIADriver driver = null;
     try {
@@ -87,18 +88,15 @@ public class UIAKeyboardTests extends UICatalogTestsBase {
       RemoteUIAWindow win = app.getMainWindow();
 
       UIATextField textfield = getTextField(win);
-      textfield.setValue("François");
       textfield.tap();
 
       UIAKeyboard keyboard = app.getKeyboard();
-      
       keyboard.typeString("F");
-      keyboard.typeString("r");
-      keyboard.typeString("ç");
       
-
+      
      
-      System.err.println(textfield.getValue());
+    
+      Assert.assertEquals(textfield.getValue(), "Francois");
 
     } finally {
       if (driver != null) {

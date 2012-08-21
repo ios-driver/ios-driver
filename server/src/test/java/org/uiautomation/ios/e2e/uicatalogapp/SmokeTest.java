@@ -6,7 +6,7 @@ import org.uiautomation.ios.UIAModels.UIARect;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAWindow;
 
-public class SmokeTests extends UICatalogTestsBase {
+public class SmokeTest extends UICatalogTestsBase {
 
   @Test
   public void canGetMainWindow() throws Exception {

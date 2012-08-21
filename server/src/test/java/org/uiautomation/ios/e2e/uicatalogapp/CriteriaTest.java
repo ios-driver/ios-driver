@@ -14,7 +14,7 @@ import org.uiautomation.ios.UIAModels.predicate.PropertyEqualCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAWindow;
 
-public class CriteriaTests extends UICatalogTestsBase {
+public class CriteriaTest extends UICatalogTestsBase {
 
 
   @Test

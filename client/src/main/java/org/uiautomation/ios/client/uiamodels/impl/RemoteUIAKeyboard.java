@@ -36,7 +36,6 @@ public class RemoteUIAKeyboard extends RemoteUIAElement implements UIAKeyboard {
     } catch (JSONException e) {
       throw new IOSAutomationException(e);
     }
-
   }
 
 
