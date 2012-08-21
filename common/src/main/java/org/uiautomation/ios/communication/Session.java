@@ -21,8 +21,8 @@ import java.util.UUID;
 public class Session {
 
   private final String opaqueKey;
-  private final Map<String, Object> desiredCapabilities;
-  private Map<String, Object> actualCapabilities;
+
+
 
   public static Session createSession(Map<String, Object> desiredCapabilities) {
     String key = UUID.randomUUID().toString();
@@ -30,11 +30,10 @@ public class Session {
     return res;
   }
 
-  public Session(String key){
+  public Session(String key) {
     this.opaqueKey = key;
-    this.desiredCapabilities = null;
   }
-  
+
   @SuppressWarnings("unused")
   private Session() {
     throw new IllegalAccessError();
@@ -43,24 +42,12 @@ public class Session {
 
   private Session(String key, Map<String, Object> desiredCapabilities) {
     this.opaqueKey = key;
-    this.desiredCapabilities = desiredCapabilities;
   }
 
   public String getSessionId() {
     return opaqueKey;
   }
 
-  public Map<String, Object> getDesiredCapabilities() {
-    return desiredCapabilities;
-  }
-
-  public void setActualCapabilities(Map<String, Object> capabilities) {
-    this.actualCapabilities = capabilities;
-  }
-
-  public Map<String, Object> getActualCapabilities() {
-    return actualCapabilities;
-  }
 
   @Override
   public String toString() {
@@ -86,7 +73,7 @@ public class Session {
     } else if (!opaqueKey.equals(other.opaqueKey)) return false;
     return true;
   }
-  
-  
+
+
 
 }
