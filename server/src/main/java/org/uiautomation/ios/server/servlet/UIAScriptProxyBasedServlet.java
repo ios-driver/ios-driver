@@ -15,23 +15,25 @@ package org.uiautomation.ios.server.servlet;
 
 import javax.servlet.http.HttpServlet;
 
+import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
+import org.uiautomation.ios.server.instruments.IOSDriver;
 import org.uiautomation.ios.server.instruments.SessionsManager;
 
 
 public abstract class UIAScriptProxyBasedServlet extends HttpServlet {
 
   private static final long serialVersionUID = -8973906920199944087L;
-  private SessionsManager sessionsManager;
+  private IOSDriver driver;
   private IOSServerConfiguration config;
 
-  public SessionsManager getSessionsManager() {
-    if (sessionsManager == null) {
-      sessionsManager = (SessionsManager) getServletContext().getAttribute(IOSServer.SESSIONS_MGR);
+  public IOSDriver getDriver() {
+    if (driver == null) {
+      driver = (IOSDriver) getServletContext().getAttribute(IOSServer.DRIVER);
     }
-    return sessionsManager;
+    return driver;
   }
 
   public IOSServerConfiguration getServerConfig() {
@@ -40,10 +42,5 @@ public abstract class UIAScriptProxyBasedServlet extends HttpServlet {
     }
     return config;
   }
-
-
-
-  public CommunicationChannel communication() {
-    return getSessionsManager().getInstrumentManager().communicate();
-  }
+  
 }

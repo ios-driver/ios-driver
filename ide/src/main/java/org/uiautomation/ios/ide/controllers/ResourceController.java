@@ -20,7 +20,7 @@ import java.io.InputStream;
 import javax.imageio.stream.FileImageInputStream;
 import javax.servlet.http.HttpServletRequest;
 
-import org.uiautomation.ios.communication.Session;
+import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.ide.IDEServlet;
 import org.uiautomation.ios.ide.Model;

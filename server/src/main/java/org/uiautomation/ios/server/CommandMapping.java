@@ -37,6 +37,7 @@ import org.uiautomation.ios.server.command.impl.ServerStatus;
 import org.uiautomation.ios.server.command.impl.SetTimeoutCommandHandler;
 import org.uiautomation.ios.server.command.impl.StopSession;
 import org.uiautomation.ios.server.command.impl.TakeScreenshot;
+import org.uiautomation.ios.server.instruments.IOSDriver;
 import org.uiautomation.ios.server.instruments.SessionsManager;
 
 public enum CommandMapping {
@@ -205,15 +206,15 @@ public enum CommandMapping {
     return payload;
   }
 
-  public Handler createHandler(SessionsManager instruments,WebDriverLikeRequest request) throws Exception{
+  public Handler createHandler(IOSDriver driver,WebDriverLikeRequest request) throws Exception{
    
     Class<?> clazz = handlerClass;
     if (clazz == null) {
       throw new RuntimeException("handler NI");
     }
 
-    Object[] args = new Object[] {instruments, request};
-    Class<?>[] argsClass = new Class[] {SessionsManager.class, WebDriverLikeRequest.class};
+    Object[] args = new Object[] {driver, request};
+    Class<?>[] argsClass = new Class[] {IOSDriver.class, WebDriverLikeRequest.class};
 
     Constructor<?> c = clazz.getConstructor(argsClass);
     Handler handler = (Handler) c.newInstance(args);

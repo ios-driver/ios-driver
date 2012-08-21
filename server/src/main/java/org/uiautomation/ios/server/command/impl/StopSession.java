@@ -17,24 +17,25 @@ import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+import org.uiautomation.ios.server.instruments.IOSDriver;
 import org.uiautomation.ios.server.instruments.SessionsManager;
 
 public class StopSession extends UIAScriptHandler {
 
-  public StopSession(SessionsManager instruments, WebDriverLikeRequest request) {
-    super(instruments, request);
+  public StopSession(IOSDriver driver, WebDriverLikeRequest request) {
+    super(driver, request);
     setJS("stop");
   }
 
   public WebDriverLikeResponse handle() throws Exception {
     super.handle();
-    String sessionId = getSessionsManager().getCurrentSessionId();
-    getSessionsManager().deleteSession();
+    String opaqueKey = getRequest().getSession();
+    getDriver().stop(opaqueKey);
     
     
     JSONObject o = new JSONObject();
     try {
-      o.put("sessionId", sessionId);
+      o.put("sessionId", opaqueKey);
       o.put("status", 0);
       o.put("value", "");
       WebDriverLikeResponse r = new WebDriverLikeResponse(o);

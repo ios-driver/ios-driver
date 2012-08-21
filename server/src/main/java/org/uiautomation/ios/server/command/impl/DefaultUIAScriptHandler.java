@@ -23,8 +23,10 @@ import org.uiautomation.ios.UIAModels.UIAWindow;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.CommandMapping;
+import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+import org.uiautomation.ios.server.instruments.IOSDriver;
 import org.uiautomation.ios.server.instruments.SessionsManager;
 
 /**
@@ -50,8 +52,8 @@ public class DefaultUIAScriptHandler extends UIAScriptHandler {
       "parent:jsMethod;UIAutomation.createJSONResponse(':sessionId',0,'')";
 
 
-  public DefaultUIAScriptHandler(SessionsManager instruments, WebDriverLikeRequest request) {
-    super(instruments, request);
+  public DefaultUIAScriptHandler(IOSDriver driver, WebDriverLikeRequest request) {
+    super(driver, request);
     setJS(computeJS());
   }
 
@@ -86,7 +88,8 @@ public class DefaultUIAScriptHandler extends UIAScriptHandler {
   }
 
   private IOSApplication getAUT() {
-    return getSessionsManager().getCurrentApplication();
+    ServerSideSession session = getDriver().getSession(getRequest().getSession());
+    return session.getApplication();
   }
 
 
@@ -97,7 +100,7 @@ public class DefaultUIAScriptHandler extends UIAScriptHandler {
 
     String js =
         template.replace(":jsMethod", method)
-            .replace(":sessionId", getSessionsManager().getCurrentSessionId())
+            .replace(":sessionId", getRequest().getSession())
             .replace(":reference", getRequest().getVariableValue(":reference"));
     return js;
   }

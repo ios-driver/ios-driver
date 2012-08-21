@@ -36,8 +36,24 @@ public class IOSCapabilities {
   public static final String LOCALE = "locale";
   public static final String AUT = "aut";
   public static final String TIME_HACK = "timeHack";
+  public static final String BUNDLE_NAME = "CFBundleName";
+  public static final String BUNDLE_VERSION = "CFBundleVersion";
+
+
 
   private final Map<String, Object> raw = new HashMap<String, Object>();
+
+  public static IOSCapabilities iphone(String bundleName, String bundleVersion) {
+    IOSCapabilities res = new IOSCapabilities();
+    res.setCapability(DEVICE, IOSDevice.iPhoneSimulator);
+    res.setCapability(LANGUAGE, "en");
+    res.setCapability(LOCALE, "en_GB");
+    res.setCapability(BUNDLE_NAME, bundleName);
+    res.setCapability(BUNDLE_VERSION, bundleVersion);
+    return res;
+  }
+
+
 
   public static IOSCapabilities iphone(String app) {
     IOSCapabilities res = new IOSCapabilities();
@@ -50,6 +66,16 @@ public class IOSCapabilities {
 
   public IOSCapabilities() {
 
+  }
+
+  public String getBundleName() {
+    Object o = raw.get(BUNDLE_NAME);
+    return ((String) o);
+  }
+
+  public String getBundleVersion() {
+    Object o = raw.get(BUNDLE_VERSION);
+    return ((String) o);
   }
 
   public IOSCapabilities(Map<String, Object> from) {

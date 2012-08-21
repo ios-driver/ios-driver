@@ -17,7 +17,6 @@ import java.io.File;
 
 import org.json.JSONObject;
 import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.communication.Session;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 
 

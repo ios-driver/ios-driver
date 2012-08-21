@@ -4,8 +4,8 @@ import java.io.File;
 import java.net.URL;
 
 import org.json.JSONObject;
+import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
-import org.uiautomation.ios.communication.Session;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.application.IOSApplication;
 

@@ -14,12 +14,12 @@
 package org.uiautomation.ios.server.command;
 
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
-import org.uiautomation.ios.server.instruments.SessionsManager;
+import org.uiautomation.ios.server.instruments.IOSDriver;
 
 public abstract class PostHandleDecorator extends HandlerDecorator{
 
-  public PostHandleDecorator(SessionsManager context) {
-    super(context);
+  public PostHandleDecorator(IOSDriver driver) {
+    super(driver);
   }
 
   public abstract void decorate(WebDriverLikeResponse response);

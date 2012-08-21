@@ -26,10 +26,36 @@ import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.instruments.Command;
 
+
+//TODO freynaud create IOSApp vs Running App that has locale + language
 public class IOSApplication {
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((app == null) ? 0 : app.hashCode());
+    return result;
+  }
+
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
+    IOSApplication other = (IOSApplication) obj;
+    if (app == null) {
+      if (other.app != null) return false;
+    } else if (!app.equals(other.app)) return false;
+    return true;
+  }
+
+
 
   private final File app;
   private final Localizable currentLanguage;
@@ -212,12 +238,12 @@ public class IOSApplication {
   public String getBundleDisplayName() {
     return getValueFromInfoPlist("CFBundleDisplayName");
   }
-  
- 
+
+
   public String getBundleName() {
     return getValueFromInfoPlist("CFBundleName");
   }
-  
+
   /**
    * 
    * @return null if the value cannot be found
@@ -225,8 +251,7 @@ public class IOSApplication {
   public String getIcon() {
     return getValueFromInfoPlist("CFBundleIconFile");
   }
-  
-  
+
 
 
   private String getValueFromInfoPlist(String key) {
@@ -249,7 +274,22 @@ public class IOSApplication {
   }
 
 
-  
+  // TODO freynaud basic for now.
+  // TODO freynaud add test.
+  public boolean matches(IOSCapabilities desiredCapabilities) {
+    if (desiredCapabilities.getBundleName() == null) {
+      throw new IOSAutomationException("you need to specify the bundle to test.");
+    }
+    if (!desiredCapabilities.getBundleName().equals(this.getBundleName())) {
+      return false;
+    }
+    if (desiredCapabilities.getBundleVersion() != null
+        && !desiredCapabilities.getBundleVersion().equals(this.getBundleVersion())) {
+      return false;
+    }
+    return true;
+  }
+
 
 
 }

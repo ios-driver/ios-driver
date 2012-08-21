@@ -16,12 +16,12 @@ package org.uiautomation.ios.server.command;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
-import org.uiautomation.ios.server.instruments.SessionsManager;
+import org.uiautomation.ios.server.instruments.IOSDriver;
 
 public class NotImplementedHandler extends BaseCommandHandler {
 
-  public NotImplementedHandler(SessionsManager sessionsManager, WebDriverLikeRequest request) {
-    super(sessionsManager, request);
+  public NotImplementedHandler(IOSDriver driver, WebDriverLikeRequest request) {
+    super(driver, request);
   }
 
   @Override

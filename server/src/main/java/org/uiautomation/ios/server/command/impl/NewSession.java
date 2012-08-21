@@ -18,15 +18,16 @@ import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
+import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.command.BaseCommandHandler;
-import org.uiautomation.ios.server.instruments.SessionsManager;
+import org.uiautomation.ios.server.instruments.IOSDriver;
 
 public class NewSession extends BaseCommandHandler {
 
   private final JSONObject capabilities;
 
-  public NewSession(SessionsManager sessionsManager, WebDriverLikeRequest request) {
-    super(sessionsManager, request);
+  public NewSession(IOSDriver driver, WebDriverLikeRequest request) {
+    super(driver, request);
 
     try {
       JSONObject payload = request.getPayload();
@@ -38,9 +39,9 @@ public class NewSession extends BaseCommandHandler {
 
   public WebDriverLikeResponse handle() throws Exception {
     IOSCapabilities cap = new IOSCapabilities(capabilities);
-    getSessionsManager().createSession(cap);
+    ServerSideSession session = getDriver().startSession(cap);
     JSONObject json = new JSONObject();
-    json.put("sessionId", getSessionsManager().getCurrentSessionId());
+    json.put("sessionId", session.getSessionId());
     json.put("status", 0);
     json.put("value", "");
     WebDriverLikeResponse r = new WebDriverLikeResponse(json);

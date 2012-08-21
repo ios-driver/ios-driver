@@ -20,7 +20,7 @@ import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 import org.uiautomation.ios.server.command.impl.hack.TimeSpeeder;
-import org.uiautomation.ios.server.instruments.SessionsManager;
+import org.uiautomation.ios.server.instruments.IOSDriver;
 
 public class GetTimeoutCommandHandler extends UIAScriptHandler {
 
@@ -29,17 +29,17 @@ public class GetTimeoutCommandHandler extends UIAScriptHandler {
       "var timeout = UIAutomation.TIMEOUT_IN_SEC;"+
       "UIAutomation.createJSONResponse(':sessionId',0,timeout)";
 
-  public GetTimeoutCommandHandler(SessionsManager context, WebDriverLikeRequest request)
+  public GetTimeoutCommandHandler(IOSDriver driver, WebDriverLikeRequest request)
       throws Exception {
-    super(context, request);
+    super(driver, request);
     setJS(getTimeout);
-    addDecorator(new CorrectTimeout(context));
+    addDecorator(new CorrectTimeout(driver));
   }
 
   class CorrectTimeout extends PostHandleDecorator {
 
-    public CorrectTimeout(SessionsManager context) {
-      super(context);
+    public CorrectTimeout(IOSDriver driver) {
+      super(driver);
     }
 
     @Override

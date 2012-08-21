@@ -51,7 +51,7 @@ public class SampleApps {
   }
 
   public static IOSCapabilities uiCatalogCap() {
-    IOSCapabilities c = IOSCapabilities.iphone(SampleApps.getUICatalogApp());
+    IOSCapabilities c = IOSCapabilities.iphone("UICatalog","2.10");
     c.setCapability(IOSCapabilities.TIME_HACK, true);
     return c;
   }

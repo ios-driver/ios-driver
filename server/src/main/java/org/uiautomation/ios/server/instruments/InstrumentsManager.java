@@ -123,13 +123,15 @@ public class InstrumentsManager {
     command.add(application.getAbsolutePath());
     command.add("-e");
     command.add("UIASCRIPT");
-    File uiscript = new ScriptHelper().getScript(IOSServer.port,application.getAbsolutePath());
+    File uiscript = new ScriptHelper().getScript(IOSServer.port,application.getAbsolutePath(),sessionId);
 
     command.add(uiscript.getAbsolutePath());
     command.add("-e");
     command.add("UIARESULTSPATH");
     command.add(output.getAbsolutePath());
     command.addAll(extraEnvtParams);
+    
+   
     
     return command;
     

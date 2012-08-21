@@ -19,6 +19,7 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.server.UIAScriptRequest;
 import org.uiautomation.ios.server.UIAScriptResponse;
+import org.uiautomation.ios.server.instruments.IOSDriver;
 import org.uiautomation.ios.server.instruments.SessionsManager;
 
 /**
@@ -30,8 +31,8 @@ import org.uiautomation.ios.server.instruments.SessionsManager;
 public abstract class UIAScriptHandler extends BaseCommandHandler {
   private String js;
 
-  public UIAScriptHandler(SessionsManager instruments, WebDriverLikeRequest request) {
-    super(instruments, request);
+  public UIAScriptHandler(IOSDriver driver, WebDriverLikeRequest request) {
+    super(driver, request);
   }
 
   protected void setJS(String js) {
@@ -52,7 +53,7 @@ public abstract class UIAScriptHandler extends BaseCommandHandler {
       JSONObject json = resp.getResponse();
       webDriverLikeResponse = new WebDriverLikeResponse(json);
     } catch (Exception e) {
-      return new FailedWebDriverLikeResponse(getSessionsManager().getCurrentSessionId(), e);
+      return new FailedWebDriverLikeResponse(getRequest().getSession(), e);
     }
     return webDriverLikeResponse;
   }

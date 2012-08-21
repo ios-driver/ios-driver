@@ -98,6 +98,10 @@ public class WebDriverLikeRequest {
     String[] pieces = path.split("/");
     return pieces[i];
   }
+  
+  public String getSession(){
+    return getVariableValue(":sessionId");
+  }
 
 
 

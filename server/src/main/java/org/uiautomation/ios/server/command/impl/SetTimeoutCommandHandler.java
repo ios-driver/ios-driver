@@ -20,7 +20,7 @@ import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.command.PreHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 import org.uiautomation.ios.server.command.impl.hack.TimeSpeeder;
-import org.uiautomation.ios.server.instruments.SessionsManager;
+import org.uiautomation.ios.server.instruments.IOSDriver;
 
 public class SetTimeoutCommandHandler extends UIAScriptHandler {
 
@@ -28,13 +28,13 @@ public class SetTimeoutCommandHandler extends UIAScriptHandler {
   private static final String setTimeout = "UIAutomation.setTimeout(:timeout);"
       + "UIAutomation.createJSONResponse(':sessionId',0,'')";
 
-  public SetTimeoutCommandHandler(SessionsManager context, WebDriverLikeRequest request)
+  public SetTimeoutCommandHandler(IOSDriver driver, WebDriverLikeRequest request)
       throws Exception {
-    super(context, request);
-    addDecorator(new CorrectTimeout(context));
+    super(driver, request);
+    addDecorator(new CorrectTimeout(driver));
   }
 
-  private String getScript(SessionsManager instruments, WebDriverLikeRequest r) throws Exception {
+  private String getScript(IOSDriver driver, WebDriverLikeRequest r) throws Exception {
     int timeout = r.getPayload().getInt("timeout");
     String s = setTimeout.replace(":timeout", String.format("%d", timeout));
     return s;
@@ -42,14 +42,14 @@ public class SetTimeoutCommandHandler extends UIAScriptHandler {
 
   @Override
   public WebDriverLikeResponse handle() throws Exception {
-    setJS(getScript(getSessionsManager(), getRequest()));
+    setJS(getScript(getDriver(), getRequest()));
     return super.handle();
   }
 
   class CorrectTimeout extends PreHandleDecorator {
 
-    public CorrectTimeout(SessionsManager context) {
-      super(context);
+    public CorrectTimeout(IOSDriver driver) {
+      super(driver);
     }
 
     @Override

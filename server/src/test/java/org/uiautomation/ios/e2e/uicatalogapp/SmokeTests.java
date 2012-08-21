@@ -9,7 +9,7 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAWindow;
 public class SmokeTests extends UICatalogTestsBase {
 
   @Test
-  public void canGetMainWindow() throws InterruptedException {
+  public void canGetMainWindow() throws Exception {
     RemoteUIADriver driver = null;
     try {
 

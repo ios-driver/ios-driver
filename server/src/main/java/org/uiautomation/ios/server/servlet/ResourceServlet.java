@@ -17,7 +17,6 @@ package org.uiautomation.ios.server.servlet;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -26,13 +25,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.uiautomation.ios.server.IOSServer;
-import org.uiautomation.ios.server.instruments.SessionsManager;
+import org.uiautomation.ios.server.instruments.IOSDriver;
 
 
 
 public class ResourceServlet extends HttpServlet {
 
-  private SessionsManager sessionsManager;
+  private IOSDriver driver;
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -44,7 +43,7 @@ public class ResourceServlet extends HttpServlet {
       throws IOException {
     String resource = request.getPathInfo().replace(request.getServletPath(), "");
     if (resource.startsWith("/")) resource = resource.replaceFirst("/", "");
-    File f = getSessionsManager().getResourceCache().getResourceForKey(resource);
+    File f = getDriver().getCache().getResourceForKey(resource);
 
     try {
       IOUtils.copy(new FileInputStream(f), response.getOutputStream());
@@ -53,10 +52,10 @@ public class ResourceServlet extends HttpServlet {
     }
   }
 
-  public SessionsManager getSessionsManager() {
-    if (sessionsManager == null) {
-      sessionsManager = (SessionsManager) getServletContext().getAttribute(IOSServer.SESSIONS_MGR);
+  public IOSDriver getDriver() {
+    if (driver == null) {
+      driver = (IOSDriver) getServletContext().getAttribute(IOSServer.DRIVER);
     }
-    return sessionsManager;
+    return driver;
   }
 }

@@ -14,13 +14,13 @@
 package org.uiautomation.ios.server.command;
 
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.instruments.SessionsManager;
+import org.uiautomation.ios.server.instruments.IOSDriver;
 
 
 public abstract class PreHandleDecorator extends HandlerDecorator{
 
-  public PreHandleDecorator(SessionsManager context) {
-    super(context);
+  public PreHandleDecorator(IOSDriver driver) {
+    super(driver);
   }
 
   public abstract void decorate(WebDriverLikeRequest request);

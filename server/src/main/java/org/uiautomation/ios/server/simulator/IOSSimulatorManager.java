@@ -80,8 +80,8 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     this.desiredSDKVersion = validateSDK(desiredSDKVersion);
     this.sdk = findSDK(desiredSDKVersion);
 
-    setDefaultSimulatorPreference("currentSDKRoot", sdk.getAbsolutePath());
-    setDefaultSimulatorPreference("SimulateDevice", device.getName());
+    //setDefaultSimulatorPreference("currentSDKRoot", sdk.getAbsolutePath());
+    //setDefaultSimulatorPreference("SimulateDevice", device.getName());
 
     this.contentAndSettingsFolder = getContentAndSettingsFolder();
     this.globalPreferencePlist = getGlobalPreferenceFile();

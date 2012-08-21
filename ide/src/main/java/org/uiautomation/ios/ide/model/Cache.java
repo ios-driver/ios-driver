@@ -5,7 +5,7 @@ import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.uiautomation.ios.communication.Session;
+import org.uiautomation.ios.UIAModels.Session;
 
 public class Cache {
 

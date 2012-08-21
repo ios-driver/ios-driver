@@ -16,16 +16,16 @@ package org.uiautomation.ios.server.command.impl;
 
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
-import org.uiautomation.ios.server.instruments.SessionsManager;
+import org.uiautomation.ios.server.instruments.IOSDriver;
 
 public class LocalTarget extends UIAScriptHandler {
 
   private static final String jsTemplate =
       "var target = UIATarget.localTarget();var k=UIAutomation.cache.store(target);UIAutomation.createJSONResponse(':sessionId',0,target);";
 
-  public LocalTarget(SessionsManager instruments, WebDriverLikeRequest request) {
-    super(instruments, request);
-    String js = jsTemplate.replace(":sessionId", instruments.getCurrentSessionId());
+  public LocalTarget(IOSDriver driver, WebDriverLikeRequest request) {
+    super(driver, request);
+    String js = jsTemplate.replace(":sessionId", request.getSession());
     setJS(js);
   }
 

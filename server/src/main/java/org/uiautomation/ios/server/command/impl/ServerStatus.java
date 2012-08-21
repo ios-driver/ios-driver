@@ -25,15 +25,14 @@ import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.command.BaseCommandHandler;
 import org.uiautomation.ios.server.command.BuildInfo;
 import org.uiautomation.ios.server.instruments.ClassicCommands;
+import org.uiautomation.ios.server.instruments.IOSDriver;
 import org.uiautomation.ios.server.instruments.SessionsManager;
 
 public class ServerStatus extends BaseCommandHandler {
 
-  private final IOSServerConfiguration config;
-  public ServerStatus(SessionsManager sessionsManager, WebDriverLikeRequest request) {
-    super(sessionsManager, request);
-    this.config = getSessionsManager().getServerConfig();
-  }
+  public ServerStatus(IOSDriver driver, WebDriverLikeRequest request) {
+    super(driver, request);
+    }
 
   /*
    * (non-Javadoc)
@@ -58,10 +57,10 @@ public class ServerStatus extends BaseCommandHandler {
     .put("simulatorVersion", sdks.get(sdks.size()-1)));
     
     JSONArray supportedApps = new JSONArray();
-    for (String path : config.getSupportedApps()){
+    for (IOSApplication a : getDriver().getSupportedApplications()){
       JSONObject app = new JSONObject();
-      app.put("applicationPath", path);
-      IOSApplication a = new IOSApplication(null, path);
+      app.put("applicationPath", a.getApplicationPath().getAbsolutePath());
+     
       
       app.put("locales",a.getSupportedLanguages());
       app.put("bundleName",a.getBundleName());
@@ -69,7 +68,7 @@ public class ServerStatus extends BaseCommandHandler {
       app.put("bundleId",a.getBundleId());
       app.put("bundleVersion",a.getBundleVersion());
       app.put("version",a.getVersion());
-      app.put("icon",getSessionsManager().getResourceCache().getKeyForApplication(path));
+      app.put("icon",getDriver().getCache().getKeyForApplication(a.getApplicationPath().getAbsolutePath()));
       supportedApps.put(app);
     }
     
@@ -80,8 +79,8 @@ public class ServerStatus extends BaseCommandHandler {
        .put("time", BuildInfo.getAttribute("buildTimestamp"))
        .put("revision", BuildInfo.getAttribute("sha")));
    
-   String currentSession = getSessionsManager().getCurrentSessionId();
-   res.put("currentSession",currentSession == null ? JSONObject.NULL : currentSession);
+   //String currentSession = getSessionsManager().getCurrentSessionId();
+   //res.put("currentSession",currentSession == null ? JSONObject.NULL : currentSession);
     
     return new WebDriverLikeResponse(null, 0, res);
      }

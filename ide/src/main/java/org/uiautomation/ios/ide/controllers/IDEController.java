@@ -2,7 +2,7 @@ package org.uiautomation.ios.ide.controllers;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.uiautomation.ios.communication.Session;
+import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.ide.model.Cache;
 import org.uiautomation.ios.ide.model.IDESessionModel;

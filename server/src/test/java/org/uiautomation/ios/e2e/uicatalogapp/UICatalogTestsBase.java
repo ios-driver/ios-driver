@@ -13,7 +13,8 @@ import org.uiautomation.ios.server.tmp.SampleApps;
 public abstract class UICatalogTestsBase {
 
   private IOSServer server;
-  private static String[] args = {"-port", "4444", "-host", "localhost","-aut",SampleApps.uiCatalogCap().getApplication()};
+  private static String[] args = {"-port", "4444", "-host", "localhost", "-aut",
+      SampleApps.getUICatalogApp()};
   private static IOSServerConfiguration config = IOSServerConfiguration.create(args);
   private String url = "http://" + config.getHost() + ":" + config.getPort() + "/wd/hub";
 
@@ -30,6 +31,7 @@ public abstract class UICatalogTestsBase {
   protected RemoteUIADriver getDriver() {
     return new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",
         SampleApps.uiCatalogCap());
+
   }
 
   protected RemoteUIAWindow getMainWindow(RemoteUIADriver driver) {

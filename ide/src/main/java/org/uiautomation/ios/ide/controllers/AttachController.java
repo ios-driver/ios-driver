@@ -18,8 +18,8 @@ import java.net.URL;
 import javax.servlet.http.HttpServletRequest;
 
 import org.uiautomation.ios.IOSCapabilities;
+import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
-import org.uiautomation.ios.communication.Session;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.ide.Model;
 import org.uiautomation.ios.ide.views.RedirectView;

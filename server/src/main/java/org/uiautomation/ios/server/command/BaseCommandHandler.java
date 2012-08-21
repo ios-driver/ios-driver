@@ -19,34 +19,36 @@ import java.util.List;
 
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
+import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
+import org.uiautomation.ios.server.instruments.IOSDriver;
 import org.uiautomation.ios.server.instruments.SessionsManager;
 
 public abstract class BaseCommandHandler implements Handler {
 
-  private final SessionsManager context;
+  private final IOSDriver driver;
   private final WebDriverLikeRequest request;
   private final List<PreHandleDecorator> preDecorators = new ArrayList<PreHandleDecorator>();
   private final List<PostHandleDecorator> postDecorators = new ArrayList<PostHandleDecorator>();
 
-  public BaseCommandHandler(SessionsManager sessionsManager, WebDriverLikeRequest request) {
-    this.context = sessionsManager;
+  public BaseCommandHandler(IOSDriver driver, WebDriverLikeRequest request) {
+    this.driver = driver;
     this.request = request;
   }
-  
+
   @Override
   public void addDecorator(PostHandleDecorator decorator) {
     postDecorators.add(decorator);
-    
+
   }
-  
+
   @Override
   public void addDecorator(PreHandleDecorator decorator) {
     preDecorators.add(decorator);
   }
 
-  protected SessionsManager getSessionsManager() {
-    return context;
+  protected IOSDriver getDriver() {
+    return driver;
   }
 
 
@@ -55,16 +57,17 @@ public abstract class BaseCommandHandler implements Handler {
   }
 
   public CommunicationChannel communication() {
-    return getSessionsManager().getInstrumentManager().communicate();
+    ServerSideSession session = getDriver().getSession(request.getSession());
+    return session.communication();
   }
-  
+
   @Override
-  public WebDriverLikeResponse handleAndRunDecorators() throws Exception  {
-    for (PreHandleDecorator pre : preDecorators){
+  public WebDriverLikeResponse handleAndRunDecorators() throws Exception {
+    for (PreHandleDecorator pre : preDecorators) {
       pre.decorate(request);
     }
     WebDriverLikeResponse response = handle();
-    for (PostHandleDecorator post : postDecorators){
+    for (PostHandleDecorator post : postDecorators) {
       post.decorate(response);
     }
     return response;

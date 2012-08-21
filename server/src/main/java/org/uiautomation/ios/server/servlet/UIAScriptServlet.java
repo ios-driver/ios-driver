@@ -23,9 +23,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
+import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.UIAScriptRequest;
 import org.uiautomation.ios.server.UIAScriptResponse;
 import org.uiautomation.ios.server.application.LanguageDictionary;
+import org.uiautomation.ios.server.instruments.CommunicationChannel;
 
 
 public class UIAScriptServlet extends UIAScriptProxyBasedServlet {
@@ -57,7 +59,7 @@ public class UIAScriptServlet extends UIAScriptProxyBasedServlet {
   private void sendNextCommand(HttpServletRequest request, HttpServletResponse response)
       throws Exception {
 
-    UIAScriptRequest nextCommand = communication().getNextCommand();
+    UIAScriptRequest nextCommand = communication(request).getNextCommand();
     String script = nextCommand.getScript();
     // System.out.println("will process now and send : " + nextCommand);
 
@@ -79,9 +81,17 @@ public class UIAScriptServlet extends UIAScriptProxyBasedServlet {
       String json = writer.toString();
       json = Normalizer.normalize(json, LanguageDictionary.norme);
       UIAScriptResponse r = new UIAScriptResponse(json);
-      communication().setNextResponse(r);
+      communication(request).setNextResponse(r);
     }
 
+
+
+  }
+
+  private CommunicationChannel communication(HttpServletRequest request) throws Exception {
+   String opaqueKey = request.getParameter("sessionId");
+   
+    return getDriver().getSession(opaqueKey).communication();
   }
 
 }

@@ -15,7 +15,7 @@ package org.uiautomation.ios.server.command.impl;
 
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
-import org.uiautomation.ios.server.instruments.SessionsManager;
+import org.uiautomation.ios.server.instruments.IOSDriver;
 
 public class GetCapabilitiesCommandHandler extends UIAScriptHandler{
 
@@ -23,8 +23,8 @@ public class GetCapabilitiesCommandHandler extends UIAScriptHandler{
       "var json = UIAutomation.getCapabilities();" +
       "UIAutomation.createJSONResponse(':sessionId',0,json)";
   
-  public GetCapabilitiesCommandHandler(SessionsManager instruments, WebDriverLikeRequest request) {
-    super(instruments, request);
+  public GetCapabilitiesCommandHandler(IOSDriver driver, WebDriverLikeRequest request) {
+    super(driver, request);
     setJS(capabilities);
   }
 

@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.UUID;
 
 import org.uiautomation.ios.IOSCapabilities;
+import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.communication.IOSDevice;
-import org.uiautomation.ios.communication.Session;
 import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
 import org.uiautomation.ios.server.IOSServerConfiguration;
 import org.uiautomation.ios.server.application.IOSApplication;

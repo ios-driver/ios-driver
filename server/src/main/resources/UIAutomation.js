@@ -54,13 +54,14 @@ var UIAutomation = {
 	cache : new Cache(),
 	CURL : "/usr/bin/curl",
 	REGISTER : "http://localhost:$PORT/wd/hub/uiascriptproxy/register",
-	COMMAND : "http://localhost:$PORT/wd/hub/uiascriptproxy",
+	COMMAND : "http://localhost:$PORT/wd/hub/uiascriptproxy?sessionId=$SESSION",
 	HOST : UIATarget.localTarget().host(),
 	TIMEOUT_IN_SEC : 0,
+	SESSION : "$SESSION",
 
 	register : function() {
 		log("registering to " + this.REGISTER);
-		var result = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.REGISTER, "-d", "params"], 90);
+		var result = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.REGISTER, "-d" , "sessionId="+this.SESSION], 90);
 		if(result.exitCode != 0) {
 			throw new UIAutomationException("error registering. exit code : " + result.exitCode);
 		}

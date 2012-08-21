@@ -21,8 +21,10 @@ import javax.servlet.Servlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
+import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.application.ResourceCache;
 import org.uiautomation.ios.server.grid.RegistrationRequest;
+import org.uiautomation.ios.server.instruments.IOSDriver;
 import org.uiautomation.ios.server.instruments.SessionsManager;
 import org.uiautomation.ios.server.servlet.IOSServlet;
 import org.uiautomation.ios.server.servlet.ResourceServlet;
@@ -35,7 +37,7 @@ public class IOSServer {
 
   private final String IDE_CLASS = "org.uiautomation.ios.ide.IDEServlet";
 
-  public static final String SESSIONS_MGR = SessionsManager.class.getName();
+  public static final String DRIVER = IOSDriver.class.getName();
   public static final String SERVER_CONFIG = IOSServerConfiguration.class.getName();
   public static final String RESOURCES = ResourceCache.class.getName();
   private final Server server;
@@ -74,14 +76,15 @@ public class IOSServer {
       servletContextHandler.addServlet(ide, "/ide/*");
     }
 
-    SessionsManager manager = new SessionsManager(this.options);
-    servletContextHandler.setAttribute(SESSIONS_MGR, manager);
-    servletContextHandler.setAttribute(SERVER_CONFIG, this.options);
-    
-    
+    IOSDriver driver = new IOSDriver();
     for (String app : this.options.getSupportedApps()){
-      manager.getResourceCache().cacheResource(app);
+      driver.addSupportedApplication(new IOSApplication(null, app));
     }
+  
+    servletContextHandler.setAttribute(DRIVER, driver);
+    
+    
+    
     
     Runtime.getRuntime().addShutdownHook(new Thread() {
       public void run() {
@@ -110,7 +113,7 @@ public class IOSServer {
   public IOSServer(IOSServerConfiguration options) throws IOSAutomationSetupException {
     this.options = options;
     this.port = options.getPort();
-    server = new Server(new InetSocketAddress("0.0.0.0", options.getPort()));
+    server = new Server(new InetSocketAddress("localhost", options.getPort()));
     
   }
   

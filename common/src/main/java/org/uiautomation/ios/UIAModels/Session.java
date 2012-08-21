@@ -11,24 +11,14 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.uiautomation.ios.communication;
-
-import java.util.Map;
-import java.util.UUID;
+package org.uiautomation.ios.UIAModels;
 
 
-// TODO freynaud extract capa from session
+
 public class Session {
 
   private final String opaqueKey;
 
-
-
-  public static Session createSession(Map<String, Object> desiredCapabilities) {
-    String key = UUID.randomUUID().toString();
-    Session res = new Session(key, desiredCapabilities);
-    return res;
-  }
 
   public Session(String key) {
     this.opaqueKey = key;
@@ -40,9 +30,6 @@ public class Session {
   }
 
 
-  private Session(String key, Map<String, Object> desiredCapabilities) {
-    this.opaqueKey = key;
-  }
 
   public String getSessionId() {
     return opaqueKey;

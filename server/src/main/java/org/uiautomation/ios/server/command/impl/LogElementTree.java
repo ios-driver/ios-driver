@@ -23,16 +23,17 @@ import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
+import org.uiautomation.ios.server.instruments.IOSDriver;
 import org.uiautomation.ios.server.instruments.SessionsManager;
 
 public class LogElementTree extends DefaultUIAScriptHandler {
 
-  public LogElementTree(SessionsManager context, WebDriverLikeRequest request) {
-    super(context, request);
-    addDecorator(new AttachScreenshotToLog(context));
+  public LogElementTree(IOSDriver driver, WebDriverLikeRequest request) {
+    super(driver, request);
+    addDecorator(new AttachScreenshotToLog(driver));
     try {
       if (request.getPayload().getBoolean("translation")){
-        addDecorator(new AddTranslationToLog(context));
+        addDecorator(new AddTranslationToLog(driver));
       }
     } catch (JSONException e) {
       e.printStackTrace();
@@ -43,8 +44,8 @@ public class LogElementTree extends DefaultUIAScriptHandler {
 
   class AddTranslationToLog extends PostHandleDecorator {
 
-    public AddTranslationToLog(SessionsManager context) {
-      super(context);
+    public AddTranslationToLog(IOSDriver driver) {
+      super(driver);
     }
 
     @Override
@@ -52,7 +53,7 @@ public class LogElementTree extends DefaultUIAScriptHandler {
       JSONObject value = (JSONObject) response.getValue();
       try {
         JSONObject rootNode = value.getJSONObject("tree");
-        addTranslation(rootNode, getContext().getCurrentApplication());
+        addTranslation(rootNode, getDriver().getSession(response.getSessionId()).getApplication());
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -77,8 +78,8 @@ public class LogElementTree extends DefaultUIAScriptHandler {
 
   class AttachScreenshotToLog extends PostHandleDecorator {
 
-    public AttachScreenshotToLog(SessionsManager context) {
-      super(context);
+    public AttachScreenshotToLog(IOSDriver driver) {
+      super(driver);
     }
 
     @Override
@@ -93,7 +94,7 @@ public class LogElementTree extends DefaultUIAScriptHandler {
 
       if (screenshot) {
         String path =
-            getContext().getCurrentSessionOutputFolder() + "/Run 1/" + TakeScreenshot.SCREEN_NAME
+            getDriver().getSession(response.getSessionId()).getOutputFolder() + "/Run 1/" + TakeScreenshot.SCREEN_NAME
                 + ".png";
         File source = new File(path);
         FileTo64EncodedStringUtils encoder = new FileTo64EncodedStringUtils(source);

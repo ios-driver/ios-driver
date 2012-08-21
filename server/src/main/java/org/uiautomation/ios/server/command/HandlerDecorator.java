@@ -13,20 +13,20 @@
  */
 package org.uiautomation.ios.server.command;
 
-import org.uiautomation.ios.server.instruments.SessionsManager;
+import org.uiautomation.ios.server.instruments.IOSDriver;
 
 
 
 public abstract class HandlerDecorator {
 
-  private final SessionsManager context;
+  private final IOSDriver driver;
 
-  public HandlerDecorator(SessionsManager context) {
-    this.context = context;
+  public HandlerDecorator(IOSDriver driver) {
+    this.driver = driver;
   }
 
-  protected SessionsManager getContext() {
-    return context;
+  protected IOSDriver getDriver() {
+    return driver;
   }
 
 }

@@ -17,10 +17,10 @@ import java.lang.reflect.Constructor;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.UIAModels.UIAElementArray;
 import org.uiautomation.ios.UIAModels.UIARect;
 import org.uiautomation.ios.communication.Path;
-import org.uiautomation.ios.communication.Session;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
