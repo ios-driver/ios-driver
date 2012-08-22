@@ -19,9 +19,9 @@ import java.util.List;
 
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
+import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
-import org.uiautomation.ios.server.instruments.IOSDriver;
 
 public abstract class BaseCommandHandler implements Handler {
 

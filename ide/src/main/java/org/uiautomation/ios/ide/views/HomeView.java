@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.IOSDevice;
-import org.uiautomation.ios.server.instruments.ClassicCommands;
+import org.uiautomation.ios.server.utils.ClassicCommands;
 
 
 public class HomeView implements View {

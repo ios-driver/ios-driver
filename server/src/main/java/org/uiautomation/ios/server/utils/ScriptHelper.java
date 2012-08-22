@@ -12,7 +12,7 @@
  * the License.
  */
 
-package org.uiautomation.ios.server.instruments;
+package org.uiautomation.ios.server.utils;
 
 import java.io.BufferedWriter;
 import java.io.File;

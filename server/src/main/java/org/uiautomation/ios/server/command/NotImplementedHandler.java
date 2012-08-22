@@ -16,7 +16,7 @@ package org.uiautomation.ios.server.command;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
-import org.uiautomation.ios.server.instruments.IOSDriver;
+import org.uiautomation.ios.server.IOSDriver;
 
 public class NotImplementedHandler extends BaseCommandHandler {
 

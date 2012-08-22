@@ -28,7 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
-import org.uiautomation.ios.server.instruments.Command;
+import org.uiautomation.ios.server.utils.Command;
 
 
 //TODO freynaud create IOSApp vs Running App that has locale + language

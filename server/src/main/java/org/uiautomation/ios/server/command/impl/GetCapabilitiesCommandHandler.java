@@ -14,8 +14,8 @@
 package org.uiautomation.ios.server.command.impl;
 
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
+import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
-import org.uiautomation.ios.server.instruments.IOSDriver;
 
 public class GetCapabilitiesCommandHandler extends UIAScriptHandler{
 

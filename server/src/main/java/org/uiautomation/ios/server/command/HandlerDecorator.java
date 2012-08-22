@@ -13,7 +13,7 @@
  */
 package org.uiautomation.ios.server.command;
 
-import org.uiautomation.ios.server.instruments.IOSDriver;
+import org.uiautomation.ios.server.IOSDriver;
 
 
 

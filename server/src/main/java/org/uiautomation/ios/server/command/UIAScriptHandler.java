@@ -17,7 +17,7 @@ import org.json.JSONObject;
 import org.uiautomation.ios.communication.FailedWebDriverLikeResponse;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
-import org.uiautomation.ios.server.instruments.IOSDriver;
+import org.uiautomation.ios.server.IOSDriver;
 
 /**
  * execute a snipet of javascript in the instruments script context and returns the result.

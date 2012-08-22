@@ -32,7 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
-import org.uiautomation.ios.server.instruments.Command;
+import org.uiautomation.ios.server.utils.Command;
 
 /**
  * 

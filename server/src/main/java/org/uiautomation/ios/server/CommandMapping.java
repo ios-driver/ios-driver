@@ -37,7 +37,6 @@ import org.uiautomation.ios.server.command.impl.ServerStatus;
 import org.uiautomation.ios.server.command.impl.SetTimeoutCommandHandler;
 import org.uiautomation.ios.server.command.impl.StopSession;
 import org.uiautomation.ios.server.command.impl.TakeScreenshot;
-import org.uiautomation.ios.server.instruments.IOSDriver;
 
 public enum CommandMapping {
 

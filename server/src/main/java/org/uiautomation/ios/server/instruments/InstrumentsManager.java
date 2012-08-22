@@ -23,6 +23,8 @@ import org.uiautomation.ios.communication.IOSDevice;
 import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.simulator.IOSSimulatorManager;
+import org.uiautomation.ios.server.utils.Command;
+import org.uiautomation.ios.server.utils.ScriptHelper;
 import org.uiautomation.ios.server.utils.hack.TimeSpeeder;
 
 public class InstrumentsManager {
@@ -41,6 +43,7 @@ public class InstrumentsManager {
 
   /**
    * constructor that will create an instrument process linked to the server.
+   * 
    * @param serverPort the port the server lives on
    * @throws IOSAutomationSetupException
    */
@@ -101,6 +104,7 @@ public class InstrumentsManager {
 
   private IOSDeviceManager prepareSimulator(String sdkVersion, IOSDevice device, String locale,
       String language) throws IOSAutomationSetupException {
+    // TODO freynaud handle real device ?
     IOSDeviceManager simulator = new IOSSimulatorManager(sdkVersion, device);
     simulator.resetContentAndSettings();
     simulator.setL10N(locale, language);
@@ -124,26 +128,26 @@ public class InstrumentsManager {
   private List<String> createInstrumentCommand() throws IOSAutomationSetupException {
     List<String> command = new ArrayList<String>();
     command.add("instruments");
-    //command.add("-w");
-    //command.add("d1ce6333af579e27d166349dc8a1989503ba5b4f");
+    // command.add("-w");
+    // command.add("d1ce6333af579e27d166349dc8a1989503ba5b4f");
     command.add("-t");
     command.add(template.getAbsolutePath());
     command.add(application.getAbsolutePath());
     command.add("-e");
     command.add("UIASCRIPT");
-    File uiscript = new ScriptHelper().getScript(port,application.getAbsolutePath(),sessionId);
+    File uiscript = new ScriptHelper().getScript(port, application.getAbsolutePath(), sessionId);
 
     command.add(uiscript.getAbsolutePath());
     command.add("-e");
     command.add("UIARESULTSPATH");
     command.add(output.getAbsolutePath());
     command.addAll(extraEnvtParams);
-    
-   
-    
+
+
+
     return command;
-    
-    
+
+
   }
 
   private File createTmpOutputFolder() throws IOException {

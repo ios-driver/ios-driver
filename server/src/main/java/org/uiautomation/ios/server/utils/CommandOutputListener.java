@@ -12,19 +12,11 @@
  * the License.
  */
 
-package org.uiautomation.ios.server.instruments;
+package org.uiautomation.ios.server.utils;
 
-public class DefaultCommandListener implements CommandOutputListener {
+public interface CommandOutputListener {
+  
+  public void stdout(String log);
 
-  @Override
-  public void stdout(String log) {
-    System.out.println(log);
-  }
-
-  @Override
-  public void stderr(String log) {
-    System.err.println(log);
-  }
-
-
+  public void stderr(String log);
 }

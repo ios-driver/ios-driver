@@ -30,9 +30,9 @@ import org.uiautomation.ios.communication.IOSDevice;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
 import org.uiautomation.ios.server.command.impl.NewSession;
-import org.uiautomation.ios.server.instruments.ClassicCommands;
-import org.uiautomation.ios.server.instruments.Command;
 import org.uiautomation.ios.server.instruments.IOSDeviceManager;
+import org.uiautomation.ios.server.utils.ClassicCommands;
+import org.uiautomation.ios.server.utils.Command;
 
 
 // java version ( simplified )

@@ -15,8 +15,8 @@ package org.uiautomation.ios.server.servlet;
 
 import javax.servlet.http.HttpServlet;
 
+import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.IOSServer;
-import org.uiautomation.ios.server.instruments.IOSDriver;
 
 @SuppressWarnings("serial")
 public abstract class DriverBasedServlet extends HttpServlet {

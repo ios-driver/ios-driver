@@ -3,7 +3,7 @@ package org.uiautomation.ios.server.command;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
-import org.uiautomation.ios.server.instruments.ClassicCommands;
+import org.uiautomation.ios.server.utils.ClassicCommands;
 
 public class CommandTests {
 
