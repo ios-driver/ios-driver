@@ -14,16 +14,8 @@
 
 package org.uiautomation.ios.server;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.uiautomation.ios.server.servlet.CustomMessage;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
@@ -78,8 +70,6 @@ public class IOSServerConfiguration {
   public static IOSServerConfiguration create(String[] args) {
     IOSServerConfiguration res = new IOSServerConfiguration();
     new JCommander(res).parse(args);
-
-    
     return res;
   }
 
@@ -89,58 +79,6 @@ public class IOSServerConfiguration {
 
   public void setHost(String host) {
     this.serverHost = host;
-  }
-
-  
-
-  /**
-   * Returns the names for the supported app names into a <br>
-   * Using the {@link #ReadAppsFrom(String) ReadAppsFrom()} helper method.
-   * 
-   * @param void
-   * @return A table with the supported application names.
-   * @see FileInputStream
-   * @see DataInputStream
-   * @see BufferedReader
-   * @see InputStreamReader
-   * @see ArrayList
-   * @see #getFromClassPath(String) getFromClassPath()
-   */
-  public String[] ReadAppsFrom(String file) throws Exception {
-    FileInputStream fstream;
-    String[] res = null;
-    fstream = new FileInputStream(file);
-    DataInputStream in = new DataInputStream(fstream);
-    BufferedReader br = new BufferedReader(new InputStreamReader(in));
-    String strLine;
-    ArrayList<String> lines = new ArrayList<String>();
-
-    while ((strLine = br.readLine()) != null) {
-      lines.add(getFromClassPath("/sampleApps/" + strLine).getAbsolutePath());
-    }
-
-    res = new String[lines.size()];
-    res = lines.toArray(res);
-
-    return res;
-  }
-
-  private static File getFromClassPath(String resource) throws Exception {
-    File res = null;
-    URL url = null;
-    try {
-      url = IOSServerConfiguration.class.getResource(resource);
-      if (url.toExternalForm().startsWith("file:")) {
-        res = new File(url.toExternalForm().replace("file:", ""));
-      }
-    } catch (Exception e) {
-      throw new CustomMessage("Cannot load the resource " + resource, "error");
-    }
-
-    if (res == null || !res.exists()) {
-      throw new CustomMessage("Couldn't locate the file from " + url.toString(), "error");
-    }
-    return res;
   }
 
   public int getPort() {
