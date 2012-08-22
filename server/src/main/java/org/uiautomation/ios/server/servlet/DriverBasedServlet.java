@@ -16,23 +16,17 @@ package org.uiautomation.ios.server.servlet;
 import javax.servlet.http.HttpServlet;
 
 import org.uiautomation.ios.server.IOSServer;
-import org.uiautomation.ios.server.IOSServerConfiguration;
 import org.uiautomation.ios.server.instruments.IOSDriver;
 
+@SuppressWarnings("serial")
+public abstract class DriverBasedServlet extends HttpServlet {
 
-public abstract class UIAScriptProxyBasedServlet extends HttpServlet {
-
-  private static final long serialVersionUID = -8973906920199944087L;
   private IOSDriver driver;
-  private IOSServerConfiguration config;
 
-  public IOSDriver getDriver() {
+  public synchronized IOSDriver getDriver() {
     if (driver == null) {
       driver = (IOSDriver) getServletContext().getAttribute(IOSServer.DRIVER);
     }
     return driver;
   }
-
- 
-  
 }

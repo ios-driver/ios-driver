@@ -29,8 +29,7 @@ import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.server.CommandMapping;
 import org.uiautomation.ios.server.command.Handler;
 
-public class IOSServlet extends UIAScriptProxyBasedServlet {
-
+public class IOSServlet extends DriverBasedServlet {
 
   private static final long serialVersionUID = -1190162363756488569L;
 

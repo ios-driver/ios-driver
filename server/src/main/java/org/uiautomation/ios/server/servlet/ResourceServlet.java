@@ -19,19 +19,17 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
-import org.uiautomation.ios.server.IOSServer;
-import org.uiautomation.ios.server.instruments.IOSDriver;
 
 
 
-public class ResourceServlet extends HttpServlet {
+@SuppressWarnings("serial")
+public class ResourceServlet extends DriverBasedServlet {
 
-  private IOSDriver driver;
+ 
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -52,10 +50,5 @@ public class ResourceServlet extends HttpServlet {
     }
   }
 
-  public IOSDriver getDriver() {
-    if (driver == null) {
-      driver = (IOSDriver) getServletContext().getAttribute(IOSServer.DRIVER);
-    }
-    return driver;
-  }
+ 
 }

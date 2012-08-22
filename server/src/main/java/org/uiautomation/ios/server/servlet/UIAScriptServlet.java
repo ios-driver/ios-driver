@@ -23,14 +23,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
-import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.UIAScriptRequest;
 import org.uiautomation.ios.server.UIAScriptResponse;
 import org.uiautomation.ios.server.application.LanguageDictionary;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
 
 
-public class UIAScriptServlet extends UIAScriptProxyBasedServlet {
+public class UIAScriptServlet extends DriverBasedServlet {
 
   private static final long serialVersionUID = 41227429706998662L;
 
@@ -61,15 +60,12 @@ public class UIAScriptServlet extends UIAScriptProxyBasedServlet {
 
     UIAScriptRequest nextCommand = communication(request).getNextCommand();
     String script = nextCommand.getScript();
-    // System.out.println("will process now and send : " + nextCommand);
 
     response.setContentType("text/html");
     response.setCharacterEncoding("UTF-8");
     response.setStatus(200);
     response.getWriter().print(script);
     response.getWriter().close();
-    // System.out.println("command sent.");
-
   }
 
   private void getResponse(HttpServletRequest request, HttpServletResponse response)
@@ -89,8 +85,8 @@ public class UIAScriptServlet extends UIAScriptProxyBasedServlet {
   }
 
   private CommunicationChannel communication(HttpServletRequest request) throws Exception {
-   String opaqueKey = request.getParameter("sessionId");
-   
+    String opaqueKey = request.getParameter("sessionId");
+
     return getDriver().getSession(opaqueKey).communication();
   }
 
