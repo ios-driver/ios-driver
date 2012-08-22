@@ -14,11 +14,11 @@ import org.uiautomation.ios.server.instruments.InstrumentsManager;
 public class ServerSideSession extends Session {
 
   private final IOSApplication application;
-  private final InstrumentsManager instruments = new InstrumentsManager();
+  private final InstrumentsManager instruments;
 
 
 
-  public ServerSideSession(IOSApplication application) {
+  public ServerSideSession(IOSApplication application,int serverPort) {
     super(UUID.randomUUID().toString());
     this.application = application;
 
@@ -28,6 +28,7 @@ public class ServerSideSession extends Session {
         forceStop();
       }
     });
+    instruments = new InstrumentsManager(serverPort);
   }
 
   public IOSApplication getApplication() {

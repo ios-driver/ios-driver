@@ -33,12 +33,13 @@ public class InstrumentsManager {
   private File application;
   private IOSDeviceManager simulator;
   private String sessionId;
+  private final int port;
   private List<String> extraEnvtParams;
   private CommunicationChannel communicationChannel;
   private Command simulatorProcess;
 
 
-  public InstrumentsManager() throws IOSAutomationSetupException {
+  public InstrumentsManager(int serverPort) throws IOSAutomationSetupException {
     File t =
         new File("/Applications/Xcode.app/Contents/Developer/"
             + "Platforms/iPhoneOS.platform/Developer/Library/"
@@ -53,6 +54,7 @@ public class InstrumentsManager {
       throw new IOSAutomationSetupException("can't find template. Try instruments -s");
     }
     template = t;
+    this.port = serverPort;
   }
 
   public void startSession(IOSDevice device, String sdkVersion, String locale, String language,
@@ -123,7 +125,7 @@ public class InstrumentsManager {
     command.add(application.getAbsolutePath());
     command.add("-e");
     command.add("UIASCRIPT");
-    File uiscript = new ScriptHelper().getScript(IOSServer.port,application.getAbsolutePath(),sessionId);
+    File uiscript = new ScriptHelper().getScript(port,application.getAbsolutePath(),sessionId);
 
     command.add(uiscript.getAbsolutePath());
     command.add("-e");

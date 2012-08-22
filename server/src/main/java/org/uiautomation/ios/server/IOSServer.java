@@ -16,13 +16,10 @@ package org.uiautomation.ios.server;
 
 import java.net.InetSocketAddress;
 
-import javax.servlet.Servlet;
-
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
 import org.uiautomation.ios.server.application.IOSApplication;
-import org.uiautomation.ios.server.application.ResourceCache;
 import org.uiautomation.ios.server.grid.RegistrationRequest;
 import org.uiautomation.ios.server.instruments.IOSDriver;
 import org.uiautomation.ios.server.servlet.IOSServlet;
@@ -34,13 +31,9 @@ import com.beust.jcommander.JCommander;
 
 public class IOSServer {
 
-  private final String IDE_CLASS = "org.uiautomation.ios.ide.IDEServlet";
-
   public static final String DRIVER = IOSDriver.class.getName();
-  public static final String SERVER_CONFIG = IOSServerConfiguration.class.getName();
-  public static final String RESOURCES = ResourceCache.class.getName();
   private final Server server;
-  public static int port;
+  private int port;
   public static final boolean debugMode = true;
   private IOSServerConfiguration options;
 
@@ -57,9 +50,6 @@ public class IOSServer {
               options.getPort(), options.getSupportedApps());
       request.registerToHub();
     }
-
-
-
   }
 
   public void init() throws IOSAutomationSetupException {
@@ -70,21 +60,13 @@ public class IOSServer {
     servletContextHandler.addServlet(IOSServlet.class, "/*");
     servletContextHandler.addServlet(ResourceServlet.class, "/resources/*");
 
-    Class<Servlet> ide = getIDEServlet();
-    if (ide != null) {
-      servletContextHandler.addServlet(ide, "/ide/*");
-    }
-
-    IOSDriver driver = new IOSDriver();
-    for (String app : this.options.getSupportedApps()){
+    IOSDriver driver = new IOSDriver(port);
+    for (String app : this.options.getSupportedApps()) {
       driver.addSupportedApplication(new IOSApplication(null, app));
     }
-  
+
     servletContextHandler.setAttribute(DRIVER, driver);
-    
-    
-    
-    
+
     Runtime.getRuntime().addShutdownHook(new Thread() {
       public void run() {
         try {
@@ -113,21 +95,12 @@ public class IOSServer {
     this.options = options;
     this.port = options.getPort();
     server = new Server(new InetSocketAddress("localhost", options.getPort()));
-    
-  }
-  
-  
 
-  private Class<Servlet> getIDEServlet() {
-    try {
-      Class<?> ide = Class.forName(IDE_CLASS);
-      Class<Servlet> c = (Class<Servlet>) ide;
-      return c;
-    } catch (Exception e) {
-      System.err.println("couldn't find " + IDE_CLASS);
-    }
-    return null;
   }
+
+
+
+
 
 
 

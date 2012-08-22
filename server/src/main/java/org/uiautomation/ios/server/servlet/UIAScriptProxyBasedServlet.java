@@ -33,11 +33,6 @@ public abstract class UIAScriptProxyBasedServlet extends HttpServlet {
     return driver;
   }
 
-  public IOSServerConfiguration getServerConfig() {
-    if (config == null) {
-      config = (IOSServerConfiguration) getServletContext().getAttribute(IOSServer.SERVER_CONFIG);
-    }
-    return config;
-  }
+ 
   
 }
