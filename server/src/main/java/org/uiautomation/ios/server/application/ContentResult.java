@@ -82,7 +82,7 @@ public class ContentResult {
 
     // each arg can potentialy be a translated snipet.
     for (String arg : args) {
-      
+      //TODO freynaud not implemented.
     }
 
   }
