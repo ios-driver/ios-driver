@@ -15,12 +15,9 @@ package org.uiautomation.ios.server.servlet;
 
 import javax.servlet.http.HttpServlet;
 
-import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
-import org.uiautomation.ios.server.instruments.CommunicationChannel;
 import org.uiautomation.ios.server.instruments.IOSDriver;
-import org.uiautomation.ios.server.instruments.SessionsManager;
 
 
 public abstract class UIAScriptProxyBasedServlet extends HttpServlet {

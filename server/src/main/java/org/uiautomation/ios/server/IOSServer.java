@@ -25,7 +25,6 @@ import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.application.ResourceCache;
 import org.uiautomation.ios.server.grid.RegistrationRequest;
 import org.uiautomation.ios.server.instruments.IOSDriver;
-import org.uiautomation.ios.server.instruments.SessionsManager;
 import org.uiautomation.ios.server.servlet.IOSServlet;
 import org.uiautomation.ios.server.servlet.ResourceServlet;
 import org.uiautomation.ios.server.servlet.UIAScriptProxyRegister;

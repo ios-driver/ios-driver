@@ -22,7 +22,6 @@ import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
 import org.uiautomation.ios.server.instruments.IOSDriver;
-import org.uiautomation.ios.server.instruments.SessionsManager;
 
 public abstract class BaseCommandHandler implements Handler {
 

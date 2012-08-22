@@ -27,7 +27,6 @@ import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 import org.uiautomation.ios.server.instruments.IOSDriver;
-import org.uiautomation.ios.server.instruments.SessionsManager;
 
 /**
  * execute the command on instruments, and returns the result cast based on the expected result.

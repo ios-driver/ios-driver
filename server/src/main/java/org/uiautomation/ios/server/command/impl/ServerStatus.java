@@ -20,13 +20,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
-import org.uiautomation.ios.server.IOSServerConfiguration;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.command.BaseCommandHandler;
 import org.uiautomation.ios.server.command.BuildInfo;
 import org.uiautomation.ios.server.instruments.ClassicCommands;
 import org.uiautomation.ios.server.instruments.IOSDriver;
-import org.uiautomation.ios.server.instruments.SessionsManager;
 
 public class ServerStatus extends BaseCommandHandler {
 

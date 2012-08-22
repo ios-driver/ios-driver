@@ -20,7 +20,6 @@ import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.server.UIAScriptRequest;
 import org.uiautomation.ios.server.UIAScriptResponse;
 import org.uiautomation.ios.server.instruments.IOSDriver;
-import org.uiautomation.ios.server.instruments.SessionsManager;
 
 /**
  * execute a snipet of javascript in the instruments script context and returns the result.
