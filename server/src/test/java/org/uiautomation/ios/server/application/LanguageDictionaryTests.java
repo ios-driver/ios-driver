@@ -38,21 +38,21 @@ public class LanguageDictionaryTests {
 
   @Test
   public void reflectionOnProjectToFindLanguageFiles() throws IOSAutomationException {
-    File app = new File(SampleApps.getIntlMountainsApp());
+    File app = new File(SampleApps.getIntlMountainsFile());
     List<File> languageFiles = LanguageDictionary.getL10NFiles(app);
     Assert.assertEquals(languageFiles.size(), 3);
   }
 
   @Test
   public void reflectionOnProjectToFindLanguageFiles2() throws IOSAutomationException {
-    File app = new File(SampleApps.getUICatalogApp());
+    File app = new File(SampleApps.getUICatalogFile());
     List<File> languageFiles = LanguageDictionary.getL10NFiles(app);
     Assert.assertEquals(languageFiles.size(), 1);
   }
 
   @Test(dependsOnMethods = {"reflectionOnProjectToFindLanguageFiles"})
   public void reflectionOFindsTheRightLanguages() throws Exception {
-    File app = new File(SampleApps.getIntlMountainsApp());
+    File app = new File(SampleApps.getIntlMountainsFile());
     List<File> languageFiles = LanguageDictionary.getL10NFiles(app);
 
     List<LanguageDictionary> dicts = new ArrayList<LanguageDictionary>();
@@ -69,7 +69,7 @@ public class LanguageDictionaryTests {
 
   @Test(dependsOnMethods = {"reflectionOnProjectToFindLanguageFiles2"})
   public void reflectionOFindsTheRightLanguages2() throws Exception {
-    File app = new File(SampleApps.getUICatalogApp());
+    File app = new File(SampleApps.getUICatalogFile());
     List<File> languageFiles = LanguageDictionary.getL10NFiles(app);
 
     List<LanguageDictionary> dicts = new ArrayList<LanguageDictionary>();

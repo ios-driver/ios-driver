@@ -57,8 +57,21 @@ public enum Localizable {
         return l10n;
       }
     }
+
     throw new IOSAutomationException("Cannot find mapping for " + name);
+
   }
+
+  public static Localizable getEnum(String oldOrNewFormat) {
+    if (Localizable.isLegacyName(oldOrNewFormat)) {
+      return Localizable.createFromLegacyName(oldOrNewFormat);
+    } else if (Localizable.isNewName(oldOrNewFormat)) {
+      return Localizable.createFromNewName(oldOrNewFormat);
+    } else {
+      throw new IOSAutomationException(oldOrNewFormat + " isn't recognized.");
+    }
+  }
+
 
   // TODO freynaud : use Locale as this is the new format apple follows.
   // ISO-639-1 (two-letter) or ISO-639-2 (three-letter)

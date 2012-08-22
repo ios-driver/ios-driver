@@ -21,6 +21,7 @@ import java.util.Set;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.Localizable;
 import org.uiautomation.ios.server.application.ResourceCache;
 import org.uiautomation.ios.server.utils.BuildInfo;
 import org.uiautomation.ios.server.utils.ClassicCommands;
@@ -51,6 +52,7 @@ public class IOSDriver {
 
   public ServerSideSession startSession(IOSCapabilities capabilities) {
     IOSApplication app = findMatchingApplication(capabilities);
+    app.setLanguage(capabilities.getLanguage());
     ServerSideSession session = new ServerSideSession(app, hostInfo.getPort());
     sessions.add(session);
     session.start(capabilities);

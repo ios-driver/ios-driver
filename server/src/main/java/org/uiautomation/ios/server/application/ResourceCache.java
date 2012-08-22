@@ -53,7 +53,7 @@ public class ResourceCache {
 
     public Mapping(String applicationPath) {
       this.applicationPath = applicationPath;
-      String icon = new IOSApplication(null, applicationPath).getIcon();
+      String icon = new IOSApplication(applicationPath).getIcon();
       this.resource = new File(applicationPath, icon);
       this.key = UUID.randomUUID().toString();
     }

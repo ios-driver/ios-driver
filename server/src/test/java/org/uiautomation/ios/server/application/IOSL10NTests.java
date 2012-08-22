@@ -24,8 +24,9 @@ public class IOSL10NTests {
   @BeforeClass
   public void setup() throws Exception {
 
-    app = new IOSApplication(en, SampleApps.getIntlMountainsApp());
+    app = new IOSApplication(SampleApps.getIntlMountainsFile());
     app.loadAllContent();
+    app.setLanguage("en");
   }
 
 
@@ -86,10 +87,10 @@ public class IOSL10NTests {
     ContentResult res = results.get(0);
     System.out.println(res);
     String french = app.getDictionary(fr).translate(res);
-   // returns "Bien que Mountain 1 de haut, 29 May 1953 aient été montés la première fois 8,848 meters."
+    // returns
+    // "Bien que Mountain 1 de haut, 29 May 1953 aient été montés la première fois 8,848 meters."
   }
-  
- 
+
 
 
 }

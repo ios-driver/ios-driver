@@ -13,7 +13,7 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAWindow;
 import org.uiautomation.ios.server.application.Localizable;
 
-public class ServerSideL10NTests extends IntlMountainTestsBase {
+public class ServerSideL10NTest extends IntlMountainTestsBase {
 
 
 

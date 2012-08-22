@@ -14,7 +14,7 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAWindow;
 import org.uiautomation.ios.server.application.Localizable;
 
-public class ComplexCriteriaTests extends IntlMountainTestsBase {
+public class ComplexCriteriaTest extends IntlMountainTestsBase {
 
 
 

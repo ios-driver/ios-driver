@@ -12,8 +12,8 @@ public class SmokeTests {
 
   @BeforeClass
   public void setup() throws Exception {
-    IDEServer.main(new String[] {"-port", "5555", "-aut", SampleApps.getUICatalogApp()});
-    IOSServer.main(new String[] {"-port", "5556", "-aut", SampleApps.getIntlMountainsApp()});
+    IDEServer.main(new String[] {"-port", "5555", "-aut", SampleApps.getUICatalogFile()});
+    IOSServer.main(new String[] {"-port", "5556", "-aut", SampleApps.getIntlMountainsFile()});
   }
 
   @Test

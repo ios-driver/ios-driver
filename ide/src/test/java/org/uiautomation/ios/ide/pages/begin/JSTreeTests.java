@@ -26,7 +26,7 @@ public class JSTreeTests {
 
   @Test
   public void canTransformToJSTreeFormat() throws JSONException, IOSAutomationException {
-    new JSTree(new IOSApplication(Localizable.en, SampleApps.getUICatalogApp()), tree);
+    new JSTree(new IOSApplication(Localizable.en, SampleApps.getUICatalogFile()), tree);
   }
 
 }

@@ -18,7 +18,7 @@ public class ServerSideSession extends Session {
 
 
 
-  public ServerSideSession(IOSApplication application,int serverPort) {
+  public ServerSideSession(IOSApplication application, int serverPort) {
     super(UUID.randomUUID().toString());
     this.application = application;
 
@@ -57,8 +57,9 @@ public class ServerSideSession extends Session {
   }
 
   public void start(IOSCapabilities capabilities) {
-    instruments.startSession(IOSDevice.iPhoneSimulator, "5.1", "en_GB", "en",
-        application.getApplicationPath(), getSessionId(), true, new ArrayList<String>());
+    instruments.startSession(IOSDevice.iPhoneSimulator, "5.1", capabilities.getLocale(),
+        capabilities.getLanguage(), application.getApplicationPath(), getSessionId(), true,
+        new ArrayList<String>());
 
   }
 

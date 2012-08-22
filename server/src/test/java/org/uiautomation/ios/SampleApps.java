@@ -41,11 +41,11 @@ public class SampleApps {
     return res;
   }
 
-  public static String getUICatalogApp() {
+  public static String getUICatalogFile() {
     return getFromClassPath(uiCatalog).getAbsolutePath();
   }
 
-  public static String getIntlMountainsApp() {
+  public static String getIntlMountainsFile() {
     return getFromClassPath(intlMountains).getAbsolutePath();
   }
 
@@ -56,7 +56,7 @@ public class SampleApps {
   }
 
   public static IOSCapabilities intlMountainsCap(Localizable l) {
-    IOSCapabilities c = IOSCapabilities.iphone(SampleApps.getIntlMountainsApp());
+    IOSCapabilities c = IOSCapabilities.iphone("InternationalMountains","1.1");
     c.setLanguage(l.getName());
     c.setCapability(IOSCapabilities.TIME_HACK, false);
     return c;

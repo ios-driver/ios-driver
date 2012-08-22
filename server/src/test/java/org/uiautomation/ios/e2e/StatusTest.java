@@ -1,4 +1,4 @@
-package org.uiautomation.ios.e2e.uicatalogapp;
+package org.uiautomation.ios.e2e;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ public class StatusTest {
       Assert.assertEquals(uicatalog.get("bundleId"), "com.yourcompany.UICatalog");
       Assert.assertEquals(uicatalog.get("bundleName"), "UICatalog");
       Assert.assertEquals(uicatalog.get("bundleVersion"), "2.10");
-      Assert.assertEquals(uicatalog.get("applicationPath"), SampleApps.getUICatalogApp());
+      Assert.assertEquals(uicatalog.get("applicationPath"), SampleApps.getUICatalogFile());
 
       JSONArray locales1 = uicatalog.getJSONArray("locales");
       Assert.assertEquals(locales1.length(), 1);
@@ -61,7 +61,7 @@ public class StatusTest {
       Assert.assertEquals(intMount.get("bundleId"), "com.yourcompany.InternationalMountains");
       Assert.assertEquals(intMount.get("bundleName"), "InternationalMountains");
       Assert.assertEquals(intMount.get("bundleVersion"), "1.1");
-      Assert.assertEquals(intMount.get("applicationPath"), SampleApps.getIntlMountainsApp());
+      Assert.assertEquals(intMount.get("applicationPath"), SampleApps.getIntlMountainsFile());
 
       JSONArray locales2 = intMount.getJSONArray("locales");
       Assert.assertEquals(locales2.length(), 3);
@@ -83,8 +83,8 @@ public class StatusTest {
 
   private IOSServer server;
   private static String[] args = {"-port", "4444", "-host", "localhost", "-aut",
-      SampleApps.getUICatalogApp(), "-aut",
-      SampleApps.getIntlMountainsApp()};
+      SampleApps.getUICatalogFile(), "-aut",
+      SampleApps.getIntlMountainsFile()};
   private static IOSServerConfiguration config;
   private String url;
 

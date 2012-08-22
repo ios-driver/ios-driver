@@ -1,14 +1,7 @@
 package org.uiautomation.ios.server.application;
 
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 
-import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -21,7 +14,7 @@ public class ServerSideL10N {
 
 
   private ServerSideL10NFactory create(Localizable l) {
-    IOSApplication app = new IOSApplication(l, SampleApps.getIntlMountainsApp());
+    IOSApplication app = new IOSApplication(SampleApps.getIntlMountainsFile());
     app.loadAllContent();
     ServerSideL10NFactory factory = new ServerSideL10NFactory(app);
     return factory;

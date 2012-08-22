@@ -31,7 +31,7 @@ import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.utils.Command;
 
 
-//TODO freynaud create IOSApp vs Running App that has locale + language
+// TODO freynaud create IOSApp vs Running App that has locale + language
 public class IOSApplication {
 
   @Override
@@ -58,7 +58,7 @@ public class IOSApplication {
 
 
   private final File app;
-  private final Localizable currentLanguage;
+  private Localizable currentLanguage;
   private final List<LanguageDictionary> dictionaries = new ArrayList<LanguageDictionary>();
 
 
@@ -68,13 +68,12 @@ public class IOSApplication {
    * @param pathToApp
    * @throws IOSAutomationException
    */
-  public IOSApplication(Localizable currentLanguage, String pathToApp)
-      throws IOSAutomationException {
+  public IOSApplication(String pathToApp) throws IOSAutomationException {
     this.app = new File(pathToApp);
     if (!app.exists()) {
       throw new IOSAutomationException(pathToApp + "isn't an IOS app.");
     }
-    this.currentLanguage = currentLanguage;
+    loadAllContent();
   }
 
 
@@ -291,5 +290,7 @@ public class IOSApplication {
   }
 
 
-
+  public void setLanguage(String language) {
+    currentLanguage = Localizable.getEnum(language);
+  }
 }

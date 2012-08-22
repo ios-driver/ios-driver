@@ -14,7 +14,7 @@ public abstract class UICatalogTestsBase {
 
   private IOSServer server;
   private static String[] args = {"-port", "4444", "-host", "localhost", "-aut",
-      SampleApps.getUICatalogApp()};
+      SampleApps.getUICatalogFile()};
   private static IOSServerConfiguration config = IOSServerConfiguration.create(args);
   private String url = "http://" + config.getHost() + ":" + config.getPort() + "/wd/hub";
 

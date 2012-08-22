@@ -13,7 +13,7 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAWindow;
 import org.uiautomation.ios.server.application.Localizable;
 
-public class CriteriaKeepsOrderTests extends IntlMountainTestsBase {
+public class CriteriaKeepsOrderTest extends IntlMountainTestsBase {
 
   @Test(groups = "broken")
   public void orCriteriaReturnsFirstMatch() {

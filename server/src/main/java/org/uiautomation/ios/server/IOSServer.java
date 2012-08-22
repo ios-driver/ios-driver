@@ -61,7 +61,7 @@ public class IOSServer {
 
     IOSDriver driver = new IOSDriver(port);
     for (String app : this.options.getSupportedApps()) {
-      driver.addSupportedApplication(new IOSApplication(null, app));
+      driver.addSupportedApplication(new IOSApplication(app));
     }
 
     servletContextHandler.setAttribute(DRIVER, driver);

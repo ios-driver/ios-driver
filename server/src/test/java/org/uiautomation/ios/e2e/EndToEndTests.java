@@ -27,7 +27,7 @@ public class EndToEndTests {
 
   private IOSServer server;
   private static String[] args = {"-port", "4444", "-host", "localhost", "-aut",
-      SampleApps.getUICatalogApp()};
+      SampleApps.getUICatalogFile()};
   private static IOSServerConfiguration config = IOSServerConfiguration.create(args);
 
   @BeforeClass
