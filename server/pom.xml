@@ -20,11 +20,7 @@
 			<artifactId>jetty-server</artifactId>
 			<version>7.2.0.v20101020</version>
 		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-servlet</artifactId>
-			<version>7.2.0.v20101020</version>
-		</dependency>
+		
 
 		<dependency>
 			<groupId>com.beust</groupId>

@@ -67,7 +67,7 @@ public class IOSServlet extends DriverBasedServlet {
   }
 
   private void process(HttpServletRequest request, HttpServletResponse response) throws Exception {
-    WebDriverLikeRequest req = getRequest(request);
+    WebDriverLikeRequest req = new WebDriverLikeRequest(request);
     WebDriverLikeResponse resp = getResponse(req);
 
     response.setContentType("application/json;charset=UTF-8");
@@ -91,26 +91,6 @@ public class IOSServlet extends DriverBasedServlet {
     }
     response.getWriter().print(resp.stringify());
     response.getWriter().close();
-
-  }
-
-  public static WebDriverLikeRequest getRequest(HttpServletRequest request) throws Exception {
-
-    String method = request.getMethod();
-    String path = request.getPathInfo();
-    String json = null;
-    if (request.getInputStream() != null) {
-      StringWriter w = new StringWriter();
-      IOUtils.copy(request.getInputStream(), w, "UTF-8");
-      json = w.toString();
-    }
-    JSONObject o = new JSONObject();
-    if (json != null && !json.isEmpty()) {
-      o = new JSONObject(json);
-    }
-
-    WebDriverLikeRequest orig = new WebDriverLikeRequest(method, path, o);
-    return orig;
 
   }
 

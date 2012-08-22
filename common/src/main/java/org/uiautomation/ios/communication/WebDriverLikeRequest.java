@@ -13,6 +13,12 @@
  */
 package org.uiautomation.ios.communication;
 
+import java.io.IOException;
+import java.io.StringWriter;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,6 +30,24 @@ public class WebDriverLikeRequest {
   // TODO freynaud extract that to a dedicated object to avoid json objects leaking exception
   // everywhere.
   private JSONObject payload;
+
+  public WebDriverLikeRequest(HttpServletRequest request) throws IOException, JSONException {
+    method = request.getMethod();
+    path = request.getPathInfo();
+    String json = null;
+    if (request.getInputStream() != null) {
+      StringWriter w = new StringWriter();
+      IOUtils.copy(request.getInputStream(), w, "UTF-8");
+      json = w.toString();
+    }
+    JSONObject o = new JSONObject();
+    if (json != null && !json.isEmpty()) {
+      o = new JSONObject(json);
+
+    }
+    payload = o;
+
+  }
 
   public WebDriverLikeRequest(String method, Path path, JSONObject payload) {
     this.method = method;
@@ -98,8 +122,8 @@ public class WebDriverLikeRequest {
     String[] pieces = path.split("/");
     return pieces[i];
   }
-  
-  public String getSession(){
+
+  public String getSession() {
     return getVariableValue(":sessionId");
   }
 

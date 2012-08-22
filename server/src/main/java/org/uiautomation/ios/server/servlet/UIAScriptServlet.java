@@ -86,7 +86,6 @@ public class UIAScriptServlet extends DriverBasedServlet {
 
   private CommunicationChannel communication(HttpServletRequest request) throws Exception {
     String opaqueKey = request.getParameter("sessionId");
-
     return getDriver().getSession(opaqueKey).communication();
   }
 
