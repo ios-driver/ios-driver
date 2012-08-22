@@ -45,6 +45,8 @@ public enum WebDriverLikeCommand {
   TARGET_NAME("GET","/session/:sessionId/uiaTarget/:reference/name",String.class),
   SYSTEM_NAME("GET","/session/:sessionId/uiaTarget/:reference/systemName",String.class),
   SYSTEM_VERSION("GET","/session/:sessionId/uiaTarget/:reference/systemVersion",String.class),
+  LANGUAGE("GET","/session/:sessionId/uiaTarget/:reference/language",String.class),
+  LOCALE("GET","/session/:sessionId/uiaTarget/:reference/locale",String.class),
   
   SCREENSHOT_WITH_NAME("POST","/session/:sessionId/uiaTarget/:reference/screenshotWithName",Void.class),
   
@@ -125,6 +127,7 @@ public enum WebDriverLikeCommand {
   TABLE_VISIBLE_CELLS("GET","/session/:sessionId/uiaElement/:reference/getVisibleCells",UIAElementArray.class),
   
   STATUS("GET","/status",JSONObject.class);
+ 
   
   private final String method;
   private final String path;

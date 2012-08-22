@@ -77,15 +77,15 @@ public class IOSServlet extends DriverBasedServlet {
     if (req.getGenericCommand() == WebDriverLikeCommand.NEW_SESSION) {
       response.setStatus(301);
       String session = resp.getSessionId();
-      
-      String scheme = request.getScheme();             // http
-      String serverName = request.getServerName();     // hostname.com
-      int serverPort = request.getServerPort();        // 80
-      String contextPath = request.getContextPath();   // /mywebapp
-      
+
+      String scheme = request.getScheme(); // http
+      String serverName = request.getServerName(); // hostname.com
+      int serverPort = request.getServerPort(); // 80
+      String contextPath = request.getContextPath(); // /mywebapp
+
       // Reconstruct original requesting URL
-      String url = scheme+"://"+serverName+":"+serverPort+contextPath;
-      response.setHeader("location", url+"/session/" + session);
+      String url = scheme + "://" + serverName + ":" + serverPort + contextPath;
+      response.setHeader("location", url + "/session/" + session);
     } else {
       response.setStatus(200);
     }
@@ -100,8 +100,12 @@ public class IOSServlet extends DriverBasedServlet {
       Handler h = CommandMapping.get(wdlc).createHandler(getDriver(), request);
       return h.handleAndRunDecorators();
     } catch (Exception e) {
-      e.printStackTrace();
-      return new FailedWebDriverLikeResponse(request.getSession(), e);
+      if (request.getGenericCommand() == WebDriverLikeCommand.NEW_SESSION) {
+        return new FailedWebDriverLikeResponse(null, e);
+      } else {
+        return new FailedWebDriverLikeResponse(request.getSession(), e);
+      }
+
 
     }
 

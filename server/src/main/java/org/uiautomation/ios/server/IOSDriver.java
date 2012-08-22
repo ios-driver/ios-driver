@@ -68,10 +68,15 @@ public class IOSDriver {
   private IOSApplication findMatchingApplication(IOSCapabilities desiredCapabilities) {
     for (IOSApplication app : supportedApplications) {
       if (app.matches(desiredCapabilities)) {
+        // check that the language is supported.
+        String l = desiredCapabilities.getLanguage() ;
+        if (l != null && !app.getSupportedLanguages().contains(l)){
+          throw new IOSAutomationException("Language requested, "+l+" ,isn't supported.Supported are : "+app.getSupportedLanguages());
+        }
         return app;
       }
     }
-    throw new IOSAutomationException(desiredCapabilities + "not found on server.");
+    throw new IOSAutomationException(desiredCapabilities.getRawCapabilities() + "not found on server.");
   }
 
   public ServerSideSession getSession(String opaqueKey) {

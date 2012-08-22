@@ -124,7 +124,7 @@ public class WebDriverLikeRequest {
   }
 
   public String getSession() {
-    return getVariableValue(":sessionId");
+      return getVariableValue(":sessionId");  
   }
 
 

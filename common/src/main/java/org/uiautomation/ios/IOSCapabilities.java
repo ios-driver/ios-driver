@@ -55,12 +55,12 @@ public class IOSCapabilities {
 
 
 
-  public static IOSCapabilities iphone(String app) {
+  public static IOSCapabilities iphone(String bundleName) {
     IOSCapabilities res = new IOSCapabilities();
     res.setCapability(DEVICE, IOSDevice.iPhoneSimulator);
     res.setCapability(LANGUAGE, "en");
     res.setCapability(LOCALE, "en_GB");
-    res.setCapability(AUT, app);
+    res.setCapability(BUNDLE_NAME, bundleName);
     return res;
   }
 

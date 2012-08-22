@@ -33,6 +33,10 @@ public interface UIATarget {
   public void takeScreenshot(String path);
 
   public UIAApplication getFrontMostApp();
+  
+  public String getLanguage();
+  
+  public String getLocale();
 
   public void setTimeout(int timeoutInSecnds);
 

@@ -57,6 +57,8 @@ public enum CommandMapping {
   TARGET_NAME(".name()"),
   SYSTEM_NAME(".systemName()"),
   SYSTEM_VERSION(".systemVersion()"),
+  LANGUAGE(".language()"),
+  LOCALE(".locale()"),
   
   SCREENSHOT_WITH_NAME(TakeScreenshot.class,".captureScreenWithName('" + TakeScreenshot.SCREEN_NAME + "')"),
   

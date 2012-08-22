@@ -83,7 +83,7 @@ public class IOSApplication {
    * @return
    * @throws Exception
    */
-  public List<Localizable> getSupportedLanguages() throws Exception {
+  public List<Localizable> getSupportedLanguages() {
     Set<Localizable> res = new HashSet<Localizable>();
     List<File> l10ns = LanguageDictionary.getL10NFiles(app);
     for (File f : l10ns) {
