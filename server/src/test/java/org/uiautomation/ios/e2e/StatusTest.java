@@ -42,7 +42,6 @@ public class StatusTest {
 
       JSONObject o = Helper.extractObject(response);
       
-      System.out.println(o.toString(2));
       JSONArray array = o.getJSONObject("value").getJSONArray("supportedApps");
       Assert.assertEquals(array.length(), 2);
 
