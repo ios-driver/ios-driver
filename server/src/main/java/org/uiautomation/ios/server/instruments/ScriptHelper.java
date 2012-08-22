@@ -24,19 +24,27 @@ import java.io.StringWriter;
 import org.apache.commons.io.IOUtils;
 import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
 
+
+/**
+ * Concatenate all the small JS files into 1 file passed to instruments, and replace variables by
+ * their value.
+ * 
+ * @author freynaud
+ * 
+ */
 public class ScriptHelper {
 
   private final String main = "main.js";
   private final String json = "json2.js";
   private final String lib1 = "UIAutomation.js";
   private final String lib2 = "UIAElement.js";
+  private static final String FILE_NAME = "uiamasterscript";
 
-  public ScriptHelper() {}
 
   private String load(String resource) throws IOException {
     InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
-    if (is ==null){
-      throw new IOSAutomationSetupException("cannot load : "+resource);
+    if (is == null) {
+      throw new IOSAutomationSetupException("cannot load : " + resource);
     }
     StringWriter writer = new StringWriter();
     IOUtils.copy(is, writer, "UTF-8");
@@ -44,7 +52,7 @@ public class ScriptHelper {
     return content;
   }
 
-  private String generateScriptContent(int port,String aut,String opaqueKey) throws IOException {
+  private String generateScriptContent(int port, String aut, String opaqueKey) throws IOException {
     StringBuilder scriptContent = new StringBuilder();
 
     String c = load(lib1);
@@ -63,8 +71,7 @@ public class ScriptHelper {
 
 
   private File createTmpScript(String content) throws IOException {
-    // File res = File.createTempFile("uiamasterscript", ".js");
-    File res = new File("uiamasterscript.js");
+    File res = File.createTempFile(FILE_NAME, ".js");
     BufferedWriter out = new BufferedWriter(new FileWriter(res));
     out.write(content);
     out.close();
@@ -72,15 +79,13 @@ public class ScriptHelper {
 
   }
 
-  public File getScript(int port,String aut,String opaqueKey) throws IOSAutomationSetupException {
-
+  public File getScript(int port, String aut, String opaqueKey) throws IOSAutomationSetupException {
     try {
-      String content = generateScriptContent(port,aut,opaqueKey);
+      String content = generateScriptContent(port, aut, opaqueKey);
       return createTmpScript(content);
     } catch (Exception e) {
       throw new IOSAutomationSetupException("cannot generate the script for instrument.", e);
     }
-
   }
 
 }
