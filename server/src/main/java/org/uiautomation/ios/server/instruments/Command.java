@@ -15,6 +15,7 @@
 package org.uiautomation.ios.server.instruments;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -34,6 +35,8 @@ public class Command {
   private final List<CommandOutputListener> listeners =
       new CopyOnWriteArrayList<CommandOutputListener>();
   private List<Thread> threads = new ArrayList<Thread>();
+
+  private File workingDir = null;
 
   public Command(List<String> args, boolean logToConsole) {
     this.args = args;
@@ -73,6 +76,10 @@ public class Command {
    */
   public void start() throws IOSAutomationSetupException {
     ProcessBuilder builder = new ProcessBuilder(args);
+    if (workingDir != null) {
+      builder.directory(workingDir);
+    }
+
     try {
       process = builder.start();
     } catch (IOException e) {
@@ -169,6 +176,15 @@ public class Command {
 
     return b.toString();
 
+  }
+
+  /**
+   * set the working directory where the output files will be written.
+   * 
+   * @param output
+   */
+  public void setWorkingDirectory(File output) {
+    this.workingDir = output;
   }
 
 

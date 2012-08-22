@@ -39,6 +39,11 @@ public class InstrumentsManager {
   private Command simulatorProcess;
 
 
+  /**
+   * constructor that will create an instrument process linked to the server.
+   * @param serverPort the port the server lives on
+   * @throws IOSAutomationSetupException
+   */
   public InstrumentsManager(int serverPort) throws IOSAutomationSetupException {
     File t =
         new File("/Applications/Xcode.app/Contents/Developer/"
@@ -76,6 +81,7 @@ public class InstrumentsManager {
       communicationChannel = new CommunicationChannel();
 
       simulatorProcess = new Command(instruments, true);
+      simulatorProcess.setWorkingDirectory(output);
       simulatorProcess.start();
 
       communicationChannel.waitForUIScriptToBeStarted();
