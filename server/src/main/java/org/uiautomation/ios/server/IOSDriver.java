@@ -69,14 +69,22 @@ public class IOSDriver {
     for (IOSApplication app : supportedApplications) {
       if (app.matches(desiredCapabilities)) {
         // check that the language is supported.
-        String l = desiredCapabilities.getLanguage() ;
-        if (l != null && !app.getSupportedLanguages().contains(Localizable.getEnum(l))){
-          throw new IOSAutomationException("Language requested, "+l+" ,isn't supported.Supported are : "+app.getSupportedLanguages());
+        String l = desiredCapabilities.getLanguage();
+        if (l != null && !app.getSupportedLanguages().contains(Localizable.getEnum(l))) {
+          throw new IOSAutomationException("Language requested, " + l
+              + " ,isn't supported.Supported are : " + app.getSupportedLanguages());
+        }
+
+        String sdk = desiredCapabilities.getSDKVersion();
+        if (sdk != null && !sdk.equals(hostInfo.getSDK())) {
+          throw new IOSAutomationException("Cannot start sdk " + sdk + ". Run on "
+              + hostInfo.getSDK());
         }
         return app;
       }
     }
-    throw new IOSAutomationException(desiredCapabilities.getRawCapabilities() + "not found on server.");
+    throw new IOSAutomationException(desiredCapabilities.getRawCapabilities()
+        + "not found on server.");
   }
 
   public ServerSideSession getSession(String opaqueKey) {
@@ -107,11 +115,14 @@ public class IOSDriver {
 
       javaVersion = System.getProperty("java.version");
 
-      // TODO find a way to get the default SDK the simulator launches when invoked via instruments
-      List<String> sdks = ClassicCommands.getInstalledSDKs();
-      simulatorVersion = sdks.get(sdks.size() - 1);
+      String sdk = ClassicCommands.getDefaultSDK();
+      simulatorVersion = sdk;
 
       this.port = port;
+    }
+
+    public String getSDK() {
+      return simulatorVersion;
     }
 
     public int getPort() {

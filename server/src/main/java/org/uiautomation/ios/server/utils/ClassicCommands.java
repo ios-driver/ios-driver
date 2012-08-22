@@ -64,6 +64,13 @@ public class ClassicCommands {
     com.executeAndWait();
     return l.getSDKs();
   }
+
+
+  // TODO freynaud find the correct command
+  public static String getDefaultSDK() {
+    List<String> sdks = getInstalledSDKs();
+    return sdks.get(sdks.size() - 1);
+  }
 }
 
 

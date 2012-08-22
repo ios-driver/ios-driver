@@ -1,9 +1,5 @@
 package org.uiautomation.ios.e2e;
 
-import java.io.File;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -11,15 +7,12 @@ import org.testng.annotations.Test;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.UIAApplication;
-import org.uiautomation.ios.UIAModels.UIARect;
 import org.uiautomation.ios.UIAModels.UIATarget;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAApplication;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIATarget;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAWindow;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
+import org.uiautomation.ios.server.utils.ClassicCommands;
 
 public class NewSessionTest {
   private IOSServer server;
@@ -46,6 +39,7 @@ public class NewSessionTest {
       UIAApplication app = target.getFrontMostApp();
       Assert.assertEquals(app.getBundleId(), "com.yourcompany.UICatalog");
       Assert.assertEquals(app.getBundleVersion(), "2.10");
+      Assert.assertEquals(target.getSystemVersion(), ClassicCommands.getDefaultSDK());
     } finally {
       if (driver != null) {
         driver.quit();
@@ -163,7 +157,40 @@ public class NewSessionTest {
     }
   }
 
-
+  @Test(expectedExceptions = IOSAutomationException.class)
+  public void wrongSDK() {
+    IOSCapabilities cap = IOSCapabilities.iphone("InternationalMountains");
+    cap.setSDKVersion("17");
+    RemoteUIADriver driver = null;
+    try {
+      driver =
+          new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",
+              cap);
+    } finally {
+      if (driver != null) {
+        driver.quit();
+      }
+    }
+  }
+  
+  @Test
+  public void correctSDK() {
+    IOSCapabilities cap = IOSCapabilities.iphone("InternationalMountains");
+    String sdk = ClassicCommands.getDefaultSDK();
+    cap.setSDKVersion(sdk);
+    RemoteUIADriver driver = null;
+    try {
+      driver =
+          new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",
+              cap);
+      UIATarget target = driver.getLocalTarget();
+      Assert.assertEquals(target.getSystemVersion(), sdk);
+    } finally {
+      if (driver != null) {
+        driver.quit();
+      }
+    }
+  }
 
   @AfterClass
   public void stopServer() throws Exception {
