@@ -9,7 +9,7 @@ import org.testng.annotations.Test;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.application.LanguageDictionary;
 import org.uiautomation.ios.server.application.Localizable;
-import org.uiautomation.ios.server.tmp.SampleApps;
+import org.uiautomation.ios.server.tests.SampleApps;
 
 public class LanguageDictionaryTests {
 

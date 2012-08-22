@@ -17,8 +17,6 @@ import org.json.JSONObject;
 import org.uiautomation.ios.communication.FailedWebDriverLikeResponse;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
-import org.uiautomation.ios.server.UIAScriptRequest;
-import org.uiautomation.ios.server.UIAScriptResponse;
 import org.uiautomation.ios.server.instruments.IOSDriver;
 
 /**

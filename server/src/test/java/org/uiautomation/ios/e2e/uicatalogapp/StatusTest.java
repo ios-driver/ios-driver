@@ -24,7 +24,7 @@ import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
 import org.uiautomation.ios.server.application.Localizable;
-import org.uiautomation.ios.server.tmp.SampleApps;
+import org.uiautomation.ios.server.tests.SampleApps;
 
 public class StatusTest {
 

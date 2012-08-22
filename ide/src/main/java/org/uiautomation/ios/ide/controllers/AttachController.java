@@ -26,7 +26,7 @@ import org.uiautomation.ios.ide.views.RedirectView;
 import org.uiautomation.ios.ide.views.View;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.application.Localizable;
-import org.uiautomation.ios.server.tmp.SampleApps;
+import org.uiautomation.ios.server.tests.SampleApps;
 
 // TODO freynaud
 public class AttachController extends BaseController {

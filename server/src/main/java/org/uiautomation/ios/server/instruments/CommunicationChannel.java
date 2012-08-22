@@ -19,8 +19,8 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.uiautomation.ios.server.UIAScriptRequest;
-import org.uiautomation.ios.server.UIAScriptResponse;
+import org.uiautomation.ios.server.command.UIAScriptRequest;
+import org.uiautomation.ios.server.command.UIAScriptResponse;
 
 public class CommunicationChannel {
   private final BlockingQueue<UIAScriptRequest> requestQueue =

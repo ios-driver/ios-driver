@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.uiautomation.ios.server;
+package org.uiautomation.ios.server.command;
 
 import org.json.JSONException;
 import org.json.JSONObject;

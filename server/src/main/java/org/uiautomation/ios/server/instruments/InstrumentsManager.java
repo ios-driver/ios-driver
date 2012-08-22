@@ -22,8 +22,8 @@ import java.util.List;
 import org.uiautomation.ios.communication.IOSDevice;
 import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
 import org.uiautomation.ios.server.IOSServer;
-import org.uiautomation.ios.server.command.impl.hack.TimeSpeeder;
 import org.uiautomation.ios.server.simulator.IOSSimulatorManager;
+import org.uiautomation.ios.server.utils.hack.TimeSpeeder;
 
 public class InstrumentsManager {
 

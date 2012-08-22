@@ -8,7 +8,7 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
-import org.uiautomation.ios.server.tmp.SampleApps;
+import org.uiautomation.ios.server.tests.SampleApps;
 
 public class ServerSerializeExceptionTests {
 

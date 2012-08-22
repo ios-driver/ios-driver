@@ -23,9 +23,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
-import org.uiautomation.ios.server.UIAScriptRequest;
-import org.uiautomation.ios.server.UIAScriptResponse;
 import org.uiautomation.ios.server.application.LanguageDictionary;
+import org.uiautomation.ios.server.command.UIAScriptRequest;
+import org.uiautomation.ios.server.command.UIAScriptResponse;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
 
 

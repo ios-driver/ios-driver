@@ -61,11 +61,9 @@ public class IOSServerConfiguration {
   /**
    * Returns a IOSServerConfiguration instance of the server configuration, from the given args
    * parameters.<br>
-   * Parsing the configuration commands using {@link ServerConfigurationCommands} instance.
    * 
    * @param args
    * @return A configuration instance of the server.
-   * @see ServerConfigurationCommands
    */
   public static IOSServerConfiguration create(String[] args) {
     IOSServerConfiguration res = new IOSServerConfiguration();

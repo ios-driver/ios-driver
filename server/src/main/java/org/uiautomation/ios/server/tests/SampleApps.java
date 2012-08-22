@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.uiautomation.ios.server.tmp;
+package org.uiautomation.ios.server.tests;
 
 import java.io.File;
 import java.net.URL;
@@ -21,7 +21,6 @@ import org.uiautomation.ios.server.application.Localizable;
 
 // TODO freynaud move to tests
 public class SampleApps {
-
 
 
   private static final String uiCatalog = "/sampleApps/UICatalog.app";

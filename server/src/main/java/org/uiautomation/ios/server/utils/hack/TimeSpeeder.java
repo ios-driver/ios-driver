@@ -12,7 +12,7 @@
  * the License.
  */
 
-package org.uiautomation.ios.server.command.impl.hack;
+package org.uiautomation.ios.server.utils.hack;
 
 import java.util.ArrayList;
 import java.util.Date;

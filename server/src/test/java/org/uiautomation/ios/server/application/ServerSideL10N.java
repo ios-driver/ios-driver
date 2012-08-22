@@ -14,7 +14,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.exceptions.InvalidCriteriaException;
-import org.uiautomation.ios.server.tmp.SampleApps;
+import org.uiautomation.ios.server.tests.SampleApps;
 
 public class ServerSideL10N {
 

@@ -12,7 +12,7 @@
  * the License.
  */
 
-package org.uiautomation.ios.server.command.impl;
+package org.uiautomation.ios.server.utils;
 
 import java.io.File;
 import java.io.FileInputStream;

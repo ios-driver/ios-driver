@@ -12,7 +12,7 @@
  * the License.
  */
 
-package org.uiautomation.ios.server.command;
+package org.uiautomation.ios.server.utils;
 
 import java.io.File;
 import java.net.URL;

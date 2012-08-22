@@ -22,6 +22,7 @@ import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.instruments.IOSDriver;
+import org.uiautomation.ios.server.utils.FileTo64EncodedStringUtils;
 
 
 public class TakeScreenshot extends DefaultUIAScriptHandler {
