@@ -26,7 +26,7 @@ import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
 
 public class ScriptHelper {
 
-  private final String main = "wip.js";
+  private final String main = "main.js";
   private final String json = "json2.js";
   private final String lib1 = "UIAutomation.js";
   private final String lib2 = "UIAElement.js";

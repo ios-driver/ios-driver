@@ -18,6 +18,7 @@ import java.net.URL;
 import javax.servlet.http.HttpServletRequest;
 
 import org.uiautomation.ios.IOSCapabilities;
+import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
@@ -26,7 +27,6 @@ import org.uiautomation.ios.ide.views.RedirectView;
 import org.uiautomation.ios.ide.views.View;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.application.Localizable;
-import org.uiautomation.ios.server.tests.SampleApps;
 
 // TODO freynaud
 public class AttachController extends BaseController {

@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.uiautomation.ios.server.tests;
+package org.uiautomation.ios;
 
 import java.io.File;
 import java.net.URL;

@@ -39,7 +39,7 @@ import org.uiautomation.ios.server.instruments.IOSDeviceManager;
 // of http://code.google.com/p/ios-sim-locale/source/browse/trunk/ios-sim-locale.m
 /**
  * setting the plist file to the correct local. Tested on mac 10.7. May work on other version. The
- * asusmption made is that the plist file read by the ios simulator is of binary1 format. See the
+ * assumption made is that the plist file read by the ios simulator is of binary1 format. See the
  * mac command line plutils for the formats.
  * 
  * 
@@ -55,7 +55,6 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   private static final String newSDKPath =
       "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator%s.sdk";
 
-  private final File sdk;
   private final String desiredSDKVersion;
   private File contentAndSettingsFolder;
   // simulator plist, to choose language and locale
@@ -78,8 +77,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
 
     this.sdks = ClassicCommands.getInstalledSDKs();
     this.desiredSDKVersion = validateSDK(desiredSDKVersion);
-    this.sdk = findSDK(desiredSDKVersion);
-
+   
     //setDefaultSimulatorPreference("currentSDKRoot", sdk.getAbsolutePath());
     //setDefaultSimulatorPreference("SimulateDevice", device.getName());
 

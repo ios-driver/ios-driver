@@ -2,6 +2,7 @@ package org.uiautomation.ios.e2e.intl;
 
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAApplication;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIATarget;
@@ -9,7 +10,6 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAWindow;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
 import org.uiautomation.ios.server.application.Localizable;
-import org.uiautomation.ios.server.tests.SampleApps;
 
 public class IntlMountainTestsBase {
   private IOSServer server;
