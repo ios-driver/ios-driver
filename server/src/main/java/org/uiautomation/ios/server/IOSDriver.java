@@ -70,7 +70,7 @@ public class IOSDriver {
       if (app.matches(desiredCapabilities)) {
         // check that the language is supported.
         String l = desiredCapabilities.getLanguage() ;
-        if (l != null && !app.getSupportedLanguages().contains(l)){
+        if (l != null && !app.getSupportedLanguages().contains(Localizable.getEnum(l))){
           throw new IOSAutomationException("Language requested, "+l+" ,isn't supported.Supported are : "+app.getSupportedLanguages());
         }
         return app;
