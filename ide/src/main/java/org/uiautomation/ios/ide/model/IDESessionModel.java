@@ -29,7 +29,6 @@ public class IDESessionModel {
   public void refresh() throws IOSAutomationException {
     screenshot.delete();
     elementTree = driver.logElementTree(screenshot,true);
-    System.out.println(screenshot.getAbsolutePath());
   }
 
   public Session getSession() {

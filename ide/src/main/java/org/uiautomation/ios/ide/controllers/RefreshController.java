@@ -34,8 +34,6 @@ public class RefreshController extends BaseController {
     long start = System.currentTimeMillis();
     try {
       getModel().refresh();
-      long total = System.currentTimeMillis() - start;
-      System.out.println("refresh " + total + "ms.");
       return new RedirectView("browse");
     } catch (Exception e) {
       throw new IOSAutomationException(e);

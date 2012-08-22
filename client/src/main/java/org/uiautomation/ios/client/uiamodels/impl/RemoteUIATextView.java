@@ -38,11 +38,5 @@ public class RemoteUIATextView extends RemoteUIAElement implements UIATextView {
     }
     execute(WebDriverLikeCommand.SET_VALUE, payload);
   }
-  
-  public static void main(String[] args) {
-    String value = "\\";
-    value = value.replaceAll("\\\\", "\\\\\\\\");
-    System.out.println(value);
-  }
 
 }

@@ -141,7 +141,7 @@ public class RemoteUIADriver implements UIADriver {
       long start = System.currentTimeMillis();
       HttpResponse response = client.execute(h, r);
       long total = System.currentTimeMillis() - start;
-      System.out.println(total + " ms \tfor " + request.getGenericCommand());
+      //System.out.println(total + " ms \tfor " + request.getGenericCommand());
 
       o = Helper.extractObject(response);
       returnCode = o.getInt("status");

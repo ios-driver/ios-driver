@@ -258,7 +258,7 @@ public class IOSApplication {
     File plist = new File(app, "Info");
     List<String> args = new ArrayList<String>();
     args.addAll(Arrays.asList(new String[] {"defaults", "read", plist.getAbsolutePath(), key}));
-    Command c = new Command(args, true);
+    Command c = new Command(args, false);
     try {
       c.executeAndWait();
       List<String> outs = c.getStdOut();

@@ -65,8 +65,6 @@ public class RegistrationRequest {
       BasicHttpEntityEnclosingRequest r =
           new BasicHttpEntityEnclosingRequest("POST", registration.toExternalForm());
 
-      System.out.println(getJSONRequest().toString(2));
-
       String json = getJSONRequest().toString();
 
       r.setEntity(new StringEntity(json));

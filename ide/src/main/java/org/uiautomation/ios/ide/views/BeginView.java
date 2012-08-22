@@ -145,10 +145,6 @@ public class BeginView implements View{
     return res;
   }
 
-  public static void main(String[] args) {
-    for (Locale l : Locale.getAvailableLocales()) {
-      System.out.println(l);
-    }
-  }
+ 
 
 }
