@@ -14,6 +14,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAApplication;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
@@ -21,69 +22,71 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteUIATarget;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAWindow;
 import org.uiautomation.ios.communication.Helper;
 import org.uiautomation.ios.communication.HttpClientFactory;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
-import org.uiautomation.ios.server.application.Localizable;
+
+
+import static org.uiautomation.ios.IOSCapabilities.*;
 
 public class StatusTest {
 
   @Test
-  public void statusTest() throws InterruptedException {
-    try {
-      HttpClient client = HttpClientFactory.getClient();
-      String url = getURL() + "/status";
-      URL u = new URL(url);
-      BasicHttpEntityEnclosingRequest r = new BasicHttpEntityEnclosingRequest("GET", url);
+  public void statusTest() throws  Exception {
+
+    HttpClient client = HttpClientFactory.getClient();
+    String url = getURL() + "/status";
+    URL u = new URL(url);
+    BasicHttpEntityEnclosingRequest r = new BasicHttpEntityEnclosingRequest("GET", url);
 
 
-      HttpHost h = new HttpHost(u.getHost(), u.getPort());
-      HttpResponse response = client.execute(h, r);
+    HttpHost h = new HttpHost(u.getHost(), u.getPort());
+    HttpResponse response = client.execute(h, r);
 
-      JSONObject o = Helper.extractObject(response);
-      
-      JSONArray array = o.getJSONObject("value").getJSONArray("supportedApps");
-      Assert.assertEquals(array.length(), 2);
+    JSONObject o = Helper.extractObject(response);
 
-      JSONObject uicatalog = array.getJSONObject(1);
-      Assert.assertEquals(uicatalog.get("bundleDisplayName"), "UICatalog");
-      Assert.assertEquals(uicatalog.get("bundleId"), "com.yourcompany.UICatalog");
-      Assert.assertEquals(uicatalog.get("bundleName"), "UICatalog");
-      Assert.assertEquals(uicatalog.get("bundleVersion"), "2.10");
-      Assert.assertEquals(uicatalog.get("applicationPath"), SampleApps.getUICatalogFile());
+    
+    JSONArray array = o.getJSONObject("value").getJSONArray("supportedApps");
+    Assert.assertEquals(array.length(), 2);
 
-      JSONArray locales1 = uicatalog.getJSONArray("locales");
-      Assert.assertEquals(locales1.length(), 1);
-      Assert.assertEquals(locales1.get(0), "en");
+    JSONObject uicatalog = array.getJSONObject(1);
+    JSONObject uiCataloguMetadata = uicatalog.getJSONObject("Info.plist");
 
-      JSONObject intMount = array.getJSONObject(0);
-      Assert.assertEquals(intMount.get("bundleId"), "com.yourcompany.InternationalMountains");
-      Assert.assertEquals(intMount.get("bundleName"), "InternationalMountains");
-      Assert.assertEquals(intMount.get("bundleVersion"), "1.1");
-      Assert.assertEquals(intMount.get("applicationPath"), SampleApps.getIntlMountainsFile());
+    
+    Assert.assertEquals(uiCataloguMetadata.get(BUNDLE_DISPLAY_NAME), "UICatalog");
+    Assert.assertEquals(uiCataloguMetadata.get(BUNDLE_ID), "com.yourcompany.UICatalog");
+    Assert.assertEquals(uiCataloguMetadata.get(BUNDLE_NAME), "UICatalog");
+    Assert.assertEquals(uiCataloguMetadata.get(BUNDLE_VERSION), "2.10");
+    Assert.assertEquals(uicatalog.get("applicationPath"), SampleApps.getUICatalogFile());
 
-      JSONArray locales2 = intMount.getJSONArray("locales");
-      Assert.assertEquals(locales2.length(), 3);
-      List<String> all = new ArrayList<String>();
-      all.add(locales2.getString(0));
-      all.add(locales2.getString(1));
-      all.add(locales2.getString(2));
+    JSONArray locales1 = uicatalog.getJSONArray("locales");
+    Assert.assertEquals(locales1.length(), 1);
+    Assert.assertEquals(locales1.get(0), "en");
 
-      Assert.assertTrue(all.contains("en"));
-      Assert.assertTrue(all.contains("zh"));
-      Assert.assertTrue(all.contains("fr"));
+    JSONObject intMount = array.getJSONObject(0);
+    JSONObject intMountMetadata = intMount.getJSONObject("Info.plist");
+    Assert.assertEquals(intMountMetadata.get(BUNDLE_ID), "com.yourcompany.InternationalMountains");
+    Assert.assertEquals(intMountMetadata.get(BUNDLE_NAME), "InternationalMountains");
+    Assert.assertEquals(intMountMetadata.get(BUNDLE_VERSION), "1.1");
+    Assert.assertEquals(intMount.get("applicationPath"), SampleApps.getIntlMountainsFile());
+
+    JSONArray locales2 = intMount.getJSONArray("locales");
+    Assert.assertEquals(locales2.length(), 3);
+    List<String> all = new ArrayList<String>();
+    all.add(locales2.getString(0));
+    all.add(locales2.getString(1));
+    all.add(locales2.getString(2));
+
+    Assert.assertTrue(all.contains("en"));
+    Assert.assertTrue(all.contains("zh"));
+    Assert.assertTrue(all.contains("fr"));
 
 
-    } catch (Exception e) {
-      throw new IOSAutomationException(e);
-    }
 
   }
 
   private IOSServer server;
   private static String[] args = {"-port", "4444", "-host", "localhost", "-aut",
-      SampleApps.getUICatalogFile(), "-aut",
-      SampleApps.getIntlMountainsFile()};
+      SampleApps.getUICatalogFile(), "-aut", SampleApps.getIntlMountainsFile()};
   private static IOSServerConfiguration config;
   private String url;
 

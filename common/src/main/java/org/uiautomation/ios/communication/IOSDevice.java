@@ -18,15 +18,20 @@ import org.uiautomation.ios.exceptions.IOSAutomationException;
 public enum IOSDevice {
 
 
-  iPhoneSimulator("iPhone Simulator"), iPadSimulator("iPad Simulator"), retina("iPhone (Retina)");
+  
+  iPhoneSimulator("iPhone Simulator",1), 
+  iPadSimulator("iPad Simulator", 2), 
+  retina("iPhone (Retina)", 1);
 
 
   // name from result of :
   // defaults read com.apple.iphonesimulator
   private final String name;
+  private final int deviceFamily;
 
-  private IOSDevice(String name) {
+  private IOSDevice(String name,int deviceFamily) {
     this.name = name;
+    this.deviceFamily = deviceFamily;
   }
 
   public String getName() {
@@ -39,9 +44,11 @@ public enum IOSDevice {
   }
 
 
-  public IOSDevice get(String s) {
-    return iPadSimulator;
+  public int getDeviceFamily() {
+    return deviceFamily;
   }
+
+ 
 
   public static IOSDevice valueOf(Object o) {
     if (o instanceof IOSDevice) {

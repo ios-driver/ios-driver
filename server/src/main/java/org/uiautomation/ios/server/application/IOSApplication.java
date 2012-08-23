@@ -14,6 +14,11 @@
 
 package org.uiautomation.ios.server.application;
 
+
+import static org.uiautomation.ios.IOSCapabilities.BUNDLE_VERSION;
+import static org.uiautomation.ios.IOSCapabilities.BUNDLE_NAME;
+import static org.uiautomation.ios.IOSCapabilities.DEVICE_FAMILLY;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,34 +34,15 @@ import org.json.JSONObject;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.utils.Command;
+import org.uiautomation.ios.server.utils.PlistFileUtils;
 
 
 // TODO freynaud create IOSApp vs Running App that has locale + language
 public class IOSApplication {
 
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((app == null) ? 0 : app.hashCode());
-    return result;
-  }
 
 
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
-    IOSApplication other = (IOSApplication) obj;
-    if (app == null) {
-      if (other.app != null) return false;
-    } else if (!app.equals(other.app)) return false;
-    return true;
-  }
-
-
-
+  private final JSONObject metadata;
   private final File app;
   private Localizable currentLanguage;
   private final List<LanguageDictionary> dictionaries = new ArrayList<LanguageDictionary>();
@@ -74,6 +60,22 @@ public class IOSApplication {
       throw new IOSAutomationException(pathToApp + "isn't an IOS app.");
     }
     loadAllContent();
+    try {
+      metadata = getFullPlist();
+    } catch (Exception e) {
+      throw new IOSAutomationException("cannot load the metadata from the Info.plist file for "
+          + pathToApp);
+    }
+  }
+
+
+  /**
+   * the content of the Info.plist for the app, as a json object.
+   * 
+   * @return
+   */
+  public JSONObject getMetadata() {
+    return metadata;
   }
 
 
@@ -206,42 +208,7 @@ public class IOSApplication {
     return app;
   }
 
-  /**
-   * 
-   * @return null if the value cannot be found
-   */
-  public String getBundleVersion() {
-    return getValueFromInfoPlist("CFBundleVersion");
-  }
 
-  /**
-   * 
-   * @return null if the value cannot be found
-   */
-  public String getBundleId() {
-    return getValueFromInfoPlist("CFBundleIdentifier");
-  }
-
-  /**
-   * 
-   * @return null if the value cannot be found
-   */
-  public String getVersion() {
-    return getValueFromInfoPlist("CFBundleShortVersionString");
-  }
-
-  /**
-   * 
-   * @return null if the value cannot be found
-   */
-  public String getBundleDisplayName() {
-    return getValueFromInfoPlist("CFBundleDisplayName");
-  }
-
-
-  public String getBundleName() {
-    return getValueFromInfoPlist("CFBundleName");
-  }
 
   /**
    * 
@@ -252,6 +219,11 @@ public class IOSApplication {
   }
 
 
+  private JSONObject getFullPlist() throws Exception {
+    File plist = new File(app, "Info.plist");
+    PlistFileUtils util = new PlistFileUtils(plist);
+    return util.toJSON();
+  }
 
   private String getValueFromInfoPlist(String key) {
     File plist = new File(app, "Info");
@@ -279,18 +251,64 @@ public class IOSApplication {
     if (desiredCapabilities.getBundleName() == null) {
       throw new IOSAutomationException("you need to specify the bundle to test.");
     }
-    if (!desiredCapabilities.getBundleName().equals(this.getBundleName())) {
+    if (!desiredCapabilities.getBundleName().equals(getMetadata(BUNDLE_NAME))) {
       return false;
     }
     if (desiredCapabilities.getBundleVersion() != null
-        && !desiredCapabilities.getBundleVersion().equals(this.getBundleVersion())) {
+        && !desiredCapabilities.getBundleVersion().equals(getMetadata(BUNDLE_VERSION))) {
       return false;
     }
     return true;
   }
 
+  public String getMetadata(String key) {
+    if (!metadata.has(key)) {
+      throw new IOSAutomationException("no property " + key + " for this app.");
+    }
+    try {
+      return metadata.getString(key);
+    } catch (JSONException e) {
+      throw new IOSAutomationException("property " + key + " can't be returned. " + e.getMessage(),
+          e);
+    }
+  }
+
+  public List<Integer> getDeviceFamily() {
+    try {
+      JSONArray array = metadata.getJSONArray(DEVICE_FAMILLY);
+      List<Integer> res = new ArrayList<Integer>();
+      for (int i = 0; i < array.length(); i++) {
+        res.add(array.getInt(i));
+      }
+      return res;
+    } catch (JSONException e) {
+      throw new IOSAutomationException("Cannot load device family", e);
+    }
+  }
+
 
   public void setLanguage(String language) {
     currentLanguage = Localizable.getEnum(language);
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((app == null) ? 0 : app.hashCode());
+    return result;
+  }
+
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
+    IOSApplication other = (IOSApplication) obj;
+    if (app == null) {
+      if (other.app != null) return false;
+    } else if (!app.equals(other.app)) return false;
+    return true;
   }
 }

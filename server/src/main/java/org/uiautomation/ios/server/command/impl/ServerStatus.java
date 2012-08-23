@@ -61,13 +61,12 @@ public class ServerStatus extends BaseCommandHandler {
      
       
       app.put("locales",a.getSupportedLanguages());
-      app.put("bundleName",a.getBundleName());
-      app.put("bundleDisplayName",a.getBundleDisplayName());
-      app.put("bundleId",a.getBundleId());
-      app.put("bundleVersion",a.getBundleVersion());
-      app.put("version",a.getVersion());
+   
       // TODO freynaud resources object
       app.put("icon","/wd/hub/resources/"+getDriver().getCache().getKeyForApplication(a.getApplicationPath().getAbsolutePath()));
+      
+      
+      app.put("Info.plist",a.getMetadata());
       supportedApps.put(app);
     }
     

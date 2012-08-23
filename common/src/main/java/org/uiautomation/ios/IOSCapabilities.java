@@ -36,9 +36,15 @@ public class IOSCapabilities {
   public static final String LOCALE = "locale";
   public static final String AUT = "aut";
   public static final String TIME_HACK = "timeHack";
-  public static final String BUNDLE_NAME = "CFBundleName";
-  public static final String BUNDLE_VERSION = "CFBundleVersion";
+  
+  public static final String BUNDLE_VERSION ="CFBundleVersion";
+  public static final String BUNDLE_ID ="CFBundleIdentifier";
+  public static final String BUNDLE_SHORT_VERSION ="CFBundleShortVersionString";  
+  public static final String BUNDLE_DISPLAY_NAME  ="CFBundleDisplayName";
+  public static final String BUNDLE_NAME ="CFBundleName";
 
+  public static final String DEVICE_FAMILLY ="UIDeviceFamily";
+  // http://developer.apple.com/library/ios/#documentation/general/Reference/InfoPlistKeyReference/Articles/iPhoneOSKeys.html
 
 
   private final Map<String, Object> raw = new HashMap<String, Object>();
