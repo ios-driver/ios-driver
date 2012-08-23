@@ -15,11 +15,12 @@ public class IDEServer {
 
   public static void main(String[] args) throws Exception {
 
+    int port = 5555;
+    if (args.length == 1) {
+      port = Integer.parseInt(args[0]);
+    }
 
-    IOSServerConfiguration options = new IOSServerConfiguration();
-    new JCommander(options, args);
-
-    IDEServer server = new IDEServer(options);
+    IDEServer server = new IDEServer(port);
     server.start();
   }
 
@@ -53,8 +54,8 @@ public class IDEServer {
     server.stop();
   }
 
-  public IDEServer(IOSServerConfiguration options) throws IOSAutomationSetupException {
-    server = new Server(new InetSocketAddress("localhost", options.getPort()));
+  public IDEServer(int port) throws IOSAutomationSetupException {
+    server = new Server(new InetSocketAddress("localhost", port));
   }
 
 }
