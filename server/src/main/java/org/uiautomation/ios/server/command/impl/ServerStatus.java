@@ -65,7 +65,7 @@ public class ServerStatus extends BaseCommandHandler {
       for (String r : a.getResources()) {
         resources.put(r, "/wd/hub/resources/" + getDriver().getCache().getKey(a, r));
       }
-      res.put("resources", resources);
+      app.put("resources", resources);
 
 
 
