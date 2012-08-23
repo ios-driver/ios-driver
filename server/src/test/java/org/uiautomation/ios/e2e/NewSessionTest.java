@@ -17,7 +17,7 @@ import org.uiautomation.ios.server.utils.ClassicCommands;
 public class NewSessionTest {
   private IOSServer server;
   private static String[] args = {"-port", "4444", "-host", "localhost", "-aut",
-      SampleApps.getUICatalogFile(), "-aut", SampleApps.getIntlMountainsFile()};
+      SampleApps.getUICatalogFile(), "-aut", SampleApps.getIntlMountainsFile(),"-aut", SampleApps.getUICatalogIpad()};
 
   private static IOSServerConfiguration config = IOSServerConfiguration.create(args);
 
@@ -191,6 +191,37 @@ public class NewSessionTest {
       }
     }
   }
+  
+  
+  @Test
+  public void correctDevice() {
+    IOSCapabilities cap = IOSCapabilities.iphone("UICatalog");
+    RemoteUIADriver driver = null;
+    try {
+      driver =
+          new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",cap);
+      UIATarget target = driver.getLocalTarget();
+      Assert.assertEquals(target.getModel(), "iPhone Simulator");
+    } finally {
+      if (driver != null) {
+        driver.quit();
+      }
+    }
+    
+    cap = IOSCapabilities.ipad("UICatalog");
+    try {
+      driver =
+          new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",cap);
+      UIATarget target = driver.getLocalTarget();
+      Assert.assertEquals(target.getModel(), "iPad Simulator");
+    } finally {
+      if (driver != null) {
+        driver.quit();
+      }
+    }
+  }
+  
+
 
   @AfterClass
   public void stopServer() throws Exception {

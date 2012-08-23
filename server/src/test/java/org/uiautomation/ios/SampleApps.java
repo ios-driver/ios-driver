@@ -24,6 +24,7 @@ public class SampleApps {
 
 
   private static final String uiCatalog = "/sampleApps/UICatalog.app";
+  private static final String uiCatalogiPad = "/sampleApps/UICatalogiPad.app";
   private static final String intlMountains = "/sampleApps/InternationalMountains.app";
 
 
@@ -47,6 +48,10 @@ public class SampleApps {
 
   public static String getIntlMountainsFile() {
     return getFromClassPath(intlMountains).getAbsolutePath();
+  }
+  
+  public static String getUICatalogIpad() {
+    return getFromClassPath(uiCatalogiPad).getAbsolutePath();
   }
 
   public static IOSCapabilities uiCatalogCap() {

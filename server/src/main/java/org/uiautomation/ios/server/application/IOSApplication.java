@@ -258,6 +258,12 @@ public class IOSApplication {
         && !desiredCapabilities.getBundleVersion().equals(getMetadata(BUNDLE_VERSION))) {
       return false;
     }
+    if (desiredCapabilities.getDevice() == null) {
+      throw new IOSAutomationException("you need to specify the device.");
+    }
+    if (!getDeviceFamily().contains(desiredCapabilities.getDevice().getDeviceFamily())) {
+      return false;
+    }
     return true;
   }
 

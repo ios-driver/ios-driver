@@ -69,6 +69,15 @@ public class IOSCapabilities {
     res.setCapability(BUNDLE_NAME, bundleName);
     return res;
   }
+  
+  public static IOSCapabilities ipad(String bundleName) {
+    IOSCapabilities res = new IOSCapabilities();
+    res.setCapability(DEVICE, IOSDevice.iPadSimulator);
+    res.setCapability(LANGUAGE, "en");
+    res.setCapability(LOCALE, "en_GB");
+    res.setCapability(BUNDLE_NAME, bundleName);
+    return res;
+  }
 
   public IOSCapabilities() {
 
