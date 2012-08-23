@@ -43,7 +43,7 @@ public class IOSDriver {
     if (!added) {
       throw new IOSAutomationException("app already present :" + application.getApplicationPath());
     }
-    cache.cacheResource(application.getApplicationPath().getAbsolutePath());
+    cache.cacheResource(application);
   }
 
   public ResourceCache getCache() {

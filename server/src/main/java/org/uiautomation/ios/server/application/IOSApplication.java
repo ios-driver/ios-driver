@@ -209,6 +209,17 @@ public class IOSApplication {
   }
 
 
+  /**
+   * the list of resources to publish via http.
+   * 
+   * @return
+   */
+  public List<String> getResources() {
+    List<String> res = new ArrayList<String>();
+    res.add(getIcon());
+    return res;
+  }
+
 
   /**
    * 

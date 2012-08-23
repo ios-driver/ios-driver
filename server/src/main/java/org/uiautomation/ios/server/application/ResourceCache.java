@@ -17,29 +17,30 @@ package org.uiautomation.ios.server.application;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class ResourceCache {
 
   List<Mapping> mapping = new ArrayList<ResourceCache.Mapping>();
 
-  public void cacheResource(String appPath) {
-    Mapping m = new Mapping(appPath);
-    mapping.add(m);
+  public void cacheResource(IOSApplication app) {
+    for (String res : app.getResources()) {
+      Mapping m = new Mapping(app, res);
+      mapping.add(m);
+    }
   }
 
   public File getResourceForKey(String key) {
     for (Mapping m : mapping) {
       if (key.equals(m.key)) {
-        return m.resource;
+        return new File(m.app.getApplicationPath(), m.resource);
       }
     }
     return null;
   }
 
-  public String getKeyForApplication(String applicationPath) {
+  public String getKey(IOSApplication app, String resource) {
     for (Mapping m : mapping) {
-      if (applicationPath.equals(m.applicationPath)) {
+      if (app.equals(m.app) && m.resource.equals(resource)) {
         return m.key;
       }
     }
@@ -47,17 +48,17 @@ public class ResourceCache {
   }
 
   class Mapping {
-    private String applicationPath;
+    private IOSApplication app;
     private String key;
-    private File resource;
+    private String resource;
 
-    public Mapping(String applicationPath) {
-      this.applicationPath = applicationPath;
-      String icon = new IOSApplication(applicationPath).getIcon();
-      this.resource = new File(applicationPath, icon);
-      //this.key = UUID.randomUUID().toString();
-      this.key = "hash="+resource.hashCode();
+    public Mapping(IOSApplication app, String resource) {
+      this.app = app;
+      this.resource = resource;
+      this.key = "hash=" + resource.hashCode();
     }
   }
+
+
 
 }

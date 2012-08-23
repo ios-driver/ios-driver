@@ -40,46 +40,50 @@ public class ServerStatus extends BaseCommandHandler {
   @Override
   public WebDriverLikeResponse handle() throws Exception {
     JSONObject res = new JSONObject();
- 
-    res.put("os",new JSONObject()
-          .put("name", System.getProperty("os.name"))
-          .put("arch", System.getProperty("os.arch"))
-          .put("version", System.getProperty("os.version")));
-    
-    res.put("java", new JSONObject()
-          .put("version", System.getProperty("java.version")));
-    
+
+    res.put(
+        "os",
+        new JSONObject().put("name", System.getProperty("os.name"))
+            .put("arch", System.getProperty("os.arch"))
+            .put("version", System.getProperty("os.version")));
+
+    res.put("java", new JSONObject().put("version", System.getProperty("java.version")));
+
     List<String> sdks = ClassicCommands.getInstalledSDKs();
-    
-    res.put("ios", new JSONObject()
-    .put("simulatorVersion", sdks.get(sdks.size()-1)));
-    
+
+    res.put("ios", new JSONObject().put("simulatorVersion", sdks.get(sdks.size() - 1)));
+
     JSONArray supportedApps = new JSONArray();
-    for (IOSApplication a : getDriver().getSupportedApplications()){
+    for (IOSApplication a : getDriver().getSupportedApplications()) {
       JSONObject app = new JSONObject();
       app.put("applicationPath", a.getApplicationPath().getAbsolutePath());
-     
-      
-      app.put("locales",a.getSupportedLanguages());
-   
-      // TODO freynaud resources object
-      app.put("icon","/wd/hub/resources/"+getDriver().getCache().getKeyForApplication(a.getApplicationPath().getAbsolutePath()));
-      
-      
-      app.put("Info.plist",a.getMetadata());
+
+
+      app.put("locales", a.getSupportedLanguages());
+
+      JSONObject resources = new JSONObject();
+      for (String r : a.getResources()) {
+        resources.put(r, "/wd/hub/resources/" + getDriver().getCache().getKey(a, r));
+      }
+      res.put("resources", resources);
+
+
+
+      app.put("Info.plist", a.getMetadata());
       supportedApps.put(app);
     }
-    
-   res.put("supportedApps",supportedApps);
-    
-   res.put("build",new JSONObject()
-       .put("version", BuildInfo.getAttribute("version"))
-       .put("time", BuildInfo.getAttribute("buildTimestamp"))
-       .put("revision", BuildInfo.getAttribute("sha")));
-   
-   //String currentSession = getSessionsManager().getCurrentSessionId();
-   //res.put("currentSession",currentSession == null ? JSONObject.NULL : currentSession);
-    
+
+    res.put("supportedApps", supportedApps);
+
+    res.put(
+        "build",
+        new JSONObject().put("version", BuildInfo.getAttribute("version"))
+            .put("time", BuildInfo.getAttribute("buildTimestamp"))
+            .put("revision", BuildInfo.getAttribute("sha")));
+
+    // String currentSession = getSessionsManager().getCurrentSessionId();
+    // res.put("currentSession",currentSession == null ? JSONObject.NULL : currentSession);
+
     return new WebDriverLikeResponse(null, 0, res);
-     }
+  }
 }
