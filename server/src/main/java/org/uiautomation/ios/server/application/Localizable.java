@@ -27,8 +27,12 @@ import org.uiautomation.ios.exceptions.IOSAutomationException;
 public enum Localizable {
 
 
-  en("en", "English"), fr("fr", "French"), de("de", "German"), it("it", "Italian"), es("es",
-      "Spanish"), zh("zh-Hant", "Chinese");
+  en("en", "English"), 
+  fr("fr", "French"), 
+  de("de", "German"), 
+  it("it", "Italian"), 
+  es("es", "Spanish"),
+  zh("zh-Hant", "Chinese");
 
   private final String newFormat;
   private final String legacy;
