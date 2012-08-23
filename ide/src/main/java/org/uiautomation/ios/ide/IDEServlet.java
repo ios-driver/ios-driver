@@ -18,20 +18,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.uiautomation.ios.ide.controllers.IDECommandController;
 import org.uiautomation.ios.ide.controllers.IDEController;
 import org.uiautomation.ios.ide.controllers.NotImplementedIDEController;
+import org.uiautomation.ios.ide.controllers.RefreshController;
 import org.uiautomation.ios.ide.controllers.ResourceController;
 import org.uiautomation.ios.ide.controllers.TreeController;
 import org.uiautomation.ios.ide.model.Cache;
 import org.uiautomation.ios.ide.views.View;
-import org.uiautomation.ios.server.servlet.UIAScriptProxyBasedServlet;
 
 
-public class IDEServlet extends UIAScriptProxyBasedServlet {
+public class IDEServlet extends HttpServlet {
 
   // TODO freynaud
   String path;
@@ -50,6 +51,7 @@ public class IDEServlet extends UIAScriptProxyBasedServlet {
     Cache cache = new Cache();
     controllers.add(new IDEController(cache));
     controllers.add(new ResourceController(cache));
+    controllers.add(new RefreshController(cache));
     controllers.add(new TreeController(cache));
     /*controllers.add(new HomeController());
     

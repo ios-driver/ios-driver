@@ -8,7 +8,6 @@ import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.ide.views.JSTree;
 import org.uiautomation.ios.server.application.IOSApplication;
-import org.uiautomation.ios.server.application.Localizable;
 
 public class JSTreeTests {
 
@@ -26,7 +25,7 @@ public class JSTreeTests {
 
   @Test
   public void canTransformToJSTreeFormat() throws JSONException, IOSAutomationException {
-    new JSTree(new IOSApplication(Localizable.en, SampleApps.getUICatalogFile()), tree);
+    new JSTree(new IOSApplication(SampleApps.getUICatalogFile()), tree);
   }
 
 }

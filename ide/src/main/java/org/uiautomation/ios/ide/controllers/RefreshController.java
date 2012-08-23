@@ -15,15 +15,18 @@ package org.uiautomation.ios.ide.controllers;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
-import org.uiautomation.ios.ide.Model;
+import org.uiautomation.ios.ide.model.Cache;
 import org.uiautomation.ios.ide.views.RedirectView;
 import org.uiautomation.ios.ide.views.View;
 
-public class RefreshController extends BaseController {
+public class RefreshController implements IDECommandController {
 
-  public RefreshController(Model model) {
-    super(model);
+  private final Cache cache;
+
+  public RefreshController(Cache cache) {
+    this.cache = cache;
   }
 
   public boolean canHandle(String pathInfo) {
@@ -33,10 +36,25 @@ public class RefreshController extends BaseController {
   public View handle(HttpServletRequest req) throws IOSAutomationException {
     long start = System.currentTimeMillis();
     try {
-      getModel().refresh();
-      return new RedirectView("browse");
+      Session s = new Session(extractSession(req.getPathInfo()));
+      cache.getModel(s).refresh();
+      return new RedirectView("home");
     } catch (Exception e) {
       throw new IOSAutomationException(e);
+    }
+  }
+
+  private String extractSession(String pathInfo) {
+
+    if (pathInfo.startsWith("/session/")) {
+      String tmp = pathInfo.replace("/session/", "");
+      if (tmp.contains("/")) {
+        return tmp.split("/")[0];
+      } else {
+        return tmp;
+      }
+    } else {
+      throw new IOSAutomationException("cannot extract session id from " + pathInfo);
     }
   }
 

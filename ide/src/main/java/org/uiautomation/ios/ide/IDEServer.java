@@ -5,7 +5,6 @@ import java.net.InetSocketAddress;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
-import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
 
 import com.beust.jcommander.JCommander;
