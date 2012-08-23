@@ -15,9 +15,10 @@
 package org.uiautomation.ios.server.application;
 
 
-import static org.uiautomation.ios.IOSCapabilities.BUNDLE_VERSION;
 import static org.uiautomation.ios.IOSCapabilities.BUNDLE_NAME;
+import static org.uiautomation.ios.IOSCapabilities.BUNDLE_VERSION;
 import static org.uiautomation.ios.IOSCapabilities.DEVICE_FAMILLY;
+import static org.uiautomation.ios.IOSCapabilities.MAGIC_PREFIX;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -259,6 +260,7 @@ public class IOSApplication {
   // TODO freynaud basic for now.
   // TODO freynaud add test.
   public boolean matches(IOSCapabilities desiredCapabilities) {
+
     if (desiredCapabilities.getBundleName() == null) {
       throw new IOSAutomationException("you need to specify the bundle to test.");
     }
@@ -274,6 +276,15 @@ public class IOSApplication {
     }
     if (!getDeviceFamily().contains(desiredCapabilities.getDevice().getDeviceFamily())) {
       return false;
+    }
+    // check any extra capability starting with plist_
+    for (String key : desiredCapabilities.getRawCapabilities().keySet()) {
+      if (key.startsWith(IOSCapabilities.MAGIC_PREFIX)) {
+        String realKey = key.replace(MAGIC_PREFIX, "");
+        if (!desiredCapabilities.getRawCapabilities().get(key).equals(getMetadata(realKey))) {
+          return false;
+        }
+      }
     }
     return true;
   }

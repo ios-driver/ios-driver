@@ -221,7 +221,61 @@ public class NewSessionTest {
     }
   }
   
-
+  @Test
+  public void canUseAnyFlagFromInfoPlistMatches() {
+    IOSCapabilities cap = IOSCapabilities.iphone("UICatalog");
+    cap.setCapability(IOSCapabilities.MAGIC_PREFIX+"CFBundleDevelopmentRegion","en");
+    RemoteUIADriver driver = null;
+    try {
+      driver =
+          new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",cap);
+      UIATarget target = driver.getLocalTarget();
+      UIAApplication app = target.getFrontMostApp();
+      Assert.assertEquals(app.getBundleId(), "com.yourcompany.UICatalog");
+      Assert.assertEquals(app.getBundleVersion(), "2.10");
+    } finally {
+      if (driver != null) {
+        driver.quit();
+      }
+    }
+  }
+  
+  @Test(expectedExceptions=IOSAutomationException.class)
+  public void canUseAnyFlagFromInfoPlistNoMatch() {
+    IOSCapabilities cap = IOSCapabilities.iphone("UICatalog");
+    cap.setCapability(IOSCapabilities.MAGIC_PREFIX+"CFBundleDevelopmentRegion","de");
+    RemoteUIADriver driver = null;
+    try {
+      driver =
+          new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",cap);
+      UIATarget target = driver.getLocalTarget();
+      UIAApplication app = target.getFrontMostApp();
+      Assert.assertEquals(app.getBundleId(), "com.yourcompany.UICatalog");
+      Assert.assertEquals(app.getBundleVersion(), "2.10");
+    } finally {
+      if (driver != null) {
+        driver.quit();
+      }
+    }
+  }
+  @Test
+  public void ignoreCapabilitiesWithoutMagicPrefix() {
+    IOSCapabilities cap = IOSCapabilities.iphone("UICatalog");
+    cap.setCapability("CFBundleDevelopmentRegion","de");
+    RemoteUIADriver driver = null;
+    try {
+      driver =
+          new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",cap);
+      UIATarget target = driver.getLocalTarget();
+      UIAApplication app = target.getFrontMostApp();
+      Assert.assertEquals(app.getBundleId(), "com.yourcompany.UICatalog");
+      Assert.assertEquals(app.getBundleVersion(), "2.10");
+    } finally {
+      if (driver != null) {
+        driver.quit();
+      }
+    }
+  }
 
   @AfterClass
   public void stopServer() throws Exception {

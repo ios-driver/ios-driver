@@ -42,9 +42,10 @@ public class IOSCapabilities {
   public static final String BUNDLE_SHORT_VERSION ="CFBundleShortVersionString";  
   public static final String BUNDLE_DISPLAY_NAME  ="CFBundleDisplayName";
   public static final String BUNDLE_NAME ="CFBundleName";
-
   public static final String DEVICE_FAMILLY ="UIDeviceFamily";
   // http://developer.apple.com/library/ios/#documentation/general/Reference/InfoPlistKeyReference/Articles/iPhoneOSKeys.html
+  
+  public static final String MAGIC_PREFIX = "plist_";
 
 
   private final Map<String, Object> raw = new HashMap<String, Object>();
