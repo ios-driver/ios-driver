@@ -257,8 +257,7 @@ public class IOSApplication {
   }
 
 
-  // TODO freynaud basic for now.
-  // TODO freynaud add test.
+
   public boolean matches(IOSCapabilities desiredCapabilities) {
 
     if (desiredCapabilities.getBundleName() == null) {
