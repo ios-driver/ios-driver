@@ -1,6 +1,5 @@
 package org.uiautomation.ios.ide.model;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -9,23 +8,21 @@ import org.uiautomation.ios.UIAModels.Session;
 
 public class Cache {
 
-  private final URL REMOTE;
+  private final URL remote;
   private Map<Session, IDESessionModel> models = new ConcurrentHashMap<Session, IDESessionModel>();
 
-  public Cache() {
-    URL u = null;
-    try {
-      u = new URL("http://localhost:5556/wd/hub");
-    } catch (MalformedURLException e) {
-      // ignore.
-    }
-    REMOTE = u;
+  /**
+   * webdriver url. http://localhost:4444/wd/hub for instance.
+   * @param endpoint
+   */
+  public Cache(URL endpoint) {
+    remote = endpoint;
   }
 
   public synchronized IDESessionModel getModel(Session session) {
     IDESessionModel model = models.get(session);
     if (model == null) {
-      model = new IDESessionModel(session, REMOTE);
+      model = new IDESessionModel(session, remote);
       model.refresh();
       models.put(session, model);
     }

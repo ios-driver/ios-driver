@@ -20,7 +20,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
+import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.command.BaseCommandHandler;
 import org.uiautomation.ios.server.utils.BuildInfo;
@@ -30,7 +32,7 @@ public class ServerStatus extends BaseCommandHandler {
 
   public ServerStatus(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
-    }
+  }
 
   /*
    * (non-Javadoc)
@@ -62,8 +64,8 @@ public class ServerStatus extends BaseCommandHandler {
       app.put("locales", a.getSupportedLanguages());
 
       JSONObject resources = new JSONObject();
-      for (String r : a.getResources()) {
-        resources.put(r, "/wd/hub/resources/" + getDriver().getCache().getKey(a, r));
+      for (String key : a.getResources().keySet()) {
+        resources.put(key, "/wd/hub/resources/" + getDriver().getCache().getKey(a, key));
       }
       app.put("resources", resources);
 
@@ -83,7 +85,15 @@ public class ServerStatus extends BaseCommandHandler {
 
     // String currentSession = getSessionsManager().getCurrentSessionId();
     // res.put("currentSession",currentSession == null ? JSONObject.NULL : currentSession);
-
-    return new WebDriverLikeResponse(null, 0, res);
+    List<ServerSideSession> sessions = getDriver().getSessions();
+    if (sessions.isEmpty()){
+      return new WebDriverLikeResponse(null, 0, res);
+    }else if (sessions.size()==1){
+      return new WebDriverLikeResponse(sessions.get(0).getSessionId(), 0, res);
+    }else {
+      throw new IOSAutomationException("NI multi sessions per server.");
+    }
+    
+    
   }
 }

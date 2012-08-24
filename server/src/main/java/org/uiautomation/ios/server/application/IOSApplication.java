@@ -15,6 +15,7 @@
 package org.uiautomation.ios.server.application;
 
 
+import static org.uiautomation.ios.IOSCapabilities.ICON;
 import static org.uiautomation.ios.IOSCapabilities.BUNDLE_NAME;
 import static org.uiautomation.ios.IOSCapabilities.BUNDLE_VERSION;
 import static org.uiautomation.ios.IOSCapabilities.DEVICE_FAMILLY;
@@ -215,20 +216,12 @@ public class IOSApplication {
    * 
    * @return
    */
-  public List<String> getResources() {
-    List<String> res = new ArrayList<String>();
-    res.add(getIcon());
-    return res;
+  public Map<String, String> getResources() {
+    Map<String, String> resourceByResourceName = new HashMap<String, String>();
+    resourceByResourceName.put(ICON, getMetadata(ICON));
+    return resourceByResourceName;
   }
 
-
-  /**
-   * 
-   * @return null if the value cannot be found
-   */
-  public String getIcon() {
-    return getValueFromInfoPlist("CFBundleIconFile");
-  }
 
 
   private JSONObject getFullPlist() throws Exception {

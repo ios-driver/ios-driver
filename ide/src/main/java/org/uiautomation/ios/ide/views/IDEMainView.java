@@ -8,9 +8,11 @@ import org.uiautomation.ios.ide.model.IDESessionModel;
 public class IDEMainView implements View {
 
   private final IDESessionModel model;
+  private final String servletPath;
 
-  public IDEMainView(IDESessionModel model) {
+  public IDEMainView(IDESessionModel model,String servletPath) {
     this.model = model;
+    this.servletPath = servletPath;
   }
 
   @Override
@@ -37,7 +39,7 @@ public class IDEMainView implements View {
 
       b.append("<div id='frame' ><img src='" + getResource("frame.png") + " '/></div>");
       b.append("<div id='mouseOver' ></div>");
-      b.append("<div id='screen' ><img src='/ide/resources/session/"+model.getSession().getSessionId()+"/screenshot.png' /></div>");
+      b.append("<div id='screen' ><img src='"+getResource("session/"+model.getSession().getSessionId()+"/screenshot.png")+"' /></div>");
       
 
       b.append("<div id ='tree' ></div>");
@@ -83,7 +85,7 @@ public class IDEMainView implements View {
 
 
   private String getResource(String name) {
-    String res = "/ide/resources/" + name;
+    String res = servletPath+"/resources/" + name;
     return res;
   }
 }

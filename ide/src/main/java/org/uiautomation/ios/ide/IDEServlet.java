@@ -14,6 +14,8 @@
 package org.uiautomation.ios.ide;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,8 +49,13 @@ public class IDEServlet extends HttpServlet {
   @Override
   public void init() throws ServletException {
     super.init();
-
-    Cache cache = new Cache();
+    URL u = null;
+    try {
+      u = new URL(System.getProperty("endpoint","http://localhost:4444/wd/hub"));
+    } catch (MalformedURLException e) {
+      e.printStackTrace();
+    }
+    Cache cache = new Cache(u);
     controllers.add(new IDEController(cache));
     controllers.add(new ResourceController(cache));
     controllers.add(new RefreshController(cache));

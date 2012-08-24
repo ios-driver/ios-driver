@@ -27,7 +27,7 @@ public class IDEController implements IDECommandController {
   public View handle(HttpServletRequest req) throws IOSAutomationException, Exception {
     final Session s = new Session(extractSession(req.getPathInfo()));
     IDESessionModel model = cache.getModel(s);
-    return new IDEMainView(model);
+    return new IDEMainView(model,req.getContextPath()+req.getServletPath());
   }
 
   private String extractSession(String pathInfo) {

@@ -87,6 +87,9 @@ public class IOSDriver {
         + "not found on server.");
   }
 
+  public List<ServerSideSession> getSessions(){
+    return sessions;
+  }
   public ServerSideSession getSession(String opaqueKey) {
     for (ServerSideSession session : sessions) {
       if (session.getSessionId().equals(opaqueKey)) {
