@@ -134,7 +134,7 @@ public class RemoteUIATarget extends RemoteObject implements UIATarget {
 
   @Override
   public int getTimeout() {
-    return getObject(WebDriverLikeCommand.GET_TIMEOUT);
+    return (Integer)getObject(WebDriverLikeCommand.GET_TIMEOUT);
   }
 
 
