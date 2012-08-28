@@ -2,6 +2,7 @@ package org.uiautomation.ios.server;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.uiautomation.ios.IOSCapabilities;
@@ -59,7 +60,7 @@ public class ServerSideSession extends Session {
   public void start(IOSCapabilities capabilities) {
     instruments.startSession(IOSDevice.iPhoneSimulator, "5.1", capabilities.getLocale(),
         capabilities.getLanguage(), application.getApplicationPath(), getSessionId(), true,
-        new ArrayList<String>());
+        capabilities.getExtraSwitches());
 
   }
 
