@@ -13,11 +13,18 @@
  */
 package org.uiautomation.ios.server;
 
+import static org.uiautomation.ios.IOSCapabilities.BUNDLE_NAME;
+import static org.uiautomation.ios.IOSCapabilities.BUNDLE_VERSION;
+import static org.uiautomation.ios.IOSCapabilities.MAGIC_PREFIX;
+
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.json.JSONException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.application.IOSApplication;
@@ -65,21 +72,37 @@ public class IOSDriver {
     sessions.remove(session);
   }
 
+
+  public IOSCapabilities getCapabilities(IOSApplication application) {
+    // some cap are from the host. SDK version is not defined by the app itself.
+    IOSCapabilities cap = new IOSCapabilities();
+    cap.setSDKVersion(hostInfo.getSDK());
+    List<String> languageCodes = new ArrayList<String>();
+    for (Localizable l : application.getSupportedLanguages()) {
+      languageCodes.add(l.toString());
+    }
+    cap.setSupportedLanguages(languageCodes);
+    cap.setCapability("applicationPath", application.getApplicationPath().getAbsoluteFile());
+
+    for (Iterator iterator = application.getMetadata().keys(); iterator.hasNext();) {
+      String key = (String) iterator.next();
+
+      try {
+        Object value = application.getMetadata().get(key);
+        cap.getRawCapabilities().put(key, value);
+      } catch (JSONException e) {
+        throw new IOSAutomationException("cannot get metadata", e);
+      }
+    }
+
+    cap.setDevice(cap.getDeviceFromDeviceFamily());
+    return cap;
+  }
+
   private IOSApplication findMatchingApplication(IOSCapabilities desiredCapabilities) {
     for (IOSApplication app : supportedApplications) {
-      if (app.matches(desiredCapabilities)) {
-        // check that the language is supported.
-        String l = desiredCapabilities.getLanguage();
-        if (l != null && !app.getSupportedLanguages().contains(Localizable.getEnum(l))) {
-          throw new IOSAutomationException("Language requested, " + l
-              + " ,isn't supported.Supported are : " + app.getSupportedLanguages());
-        }
-
-        String sdk = desiredCapabilities.getSDKVersion();
-        if (sdk != null && !sdk.equals(hostInfo.getSDK())) {
-          throw new IOSAutomationException("Cannot start sdk " + sdk + ". Run on "
-              + hostInfo.getSDK());
-        }
+      IOSCapabilities appCapabilities = getCapabilities(app);
+      if (IOSDriver.matches(appCapabilities, desiredCapabilities)) {
         return app;
       }
     }
@@ -87,9 +110,66 @@ public class IOSDriver {
         + "not found on server.");
   }
 
-  public List<ServerSideSession> getSessions(){
+
+  public static boolean matches(Map<String, Object> appCapabilities,
+      Map<String, Object> desiredCapabilities) {
+    IOSCapabilities a = new IOSCapabilities(appCapabilities);
+    IOSCapabilities d = new IOSCapabilities(desiredCapabilities);
+    return matches(a, d);
+
+  }
+
+  private static boolean matches(IOSCapabilities applicationCapabilities,
+      IOSCapabilities desiredCapabilities) {
+
+    if (desiredCapabilities.getBundleName() == null) {
+      throw new IOSAutomationException("you need to specify the bundle to test.");
+    }
+    if (!desiredCapabilities.getBundleName().equals(applicationCapabilities.getBundleName())) {
+      return false;
+    }
+    if (desiredCapabilities.getBundleVersion() != null
+        && !desiredCapabilities.getBundleVersion().equals(
+            applicationCapabilities.getBundleVersion())) {
+      return false;
+    }
+    if (desiredCapabilities.getDevice() == null) {
+      throw new IOSAutomationException("you need to specify the device.");
+    }
+    if (!(applicationCapabilities.getDeviceFromDeviceFamily() == desiredCapabilities.getDevice())) {
+      return false;
+    }
+    // check any extra capability starting with plist_
+    for (String key : desiredCapabilities.getRawCapabilities().keySet()) {
+      if (key.startsWith(IOSCapabilities.MAGIC_PREFIX)) {
+        String realKey = key.replace(MAGIC_PREFIX, "");
+        if (!desiredCapabilities.getRawCapabilities().get(key)
+            .equals(applicationCapabilities.getRawCapabilities().get(realKey))) {
+          return false;
+        }
+      }
+    }
+    String l = desiredCapabilities.getLanguage();
+    if (l != null && !applicationCapabilities.getSupportedLanguages().contains(l)) {
+      throw new IOSAutomationException("Language requested, " + l
+          + " ,isn't supported.Supported are : " + applicationCapabilities.getSupportedLanguages());
+    }
+
+    String sdk = desiredCapabilities.getSDKVersion();
+    if (sdk != null && !sdk.equals(applicationCapabilities.getSDKVersion())) {
+      throw new IOSAutomationException("Cannot start sdk " + sdk + ". Run on "
+          + applicationCapabilities.getSDKVersion());
+    }
+
+    return true;
+  }
+
+
+
+  public List<ServerSideSession> getSessions() {
     return sessions;
   }
+
   public ServerSideSession getSession(String opaqueKey) {
     for (ServerSideSession session : sessions) {
       if (session.getSessionId().equals(opaqueKey)) {

@@ -15,9 +15,11 @@
 package org.uiautomation.ios.server.command.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
@@ -51,27 +53,22 @@ public class ServerStatus extends BaseCommandHandler {
 
     res.put("java", new JSONObject().put("version", System.getProperty("java.version")));
 
-    List<String> sdks = ClassicCommands.getInstalledSDKs();
-
-    res.put("ios", new JSONObject().put("simulatorVersion", sdks.get(sdks.size() - 1)));
+    res.put("ios", new JSONObject().put("simulatorVersion",ClassicCommands.getDefaultSDK()));
 
     JSONArray supportedApps = new JSONArray();
     for (IOSApplication a : getDriver().getSupportedApplications()) {
       JSONObject app = new JSONObject();
-      app.put("applicationPath", a.getApplicationPath().getAbsolutePath());
-
-
-      app.put("locales", a.getSupportedLanguages());
-
+     
       JSONObject resources = new JSONObject();
       for (String key : a.getResources().keySet()) {
         resources.put(key, "/wd/hub/resources/" + getDriver().getCache().getKey(a, key));
       }
       app.put("resources", resources);
 
-
-
-      app.put("Info.plist", a.getMetadata());
+      Map<String, Object> capabilities = getDriver().getCapabilities(a).getRawCapabilities();
+      for (String key : capabilities.keySet()){
+        app.put(key, capabilities.get(key));
+      }  
       supportedApps.put(app);
     }
 
@@ -82,6 +79,9 @@ public class ServerStatus extends BaseCommandHandler {
         new JSONObject().put("version", BuildInfo.getAttribute("version"))
             .put("time", BuildInfo.getAttribute("buildTimestamp"))
             .put("revision", BuildInfo.getAttribute("sha")));
+    
+    
+ 
 
     // String currentSession = getSessionsManager().getCurrentSessionId();
     // res.put("currentSession",currentSession == null ? JSONObject.NULL : currentSession);

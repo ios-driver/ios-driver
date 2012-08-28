@@ -18,10 +18,9 @@ import org.uiautomation.ios.exceptions.IOSAutomationException;
 public enum IOSDevice {
 
 
-  
-  iPhoneSimulator("iPhone Simulator",1), 
-  iPadSimulator("iPad Simulator", 2), 
-  retina("iPhone (Retina)", 1);
+
+  iPhoneSimulator("iPhone Simulator", 1), iPadSimulator("iPad Simulator", 2), retina(
+      "iPhone (Retina)", 1);
 
 
   // name from result of :
@@ -29,7 +28,7 @@ public enum IOSDevice {
   private final String name;
   private final int deviceFamily;
 
-  private IOSDevice(String name,int deviceFamily) {
+  private IOSDevice(String name, int deviceFamily) {
     this.name = name;
     this.deviceFamily = deviceFamily;
   }
@@ -48,7 +47,7 @@ public enum IOSDevice {
     return deviceFamily;
   }
 
- 
+
 
   public static IOSDevice valueOf(Object o) {
     if (o instanceof IOSDevice) {
@@ -67,5 +66,14 @@ public enum IOSDevice {
 
   public static IOSDevice getDefault() {
     return iPhoneSimulator;
+  }
+
+  public static IOSDevice getFromFamilyCode(int deviceId) {
+    for (IOSDevice d : IOSDevice.values()) {
+      if (d.deviceFamily == deviceId) {
+        return d;
+      }
+    }
+    throw new IOSAutomationException("Cannot find defice for device family : " + deviceId);
   }
 }

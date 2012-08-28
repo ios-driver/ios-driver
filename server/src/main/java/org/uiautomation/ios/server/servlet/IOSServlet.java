@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
+import org.omg.CORBA.ExceptionList;
 import org.uiautomation.ios.communication.FailedWebDriverLikeResponse;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
@@ -100,13 +101,11 @@ public class IOSServlet extends DriverBasedServlet {
       Handler h = CommandMapping.get(wdlc).createHandler(getDriver(), request);
       return h.handleAndRunDecorators();
     } catch (Exception e) {
-      if (request.getGenericCommand() == WebDriverLikeCommand.NEW_SESSION) {
-        return new FailedWebDriverLikeResponse(null, e);
-      } else {
+      try {
         return new FailedWebDriverLikeResponse(request.getSession(), e);
+      } catch (Exception e1) {
+        return new FailedWebDriverLikeResponse(null, e);
       }
-
-
     }
 
   }

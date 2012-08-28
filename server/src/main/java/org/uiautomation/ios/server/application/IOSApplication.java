@@ -15,10 +15,10 @@
 package org.uiautomation.ios.server.application;
 
 
-import static org.uiautomation.ios.IOSCapabilities.ICON;
 import static org.uiautomation.ios.IOSCapabilities.BUNDLE_NAME;
 import static org.uiautomation.ios.IOSCapabilities.BUNDLE_VERSION;
 import static org.uiautomation.ios.IOSCapabilities.DEVICE_FAMILLY;
+import static org.uiautomation.ios.IOSCapabilities.ICON;
 import static org.uiautomation.ios.IOSCapabilities.MAGIC_PREFIX;
 
 import java.io.File;
@@ -230,57 +230,7 @@ public class IOSApplication {
     return util.toJSON();
   }
 
-  private String getValueFromInfoPlist(String key) {
-    File plist = new File(app, "Info");
-    List<String> args = new ArrayList<String>();
-    args.addAll(Arrays.asList(new String[] {"defaults", "read", plist.getAbsolutePath(), key}));
-    Command c = new Command(args, false);
-    try {
-      c.executeAndWait();
-      List<String> outs = c.getStdOut();
-      if (outs.size() != 1) {
-        throw new IOSAutomationException("couldn't find bundleId" + outs);
-      } else {
-        return outs.get(0);
-      }
-    } catch (Exception e) {
-      // if the key doesn't exist.
-      return null;
-    }
-  }
-
-
-
-  public boolean matches(IOSCapabilities desiredCapabilities) {
-
-    if (desiredCapabilities.getBundleName() == null) {
-      throw new IOSAutomationException("you need to specify the bundle to test.");
-    }
-    if (!desiredCapabilities.getBundleName().equals(getMetadata(BUNDLE_NAME))) {
-      return false;
-    }
-    if (desiredCapabilities.getBundleVersion() != null
-        && !desiredCapabilities.getBundleVersion().equals(getMetadata(BUNDLE_VERSION))) {
-      return false;
-    }
-    if (desiredCapabilities.getDevice() == null) {
-      throw new IOSAutomationException("you need to specify the device.");
-    }
-    if (!getDeviceFamily().contains(desiredCapabilities.getDevice().getDeviceFamily())) {
-      return false;
-    }
-    // check any extra capability starting with plist_
-    for (String key : desiredCapabilities.getRawCapabilities().keySet()) {
-      if (key.startsWith(IOSCapabilities.MAGIC_PREFIX)) {
-        String realKey = key.replace(MAGIC_PREFIX, "");
-        if (!desiredCapabilities.getRawCapabilities().get(key).equals(getMetadata(realKey))) {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-
+ 
   public String getMetadata(String key) {
     if (!metadata.has(key)) {
       throw new IOSAutomationException("no property " + key + " for this app.");

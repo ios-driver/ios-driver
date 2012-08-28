@@ -24,6 +24,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.communication.IOSDevice;
+import org.uiautomation.ios.exceptions.IOSAutomationException;
 
 public class IOSCapabilities {
 
@@ -33,19 +34,20 @@ public class IOSCapabilities {
   public static final String SDK_VERSION = "sdkVersion";
   public static final String IOS_SWITCHES = "ios.switches";
   public static final String LANGUAGE = "language";
+  public static final String SUPPORTED_LANGUAGES = "supportedLanguages";
   public static final String LOCALE = "locale";
   public static final String AUT = "aut";
   public static final String TIME_HACK = "timeHack";
-  
-  public static final String BUNDLE_VERSION ="CFBundleVersion";
-  public static final String BUNDLE_ID ="CFBundleIdentifier";
-  public static final String BUNDLE_SHORT_VERSION ="CFBundleShortVersionString";  
-  public static final String BUNDLE_DISPLAY_NAME  ="CFBundleDisplayName";
-  public static final String BUNDLE_NAME ="CFBundleName";
-  public static final String DEVICE_FAMILLY ="UIDeviceFamily";
+
+  public static final String BUNDLE_VERSION = "CFBundleVersion";
+  public static final String BUNDLE_ID = "CFBundleIdentifier";
+  public static final String BUNDLE_SHORT_VERSION = "CFBundleShortVersionString";
+  public static final String BUNDLE_DISPLAY_NAME = "CFBundleDisplayName";
+  public static final String BUNDLE_NAME = "CFBundleName";
+  public static final String DEVICE_FAMILLY = "UIDeviceFamily";
   // http://developer.apple.com/library/ios/#documentation/general/Reference/InfoPlistKeyReference/Articles/iPhoneOSKeys.html
-  public static final String ICON ="CFBundleIconFile";
-  
+  public static final String ICON = "CFBundleIconFile";
+
   public static final String MAGIC_PREFIX = "plist_";
 
 
@@ -71,7 +73,7 @@ public class IOSCapabilities {
     res.setCapability(BUNDLE_NAME, bundleName);
     return res;
   }
-  
+
   public static IOSCapabilities ipad(String bundleName) {
     IOSCapabilities res = new IOSCapabilities();
     res.setCapability(DEVICE, IOSDevice.iPadSimulator);
@@ -131,6 +133,22 @@ public class IOSCapabilities {
 
   public Map<String, Object> getRawCapabilities() {
     return raw;
+  }
+
+  public IOSDevice getDeviceFromDeviceFamily() {
+    JSONArray o = (JSONArray) raw.get(DEVICE_FAMILLY);
+    if (o.length() != 1) {
+      throw new IOSAutomationException(
+          "Cannot find the capability for the app.Supported only 1, and got " + o);
+    } else {
+      try {
+        int deviceId = o.getInt(0);
+        IOSDevice res = IOSDevice.getFromFamilyCode(deviceId);
+        return res;
+      } catch (JSONException e) {
+        throw new IOSAutomationException("wrong format for device family. Got " + o);
+      }
+    }
   }
 
   public IOSDevice getDevice() {
@@ -194,5 +212,14 @@ public class IOSCapabilities {
     } else {
       return Boolean.parseBoolean((String) o);
     }
+  }
+
+
+  public List<String> getSupportedLanguages() {
+    return (List<String>) raw.get(SUPPORTED_LANGUAGES);
+  }
+
+  public void setSupportedLanguages(List<String> supportedLanguages) {
+    raw.put(SUPPORTED_LANGUAGES, supportedLanguages);
   }
 }

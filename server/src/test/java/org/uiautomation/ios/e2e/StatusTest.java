@@ -49,27 +49,26 @@ public class StatusTest {
     Assert.assertEquals(array.length(), 2);
 
     JSONObject uicatalog = array.getJSONObject(1);
-    JSONObject uiCataloguMetadata = uicatalog.getJSONObject("Info.plist");
-
+   
     
-    Assert.assertEquals(uiCataloguMetadata.get(BUNDLE_DISPLAY_NAME), "UICatalog");
-    Assert.assertEquals(uiCataloguMetadata.get(BUNDLE_ID), "com.yourcompany.UICatalog");
-    Assert.assertEquals(uiCataloguMetadata.get(BUNDLE_NAME), "UICatalog");
-    Assert.assertEquals(uiCataloguMetadata.get(BUNDLE_VERSION), "2.10");
+    Assert.assertEquals(uicatalog.get(BUNDLE_DISPLAY_NAME), "UICatalog");
+    Assert.assertEquals(uicatalog.get(BUNDLE_ID), "com.yourcompany.UICatalog");
+    Assert.assertEquals(uicatalog.get(BUNDLE_NAME), "UICatalog");
+    Assert.assertEquals(uicatalog.get(BUNDLE_VERSION), "2.10");
     Assert.assertEquals(uicatalog.get("applicationPath"), SampleApps.getUICatalogFile());
 
-    JSONArray locales1 = uicatalog.getJSONArray("locales");
+    JSONArray locales1 = uicatalog.getJSONArray(SUPPORTED_LANGUAGES);
     Assert.assertEquals(locales1.length(), 1);
     Assert.assertEquals(locales1.get(0), "en");
 
     JSONObject intMount = array.getJSONObject(0);
-    JSONObject intMountMetadata = intMount.getJSONObject("Info.plist");
-    Assert.assertEquals(intMountMetadata.get(BUNDLE_ID), "com.yourcompany.InternationalMountains");
-    Assert.assertEquals(intMountMetadata.get(BUNDLE_NAME), "InternationalMountains");
-    Assert.assertEquals(intMountMetadata.get(BUNDLE_VERSION), "1.1");
+   
+    Assert.assertEquals(intMount.get(BUNDLE_ID), "com.yourcompany.InternationalMountains");
+    Assert.assertEquals(intMount.get(BUNDLE_NAME), "InternationalMountains");
+    Assert.assertEquals(intMount.get(BUNDLE_VERSION), "1.1");
     Assert.assertEquals(intMount.get("applicationPath"), SampleApps.getIntlMountainsFile());
 
-    JSONArray locales2 = intMount.getJSONArray("locales");
+    JSONArray locales2 = intMount.getJSONArray(SUPPORTED_LANGUAGES);
     Assert.assertEquals(locales2.length(), 3);
     List<String> all = new ArrayList<String>();
     all.add(locales2.getString(0));
