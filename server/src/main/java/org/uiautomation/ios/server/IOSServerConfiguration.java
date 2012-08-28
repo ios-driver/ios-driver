@@ -49,6 +49,10 @@ public class IOSServerConfiguration {
   public String getRegistrationURL() {
     return registrationURL;
   }
+  
+  public void addSupportedApp(String appAbsolutPath){
+    supportedApps.add(appAbsolutPath);
+  }
 
   public List<String> getSupportedApps() {
     return supportedApps;
