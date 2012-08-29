@@ -16,7 +16,12 @@ package org.uiautomation.ios.server;
 
 import java.net.InetSocketAddress;
 
+import javax.servlet.Servlet;
+
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.DefaultHandler;
+import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
 import org.uiautomation.ios.server.application.IOSApplication;
@@ -52,19 +57,35 @@ public class IOSServer {
   }
 
   public void init() throws IOSAutomationSetupException {
-    ServletContextHandler servletContextHandler =
-        new ServletContextHandler(server, "/wd/hub", true, false);
-    servletContextHandler.addServlet(UIAScriptProxyRegister.class, "/uiascriptproxy/register/*");
-    servletContextHandler.addServlet(UIAScriptServlet.class, "/uiascriptproxy/*");
-    servletContextHandler.addServlet(IOSServlet.class, "/*");
-    servletContextHandler.addServlet(ResourceServlet.class, "/resources/*");
+    ServletContextHandler wd = new ServletContextHandler(server, "/wd/hub", true, false);
+    wd.addServlet(UIAScriptProxyRegister.class, "/uiascriptproxy/register/*");
+    wd.addServlet(UIAScriptServlet.class, "/uiascriptproxy/*");
+    wd.addServlet(IOSServlet.class, "/*");
+    wd.addServlet(ResourceServlet.class, "/resources/*");
+
+
+
+    ServletContextHandler extra = new ServletContextHandler(server, "/", true, false);
+    try {
+      String ide = "org.uiautomation.ios.ide.IDEServlet";
+      Class<?> c = Class.forName(ide);
+      Class<Servlet> r = (Class<Servlet>) c;
+
+      extra.addServlet(r, "/ide/*");
+    } catch (Exception e) {
+      System.err.println("couldn't find ide servlet");
+    }
+
+    HandlerList handlers = new HandlerList();
+    handlers.setHandlers(new Handler[] {wd, extra});
+    server.setHandler(handlers);
 
     IOSDriver driver = new IOSDriver(port);
     for (String app : this.options.getSupportedApps()) {
       driver.addSupportedApplication(new IOSApplication(app));
     }
 
-    servletContextHandler.setAttribute(DRIVER, driver);
+    wd.setAttribute(DRIVER, driver);
 
     Runtime.getRuntime().addShutdownHook(new Thread() {
       public void run() {
@@ -96,10 +117,6 @@ public class IOSServer {
     server = new Server(new InetSocketAddress("0.0.0.0", options.getPort()));
 
   }
-
-
-
-
 
 
 

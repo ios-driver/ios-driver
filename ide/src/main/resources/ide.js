@@ -2,8 +2,13 @@ $(document)
 		.ready(
 				function() {
 
-					var offsetX = 49;
-					var offsetY = 143;
+					// iphone
+					//var offsetX = 49;
+					//var offsetY = 143;
+					
+					// ipad
+					//offsetX = 68;
+					//offsetY = 68;
 
 					var tree = $("#tree").jstree({
 						"core" : {
@@ -134,6 +139,7 @@ $(document)
 					$("#mouseOver")
 							.mousemove(
 									function(e) {
+										
 										if (!lock) {
 											var x = e.pageX - offsetX;
 											var y = e.pageY - offsetY;

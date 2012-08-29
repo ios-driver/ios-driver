@@ -1,72 +1,103 @@
 @CHARSET "UTF-8";
-#screen {
+#screeniPhone {
 	position: absolute;
 	left: 49px;
 	top: 143px;
 }
-#mouseOver {
+#screeniPad {
+	position: absolute;
+	left: 65px;
+	top: 68px;
+}
+.mouseOveriPhone {
 	position: absolute;
 	left: 49px;
 	top: 143px;
 	height: 480px;
-    width: 320px;
-    z-index:4;
-
-    
+	width: 320px;
+	z-index: 4;
 }
+.mouseOveriPad {
+	position: absolute;
+	left: 68px;
+	top: 68px;
+	height: 1024px;
+	width: 768px;
+	z-index: 4;
+}
+
+
 #frame {
 	position: absolute;
 	left: 25px;
 	top: 25px;
 }
-#content,#tree {
+
+#contentiPhone, .treeiPhone {
 	position: absolute;
 	left: 400px;
 	top: 0px;
 }
-
+#contentiPad, .treeiPad {
+	position: absolute;
+	left: 900px;
+	top: 0px;
+}
 #highlight {
 	position: absolute;
-	background-color:yellow;
+	background-color: yellow;
 	left: 0px;
 	top: 0px;
 	height: 0px;
-    width: 0px;
-	z-index:3;
+	width: 0px;
+	z-index: 3;
 	opacity: 0.5;
 }
-#details {
+.detailsiPhone {
 	position: absolute;
-	background-color:yellow;
+	background-color: yellow;
 	left: 800px;
 	top: 0px;
 	height: auto;
-    width: 500px;
+	width: 500px;
 }
 
-#actions {
+.detailsiPad {
 	position: absolute;
-	background-color:yellow;
+	background-color: yellow;
+	left: 1300px;
+	top: 0px;
+	height: auto;
+	width: 500px;
+}
+.actionsiPhone {
+	position: absolute;
+	background-color: yellow;
 	left: 800px;
 	top: 400px;
 	height: 200px;
-    width: 500px;
+	width: 500px;
 }
-
-#notice{
+.actionsiPad {
+	position: absolute;
+	background-color: yellow;
+	left: 1300px;
+	top: 400px;
+	height: 200px;
+	width: 500px;
+}
+#notice {
 	position: absolute;
 	left: 800px;
 	top: 600px;
 	height: 200px;
-    width: 500px;
+	width: 500px;
 }
-
-.error-msg{
+.error-msg {
 	font-size: 16px;
 	color: red;
 }
-
-.notice-msg{
+.notice-msg {
 	font-size: 16px;
 	color: green;
 }

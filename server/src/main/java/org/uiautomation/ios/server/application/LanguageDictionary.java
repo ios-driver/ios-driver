@@ -76,7 +76,7 @@ public class LanguageDictionary {
       String original = content.get(key);
 
       boolean match = match(string, original);
-      boolean tooGeneric = key.equals("%@ %d of %d") || key.equals("%@ at %@");
+      boolean tooGeneric = key.equals("%@ %d of %d") || key.equals("%@ at %@") || key.equals("(%@)");
       if (match && !tooGeneric) {
         ContentResult r = new ContentResult(language, key, original, string);
         for (String s : r.getArgs()) {

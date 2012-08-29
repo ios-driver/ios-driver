@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.URL;
 
 import org.json.JSONObject;
+import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
@@ -14,8 +15,8 @@ public class IDESessionModel {
 
 
   private final Session session;
+  private IOSCapabilities caps;
   private final RemoteUIADriver driver;
-  private IOSApplication app;
   private File screenshot;
 
   private JSONObject elementTree;
@@ -25,6 +26,14 @@ public class IDESessionModel {
     this.screenshot = new File(session.getSessionId() + ".png");
     driver = new RemoteUIADriver(remoteURL, session);
   }
+  
+  public IOSCapabilities getCapabilities(){
+    if (caps==null){
+      caps = driver.getCapabilities();
+    }
+    return caps;
+  }
+  
 
   public void refresh() throws IOSAutomationException {
     screenshot.delete();

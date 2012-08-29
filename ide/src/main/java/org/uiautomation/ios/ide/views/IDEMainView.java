@@ -2,6 +2,7 @@ package org.uiautomation.ios.ide.views;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.uiautomation.ios.communication.IOSDevice;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.ide.model.IDESessionModel;
 
@@ -10,7 +11,7 @@ public class IDEMainView implements View {
   private final IDESessionModel model;
   private final String servletPath;
 
-  public IDEMainView(IDESessionModel model,String servletPath) {
+  public IDEMainView(IDESessionModel model, String servletPath) {
     this.model = model;
     this.servletPath = servletPath;
   }
@@ -24,11 +25,21 @@ public class IDEMainView implements View {
 
       b.append(" <link rel='stylesheet' href='" + getResource("ide.css") + "'  type='text/css'/>");
       b.append("<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>");
-      b.append("<script type='text/javascript' src='" + getResource("jquery.jstree.js")
-          + "'></script>");
+      b.append("<script type='text/javascript' src='" + getResource("jquery.jstree.js") + "'></script>");
+      
+      if (model.getCapabilities().getDevice() == IOSDevice.iPhoneSimulator) {
+        b.append("<script > var offsetX = 49; var offsetY = 143;</script>");
+      }else{
+        b.append("<script > var offsetX = 68; var offsetY = 68;</script>");      
+      }
+    
+                    
+     
+                  
+      
       b.append("<script type='text/javascript' src='" + getResource("ide.js") + "'></script>");
 
-
+     
 
       b.append("</head>");
 
@@ -37,18 +48,27 @@ public class IDEMainView implements View {
       b.append("<html>");
       b.append("<div id ='highlight' ></div>");
 
-      b.append("<div id='frame' ><img src='" + getResource("frame.png") + " '/></div>");
-      b.append("<div id='mouseOver' ></div>");
-      b.append("<div id='screen' ><img src='"+getResource("session/"+model.getSession().getSessionId()+"/screenshot.png")+"' /></div>");
-      
+      String suffix = "iPad";
+      if (model.getCapabilities().getDevice() == IOSDevice.iPhoneSimulator) {
+        suffix = "iPhone";
+      }
 
-      b.append("<div id ='tree' ></div>");
+      b.append("<div id='frame' ><img src='" + getResource("frame" + suffix + ".png")
+          + " '/></div>");
+      b.append("<div id='mouseOver' class='mouseOver" + suffix + "' ></div>");
+      b.append("<div id='screen" + suffix + "' ><img src='"
+          + getResource("session/" + model.getSession().getSessionId() + "/screenshot.png")
+          + "' /></div>");
 
-      b.append("<div id ='details'>details</div>");
+
+
+      b.append("<div id ='tree' class='tree" + suffix + "' ></div>");
+
+      b.append("<div id ='details' class='details" + suffix + "'>details</div>");
 
 
 
-      b.append("<div id ='actions'>actions");
+      b.append("<div id ='actions' class='actions" + suffix + "'>actions");
       b.append("<form action='tap' method='GET'>");
 
       b.append("<div id ='reference'></div>");
@@ -85,7 +105,7 @@ public class IDEMainView implements View {
 
 
   private String getResource(String name) {
-    String res = servletPath+"/resources/" + name;
+    String res = servletPath + "/resources/" + name;
     return res;
   }
 }
