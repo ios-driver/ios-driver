@@ -133,7 +133,7 @@ var UIAutomation = {
 			try {
 				var request = this.getNextCommand();
 				if(request === "stop") {
-					var response = this.createJSONResponse("sessionId", 0, "ok");
+					var response = this.createJSONResponse(this.SESSION, 0, "ok");
 					this.sendResponse(response);
 					return;
 				} else {
@@ -142,12 +142,12 @@ var UIAutomation = {
 						response = eval(request);
 					} catch (err) {
 						log("err : " + JSON.stringify(err));
-						response = this.createJSONResponse("sessionId", err.status, err);
+						response = this.createJSONResponse(this.SESSION, err.status, err);
 					}
 					this.sendResponse(response);
 				}
 			} catch (err) {
-				var response = this.createJSONResponse("sessionId", 13, err);
+				var response = this.createJSONResponse(this.SESSION, 13, err);
 				this.sendResponse(response);
 			}
 		}
