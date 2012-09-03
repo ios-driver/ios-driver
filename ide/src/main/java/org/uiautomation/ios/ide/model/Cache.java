@@ -18,6 +18,10 @@ public class Cache {
   public Cache(URL endpoint) {
     remote = endpoint;
   }
+  
+  public URL getEndPoint(){
+    return remote;
+  }
 
   public synchronized IDESessionModel getModel(Session session) {
     IDESessionModel model = models.get(session);

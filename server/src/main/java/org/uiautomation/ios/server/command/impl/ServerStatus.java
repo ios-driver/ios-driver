@@ -83,8 +83,6 @@ public class ServerStatus extends BaseCommandHandler {
     
  
 
-    // String currentSession = getSessionsManager().getCurrentSessionId();
-    // res.put("currentSession",currentSession == null ? JSONObject.NULL : currentSession);
     List<ServerSideSession> sessions = getDriver().getSessions();
     if (sessions.isEmpty()){
       return new WebDriverLikeResponse(null, 0, res);
