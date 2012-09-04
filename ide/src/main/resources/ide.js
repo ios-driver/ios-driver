@@ -1,15 +1,8 @@
 $(document)
 		.ready(
 				function() {
-
-					// iphone
-					//var offsetX = 49;
-					//var offsetY = 143;
-					
-					// ipad
-					//offsetX = 68;
-					//offsetY = 68;
-
+ 
+					// offsetX Y set in the main page as global variable.
 					var tree = $("#tree").jstree({
 						"core" : {
 							"animation" : 0,
@@ -94,8 +87,8 @@ $(document)
 					}
 
 					highlight = function(x, y, h, w, translationFound) {
-						$('#highlight').css('left', (x + offsetX) + 'px').css(
-								'top', (y + offsetY) + 'px').css('height',
+						$('#highlight').css('left', (x + realOffsetX) + 'px').css(
+								'top', (y + realOffsetY) + 'px').css('height',
 								h + 'px').css('width', w + 'px');
 						var color;
 						if (translationFound) {
@@ -141,8 +134,8 @@ $(document)
 									function(e) {
 										
 										if (!lock) {
-											var x = e.pageX - offsetX;
-											var y = e.pageY - offsetY;
+											var x = e.pageX - realOffsetX;
+											var y = e.pageY - realOffsetX;
 											
 
 											var finder = new CandidateFinder(x,

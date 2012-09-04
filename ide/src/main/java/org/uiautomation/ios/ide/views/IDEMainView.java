@@ -2,9 +2,11 @@ package org.uiautomation.ios.ide.views;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.communication.IOSDevice;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.ide.model.IDESessionModel;
+import org.uiautomation.ios.ide.views.positioning.IPadDevicePositioning;
 
 public class IDEMainView implements View {
 
@@ -15,6 +17,10 @@ public class IDEMainView implements View {
     this.model = model;
     this.servletPath = servletPath;
   }
+  
+ 
+  
+  
 
   @Override
   public void render(HttpServletResponse response) throws Exception {
@@ -25,21 +31,24 @@ public class IDEMainView implements View {
 
       b.append(" <link rel='stylesheet' href='" + getResource("ide.css") + "'  type='text/css'/>");
       b.append("<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>");
-      b.append("<script type='text/javascript' src='" + getResource("jquery.jstree.js") + "'></script>");
+      b.append("<script type='text/javascript' src='" + getResource("jquery.jstree.js")
+          + "'></script>");
+
+      IPadDevicePositioning position = new IPadDevicePositioning(model.getDeviceOrientation(),25,25);
+      int degree = model.getDeviceOrientation().getRotationInDegree();
       
       if (model.getCapabilities().getDevice() == IOSDevice.iPhoneSimulator) {
         b.append("<script > var offsetX = 49; var offsetY = 143;</script>");
-      }else{
-        b.append("<script > var offsetX = 68; var offsetY = 68;</script>");      
+      } else {
+        b.append("<script > var offsetY = "+position.getScreenTop()+"; var offsetX = "+position.getScreenLeft()+";</script>");
+        b.append("<script > var realOffsetY = "+position.getRealScreenTop()+"; var realOffsetX = "+position.getRealScreenLeft()+";</script>");
       }
-    
-                    
-     
-                  
-      
+
+
+
       b.append("<script type='text/javascript' src='" + getResource("ide.js") + "'></script>");
 
-     
+
 
       b.append("</head>");
 
@@ -53,16 +62,34 @@ public class IDEMainView implements View {
         suffix = "iPhone";
       }
 
-      b.append("<div id='frame' ><img src='" + getResource("frame" + suffix + ".png")
-          + " '/></div>");
-      b.append("<div id='mouseOver' class='mouseOver" + suffix + "' ></div>");
-      b.append("<div id='screen" + suffix + "' ><img src='"
-          + getResource("session/" + model.getSession().getSessionId() + "/screenshot.png")
+     
+      String rotate = "-moz-transform:rotate("+degree+"deg);";
+      b.append("<div id='frame' ");
+      b.append("style='" +rotate+
+      		"top:"+position.getFrameTop()+"px;" +
+      		"left : "+position.getFrameLeft()+"px' >" +
+      		
+      		"<img src='" + getResource("frame" + suffix + ".png") + " '/></div>");
+      
+      b.append("<div id='mouseOver' " +
+          "style='left:"+position.getRealScreenLeft()+"px;" +
+          "top:"+position.getRealScreenTop()+"px;" +
+          "width:"+position.getRealScreenWidth()+"px;" +
+          "height :"+position.getRealScreenHeight()+"px ' ></div>");
+      b.append("<div id='screen' " +
+      		"style='"+rotate +
+      				"top:"+position.getScreenTop()+"px;" +
+      				"left:"+position.getScreenLeft()+"px' >" +
+      		"<img src='" + getResource("session/" + model.getSession().getSessionId() + "/screenshot.png")
           + "' /></div>");
 
 
+    
+     
 
-      b.append("<div id ='tree' class='tree" + suffix + "' ></div>");
+
+
+      b.append("<div id ='tree'  ></div>");
 
       b.append("<div id ='details' class='details" + suffix + "'>details</div>");
 
@@ -101,6 +128,8 @@ public class IDEMainView implements View {
     }
 
   }
+
+ 
 
 
 

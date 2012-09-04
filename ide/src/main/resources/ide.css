@@ -1,46 +1,31 @@
 @CHARSET "UTF-8";
-#screeniPhone {
-	position: absolute;
-	left: 49px;
-	top: 143px;
-}
-#screeniPad {
-	position: absolute;
-	left: 65px;
-	top: 68px;
-}
-.mouseOveriPhone {
-	position: absolute;
-	left: 49px;
-	top: 143px;
-	height: 480px;
-	width: 320px;
-	z-index: 4;
-}
-.mouseOveriPad {
-	position: absolute;
-	left: 68px;
-	top: 68px;
-	height: 1024px;
-	width: 768px;
-	z-index: 4;
-}
 
+.div {
+	border: 2px solid red;
+	border-color: red;
+}
 
 #frame {
 	position: absolute;
-	left: 25px;
-	top: 25px;
+	
 }
 
-#contentiPhone, .treeiPhone {
+#screen {
 	position: absolute;
-	left: 400px;
-	top: 0px;
+	
 }
-#contentiPad, .treeiPad {
+
+#mouseOver {
 	position: absolute;
-	left: 900px;
+	z-index: 4;
+	border: 2px solid red;
+	border-color: red;
+	
+}
+
+#tree {
+	position: absolute;
+	left: 1200px;
 	top: 0px;
 }
 #highlight {
