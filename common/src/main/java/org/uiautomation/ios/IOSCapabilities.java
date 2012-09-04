@@ -222,4 +222,11 @@ public class IOSCapabilities {
   public void setSupportedLanguages(List<String> supportedLanguages) {
     raw.put(SUPPORTED_LANGUAGES, supportedLanguages);
   }
+
+
+
+  public void setBundleName(String bundleName) {
+    setCapability(BUNDLE_NAME, bundleName);
+    
+  }
 }
