@@ -5,6 +5,7 @@ import java.net.InetSocketAddress;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
+import org.uiautomation.ios.ide.model.Cache;
 import org.uiautomation.ios.server.IOSServerConfiguration;
 
 import com.beust.jcommander.JCommander;
@@ -12,6 +13,7 @@ import com.beust.jcommander.JCommander;
 public class IDEServer {
 
   private final Server server;
+  private final ServletContextHandler servletContextHandler;
 
   public static void main(String[] args) throws Exception {
 
@@ -24,11 +26,15 @@ public class IDEServer {
     server.start();
   }
 
+  public void setCache(Cache c) {
+    servletContextHandler.setAttribute(Cache.KEY, c);
+  }
+
   public void init() throws IOSAutomationSetupException {
-    ServletContextHandler servletContextHandler =
-        new ServletContextHandler(server, "/ide", true, false);
+
 
     servletContextHandler.addServlet(IDEServlet.class, "/*");
+
 
     Runtime.getRuntime().addShutdownHook(new Thread() {
       public void run() {
@@ -56,6 +62,7 @@ public class IDEServer {
 
   public IDEServer(int port) throws IOSAutomationSetupException {
     server = new Server(new InetSocketAddress("localhost", port));
+    servletContextHandler = new ServletContextHandler(server, "/ide", true, false);
   }
 
 }
