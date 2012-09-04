@@ -13,17 +13,14 @@
  */
 package org.uiautomation.ios.ide.controllers;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import javax.imageio.stream.FileImageInputStream;
 import javax.servlet.http.HttpServletRequest;
 
 import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.ide.IDEServlet;
-import org.uiautomation.ios.ide.Model;
 import org.uiautomation.ios.ide.model.Cache;
 import org.uiautomation.ios.ide.model.IDESessionModel;
 import org.uiautomation.ios.ide.views.ResourceView;
@@ -53,7 +50,7 @@ public class ResourceController implements IDECommandController {
       String session = extractSession(req.getPathInfo());
       IDESessionModel model = cache.getModel(new Session(session));
       try {
-        is = new FileInputStream(model.getScreenshot());
+        is = model.getScreenshot();
       } catch (FileNotFoundException e) {
         is = null;
       }
