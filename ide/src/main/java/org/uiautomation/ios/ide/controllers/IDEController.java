@@ -19,7 +19,7 @@ public class IDEController implements IDECommandController {
 
   @Override
   public boolean canHandle(String pathInfo) {
-    boolean ok =  pathInfo.startsWith("/session/") && pathInfo.endsWith("/home");
+    boolean ok = pathInfo.startsWith("/session/") && pathInfo.endsWith("/home");
     return ok;
   }
 
@@ -27,7 +27,7 @@ public class IDEController implements IDECommandController {
   public View handle(HttpServletRequest req) throws IOSAutomationException, Exception {
     final Session s = new Session(extractSession(req.getPathInfo()));
     IDESessionModel model = cache.getModel(s);
-    return new IDEMainView(model,req.getContextPath()+req.getServletPath());
+    return new IDEMainView(model, req.getContextPath() + req.getServletPath());
   }
 
   private String extractSession(String pathInfo) {
