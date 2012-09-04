@@ -86,6 +86,7 @@ public class InstrumentsManager {
       simulatorProcess = new Command(instruments, true);
       simulatorProcess.setWorkingDirectory(output);
       simulatorProcess.start();
+     
 
       communicationChannel.waitForUIScriptToBeStarted();
 
