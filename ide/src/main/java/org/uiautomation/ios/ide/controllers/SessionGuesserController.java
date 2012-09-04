@@ -1,7 +1,6 @@
 package org.uiautomation.ios.ide.controllers;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +13,6 @@ import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.UIAModels.Session;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.communication.Helper;
 import org.uiautomation.ios.communication.HttpClientFactory;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
