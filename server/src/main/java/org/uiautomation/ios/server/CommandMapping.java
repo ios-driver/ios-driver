@@ -59,6 +59,7 @@ public enum CommandMapping {
   SYSTEM_VERSION(".systemVersion()"),
   LANGUAGE(".language()"),
   LOCALE(".locale()"),
+  SET_ORIENTATION(".setDeviceOrientation(:orientation)"),
   
   SCREENSHOT_WITH_NAME(TakeScreenshot.class,".captureScreenWithName('" + TakeScreenshot.SCREEN_NAME + "')"),
   

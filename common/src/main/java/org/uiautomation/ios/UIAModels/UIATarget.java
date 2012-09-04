@@ -41,4 +41,6 @@ public interface UIATarget {
   public void setTimeout(int timeoutInSecnds);
 
   public int getTimeout(); 
+  
+  public void setDeviceOrientation(Orientation o);
 }

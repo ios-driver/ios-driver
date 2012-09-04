@@ -20,6 +20,7 @@ import java.io.IOException;
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.UIAModels.UIARect;
 import org.uiautomation.ios.UIAModels.UIATarget;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
@@ -149,5 +150,20 @@ public class RemoteUIATarget extends RemoteObject implements UIATarget {
   @Override
   public String getLocale() {
     return getObject(WebDriverLikeCommand.LOCALE);
+  }
+
+
+
+  @Override
+  public void setDeviceOrientation(Orientation o) {
+    JSONObject to = new JSONObject();
+    try {
+      to.put("orientation", o);
+      execute(WebDriverLikeCommand.SET_ORIENTATION, to);
+    } catch (JSONException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    
   }
 }
