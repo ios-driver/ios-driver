@@ -9,7 +9,6 @@ import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.ide.model.Cache;
 import org.uiautomation.ios.ide.model.IDESessionModel;
-import org.uiautomation.ios.ide.views.IDEMainView;
 import org.uiautomation.ios.ide.views.JSONView;
 import org.uiautomation.ios.ide.views.View;
 
