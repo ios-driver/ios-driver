@@ -1,0 +1,608 @@
+{
+  "deviceOrientation": 3,
+  "tree": {
+    "children": [
+      {
+        "l10n": {"matches": 0},
+        "label": null,
+        "name": null,
+        "rect": {
+          "origin": {
+            "x": 0,
+            "y": 20
+          },
+          "size": {
+            "height": 748,
+            "width": 1024
+          }
+        },
+        "ref": 45,
+        "type": "UIAButton",
+        "value": null
+      },
+      {
+        "l10n": {
+          "langs": [
+            {"fr": []},
+            {"es": []},
+            {"it": []},
+            {"en": []},
+            {"de": []}
+          ],
+          "matches": 0
+        },
+        "label": "TabStripe_Colors.png",
+        "name": "TabStripe_Colors.png",
+        "rect": {
+          "origin": {
+            "x": 1014,
+            "y": -120
+          },
+          "size": {
+            "height": 888,
+            "width": 10
+          }
+        },
+        "ref": 46,
+        "type": "UIAImage",
+        "value": null
+      },
+      {
+        "l10n": {
+          "langs": [
+            {"fr": []},
+            {"es": []},
+            {"it": []},
+            {"en": []},
+            {"de": []}
+          ],
+          "matches": 0
+        },
+        "label": "General_BackgroundCanvas.png",
+        "name": "General_BackgroundCanvas.png",
+        "rect": {
+          "origin": {
+            "x": 0,
+            "y": 20
+          },
+          "size": {
+            "height": 748,
+            "width": 1024
+          }
+        },
+        "ref": 47,
+        "type": "UIAImage",
+        "value": null
+      },
+      {
+        "l10n": {
+          "langs": [
+            {"fr": []},
+            {"es": []},
+            {"it": []},
+            {"en": []},
+            {"de": []}
+          ],
+          "matches": 0
+        },
+        "label": "Photo_Welcome.png",
+        "name": "Photo_Welcome.png",
+        "rect": {
+          "origin": {
+            "x": 482,
+            "y": 201
+          },
+          "size": {
+            "height": 128,
+            "width": 415
+          }
+        },
+        "ref": 48,
+        "type": "UIAImage",
+        "value": null
+      },
+      {
+        "l10n": {
+          "key": "Welcome to the new eBay for iPad",
+          "langs": [
+            {"fr": ["Bienvenue sur l'app d'eBay pour iPad"]},
+            {"es": ["Bienvenido al nuevo eBay para iPad"]},
+            {"it": ["Benvenuto sul nuovo eBay per iPad"]},
+            {"en": ["Welcome to the new eBay for iPad"]},
+            {"de": ["Herzlich willkommen bei der neuen eBay-App für iPad"]}
+          ],
+          "matches": 1
+        },
+        "label": "Bienvenue sur l'app d'eBay pour iPad",
+        "name": "Bienvenue sur l'app d'eBay pour iPad",
+        "rect": {
+          "origin": {
+            "x": 439,
+            "y": 338
+          },
+          "size": {
+            "height": 42,
+            "width": 500
+          }
+        },
+        "ref": 49,
+        "type": "UIAStaticText",
+        "value": "Bienvenue sur l'app d'eBay pour iPad"
+      },
+      {
+        "l10n": {
+          "key": "By tapping Agree, you agree to be bound by the eBay Mobile Privacy Policy and Terms of Use.",
+          "langs": [
+            {"fr": [
+              "En appuyant sur J'accepte, vous confirmez avoir lu et accepté les Conditions d'utilisation et le Règlement sur le respect de la vie privée d'eBay Mobile.",
+              "En appuyant sur J'accepte, vous confirmez avoir lu et accepté les Conditions d'utilisation et le Règlement sur le respect de la vie privée d'eBay Mobile."
+            ]},
+            {"es": [
+              "Al pulsar en Acepto, aceptas quedar vinculado por los Términos y Condiciones de Uso de eBay Móvil y confirmas que has leído y aceptado la Política de Protección de Datos.",
+              "Al pulsar Acepto, estás aceptando la Política de privacidad y las Condiciones de uso de eBay Móvil."
+            ]},
+            {"it": [
+              "Toccando Accetto, accetti le Regole sulla Privacy e i Termini di utilizzo di eBay Mobile.",
+              "Toccando Accetto, accetti le Regole sulla Privacy e i Termini di utilizzo di eBay Mobile."
+            ]},
+            {"en": [
+              "By tapping Agree, you agree to be bound by the eBay Mobile Privacy Policy and Terms of Use.",
+              "By tapping Agree, you agree to the eBay Mobile Privacy Policy and Terms of Use."
+            ]},
+            {"de": [
+              "Durch Antippen der Schaltfläche \u201eZustimmen\u201c erklären Sie sich mit den Datenschutzrichtlinien und Nutzungsbedingungen von eBay für Mobilgeräte einverstanden.",
+              "Durch Antippen der Schaltfläche \u201eZustimmen\u201c erklären Sie sich mit den Datenschutzrichtlinien und Nutzungsbedingungen von eBay für Mobilgeräte einverstanden."
+            ]}
+          ],
+          "matches": 2
+        },
+        "label": "En appuyant sur J'accepte, vous confirmez avoir lu et accepté les Conditions d'utilisation et le Règlement sur le respect de la vie privée d'eBay Mobile.",
+        "name": "En appuyant sur J'accepte, vous confirmez avoir lu et accepté les Conditions d'utilisation et le Règlement sur le respect de la vie privée d'eBay Mobile.",
+        "rect": {
+          "origin": {
+            "x": 504,
+            "y": 377
+          },
+          "size": {
+            "height": 80,
+            "width": 370
+          }
+        },
+        "ref": 50,
+        "type": "UIAStaticText",
+        "value": "En appuyant sur J'accepte, vous confirmez avoir lu et accepté les Conditions d'utilisation et le Règlement sur le respect de la vie privée d'eBay Mobile."
+      },
+      {
+        "l10n": {"matches": 0},
+        "label": null,
+        "name": null,
+        "rect": {
+          "origin": {
+            "x": 514,
+            "y": 463
+          },
+          "size": {
+            "height": 6,
+            "width": 350
+          }
+        },
+        "ref": 51,
+        "type": "UIAImage",
+        "value": null
+      },
+      {
+        "l10n": {
+          "key": "View Agreement",
+          "langs": [
+            {"fr": [
+              "Afficher",
+              "Afficher",
+              "Afficher"
+            ]},
+            {"es": [
+              "Ver Condiciones",
+              "Ver",
+              "Ver Términos"
+            ]},
+            {"it": [
+              "Vedi l'Accordo",
+              "Vedi",
+              "Vedi i termini"
+            ]},
+            {"en": [
+              "View Agreement",
+              "View",
+              "View Terms"
+            ]},
+            {"de": [
+              "AGB anzeigen",
+              "Aufrufen",
+              "Anzeigen"
+            ]}
+          ],
+          "matches": 3
+        },
+        "label": "Afficher",
+        "name": "Afficher",
+        "rect": {
+          "origin": {
+            "x": 529,
+            "y": 489
+          },
+          "size": {
+            "height": 34,
+            "width": 150
+          }
+        },
+        "ref": 52,
+        "type": "UIAButton",
+        "value": null
+      },
+      {
+        "children": [
+          {
+            "l10n": {"matches": 0},
+            "label": null,
+            "name": null,
+            "rect": {
+              "origin": {
+                "x": 529,
+                "y": 489
+              },
+              "size": {
+                "height": 34,
+                "width": 150
+              }
+            },
+            "ref": 54,
+            "type": "UIAImage",
+            "value": null
+          },
+          {
+            "l10n": {
+              "key": "Decline",
+              "langs": [
+                {"fr": ["Je refuse"]},
+                {"es": ["Rechazar"]},
+                {"it": ["Rifiuto"]},
+                {"en": ["Decline"]},
+                {"de": ["Ablehnen"]}
+              ],
+              "matches": 1
+            },
+            "label": "Je refuse",
+            "name": "Je refuse",
+            "rect": {
+              "origin": {
+                "x": 575,
+                "y": 497
+              },
+              "size": {
+                "height": 18,
+                "width": 58
+              }
+            },
+            "ref": 55,
+            "type": "UIAStaticText",
+            "value": "Je refuse"
+          }
+        ],
+        "l10n": {
+          "key": "Decline",
+          "langs": [
+            {"fr": ["Je refuse"]},
+            {"es": ["Rechazar"]},
+            {"it": ["Rifiuto"]},
+            {"en": ["Decline"]},
+            {"de": ["Ablehnen"]}
+          ],
+          "matches": 1
+        },
+        "label": "Je refuse",
+        "name": "Je refuse",
+        "rect": {
+          "origin": {
+            "x": 529,
+            "y": 489
+          },
+          "size": {
+            "height": 34,
+            "width": 150
+          }
+        },
+        "ref": 53,
+        "type": "UIAButton",
+        "value": null
+      },
+      {
+        "children": [
+          {
+            "l10n": {"matches": 0},
+            "label": null,
+            "name": null,
+            "rect": {
+              "origin": {
+                "x": 529,
+                "y": 489
+              },
+              "size": {
+                "height": 34,
+                "width": 150
+              }
+            },
+            "ref": 57,
+            "type": "UIAImage",
+            "value": null
+          },
+          {
+            "l10n": {
+              "key": "Not Now",
+              "langs": [
+                {"fr": ["Pas maintenant"]},
+                {"es": ["Ahora no"]},
+                {"it": ["Non adesso"]},
+                {"en": ["Not Now"]},
+                {"de": ["Nicht jetzt"]}
+              ],
+              "matches": 1
+            },
+            "label": "Pas maintenant",
+            "name": "Pas maintenant",
+            "rect": {
+              "origin": {
+                "x": 555,
+                "y": 497
+              },
+              "size": {
+                "height": 18,
+                "width": 98
+              }
+            },
+            "ref": 58,
+            "type": "UIAStaticText",
+            "value": "Pas maintenant"
+          }
+        ],
+        "l10n": {
+          "key": "Not Now",
+          "langs": [
+            {"fr": ["Pas maintenant"]},
+            {"es": ["Ahora no"]},
+            {"it": ["Non adesso"]},
+            {"en": ["Not Now"]},
+            {"de": ["Nicht jetzt"]}
+          ],
+          "matches": 1
+        },
+        "label": "Pas maintenant",
+        "name": "Pas maintenant",
+        "rect": {
+          "origin": {
+            "x": 529,
+            "y": 489
+          },
+          "size": {
+            "height": 34,
+            "width": 150
+          }
+        },
+        "ref": 56,
+        "type": "UIAButton",
+        "value": null
+      },
+      {
+        "l10n": {
+          "key": "Agree",
+          "langs": [
+            {"fr": ["J'accepte"]},
+            {"es": ["Acepto"]},
+            {"it": ["Accetto"]},
+            {"en": ["Agree"]},
+            {"de": ["Zustimmen"]}
+          ],
+          "matches": 1
+        },
+        "label": "J'accepte",
+        "name": "J'accepte",
+        "rect": {
+          "origin": {
+            "x": 701,
+            "y": 489
+          },
+          "size": {
+            "height": 34,
+            "width": 150
+          }
+        },
+        "ref": 59,
+        "type": "UIAButton",
+        "value": null
+      },
+      {
+        "children": [
+          {
+            "l10n": {"matches": 0},
+            "label": null,
+            "name": null,
+            "rect": {
+              "origin": {
+                "x": 701,
+                "y": 489
+              },
+              "size": {
+                "height": 34,
+                "width": 150
+              }
+            },
+            "ref": 61,
+            "type": "UIAImage",
+            "value": null
+          },
+          {
+            "l10n": {
+              "key": "Sign In",
+              "langs": [
+                {"fr": [
+                  "Ouvrir session",
+                  "Ouvrir session"
+                ]},
+                {"es": [
+                  "Identifícate",
+                  "Identificarse"
+                ]},
+                {"it": [
+                  "Accedi",
+                  "Accedi"
+                ]},
+                {"en": [
+                  "Sign In",
+                  "Login"
+                ]},
+                {"de": [
+                  "Einloggen",
+                  "Anmelden"
+                ]}
+              ],
+              "matches": 2
+            },
+            "label": "Ouvrir session",
+            "name": "Ouvrir session",
+            "rect": {
+              "origin": {
+                "x": 731,
+                "y": 497
+              },
+              "size": {
+                "height": 18,
+                "width": 90
+              }
+            },
+            "ref": 62,
+            "type": "UIAStaticText",
+            "value": "Ouvrir session"
+          }
+        ],
+        "l10n": {
+          "key": "Sign In",
+          "langs": [
+            {"fr": [
+              "Ouvrir session",
+              "Ouvrir session"
+            ]},
+            {"es": [
+              "Identifícate",
+              "Identificarse"
+            ]},
+            {"it": [
+              "Accedi",
+              "Accedi"
+            ]},
+            {"en": [
+              "Sign In",
+              "Login"
+            ]},
+            {"de": [
+              "Einloggen",
+              "Anmelden"
+            ]}
+          ],
+          "matches": 2
+        },
+        "label": "Ouvrir session",
+        "name": "Ouvrir session",
+        "rect": {
+          "origin": {
+            "x": 701,
+            "y": 489
+          },
+          "size": {
+            "height": 34,
+            "width": 150
+          }
+        },
+        "ref": 60,
+        "type": "UIAButton",
+        "value": null
+      },
+      {
+        "l10n": {
+          "langs": [
+            {"fr": []},
+            {"es": []},
+            {"it": []},
+            {"en": []},
+            {"de": []}
+          ],
+          "matches": 0
+        },
+        "label": "Logo_Splash.png",
+        "name": "Logo_Splash.png",
+        "rect": {
+          "origin": {
+            "x": 162,
+            "y": 324
+          },
+          "size": {
+            "height": 140,
+            "width": 270
+          }
+        },
+        "ref": 63,
+        "type": "UIAImage",
+        "value": null
+      },
+      {
+        "l10n": {"matches": 0},
+        "label": null,
+        "name": null,
+        "rect": {
+          "origin": {
+            "x": 17,
+            "y": 722
+          },
+          "size": {
+            "height": 30,
+            "width": 70
+          }
+        },
+        "ref": 64,
+        "type": "UIAImage",
+        "value": null
+      },
+      {
+        "l10n": {"matches": 0},
+        "label": "",
+        "name": null,
+        "rect": {
+          "origin": {
+            "x": 92,
+            "y": 728
+          },
+          "size": {
+            "height": 21,
+            "width": 200
+          }
+        },
+        "ref": 65,
+        "type": "UIAStaticText",
+        "value": ""
+      }
+    ],
+    "l10n": {"matches": 0},
+    "label": null,
+    "name": null,
+    "rect": {
+      "origin": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "height": 768,
+        "width": 1024
+      }
+    },
+    "ref": 2,
+    "type": "UIAWindow",
+    "value": null
+  }
+}
