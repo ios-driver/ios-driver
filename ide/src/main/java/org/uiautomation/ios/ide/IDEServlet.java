@@ -32,6 +32,7 @@ import org.uiautomation.ios.ide.controllers.ResourceController;
 import org.uiautomation.ios.ide.controllers.SessionGuesserController;
 import org.uiautomation.ios.ide.controllers.TreeController;
 import org.uiautomation.ios.ide.model.Cache;
+import org.uiautomation.ios.ide.model.CacheDefaultImpl;
 import org.uiautomation.ios.ide.views.View;
 
 
@@ -56,7 +57,11 @@ public class IDEServlet extends HttpServlet {
     } catch (MalformedURLException e) {
       e.printStackTrace();
     }
-    Cache cache = new Cache(u);
+    Cache cache = (Cache) getServletContext().getAttribute(Cache.KEY);
+    if (cache == null){
+      cache = new CacheDefaultImpl(u);
+    }
+    
     controllers.add(new SessionGuesserController(cache));
     controllers.add(new IDEController(cache));
     controllers.add(new ResourceController(cache));
