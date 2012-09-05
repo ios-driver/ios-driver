@@ -29,6 +29,8 @@ public class MockedCache implements Cache {
       Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT);
     addModel("eBay", IOSDevice.iPadSimulator, Localizable.fr,
       Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT);
+    addModel("eBay", IOSDevice.iPadSimulator, Localizable.fr,
+      Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN);
 
   }
 

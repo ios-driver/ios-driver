@@ -4,29 +4,46 @@
 	border: 2px solid red;
 	border-color: red;
 }
-
+#simulator {
+	position: absolute;
+	width: 1158px;
+	height: 902px;
+	top : 0px;
+	left : 0px;
+	/*-moz-transform: scale(0.5);*/
+}
+/* making it of size 0
+ to have the rotate of the top left corner. */
+#rotationCenter {
+	position: absolute;
+	/*-webkit-transform: rotate(90deg);
+	-moz-transform: rotate(90deg);
+	top: 25px;
+	left: 1133px;*/
+	height: 0px;
+	width: 0px;
+}
 #frame {
 	position: absolute;
-	
+	top: 0px;
+	left: 0px;
 }
-
 #screen {
 	position: absolute;
-	
+	top: 42px;
+	left: 42px;
 }
-
 #mouseOver {
 	position: absolute;
-	z-index: 4;
-	border: 2px solid red;
-	border-color: red;
 	
+	height: 768px;
+	width: 1024px;
+	z-index: 4;
+	border: 2px solid blue;
 }
-
 #tree {
 	position: absolute;
 	left: 1200px;
-	top: 0px;
 }
 #highlight {
 	position: absolute;
@@ -37,52 +54,4 @@
 	width: 0px;
 	z-index: 3;
 	opacity: 0.5;
-}
-.detailsiPhone {
-	position: absolute;
-	background-color: yellow;
-	left: 800px;
-	top: 0px;
-	height: auto;
-	width: 500px;
-}
-
-.detailsiPad {
-	position: absolute;
-	background-color: yellow;
-	left: 1300px;
-	top: 0px;
-	height: auto;
-	width: 500px;
-}
-.actionsiPhone {
-	position: absolute;
-	background-color: yellow;
-	left: 800px;
-	top: 400px;
-	height: 200px;
-	width: 500px;
-}
-.actionsiPad {
-	position: absolute;
-	background-color: yellow;
-	left: 1300px;
-	top: 400px;
-	height: 200px;
-	width: 500px;
-}
-#notice {
-	position: absolute;
-	left: 800px;
-	top: 600px;
-	height: 200px;
-	width: 500px;
-}
-.error-msg {
-	font-size: 16px;
-	color: red;
-}
-.notice-msg {
-	font-size: 16px;
-	color: green;
 }

@@ -1,7 +1,7 @@
 $(document)
 		.ready(
 				function() {
- 
+
 					// offsetX Y set in the main page as global variable.
 					var tree = $("#tree").jstree({
 						"core" : {
@@ -87,9 +87,10 @@ $(document)
 					}
 
 					highlight = function(x, y, h, w, translationFound) {
-						$('#highlight').css('left', (x + realOffsetX) + 'px').css(
-								'top', (y + realOffsetY) + 'px').css('height',
-								h + 'px').css('width', w + 'px');
+						$('#highlight').css('left', (x + realOffsetX) + 'px')
+								.css('top', (y + realOffsetY) + 'px').css(
+										'height', h + 'px').css('width',
+										w + 'px');
 						var color;
 						if (translationFound) {
 							color = "blue";
@@ -99,44 +100,50 @@ $(document)
 						$('#highlight').css("background-color", color);
 					}
 
-									
-					showDetails = function(type, ref, na, label, value, rect, l10n) {
+					showDetails = function(type, ref, na, label, value, rect,
+							l10n) {
 						var prettyL10N = "";
-				
-						if(l10n) {
+
+						if (l10n) {
 							prettyL10N = "\n<b>L10N : </b>";
 							var matches = l10n.matches;
 							prettyL10N += "\nmatch: " + matches;
-				
-							if(matches > 0) {
+
+							if (matches > 0) {
 								prettyL10N += "\nKEY: " + l10n.key;
 								var langs = l10n.langs;
-								for(var name in langs) {
+								for ( var name in langs) {
 									var result = langs[name];
-									for (var a in result){
-										prettyL10N += "\n" + a + " : " + result[a];
+									for ( var a in result) {
+										prettyL10N += "\n" + a + " : "
+												+ result[a];
 									}
-									
+
 								}
 							}
-				
+
 						} else {
 							prettyL10N = "no l10n for --" + name + "--";
 						}
-				
-						$('#details').html("<u>Details</u><pre>type:" + type + "\nreference:" + ref + "\nname:" + na + "\nlabel:" + label + "\nvalue:" + value + "\nrect: x=" + rect.x + ",y=" + rect.y + ",h=" + rect.h + "w=" + rect.w + prettyL10N + "</pre>");
-				
+
+						$('#details').html(
+								"<u>Details</u><pre>type:" + type
+										+ "\nreference:" + ref + "\nname:" + na
+										+ "\nlabel:" + label + "\nvalue:"
+										+ value + "\nrect: x=" + rect.x + ",y="
+										+ rect.y + ",h=" + rect.h + "w="
+										+ rect.w + prettyL10N + "</pre>");
+
 					};
 
 					var root;
 					$("#mouseOver")
 							.mousemove(
 									function(e) {
-										
+
 										if (!lock) {
 											var x = e.pageX - realOffsetX;
 											var y = e.pageY - realOffsetX;
-											
 
 											var finder = new CandidateFinder(x,
 													y, root);
@@ -225,3 +232,50 @@ $(document)
 					}
 
 				});
+var realOffsetX = 0;
+var realOffsetY = 0;
+configure = function(device, orientation) {
+
+	realOffsetX = 25 + 42;
+	realOffsetY = 25 + 42;
+
+	var scale = 1;
+	if (orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT') {
+		$('#rotationCenter').css('-moz-transform', 'rotate(90deg)');
+		$('#rotationCenter').css('left', (1108 * scale + 25) + 'px');
+		$('#rotationCenter').css('top', 25 + 'px');
+
+		$('#mouseOver').css('top', 25 + 42 + 'px');
+		$('#mouseOver').css('left', 25 + 42 + 'px');
+		$('#mouseOver').css('height', 768 + 'px');
+		$('#mouseOver').css('width', 1024 + 'px');
+
+	} else if (orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPELEFT') {
+		$('#rotationCenter').css('-moz-transform', 'rotate(-90deg)');
+		$('#rotationCenter').css('left', 25 + 'px');
+		$('#rotationCenter').css('top', (852 * scale + 25) + 'px');
+
+		$('#mouseOver').css('top', 25 + 42 + 'px');
+		$('#mouseOver').css('left', 25 + 42 + 'px');
+		$('#mouseOver').css('height', 768 + 'px');
+		$('#mouseOver').css('width', 1024 + 'px');
+	} else if (orientation === 'UIA_DEVICE_ORIENTATION_PORTRAIT') {
+		$('#rotationCenter').css('-moz-transform', 'rotate(0deg)');
+		$('#rotationCenter').css('left', 25 + 'px');
+		$('#rotationCenter').css('top', 25 + 'px');
+
+		$('#mouseOver').css('top', 25 + 42 + 'px');
+		$('#mouseOver').css('left', 25 + 42 + 'px');
+		$('#mouseOver').css('height', 1024 + 'px');
+		$('#mouseOver').css('width', 768 + 'px');
+	}else if (orientation === 'UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN') {
+		$('#rotationCenter').css('-moz-transform', 'rotate(180deg)');
+		$('#rotationCenter').css('left', (852*scale)+25 + 'px');
+		$('#rotationCenter').css('top', (1108*scale)+25 + 'px');
+
+		$('#mouseOver').css('top', 25 + 42 + 'px');
+		$('#mouseOver').css('left', 25 + 42 + 'px');
+		$('#mouseOver').css('height', 1024 + 'px');
+		$('#mouseOver').css('width', 768 + 'px');
+	}
+};

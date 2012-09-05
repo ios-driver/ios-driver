@@ -17,13 +17,10 @@ public class IDEMainView implements View {
     this.model = model;
     this.servletPath = servletPath;
   }
-  
- 
-  
-  
 
-  @Override
-  public void render(HttpServletResponse response) throws Exception {
+
+
+  public void render2(HttpServletResponse response) throws Exception {
     try {
       StringBuilder b = new StringBuilder();
       b.append("<html>");
@@ -34,15 +31,18 @@ public class IDEMainView implements View {
       b.append("<script type='text/javascript' src='" + getResource("jquery.jstree.js")
           + "'></script>");
 
-      IPadDevicePositioning position = new IPadDevicePositioning(model.getDeviceOrientation(),25,25);
+      IPadDevicePositioning position =
+          new IPadDevicePositioning(model.getDeviceOrientation(), 25, 25);
       int degree = model.getDeviceOrientation().getRotationInDegree();
-      
-      if (model.getCapabilities().getDevice() == IOSDevice.iPhoneSimulator) {
+
+      /*if (model.getCapabilities().getDevice() == IOSDevice.iPhoneSimulator) {
         b.append("<script > var offsetX = 49; var offsetY = 143;</script>");
       } else {
-        b.append("<script > var offsetY = "+position.getScreenTop()+"; var offsetX = "+position.getScreenLeft()+";</script>");
-        b.append("<script > var realOffsetY = "+position.getRealScreenTop()+"; var realOffsetX = "+position.getRealScreenLeft()+";</script>");
-      }
+        b.append("<script > var offsetY = " + position.getScreenTop() + "; var offsetX = "
+            + position.getScreenLeft() + ";</script>");
+        b.append("<script > var realOffsetY = " + position.getRealScreenTop()
+            + "; var realOffsetX = " + position.getRealScreenLeft() + ";</script>");
+      }*/
 
 
 
@@ -62,30 +62,21 @@ public class IDEMainView implements View {
         suffix = "iPhone";
       }
 
-     
-      String rotate = "-moz-transform:rotate("+degree+"deg);";
+
+      String rotate = "-moz-transform:rotate(" + degree + "deg);";
       b.append("<div id='frame' ");
-      b.append("style='" +rotate+
-      		"top:"+position.getFrameTop()+"px;" +
-      		"left : "+position.getFrameLeft()+"px' >" +
-      		
-      		"<img src='" + getResource("frame" + suffix + ".png") + " '/></div>");
-      
-      b.append("<div id='mouseOver' " +
-          "style='left:"+position.getRealScreenLeft()+"px;" +
-          "top:"+position.getRealScreenTop()+"px;" +
-          "width:"+position.getRealScreenWidth()+"px;" +
-          "height :"+position.getRealScreenHeight()+"px ' ></div>");
-      b.append("<div id='screen' " +
-      		"style='"+rotate +
-      				"top:"+position.getScreenTop()+"px;" +
-      				"left:"+position.getScreenLeft()+"px' >" +
-      		"<img src='" + getResource("session/" + model.getSession().getSessionId() + "/screenshot.png")
+      b.append("style='" + rotate + "top:" + position.getFrameTop() + "px;" + "left : "
+          + position.getFrameLeft() + "px' >" +
+
+          "<img src='" + getResource("frame" + suffix + ".png") + " '/></div>");
+
+      b.append("<div id='mouseOver' " + "style='left:" + position.getRealScreenLeft() + "px;"
+          + "top:" + position.getRealScreenTop() + "px;" + "width:" + position.getRealScreenWidth()
+          + "px;" + "height :" + position.getRealScreenHeight() + "px ' ></div>");
+      b.append("<div id='screen' " + "style='" + rotate + "top:" + position.getScreenTop() + "px;"
+          + "left:" + position.getScreenLeft() + "px' >" + "<img src='"
+          + getResource("session/" + model.getSession().getSessionId() + "/screenshot.png")
           + "' /></div>");
-
-
-    
-     
 
 
 
@@ -129,7 +120,97 @@ public class IDEMainView implements View {
 
   }
 
- 
+  @Override
+  public void render(HttpServletResponse response) throws Exception {
+    try {
+      StringBuilder b = new StringBuilder();
+      b.append("<html>");
+      b.append("<head>");
+
+      b.append(" <link rel='stylesheet' href='" + getResource("ide.css") + "'  type='text/css'/>");
+      b.append("<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>");
+      b.append("<script type='text/javascript' src='" + getResource("jquery.jstree.js")
+          + "'></script>");
+
+     
+      /*IPadDevicePositioning position =
+          new IPadDevicePositioning(model.getDeviceOrientation(), 25, 25);
+      int degree = model.getDeviceOrientation().getRotationInDegree();*/
+      IOSDevice device = model.getCapabilities().getDevice();
+
+     /* if (model.getCapabilities().getDevice() == IOSDevice.iPhoneSimulator) {
+        b.append("<script > var offsetX = 49; var offsetY = 143;</script>");
+      } else {
+        b.append("<script > var offsetY = " + position.getScreenTop() + "; var offsetX = "
+            + position.getScreenLeft() + ";</script>");
+        b.append("<script > var realOffsetY = " + position.getRealScreenTop()
+            + "; var realOffsetX = " + position.getRealScreenLeft() + ";</script>");
+      }*/
+
+
+
+      b.append("<script type='text/javascript' src='" + getResource("ide.js") + "'></script>");
+
+
+
+      b.append("</head>");
+
+
+      b.append("<body>");
+      b.append("<html>");
+
+
+      b.append("<div id ='highlight' ></div>");
+
+      b.append("<div id='simulator'>");
+      b.append("<div id='mouseOver'></div>");
+      b.append(" <div id='rotationCenter'>");
+      b.append("<div id='frame'>");
+      b.append("<img src='"+getFrame(device)+"' />");
+      b.append("        <div id='screen'>");
+      b.append("         <img src='"+getScreen(device)+"' />");
+      b.append("</div>");
+      b.append("</div>");
+      b.append("</div>");
+      b.append("</div>");
+
+
+      b.append("<div id ='tree'  ></div>");
+      b.append("<div id ='details' >details</div>");
+
+    
+    
+      b.append("<script >configure('ipad','"+model.getDeviceOrientation()+"');</script>");
+        
+      b.append("</body>");
+      b.append("</html>");
+
+
+
+      response.setContentType("text/html");
+      response.setCharacterEncoding("UTF-8");
+      response.setStatus(200);
+
+      response.getWriter().print(b.toString());
+    } catch (Exception e) {
+      throw new IOSAutomationException(e);
+    }
+
+  }
+
+  private String getScreen(IOSDevice device) {
+    return getResource("session/" + model.getSession().getSessionId() + "/screenshot.png");
+  }
+
+
+
+  private String getFrame(IOSDevice device) {
+    if (device == IOSDevice.iPhoneSimulator) {
+      return getResource("frameiphone.png");
+    } else {
+      return getResource("frameipad.png");
+    }
+  }
 
 
 
