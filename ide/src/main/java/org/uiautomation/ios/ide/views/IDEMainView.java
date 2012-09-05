@@ -35,14 +35,14 @@ public class IDEMainView implements View {
           new IPadDevicePositioning(model.getDeviceOrientation(), 25, 25);
       int degree = model.getDeviceOrientation().getRotationInDegree();
 
-      /*if (model.getCapabilities().getDevice() == IOSDevice.iPhoneSimulator) {
-        b.append("<script > var offsetX = 49; var offsetY = 143;</script>");
-      } else {
-        b.append("<script > var offsetY = " + position.getScreenTop() + "; var offsetX = "
-            + position.getScreenLeft() + ";</script>");
-        b.append("<script > var realOffsetY = " + position.getRealScreenTop()
-            + "; var realOffsetX = " + position.getRealScreenLeft() + ";</script>");
-      }*/
+      /*
+       * if (model.getCapabilities().getDevice() == IOSDevice.iPhoneSimulator) {
+       * b.append("<script > var offsetX = 49; var offsetY = 143;</script>"); } else {
+       * b.append("<script > var offsetY = " + position.getScreenTop() + "; var offsetX = " +
+       * position.getScreenLeft() + ";</script>"); b.append("<script > var realOffsetY = " +
+       * position.getRealScreenTop() + "; var realOffsetX = " + position.getRealScreenLeft() +
+       * ";</script>"); }
+       */
 
 
 
@@ -132,20 +132,21 @@ public class IDEMainView implements View {
       b.append("<script type='text/javascript' src='" + getResource("jquery.jstree.js")
           + "'></script>");
 
-     
-      /*IPadDevicePositioning position =
-          new IPadDevicePositioning(model.getDeviceOrientation(), 25, 25);
-      int degree = model.getDeviceOrientation().getRotationInDegree();*/
+
+      /*
+       * IPadDevicePositioning position = new IPadDevicePositioning(model.getDeviceOrientation(),
+       * 25, 25); int degree = model.getDeviceOrientation().getRotationInDegree();
+       */
       IOSDevice device = model.getCapabilities().getDevice();
 
-     /* if (model.getCapabilities().getDevice() == IOSDevice.iPhoneSimulator) {
-        b.append("<script > var offsetX = 49; var offsetY = 143;</script>");
-      } else {
-        b.append("<script > var offsetY = " + position.getScreenTop() + "; var offsetX = "
-            + position.getScreenLeft() + ";</script>");
-        b.append("<script > var realOffsetY = " + position.getRealScreenTop()
-            + "; var realOffsetX = " + position.getRealScreenLeft() + ";</script>");
-      }*/
+      /*
+       * if (model.getCapabilities().getDevice() == IOSDevice.iPhoneSimulator) {
+       * b.append("<script > var offsetX = 49; var offsetY = 143;</script>"); } else {
+       * b.append("<script > var offsetY = " + position.getScreenTop() + "; var offsetX = " +
+       * position.getScreenLeft() + ";</script>"); b.append("<script > var realOffsetY = " +
+       * position.getRealScreenTop() + "; var realOffsetX = " + position.getRealScreenLeft() +
+       * ";</script>"); }
+       */
 
 
 
@@ -160,28 +161,29 @@ public class IDEMainView implements View {
       b.append("<html>");
 
 
-      b.append("<div id ='highlight' ></div>");
 
       b.append("<div id='simulator'>");
       b.append("<div id='mouseOver'></div>");
+      b.append("<div id ='highlight' ></div>");
       b.append(" <div id='rotationCenter'>");
       b.append("<div id='frame'>");
-      b.append("<img src='"+getFrame(device)+"' />");
+      b.append("<img src='" + getFrame(device) + "' />");
       b.append("        <div id='screen'>");
-      b.append("         <img src='"+getScreen(device)+"' />");
+      b.append("         <img src='" + getScreen(device) + "' />");
       b.append("</div>");
       b.append("</div>");
       b.append("</div>");
       b.append("</div>");
+
 
 
       b.append("<div id ='tree'  ></div>");
       b.append("<div id ='details' >details</div>");
 
-    
-    
-      b.append("<script >configure('ipad','"+model.getDeviceOrientation()+"');</script>");
-        
+
+
+      b.append("<script >configure('ipad','" + model.getDeviceOrientation() + "');</script>");
+
       b.append("</body>");
       b.append("</html>");
 

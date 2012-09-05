@@ -87,10 +87,11 @@ $(document)
 					}
 
 					highlight = function(x, y, h, w, translationFound) {
-						$('#highlight').css('left', (x + realOffsetX) + 'px')
-								.css('top', (y + realOffsetY) + 'px').css(
-										'height', h + 'px').css('width',
-										w + 'px');
+						$('#highlight').css('left', x + realOffsetX + 'px');
+						$('#highlight').css('top', y + realOffsetY + 'px');
+						$('#highlight').css('height', h + 'px');
+						$('#highlight').css('width', w + 'px');
+
 						var color;
 						if (translationFound) {
 							color = "blue";
@@ -98,6 +99,7 @@ $(document)
 							color = "yellow";
 						}
 						$('#highlight').css("background-color", color);
+
 					}
 
 					showDetails = function(type, ref, na, label, value, rect,
@@ -142,8 +144,10 @@ $(document)
 									function(e) {
 
 										if (!lock) {
-											var x = e.pageX - realOffsetX;
-											var y = e.pageY - realOffsetX;
+											var x = e.pageX / scale
+													- realOffsetX;
+											var y = e.pageY / scale
+													- realOffsetY;
 
 											var finder = new CandidateFinder(x,
 													y, root);
@@ -234,15 +238,22 @@ $(document)
 				});
 var realOffsetX = 0;
 var realOffsetY = 0;
+var xScaleCorrection = 0;
+var yScaleCorrection = 0;
+var scale = 1;
 configure = function(device, orientation) {
-
+	scale = 0.75;
 	realOffsetX = 25 + 42;
 	realOffsetY = 25 + 42;
 
-	var scale = 1;
+	xScaleCorrection = -(1 - scale) / 2 * 852;
+	yScaleCorrection = -(1 - scale) / 2 * 1108;
+
+	$('#simulator').css('-moz-transform', 'scale(' + scale + ')');
+
 	if (orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT') {
 		$('#rotationCenter').css('-moz-transform', 'rotate(90deg)');
-		$('#rotationCenter').css('left', (1108 * scale + 25) + 'px');
+		$('#rotationCenter').css('left', (1108 + 25) + 'px');
 		$('#rotationCenter').css('top', 25 + 'px');
 
 		$('#mouseOver').css('top', 25 + 42 + 'px');
@@ -253,7 +264,7 @@ configure = function(device, orientation) {
 	} else if (orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPELEFT') {
 		$('#rotationCenter').css('-moz-transform', 'rotate(-90deg)');
 		$('#rotationCenter').css('left', 25 + 'px');
-		$('#rotationCenter').css('top', (852 * scale + 25) + 'px');
+		$('#rotationCenter').css('top', (852 + 25) + 'px');
 
 		$('#mouseOver').css('top', 25 + 42 + 'px');
 		$('#mouseOver').css('left', 25 + 42 + 'px');
@@ -268,14 +279,17 @@ configure = function(device, orientation) {
 		$('#mouseOver').css('left', 25 + 42 + 'px');
 		$('#mouseOver').css('height', 1024 + 'px');
 		$('#mouseOver').css('width', 768 + 'px');
-	}else if (orientation === 'UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN') {
+
+	} else if (orientation === 'UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN') {
+		$('#rotationCenter').css('left', 852 + 25 + 'px');
+		$('#rotationCenter').css('top', 1108 + 25 + 'px');
 		$('#rotationCenter').css('-moz-transform', 'rotate(180deg)');
-		$('#rotationCenter').css('left', (852*scale)+25 + 'px');
-		$('#rotationCenter').css('top', (1108*scale)+25 + 'px');
 
 		$('#mouseOver').css('top', 25 + 42 + 'px');
 		$('#mouseOver').css('left', 25 + 42 + 'px');
 		$('#mouseOver').css('height', 1024 + 'px');
 		$('#mouseOver').css('width', 768 + 'px');
+
 	}
+
 };

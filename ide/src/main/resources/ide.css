@@ -4,10 +4,12 @@
 	border: 2px solid red;
 	border-color: red;
 }
+#test {
+	position: absolute;
+}
 #simulator {
 	position: absolute;
-	width: 1158px;
-	height: 902px;
+	
 	top : 0px;
 	left : 0px;
 	/*-moz-transform: scale(0.5);*/
