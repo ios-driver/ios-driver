@@ -148,7 +148,9 @@ $(document)
 													- realOffsetX;
 											var y = e.pageY / scale
 													- realOffsetY;
-
+											// x = x / scale;
+											// y = y / scale;
+											console.log(x + "," + y);
 											var finder = new CandidateFinder(x,
 													y, root);
 											var node = finder.getNode();
@@ -238,58 +240,93 @@ $(document)
 				});
 var realOffsetX = 0;
 var realOffsetY = 0;
-var xScaleCorrection = 0;
-var yScaleCorrection = 0;
+
 var scale = 1;
 configure = function(device, orientation) {
 	scale = 0.75;
-	realOffsetX = 25 + 42;
-	realOffsetY = 25 + 42;
 
-	xScaleCorrection = -(1 - scale) / 2 * 852;
-	yScaleCorrection = -(1 - scale) / 2 * 1108;
+	var margin = 25;
+
+	var FRAME_IPAD_H = 1108;
+	var FRAME_IPAD_W = 852;
+	var SCREEN_IPAD_H = 1024;
+	var SCREEN_IPAD_W = 768;
+	var SCREEN_TO_TOP_IPAD = 42;
+	var SCREEN_TO_LEFT_IPAD = 42;
+
+	var FRAME_IPHONE_H = 716;
+	var FRAME_IPHONE_W = 368;
+	var SCREEN_IPHONE_H = 480;
+	var SCREEN_IPHONE_W = 320;
+	var SCREEN_TO_TOP_IPHONE = 118
+	var SCREEN_TO_LEFT_IPHONE = 24;
+
+	var frame_h = 0;
+	var frame_w = 0;
+
+	var screen_h = 0;
+	var screen_w = 0;
+
+	var to_top = 0;
+	var to_left = 0;
+
+	if (device === 'ipad') {
+		frame_h = FRAME_IPAD_H;
+		frame_w = FRAME_IPAD_W;
+		screen_h = SCREEN_IPAD_H;
+		screen_w = SCREEN_IPAD_W;
+		to_top = SCREEN_TO_TOP_IPAD;
+		to_left = SCREEN_TO_LEFT_IPAD;
+	} else if (device === 'iphone') {
+		frame_h = FRAME_IPHONE_H;
+		frame_w = FRAME_IPHONE_W;
+		screen_h = SCREEN_IPHONE_H;
+		screen_w = SCREEN_IPHONE_W;
+		to_top = SCREEN_TO_TOP_IPHONE;
+		to_left = SCREEN_TO_LEFT_IPHONE;
+	} else {
+		console.log("error, wrong device :" + device);
+	}
+
+	realOffsetX = margin + to_left;
+	realOffsetY = margin + to_top;
 
 	$('#simulator').css('-moz-transform', 'scale(' + scale + ')');
-
+	$('#mouseOver').css('top', margin + to_top + 'px');
+	$('#mouseOver').css('left', margin + to_left + 'px');
+	var angle = 0;
 	if (orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT') {
-		$('#rotationCenter').css('-moz-transform', 'rotate(90deg)');
-		$('#rotationCenter').css('left', (1108 + 25) + 'px');
-		$('#rotationCenter').css('top', 25 + 'px');
+		angle = 90;
+		$('#rotationCenter').css('left', (frame_h + margin) + 'px');
+		$('#rotationCenter').css('top', margin + 'px');
 
-		$('#mouseOver').css('top', 25 + 42 + 'px');
-		$('#mouseOver').css('left', 25 + 42 + 'px');
-		$('#mouseOver').css('height', 768 + 'px');
-		$('#mouseOver').css('width', 1024 + 'px');
+		$('#mouseOver').css('height', screen_w + 'px');
+		$('#mouseOver').css('width', screen_h + 'px');
 
 	} else if (orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPELEFT') {
-		$('#rotationCenter').css('-moz-transform', 'rotate(-90deg)');
-		$('#rotationCenter').css('left', 25 + 'px');
-		$('#rotationCenter').css('top', (852 + 25) + 'px');
+		angle = -90;
+		$('#rotationCenter').css('left', margin + 'px');
+		$('#rotationCenter').css('top', (frame_w + margin) + 'px');
 
-		$('#mouseOver').css('top', 25 + 42 + 'px');
-		$('#mouseOver').css('left', 25 + 42 + 'px');
-		$('#mouseOver').css('height', 768 + 'px');
-		$('#mouseOver').css('width', 1024 + 'px');
+		$('#mouseOver').css('height', screen_w + 'px');
+		$('#mouseOver').css('width', screen_h + 'px');
 	} else if (orientation === 'UIA_DEVICE_ORIENTATION_PORTRAIT') {
-		$('#rotationCenter').css('-moz-transform', 'rotate(0deg)');
-		$('#rotationCenter').css('left', 25 + 'px');
-		$('#rotationCenter').css('top', 25 + 'px');
+		angle = 0;
+		$('#rotationCenter').css('left', margin + 'px');
+		$('#rotationCenter').css('top', margin + 'px');
 
-		$('#mouseOver').css('top', 25 + 42 + 'px');
-		$('#mouseOver').css('left', 25 + 42 + 'px');
-		$('#mouseOver').css('height', 1024 + 'px');
-		$('#mouseOver').css('width', 768 + 'px');
+		$('#mouseOver').css('height', screen_h + 'px');
+		$('#mouseOver').css('width', screen_w + 'px');
 
 	} else if (orientation === 'UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN') {
-		$('#rotationCenter').css('left', 852 + 25 + 'px');
-		$('#rotationCenter').css('top', 1108 + 25 + 'px');
-		$('#rotationCenter').css('-moz-transform', 'rotate(180deg)');
+		angle = 180;
+		$('#rotationCenter').css('left', frame_w + margin + 'px');
+		$('#rotationCenter').css('top', frame_h + margin + 'px');
 
-		$('#mouseOver').css('top', 25 + 42 + 'px');
-		$('#mouseOver').css('left', 25 + 42 + 'px');
-		$('#mouseOver').css('height', 1024 + 'px');
-		$('#mouseOver').css('width', 768 + 'px');
+		$('#mouseOver').css('height', screen_h + 'px');
+		$('#mouseOver').css('width', screen_w + 'px');
 
 	}
+	$('#rotationCenter').css('-moz-transform', 'rotate(' + angle + 'deg)');
 
 };
