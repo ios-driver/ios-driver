@@ -4,14 +4,10 @@
 	border: 2px solid red;
 	border-color: red;
 }
-#test {
-	position: absolute;
-}
 #simulator {
 	position: absolute;
-	
-	top : 0px;
-	left : 0px;
+	top: 0px;
+	left: 0px;
 	/*-moz-transform: scale(0.5);*/
 }
 /* making it of size 0
@@ -19,9 +15,9 @@
 #rotationCenter {
 	position: absolute;
 	/*-webkit-transform: rotate(90deg);
-	-moz-transform: rotate(90deg);
-	top: 25px;
-	left: 1133px;*/
+	 -moz-transform: rotate(90deg);
+	 top: 25px;
+	 left: 1133px;*/
 	height: 0px;
 	width: 0px;
 }
@@ -37,11 +33,7 @@
 }
 #mouseOver {
 	position: absolute;
-	
-	height: 768px;
-	width: 1024px;
 	z-index: 4;
-	border: 2px solid blue;
 }
 #tree {
 	position: absolute;
