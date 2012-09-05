@@ -129,12 +129,16 @@ $(document)
 						}
 
 						$('#details').html(
-								"<u>Details</u><pre>type:" + type
-										+ "\nreference:" + ref + "\nname:" + na
-										+ "\nlabel:" + label + "\nvalue:"
-										+ value + "\nrect: x=" + rect.x + ",y="
+								"<u><b>Details</b></u>" + "<p><b>type:</b>"
+										+ type + "</p>"
+										+ "<p><b>reference:</b>" + ref + "</p>"
+										+ "<p><b>name:</b>" + na + "</p>"
+										+ "<p><b>label:</b>" + label + "</p>"
+										+ "<p><b>value:</b>" + value + "</p>"
+										+ "<p><b>rect:</b> x=" + rect.x + ",y="
 										+ rect.y + ",h=" + rect.h + "w="
-										+ rect.w + prettyL10N + "</pre>");
+										+ rect.w + "</p>" + "<pre>"
+										+ prettyL10N + "</pre>");
 
 					};
 
@@ -242,11 +246,33 @@ var realOffsetX = 0;
 var realOffsetY = 0;
 
 var scale = 1;
-configure = function(device, orientation) {
-	scale = 0.75;
 
-	var margin = 25;
+var frame_h = 0;
+var frame_w = 0;
 
+var screen_h = 0;
+var screen_w = 0;
+
+var to_top = 0;
+var to_left = 0;
+
+var margin = 25;
+var DETAILS_WIDTH = 400;
+var TREE_WIDTH = 350;
+
+findFrameSizeInPixels = function(rest, margin) {
+	var width = window.innerWidth;
+	var leftForFrame = width - (rest + 4*margin);
+	return leftForFrame;
+};
+
+var device;
+var orientation;
+
+configure = function(d, o) {
+
+	device =d;
+	orientation = o;
 	var FRAME_IPAD_H = 1108;
 	var FRAME_IPAD_W = 852;
 	var SCREEN_IPAD_H = 1024;
@@ -258,17 +284,8 @@ configure = function(device, orientation) {
 	var FRAME_IPHONE_W = 368;
 	var SCREEN_IPHONE_H = 480;
 	var SCREEN_IPHONE_W = 320;
-	var SCREEN_TO_TOP_IPHONE = 118
+	var SCREEN_TO_TOP_IPHONE = 118;
 	var SCREEN_TO_LEFT_IPHONE = 24;
-
-	var frame_h = 0;
-	var frame_w = 0;
-
-	var screen_h = 0;
-	var screen_w = 0;
-
-	var to_top = 0;
-	var to_left = 0;
 
 	if (device === 'ipad') {
 		frame_h = FRAME_IPAD_H;
@@ -288,45 +305,87 @@ configure = function(device, orientation) {
 		console.log("error, wrong device :" + device);
 	}
 
+};
+
+resize = function() {
+	var neededSpace = frame_w;
+	if (orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT'
+			|| orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPELEFT') {
+		neededSpace = frame_h;
+	}
+	var leftInPixel = findFrameSizeInPixels(DETAILS_WIDTH + TREE_WIDTH, margin);
+
+	scale = leftInPixel / neededSpace;
+	if (scale > 1) {
+		scale = 1;
+	}
+
+	$('#simulator').css('-moz-transform', 'scale(' + scale + ')');
+	$('#screen').css('top', to_top + 'px');
+	$('#screen').css('left', to_left + 'px');
+
+	var angle = 0;
+	var mouseOver_w = screen_w;
+	var mouseOver_h = screen_h;
+	var width = frame_w;
+
 	realOffsetX = margin + to_left;
 	realOffsetY = margin + to_top;
 
-	$('#simulator').css('-moz-transform', 'scale(' + scale + ')');
-	$('#mouseOver').css('top', margin + to_top + 'px');
-	$('#mouseOver').css('left', margin + to_left + 'px');
-	var angle = 0;
 	if (orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT') {
 		angle = 90;
 		$('#rotationCenter').css('left', (frame_h + margin) + 'px');
 		$('#rotationCenter').css('top', margin + 'px');
 
-		$('#mouseOver').css('height', screen_w + 'px');
-		$('#mouseOver').css('width', screen_h + 'px');
+		// for landscape, w becomes h and h becomes w.
+		mouseOver_w = screen_h;
+		mouseOver_h = screen_w;
+
+		realOffsetX = margin + to_top;
+		realOffsetY = margin + to_left;
+
+		width = frame_h;
 
 	} else if (orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPELEFT') {
 		angle = -90;
 		$('#rotationCenter').css('left', margin + 'px');
 		$('#rotationCenter').css('top', (frame_w + margin) + 'px');
+		mouseOver_w = screen_h;
+		mouseOver_h = screen_w;
 
-		$('#mouseOver').css('height', screen_w + 'px');
-		$('#mouseOver').css('width', screen_h + 'px');
+		realOffsetX = margin + to_top;
+		realOffsetY = margin + to_left;
+
+		width = frame_h;
+
 	} else if (orientation === 'UIA_DEVICE_ORIENTATION_PORTRAIT') {
 		angle = 0;
 		$('#rotationCenter').css('left', margin + 'px');
 		$('#rotationCenter').css('top', margin + 'px');
-
-		$('#mouseOver').css('height', screen_h + 'px');
-		$('#mouseOver').css('width', screen_w + 'px');
 
 	} else if (orientation === 'UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN') {
 		angle = 180;
 		$('#rotationCenter').css('left', frame_w + margin + 'px');
 		$('#rotationCenter').css('top', frame_h + margin + 'px');
 
-		$('#mouseOver').css('height', screen_h + 'px');
-		$('#mouseOver').css('width', screen_w + 'px');
-
 	}
+
+	$('#mouseOver').css('top', realOffsetY + 'px');
+	$('#mouseOver').css('left', realOffsetX + 'px');
+	$('#mouseOver').css('height', mouseOver_h + 'px');
+	$('#mouseOver').css('width', mouseOver_w + 'px');
+
 	$('#rotationCenter').css('-moz-transform', 'rotate(' + angle + 'deg)');
 
+	$('#tree').css('top', margin + 'px');
+
+	var treeLeft = width * scale + 2 * (margin);
+	$('#tree').css('left', treeLeft + 'px');
+
+	$('#details').css('left', treeLeft + TREE_WIDTH + margin + 'px');
+	$('#details').css('width', DETAILS_WIDTH);
 };
+
+$(window).resize(function() {
+	resize();
+});

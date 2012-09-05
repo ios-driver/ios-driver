@@ -1,9 +1,5 @@
 @CHARSET "UTF-8";
 
-.div {
-	border: 2px solid red;
-	border-color: red;
-}
 #simulator {
 	position: absolute;
 	top: 0px;
@@ -28,16 +24,20 @@
 }
 #screen {
 	position: absolute;
-	top: 42px;
-	left: 42px;
+	/*border: 2px solid blue;*/
 }
 #mouseOver {
 	position: absolute;
 	z-index: 4;
+	/*border: 2px solid green;*/
 }
 #tree {
 	position: absolute;
-	left: 1200px;
+}
+#details {
+	position: absolute;
+	width: 350px;
+	border: 2px solid green;
 }
 #highlight {
 	position: absolute;

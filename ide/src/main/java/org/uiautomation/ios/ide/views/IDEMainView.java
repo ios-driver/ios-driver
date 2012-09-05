@@ -183,9 +183,12 @@ public class IDEMainView implements View {
       b.append("<div id ='details' >details</div>");
 
 
-
-      b.append("<script >configure('ipad','" + model.getDeviceOrientation() + "');</script>");
-
+      String d = "iphone";
+      if (model.getCapabilities().getDevice() == IOSDevice.iPadSimulator) {
+        d = "ipad";
+      }
+      b.append("<script >configure('" + d + "','" + model.getDeviceOrientation() + "');</script>");
+      b.append("<script >resize();</script>");
       b.append("</body>");
       b.append("</html>");
 
