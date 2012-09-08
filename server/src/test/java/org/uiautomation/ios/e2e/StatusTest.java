@@ -76,7 +76,7 @@ public class StatusTest {
     all.add(locales2.getString(2));
 
     Assert.assertTrue(all.contains("en"));
-    Assert.assertTrue(all.contains("zh"));
+    Assert.assertTrue(all.contains("zh-Hant"));
     Assert.assertTrue(all.contains("fr"));
 
 
