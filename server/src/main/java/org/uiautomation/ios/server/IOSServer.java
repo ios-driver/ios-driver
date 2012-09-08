@@ -36,18 +36,17 @@ import com.beust.jcommander.JCommander;
 public class IOSServer {
 
   public static final String DRIVER = IOSDriver.class.getName();
-  private final Server server;
+  private Server server;
   private int port;
   public static final boolean debugMode = true;
   private IOSServerConfiguration options;
 
 
   public static void main(String[] args) throws Exception {
-    IOSServerConfiguration options = new IOSServerConfiguration();
-    new JCommander(options, args);
 
-    IOSServer server = new IOSServer(options);
+    IOSServer server = new IOSServer(args);
     server.start();
+    IOSServerConfiguration options = server.getOptions();
     if (options.getRegistrationURL() != null) {
       RegistrationRequest request =
           new RegistrationRequest(options.getRegistrationURL(), options.getHost(),
@@ -56,7 +55,31 @@ public class IOSServer {
     }
   }
 
-  public void init() throws IOSAutomationSetupException {
+  public IOSServer(IOSServerConfiguration options) throws IOSAutomationSetupException {
+    init(options);
+
+  }
+
+  public IOSServer(String[] args) {
+    init(args);
+  }
+
+  public IOSServerConfiguration getOptions() {
+    return options;
+  }
+
+  private void init(String[] args) {
+    IOSServerConfiguration options = new IOSServerConfiguration();
+    new JCommander(options, args);
+    init(options);
+  }
+
+  private void init(IOSServerConfiguration options) throws IOSAutomationSetupException {
+    this.options = options;
+    this.port = options.getPort();
+    server = new Server(new InetSocketAddress("0.0.0.0", options.getPort()));
+
+
     ServletContextHandler wd = new ServletContextHandler(server, "/wd/hub", true, false);
     wd.addServlet(UIAScriptProxyRegister.class, "/uiascriptproxy/register/*");
     wd.addServlet(UIAScriptServlet.class, "/uiascriptproxy/*");
@@ -100,7 +123,6 @@ public class IOSServer {
   }
 
   public void start() throws Exception {
-    init();
     if (!server.isRunning()) {
       server.start();
     }
@@ -109,13 +131,6 @@ public class IOSServer {
 
   public void stop() throws Exception {
     server.stop();
-  }
-
-  public IOSServer(IOSServerConfiguration options) throws IOSAutomationSetupException {
-    this.options = options;
-    this.port = options.getPort();
-    server = new Server(new InetSocketAddress("0.0.0.0", options.getPort()));
-
   }
 
 
