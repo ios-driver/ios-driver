@@ -80,7 +80,6 @@ public class RemoteUIAElement extends RemoteObject implements UIAElement {
     } catch (JSONException e) {
       throw new IOSAutomationException(e);
     }
-
   }
 
   @Override
@@ -139,7 +138,7 @@ public class RemoteUIAElement extends RemoteObject implements UIAElement {
   }
 
   @Override
-  public JSONObject logElementTree(File screenshot,boolean translation) throws Exception {
+  public JSONObject logElementTree(File screenshot, boolean translation) throws Exception {
     WebDriverLikeCommand command = WebDriverLikeCommand.TREE;
     Path p = new Path(command).withSession(getSessionId()).withReference(getReference());
     return RemoteUIAElement.logElementTree(screenshot, translation, p, command, getDriver());
