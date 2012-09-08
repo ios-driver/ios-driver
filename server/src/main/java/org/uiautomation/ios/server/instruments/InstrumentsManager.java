@@ -86,7 +86,7 @@ public class InstrumentsManager {
       simulatorProcess = new Command(instruments, true);
       simulatorProcess.setWorkingDirectory(output);
       simulatorProcess.start();
-     
+
 
       communicationChannel.waitForUIScriptToBeStarted();
 
@@ -143,8 +143,6 @@ public class InstrumentsManager {
     command.add("UIARESULTSPATH");
     command.add(output.getAbsolutePath());
     command.addAll(extraEnvtParams);
-
-
 
     return command;
 
