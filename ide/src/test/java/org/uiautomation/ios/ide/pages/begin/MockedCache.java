@@ -1,6 +1,5 @@
 package org.uiautomation.ios.ide.pages.begin;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URL;
@@ -8,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Orientation;
@@ -26,35 +24,36 @@ public class MockedCache implements Cache {
     addModel("eBay", IOSDevice.iPadSimulator, Localizable.fr,
         Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPELEFT);
     addModel("eBay", IOSDevice.iPadSimulator, Localizable.fr,
-      Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT);
+        Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT);
     addModel("eBay", IOSDevice.iPadSimulator, Localizable.fr,
-      Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT);
+        Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT);
     addModel("eBay", IOSDevice.iPadSimulator, Localizable.fr,
-      Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN);
+        Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN);
 
   }
 
 
-  private void addModel(String bundleName, IOSDevice device, Localizable l, Orientation o) throws Exception {
+  private void addModel(String bundleName, IOSDevice device, Localizable l, Orientation o)
+      throws Exception {
     String name = bundleName + "_" + l + "_" + o;
     String p = "iphone";
-    if (device == IOSDevice.iPadSimulator){
+    if (device == IOSDevice.iPadSimulator) {
       p = "ipad";
     }
-    String json = "mock/"+p+"/" + name + ".json";
-    String screenshot = "mock/"+p+"/" + name + ".png";
-    InputStream in =Thread.currentThread().getContextClassLoader().getResourceAsStream(json);
+    String json = "mock/" + p + "/" + name + ".json";
+    String screenshot = "mock/" + p + "/" + name + ".png";
+    InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(json);
     StringWriter out = new StringWriter();
     IOUtils.copy(in, out, "UTF-8");
 
     JSONObject tree = new JSONObject(out.toString());
-    Session session = new Session(name);
-   IOSCapabilities cap = new IOSCapabilities();
+    Session session = new Session(name + p);
+    IOSCapabilities cap = new IOSCapabilities();
     cap.setDevice(device);
     cap.setLocale(l.getName());
     cap.setBundleName(bundleName);
 
-    IDESessionModel model = new MockedModel(session, screenshot, tree,cap);
+    IDESessionModel model = new MockedModel(session, screenshot, tree, cap);
     cache.put(session, model);
   }
 
