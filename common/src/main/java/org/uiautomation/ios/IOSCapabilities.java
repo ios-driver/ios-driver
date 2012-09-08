@@ -84,7 +84,7 @@ public class IOSCapabilities {
   }
 
   public IOSCapabilities() {
-
+    setCapability(TIME_HACK,true);
   }
 
   public String getBundleName() {
