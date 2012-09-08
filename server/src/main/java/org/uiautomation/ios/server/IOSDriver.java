@@ -79,7 +79,7 @@ public class IOSDriver {
     cap.setSDKVersion(hostInfo.getSDK());
     List<String> languageCodes = new ArrayList<String>();
     for (Localizable l : application.getSupportedLanguages()) {
-      languageCodes.add(l.toString());
+      languageCodes.add(l.getName());
     }
     cap.setSupportedLanguages(languageCodes);
     cap.setCapability("applicationPath", application.getApplicationPath().getAbsoluteFile());
