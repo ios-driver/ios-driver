@@ -60,6 +60,9 @@ public class IOSDriver {
   public ServerSideSession startSession(IOSCapabilities capabilities) {
     IOSApplication app = findMatchingApplication(capabilities);
     app.setLanguage(capabilities.getLanguage());
+    if (capabilities.getSDKVersion() == null){
+      capabilities.setSDKVersion(ClassicCommands.getDefaultSDK());
+    }
     ServerSideSession session = new ServerSideSession(app, hostInfo.getPort());
     sessions.add(session);
     session.start(capabilities);
