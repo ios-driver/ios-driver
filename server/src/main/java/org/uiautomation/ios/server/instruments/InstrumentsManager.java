@@ -61,6 +61,8 @@ public class InstrumentsManager {
     if (!t.exists()) {
       throw new IOSAutomationSetupException("can't find template. Try instruments -s");
     }
+
+
     template = t;
     this.port = serverPort;
   }
@@ -87,8 +89,15 @@ public class InstrumentsManager {
       simulatorProcess.setWorkingDirectory(output);
       simulatorProcess.start();
 
-
-      communicationChannel.waitForUIScriptToBeStarted();
+     
+      boolean success = communicationChannel.waitForUIScriptToBeStarted();
+      // appears only in ios6. : Automation Instrument ran into an exception while trying to run the
+      // script. UIAScriptAgentSignaledException
+      if (!success) {
+        simulatorProcess.forceStop();
+        killSimulator();
+        throw new IOSAutomationSetupException("Instruments crashed.");
+      }
 
       if (timeHack) {
         TimeSpeeder.getInstance().activate();
@@ -96,6 +105,7 @@ public class InstrumentsManager {
       } else {
         TimeSpeeder.getInstance().desactivate();
       }
+
 
     } catch (Exception e) {
       throw new IOSAutomationSetupException("error starting instrument for session " + sessionId, e);
