@@ -242,7 +242,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
             .format("%s/Library/Application Support/iPhone Simulator/%s", home, desiredSDKVersion);
     File f = new File(s);
     if (!f.exists()) {
-      throw new IOSAutomationException(f + " doesn't exist.Is the sdk version correct ?");
+      f.mkdirs();
     }
     return f;
   }
