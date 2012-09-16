@@ -25,14 +25,14 @@ import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.application.IOSApplication;
 
 public class Model {
-  
+
   private RemoteUIADriver driver;
   private IOSApplication app;
-  
+
   private JSONObject cache;
 
 
- 
+
   public RemoteUIADriver getDriver() {
     return driver;
   }
@@ -49,21 +49,21 @@ public class Model {
   }
 
   public JSONObject getObjectTree() {
-    JSONObject res =  cache.optJSONObject("tree");
+    JSONObject res = cache.optJSONObject("tree");
     return res;
   }
 
 
   public void refresh() throws IOSAutomationException {
-    
-    cache = driver.logElementTree(null,false);
+
+    cache = driver.logElementTree(null, false);
   }
 
   public InputStream getLastScreenshotInputStream() throws IOSAutomationException {
     try {
       File f = new File(cache.optString("path"));
       while (!f.exists()) {
-        System.out.println("cannot find " + f+".Last screenshot cannot be found.");
+        System.out.println("cannot find " + f + ".Last screenshot cannot be found.");
         Thread.sleep(250);
       }
       InputStream is = new FileInputStream(f);
@@ -102,7 +102,7 @@ public class Model {
 
   public void setAUT(IOSApplication app) {
     this.app = app;
-    
+
   }
 
 

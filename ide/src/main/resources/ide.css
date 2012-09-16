@@ -1,19 +1,33 @@
 @CHARSET "UTF-8";
 
+
+body{
+	background: #CCCCCC;
+	font-family:  sans-serif;
+	margin:0%;
+	padding: 0%;
+}
+
+h3{
+	font-weight: bold;
+	color: #666666;
+}
+
+
+
+
+
+
 #simulator {
 	position: absolute;
 	top: 0px;
 	left: 0px;
-	/*-moz-transform: scale(0.5);*/
+	float:left;
 }
 /* making it of size 0
  to have the rotate of the top left corner. */
 #rotationCenter {
 	position: absolute;
-	/*-webkit-transform: rotate(90deg);
-	 -moz-transform: rotate(90deg);
-	 top: 25px;
-	 left: 1133px;*/
 	height: 0px;
 	width: 0px;
 }
@@ -24,20 +38,77 @@
 }
 #screen {
 	position: absolute;
-	/*border: 2px solid blue;*/
 }
 #mouseOver {
 	position: absolute;
 	z-index: 4;
-	/*border: 2px solid green;*/
 }
 #tree {
-	position: absolute;
+	height: 97%;
+	float:right;
+	width: 21%;
+	overflow:auto;
+	
 }
 #details {
-	position: absolute;
-	width: 350px;
-	border: 2px solid green;
+	float:right;
+	width: 19%;
+	border:1px solid #CCCCCC;
+	border-radius:8px;
+	-moz-border-radius:8px; /* Firefox 3.6 and earlier */
+	padding: 10px;
+	background: #FAFAFA;
+	color: #444444;
+	height: 97%;
+	overflow:auto;
+}
+
+#footer{
+	position:fixed;
+	left:0%;
+	bottom:0%;
+	border-top: 2px solid #CCCCCC;
+	background: #DDDDDD;
+	width:100%;
+	height:1.2em;
+	text-align: right;
+	float: none;
+
+	}
+
+
+#footer ul li {
+	margin-right: 2em;
+	padding-right: 2em;	list-style: none;
+	display: inline;
+	color: #444444;
+	}
+	
+		
+
+#footer ul{
+	display: inline;
+}
+
+#footer a:visited, a:link{
+	text-decoration:none;
+	color: #444444;
+}
+
+#footer a:hover{
+	text-decoration: none;
+	border-right:4px solid yellow;
+	border-left:4px solid yellow;
+	border-radius:8px;
+	-moz-border-radius:8px; /* Firefox 3.6 and earlier */
+	color: #444444;
+}
+
+#details p{
+	width:100%;
+	border-bottom: 1px solid #CCCCCC;
+	padding-bottom: 0.3em;
+	
 }
 #highlight {
 	position: absolute;
