@@ -2,7 +2,6 @@ package org.uiautomation.ios.ide.views;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.communication.IOSDevice;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.ide.model.IDESessionModel;
@@ -54,7 +53,8 @@ public class IDEMainView implements View {
 
 
       b.append("<body>");
-      b.append("<html>");
+      // Menu div
+      b.append("<div id=\"menu\"/></div>");
       b.append("<div id ='highlight' ></div>");
 
       String suffix = "iPad";
@@ -82,7 +82,7 @@ public class IDEMainView implements View {
 
       b.append("<div id ='tree'  ></div>");
 
-      b.append("<div id ='details' class='details" + suffix + "'>details</div>");
+      b.append("<div id ='details' class='details" + suffix + "'></div>");
 
 
 
@@ -178,9 +178,9 @@ public class IDEMainView implements View {
       b.append("</div>");
 
 
-
+      b.append("<div id ='details' ></div>");
       b.append("<div id ='tree'  ></div>");
-      b.append("<div id ='details' >details</div>");
+
 
 
       String d = "iphone";
@@ -189,6 +189,16 @@ public class IDEMainView implements View {
       }
       b.append("<script >configure('" + d + "','" + model.getDeviceOrientation() + "');</script>");
       b.append("<script >resize();</script>");
+
+      b.append("<div id ='footer'>");
+      b.append("<ul>");
+      b.append("<li><a href=\"#\">See Capabilities</a></li>");
+      b.append("<li><a href=\"#\">Suported Languages</a></li>");
+      b.append("<li><a href=\"#\">Debug Options</a></li>");
+      b.append("</ul>");
+      b.append("</div>");
+
+
       b.append("</body>");
       b.append("</html>");
 
