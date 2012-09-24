@@ -16,15 +16,13 @@ h3{
 
 
 
-
-
-
 #simulator {
 	position: absolute;
 	top: 0px;
 	left: 0px;
 	float:left;
-	margin-bottom:4.4em;
+	margin-bottom:6em;
+	min-height:95%;
 }
 /* making it of size 0
  to have the rotate of the top left corner. */
