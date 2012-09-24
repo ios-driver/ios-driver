@@ -18,8 +18,8 @@ h3{
 
 #simulator {
 	position: absolute;
-	top: 0px;
-	left: 0px;
+	top: 25px;
+	left: 25px;
 	float:left;
 	margin-bottom:6em;
 	min-height:95%;
