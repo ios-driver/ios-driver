@@ -36,4 +36,7 @@ public class Helper {
       throw new IOSAutomationException(str, e);
     }
   }
+
+
+
 }
