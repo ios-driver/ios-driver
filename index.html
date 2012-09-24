@@ -22,7 +22,8 @@
           <h2 id="project_tagline">IOS native app automation</h2>
 
             <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/downloads/freynaud/ios-driver/server-standalone-1.0.0-SNAPSHOT.jar">Download this project as a .jar file</a>
+              <a class="zip_download_link" href="https://github.com/freynaud/ios-driver/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/freynaud/ios-driver/tarball/master">Download this project as a tar.gz file</a>
             </section>
         </header>
     </div>
@@ -65,7 +66,8 @@ iOS Simulator SDKs:
 
 <h3>Getting the application to test</h3>
 
-<p>You need to attach an app that will work with UIAutomation.
+<p>( for the doc example, I'll use the apple app <a href="http://developer.apple.com/library/ios/#samplecode/InternationalMountains/Introduction/Intro.html">InternationalMountains</a>
+You need to attach an app that will work with UIAutomation.
 You can use xcodebuild command line ( from you CI for instance ) or use the xcode UI.</p>
 
 <p>With the UI : 
@@ -148,6 +150,85 @@ http://localhost:4444/wd/hub/status</p>
   }
 }
 </code></pre>
+
+<h3>Starting the application using the java client.</h3>
+
+<p>using the intl mountain app with language = Chinese. </p>
+
+<p>start, click on the first element, take a screenshot and quit.</p>
+
+<pre><code>public static void main(String[] args) {
+
+    IOSCapabilities cap = IOSCapabilities.iphone("InternationalMountains", "1.1");
+    cap.setLanguage("zh-Hant");
+
+    RemoteUIADriver driver = new RemoteUIADriver("http://localhost:4444/wd/hub", cap);
+
+    UIATarget target = driver.getLocalTarget();
+    UIAWindow mainWindow = target.getFrontMostApp().getMainWindow();
+
+    // find the first element of type UIATableCell.
+    UIAElement element = mainWindow.findElement(new TypeCriteria(UIATableCell.class));
+    element.tap();
+
+    target.takeScreenshot("step2.png");
+
+    driver.quit();
+}
+</code></pre>
+
+<p>you should now have a screenshot of mountain 1 details :
+<img src="step2.png" alt="step2.png"></p>
+
+<p>IOS automation is very content based. There is no id like for web pages. This makes localized pages a bit trickier to test. 
+Fortunately the localization data is embedded into the app, so the server can access it if you know the key for the content. You can use the IDE embedded in the ios-driver server to access it.
+Add a break point on  target.takeScreenshot("step2.png");</p>
+
+<p>When the application has stopped there, open a browser and got to http://localhost:4444/ide/
+You will see the app with its object tree. 
+<img src="ide" alt="ide"></p>
+
+<p>Mouse over the element you're interested in. In this example the description of the mountain, and note the content key for that element :  "sentenceFormat".
+The criteria to locate that element will be :</p>
+
+<pre><code> NameCriteria criteria =  new NameCriteria("sentenceFormat", L10NStrategy.serverL10N, MatchingStrategy.regex);
+</code></pre>
+
+<p>In this case, the 3 element attributes, name label and value have the same value. So LabelCriteria or ValueCriteria would work too.
+We need the server to handle the localization :  L10NStrategy.serverL10N
+We need a regex match, because the date and mountain name are variable : MatchingStrategy.regex</p>
+
+<p>Now add that in the main, and add a sysout to see the content of the element :</p>
+
+<pre><code>  public static void main(String[] args) {
+
+    IOSCapabilities cap = IOSCapabilities.iphone("InternationalMountains", "1.1");
+    cap.setLanguage("zh-Hant");
+
+    RemoteUIADriver driver = new RemoteUIADriver("http://localhost:4444/wd/hub", cap);
+
+
+    UIATarget target = driver.getLocalTarget();
+    UIAWindow mainWindow = target.getFrontMostApp().getMainWindow();
+
+    // find the first element of type UIATableCell.
+    UIAElement element = mainWindow.findElement(new TypeCriteria(UIATableCell.class));
+    element.tap();
+
+    NameCriteria criteria =
+        new NameCriteria("sentenceFormat", L10NStrategy.serverL10N, MatchingStrategy.regex);
+    UIAElement text = mainWindow.findElement(criteria);
+    System.out.println(text.getName());
+    driver.quit();
+  }
+</code></pre>
+
+<p>will print out :</p>
+
+<pre><code>山 1 是8,848米高。它第一次攀登了在29 May 1953。
+</code></pre>
+
+<p>The same test will run for all the languages supported by this app, so fr and en, without having to change anything but the value passed in the capability.setLanguage.</p>
       </section>
     </div>
 
