@@ -23,11 +23,11 @@ var Cache = function() {
 	};
 
 	this.get = function(reference) {
-		if (reference == 0){
+		/*if (reference == 0){
 			UITarget.localTarget();
 		}else if (reference == 1){
 			UITarget.localTarget().frontMostApp();
-		}
+		}*/
 		var res = this.storage[reference];
 		// target and app aren't stale.
 		if(!res) {
