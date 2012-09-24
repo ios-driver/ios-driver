@@ -83,7 +83,6 @@ public class RemoteUIATarget extends RemoteObject implements UIATarget {
   @Override
   public void takeScreenshot(String path) {
     try {
-
       // TODO freynaud use getObject ?
       JSONObject res = getJSONResult(WebDriverLikeCommand.SCREENSHOT_WITH_NAME);
       String content = res.getString("64encoded");

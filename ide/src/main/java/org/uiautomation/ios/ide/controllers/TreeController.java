@@ -83,7 +83,7 @@ public class TreeController implements IDECommandController {
 
   private String getNodeTitle(JSONObject node) throws JSONException {
     StringBuilder b = new StringBuilder();
-    b.append("[" + node.getString("type") + ",ref=" + node.getString("ref") + "] - ");
+    b.append( "["+node.getString("type") +"]-");
 
     String name = node.optString("name");
     String value = node.optString("value");

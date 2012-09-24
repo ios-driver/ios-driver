@@ -257,12 +257,11 @@ var to_top = 0;
 var to_left = 0;
 
 var margin = 25;
-var DETAILS_WIDTH = 400;
-var TREE_WIDTH = 350;
+var treeAndDetailInPercent = 0.48;
 
-findFrameSizeInPixels = function(rest, margin) {
+findFrameSizeInPixels = function() {
 	var width = window.innerWidth;
-	var leftForFrame = width - (rest + 4*margin);
+	var leftForFrame =  width * (1-treeAndDetailInPercent);
 	return leftForFrame;
 };
 
@@ -313,7 +312,7 @@ resize = function() {
 			|| orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPELEFT') {
 		neededSpace = frame_h;
 	}
-	var leftInPixel = findFrameSizeInPixels(DETAILS_WIDTH + TREE_WIDTH, margin);
+	var leftInPixel = findFrameSizeInPixels();
 
 	scale = leftInPixel / neededSpace;
 	if (scale > 1) {
