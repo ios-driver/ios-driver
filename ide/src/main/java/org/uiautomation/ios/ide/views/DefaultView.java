@@ -47,14 +47,15 @@ public class DefaultView implements View {
       b.append("<html>");
       b.append("<div id ='highlight' ></div>");
 
+
+
       b.append("<div id='frame' ><img src='" + getResource("frame.png") + " '/></div>");
       b.append("<div id='mouseOver' ></div>");
       b.append("<div id='screen' ><img src='" + getResource("lastScreen.png") + "' /></div>");
 
 
+      b.append("<div id ='details'></div>");
       b.append("<div id ='tree' ></div>");
-
-      b.append("<div id ='details'>details</div>");
 
       b.append("<div id = 'notice'>" + this.renderPartial() + "</div>");
 
@@ -65,7 +66,7 @@ public class DefaultView implements View {
 
       b.append(" <input type='submit' value='tap'>");
       b.append("</form>");
-      
+
       b.append("<form action='debug' method='GET'>");
 
       b.append("X: <input type='text' name='x' >");
@@ -91,8 +92,8 @@ public class DefaultView implements View {
     }
 
   }
-  
-  public String renderPartial(){
+
+  public String renderPartial() {
     StringBuilder b = new StringBuilder();
     b.append("<div>");
     b.append("<ul>");
@@ -101,7 +102,7 @@ public class DefaultView implements View {
     b.append("</div>");
     return b.toString();
   }
-  
+
   private String getResource(String name) {
     String res = "resources/" + name;
     return res;

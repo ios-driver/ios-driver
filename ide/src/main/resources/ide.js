@@ -107,18 +107,18 @@ $(document)
 						var prettyL10N = "";
 
 						if (l10n) {
-							prettyL10N = "\n<b>L10N : </b>";
+							prettyL10N = "<h3>L10N</h3>";
 							var matches = l10n.matches;
-							prettyL10N += "\nmatch: " + matches;
+							prettyL10N += "<p><b>Matches</b>: " + matches + "</p>";
 
 							if (matches > 0) {
-								prettyL10N += "\nKEY: " + l10n.key;
+								prettyL10N += "<p><b>Key</b>: " + l10n.key+ "</p>";
 								var langs = l10n.langs;
 								for ( var name in langs) {
 									var result = langs[name];
 									for ( var a in result) {
-										prettyL10N += "\n" + a + " : "
-												+ result[a];
+										prettyL10N += "<p><b>" + a + "</b> : "
+												+ result[a]+"</p>";
 									}
 
 								}
@@ -129,16 +129,16 @@ $(document)
 						}
 
 						$('#details').html(
-								"<u><b>Details</b></u>" + "<p><b>type:</b>"
+								"<h3>Details</h3>" + "<p><b>Type</b>: "
 										+ type + "</p>"
-										+ "<p><b>reference:</b>" + ref + "</p>"
-										+ "<p><b>name:</b>" + na + "</p>"
-										+ "<p><b>label:</b>" + label + "</p>"
-										+ "<p><b>value:</b>" + value + "</p>"
-										+ "<p><b>rect:</b> x=" + rect.x + ",y="
+										+ "<p><b>Reference</b>: " + ref + "</p>"
+										+ "<p><b>Name</b>: " + na + "</p>"
+										+ "<p><b>Label</b>: " + label + "</p>"
+										+ "<p><b>Value</b>: " + value + "</p>"
+										+ "<p><b>Rect</b>: x=" + rect.x + ",y="
 										+ rect.y + ",h=" + rect.h + "w="
-										+ rect.w + "</p>" + "<pre>"
-										+ prettyL10N + "</pre>");
+										+ rect.w + "</p>" 
+										+ prettyL10N );
 
 					};
 
@@ -257,12 +257,11 @@ var to_top = 0;
 var to_left = 0;
 
 var margin = 25;
-var DETAILS_WIDTH = 400;
-var TREE_WIDTH = 350;
+var treeAndDetailInPercent = 0.48;
 
-findFrameSizeInPixels = function(rest, margin) {
+findFrameSizeInPixels = function() {
 	var width = window.innerWidth;
-	var leftForFrame = width - (rest + 4*margin);
+	var leftForFrame =  width * (1-treeAndDetailInPercent);
 	return leftForFrame;
 };
 
@@ -313,7 +312,7 @@ resize = function() {
 			|| orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPELEFT') {
 		neededSpace = frame_h;
 	}
-	var leftInPixel = findFrameSizeInPixels(DETAILS_WIDTH + TREE_WIDTH, margin);
+	var leftInPixel = findFrameSizeInPixels();
 
 	scale = leftInPixel / neededSpace;
 	if (scale > 1) {
@@ -377,13 +376,8 @@ resize = function() {
 
 	$('#rotationCenter').css('-moz-transform', 'rotate(' + angle + 'deg)');
 
-	$('#tree').css('top', margin + 'px');
 
-	var treeLeft = width * scale + 2 * (margin);
-	$('#tree').css('left', treeLeft + 'px');
-
-	$('#details').css('left', treeLeft + TREE_WIDTH + margin + 'px');
-	$('#details').css('width', DETAILS_WIDTH);
+	
 };
 
 $(window).resize(function() {

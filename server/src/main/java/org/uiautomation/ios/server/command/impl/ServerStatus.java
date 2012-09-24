@@ -19,7 +19,6 @@ import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
@@ -53,12 +52,12 @@ public class ServerStatus extends BaseCommandHandler {
 
     res.put("java", new JSONObject().put("version", System.getProperty("java.version")));
 
-    res.put("ios", new JSONObject().put("simulatorVersion",ClassicCommands.getDefaultSDK()));
+    res.put("ios", new JSONObject().put("simulatorVersion", ClassicCommands.getDefaultSDK()));
 
     JSONArray supportedApps = new JSONArray();
     for (IOSApplication a : getDriver().getSupportedApplications()) {
       JSONObject app = new JSONObject();
-     
+
       JSONObject resources = new JSONObject();
       for (String key : a.getResources().keySet()) {
         resources.put(key, "/wd/hub/resources/" + getDriver().getCache().getKey(a, key));
@@ -66,9 +65,9 @@ public class ServerStatus extends BaseCommandHandler {
       app.put("resources", resources);
 
       Map<String, Object> capabilities = getDriver().getCapabilities(a).getRawCapabilities();
-      for (String key : capabilities.keySet()){
+      for (String key : capabilities.keySet()) {
         app.put(key, capabilities.get(key));
-      }  
+      }
       supportedApps.put(app);
     }
 
@@ -79,19 +78,18 @@ public class ServerStatus extends BaseCommandHandler {
         new JSONObject().put("version", BuildInfo.getAttribute("version"))
             .put("time", BuildInfo.getAttribute("buildTimestamp"))
             .put("revision", BuildInfo.getAttribute("sha")));
-    
-    
- 
+
+
 
     List<ServerSideSession> sessions = getDriver().getSessions();
-    if (sessions.isEmpty()){
+    if (sessions.isEmpty()) {
       return new WebDriverLikeResponse(null, 0, res);
-    }else if (sessions.size()==1){
+    } else if (sessions.size() == 1) {
       return new WebDriverLikeResponse(sessions.get(0).getSessionId(), 0, res);
-    }else {
+    } else {
       throw new IOSAutomationException("NI multi sessions per server.");
     }
-    
-    
+
+
   }
 }

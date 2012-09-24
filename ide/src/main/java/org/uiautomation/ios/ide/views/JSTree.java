@@ -41,6 +41,8 @@ public class JSTree {
     JSONObject node = new JSONObject();
     node.put("data", getNodeTitle(from));
     node.put("id", getNodeTitle(from));
+    
+    
 
     // add an id to the node to make them selectable by :reference
     JSONObject attr = new JSONObject();

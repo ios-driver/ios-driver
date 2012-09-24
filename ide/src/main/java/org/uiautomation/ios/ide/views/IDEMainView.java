@@ -1,8 +1,18 @@
 package org.uiautomation.ios.ide.views;
 
+import java.net.URL;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletResponse;
 
-import org.uiautomation.ios.UIAModels.Orientation;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.message.BasicHttpEntityEnclosingRequest;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.uiautomation.ios.communication.Helper;
+import org.uiautomation.ios.communication.HttpClientFactory;
 import org.uiautomation.ios.communication.IOSDevice;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.ide.model.IDESessionModel;
@@ -54,7 +64,8 @@ public class IDEMainView implements View {
 
 
       b.append("<body>");
-      b.append("<html>");
+      // Menu div
+      b.append("<div id=\"menu\"/></div>");
       b.append("<div id ='highlight' ></div>");
 
       String suffix = "iPad";
@@ -82,7 +93,7 @@ public class IDEMainView implements View {
 
       b.append("<div id ='tree'  ></div>");
 
-      b.append("<div id ='details' class='details" + suffix + "'>details</div>");
+      b.append("<div id ='details' class='details" + suffix + "'></div>");
 
 
 
@@ -151,7 +162,7 @@ public class IDEMainView implements View {
 
 
       b.append("<script type='text/javascript' src='" + getResource("ide.js") + "'></script>");
-
+      b.append("<script type='text/javascript' src='" + getResource("uiactions.js") + "'></script>");
 
 
       b.append("</head>");
@@ -178,9 +189,9 @@ public class IDEMainView implements View {
       b.append("</div>");
 
 
-
+      b.append("<div id ='details' ></div>");
       b.append("<div id ='tree'  ></div>");
-      b.append("<div id ='details' >details</div>");
+
 
 
       String d = "iphone";
@@ -189,6 +200,45 @@ public class IDEMainView implements View {
       }
       b.append("<script >configure('" + d + "','" + model.getDeviceOrientation() + "');</script>");
       b.append("<script >resize();</script>");
+
+      b.append("<div id ='footer'>");
+      b.append("<div id=\"picture\"/>");
+      b.append("<img src=\"" + getIcon() + "\"/>");
+      b.append("</div>");
+      b.append("<ul>");
+      b.append("<li id=\"capabilities\"><a href=\"#\">See Capabilities</a></li>");
+      b.append("<li id=\"languages\"><a href=\"#\">Suported Languages</a></li>");
+      b.append("<li><a href=\"#\">Debug Options</a></li>");
+      b.append("</ul>");
+      b.append("</div>");
+
+      /*
+       * OVERLAY Capabilities
+       */
+      b.append("<div class=\"overlay\" id=\"overlay\" style=\"display:none;\"></div>");
+
+      b.append("<div class=\"box\" id=\"box\">");
+      b.append("<a class=\"boxclose\" id=\"boxclose\"></a>");
+      b.append("<h3>Capabilities</h3>");
+      b.append("<p>");
+      b.append(displayCapabilities());
+      b.append("</p>");
+      b.append("</div>");
+      /* END OVERLAY CAPABILITIES */
+
+      /* OVERLAY LANGUAGES */
+      b.append("<div class=\"overlaylanguages\" id=\"overlayLanguages\" style=\"display:none;\"></div>");
+
+      b.append("<div class=\"boxlanguages\" id=\"boxlanguages\">");
+      b.append("<a class=\"boxcloselanguages\" id=\"boxcloselanguages\"></a>");
+      b.append("<h3>Supported Languages</h3>");
+      b.append("<p>");
+      b.append(getListOfLanguagesInHTML());
+      b.append("</p>");
+      b.append("</div>");
+
+      /* END OVERLAY FOR LANGUAGES */
+
       b.append("</body>");
       b.append("</html>");
 
@@ -204,6 +254,21 @@ public class IDEMainView implements View {
     }
 
   }
+
+  private String displayCapabilities() {
+    if (model != null) {
+      StringBuffer capabilities = new StringBuffer();
+      Set<String> keys = model.getCapabilities().getRawCapabilities().keySet();
+      for (String capability : keys) {
+        capabilities.append("<p><b>" + capability + "</b>: "
+            + model.getCapabilities().getRawCapabilities().get(capability) + "</p>");
+      }
+      return capabilities.toString();
+    }
+    return "No capabilities available. Model = null";
+  }
+
+
 
   private String getScreen(IOSDevice device) {
     return getResource("session/" + model.getSession().getSessionId() + "/screenshot.png");
@@ -224,5 +289,61 @@ public class IDEMainView implements View {
   private String getResource(String name) {
     String res = servletPath + "/resources/" + name;
     return res;
+  }
+
+
+
+  private String getListOfLanguagesInHTML() throws Exception {
+    JSONObject jsonApp = getAppFromStatus();
+    JSONArray supportedLanguages = (JSONArray) jsonApp.get("supportedLanguages");
+
+    StringBuffer buffer = new StringBuffer();
+    buffer.append("<ul>");
+    for (int i = 0; i < supportedLanguages.length(); i++) {
+      buffer.append("<li>" + supportedLanguages.getString(i) + "</li>");
+    }
+    buffer.append("<ul>");
+
+    return buffer.toString();
+  }
+
+  private String getIcon() throws Exception {
+    JSONObject app = getAppFromStatus();
+    JSONObject resources = app.getJSONObject("resources");
+    String icon = resources.getString("CFBundleIconFile");
+    // TODO: URL HARDCODED
+    return "http://localhost:4444" + icon;
+
+  }
+
+
+  private JSONObject getStatus() throws Exception {
+    HttpClient client = HttpClientFactory.getClient();
+    // TODO: URLHARDCODED
+    String url = "http://localhost:4444/wd/hub" + "/status";
+    URL u = new URL(url);
+    BasicHttpEntityEnclosingRequest r = new BasicHttpEntityEnclosingRequest("GET", url);
+
+    HttpHost h = new HttpHost(u.getHost(), u.getPort());
+    HttpResponse response = client.execute(h, r);
+
+    JSONObject o = Helper.extractObject(response);
+
+    return o;
+  }
+
+
+
+  private JSONObject getAppFromStatus() throws Exception {
+    JSONObject status = getStatus();
+    JSONArray array = status.getJSONObject("value").getJSONArray("supportedApps");
+    for (int i = 0; i < array.length(); i++) {
+      JSONObject jsonApp = array.getJSONObject(i);
+      if (jsonApp.get("CFBundleIdentifier").equals(
+          model.getCapabilities().getRawCapabilities().get("bundleid"))) {
+        return jsonApp;
+      }
+    }
+    return null;
   }
 }
