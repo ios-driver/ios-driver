@@ -58,7 +58,7 @@ public class ServerSideSession extends Session {
   }
 
   public void start(IOSCapabilities capabilities) {
-    instruments.startSession(IOSDevice.iPhoneSimulator, capabilities.getSDKVersion(), capabilities.getLocale(),
+    instruments.startSession(capabilities.getDevice(), capabilities.getSDKVersion(), capabilities.getLocale(),
         capabilities.getLanguage(), application.getApplicationPath(), getSessionId(),
         capabilities.isTimeHack(), capabilities.getExtraSwitches());
 
