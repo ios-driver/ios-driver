@@ -13,8 +13,6 @@
  */
 package org.uiautomation.ios.server;
 
-import static org.uiautomation.ios.IOSCapabilities.BUNDLE_NAME;
-import static org.uiautomation.ios.IOSCapabilities.BUNDLE_VERSION;
 import static org.uiautomation.ios.IOSCapabilities.MAGIC_PREFIX;
 
 import java.util.ArrayList;
