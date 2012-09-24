@@ -16,10 +16,9 @@ package org.uiautomation.ios;
 import java.io.File;
 import java.net.URL;
 
-import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.server.application.Localizable;
 
-// TODO freynaud move to tests
+
 public class SampleApps {
 
 
