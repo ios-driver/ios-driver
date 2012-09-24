@@ -24,6 +24,7 @@ h3{
 	top: 0px;
 	left: 0px;
 	float:left;
+	margin-bottom:4.4em;
 }
 /* making it of size 0
  to have the rotate of the top left corner. */
@@ -49,6 +50,7 @@ h3{
 	float:right;
 	width: 21%;
 	overflow:auto;
+	margin-bottom:4.4em;
 	
 }
 #details {
@@ -62,6 +64,7 @@ h3{
 	color: #444444;
 	height: 97%;
 	overflow:auto;
+	margin-bottom:4.4em;
 }
 
 #footer{
