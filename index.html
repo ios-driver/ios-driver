@@ -22,8 +22,7 @@
           <h2 id="project_tagline">IOS native app automation</h2>
 
             <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/freynaud/ios-driver/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/freynaud/ios-driver/tarball/master">Download this project as a tar.gz file</a>
+              <a class="zip_download_link" href="https://github.com/downloads/freynaud/ios-driver/server-standalone-1.0.0-SNAPSHOT.jar">Download</a>
             </section>
         </header>
     </div>
@@ -178,7 +177,7 @@ http://localhost:4444/wd/hub/status</p>
 </code></pre>
 
 <p>you should now have a screenshot of mountain 1 details :
-<img src="step2.png" alt="step2.png"></p>
+<img src="images/step2.png" alt="step2.png" height="480" width="320" ></p>
 
 <p>IOS automation is very content based. There is no id like for web pages. This makes localized pages a bit trickier to test. 
 Fortunately the localization data is embedded into the app, so the server can access it if you know the key for the content. You can use the IDE embedded in the ios-driver server to access it.
@@ -186,7 +185,7 @@ Add a break point on  target.takeScreenshot("step2.png");</p>
 
 <p>When the application has stopped there, open a browser and got to http://localhost:4444/ide/
 You will see the app with its object tree. 
-<img src="ide" alt="ide"></p>
+<img src="images/IDE.png" alt="ide"></p>
 
 <p>Mouse over the element you're interested in. In this example the description of the mountain, and note the content key for that element :  "sentenceFormat".
 The criteria to locate that element will be :</p>
