@@ -6,6 +6,7 @@ body{
 	font-family:  sans-serif;
 	margin:0%;
 	padding: 0%;
+	height:120%
 }
 
 h3{
@@ -70,11 +71,15 @@ h3{
 	border-top: 2px solid #CCCCCC;
 	background: #DDDDDD;
 	width:100%;
-	height:1.2em;
-	text-align: right;
+	height:4.3em;
 	float: none;
-
 	}
+	
+#picture{
+	float:right;
+	margin-right:1em;
+	margin-top: 0.3em;
+}
 
 
 #footer ul li {
@@ -87,21 +92,27 @@ h3{
 		
 
 #footer ul{
+	margin-top: 1.9em;
 	display: inline;
+	float:right;
 }
 
 #footer a:visited, a:link{
 	text-decoration:none;
 	color: #444444;
+	padding-right: 1em;
 }
 
 #footer a:hover{
 	text-decoration: none;
-	border-right:4px solid yellow;
-	border-left:4px solid yellow;
+	border-right:2px solid blue;
+	border-bottom:2px solid blue;
 	border-radius:8px;
 	-moz-border-radius:8px; /* Firefox 3.6 and earlier */
 	color: #444444;
+	padding-right: 1em;
+	padding-bottom: 0.2em;
+	
 }
 
 #details p{
@@ -119,4 +130,55 @@ h3{
 	width: 0px;
 	z-index: 3;
 	opacity: 0.5;
+}
+
+
+.overlay, .overlayLanguages{
+    background:transparent url(images/overlay.png) repeat top left;
+    position:fixed;
+    top:0px;
+    bottom:0px;
+    left:0px;
+    right:0px;
+    z-index:100;
+    
+}
+
+.box, .boxlanguages{
+    position:fixed;
+    top:-500px;
+    left:30%;
+    right:30%;
+    background-color:#fff;
+    color:#7F7F7F;
+    padding:20px;
+	max-height: 400px;
+    border:2px solid #ccc;
+    -moz-border-radius: 20px;
+    -webkit-border-radius:20px;
+    -khtml-border-radius:20px;
+    -moz-box-shadow: 0 1px 5px #333;
+    -webkit-box-shadow: 0 1px 5px #333;
+    z-index:101;
+
+
+}
+
+.boxlanguages ul{
+	list-style: none;
+}
+
+.boxlanguages ul li{
+	margin-bottom: 0.3em;
+	text-transform:uppercase;
+}
+
+a.boxclose, a.boxcloselanguages{
+    float:right;
+    width:26px;
+    height:26px;
+    background:transparent url(images/cancel.png) repeat top left;
+    margin-top:-10px;
+    margin-right:-10px;
+    cursor:pointer;
 }

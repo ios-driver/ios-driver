@@ -87,7 +87,7 @@ public class IDESessionModelImpl implements IDESessionModel {
 
   @Override
   public Orientation getDeviceOrientation() {
-   int i = elementTree.optInt("deviceOrientation");
-   return Orientation.fromInterfaceOrientation(i);
+    int i = elementTree.optInt("deviceOrientation");
+    return Orientation.fromInterfaceOrientation(i);
   }
 }

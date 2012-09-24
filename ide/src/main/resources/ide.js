@@ -262,7 +262,7 @@ var TREE_WIDTH = 350;
 
 findFrameSizeInPixels = function(rest, margin) {
 	var width = window.innerWidth;
-	var leftForFrame = width - (rest + 4*margin);
+	var leftForFrame = width - (width*0.47);
 	return leftForFrame;
 };
 
