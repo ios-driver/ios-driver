@@ -176,8 +176,8 @@ http://localhost:4444/wd/hub/status</p>
 }
 </code></pre>
 
-<p>you should now have a screenshot of mountain 1 details :
-<img src="images/step2.png" alt="step2.png" height='480' width='320' ></p>
+<p>you should now have a screenshot of mountain 1 details :</p>
+<img src="images/step2.png" alt="step2.png" height='480' width='320' >
 
 <p>IOS automation is very content based. There is no id like for web pages. This makes localized pages a bit trickier to test. 
 Fortunately the localization data is embedded into the app, so the server can access it if you know the key for the content. You can use the IDE embedded in the ios-driver server to access it.
@@ -190,7 +190,8 @@ You will see the app with its object tree.
 <p>Mouse over the element you're interested in. In this example the description of the mountain, and note the content key for that element :  "sentenceFormat".
 The criteria to locate that element will be :</p>
 
-<pre><code> NameCriteria criteria =  new NameCriteria("sentenceFormat", L10NStrategy.serverL10N, MatchingStrategy.regex);
+<pre><code> NameCriteria criteria =  new NameCriteria("sentenceFormat", 
+	L10NStrategy.serverL10N, MatchingStrategy.regex);
 </code></pre>
 
 <p>In this case, the 3 element attributes, name label and value have the same value. So LabelCriteria or ValueCriteria would work too.
