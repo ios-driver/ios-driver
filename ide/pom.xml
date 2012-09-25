@@ -89,6 +89,7 @@
 					</descriptorRefs>
 					<finalName>server-standalone-${project.version}</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
+					<outputDirectory>../</outputDirectory>
 				</configuration>
 
 			</plugin>
