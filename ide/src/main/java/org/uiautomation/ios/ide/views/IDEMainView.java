@@ -57,7 +57,6 @@ public class IDEMainView implements View {
       b.append("<html>");
 
 
-
       b.append("<div id='simulator'>");
 
       b.append("<div id ='highlight' ></div>");
@@ -123,7 +122,6 @@ public class IDEMainView implements View {
       b.append("</div>");
 
       /* END OVERLAY FOR LANGUAGES */
-
       b.append("</body>");
       b.append("</html>");
 

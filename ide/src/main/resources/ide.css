@@ -51,14 +51,14 @@ h4{
 #tree {
 	height: 92%;
 	float:right;
-	width: 21%;
+	width: 23%;
 	overflow:auto;
 	margin-top:45px;
 	
 }
 #details {
 	float:right;
-	width: 19%;
+	width: 18%;
 	border:1px solid #CCCCCC;
 	border-radius:8px;
 	-moz-border-radius:8px; /* Firefox 3.6 and earlier */
@@ -148,12 +148,9 @@ h4{
     color:#7F7F7F;
     padding:20px;
 	max-height: 400px;
-    border:2px solid #ccc;
-    -moz-border-radius: 20px;
-    -webkit-border-radius:20px;
-    -khtml-border-radius:20px;
-    -moz-box-shadow: 0 1px 5px #333;
-    -webkit-box-shadow: 0 1px 5px #333;
+    border:2px solid #455372;
+    border-radius:8px;
+	-moz-border-radius:8px; /* Firefox 3.6 and earlier */
     z-index:101;
 
 
