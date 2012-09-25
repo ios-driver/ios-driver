@@ -23,8 +23,8 @@ import org.uiautomation.ios.exceptions.IOSAutomationException;
 public interface UIADriver {
 
   public Session getSession();
-
-  public UIATarget getLocalTarget();
+  
+   public UIATarget getLocalTarget();
 
   public IOSCapabilities getCapabilities() throws Exception;
 
