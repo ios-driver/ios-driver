@@ -95,6 +95,7 @@ public class IOSServer {
       Class<Servlet> r = (Class<Servlet>) c;
 
       extra.addServlet(r, "/ide/*");
+      
     } catch (Exception e) {
       System.err.println("couldn't find ide servlet");
     }
@@ -109,6 +110,7 @@ public class IOSServer {
     }
 
     wd.setAttribute(DRIVER, driver);
+    extra.setAttribute(DRIVER, driver);
 
     Runtime.getRuntime().addShutdownHook(new Thread() {
       public void run() {

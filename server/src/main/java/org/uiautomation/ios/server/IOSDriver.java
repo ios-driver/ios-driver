@@ -54,6 +54,10 @@ public class IOSDriver {
   public ResourceCache getCache() {
     return cache;
   }
+  
+  public int getPort(){
+    return hostInfo.getPort();
+  }
 
   public ServerSideSession startSession(IOSCapabilities capabilities) {
     IOSApplication app = findMatchingApplication(capabilities);

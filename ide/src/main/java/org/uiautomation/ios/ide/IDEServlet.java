@@ -34,6 +34,8 @@ import org.uiautomation.ios.ide.controllers.TreeController;
 import org.uiautomation.ios.ide.model.Cache;
 import org.uiautomation.ios.ide.model.CacheDefaultImpl;
 import org.uiautomation.ios.ide.views.View;
+import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServer;
 
 
 public class IDEServlet extends HttpServlet {
@@ -52,34 +54,25 @@ public class IDEServlet extends HttpServlet {
   public void init() throws ServletException {
     super.init();
     URL u = null;
+   
     try {
-      u = new URL(System.getProperty("endpoint","http://localhost:4444/wd/hub"));
+      IOSDriver driver = (IOSDriver) getServletContext().getAttribute(IOSServer.DRIVER);
+      int port = driver.getPort();
+      u = new URL(System.getProperty("endpoint", "http://localhost:"+port+"/wd/hub"));
     } catch (MalformedURLException e) {
       e.printStackTrace();
     }
     Cache cache = (Cache) getServletContext().getAttribute(Cache.KEY);
-    if (cache == null){
+    if (cache == null) {
       cache = new CacheDefaultImpl(u);
     }
-    
+
     controllers.add(new SessionGuesserController(cache));
     controllers.add(new IDEController(cache));
     controllers.add(new ResourceController(cache));
     controllers.add(new RefreshController(cache));
     controllers.add(new TreeController(cache));
-    /*controllers.add(new HomeController());
-    
-    controllers.add(new AttachController(model));
-    controllers.add(new StartController(model));
-    controllers.add(new RefreshController(model));
-   
-    controllers.add(new StopController(model));
-    controllers.add(new UserActionController(model));
-    controllers.add(new BeginController(model, getServerConfig()));
-    controllers.add(new DebugController(model));
-    controllers.add(new getLanguagesController(model));
 
-    controllers.add(new NoActionController(model, "/tree", new JSTreeJSON(model)));*/
 
   }
 
@@ -104,7 +97,7 @@ public class IDEServlet extends HttpServlet {
         return c;
       }
     }
-    return new NotImplementedIDEController(model);
+    return new NotImplementedIDEController();
   }
 
 
