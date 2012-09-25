@@ -9,6 +9,11 @@
 	</parent>
 	<artifactId>ios-ide</artifactId>
 
+	<scm>
+		<url>scm:git:git://github.com/freynaud/ios-driver.git</url>
+		<connection>scm:git:git://github.com/freynaud/ios-driver.git</connection>
+	</scm>
+
 	<dependencies>
 
 		<dependency>
@@ -37,6 +42,73 @@
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<version>${project.version}</version>
+							<buildTimestamp>${maven.build.timestamp}</buildTimestamp>
+							<sha>${buildNumber}</sha>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<id>create-executable-jar</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+
+				</executions>
+				<configuration>
+
+					<archive>
+						<manifest>
+							<mainClass>org.uiautomation.ios.server.IOSServer</mainClass>
+						</manifest>
+						<manifestEntries>
+							<version>${project.version}</version>
+							<buildTimestamp>${maven.build.timestamp}</buildTimestamp>
+							<sha>${buildNumber}</sha>
+						</manifestEntries>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<finalName>server-standalone-${project.version}</finalName>
+					<appendAssemblyId>false</appendAssemblyId>
+				</configuration>
+
+			</plugin>
+
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<version>1.1</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<doCheck>false</doCheck>
+					<doUpdate>false</doUpdate>
 				</configuration>
 			</plugin>
 		</plugins>
