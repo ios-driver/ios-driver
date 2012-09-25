@@ -6,7 +6,7 @@ body{
 	font-family:  sans-serif;
 	margin:0%;
 	padding: 0%;
-	height:120%
+	font-size: 0.9em;
 }
 
 h3{
@@ -18,8 +18,8 @@ h3{
 
 #simulator {
 	position: absolute;
-	top: 25px;
-	left: 25px;
+	top: 45px;
+	left: 0px;
 	float:left;
 	margin-bottom:6em;
 	min-height:95%;
@@ -44,11 +44,11 @@ h3{
 	z-index: 4;
 }
 #tree {
-	height: 97%;
+	height: 90%;
 	float:right;
 	width: 21%;
 	overflow:auto;
-	margin-bottom:4.4em;
+	margin-top:3em;
 	
 }
 #details {
@@ -60,26 +60,26 @@ h3{
 	padding: 10px;
 	background: #FAFAFA;
 	color: #444444;
-	height: 97%;
+	height: 90%;
 	overflow:auto;
-	margin-bottom:4.4em;
+	margin-top:3em;
 }
 
 #footer{
 	position:fixed;
-	left:0%;
-	bottom:0%;
-	border-top: 2px solid #CCCCCC;
+
+	border-bottom: 2px solid #CCCCCC;
 	background: #DDDDDD;
 	width:100%;
-	height:4.3em;
+	height:3em;
 	float: none;
 	}
 	
 #picture{
-	float:right;
-	margin-right:1em;
-	margin-top: 0.3em;
+	float:left;
+	margin-left:1em;
+	margin-top: -0.4em;
+	-moz-transform: scale(0.6);
 }
 
 
@@ -93,9 +93,9 @@ h3{
 		
 
 #footer ul{
-	margin-top: 1.9em;
+	margin-top: 1em;
 	display: inline;
-	float:right;
+	float:left;
 }
 
 #footer a:visited, a:link{
@@ -105,11 +105,7 @@ h3{
 }
 
 #footer a:hover{
-	text-decoration: none;
-	border-right:2px solid blue;
-	border-bottom:2px solid blue;
-	border-radius:8px;
-	-moz-border-radius:8px; /* Firefox 3.6 and earlier */
+	text-decoration: underline;
 	color: #444444;
 	padding-right: 1em;
 	padding-bottom: 0.2em;
@@ -126,7 +122,7 @@ h3{
 	position: absolute;
 	background-color: yellow;
 	left: 0px;
-	top: 0px;
+	top: 45px;
 	height: 0px;
 	width: 0px;
 	z-index: 3;
