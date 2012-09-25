@@ -16,15 +16,11 @@ package org.uiautomation.ios.ide.controllers;
 import javax.servlet.http.HttpServletRequest;
 
 import org.uiautomation.ios.exceptions.IOSAutomationException;
-import org.uiautomation.ios.ide.Model;
-import org.uiautomation.ios.ide.views.DefaultView;
 import org.uiautomation.ios.ide.views.View;
 
-public class NotImplementedIDEController extends BaseController {
+public class NotImplementedIDEController implements IDECommandController {
 
-  public NotImplementedIDEController(Model model) {
-    super(model);
-  }
+
 
 
   public boolean canHandle(String pathInfo) {
