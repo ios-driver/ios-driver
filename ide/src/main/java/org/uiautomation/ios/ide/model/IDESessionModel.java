@@ -2,6 +2,7 @@ package org.uiautomation.ios.ide.model;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.net.URL;
 
 import org.json.JSONObject;
 import org.uiautomation.ios.IOSCapabilities;
@@ -24,5 +25,7 @@ public interface IDESessionModel {
   public JSONObject getTree();
   
   public Orientation getDeviceOrientation();
+  
+  public URL getEndPoint();
 
 }

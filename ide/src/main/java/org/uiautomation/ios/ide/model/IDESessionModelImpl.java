@@ -21,12 +21,14 @@ public class IDESessionModelImpl implements IDESessionModel {
   private IOSCapabilities caps;
   private final RemoteUIADriver driver;
   private File screenshot;
+  private final URL remoteEndPoint;
 
   private JSONObject elementTree;
 
   public IDESessionModelImpl(Session session, URL remoteURL) {
     this.session = session;
     this.screenshot = new File(session.getSessionId() + ".png");
+    this.remoteEndPoint = remoteURL;
     driver = new RemoteUIADriver(remoteURL, session);
   }
 
@@ -90,4 +92,11 @@ public class IDESessionModelImpl implements IDESessionModel {
     int i = elementTree.optInt("deviceOrientation");
     return Orientation.fromInterfaceOrientation(i);
   }
+
+  @Override
+  public URL getEndPoint() {
+    return remoteEndPoint;
+  }
+
+
 }

@@ -29,8 +29,6 @@ public class IDEMainView implements View {
 
 
 
-  
-
   @Override
   public void render(HttpServletResponse response) throws Exception {
     try {
@@ -195,19 +193,21 @@ public class IDEMainView implements View {
   }
 
   private String getIcon() throws Exception {
+
     JSONObject app = getAppFromStatus();
     JSONObject resources = app.getJSONObject("resources");
     String icon = resources.getString("CFBundleIconFile");
-    // TODO: URL HARDCODED
-    return "http://localhost:4444" + icon;
+   
+    String h = model.getEndPoint().getHost();
+    int p = model.getEndPoint().getPort();
+    return "http://" + h + ":" + p + icon;
 
   }
 
 
   private JSONObject getStatus() throws Exception {
     HttpClient client = HttpClientFactory.getClient();
-    // TODO: URLHARDCODED
-    String url = "http://localhost:4444/wd/hub" + "/status";
+    String url = model.getEndPoint() + "/status";
     URL u = new URL(url);
     BasicHttpEntityEnclosingRequest r = new BasicHttpEntityEnclosingRequest("GET", url);
 
