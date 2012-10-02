@@ -13,7 +13,9 @@
  */
 package org.uiautomation.ios.server.command.impl;
 
+import org.uiautomation.ios.UIAModels.UIAAlert;
 import org.uiautomation.ios.UIAModels.UIAApplication;
+import org.uiautomation.ios.UIAModels.UIAButton;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIAElementArray;
 import org.uiautomation.ios.UIAModels.UIAKeyboard;
@@ -80,9 +82,11 @@ public class DefaultUIAScriptHandler extends UIAScriptHandler {
     if (type == UIAApplication.class) return true;
     if (type == UIATarget.class) return true;
     if (type == UIAWindow.class) return true;
+    if (type == UIAButton.class) return true;
     if (type == UIAElement.class) return true;
     if (type == UIAElementArray.class) return true;
     if (type == UIAKeyboard.class) return true;
+    if (type == UIAAlert.class) return true;
     return false;
   }
 

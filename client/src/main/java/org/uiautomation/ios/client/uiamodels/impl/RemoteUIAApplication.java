@@ -33,7 +33,8 @@ public class RemoteUIAApplication extends RemoteObject implements UIAApplication
   }
 
   public RemoteUIAWindow getMainWindow() {
-    return (RemoteUIAWindow) getRemoteObject(WebDriverLikeCommand.MAIN_WINDOW);
+    //return (RemoteUIAWindow) getRemoteObject(WebDriverLikeCommand.MAIN_WINDOW);
+    return new RemoteUIAWindow(getDriver(), "0");
   }
 
   @Override

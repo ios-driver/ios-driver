@@ -43,4 +43,6 @@ public interface UIATarget {
   public int getTimeout(); 
   
   public void setDeviceOrientation(Orientation o);
+  
+  public UIAAlert getAlert();
 }

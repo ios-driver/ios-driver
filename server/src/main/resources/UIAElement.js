@@ -87,6 +87,27 @@ UIAElement.prototype.tap2 = function() {
 
 }
 
+UIAAlert.prototype.defaultButton2 = function() {
+	var res = this.defaultButton();
+	res.tap2 = function() {
+		if(this.isVisible()) {
+			var rect = this.rect();
+			var x = rect.origin.x + (rect.size.width / 2);
+			var y = rect.origin.y + (rect.size.height / 2);
+			var point = {
+				'x' : Math.floor(x),
+				'y' : Math.floor(y)
+			};
+			UIATarget.localTarget().tap(point);
+			UIAutomation.cache.clearAlert();
+		} else {
+			var ex = new UIAutomationException("element is not visible", 11);
+			throw ex;
+		}
+	}
+	return res;
+}
+
 UIAElement.prototype.reference = function() {
 	if(!this.id) {
 		UIAutomation.cache.store(this);
@@ -236,7 +257,7 @@ UIAElement.prototype.tree = function(attachScreenshot) {
 	var res = buildNode(this);
 	result.tree = res;
 	// TODO freynaud why is that broken ?
-	//result.deviceOrientation = UIATarget.localTarget().deviceOrientation();
+	// result.deviceOrientation = UIATarget.localTarget().deviceOrientation();
 	result.deviceOrientation = UIATarget.localTarget().frontMostApp().interfaceOrientation()
 
 	return result;

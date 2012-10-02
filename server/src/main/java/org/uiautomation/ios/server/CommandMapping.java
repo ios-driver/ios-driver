@@ -18,6 +18,7 @@ import java.lang.reflect.Constructor;
 import java.util.Iterator;
 
 import org.json.JSONObject;
+import org.uiautomation.ios.UIAModels.UIAButton;
 import org.uiautomation.ios.UIAModels.predicate.AbstractCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.CriteriaDecorator;
@@ -133,7 +134,11 @@ public enum CommandMapping {
   TABLE_CELLS(".cells()"),
   TABLE_VISIBLE_CELLS(".visibleCells()"),
   
+  ALERT_CANCEL_BUTTON(".cancelButton2()"),
+  ALERT_DEFAULT_BUTTON(".defaultButton2()"),
+  
   STATUS(ServerStatus.class);
+  
   
   private WebDriverLikeCommand command;
   private final Class<? extends Handler> handlerClass;

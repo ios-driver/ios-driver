@@ -165,7 +165,7 @@ public class RemoteUIADriver implements UIADriver {
 
   @Override
   public RemoteUIATarget getLocalTarget() {
-    WebDriverLikeCommand command = WebDriverLikeCommand.LOCAL_TARGET;
+    /*WebDriverLikeCommand command = WebDriverLikeCommand.LOCAL_TARGET;
     String genericPath = command.path();
     String path = genericPath.replace(":sessionId", session.getSessionId());
     WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), path);
@@ -174,7 +174,8 @@ public class RemoteUIADriver implements UIADriver {
       return new RemoteUIATarget(this, ((JSONObject) response.getValue()).getString("ref"));
     } catch (Exception e) {
       throw new IOSAutomationException("Cannot get the localTarget() for the AUT.", e);
-    }
+    }*/
+    return  new RemoteUIATarget(this, "2");
   }
 
   @Override

@@ -21,8 +21,10 @@ import org.apache.commons.codec.binary.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.UIAModels.Orientation;
+import org.uiautomation.ios.UIAModels.UIAAlert;
 import org.uiautomation.ios.UIAModels.UIARect;
 import org.uiautomation.ios.UIAModels.UIATarget;
+import org.uiautomation.ios.UIAModels.UIAWindow;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
@@ -92,7 +94,7 @@ public class RemoteUIATarget extends RemoteObject implements UIATarget {
     }
   }
 
-  public static  void createFileFrom64EncodedString(File f, String encoded64) throws IOException {
+  public static void createFileFrom64EncodedString(File f, String encoded64) throws IOException {
     byte[] img64 = Base64.decodeBase64(encoded64);
     FileOutputStream os = new FileOutputStream(f);
     os.write(img64);
@@ -101,7 +103,8 @@ public class RemoteUIATarget extends RemoteObject implements UIATarget {
 
   @Override
   public RemoteUIAApplication getFrontMostApp() {
-    return (RemoteUIAApplication) getRemoteObject(WebDriverLikeCommand.FONT_MOST_APP);
+    // return (RemoteUIAApplication) getRemoteObject(WebDriverLikeCommand.FONT_MOST_APP);
+    return new RemoteUIAApplication(getDriver(), "1");
   }
 
   @Override
@@ -134,7 +137,7 @@ public class RemoteUIATarget extends RemoteObject implements UIATarget {
 
   @Override
   public int getTimeout() {
-    return (Integer)getObject(WebDriverLikeCommand.GET_TIMEOUT);
+    return (Integer) getObject(WebDriverLikeCommand.GET_TIMEOUT);
   }
 
 
@@ -163,6 +166,13 @@ public class RemoteUIATarget extends RemoteObject implements UIATarget {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    
+
+  }
+
+
+
+  @Override
+  public UIAAlert getAlert() {
+    return new RemoteUIAAlert(getDriver(), "3");
   }
 }

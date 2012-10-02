@@ -127,7 +127,11 @@ public enum WebDriverLikeCommand {
   TABLE_CELLS("GET","/session/:sessionId/uiaElement/:reference/getCells",UIAElementArray.class),
   TABLE_VISIBLE_CELLS("GET","/session/:sessionId/uiaElement/:reference/getVisibleCells",UIAElementArray.class),
   
-  STATUS("GET","/status",JSONObject.class), ;
+  STATUS("GET","/status",JSONObject.class),
+  ALERT_CANCEL_BUTTON("GET","/session/:sessionId/uiaElement/:reference/cancel",UIAButton.class),
+  ALERT_DEFAULT_BUTTON("GET","/session/:sessionId/uiaElement/:reference/default",UIAButton.class),
+  
+  ;
  
   
   private final String method;

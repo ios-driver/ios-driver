@@ -13,7 +13,7 @@ function log(msg) {
 
 var Cache = function() {
 	this.storage = {};
-	this.lastReference = 0;
+	this.lastReference = 3;
 
 	this.store = function(element) {
 		this.lastReference++;
@@ -23,11 +23,20 @@ var Cache = function() {
 	};
 
 	this.get = function(reference) {
-		/*if (reference == 0){
-			UITarget.localTarget();
-		}else if (reference == 1){
-			UITarget.localTarget().frontMostApp();
-		}*/
+		if(reference == 0) {
+			return UIATarget.localTarget().frontMostApp().mainWindow();
+		} else if(reference == 1) {
+			return UIATarget.localTarget().frontMostApp();
+		} else if(reference == 2) {
+			return UIATarget.localTarget();
+		} else if (reference == 3){
+			return this.storage[3];
+		}
+
+		
+		if (this.storage[3]){
+			throw new UIAutomationException("cannot interact with objects. There is an alert.",26);
+		}
 		var res = this.storage[reference];
 		// target and app aren't stale.
 		if(!res) {
@@ -43,6 +52,18 @@ var Cache = function() {
 		}
 
 	};
+	
+	
+	
+	this.setAlert = function(alert){
+		this.storage[3] = alert;
+		log("found alert");
+	};
+	
+	this.clearAlert = function(){
+		log("removed alert");
+		this.storage[3] = null;
+	}
 
 	this.clear = function() {
 		this.storage = {};
@@ -66,7 +87,7 @@ var UIAutomation = {
 
 	register : function() {
 		log("registering to " + this.REGISTER);
-		var result = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.REGISTER, "-d" , "sessionId="+this.SESSION], 90);
+		var result = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.REGISTER, "-d", "sessionId=" + this.SESSION], 90);
 		if(result.exitCode != 0) {
 			throw new UIAutomationException("error registering. exit code : " + result.exitCode);
 		}
@@ -130,8 +151,14 @@ var UIAutomation = {
 		result.rect = target.rect();
 		return JSON.stringify(result);
 	},
-	setTimeout : function(timeoutInSeconds){
+	setTimeout : function(timeoutInSeconds) {
 		this.TIMEOUT_IN_SEC = timeoutInSeconds;
+	},
+	setAlertHandler : function() {
+		UIATarget.onAlert = function onAlert(alert) {
+			UIAutomation.cache.setAlert(alert);
+			return true;
+		}
 	},
 	commandLoop : function() {
 		while(true) {
