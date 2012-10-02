@@ -13,8 +13,6 @@
  */
 package org.uiautomation.ios.server;
 
-import static org.uiautomation.ios.IOSCapabilities.BUNDLE_NAME;
-import static org.uiautomation.ios.IOSCapabilities.BUNDLE_VERSION;
 import static org.uiautomation.ios.IOSCapabilities.MAGIC_PREFIX;
 
 import java.util.ArrayList;
@@ -60,9 +58,18 @@ public class IOSDriver {
   public ServerSideSession startSession(IOSCapabilities capabilities) {
     IOSApplication app = findMatchingApplication(capabilities);
     app.setLanguage(capabilities.getLanguage());
+    if (capabilities.getSDKVersion() == null) {
+      capabilities.setSDKVersion(ClassicCommands.getDefaultSDK());
+    }
     ServerSideSession session = new ServerSideSession(app, hostInfo.getPort());
     sessions.add(session);
-    session.start(capabilities);
+    try {
+      session.start(capabilities);
+    } catch (IOSAutomationException e) {
+      sessions.remove(session);
+      throw e;
+    }
+
     return session;
   }
 
@@ -79,7 +86,7 @@ public class IOSDriver {
     cap.setSDKVersion(hostInfo.getSDK());
     List<String> languageCodes = new ArrayList<String>();
     for (Localizable l : application.getSupportedLanguages()) {
-      languageCodes.add(l.toString());
+      languageCodes.add(l.getName());
     }
     cap.setSupportedLanguages(languageCodes);
     cap.setCapability("applicationPath", application.getApplicationPath().getAbsoluteFile());

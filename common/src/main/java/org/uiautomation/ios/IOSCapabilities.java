@@ -84,7 +84,7 @@ public class IOSCapabilities {
   }
 
   public IOSCapabilities() {
-
+    setCapability(TIME_HACK, true);
   }
 
   public String getBundleName() {
@@ -198,7 +198,7 @@ public class IOSCapabilities {
   public List<String> getExtraSwitches() {
     List<String> res = new ArrayList<String>();
     if (raw.get(IOS_SWITCHES) != null) {
-      res.addAll((Collection<String>) raw.get(IOS_SWITCHES));
+      res.addAll(getList(IOS_SWITCHES));
     }
     return res;
   }
@@ -214,9 +214,28 @@ public class IOSCapabilities {
     }
   }
 
+  private List<String> getList(String key) {
+    Object o = raw.get(key);
+    if (o instanceof List<?>) {
+      return (List<String>) o;
+    } else if (o instanceof JSONArray) {
+      JSONArray a = (JSONArray) o;
+      List<String> res = new ArrayList<String>();
+
+      for (int i = 0; i < a.length(); i++) {
+        try {
+          res.add(a.getString(i));
+        } catch (JSONException e) {
+          throw new IOSAutomationException(e);
+        }
+      }
+      return res;
+    }
+    throw new ClassCastException("expected collection of string, got " + o.getClass());
+  }
 
   public List<String> getSupportedLanguages() {
-    return (List<String>) raw.get(SUPPORTED_LANGUAGES);
+    return getList(SUPPORTED_LANGUAGES);
   }
 
   public void setSupportedLanguages(List<String> supportedLanguages) {
@@ -227,6 +246,6 @@ public class IOSCapabilities {
 
   public void setBundleName(String bundleName) {
     setCapability(BUNDLE_NAME, bundleName);
-    
+
   }
 }

@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.uiautomation.ios.communication.IOSDevice;
 import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
-import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.simulator.IOSSimulatorManager;
 import org.uiautomation.ios.server.utils.Command;
 import org.uiautomation.ios.server.utils.ScriptHelper;
@@ -29,7 +28,6 @@ import org.uiautomation.ios.server.utils.hack.TimeSpeeder;
 
 public class InstrumentsManager {
 
-  public static final String INSTRUMENTS_PROCESS_NAME = "/Developer/usr/bin/instruments";
   private File output;
   private final File template;
   private File application;
@@ -61,6 +59,8 @@ public class InstrumentsManager {
     if (!t.exists()) {
       throw new IOSAutomationSetupException("can't find template. Try instruments -s");
     }
+
+
     template = t;
     this.port = serverPort;
   }
@@ -87,8 +87,15 @@ public class InstrumentsManager {
       simulatorProcess.setWorkingDirectory(output);
       simulatorProcess.start();
 
-
-      communicationChannel.waitForUIScriptToBeStarted();
+     
+      boolean success = communicationChannel.waitForUIScriptToBeStarted();
+      // appears only in ios6. : Automation Instrument ran into an exception while trying to run the
+      // script. UIAScriptAgentSignaledException
+      if (!success) {
+        simulatorProcess.forceStop();
+        killSimulator();
+        throw new IOSAutomationSetupException("Instruments crashed.");
+      }
 
       if (timeHack) {
         TimeSpeeder.getInstance().activate();
@@ -96,6 +103,7 @@ public class InstrumentsManager {
       } else {
         TimeSpeeder.getInstance().desactivate();
       }
+
 
     } catch (Exception e) {
       throw new IOSAutomationSetupException("error starting instrument for session " + sessionId, e);
@@ -129,8 +137,6 @@ public class InstrumentsManager {
   private List<String> createInstrumentCommand() throws IOSAutomationSetupException {
     List<String> command = new ArrayList<String>();
     command.add("instruments");
-    // command.add("-w");
-    // command.add("d1ce6333af579e27d166349dc8a1989503ba5b4f");
     command.add("-t");
     command.add(template.getAbsolutePath());
     command.add(application.getAbsolutePath());

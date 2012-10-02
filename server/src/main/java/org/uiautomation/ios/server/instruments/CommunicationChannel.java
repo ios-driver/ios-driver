@@ -15,6 +15,7 @@ package org.uiautomation.ios.server.instruments;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -32,13 +33,13 @@ public class CommunicationChannel {
   private final Condition condition = lock.newCondition();
   private volatile boolean ready = false;
 
-  public void waitForUIScriptToBeStarted() throws InterruptedException {
+  public boolean waitForUIScriptToBeStarted() throws InterruptedException {
     try {
       lock.lock();
       if (ready) {
-        return;
+        return true;
       }
-      condition.await();
+      return condition.await(60, TimeUnit.SECONDS);
     } finally {
       lock.unlock();
     }

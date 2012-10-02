@@ -16,10 +16,9 @@ package org.uiautomation.ios;
 import java.io.File;
 import java.net.URL;
 
-import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.server.application.Localizable;
 
-// TODO freynaud move to tests
+
 public class SampleApps {
 
 
@@ -63,7 +62,7 @@ public class SampleApps {
   public static IOSCapabilities intlMountainsCap(Localizable l) {
     IOSCapabilities c = IOSCapabilities.iphone("InternationalMountains","1.1");
     c.setLanguage(l.getName());
-    c.setCapability(IOSCapabilities.TIME_HACK, false);
+    c.setCapability(IOSCapabilities.TIME_HACK, true);
     return c;
   }
 }

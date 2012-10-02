@@ -2,6 +2,7 @@ package org.uiautomation.ios.ide.pages.begin;
 
 import java.io.File;
 import java.io.InputStream;
+import java.net.URL;
 
 import org.json.JSONObject;
 import org.uiautomation.ios.IOSCapabilities;
@@ -54,6 +55,11 @@ public class MockedModel implements IDESessionModel {
   public Orientation getDeviceOrientation() {
    int i = tree.optInt("deviceOrientation");
    return Orientation.fromInterfaceOrientation(i);
+  }
+
+  @Override
+  public URL getEndPoint() {
+    throw new RuntimeException("NI");
   }
 
 }

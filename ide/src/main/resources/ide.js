@@ -260,9 +260,15 @@ var margin = 25;
 var treeAndDetailInPercent = 0.48;
 
 findFrameSizeInPixels = function() {
+<<<<<<< HEAD
 var width = window.innerWidth;
 var leftForFrame = width * (1-treeAndDetailInPercent);
 return leftForFrame;
+=======
+	var width = window.innerWidth;
+	var leftForFrame =  width * (1-treeAndDetailInPercent);
+	return leftForFrame;
+>>>>>>> master
 };
 
 var device;
@@ -307,12 +313,21 @@ console.log("error, wrong device :" + device);
 };
 
 resize = function() {
+<<<<<<< HEAD
 var neededSpace = frame_w;
 if (orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT'
 || orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPELEFT') {
 neededSpace = frame_h;
 }
 var leftInPixel = findFrameSizeInPixels();
+=======
+	var neededSpace = frame_w;
+	if (orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT'
+			|| orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPELEFT') {
+		neededSpace = frame_h;
+	}
+	var leftInPixel = findFrameSizeInPixels();
+>>>>>>> master
 
 scale = leftInPixel / neededSpace;
 if (scale > 1) {
