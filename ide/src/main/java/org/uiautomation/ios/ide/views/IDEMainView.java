@@ -57,7 +57,6 @@ public class IDEMainView implements View {
       b.append("<html>");
 
 
-
       b.append("<div id='simulator'>");
 
       b.append("<div id ='highlight' ></div>");
@@ -86,7 +85,7 @@ public class IDEMainView implements View {
       b.append("<script >configure('" + d + "','" + model.getDeviceOrientation() + "');</script>");
       b.append("<script >resize();</script>");
 
-      b.append("<div id ='footer'>");
+      b.append("<div id ='topmenu'>");
       b.append("<div id=\"picture\"/>");
       b.append("<img src=\"" + getIcon() + "\"/>");
       b.append("</div>");
@@ -104,7 +103,7 @@ public class IDEMainView implements View {
 
       b.append("<div class=\"box\" id=\"box\">");
       b.append("<a class=\"boxclose\" id=\"boxclose\"></a>");
-      b.append("<h3>Capabilities</h3>");
+      b.append("<h4>Capabilities</h4>");
       b.append("<p>");
       b.append(displayCapabilities());
       b.append("</p>");
@@ -116,14 +115,13 @@ public class IDEMainView implements View {
 
       b.append("<div class=\"boxlanguages\" id=\"boxlanguages\">");
       b.append("<a class=\"boxcloselanguages\" id=\"boxcloselanguages\"></a>");
-      b.append("<h3>Supported Languages</h3>");
+      b.append("<h4>Supported Languages</h4>");
       b.append("<p>");
       b.append(getListOfLanguagesInHTML());
       b.append("</p>");
       b.append("</div>");
 
       /* END OVERLAY FOR LANGUAGES */
-
       b.append("</body>");
       b.append("</html>");
 
@@ -197,7 +195,7 @@ public class IDEMainView implements View {
     JSONObject app = getAppFromStatus();
     JSONObject resources = app.getJSONObject("resources");
     String icon = resources.getString("CFBundleIconFile");
-   
+
     String h = model.getEndPoint().getHost();
     int p = model.getEndPoint().getPort();
     return "http://" + h + ":" + p + icon;

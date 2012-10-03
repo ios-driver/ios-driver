@@ -234,5 +234,20 @@ public class RemoteUIAElement extends RemoteObject implements UIAElement {
   }
 
 
+  @Override
+  public void flickInsideWithOptions(int touchCount, UIAPoint startOffset, UIAPoint endOffset) {
+    try {
+      JSONObject payload = new JSONObject();
+      payload.put("touchCount", touchCount);
+      payload.put("startOffset", startOffset);
+      payload.put("endOffset", endOffset);
+      execute(WebDriverLikeCommand.FLICK_INSIDE_WITH_OPTIONS, payload);
+    } catch (JSONException e) {
+      e.printStackTrace();
+
+    }
+  }
+
+
 
 }

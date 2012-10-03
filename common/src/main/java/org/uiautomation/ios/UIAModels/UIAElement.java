@@ -31,7 +31,8 @@ public interface UIAElement {
   public UIAElement getParent();
 
   public UIAElement findElement(Criteria c) throws NoSuchElementException;
-  public <T> T findElement(Class<T> type,Criteria c) throws NoSuchElementException;
+
+  public <T> T findElement(Class<T> type, Criteria c) throws NoSuchElementException;
 
   public UIAElementArray<UIAElement> findElements(Criteria c);
 
@@ -59,7 +60,9 @@ public interface UIAElement {
 
   // tapWithOptions();
   // dragInsideWithOptions
-  // flickInsideWithOptions
+
+  public void flickInsideWithOptions(int fingersNumber, UIAPoint startOffset, UIAPoint endOffset);
+
   public void scrollToVisible();
 
   // rotateWithOptions
@@ -92,6 +95,6 @@ public interface UIAElement {
 
 
 
-  public JSONObject logElementTree(File screenshot,boolean translation) throws Exception;
+  public JSONObject logElementTree(File screenshot, boolean translation) throws Exception;
 
 }
