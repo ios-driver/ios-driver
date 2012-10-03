@@ -124,7 +124,7 @@ $(document).ready(function() {
 
 		if(!lock) {
 			var x = e.pageX / scale - realOffsetX;
-			var y = e.pageY / scale - realOffsetY;
+			var y = e.pageY / scale - (realOffsetY + 45);
 			// x = x / scale;
 			// y = y / scale;
 			console.log(x + "," + y);
@@ -221,10 +221,10 @@ var to_left = 0;
 var margin = 25;
 var treeAndDetailInPercent = 0.48;
 findFrameSizeInPixels = function() {
-
 	var width = window.innerWidth;
 	var leftForFrame = width * (1 - treeAndDetailInPercent);
 	return leftForFrame;
+
 };
 var device;
 var orientation;
