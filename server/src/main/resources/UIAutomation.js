@@ -29,38 +29,45 @@ var Cache = function() {
 			return UIATarget.localTarget().frontMostApp();
 		} else if(reference == 2) {
 			return UIATarget.localTarget();
-		} else if (reference == 3){
+		} else if(reference == 3) {
 			return this.storage[3];
 		}
 
-		
-		if (this.storage[3]){
-			throw new UIAutomationException("cannot interact with objects. There is an alert.",26);
-		}
 		var res = this.storage[reference];
-		// target and app aren't stale.
-		if(!res) {
-			throw new UIAutomationException("can't find " + reference + " in cache.");
-			// window an apps aren't stale ?
-		} else if(res.type && (res.type() == "UIAWindow" || res.type() == "UIAApplication")) {
-			return res;
-			// on arrays, stale doesn't make sense.
-		} else if(res.isStale && res.isStale()) {
-			throw new UIAutomationException("elements ref:" + reference + " is stale", 10);
-		} else {
-			return res;
+
+		// there is an alert.
+		if(this.storage[3]) {
+			var parent = res.parent();
+			while(parent.type() != "UIAElementNil" && parent.type() != "UIAAlert") {
+				parent = parent.parent();
+			}
+			if(parent.type() == "UIAElementNil") {
+				throw new UIAutomationException("cannot interact with objects. There is an alert.", 26);
+			} else {
+				// target and app aren't stale.
+				if(!res) {
+					throw new UIAutomationException("can't find " + reference + " in cache.");
+					// window an apps aren't stale ?
+				} else if(res.type && (res.type() == "UIAWindow" || res.type() == "UIAApplication")) {
+					return res;
+					// on arrays, stale doesn't make sense.
+				} else if(res.isStale && res.isStale()) {
+					throw new UIAutomationException("elements ref:" + reference + " is stale", 10);
+				} else {
+					return res;
+				}
+			}
+
 		}
 
 	};
-	
-	
-	
-	this.setAlert = function(alert){
+
+	this.setAlert = function(alert) {
 		this.storage[3] = alert;
 		log("found alert");
 	};
-	
-	this.clearAlert = function(){
+
+	this.clearAlert = function() {
 		log("removed alert");
 		this.storage[3] = null;
 	}
