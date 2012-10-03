@@ -6,20 +6,27 @@ body{
 	font-family:  sans-serif;
 	margin:0%;
 	padding: 0%;
-	height:120%
+	font-size: 0.9em;
+
 }
 
 h3{
-	font-weight: bold;
-	color: #666666;
+font-weight: bold;
+	border-bottom:3px solid #FF9900;
+	color: #444444;
 }
 
+h4{
+	font-weight: bold;
+	border-bottom:3px solid #FF9900;
+	color: #444444;
+}
 
 
 #simulator {
 	position: absolute;
-	top: 25px;
-	left: 25px;
+	top: 45px;
+	left: 0px;
 	float:left;
 	margin-bottom:6em;
 	min-height:95%;
@@ -44,76 +51,72 @@ h3{
 	z-index: 4;
 }
 #tree {
-	height: 97%;
+	height: 92%;
 	float:right;
-	width: 21%;
+	width: 23%;
 	overflow:auto;
-	margin-bottom:4.4em;
-	
+	margin-top:45px;
+
 }
 #details {
 	float:right;
-	width: 19%;
+	width: 18%;
 	border:1px solid #CCCCCC;
 	border-radius:8px;
 	-moz-border-radius:8px; /* Firefox 3.6 and earlier */
 	padding: 10px;
 	background: #FAFAFA;
 	color: #444444;
-	height: 97%;
+
+	height: 92%;
 	overflow:auto;
-	margin-bottom:4.4em;
+	margin-top:45px;
+
 }
 
-#footer{
+#topmenu{
 	position:fixed;
-	left:0%;
-	bottom:0%;
-	border-top: 2px solid #CCCCCC;
-	background: #DDDDDD;
+	background: #455372;
 	width:100%;
-	height:4.3em;
-	float: none;
+	height:45px;
 	}
 	
 #picture{
-	float:right;
-	margin-right:1em;
-	margin-top: 0.3em;
+	float:left;
+
+	-moz-transform: scale(0.6);
+	margin-top: -6px;
+
 }
 
 
-#footer ul li {
+#topmenu ul li {
 	margin-right: 2em;
 	padding-right: 2em;	list-style: none;
 	display: inline;
-	color: #444444;
+	color: #FFFFFF;
 	}
 	
 		
 
-#footer ul{
-	margin-top: 1.9em;
+
+#topmenu ul{
+	margin-top: 0.9em;
+
 	display: inline;
-	float:right;
+	float:left;
 }
 
-#footer a:visited, a:link{
+#topmenu a:visited, a:link{
 	text-decoration:none;
-	color: #444444;
-	padding-right: 1em;
+	color: #FFFFFF;
 }
 
-#footer a:hover{
+
+#topmenu a:hover{
 	text-decoration: none;
-	border-right:2px solid blue;
-	border-bottom:2px solid blue;
-	border-radius:8px;
-	-moz-border-radius:8px; /* Firefox 3.6 and earlier */
-	color: #444444;
-	padding-right: 1em;
-	padding-bottom: 0.2em;
-	
+	border-bottom:3px solid #FF9900;
+	color: #FFFFFF;
 }
 
 #details p{
@@ -126,7 +129,7 @@ h3{
 	position: absolute;
 	background-color: yellow;
 	left: 0px;
-	top: 0px;
+	top: 45px;
 	height: 0px;
 	width: 0px;
 	z-index: 3;
@@ -154,12 +157,9 @@ h3{
     color:#7F7F7F;
     padding:20px;
 	max-height: 400px;
-    border:2px solid #ccc;
-    -moz-border-radius: 20px;
-    -webkit-border-radius:20px;
-    -khtml-border-radius:20px;
-    -moz-box-shadow: 0 1px 5px #333;
-    -webkit-box-shadow: 0 1px 5px #333;
+    border:2px solid #455372;
+    border-radius:8px;
+	-moz-border-radius:8px; /* Firefox 3.6 and earlier */
     z-index:101;
 
 

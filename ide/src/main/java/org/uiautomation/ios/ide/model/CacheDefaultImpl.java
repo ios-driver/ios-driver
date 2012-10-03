@@ -30,7 +30,6 @@ public class CacheDefaultImpl implements Cache {
     IDESessionModel model = models.get(session);
     if (model == null) {
       model = new IDESessionModelImpl(session, remote);
-      model.refresh();
       models.put(model.getSession(), model);
     }
     return model;
