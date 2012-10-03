@@ -150,8 +150,8 @@ function(e) {
 if (!lock) {
 var x = e.pageX / scale
 - realOffsetX;
-var y = (e.pageY-45) / scale
-- realOffsetY;
+var y = e.pageY / scale
+- (realOffsetY+45);
 // x = x / scale;
 // y = y / scale;
 console.log(x + "," + y);
