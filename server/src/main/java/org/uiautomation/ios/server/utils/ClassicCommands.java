@@ -78,7 +78,7 @@ public class ClassicCommands {
     return new File(res);
 
   }
-  
+
   public static void main(String[] args) {
     System.out.println(getXCodeInstall());
   }
@@ -94,8 +94,13 @@ public class ClassicCommands {
     return l.getSDKs();
   }
 
+  // TODO freynaud find the correct command
+  public static String getDefaultSDK() {
+    List<String> sdks = getInstalledSDKs();
+    return sdks.get(sdks.size() - 1);
+  }
 
-  
+
 }
 
 
