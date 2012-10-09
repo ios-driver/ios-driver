@@ -167,10 +167,11 @@ public class IOSDriver {
     }
 
     String sdk = desiredCapabilities.getSDKVersion();
-    if (sdk != null && !sdk.equals(applicationCapabilities.getSDKVersion())) {
+    //TODO freynaud validate for multi SDK
+    /*if (sdk != null && !sdk.equals(applicationCapabilities.getSDKVersion())) {
       throw new IOSAutomationException("Cannot start sdk " + sdk + ". Run on "
           + applicationCapabilities.getSDKVersion());
-    }
+    }*/
 
     return true;
   }

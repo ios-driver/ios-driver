@@ -49,12 +49,9 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   private final List<String> sdks;
   private static final String TEMPLATE = "/globalPlist.json";
   private static final String PLUTIL = "/usr/bin/plutil";
+  private static File xcodeInstall;
 
-  private static final String oldSDKPath =
-      "/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator%s.sdk";
-  private static final String newSDKPath =
-      "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator%s.sdk";
-
+ 
   private final String desiredSDKVersion;
   private File contentAndSettingsFolder;
   // simulator plist, to choose language and locale
@@ -71,13 +68,14 @@ public class IOSSimulatorManager implements IOSDeviceManager {
    */
   public IOSSimulatorManager(String desiredSDKVersion, IOSDevice device)
       throws IOSAutomationSetupException {
-    if (isSimulatorRunning()) {
+    if (isSimulatorRunning() && ! isWarmupRequired()) {
       throw new IOSAutomationSetupException("another instance of the simulator is already running.");
     }
 
     this.sdks = ClassicCommands.getInstalledSDKs();
     this.desiredSDKVersion = validateSDK(desiredSDKVersion);
    
+    xcodeInstall = ClassicCommands.getXCodeInstall();
     //setDefaultSimulatorPreference("currentSDKRoot", sdk.getAbsolutePath());
     //setDefaultSimulatorPreference("SimulateDevice", device.getName());
 
@@ -85,7 +83,61 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     this.globalPreferencePlist = getGlobalPreferenceFile();
   }
 
+  private boolean isWarmupRequired() {
+   // TODO freynaud implement. Refactor.
+    return true;
+  }
 
+  public void forceDefaultSDK(String desiredSDKVersion) {
+    for (String v : sdks) {
+      if (!v.equals(desiredSDKVersion)) {
+        File f =
+            new File(xcodeInstall,
+                "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator"
+                    + v + ".sdk");
+        if (!f.exists()) {
+          System.err.println("doesn't exist " + f);
+        } else {
+          File renamed =
+              new File(xcodeInstall,
+                  "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs/iPhoneSimulator"
+                      + v + ".sdk");
+          boolean ok = f.renameTo(renamed);
+          if (!ok) {
+            throw new IOSAutomationException("failed to move " + f + " to " + renamed
+                + getErrorMessageMoveSDK());
+          }
+        }
+      }
+    }
+  }
+
+  private String getErrorMessageMoveSDK() {
+    File sdk =  new File(xcodeInstall,
+      "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs");
+    File exiled = new File(xcodeInstall,
+          "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs");
+    String msg = "Cannot move folders from "+sdk+" to "+exiled;
+    msg+= " Make sure the rights are correct (chmod -R +rw ... )";
+    return msg;
+    
+  }
+
+  public void restoreExiledSDKs() {
+    File exiled =
+        new File(xcodeInstall,
+            "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs/");
+    for (String s : exiled.list()) {
+      File sdk = new File(exiled,s);
+      File original = new File(sdk.getParentFile().getParentFile() + "/SDKs/" + s);
+      boolean ok = sdk.renameTo(original);
+      if (!ok) {
+        throw new IOSAutomationException(
+            "Error restoring the SDK to its original directory. The SDK will be missing in xcode.");
+      }
+    }
+
+  }
 
   /**
    * update the preference of the simulator. Similar to using the IOS Simulator menu > Hardware >
@@ -108,18 +160,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     updatePreference.executeAndWait();
   }
 
-  private File findSDK(String version) throws IOSAutomationSetupException {
-    File old = new File(String.format(oldSDKPath, version));
-    if (old.exists()) {
-      return old;
-    }
-    File newPath = new File(String.format(newSDKPath, version));
-    if (newPath.exists()) {
-      return newPath;
-    }
-    throw new IOSAutomationSetupException("Cannot find iphone simulator SDK for version " + version);
-
-  }
+ 
 
   private String validateSDK(String sdk) throws IOSAutomationSetupException {
     if (!sdks.contains(sdk)) {
