@@ -78,10 +78,33 @@ public class ClassicCommands {
     return new File(res);
 
   }
-
-  public static void main(String[] args) {
-    System.out.println(getXCodeInstall());
+  
+  
+  public static File getAutomationTemplate(){
+    List<String> cmd = new ArrayList<String>();
+    cmd.add("instruments");
+    cmd.add("-s");
+    Command c = new Command(cmd, false);
+ 
+    Grep grep = new Grep("Automation.tracetemplate");
+    c.registerListener(grep);
+    c.executeAndWait();
+    List<String> res =  grep.getMatching();
+    if (res.size()!=1){
+      throw new IOSAutomationException("expected 1 result for automation on instruments -s , got "+res);
+    }
+    String path = res.get(0);
+    path = path.replaceFirst(",","");
+    path = path.replaceAll("\"","");
+    path = path.trim();
+    File f = new File(path);
+    if (!f.exists()){
+      throw new IOSAutomationException(f +"isn't a valid template.");
+    }
+    return f;
   }
+
+
 
   public static List<String> getInstalledSDKs() throws IOSAutomationSetupException {
     List<String> c = new ArrayList<String>();
@@ -160,6 +183,10 @@ class Grep implements CommandOutputListener {
     }
   }
 
-  public void stderr(String log) {}
+  public void stderr(String log) {
+    if (log.contains(pattern)) {
+      matching.add(log);
+    }
+  }
 
 }
