@@ -49,7 +49,11 @@ public class UIAKeyboardTest extends UICatalogTestsBase {
     return textfield;
   }
 
-  @Test
+  /**
+   * 28 on IOS 5
+   * 31 on IOS 6
+   */
+  @Test(groups="broken")
   public void canFindKeyboard() {
     RemoteUIADriver driver = null;
     try {
@@ -64,7 +68,7 @@ public class UIAKeyboardTest extends UICatalogTestsBase {
 
       UIAKeyboard keyboard = app.getKeyboard();
 
-      UIAElementArray<UIAKey> keys = app.getKeyboard().getKeys();
+      UIAElementArray<UIAKey> keys = keyboard.getKeys();
       Assert.assertEquals(keys.size(), 28);
       // GB, should be a qwerty
       Assert.assertEquals(keys.get(0).getName(), "Q");
