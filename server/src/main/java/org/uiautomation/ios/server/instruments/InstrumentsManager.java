@@ -22,6 +22,7 @@ import java.util.List;
 import org.uiautomation.ios.communication.IOSDevice;
 import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
 import org.uiautomation.ios.server.simulator.IOSSimulatorManager;
+import org.uiautomation.ios.server.utils.ClassicCommands;
 import org.uiautomation.ios.server.utils.Command;
 import org.uiautomation.ios.server.utils.ScriptHelper;
 import org.uiautomation.ios.server.utils.hack.TimeSpeeder;
@@ -46,28 +47,14 @@ public class InstrumentsManager {
    * @throws IOSAutomationSetupException
    */
   public InstrumentsManager(int serverPort) throws IOSAutomationSetupException {
-    File t =
-        new File("/Applications/Xcode.app/Contents/Developer/"
-            + "Platforms/iPhoneOS.platform/Developer/Library/"
-            + "Instruments/PlugIns/AutomationInstrument.bundle/"
-            + "Contents/Resources/Automation.tracetemplate");
-    if (!t.exists()) {
-      t =
-          new File(
-              "/Developer/Platforms/iPhoneOS.platform/Developer/Library/Instruments/PlugIns/AutomationInstrument.bundle/Contents/Resources/Automation.tracetemplate");
-    }
-    if (!t.exists()) {
-      throw new IOSAutomationSetupException("can't find template. Try instruments -s");
-    }
-
-
-    template = t;
+    template = ClassicCommands.getAutomationTemplate();
     this.port = serverPort;
   }
 
   public void startSession(IOSDevice device, String sdkVersion, String locale, String language,
       File application, String sessionId, boolean timeHack, List<String> envtParams)
       throws IOSAutomationSetupException {
+    IOSSimulatorManager sim = null;
     try {
       this.sessionId = sessionId;
       this.extraEnvtParams = envtParams;
@@ -78,16 +65,27 @@ public class InstrumentsManager {
       }
       this.application = application;
 
-      simulator = prepareSimulator(sdkVersion, device, locale, language);
 
-      List<String> instruments = createInstrumentCommand();
+      if (isWarmupRequired(sdkVersion)) {
+        warmup();
+      }
+
+      simulator = prepareSimulator(sdkVersion, device, locale, language);
+      sim = (IOSSimulatorManager) simulator;
+
+      sim.forceDefaultSDK(sdkVersion);
+
+      File uiscript = new ScriptHelper().getScript(port, application.getAbsolutePath(), sessionId);
+
+
+      List<String> instruments = createInstrumentCommand(uiscript.getAbsolutePath());
       communicationChannel = new CommunicationChannel();
 
       simulatorProcess = new Command(instruments, true);
       simulatorProcess.setWorkingDirectory(output);
       simulatorProcess.start();
 
-     
+
       boolean success = communicationChannel.waitForUIScriptToBeStarted();
       // appears only in ios6. : Automation Instrument ran into an exception while trying to run the
       // script. UIAScriptAgentSignaledException
@@ -107,8 +105,29 @@ public class InstrumentsManager {
 
     } catch (Exception e) {
       throw new IOSAutomationSetupException("error starting instrument for session " + sessionId, e);
+    } finally {
+      if (sim != null) {
+        sim.restoreExiledSDKs();
+      }
     }
 
+  }
+
+  private void warmup() {
+    String script = "/Users/freynaud/Documents/master.js";
+    List<String> cmd = createInstrumentCommand(script);
+    Command c = new Command(cmd, true);
+    c.executeAndWait();
+  }
+
+  private boolean isWarmupRequired(String sdkVersion) {
+    List<String> sdks = ClassicCommands.getInstalledSDKs();
+    if (sdkVersion.equals("5.0") || sdkVersion.equals("5.1")) {
+      if (sdks.contains("6.0")) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private IOSDeviceManager prepareSimulator(String sdkVersion, IOSDevice device, String locale,
@@ -134,7 +153,7 @@ public class InstrumentsManager {
 
   }
 
-  private List<String> createInstrumentCommand() throws IOSAutomationSetupException {
+  private List<String> createInstrumentCommand(String script) throws IOSAutomationSetupException {
     List<String> command = new ArrayList<String>();
     command.add("instruments");
     command.add("-t");
@@ -142,9 +161,7 @@ public class InstrumentsManager {
     command.add(application.getAbsolutePath());
     command.add("-e");
     command.add("UIASCRIPT");
-    File uiscript = new ScriptHelper().getScript(port, application.getAbsolutePath(), sessionId);
-
-    command.add(uiscript.getAbsolutePath());
+    command.add(script);
     command.add("-e");
     command.add("UIARESULTSPATH");
     command.add(output.getAbsolutePath());

@@ -67,6 +67,11 @@ UIAElementArray.prototype.element = function(depth, criteria) {
 UIAElement.prototype.type = function() {
 	return this.toString().replace('[object ', '').replace(']', '');
 }
+
+UIAElementNil.prototype.type = function() {
+	return "UIAElementNil";
+}
+
 // TODO freynaud check why this is necessary. key extends elements.
 UIAKey.prototype.type = UIAElement.prototype.type;
 
@@ -114,6 +119,8 @@ UIAElement.prototype.reference = function() {
 	}
 	return this.id;
 }
+UIAElementNil.prototype.reference = UIAElement.prototype.reference;
+
 UIAKey.prototype.reference = UIAElement.prototype.reference;
 /**
  * can't find a way to detect stale object. CheckIsValid doesn't do it properly.
@@ -121,11 +128,16 @@ UIAKey.prototype.reference = UIAElement.prototype.reference;
  */
 UIAElement.prototype.isStale = function() {
 	if(this.checkIsValid() == false) {
+		log("checkISValid returns false");
 		return true;
 	} else {
 		try {
 			this.scrollToVisible();
-			return false;
+			if (this.isVisible() == 1){
+				return false;
+			}else {
+				return true;
+			}
 		} catch (err) {
 			if(err.message && err.message.indexOf('scrollToVisible cannot be used') != -1) {
 				return true;

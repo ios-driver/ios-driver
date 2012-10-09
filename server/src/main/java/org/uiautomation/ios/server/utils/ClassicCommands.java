@@ -13,6 +13,7 @@
  */
 package org.uiautomation.ios.server.utils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +55,57 @@ public class ClassicCommands {
 
   }
 
+
+
+  public static File getXCodeInstall() {
+    List<String> cmd = new ArrayList<String>();
+    cmd.add("/usr/bin/xcrun");
+    cmd.add("-find");
+    cmd.add("xcodebuild");
+
+    Command c = new Command(cmd, false);
+    c.executeAndWait();
+
+    if (c.getStdOut().size() != 1) {
+      throw new IOSAutomationException("cannot find XCode location." + c.getStdOut());
+    }
+
+    String path = c.getStdOut().get(0);
+
+    String pattern = ".app/";
+    int index = path.indexOf(pattern);
+    String res = path.substring(0, index + pattern.length());
+    return new File(res);
+
+  }
+  
+  
+  public static File getAutomationTemplate(){
+    List<String> cmd = new ArrayList<String>();
+    cmd.add("instruments");
+    cmd.add("-s");
+    Command c = new Command(cmd, false);
+ 
+    Grep grep = new Grep("Automation.tracetemplate");
+    c.registerListener(grep);
+    c.executeAndWait();
+    List<String> res =  grep.getMatching();
+    if (res.size()!=1){
+      throw new IOSAutomationException("expected 1 result for automation on instruments -s , got "+res);
+    }
+    String path = res.get(0);
+    path = path.replaceFirst(",","");
+    path = path.replaceAll("\"","");
+    path = path.trim();
+    File f = new File(path);
+    if (!f.exists()){
+      throw new IOSAutomationException(f +"isn't a valid template.");
+    }
+    return f;
+  }
+
+
+
   public static List<String> getInstalledSDKs() throws IOSAutomationSetupException {
     List<String> c = new ArrayList<String>();
     c.add("xcodebuild");
@@ -65,12 +117,12 @@ public class ClassicCommands {
     return l.getSDKs();
   }
 
-
   // TODO freynaud find the correct command
   public static String getDefaultSDK() {
     List<String> sdks = getInstalledSDKs();
     return sdks.get(sdks.size() - 1);
   }
+
 
 }
 
@@ -131,6 +183,10 @@ class Grep implements CommandOutputListener {
     }
   }
 
-  public void stderr(String log) {}
+  public void stderr(String log) {
+    if (log.contains(pattern)) {
+      matching.add(log);
+    }
+  }
 
 }
