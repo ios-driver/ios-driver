@@ -26,6 +26,7 @@ public class SampleApps {
   private static final String uiCatalogiPad = "/sampleApps/UICatalogiPad.app";
   private static final String intlMountains = "/sampleApps/InternationalMountains.app";
 
+  private static final String sdkVersion = System.getProperty("SDK", null);
 
 
   private static File getFromClassPath(String resource) {
@@ -48,21 +49,29 @@ public class SampleApps {
   public static String getIntlMountainsFile() {
     return getFromClassPath(intlMountains).getAbsolutePath();
   }
-  
+
   public static String getUICatalogIpad() {
     return getFromClassPath(uiCatalogiPad).getAbsolutePath();
   }
 
   public static IOSCapabilities uiCatalogCap() {
-    IOSCapabilities c = IOSCapabilities.iphone("UICatalog","2.10");
+    IOSCapabilities c = IOSCapabilities.iphone("UICatalog", "2.10");
     c.setCapability(IOSCapabilities.TIME_HACK, true);
+    if (sdkVersion != null) {
+      System.out.println("SET SDK to " + sdkVersion);
+      c.setSDKVersion(sdkVersion);
+    }
     return c;
   }
 
   public static IOSCapabilities intlMountainsCap(Localizable l) {
-    IOSCapabilities c = IOSCapabilities.iphone("InternationalMountains","1.1");
+    IOSCapabilities c = IOSCapabilities.iphone("InternationalMountains", "1.1");
     c.setLanguage(l.getName());
     c.setCapability(IOSCapabilities.TIME_HACK, true);
+    if (sdkVersion != null) {
+      System.out.println("SET SDK to " + sdkVersion);
+      c.setSDKVersion(sdkVersion);
+    }
     return c;
   }
 }
