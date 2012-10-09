@@ -13,6 +13,7 @@
  */
 package org.uiautomation.ios.server.utils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +55,34 @@ public class ClassicCommands {
 
   }
 
+
+
+  public static File getXCodeInstall() {
+    List<String> cmd = new ArrayList<String>();
+    cmd.add("/usr/bin/xcrun");
+    cmd.add("-find");
+    cmd.add("xcodebuild");
+
+    Command c = new Command(cmd, false);
+    c.executeAndWait();
+
+    if (c.getStdOut().size() != 1) {
+      throw new IOSAutomationException("cannot find XCode location." + c.getStdOut());
+    }
+
+    String path = c.getStdOut().get(0);
+
+    String pattern = ".app/";
+    int index = path.indexOf(pattern);
+    String res = path.substring(0, index + pattern.length());
+    return new File(res);
+
+  }
+  
+  public static void main(String[] args) {
+    System.out.println(getXCodeInstall());
+  }
+
   public static List<String> getInstalledSDKs() throws IOSAutomationSetupException {
     List<String> c = new ArrayList<String>();
     c.add("xcodebuild");
@@ -66,12 +95,7 @@ public class ClassicCommands {
   }
 
 
-  // TODO freynaud find the correct command
-  public static String getDefaultSDK() {
-    List<String> sdks = getInstalledSDKs();
-    return sdks.get(sdks.size() - 1);
-  }
-
+  
 }
 
 
