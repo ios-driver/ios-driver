@@ -16,6 +16,7 @@ UIATarget.prototype.locale = function() {
 
 UIAApplication.prototype.keyboard2 = function() {
 	var keyboard = this.keyboard();
+	log("keyboard : " + keyboard)
 	if(keyboard.toString() == "[object UIAElementNil]") {
 		throw new UIAutomationException("cannot find keyboard", 7);
 	} else {
@@ -71,7 +72,6 @@ UIAElement.prototype.type = function() {
 UIAElementNil.prototype.type = function() {
 	return "UIAElementNil";
 }
-
 // TODO freynaud check why this is necessary. key extends elements.
 UIAKey.prototype.type = UIAElement.prototype.type;
 
@@ -89,7 +89,6 @@ UIAElement.prototype.tap2 = function() {
 		var ex = new UIAutomationException("element is not visible", 11);
 		throw ex;
 	}
-
 }
 
 UIAAlert.prototype.defaultButton2 = function() {
@@ -122,6 +121,7 @@ UIAElement.prototype.reference = function() {
 UIAElementNil.prototype.reference = UIAElement.prototype.reference;
 
 UIAKey.prototype.reference = UIAElement.prototype.reference;
+
 /**
  * can't find a way to detect stale object. CheckIsValid doesn't do it properly.
  * Trying to scroll to the element seems like a valid approximation.
@@ -132,10 +132,13 @@ UIAElement.prototype.isStale = function() {
 		return true;
 	} else {
 		try {
-			this.scrollToVisible();
-			if (this.isVisible() == 1){
+			if((this.type() != "UIAKey") && (this.type() != "UIAKeyboard")) {
+				this.scrollToVisible();
+			}
+
+			if(this.isVisible() == 1) {
 				return false;
-			}else {
+			} else {
 				return true;
 			}
 		} catch (err) {
