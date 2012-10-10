@@ -52,9 +52,9 @@ var Cache = function() {
 			} else if(res.type && (res.type() == "UIAWindow" || res.type() == "UIAApplication")) {
 				return res;
 				// on arrays, stale doesn't make sense.
-			} else if(res.isStale && res.isStale()) {
+			} /*else if(res.isStale && res.isStale()) {
 			 throw new UIAutomationException("elements ref:" + reference + " is stale", 10);
-			 } else {
+			 } */else {
 				return res;
 			}
 		}
