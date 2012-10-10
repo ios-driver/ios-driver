@@ -34,7 +34,7 @@ var Cache = function() {
 		}
 
 		var res = this.storage[reference];
-
+		
 		// there is an alert.
 		if(this.storage[3]) {
 			var parent = res.parent();
@@ -43,21 +43,22 @@ var Cache = function() {
 			}
 			if(parent.type() == "UIAElementNil") {
 				throw new UIAutomationException("cannot interact with objects. There is an alert.", 26);
-			} else {
-				// target and app aren't stale.
-				if(!res) {
-					throw new UIAutomationException("can't find " + reference + " in cache.");
-					// window an apps aren't stale ?
-				} else if(res.type && (res.type() == "UIAWindow" || res.type() == "UIAApplication")) {
-					return res;
-					// on arrays, stale doesn't make sense.
-				}/* else if(res.isStale && res.isStale()) {
-				 throw new UIAutomationException("elements ref:" + reference + " is stale", 10);
-				 } */else {
-					return res;
-				}
+			}
+		} else {
+			// target and app aren't stale.
+			if(!res) {
+				throw new UIAutomationException("can't find " + reference + " in cache.");
+				// window an apps aren't stale ?
+			} else if(res.type && (res.type() == "UIAWindow" || res.type() == "UIAApplication")) {
+				return res;
+				// on arrays, stale doesn't make sense.
+			} else if(res.isStale && res.isStale()) {
+			 throw new UIAutomationException("elements ref:" + reference + " is stale", 10);
+			 } else {
+				return res;
 			}
 		}
+
 	};
 
 	this.setAlert = function(alert) {
