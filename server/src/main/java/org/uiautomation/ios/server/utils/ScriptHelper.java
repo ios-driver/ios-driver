@@ -20,6 +20,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.io.Writer;
 
 import org.apache.commons.io.IOUtils;
 import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
@@ -34,6 +35,7 @@ import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
  */
 public class ScriptHelper {
 
+  private final static boolean DEBUG = true;
   private final String main = "main.js";
   private final String json = "json2.js";
   private final String lib1 = "UIAutomation.js";
@@ -71,10 +73,16 @@ public class ScriptHelper {
 
 
   private File createTmpScript(String content) throws IOException {
-    File res = File.createTempFile(FILE_NAME, ".js");
-    BufferedWriter out = new BufferedWriter(new FileWriter(res));
-    out.write(content);
-    out.close();
+    File res=null;
+    if (DEBUG){
+      res = new File("/Users/freynaud/Documents/debug.js");
+    }else {
+      res = File.createTempFile(FILE_NAME, ".js");
+    }
+   
+    Writer writer =  new FileWriter(res);
+    IOUtils.copy(IOUtils.toInputStream(content),writer, "UTF-8");
+    IOUtils.closeQuietly(writer);
     return res;
 
   }
