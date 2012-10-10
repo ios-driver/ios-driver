@@ -50,10 +50,9 @@ public class UIAKeyboardTest extends UICatalogTestsBase {
   }
 
   /**
-   * 28 on IOS 5
-   * 31 on IOS 6
+   * 28 on IOS 5 31 on IOS 6
    */
-  @Test(groups="broken")
+  @Test(groups = "broken")
   public void canFindKeyboard() {
     RemoteUIADriver driver = null;
     try {
@@ -69,7 +68,7 @@ public class UIAKeyboardTest extends UICatalogTestsBase {
       UIAKeyboard keyboard = app.getKeyboard();
 
       UIAElementArray<UIAKey> keys = keyboard.getKeys();
-      Assert.assertEquals(keys.size(), 28);
+      Assert.assertTrue(keys.size() == 28 || keys.size() == 31);
       // GB, should be a qwerty
       Assert.assertEquals(keys.get(0).getName(), "Q");
 
@@ -79,9 +78,9 @@ public class UIAKeyboardTest extends UICatalogTestsBase {
       }
     }
   }
-  
+
   // some timing issues here.Need a change server side.
-  @Test(groups="broken")
+  @Test(groups = "broken")
   public void typeBasic() {
     RemoteUIADriver driver = null;
     try {
@@ -96,10 +95,9 @@ public class UIAKeyboardTest extends UICatalogTestsBase {
 
       UIAKeyboard keyboard = app.getKeyboard();
       keyboard.typeString("F");
-      
-      
-     
-    
+
+
+
       Assert.assertEquals(textfield.getValue(), "Francois");
 
     } finally {
