@@ -18,6 +18,7 @@ public enum ExceptionStatus {
   StaleElementReference(10,StaleReferenceException.class),
   ElementNotVisible(11, ElementNotVisibleException.class), 
   UnknownError(13,IOSAutomationException.class),
+  UnexpectedAlertOpen(26,UnexpectedAlertOpen.class),
   InvalidSelector(32,InvalidCriteriaException.class);
 
   private final Class<? extends Exception> ex;
