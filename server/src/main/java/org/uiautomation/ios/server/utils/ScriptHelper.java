@@ -35,7 +35,6 @@ import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
  */
 public class ScriptHelper {
 
-  private final static boolean DEBUG = true;
   private final String main = "main.js";
   private final String json = "json2.js";
   private final String lib1 = "UIAutomation.js";
@@ -72,18 +71,17 @@ public class ScriptHelper {
 
 
 
-  private File createTmpScript(String content) throws IOException {
-    File res=null;
-    if (DEBUG){
-      res = new File("/Users/freynaud/Documents/debug.js");
-    }else {
-      res = File.createTempFile(FILE_NAME, ".js");
+  public File createTmpScript(String content) throws IOSAutomationSetupException {
+    try {
+      File res = File.createTempFile(FILE_NAME, ".js");
+      Writer writer = new FileWriter(res);
+      IOUtils.copy(IOUtils.toInputStream(content), writer, "UTF-8");
+      IOUtils.closeQuietly(writer);
+      return res;
+    } catch (Exception e) {
+      throw new IOSAutomationSetupException("Cannot generate script.");
     }
-   
-    Writer writer =  new FileWriter(res);
-    IOUtils.copy(IOUtils.toInputStream(content),writer, "UTF-8");
-    IOUtils.closeQuietly(writer);
-    return res;
+
 
   }
 
