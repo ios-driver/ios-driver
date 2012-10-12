@@ -114,8 +114,8 @@ public class InstrumentsManager {
   }
 
   private void warmup() {
-    String script = "/Users/freynaud/Documents/master.js";
-    List<String> cmd = createInstrumentCommand(script);
+    File script = new ScriptHelper().createTmpScript("UIALogger.logMessage('warming up');");
+    List<String> cmd = createInstrumentCommand(script.getAbsolutePath());
     Command c = new Command(cmd, true);
     c.executeAndWait();
   }
