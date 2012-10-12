@@ -34,6 +34,8 @@ public abstract class AbstractCriteria implements Criteria {
       throws Exception {
     int nbKeys = serialized.length();
     switch (nbKeys) {
+      case KEYS_IN_EMPTY_CRITERIA:
+        return (T)new EmptyCriteria();
       case KEYS_IN_COMPOSED_CRITERIA:
         String key = (String) serialized.keys().next();
         CompositionType type = CompositionType.valueOf(key);
@@ -52,6 +54,7 @@ public abstract class AbstractCriteria implements Criteria {
 
   }
 
+  private static final int KEYS_IN_EMPTY_CRITERIA = 0;
   private static final int KEYS_IN_COMPOSED_CRITERIA = 1;
   private static final int KEYS_IN_PROPERTY_CRITERIA = 4;
 
