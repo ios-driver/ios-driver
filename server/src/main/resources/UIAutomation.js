@@ -34,14 +34,22 @@ var Cache = function() {
 		}
 
 		var res = this.storage[reference];
-		
+
 		// there is an alert.
 		if(this.storage[3]) {
-			var parent = res.parent();
-			while(parent.type() != "UIAElementNil" && parent.type() != "UIAAlert") {
-				parent = parent.parent();
+			log("alert was present when trying to get " + res.toString());
+			var parent;
+			if(res.parent) {
+				parent = res.parent();
 			}
-			if(parent.type() == "UIAElementNil") {
+
+			while(parent.type() != "UIAElementNil" && parent.type() != "UIAAlert" && parent.type() != "UIATarget") {
+				parent = parent.parent();
+				log("while on" + parent.toString());
+				log("type " + parent.type());
+			}
+
+			if(parent.type() == "UIAElementNil" || parent.type() === "UIATarget") {
 				throw new UIAutomationException("cannot interact with objects. There is an alert.", 26);
 			}
 		} else {
@@ -52,9 +60,9 @@ var Cache = function() {
 			} else if(res.type && (res.type() == "UIAWindow" || res.type() == "UIAApplication")) {
 				return res;
 				// on arrays, stale doesn't make sense.
-			} /*else if(res.isStale && res.isStale()) {
-			 throw new UIAutomationException("elements ref:" + reference + " is stale", 10);
-			 } */else {
+			} else if(res.isStale && res.isStale()) {
+				throw new UIAutomationException("elements ref:" + reference + " is stale", 10);
+			} else {
 				return res;
 			}
 		}
