@@ -69,6 +69,8 @@ UIAElement.prototype.type = function() {
 	return this.toString().replace('[object ', '').replace(']', '');
 }
 
+
+
 UIAElementNil.prototype.type = function() {
 	return "UIAElementNil";
 }
@@ -149,15 +151,11 @@ UIAElement.prototype.isStale = function() {
 	}
 	return false;
 }
-/*
- * UIAElement.prototype.element = function(depth, criteria) { var all =
- * this.getChildren(depth); var res = new Array();
- *
- * for(var i = 0; i < all.length; i++) { var element = all[i];
- * if(element.matches(criteria)) { return element; } } throw new
- * UIAutomationException("cannot find element for criteria :" +
- * JSON.stringify(criteria), 7); }
- */
+
+UIAKey.prototype.scrollToVisible = function() {
+};
+UIAKeyboard.prototype.scrollToVisible = function() {
+};
 
 UIAElement.prototype.element_or = function(depth, criteria) {
 	var all = this.getChildren(depth);
