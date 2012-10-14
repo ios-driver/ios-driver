@@ -28,6 +28,7 @@ import org.uiautomation.ios.UIAModels.UIAWindow;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
+import org.uiautomation.ios.exceptions.NoAlertOpenError;
 
 public class RemoteUIATarget extends RemoteObject implements UIATarget {
 
@@ -172,7 +173,12 @@ public class RemoteUIATarget extends RemoteObject implements UIATarget {
 
 
   @Override
-  public UIAAlert getAlert() {
-    return new RemoteUIAAlert(getDriver(), "3");
+  public UIAAlert getAlert() throws NoAlertOpenError {
+    // if there is an alert, it's hardcoded to ref = 3. Not need to call to know that.
+    RemoteUIAAlert alert = new RemoteUIAAlert(getDriver(), "3");
+    // but need to access it once with a call just to check if an alert actually exists. If not,
+    // throw a no alert exception
+    alert.getName();
+    return alert;
   }
 }
