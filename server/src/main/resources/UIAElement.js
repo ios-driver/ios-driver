@@ -129,7 +129,6 @@ UIAKey.prototype.reference = UIAElement.prototype.reference;
  * Trying to scroll to the element seems like a valid approximation.
  */
 UIAElement.prototype.isStale = function() {
-	//log("isStale on : "+this.toString());
 	if(this.checkIsValid() == false) {
 		log("checkISValid returns false");
 		return true;
