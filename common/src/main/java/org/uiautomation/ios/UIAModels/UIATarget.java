@@ -13,6 +13,8 @@
  */
 package org.uiautomation.ios.UIAModels;
 
+import org.uiautomation.ios.exceptions.NoAlertOpenError;
+
 
 
 public interface UIATarget {
@@ -44,5 +46,5 @@ public interface UIATarget {
   
   public void setDeviceOrientation(Orientation o);
   
-  public UIAAlert getAlert();
+  public UIAAlert getAlert() throws NoAlertOpenError;
 }
