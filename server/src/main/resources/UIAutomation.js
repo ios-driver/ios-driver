@@ -30,28 +30,25 @@ var Cache = function() {
 		} else if(reference == 2) {
 			return UIATarget.localTarget();
 		} else if(reference == 3) {
-			return this.storage[3];
+			if(this.storage[3]) {
+				return this.storage[3];
+			} else {
+				throw new UIAutomationException("No alert opened", 27);
+			}
+
 		}
 
 		var res = this.storage[reference];
 
 		// there is an alert.
 		if(this.storage[3]) {
-			log("alert was present when trying to get " + res.toString());
-			var parent;
-			if(res.parent) {
-				parent = res.parent();
+
+			if(res.isInAlert()) {
+				return res;
+			} else {
+				throw new UIAutomationException("cannot interact with object " + res + ". There is an alert.", 26);
 			}
 
-			while(parent.type() != "UIAElementNil" && parent.type() != "UIAAlert" && parent.type() != "UIATarget") {
-				parent = parent.parent();
-				log("while on" + parent.toString());
-				log("type " + parent.type());
-			}
-
-			if(parent.type() == "UIAElementNil" || parent.type() === "UIATarget") {
-				throw new UIAutomationException("cannot interact with objects. There is an alert.", 26);
-			}
 		} else {
 			// target and app aren't stale.
 			if(!res) {
@@ -69,6 +66,9 @@ var Cache = function() {
 
 	};
 
+	this.getAlert = function() {
+		return this.storage[3];
+	};
 	this.setAlert = function(alert) {
 		this.storage[3] = alert;
 		log("found alert");
