@@ -129,15 +129,13 @@ UIAKey.prototype.reference = UIAElement.prototype.reference;
  * Trying to scroll to the element seems like a valid approximation.
  */
 UIAElement.prototype.isStale = function() {
+	//log("isStale on : "+this.toString());
 	if(this.checkIsValid() == false) {
 		log("checkISValid returns false");
 		return true;
 	} else {
 		try {
-			if((this.type() != "UIAKey") && (this.type() != "UIAKeyboard")) {
-				this.scrollToVisible();
-			}
-
+			this.scrollToVisible();
 			if(this.isVisible() == 1) {
 				return false;
 			} else {
@@ -152,10 +150,9 @@ UIAElement.prototype.isStale = function() {
 	return false;
 }
 
-UIAKey.prototype.scrollToVisible = function() {
-};
-UIAKeyboard.prototype.scrollToVisible = function() {
-};
+UIAKey.prototype.scrollToVisible = function() {};
+
+UIAKeyboard.prototype.scrollToVisible = function() {};
 
 UIAElement.prototype.element_or = function(depth, criteria) {
 	var all = this.getChildren(depth);
