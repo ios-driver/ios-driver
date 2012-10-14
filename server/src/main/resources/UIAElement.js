@@ -69,8 +69,21 @@ UIAElement.prototype.type = function() {
 	return this.toString().replace('[object ', '').replace(']', '');
 }
 
+UIAElement.prototype.isInAlert = function() {
+	var parent;
+	if(this.parent) {
+		parent = this.parent();
+	}
 
+	while(parent.type() != "UIAElementNil" && parent.type() != "UIATarget") {
+		if(parent.type() == "UIAAlert") {
+			return true;
+		}
+		parent = parent.parent();
+	}
 
+	return false;
+}
 UIAElementNil.prototype.type = function() {
 	return "UIAElementNil";
 }
@@ -87,6 +100,11 @@ UIAElement.prototype.tap2 = function() {
 			'y' : Math.floor(y)
 		};
 		UIATarget.localTarget().tap(point);
+		if(this.isInAlert() && this.type() == "UIAButton") {
+			log("tapping in something in an alert.Alert is gone.");
+			UIAutomation.cache.clearAlert();
+		}
+
 	} else {
 		var ex = new UIAutomationException("element is not visible", 11);
 		throw ex;
@@ -149,9 +167,11 @@ UIAElement.prototype.isStale = function() {
 	return false;
 }
 
-UIAKey.prototype.scrollToVisible = function() {};
+UIAKey.prototype.scrollToVisible = function() {
+};
 
-UIAKeyboard.prototype.scrollToVisible = function() {};
+UIAKeyboard.prototype.scrollToVisible = function() {
+};
 
 UIAElement.prototype.element_or = function(depth, criteria) {
 	var all = this.getChildren(depth);
