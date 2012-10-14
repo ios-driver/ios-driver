@@ -152,6 +152,9 @@ UIAElement.prototype.isStale = function() {
 		return true;
 	} else {
 		try {
+			if(this.isVisible()) {
+				return false;
+			}
 			this.scrollToVisible();
 			if(this.isVisible() == 1) {
 				return false;
