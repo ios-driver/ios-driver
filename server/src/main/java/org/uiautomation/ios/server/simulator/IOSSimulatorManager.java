@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
@@ -50,8 +51,9 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   private static final String TEMPLATE = "/globalPlist.json";
   private static final String PLUTIL = "/usr/bin/plutil";
   private static File xcodeInstall;
+  private static final Logger log = Logger.getLogger(IOSSimulatorManager.class.getName());
 
- 
+
   private final String desiredSDKVersion;
   private File contentAndSettingsFolder;
   // simulator plist, to choose language and locale
@@ -68,23 +70,23 @@ public class IOSSimulatorManager implements IOSDeviceManager {
    */
   public IOSSimulatorManager(String desiredSDKVersion, IOSDevice device)
       throws IOSAutomationSetupException {
-    if (isSimulatorRunning() && ! isWarmupRequired()) {
+    if (isSimulatorRunning() && !isWarmupRequired()) {
       throw new IOSAutomationSetupException("another instance of the simulator is already running.");
     }
 
     this.sdks = ClassicCommands.getInstalledSDKs();
     this.desiredSDKVersion = validateSDK(desiredSDKVersion);
-   
+
     xcodeInstall = ClassicCommands.getXCodeInstall();
-    //setDefaultSimulatorPreference("currentSDKRoot", sdk.getAbsolutePath());
-    //setDefaultSimulatorPreference("SimulateDevice", device.getName());
+    // setDefaultSimulatorPreference("currentSDKRoot", sdk.getAbsolutePath());
+    // setDefaultSimulatorPreference("SimulateDevice", device.getName());
 
     this.contentAndSettingsFolder = getContentAndSettingsFolder();
     this.globalPreferencePlist = getGlobalPreferenceFile();
   }
 
   private boolean isWarmupRequired() {
-   // TODO freynaud implement. Refactor.
+    // TODO freynaud implement. Refactor.
     return true;
   }
 
@@ -113,22 +115,28 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   }
 
   private String getErrorMessageMoveSDK() {
-    File sdk =  new File(xcodeInstall,
-      "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs");
-    File exiled = new File(xcodeInstall,
-          "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs");
-    String msg = "Cannot move folders from "+sdk+" to "+exiled;
-    msg+= " Make sure the rights are correct (chmod -R +rw ... )";
+    File sdk =
+        new File(xcodeInstall,
+            "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs");
+    File exiled =
+        new File(xcodeInstall,
+            "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs");
+    String msg = "Cannot move folders from " + sdk + " to " + exiled;
+    msg += " Make sure the rights are correct (chmod -R +rw ... )";
     return msg;
-    
+
   }
 
   public void restoreExiledSDKs() {
     File exiled =
         new File(xcodeInstall,
             "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs/");
+    if (!exiled.exists()) {
+      log.warning(exiled.getAbsolutePath() + " doesn't exist." + getErrorMessageMoveSDK());
+      return;
+    }
     for (String s : exiled.list()) {
-      File sdk = new File(exiled,s);
+      File sdk = new File(exiled, s);
       File original = new File(sdk.getParentFile().getParentFile() + "/SDKs/" + s);
       boolean ok = sdk.renameTo(original);
       if (!ok) {
@@ -160,7 +168,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     updatePreference.executeAndWait();
   }
 
- 
+
 
   private String validateSDK(String sdk) throws IOSAutomationSetupException {
     if (!sdks.contains(sdk)) {
