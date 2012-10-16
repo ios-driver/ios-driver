@@ -17,7 +17,7 @@ import org.uiautomation.ios.server.utils.ClassicCommands;
 public class NewSessionTest {
   private IOSServer server;
   private static String[] args = {"-port", "4444", "-host", "localhost", "-aut",
-      SampleApps.getUICatalogFile(), "-aut", SampleApps.getIntlMountainsFile(),"-aut", SampleApps.getUICatalogIpad()};
+      SampleApps.getUICatalogFile(), "-aut", SampleApps.getIntlMountainsFile(),"-aut", SampleApps.getUICatalogIpad(),"-aut","/Users/freynaud/build/eBay2.2.2rc1.app"};
 
   private static IOSServerConfiguration config = IOSServerConfiguration.create(args);
 
@@ -30,16 +30,20 @@ public class NewSessionTest {
   @Test
   public void base() {
     RemoteUIADriver driver = null;
+    IOSCapabilities cap = IOSCapabilities.iphone("UICatalog", "2.10");
+    String sdk = cap.getSDKVersion();
     try {
       driver =
           new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",
-              IOSCapabilities.iphone("UICatalog", "2.10"));
+            SampleApps.uiCatalogCap());
 
       UIATarget target = driver.getLocalTarget();
+      System.out.println(target.getSystemVersion());
+      
       UIAApplication app = target.getFrontMostApp();
       Assert.assertEquals(app.getBundleId(), "com.yourcompany.UICatalog");
       Assert.assertEquals(app.getBundleVersion(), "2.10");
-      Assert.assertEquals(target.getSystemVersion(), ClassicCommands.getDefaultSDK());
+      Assert.assertEquals(target.getSystemVersion(), sdk);
     } finally {
       if (driver != null) {
         driver.quit();
