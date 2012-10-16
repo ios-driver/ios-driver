@@ -26,9 +26,6 @@ public class RemoteUIAElementTest extends UICatalogTestsBase {
 
 
 
- 
-
-
   @Test
   public void findElement() {
     RemoteUIADriver driver = null;
@@ -47,8 +44,8 @@ public class RemoteUIAElementTest extends UICatalogTestsBase {
       }
     }
   }
-  
-  
+
+
   @Test
   public void logElementTreeNoScreenshot() throws Exception {
     RemoteUIADriver driver = null;
@@ -61,7 +58,7 @@ public class RemoteUIAElementTest extends UICatalogTestsBase {
       Criteria c = new AndCriteria(c1, c2);
       UIAElement element = win.findElement(c);
       Assert.assertEquals(element.getName(), name);
-      JSONObject tree = element.logElementTree(null,false);
+      JSONObject tree = element.logElementTree(null, false);
       Assert.assertTrue(tree.has("tree"));
     } finally {
       if (driver != null) {
@@ -69,7 +66,7 @@ public class RemoteUIAElementTest extends UICatalogTestsBase {
       }
     }
   }
-  
+
   @Test
   public void logElementTreeWithScreenshot() throws Exception {
     RemoteUIADriver driver = null;
@@ -84,7 +81,7 @@ public class RemoteUIAElementTest extends UICatalogTestsBase {
       Assert.assertEquals(element.getName(), name);
       File f = new File("logElementTreeWithScreenshotTmp");
       f.delete();
-      JSONObject tree = element.logElementTree(f,true);
+      JSONObject tree = element.logElementTree(f, true);
       Assert.assertTrue(tree.has("tree"));
       Assert.assertTrue(f.exists());
       f.delete();
@@ -115,15 +112,15 @@ public class RemoteUIAElementTest extends UICatalogTestsBase {
     }
   }
 
-  // sometimes 29, sometimes 31 depending on the timing.
-  @Test(groups="broken")
+  // sometimes 29, sometimes 31 depending on the timing.and 33 with ios 6...
+  @Test(groups = "broken")
   public void findAllElements() throws InterruptedException {
     RemoteUIADriver driver = null;
     try {
       driver = getDriver();
       RemoteUIAWindow win = getMainWindow(driver);
       UIAElementArray<UIAElement> elements = win.findElements(new EmptyCriteria());
-      Assert.assertEquals(elements.size(), 31);
+      Assert.assertEquals(elements.size(), 33);
     } finally {
       if (driver != null) {
         driver.quit();
@@ -152,7 +149,7 @@ public class RemoteUIAElementTest extends UICatalogTestsBase {
     }
   }
 
-  @Test(groups ="broken")
+  @Test(groups = "broken")
   public void isVisibleTests() {
     RemoteUIADriver driver = null;
 
