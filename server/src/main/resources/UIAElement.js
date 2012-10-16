@@ -84,6 +84,23 @@ UIAElement.prototype.isInAlert = function() {
 
 	return false;
 }
+
+UIAElement.prototype.isScrollable = function() {
+	var parent;
+	if(this.parent) {
+		parent = this.parent();
+	}
+
+	while(parent.type() != "UIAElementNil" && parent.type() != "UIATarget") {
+		if(parent.type() == "UIATableView" || parent.type() == "UIAWebView") {
+			return true;
+		}
+		parent = parent.parent();
+	}
+
+	return false;
+}
+
 UIAElementNil.prototype.type = function() {
 	return "UIAElementNil";
 }
@@ -143,19 +160,29 @@ UIAElementNil.prototype.reference = UIAElement.prototype.reference;
 UIAKey.prototype.reference = UIAElement.prototype.reference;
 
 /**
+ * scrollToVisible only makes sense if the element if in a webview or a tableView.
+ * It was working, and doing nothing for other elements up to ios5.1.
+ * Starting from ios6, it now throws :
+ * Unexpected error in -[UIAStaticText_0xdc363d0 scrollToVisible], /SourceCache/UIAutomation_Sim/UIAutomation-271/Framework/UIAElement.m line 1545, kAXErrorFailure
+ * so need to check first if scrolling will do anything to avoid this exception.
+ */
+UIAElement.prototype.scrollToVisibleSafe = function() {
+	if(this.isScrollable()) {
+		this.scrollToVisible();
+	}
+}
+/**
  * can't find a way to detect stale object. CheckIsValid doesn't do it properly.
  * Trying to scroll to the element seems like a valid approximation.
  */
 UIAElement.prototype.isStale = function() {
+	log(this + "checkISValid :" + this.checkIsValid());
 	if(this.checkIsValid() == false) {
 		log("checkISValid returns false");
 		return true;
 	} else {
 		try {
-			if(this.isVisible()) {
-				return false;
-			}
-			this.scrollToVisible();
+			this.scrollToVisibleSafe();
 			if(this.isVisible() == 1) {
 				return false;
 			} else {
