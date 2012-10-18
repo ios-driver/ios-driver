@@ -18,8 +18,7 @@ import org.uiautomation.ios.server.utils.ClassicCommands;
 public class NewSessionTest {
   private IOSServer server;
   private static String[] args = {"-port", "4444", "-host", "localhost", "-aut",
-      SampleApps.getUICatalogFile(), "-aut", SampleApps.getIntlMountainsFile(), "-aut",
-      SampleApps.getUICatalogIpad(), "-aut", "/Users/freynaud/build/eBay2.2.2rc1.app"};
+      SampleApps.getUICatalogFile(), "-aut", SampleApps.getIntlMountainsFile(), "-aut"};
 
   private static IOSServerConfiguration config = IOSServerConfiguration.create(args);
 

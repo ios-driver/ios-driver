@@ -13,6 +13,7 @@
  */
 package org.uiautomation.ios.communication;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.uiautomation.ios.UIAModels.UIAApplication;
 import org.uiautomation.ios.UIAModels.UIAButton;
@@ -31,6 +32,7 @@ import org.uiautomation.ios.exceptions.IOSAutomationException;
 public enum WebDriverLikeCommand {
   NEW_SESSION("POST","/session",String.class),
   GET_SESSION("GET", "/session/:sessionId",JSONObject.class),
+  SESSIONS("GET","/sessions",JSONArray.class),
   DELETE_SESSION("DELETE","/session/:sessionId",null),
   SET_TIMEOUT("POST", "/session/:sessionId/target/:reference/timeout",Void.class),
   GET_TIMEOUT("GET", "/session/:sessionId/target/:reference/timeout",Integer.class),

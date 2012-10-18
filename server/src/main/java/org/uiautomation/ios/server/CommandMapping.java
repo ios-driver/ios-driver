@@ -18,7 +18,6 @@ import java.lang.reflect.Constructor;
 import java.util.Iterator;
 
 import org.json.JSONObject;
-import org.uiautomation.ios.UIAModels.UIAButton;
 import org.uiautomation.ios.UIAModels.predicate.AbstractCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.CriteriaDecorator;
@@ -30,6 +29,7 @@ import org.uiautomation.ios.server.command.Handler;
 import org.uiautomation.ios.server.command.NotImplementedHandler;
 import org.uiautomation.ios.server.command.impl.DefaultUIAScriptHandler;
 import org.uiautomation.ios.server.command.impl.GetCapabilitiesCommandHandler;
+import org.uiautomation.ios.server.command.impl.GetSessions;
 import org.uiautomation.ios.server.command.impl.GetTimeoutCommandHandler;
 import org.uiautomation.ios.server.command.impl.LocalTarget;
 import org.uiautomation.ios.server.command.impl.LogElementTree;
@@ -43,6 +43,7 @@ public enum CommandMapping {
 
   NEW_SESSION(NewSession.class),
   GET_SESSION(GetCapabilitiesCommandHandler.class),
+  SESSIONS(GetSessions.class),
   DELETE_SESSION(StopSession.class),
   SET_TIMEOUT(SetTimeoutCommandHandler.class),
   GET_TIMEOUT(GetTimeoutCommandHandler.class),
