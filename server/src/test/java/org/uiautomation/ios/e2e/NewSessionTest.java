@@ -16,7 +16,7 @@ import org.uiautomation.ios.server.IOSServerConfiguration;
 import org.uiautomation.ios.server.utils.ClassicCommands;
 
 public class NewSessionTest {
-  private IOSServer server;
+  /*private IOSServer server;
   private static String[] args = {"-port", "4444", "-host", "localhost", "-aut",
       SampleApps.getUICatalogFile(), "-aut", SampleApps.getIntlMountainsFile(), "-aut"};
 
@@ -293,5 +293,5 @@ public class NewSessionTest {
   @AfterClass
   public void stopServer() throws Exception {
     server.stop();
-  }
+  }*/
 }

@@ -235,6 +235,32 @@ public class RemoteUIADriver implements UIADriver {
     }
   }
 
+  @Override
+  public void setTimeout(int timeoutInSeconds) {
+    JSONObject to = new JSONObject();
+    try {
+      to.put("timeout", timeoutInSeconds);
+      WebDriverLikeCommand command = WebDriverLikeCommand.SET_TIMEOUT;
+      Path p = new Path(command).withSession(session.getSessionId());
+      WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, to);
+      execute(request);
+    } catch (JSONException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+
+
+
+  @Override
+  public int getTimeout() {
+    WebDriverLikeCommand command = WebDriverLikeCommand.GET_TIMEOUT;
+    Path p = new Path(command).withSession(session.getSessionId());
+    WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, null);
+    WebDriverLikeResponse response = execute(request);
+    return (Integer)response.getValue();
+  }
+
 
 
 }

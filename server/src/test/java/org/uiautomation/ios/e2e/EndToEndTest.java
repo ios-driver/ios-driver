@@ -22,8 +22,9 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteUIATarget;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAWindow;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
+import org.uiautomation.ios.server.utils.ClassicCommands;
 
-public class EndToEndTests {
+public class EndToEndTest {
 
   private IOSServer server;
   private static String[] args = {"-port", "4444", "-host", "localhost", "-aut",
@@ -45,7 +46,7 @@ public class EndToEndTests {
               SampleApps.uiCatalogCap());
 
       RemoteUIATarget target = driver.getLocalTarget();
-      Assert.assertEquals(target.getReference(), "1");
+      Assert.assertEquals(target.getReference(), "2");
       target = (RemoteUIATarget) driver.getLocalTarget();
       Assert.assertEquals(target.getReference(), "2");
     } finally {
@@ -62,32 +63,29 @@ public class EndToEndTests {
       driver =
           new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",
               SampleApps.uiCatalogCap());
-
+      String sdk = SampleApps.uiCatalogCap().getSDKVersion();
+      if (sdk == null) {
+        sdk = ClassicCommands.getDefaultSDK();
+      }
       RemoteUIATarget target = driver.getLocalTarget();
-      Assert.assertEquals(target.getReference(), "1");
+      Assert.assertEquals(target.getReference(), "2");
 
-      String model = target.getModel();
-      Assert.assertEquals(model, "iPhone Simulator");
+      IOSCapabilities actual = driver.getCapabilities();
 
-      String name = target.getName();
-      Assert.assertEquals(name, "iPhone Simulator");
-
-      String systemName = target.getSystemName();
-      Assert.assertEquals(systemName, "iPhone OS");
-
-      String systemVersion = target.getSystemVersion();
-      Assert.assertEquals(systemVersion, "5.1");
+      Assert.assertEquals(actual.getCapability(IOSCapabilities.DEVICE), "iPhone Simulator");
+      Assert.assertEquals(actual.getCapability(IOSCapabilities.UI_NAME), "iPhone Simulator");
+      Assert.assertEquals(actual.getCapability(IOSCapabilities.UI_SYSTEM_NAME), "iPhone OS");
+      Assert.assertEquals(actual.getSDKVersion(), sdk);
+      Assert.assertNull(actual.getCapability(IOSCapabilities.UI_VERSION));
+      Assert.assertEquals(actual.getCapability(IOSCapabilities.UI_BUNDLE_ID),
+          "com.yourcompany.UICatalog");
+      Assert.assertEquals(actual.getCapability(IOSCapabilities.UI_BUNDLE_VERSION), "2.10");
 
       UIARect rect = target.getRect();
       Assert.assertEquals(rect.getX(), 0);
       Assert.assertEquals(rect.getX(), 0);
       Assert.assertEquals(rect.getHeight(), 480);
       Assert.assertEquals(rect.getWidth(), 320);
-
-      UIAApplication app = target.getFrontMostApp();
-      Assert.assertNull(app.getVersion());
-      Assert.assertEquals(app.getBundleId(), "com.yourcompany.UICatalog");
-      Assert.assertEquals(app.getBundleVersion(), "2.10");
 
     } finally {
       if (driver != null) {
@@ -136,48 +134,9 @@ public class EndToEndTests {
       }
     }
   }
-  
-  @Test
-  public void logElementTreeWithScreenshot() throws InterruptedException, JSONException {
-    RemoteUIADriver driver = null;
-    try {
 
-      driver =
-          new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",
-              SampleApps.uiCatalogCap());
+ 
 
-      File f = new File("logElementTreeTmp");
-      f.delete();
-      JSONObject object = driver.logElementTree(f,true);
-     
-      System.out.println(object.toString(2));
-      Assert.assertTrue(f.exists());
-      f.delete();
-    } finally {
-      if (driver != null) {
-        driver.quit();
-      }
-    }
-  }
-
-  
-  @Test
-  public void logElementTreeNoScreenshot() throws InterruptedException, JSONException {
-    RemoteUIADriver driver = null;
-    try {
-
-      driver =
-          new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",
-              SampleApps.uiCatalogCap());
-
-      JSONObject object = driver.logElementTree(null,false);
-      Assert.assertTrue(object.has("tree"));
-    } finally {
-      if (driver != null) {
-        driver.quit();
-      }
-    }
-  }
   @Test
   public void mainWindow() throws InterruptedException {
     RemoteUIADriver driver = null;

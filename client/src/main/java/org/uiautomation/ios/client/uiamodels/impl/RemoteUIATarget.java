@@ -56,6 +56,7 @@ public class RemoteUIATarget extends RemoteObject implements UIATarget {
     }
   }
 
+
   @Override
   public UIARect getRect() {
     return getUIARect(WebDriverLikeCommand.TARGET_RECT);
@@ -102,25 +103,7 @@ public class RemoteUIATarget extends RemoteObject implements UIATarget {
 
 
 
-  @Override
-  public void setTimeout(int timeoutInSeconds) {
-    JSONObject to = new JSONObject();
-    try {
-      to.put("timeout", timeoutInSeconds);
-      execute(WebDriverLikeCommand.SET_TIMEOUT, to);
-    } catch (JSONException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-  }
-
-
-
-  @Override
-  public int getTimeout() {
-    return (Integer) getObject(WebDriverLikeCommand.GET_TIMEOUT);
-  }
-
+  
 
 
   @Override

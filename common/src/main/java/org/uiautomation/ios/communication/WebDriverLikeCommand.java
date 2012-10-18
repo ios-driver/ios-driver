@@ -35,8 +35,8 @@ public enum WebDriverLikeCommand {
   DELETE_SESSION("DELETE","/session/:sessionId",null),
   SESSIONS("GET","/sessions",JSONArray.class),
  
-  SET_TIMEOUT("POST", "/session/:sessionId/target/:reference/timeout",Void.class),
-  GET_TIMEOUT("GET", "/session/:sessionId/target/:reference/timeout",Integer.class),
+  SET_TIMEOUT("POST", "/session/:sessionId/timeouts",Void.class),
+  GET_TIMEOUT("GET", "/session/:sessionId/timeouts",Integer.class),
   
   // UIATarget
   LOCAL_TARGET("GET","/session/:sessionId/localTarget",UIATarget.class),

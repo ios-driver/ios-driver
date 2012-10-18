@@ -15,8 +15,10 @@ package org.uiautomation.ios.UIAModels;
 
 import java.io.File;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.IOSCapabilities;
+import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 
 
@@ -31,6 +33,11 @@ public interface UIADriver {
   public JSONObject logElementTree(File screenshot,boolean translation) throws IOSAutomationException;
 
   public void quit();
+  
+  public void setTimeout(int timeoutInSeconds);
+ 
+  public int getTimeout();
+
 
 
 }
