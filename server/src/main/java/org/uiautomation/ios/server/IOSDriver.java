@@ -25,6 +25,7 @@ import java.util.Set;
 import org.json.JSONException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
+import org.uiautomation.ios.exceptions.SessionNotCreatedException;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.application.Localizable;
 import org.uiautomation.ios.server.application.ResourceCache;
@@ -54,8 +55,8 @@ public class IOSDriver {
   public ResourceCache getCache() {
     return cache;
   }
-  
-  public int getPort(){
+
+  public int getPort() {
     return hostInfo.getPort();
   }
 
@@ -71,7 +72,7 @@ public class IOSDriver {
       session.start(capabilities);
     } catch (IOSAutomationException e) {
       sessions.remove(session);
-      throw e;
+      throw new SessionNotCreatedException("Error starting the session.", e);
     }
 
     return session;
@@ -117,7 +118,7 @@ public class IOSDriver {
         return app;
       }
     }
-    throw new IOSAutomationException(desiredCapabilities.getRawCapabilities()
+    throw new SessionNotCreatedException(desiredCapabilities.getRawCapabilities()
         + "not found on server.");
   }
 
@@ -162,16 +163,17 @@ public class IOSDriver {
     }
     String l = desiredCapabilities.getLanguage();
     if (l != null && !applicationCapabilities.getSupportedLanguages().contains(l)) {
-      throw new IOSAutomationException("Language requested, " + l
+      throw new SessionNotCreatedException("Language requested, " + l
           + " ,isn't supported.Supported are : " + applicationCapabilities.getSupportedLanguages());
     }
 
     String sdk = desiredCapabilities.getSDKVersion();
-    //TODO freynaud validate for multi SDK
-    /*if (sdk != null && !sdk.equals(applicationCapabilities.getSDKVersion())) {
-      throw new IOSAutomationException("Cannot start sdk " + sdk + ". Run on "
-          + applicationCapabilities.getSDKVersion());
-    }*/
+    // TODO freynaud validate for multi SDK
+    /*
+     * if (sdk != null && !sdk.equals(applicationCapabilities.getSDKVersion())) { throw new
+     * IOSAutomationException("Cannot start sdk " + sdk + ". Run on " +
+     * applicationCapabilities.getSDKVersion()); }
+     */
 
     return true;
   }

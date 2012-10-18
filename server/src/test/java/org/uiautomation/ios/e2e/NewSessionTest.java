@@ -10,6 +10,7 @@ import org.uiautomation.ios.UIAModels.UIAApplication;
 import org.uiautomation.ios.UIAModels.UIATarget;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
+import org.uiautomation.ios.exceptions.SessionNotCreatedException;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
 import org.uiautomation.ios.server.utils.ClassicCommands;
@@ -17,7 +18,8 @@ import org.uiautomation.ios.server.utils.ClassicCommands;
 public class NewSessionTest {
   private IOSServer server;
   private static String[] args = {"-port", "4444", "-host", "localhost", "-aut",
-      SampleApps.getUICatalogFile(), "-aut", SampleApps.getIntlMountainsFile(),"-aut", SampleApps.getUICatalogIpad(),"-aut","/Users/freynaud/build/eBay2.2.2rc1.app"};
+      SampleApps.getUICatalogFile(), "-aut", SampleApps.getIntlMountainsFile(), "-aut",
+      SampleApps.getUICatalogIpad(), "-aut", "/Users/freynaud/build/eBay2.2.2rc1.app"};
 
   private static IOSServerConfiguration config = IOSServerConfiguration.create(args);
 
@@ -32,14 +34,16 @@ public class NewSessionTest {
     RemoteUIADriver driver = null;
     IOSCapabilities cap = IOSCapabilities.iphone("UICatalog", "2.10");
     String sdk = cap.getSDKVersion();
+    if (sdk == null) {
+      sdk = ClassicCommands.getDefaultSDK();
+    }
     try {
       driver =
           new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",
-            SampleApps.uiCatalogCap());
+              SampleApps.uiCatalogCap());
 
       UIATarget target = driver.getLocalTarget();
-      System.out.println(target.getSystemVersion());
-      
+
       UIAApplication app = target.getFrontMostApp();
       Assert.assertEquals(app.getBundleId(), "com.yourcompany.UICatalog");
       Assert.assertEquals(app.getBundleVersion(), "2.10");
@@ -115,7 +119,7 @@ public class NewSessionTest {
     }
   }
 
-  @Test(expectedExceptions = IOSAutomationException.class)
+  @Test(expectedExceptions = SessionNotCreatedException.class)
   public void recognizeUnsupportedLanguageLocale() {
     RemoteUIADriver driver = null;
     try {
@@ -132,7 +136,7 @@ public class NewSessionTest {
     }
   }
 
-  @Test(expectedExceptions = IOSAutomationException.class)
+  @Test(expectedExceptions = SessionNotCreatedException.class)
   public void doesntExist() {
     RemoteUIADriver driver = null;
     try {
@@ -161,7 +165,7 @@ public class NewSessionTest {
     }
   }
 
-  @Test(expectedExceptions = IOSAutomationException.class)
+  @Test(expectedExceptions = SessionNotCreatedException.class)
   public void wrongSDK() {
     IOSCapabilities cap = IOSCapabilities.iphone("InternationalMountains");
     cap.setSDKVersion("17");
@@ -176,7 +180,7 @@ public class NewSessionTest {
       }
     }
   }
-  
+
   @Test
   public void correctSDK() {
     IOSCapabilities cap = IOSCapabilities.iphone("InternationalMountains");
@@ -195,15 +199,16 @@ public class NewSessionTest {
       }
     }
   }
-  
-  
+
+
   @Test
   public void correctDevice() {
     IOSCapabilities cap = IOSCapabilities.iphone("UICatalog");
     RemoteUIADriver driver = null;
     try {
       driver =
-          new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",cap);
+          new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",
+              cap);
       UIATarget target = driver.getLocalTarget();
       Assert.assertEquals(target.getModel(), "iPhone Simulator");
     } finally {
@@ -211,11 +216,12 @@ public class NewSessionTest {
         driver.quit();
       }
     }
-    
+
     cap = IOSCapabilities.ipad("UICatalog");
     try {
       driver =
-          new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",cap);
+          new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",
+              cap);
       UIATarget target = driver.getLocalTarget();
       Assert.assertEquals(target.getModel(), "iPad Simulator");
     } finally {
@@ -224,15 +230,16 @@ public class NewSessionTest {
       }
     }
   }
-  
+
   @Test
   public void canUseAnyFlagFromInfoPlistMatches() {
     IOSCapabilities cap = IOSCapabilities.iphone("UICatalog");
-    cap.setCapability(IOSCapabilities.MAGIC_PREFIX+"CFBundleDevelopmentRegion","en");
+    cap.setCapability(IOSCapabilities.MAGIC_PREFIX + "CFBundleDevelopmentRegion", "en");
     RemoteUIADriver driver = null;
     try {
       driver =
-          new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",cap);
+          new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",
+              cap);
       UIATarget target = driver.getLocalTarget();
       UIAApplication app = target.getFrontMostApp();
       Assert.assertEquals(app.getBundleId(), "com.yourcompany.UICatalog");
@@ -243,15 +250,16 @@ public class NewSessionTest {
       }
     }
   }
-  
-  @Test(expectedExceptions=IOSAutomationException.class)
+
+  @Test(expectedExceptions = SessionNotCreatedException.class)
   public void canUseAnyFlagFromInfoPlistNoMatch() {
     IOSCapabilities cap = IOSCapabilities.iphone("UICatalog");
-    cap.setCapability(IOSCapabilities.MAGIC_PREFIX+"CFBundleDevelopmentRegion","de");
+    cap.setCapability(IOSCapabilities.MAGIC_PREFIX + "CFBundleDevelopmentRegion", "de");
     RemoteUIADriver driver = null;
     try {
       driver =
-          new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",cap);
+          new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",
+              cap);
       UIATarget target = driver.getLocalTarget();
       UIAApplication app = target.getFrontMostApp();
       Assert.assertEquals(app.getBundleId(), "com.yourcompany.UICatalog");
@@ -262,14 +270,16 @@ public class NewSessionTest {
       }
     }
   }
+
   @Test
   public void ignoreCapabilitiesWithoutMagicPrefix() {
     IOSCapabilities cap = IOSCapabilities.iphone("UICatalog");
-    cap.setCapability("CFBundleDevelopmentRegion","de");
+    cap.setCapability("CFBundleDevelopmentRegion", "de");
     RemoteUIADriver driver = null;
     try {
       driver =
-          new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",cap);
+          new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",
+              cap);
       UIATarget target = driver.getLocalTarget();
       UIAApplication app = target.getFrontMostApp();
       Assert.assertEquals(app.getBundleId(), "com.yourcompany.UICatalog");

@@ -20,7 +20,8 @@ public enum ExceptionStatus {
   UnknownError(13,IOSAutomationException.class),
   UnexpectedAlertOpen(26,UnexpectedAlertOpen.class),
   NoAlertOpenError(27,NoAlertOpenError.class),
-  InvalidSelector(32,InvalidCriteriaException.class);
+  InvalidSelector(32,InvalidCriteriaException.class),
+  SessionNotCreatedException(33,SessionNotCreatedException.class);
 
   private final Class<? extends Exception> ex;
   private final int status;
