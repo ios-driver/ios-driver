@@ -26,13 +26,14 @@ public class GetTimeoutCommandHandler extends UIAScriptHandler {
 
 
   private static final String getTimeout = 
-      "var timeout = UIAutomation.TIMEOUT_IN_SEC;"+
+      "var timeout =UIAutomation.getTimeout(':type');"+
       "UIAutomation.createJSONResponse(':sessionId',0,timeout)";
 
   public GetTimeoutCommandHandler(IOSDriver driver, WebDriverLikeRequest request)
       throws Exception {
     super(driver, request);
-    setJS(getTimeout);
+    String type = request.getPayload().getString("type");
+    setJS(getTimeout.replace(":type",type));
     addDecorator(new CorrectTimeout(driver));
   }
 

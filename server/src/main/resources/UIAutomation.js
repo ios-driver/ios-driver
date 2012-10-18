@@ -96,7 +96,9 @@ var UIAutomation = {
 	REGISTER : "http://localhost:$PORT/wd/hub/uiascriptproxy/register",
 	COMMAND : "http://localhost:$PORT/wd/hub/uiascriptproxy?sessionId=$SESSION",
 	HOST : UIATarget.localTarget().host(),
-	TIMEOUT_IN_SEC : 0,
+	TIMEOUT_IN_SEC : {
+		"implicit" : 0
+	},
 	SESSION : "$SESSION",
 
 	register : function() {
@@ -166,8 +168,11 @@ var UIAutomation = {
 		result.rect = target.rect();
 		return JSON.stringify(result);
 	},
-	setTimeout : function(timeoutInSeconds) {
-		this.TIMEOUT_IN_SEC = timeoutInSeconds;
+	setTimeout : function(type, timeoutInSeconds) {
+		this.TIMEOUT_IN_SEC[type] = timeoutInSeconds;
+	},
+	getTimeout : function(type) {
+		return this.TIMEOUT_IN_SEC[type];
 	},
 	setAlertHandler : function() {
 		UIATarget.onAlert = function onAlert(alert) {

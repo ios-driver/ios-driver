@@ -236,16 +236,16 @@ public class RemoteUIADriver implements UIADriver {
   }
 
   @Override
-  public void setTimeout(int timeoutInSeconds) {
+  public void setTimeout(String type, int timeoutInSeconds) {
     JSONObject to = new JSONObject();
     try {
       to.put("timeout", timeoutInSeconds);
+      to.put("type", type);
       WebDriverLikeCommand command = WebDriverLikeCommand.SET_TIMEOUT;
       Path p = new Path(command).withSession(session.getSessionId());
       WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, to);
       execute(request);
     } catch (JSONException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
@@ -253,12 +253,20 @@ public class RemoteUIADriver implements UIADriver {
 
 
   @Override
-  public int getTimeout() {
-    WebDriverLikeCommand command = WebDriverLikeCommand.GET_TIMEOUT;
-    Path p = new Path(command).withSession(session.getSessionId());
-    WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, null);
-    WebDriverLikeResponse response = execute(request);
-    return (Integer)response.getValue();
+  public int getTimeout(String type) {
+
+    try {
+      JSONObject payload = new JSONObject();
+      payload.put("type", type);
+      WebDriverLikeCommand command = WebDriverLikeCommand.GET_TIMEOUT;
+      Path p = new Path(command).withSession(session.getSessionId());
+      WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, payload);
+      WebDriverLikeResponse response = execute(request);
+      return (Integer) response.getValue();
+    } catch (JSONException e) {
+      throw new IOSAutomationException("JSON error", e);
+    }
+
   }
 
 

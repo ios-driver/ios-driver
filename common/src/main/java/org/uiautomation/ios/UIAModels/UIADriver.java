@@ -34,9 +34,9 @@ public interface UIADriver {
 
   public void quit();
   
-  public void setTimeout(int timeoutInSeconds);
+  public void setTimeout(String type,int timeoutInSeconds);
  
-  public int getTimeout();
+  public int getTimeout(String type);
 
 
 

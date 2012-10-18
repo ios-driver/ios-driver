@@ -25,7 +25,7 @@ import org.uiautomation.ios.server.utils.hack.TimeSpeeder;
 public class SetTimeoutCommandHandler extends UIAScriptHandler {
 
 
-  private static final String setTimeout = "UIAutomation.setTimeout(:timeout);"
+  private static final String setTimeout = "UIAutomation.setTimeout(':type',:timeout);"
       + "UIAutomation.createJSONResponse(':sessionId',0,'')";
 
   public SetTimeoutCommandHandler(IOSDriver driver, WebDriverLikeRequest request)
@@ -36,7 +36,9 @@ public class SetTimeoutCommandHandler extends UIAScriptHandler {
 
   private String getScript(IOSDriver driver, WebDriverLikeRequest r) throws Exception {
     int timeout = r.getPayload().getInt("timeout");
+    String type = r.getPayload().getString("type");
     String s = setTimeout.replace(":timeout", String.format("%d", timeout));
+    s = s.replace(":type",type);
     return s;
   }
 

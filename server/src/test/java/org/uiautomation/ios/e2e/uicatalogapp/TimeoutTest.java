@@ -20,10 +20,9 @@ public class TimeoutTest extends UICatalogTestsBase {
     try {
 
       driver = getDriver();
-      Assert.assertEquals(driver.getTimeout(), 0);
-      driver.setTimeout(17);
-      Assert.assertEquals(driver.getTimeout(), 17);
-
+      Assert.assertEquals(driver.getTimeout("implicit"), 0);
+      driver.setTimeout("implicit",17);
+      Assert.assertEquals(driver.getTimeout("implicit"), 17);
 
     } finally {
       if (driver != null) {
@@ -39,7 +38,7 @@ public class TimeoutTest extends UICatalogTestsBase {
 
       String name = "Buttons, Various uses of UIButton2";
       driver = getDriver();
-      driver.setTimeout(10);
+      driver.setTimeout("implicit",10);
       RemoteUIAWindow win = getMainWindow(driver);
       Criteria c1 = new TypeCriteria(UIATableCell.class);
       Criteria c2 = new NameCriteria(name);

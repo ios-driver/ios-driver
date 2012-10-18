@@ -221,7 +221,7 @@ UIAElement.prototype.element = function(depth, criteria) {
 	if(UIAutomation.TIMEOUT_IN_SEC == 0) {
 		return this._element(depth, criteria);
 	} else {
-		var timeout = UIAutomation.TIMEOUT_IN_SEC;
+		var timeout = UIAutomation.getTimeoit('implicit');
 		var limit = new Date().getTime() + (1000 * timeout);
 
 		while(new Date().getTime() < limit) {
