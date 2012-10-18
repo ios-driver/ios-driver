@@ -78,10 +78,22 @@ public class FailedWebDriverLikeResponse extends WebDriverLikeResponse {
         causeThrowable = createThrowable(cause);
       }
 
-      Object[] args = new Object[] {msg, (Exception) causeThrowable};
-      Class<?>[] argsClass = new Class[] {String.class, Throwable.class};
-      Constructor<?> constructor = c.getConstructor(argsClass);
-      Throwable exception = (Throwable) constructor.newInstance(args);
+      Object[] args;
+      Constructor<?> constructor;
+      Throwable exception;
+      try {
+        Class<?>[] argsClass = new Class[] {String.class, Throwable.class};
+        constructor = c.getConstructor(argsClass);
+        args = new Object[] {msg, (Exception) causeThrowable};
+        exception = (Throwable) constructor.newInstance(args);
+        
+      }catch (NoSuchMethodException e){
+        Class<?>[] argsClass = new Class[] {String.class};
+        constructor = c.getConstructor(argsClass);
+        args = new Object[] {msg};
+        exception = (Throwable) constructor.newInstance(args);
+      }
+
       JSONArray stack = serialized.optJSONArray("stacktrace");
       if (stack != null) {
         List<StackTraceElement> stacks = new ArrayList<StackTraceElement>();
