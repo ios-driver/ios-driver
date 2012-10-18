@@ -141,7 +141,7 @@ public class RemoteUIADriver implements UIADriver {
       long start = System.currentTimeMillis();
       HttpResponse response = client.execute(h, r);
       long total = System.currentTimeMillis() - start;
-      //System.out.println(total + " ms \tfor " + request.getGenericCommand());
+      // System.out.println(total + " ms \tfor " + request.getGenericCommand());
 
       o = Helper.extractObject(response);
       returnCode = o.getInt("status");
@@ -153,29 +153,33 @@ public class RemoteUIADriver implements UIADriver {
     if (returnCode == 0) {
       return new WebDriverLikeResponse(o);
     } else {
+      JSONObject value;
       Throwable t = null;
       try {
-        t = FailedWebDriverLikeResponse.createThrowable(o.getJSONObject("value"));
+        value = o.getJSONObject("value");
       } catch (JSONException e) {
         throw new IOSAutomationException(e);
       }
-      throw (IOSAutomationException) t;
+      t = FailedWebDriverLikeResponse.createThrowable(value);
+      if (t instanceof IOSAutomationException) {
+        throw (IOSAutomationException) t;
+      } else {
+        throw new IOSAutomationException("The server threw an unexpected exception", t);
+      }
     }
   }
 
   @Override
   public RemoteUIATarget getLocalTarget() {
-    /*WebDriverLikeCommand command = WebDriverLikeCommand.LOCAL_TARGET;
-    String genericPath = command.path();
-    String path = genericPath.replace(":sessionId", session.getSessionId());
-    WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), path);
-    try {
-      WebDriverLikeResponse response = execute(request);
-      return new RemoteUIATarget(this, ((JSONObject) response.getValue()).getString("ref"));
-    } catch (Exception e) {
-      throw new IOSAutomationException("Cannot get the localTarget() for the AUT.", e);
-    }*/
-    return  new RemoteUIATarget(this, "2");
+    /*
+     * WebDriverLikeCommand command = WebDriverLikeCommand.LOCAL_TARGET; String genericPath =
+     * command.path(); String path = genericPath.replace(":sessionId", session.getSessionId());
+     * WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), path); try {
+     * WebDriverLikeResponse response = execute(request); return new RemoteUIATarget(this,
+     * ((JSONObject) response.getValue()).getString("ref")); } catch (Exception e) { throw new
+     * IOSAutomationException("Cannot get the localTarget() for the AUT.", e); }
+     */
+    return new RemoteUIATarget(this, "2");
   }
 
   @Override
@@ -208,6 +212,8 @@ public class RemoteUIADriver implements UIADriver {
     WebDriverLikeResponse response;
     try {
       response = execute(request);
+    } catch (IOSAutomationException e) {
+      throw e;
     } catch (Exception e) {
       throw new IOSAutomationException(e);
     }

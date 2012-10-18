@@ -31,9 +31,6 @@ public interface UIAApplication {
   //statusBar
   //tabBar
   //toolbar
-  public String getBundleId();
-  public String getBundleVersion();
-  public String getVersion();
   
   //setPreferencesValueForKey
   //preferencesValueForKey

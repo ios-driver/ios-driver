@@ -22,29 +22,19 @@ public interface UIATarget {
   // TODO freynaud UIAPoint here.
   public void tap(int x, int y);
 
-  public String getModel();
 
   public UIARect getRect();
 
-  public String getName();
-
-  public String getSystemName();
-
-  public String getSystemVersion();
 
   public void takeScreenshot(String path);
 
   public UIAApplication getFrontMostApp();
-  
-  public String getLanguage();
-  
-  public String getLocale();
 
   public void setTimeout(int timeoutInSecnds);
 
-  public int getTimeout(); 
-  
+  public int getTimeout();
+
   public void setDeviceOrientation(Orientation o);
-  
+
   public UIAAlert getAlert() throws NoAlertOpenError;
 }

@@ -53,14 +53,8 @@ public enum CommandMapping {
   HOST(NotImplementedHandler.class),
   TREE(LogElementTree.class,".tree(:attachScreenshot)"),
   
-  MODEL(".model()"),
   TARGET_RECT(".rect()"),
   TARGET_TAP(".tap({x::x,y::y})"),
-  TARGET_NAME(".name()"),
-  SYSTEM_NAME(".systemName()"),
-  SYSTEM_VERSION(".systemVersion()"),
-  LANGUAGE(".language()"),
-  LOCALE(".locale()"),
   SET_ORIENTATION(".setDeviceOrientation(:orientation)"),
   
   SCREENSHOT_WITH_NAME(TakeScreenshot.class,".captureScreenWithName('" + TakeScreenshot.SCREEN_NAME + "')"),
@@ -75,10 +69,6 @@ public enum CommandMapping {
   KEYBOARD_KEYS(".keys()"), 
   KEYBOARD_BUTTONS (".buttons()"),
   TYPE_STRING(".typeString(:string)"),
-  BUNDLE_ID(".bundleID()"),
-  VERSION(".version()"),
-  BUNDLE_VERSION(".bundleVersion()"),
-   
     // UIAHost
    //PERFORM_TASK_WITH_PATH_ARGUMENTS_TIMEOUT(null),
   

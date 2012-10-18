@@ -13,21 +13,58 @@
  */
 package org.uiautomation.ios.server.command.impl;
 
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.uiautomation.ios.communication.FailedWebDriverLikeResponse;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
+import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.ServerSideSession;
+import org.uiautomation.ios.server.application.Localizable;
+import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 
-public class GetCapabilitiesCommandHandler extends UIAScriptHandler{
+public class GetCapabilitiesCommandHandler extends UIAScriptHandler {
 
-  private static final String capabilities =
-      "var json = UIAutomation.getCapabilities();" +
-      "UIAutomation.createJSONResponse(':sessionId',0,json)";
-  
+  private static final String capabilities = "var json = UIAutomation.getCapabilities();"
+      + "UIAutomation.createJSONResponse(':sessionId',0,json)";
+
   public GetCapabilitiesCommandHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
-    setJS(capabilities);
+    setJS(capabilities.replace(":sessionId", request.getSession()));
+    addDecorator(new AddAllSupportedLocalesDecorator(getDriver()));
   }
 
+
+  class AddAllSupportedLocalesDecorator extends PostHandleDecorator {
+
+    public AddAllSupportedLocalesDecorator(IOSDriver driver) {
+      super(driver);
+
+    }
+
+    @Override
+    public void decorate(WebDriverLikeResponse response) {
+      ServerSideSession session = getDriver().getSession(response.getSessionId());
+      try {
+        JSONObject o = new JSONObject((String) response.getValue());
+        JSONArray array = new JSONArray();
+        List<Localizable> ls = session.getApplication().getSupportedLanguages();
+
+        for (Localizable l : ls) {
+          array.put(l.getName());
+        }
+        o.put("supportedLocales", array);
+        response.setValue(o.toString());
+      } catch (JSONException e) {
+        response = new FailedWebDriverLikeResponse(session.getSessionId(), e);
+      }
+
+    }
+  }
 
 
 }

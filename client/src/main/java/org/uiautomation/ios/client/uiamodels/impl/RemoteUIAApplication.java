@@ -42,20 +42,7 @@ public class RemoteUIAApplication extends RemoteObject implements UIAApplication
     return (UIAKeyboard) getRemoteObject(WebDriverLikeCommand.KEYBOARD);
   }
 
-  @Override
-  public String getBundleId() {
-    return getObject(WebDriverLikeCommand.BUNDLE_ID);
-  }
-
-  @Override
-  public String getVersion() {
-    return getObject(WebDriverLikeCommand.VERSION);
-  }
-
-  @Override
-  public String getBundleVersion() {
-    return getObject(WebDriverLikeCommand.BUNDLE_VERSION);
-  }
+  
 
 
 

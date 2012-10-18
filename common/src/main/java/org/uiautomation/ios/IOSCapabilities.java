@@ -28,10 +28,23 @@ import org.uiautomation.ios.exceptions.IOSAutomationException;
 
 public class IOSCapabilities {
 
+  // UIAutomation properties called from instuments
+  // UIAAplication.bundleID();
+  public static final String UI_BUNDLE_ID = "bundleid";
+  // UIATarget.systemName();
+  public static final String UI_SYSTEM_NAME = "systemName";
+  // UIATarget.systemVersion();
+  public static final String UI_SDK_VERSION = "sdkVersion";
+  // UIATarget.name();
+  public static final String UI_NAME = "name";
+  // UIAAplication.bundleVersion();
+  public static final String UI_BUNDLE_VERSION = "bundleVersion";
+  // UIAAplication.version();
+  public static final String UI_VERSION = "version";
 
 
+  // plist + envt variable
   public static final String DEVICE = "device";
-  public static final String SDK_VERSION = "sdkVersion";
   public static final String IOS_SWITCHES = "ios.switches";
   public static final String LANGUAGE = "language";
   public static final String SUPPORTED_LANGUAGES = "supportedLanguages";
@@ -157,7 +170,7 @@ public class IOSCapabilities {
   }
 
   public String getSDKVersion() {
-    Object o = raw.get(SDK_VERSION);
+    Object o = raw.get(UI_SDK_VERSION);
     return ((String) o);
   }
 
@@ -183,7 +196,7 @@ public class IOSCapabilities {
   }
 
   public void setSDKVersion(String sdkVersion) {
-    raw.put(SDK_VERSION, sdkVersion);
+    raw.put(UI_SDK_VERSION, sdkVersion);
   }
 
   public void setLocale(String locale) {
@@ -246,6 +259,15 @@ public class IOSCapabilities {
 
   public void setBundleName(String bundleName) {
     setCapability(BUNDLE_NAME, bundleName);
+  }
+
+  public Object getCapability(String key) {
+    Object o = getRawCapabilities().get(key);
+    if (o != null && o.equals(JSONObject.NULL)) {
+      return null;
+    } else {
+      return o;
+    }
 
   }
 }

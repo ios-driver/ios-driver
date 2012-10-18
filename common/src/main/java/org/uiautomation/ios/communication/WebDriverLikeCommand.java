@@ -32,8 +32,9 @@ import org.uiautomation.ios.exceptions.IOSAutomationException;
 public enum WebDriverLikeCommand {
   NEW_SESSION("POST","/session",String.class),
   GET_SESSION("GET", "/session/:sessionId",JSONObject.class),
-  SESSIONS("GET","/sessions",JSONArray.class),
   DELETE_SESSION("DELETE","/session/:sessionId",null),
+  SESSIONS("GET","/sessions",JSONArray.class),
+ 
   SET_TIMEOUT("POST", "/session/:sessionId/target/:reference/timeout",Void.class),
   GET_TIMEOUT("GET", "/session/:sessionId/target/:reference/timeout",Integer.class),
   
@@ -41,14 +42,8 @@ public enum WebDriverLikeCommand {
   LOCAL_TARGET("GET","/session/:sessionId/localTarget",UIATarget.class),
   TREE("GET","/session/:sessionId/tree/:reference",String.class),
   HOST("GET","/session/:sessionId/uiaTarget/:reference/host",UIHost.class),
-  MODEL("GET","/session/:sessionId/uiaTarget/:reference/model",String.class),
   TARGET_RECT("GET","/session/:sessionId/uiaTarget/:reference/rect",UIARect.class),
   TARGET_TAP("GET","/session/:sessionId/tap/:reference",Void.class),
-  TARGET_NAME("GET","/session/:sessionId/uiaTarget/:reference/name",String.class),
-  SYSTEM_NAME("GET","/session/:sessionId/uiaTarget/:reference/systemName",String.class),
-  SYSTEM_VERSION("GET","/session/:sessionId/uiaTarget/:reference/systemVersion",String.class),
-  LANGUAGE("GET","/session/:sessionId/uiaTarget/:reference/language",String.class),
-  LOCALE("GET","/session/:sessionId/uiaTarget/:reference/locale",String.class),
   SET_ORIENTATION("POST","/session/:sessionId/uiaTarget/:reference/oriantation",Void.class),
   
   SCREENSHOT_WITH_NAME("POST","/session/:sessionId/uiaTarget/:reference/screenshotWithName",Void.class),
@@ -61,9 +56,6 @@ public enum WebDriverLikeCommand {
   // UIAApplication
   MAIN_WINDOW("GET" , "/session/:sessionId/uiaApplication/:reference/mainWindow",UIAWindow.class),
   WINDOWS("GET" , "/session/:sessionId/uiaTarget/:reference/windows",UIAElementArray.class),
-  BUNDLE_ID("GET" , "/session/:sessionId/uiaApplication/:reference/bundleId",String.class),
-  VERSION("GET" , "/session/:sessionId/uiaApplication/:reference/version",String.class),
-  BUNDLE_VERSION("GET" , "/session/:sessionId/uiaApplication/:reference/bundleVersion",String.class),
   
   // UIAElement
   HIT_POINT("GET" , "/session/:sessionId/uiaElement/:reference/hitPoint",UIAPoint.class),

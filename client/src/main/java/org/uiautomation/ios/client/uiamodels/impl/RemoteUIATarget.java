@@ -24,7 +24,6 @@ import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.UIAModels.UIAAlert;
 import org.uiautomation.ios.UIAModels.UIARect;
 import org.uiautomation.ios.UIAModels.UIATarget;
-import org.uiautomation.ios.UIAModels.UIAWindow;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
@@ -35,12 +34,6 @@ public class RemoteUIATarget extends RemoteObject implements UIATarget {
 
   public RemoteUIATarget(RemoteUIADriver driver, String id) {
     super(driver, id);
-  }
-
-
-
-  public String getModel() {
-    return getObject(WebDriverLikeCommand.MODEL);
   }
 
 
@@ -68,20 +61,7 @@ public class RemoteUIATarget extends RemoteObject implements UIATarget {
     return getUIARect(WebDriverLikeCommand.TARGET_RECT);
   }
 
-  @Override
-  public String getName() {
-    return getObject(WebDriverLikeCommand.TARGET_NAME);
-  }
 
-  @Override
-  public String getSystemName() {
-    return getObject(WebDriverLikeCommand.SYSTEM_NAME);
-  }
-
-  @Override
-  public String getSystemVersion() {
-    return getObject(WebDriverLikeCommand.SYSTEM_VERSION);
-  }
 
   @Override
   public void takeScreenshot(String path) {
@@ -144,20 +124,6 @@ public class RemoteUIATarget extends RemoteObject implements UIATarget {
 
 
   @Override
-  public String getLanguage() {
-    return getObject(WebDriverLikeCommand.LANGUAGE);
-  }
-
-
-
-  @Override
-  public String getLocale() {
-    return getObject(WebDriverLikeCommand.LOCALE);
-  }
-
-
-
-  @Override
   public void setDeviceOrientation(Orientation o) {
     JSONObject to = new JSONObject();
     try {
@@ -181,4 +147,7 @@ public class RemoteUIATarget extends RemoteObject implements UIATarget {
     alert.getName();
     return alert;
   }
+
+
+
 }
