@@ -102,9 +102,11 @@ public class DefaultUIAScriptHandler extends UIAScriptHandler {
     String method = mapping.jsMethod(getRequest().getPayload(), getAUT());
 
     String js =
-        template.replace(":jsMethod", method)
-            .replace(":sessionId", getRequest().getSession())
-            .replace(":reference", getRequest().getVariableValue(":reference"));
+        template.replace(":jsMethod", method).replace(":sessionId", getRequest().getSession());
+    if (getRequest().hasVariable(":reference")) {
+      js = js.replace(":reference", getRequest().getVariableValue(":reference"));
+    }
+
     return js;
   }
 

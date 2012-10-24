@@ -29,6 +29,7 @@ import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.UIAModels.UIADriver;
 import org.uiautomation.ios.UIAModels.UIAElement;
+import org.uiautomation.ios.UIAModels.UIAElementArray;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.communication.FailedWebDriverLikeResponse;
 import org.uiautomation.ios.communication.Helper;
@@ -278,21 +279,27 @@ public class RemoteUIADriver implements UIADriver {
       JSONObject payload = new JSONObject();
       payload.put("depth", -1);
       payload.put("criteria", c.getJSONRepresentation());
-      return (UIAElement) getRemoteObject(WebDriverLikeCommand.ELEMENT, payload);
+      return (UIAElement) getRemoteObject(WebDriverLikeCommand.ELEMENT_ROOT, payload);
     } catch (JSONException e) {
       throw new IOSAutomationException(e);
     }
   }
 
   @Override
-  public <T> T findElement(Class<T> type, Criteria c) throws NoSuchElementException {
-    // TODO Auto-generated method stub
-    return null;
+  public UIAElementArray<UIAElement> findElements(Criteria c) {
+    try {
+      JSONObject payload = new JSONObject();
+      payload.put("depth", -1);
+      payload.put("criteria", c.getJSONRepresentation());
+      return (UIAElementArray<UIAElement>) getRemoteObject(WebDriverLikeCommand.ELEMENTS_ROOT, payload);
+    } catch (JSONException e) {
+      throw new IOSAutomationException(e);
+    }
   }
 
   public RemoteObject getRemoteObject(WebDriverLikeCommand command, JSONObject payload) {
     try {
-      Path p = new Path(command).withSession(getSession().getSessionId()).withoutReference();
+      Path p = new Path(command).withSession(getSession().getSessionId());
 
       WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, payload);
       WebDriverLikeResponse response = execute(request);

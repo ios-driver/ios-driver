@@ -2,6 +2,7 @@ package org.uiautomation.ios.e2e.uicatalogapp;
 
 import org.testng.annotations.Test;
 import org.uiautomation.ios.UIAModels.UIAElement;
+import org.uiautomation.ios.UIAModels.UIAElementArray;
 import org.uiautomation.ios.UIAModels.UIATableCell;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
@@ -24,6 +25,26 @@ public class FindElementTest extends UICatalogTestsBase {
      
       UIAElement element = driver.findElement(c);
       System.out.println(element);
+
+    } finally {
+      if (driver != null) {
+        driver.quit();
+      }
+    }
+  }
+  
+  @Test
+  public void findElementsOnRoot() throws InterruptedException {
+    RemoteUIADriver driver = null;
+    try {
+      driver = getDriver();
+      
+    
+      Criteria cell = new TypeCriteria(UIATableCell.class);
+     
+   
+      UIAElementArray<UIAElement> array = driver.findElements(cell);
+      System.out.println(array.size());
 
     } finally {
       if (driver != null) {

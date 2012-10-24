@@ -122,6 +122,11 @@ public class WebDriverLikeRequest {
     String[] pieces = path.split("/");
     return pieces[i];
   }
+  public boolean hasVariable(String variable) {
+    WebDriverLikeCommand genericCommand = getGenericCommand();
+    boolean ok = genericCommand.path().contains(variable);
+    return ok;
+  }
 
   public String getSession() {
       return getVariableValue(":sessionId");  
