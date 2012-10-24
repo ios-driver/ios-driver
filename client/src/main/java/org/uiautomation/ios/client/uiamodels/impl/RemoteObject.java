@@ -90,7 +90,7 @@ public abstract class RemoteObject {
    *         list for a UIAElementArray.
    * @throws Exception
    */
-  private RemoteObject createObject(RemoteUIADriver driver, JSONObject uiObject, Class<?> expected)
+  public static RemoteObject createObject(RemoteUIADriver driver, JSONObject uiObject, Class<?> expected)
       throws Exception {
     String ref = uiObject.getString("ref");
     String type = uiObject.getString("type");

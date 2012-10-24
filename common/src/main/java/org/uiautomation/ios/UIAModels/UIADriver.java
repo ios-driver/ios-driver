@@ -18,15 +18,17 @@ import java.io.File;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.IOSCapabilities;
+import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
+import org.uiautomation.ios.exceptions.NoSuchElementException;
 
 
 public interface UIADriver {
 
   public Session getSession();
   
-   public UIATarget getLocalTarget();
+  public UIATarget getLocalTarget();
 
   public IOSCapabilities getCapabilities() throws Exception;
 
@@ -38,6 +40,9 @@ public interface UIADriver {
  
   public int getTimeout(String type);
 
+  public UIAElement findElement(Criteria c) throws NoSuchElementException;
+
+  public <T> T findElement(Class<T> type, Criteria c) throws NoSuchElementException;
 
 
 }

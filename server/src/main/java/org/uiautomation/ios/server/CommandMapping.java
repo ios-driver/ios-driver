@@ -18,6 +18,7 @@ import java.lang.reflect.Constructor;
 import java.util.Iterator;
 
 import org.json.JSONObject;
+import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.predicate.AbstractCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.CriteriaDecorator;
@@ -78,6 +79,11 @@ public enum CommandMapping {
   RECT(".rect()"),
   
   PARENT(NotImplementedHandler.class),
+  
+
+  ELEMENT_ROOT(""),
+  ELEMENTS_ROOT(""),
+  
   ELEMENT(".element(:depth,:criteria)"),
   ELEMENTS(".elements2(:depth,:criteria)"),
   ANCESTRY(NotImplementedHandler.class),
