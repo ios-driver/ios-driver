@@ -30,6 +30,7 @@ import org.uiautomation.ios.server.command.Handler;
 import org.uiautomation.ios.server.command.NotImplementedHandler;
 import org.uiautomation.ios.server.command.impl.DefaultUIAScriptHandler;
 import org.uiautomation.ios.server.command.impl.FindElementRoot;
+import org.uiautomation.ios.server.command.impl.FindElementsRoot;
 import org.uiautomation.ios.server.command.impl.GetCapabilitiesCommandHandler;
 import org.uiautomation.ios.server.command.impl.GetSessions;
 import org.uiautomation.ios.server.command.impl.GetTimeoutCommandHandler;
@@ -83,7 +84,7 @@ public enum CommandMapping {
   
 
   ELEMENT_ROOT(FindElementRoot.class),
-  ELEMENTS_ROOT(""),
+  ELEMENTS_ROOT(FindElementsRoot.class),
   
   ELEMENT(".element(:depth,:criteria)"),
   ELEMENTS(".elements2(:depth,:criteria)"),

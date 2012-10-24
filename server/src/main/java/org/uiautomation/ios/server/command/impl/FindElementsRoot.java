@@ -5,14 +5,14 @@ import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 
-public class FindElementRoot extends UIAScriptHandler {
+public class FindElementsRoot extends UIAScriptHandler {
 
   private static final String jsTemplate =
       "var root = UIAutomation.cache.get('0');" +
-      "var result = root.element(:depth,:criteria);" +
+      "var result = root.elements2(:depth,:criteria);" +
       "UIAutomation.createJSONResponse(':sessionId',0,result);";
 
-  public FindElementRoot(IOSDriver driver, WebDriverLikeRequest request) {
+  public FindElementsRoot(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
     try {
       int depth = request.getPayload().getInt("depth");
@@ -20,12 +20,10 @@ public class FindElementRoot extends UIAScriptHandler {
       String js =
           jsTemplate.replace(":sessionId", request.getSession()).replace(":depth", "" + depth)
               .replace(":criteria", criteria);
+      System.out.println("FindElementRoot:" + js);
       setJS(js);
     } catch (Exception e) {
       throw new IOSAutomationException("error parsing the payload", e);
     }
-
-
-
   }
 }
