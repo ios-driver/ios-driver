@@ -62,8 +62,12 @@ public enum WebDriverLikeCommand {
   RECT("GET" , "/session/:sessionId/uiaElement/:reference/rect",UIARect.class),
   
   PARENT("GET" , "/session/:sessionId/uiaElement/:reference/parent",UIAElement.class),
-  ELEMENT("GET" , "/session/:sessionId/uiaElement/:reference/elements",UIAElement.class),
-  ELEMENTS("GET" , "/session/:sessionId/uiaElement/:reference/elements2",UIAElementArray.class),
+  
+  ELEMENT_ROOT("POST" , "/session/:sessionId/uiaElement/:reference/elements",UIAElement.class),
+  ELEMENTS_ROOT("POST" , "/session/:sessionId/uiaElement/:reference/elements2",UIAElementArray.class),
+  
+  ELEMENT("POST" , "/session/:sessionId/uiaElement/:reference/elements",UIAElement.class),
+  ELEMENTS("POST" , "/session/:sessionId/uiaElement/:reference/elements2",UIAElementArray.class),
   
   ANCESTRY("GET" , "/session/:sessionId/uiaElement/:reference/ancestry",UIAElement.class),
   ACTIVITY_INDICATORS("GET" , "/session/:sessionId/uiaElement/:reference/activityIndicator",UIAElementArray.class),
