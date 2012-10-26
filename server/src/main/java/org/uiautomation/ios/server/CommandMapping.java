@@ -60,7 +60,7 @@ public enum CommandMapping {
   TARGET_TAP(".tap({x::x,y::y})"),
   SET_ORIENTATION(".setDeviceOrientation(:orientation)"),
   
-  SCREENSHOT_WITH_NAME(TakeScreenshot.class,".captureScreenWithName('" + TakeScreenshot.SCREEN_NAME + "')"),
+  SCREENSHOT(TakeScreenshot.class),
   
   FONT_MOST_APP(".frontMostApp()"),
   

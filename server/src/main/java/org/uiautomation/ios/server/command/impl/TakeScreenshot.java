@@ -22,15 +22,19 @@ import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
+import org.uiautomation.ios.server.command.UIAScriptHandler;
 import org.uiautomation.ios.server.utils.FileTo64EncodedStringUtils;
 
 
-public class TakeScreenshot extends DefaultUIAScriptHandler {
+public class TakeScreenshot extends UIAScriptHandler {
 
   public static final String SCREEN_NAME = "tmpScreenshot";
+  private static final String jsTemplate = "UIATarget.localTarget().captureScreenWithName('"+ SCREEN_NAME + "');" +
+      		"UIAutomation.createJSONResponse(':sessionId',0,'ok');";
 
   public TakeScreenshot(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
+    setJS(jsTemplate.replace(":sessionId",request.getSession()));
     addDecorator(new SendBack64EncodedStringDecorator(driver));
   }
 
@@ -43,7 +47,9 @@ public class TakeScreenshot extends DefaultUIAScriptHandler {
     @Override
     public void decorate(WebDriverLikeResponse response) {
 
-      String path = getDriver().getSession(getRequest().getSession()).getOutputFolder() + "/Run 1/" + SCREEN_NAME +".png";
+      String path =
+          getDriver().getSession(getRequest().getSession()).getOutputFolder() + "/Run 1/"
+              + SCREEN_NAME + ".png";
       File source = new File(path);
       FileTo64EncodedStringUtils encoder = new FileTo64EncodedStringUtils(source);
       try {

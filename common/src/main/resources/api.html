@@ -20,49 +20,158 @@
 	color: green;
 }
 
+.na a:link {
+	color: yellow;
+}
+
+.na a:visited {
+	color: yellow;
+}
+
+.na a:hover {
+	color: yellow;
+}
+
+.na a:active {
+	color: yellow;
+}
+
 .edit {
 	color: red;
 }
 </style>
 </head>
 <body>
+
+	<h1 id='criteria'>Criteria</h1>
+
+	Main difference between the selenium JSON Criteria used to filter the object tree and get a subset of it. Used by the findElement and findElements
+	methods.
+
+
+
+	<h2>Property criteria</h2>
+
+	filtering based on the properties of the elements.
+	<table class="wikitable">
+		<tbody>
+			<tr>
+				<td><strong>property</strong>
+				</td>
+				<td><strong>value</strong>
+				</td>
+			</tr>
+			<tr>
+				<td>depth</td>
+				<td>(integer) depth of the element tree that will be considered for the search. -1 to search the entire tree.</td>
+			</tr>
+			<tr>
+				<td>method name</td>
+				<td>the kind of attribute to filter against. Can be one of the following : type (to filter by type of UIElement) , name , label, value</td>
+			</tr>
+			<tr>
+				<td>matching</td>
+				<td>how the matching will be done.Possible values are exact, starts, contains, ends, regex;</td>
+			</tr>
+			<tr>
+				<td>l10n</td>
+				<td>what kind of translation will be performed before the matching. Possible values are none,serverL10N. Can be extending for convinience to
+					have client side l10n too, but that will be done before calling the protocol</td>
+			</tr>
+			<tr>
+				<td>expected</td>
+				<td>the expected value for the matching.</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<br />
+	<b>Examples:</b>
+	<p>to get the elements with name == test</p>
+	<pre>
+{"l10n":"none","expected":"test","matching":"exact","method":"name"}
+</pre>
+
+	<p>to get all the UIAButton</p>
+	<pre>
+{"l10n":"none","expected":"UIAButton","matching":"exact","method":"type"}
+</pre>
+
+	<p>to get the elements with label starting with A</p>
+	<pre>
+{"l10n":"none","expected":"A","matching":"starts","method":"label"}
+</pre>
+	<h2>Composition</h2>
+
+	Criteria can then be composed by combining several criteria using AND, OR and NOT and a list of criteria.
+
+	<p>To get all the elements with a label starting with A, containing B and ending with C</p>
+	<pre>
+{"AND": [
+  {
+    "expected": "A",
+    "l10n": "none",
+    "matching": "starts",
+    "method": "label"
+  },
+  {
+    "expected": "B",
+    "l10n": "none",
+    "matching": "contains",
+    "method": "label"
+  },
+  {
+    "expected": "C",
+    "l10n": "none",
+    "matching": "ends",
+    "method": "label"
+  }
+]}
+
+</pre>
+
+	<h2>Empty criteria</h2>
+	{} matches all elements.
+
+
+	<h1>Commands:</h1>
 	<ul>
 		<li class='done'><a href="#/status">/status </a></li>
 		<li class='done'><a href="#/session">/session</a></li>
 		<li class='done'><a href="#/sessions">/sessions</a></li>
 		<li class='done'><a href="#/session/:sessionId">/session/:sessionId</a></li>
 		<li class='done'><a href="#/session/:sessionId/timeouts">/session/:sessionId/timeouts</a></li>
-		<li><a href="#/session/:sessionId/timeouts/async_script">/session/:sessionId/timeouts/async_script</a></li>
-		<li><a href="#/session/:sessionId/timeouts/implicit_wait">/session/:sessionId/timeouts/implicit_wait</a></li>
-		<li><a href="#/session/:sessionId/window_handle">/session/:sessionId/window_handle</a></li>
-		<li><a href="#/session/:sessionId/window_handles">/session/:sessionId/window_handles</a></li>
-		<li><a href="#/session/:sessionId/url">/session/:sessionId/url</a></li>
-		<li><a href="#/session/:sessionId/forward">/session/:sessionId/forward</a></li>
-		<li><a href="#/session/:sessionId/back">/session/:sessionId/back</a></li>
-		<li><a href="#/session/:sessionId/refresh">/session/:sessionId/refresh</a></li>
-		<li><a href="#/session/:sessionId/execute">/session/:sessionId/execute</a></li>
-		<li><a href="#/session/:sessionId/execute_async">/session/:sessionId/execute_async</a></li>
-		<li><a href="#/session/:sessionId/screenshot">/session/:sessionId/screenshot</a></li>
-		<li><a href="#/session/:sessionId/ime/available_engines">/session/:sessionId/ime/available_engines</a></li>
-		<li><a href="#/session/:sessionId/ime/active_engine">/session/:sessionId/ime/active_engine</a></li>
-		<li><a href="#/session/:sessionId/ime/activated">/session/:sessionId/ime/activated</a></li>
-		<li><a href="#/session/:sessionId/ime/deactivate">/session/:sessionId/ime/deactivate</a></li>
-		<li><a href="#/session/:sessionId/ime/activate">/session/:sessionId/ime/activate</a></li>
+		<li class='na'><a href="#/session/:sessionId/timeouts/async_script">/session/:sessionId/timeouts/async_script</a></li>
+		<li class='na'><a href="#/session/:sessionId/timeouts/implicit_wait">/session/:sessionId/timeouts/implicit_wait</a></li>
+		<li class='na'><a href="#/session/:sessionId/window_handle">/session/:sessionId/window_handle</a></li>
+		<li class='na'><a href="#/session/:sessionId/window_handles">/session/:sessionId/window_handles</a></li>
+		<li class='na'><a href="#/session/:sessionId/url">/session/:sessionId/url</a></li>
+		<li class='na'><a href="#/session/:sessionId/forward">/session/:sessionId/forward</a></li>
+		<li class='na'><a href="#/session/:sessionId/back">/session/:sessionId/back</a></li>
+		<li class='na'><a href="#/session/:sessionId/refresh">/session/:sessionId/refresh</a></li>
+		<li class='na'><a href="#/session/:sessionId/execute">/session/:sessionId/execute</a></li>
+		<li class='na'><a href="#/session/:sessionId/execute_async">/session/:sessionId/execute_async</a></li>
+		<li class='done'><a href="#/session/:sessionId/screenshot">/session/:sessionId/screenshot</a></li>
+		<li class='na'><a href="#/session/:sessionId/ime/available_engines">/session/:sessionId/ime/available_engines</a></li>
+		<li class='na'><a href="#/session/:sessionId/ime/active_engine">/session/:sessionId/ime/active_engine</a></li>
+		<li class='na'><a href="#/session/:sessionId/ime/activated">/session/:sessionId/ime/activated</a></li>
+		<li class='na'><a href="#/session/:sessionId/ime/deactivate">/session/:sessionId/ime/deactivate</a></li>
+		<li class='na'><a href="#/session/:sessionId/ime/activate">/session/:sessionId/ime/activate</a></li>
 		<li><a href="#/session/:sessionId/frame">/session/:sessionId/frame</a></li>
 		<li><a href="#/session/:sessionId/window">/session/:sessionId/window</a></li>
-		<li><a href="#/session/:sessionId/window/:windowHandle/size">/session/:sessionId/window/:windowHandle/size</a></li>
-		<li><a href="#/session/:sessionId/window/:windowHandle/position">/session/:sessionId/window/:windowHandle/position</a></li>
-		<li><a href="#/session/:sessionId/window/:windowHandle/maximize">/session/:sessionId/window/:windowHandle/maximize</a></li>
-		<li><a href="#/session/:sessionId/cookie">/session/:sessionId/cookie</a></li>
-		<li><a href="#/session/:sessionId/cookie/:name">/session/:sessionId/cookie/:name</a></li>
+		<li class='na'><a href="#/session/:sessionId/window/:windowHandle/size">/session/:sessionId/window/:windowHandle/size</a></li>
+		<li class='na'><a href="#/session/:sessionId/window/:windowHandle/position">/session/:sessionId/window/:windowHandle/position</a></li>
+		<li class='na'><a href="#/session/:sessionId/window/:windowHandle/maximize">/session/:sessionId/window/:windowHandle/maximize</a></li>
+		<li class='na'><a href="#/session/:sessionId/cookie">/session/:sessionId/cookie</a></li>
+		<li class='na'><a href="#/session/:sessionId/cookie/:name">/session/:sessionId/cookie/:name</a></li>
 		<li><a href="#/session/:sessionId/source">/session/:sessionId/source</a></li>
 		<li><a href="#/session/:sessionId/title">/session/:sessionId/title</a></li>
-		<li><a href="#/session/:sessionId/element">/session/:sessionId/element</a></li>
-		<li><a href="#/session/:sessionId/elements">/session/:sessionId/elements</a></li>
+		<li class='done'><a href="#/session/:sessionId/element">/session/:sessionId/element</a></li>
+		<li class='done'><a href="#/session/:sessionId/elements">/session/:sessionId/elements</a></li>
 		<li><a href="#/session/:sessionId/element/active">/session/:sessionId/element/active</a></li>
-		<li><a href="#/session/:sessionId/element/:id">/session/:sessionId/element/:id</a></li>
-		<li><a href="#/session/:sessionId/element/:id/element">/session/:sessionId/element/:id/element</a></li>
-		<li><a href="#/session/:sessionId/element/:id/elements">/session/:sessionId/element/:id/elements</a></li>
+		<li class='done'><a href="#/session/:sessionId/element/:id">/session/:sessionId/element/:id</a></li>
+		<li class='done'><a href="#/session/:sessionId/element/:id/element">/session/:sessionId/element/:id/element</a></li>
+		<li class='done'><a href="#/session/:sessionId/element/:id/elements">/session/:sessionId/element/:id/elements</a></li>
 		<li><a href="#/session/:sessionId/element/:id/click">/session/:sessionId/element/:id/click</a></li>
 		<li><a href="#/session/:sessionId/element/:id/submit">/session/:sessionId/element/:id/submit</a></li>
 		<li><a href="#/session/:sessionId/element/:id/text">/session/:sessionId/element/:id/text</a></li>
@@ -2795,54 +2904,9 @@
 		<dd>
 			<dl>
 				<dd>
-					Search for an element on the page, starting from the document root. The located element will be returned as a WebElement<a
-						href="http://code.google.com/p/selenium/w/edit/WebElement">?</a> JSON object. The table below lists the locator strategies that each server
-					should support. Each locator must return the first matching element located in the DOM.
-					<p></p>
-					<p></p>
-					<table class="wikitable">
-						<tbody>
-							<tr>
-								<td><strong>Strategy</strong>
-								</td>
-								<td><strong>Description</strong>
-								</td>
-							</tr>
-							<tr>
-								<td>class name</td>
-								<td>Returns an element whose class name contains the search value; compound class names are not permitted.</td>
-							</tr>
-							<tr>
-								<td>css selector</td>
-								<td>Returns an element matching a CSS selector.</td>
-							</tr>
-							<tr>
-								<td>id</td>
-								<td>Returns an element whose ID attribute matches the search value.</td>
-							</tr>
-							<tr>
-								<td>name</td>
-								<td>Returns an element whose NAME attribute matches the search value.</td>
-							</tr>
-							<tr>
-								<td>link text</td>
-								<td>Returns an anchor element whose visible text matches the search value.</td>
-							</tr>
-							<tr>
-								<td>partial link text</td>
-								<td>Returns an anchor element whose visible text partially matches the search value.</td>
-							</tr>
-							<tr>
-								<td>tag name</td>
-								<td>Returns an element whose tag name matches the search value.</td>
-							</tr>
-							<tr>
-								<td>xpath</td>
-								<td>Returns an element matching an XPath expression.</td>
-							</tr>
-						</tbody>
-					</table>
-					<p></p>
+					Search for an element on the page, starting from the document root <span class='edit'>(its main window)</span>. The located element will be
+					returned as a WebElement<a href="http://code.google.com/p/selenium/w/edit/WebElement">?</a> JSON object. The table below lists the locator
+					strategies that each server should support. Each locator must return the first matching element located in the DOM.
 					<p></p>
 				</dd>
 				<dd>
@@ -2856,22 +2920,22 @@
 						</dd>
 					</dl>
 				</dd>
-				<dd>
+				<dd class='edit'>
 					<dl>
 						<dt>
 							<strong>JSON Parameters:</strong>
 						</dt>
 						<dd>
-							<tt>using</tt>
+							<tt>depth</tt>
 							-
-							<tt>{string}</tt>
-							The locator strategy to use.
+							<tt>{int}</tt>
+							the depth the element tree to be considered for the search
 						</dd>
 						<dd>
-							<tt>value</tt>
+							<tt>criteria</tt>
 							-
-							<tt>{string}</tt>
-							The The search target.
+							<tt>{object}</tt>
+							The criteria used to filter the result. <a href='#criteria'>criteria</a>
 						</dd>
 					</dl>
 				</dd>
@@ -2892,16 +2956,8 @@
 							<strong>Potential Errors:</strong>
 						</dt>
 						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-						<dd>
 							<tt>NoSuchElement</tt>
 							- If the element cannot be found.
-						</dd>
-						<dd>
-							<tt>XPathLookupError</tt>
-							- If using XPath and the input expression is invalid.
 						</dd>
 					</dl>
 				</dd>
@@ -2931,48 +2987,7 @@
 					should support. Elements should be returned in the order located in the DOM.
 					<p></p>
 					<p></p>
-					<table class="wikitable">
-						<tbody>
-							<tr>
-								<td><strong>Strategy</strong>
-								</td>
-								<td><strong>Description</strong>
-								</td>
-							</tr>
-							<tr>
-								<td>class name</td>
-								<td>Returns all elements whose class name contains the search value; compound class names are not permitted.</td>
-							</tr>
-							<tr>
-								<td>css selector</td>
-								<td>Returns all elements matching a CSS selector.</td>
-							</tr>
-							<tr>
-								<td>id</td>
-								<td>Returns all elements whose ID attribute matches the search value.</td>
-							</tr>
-							<tr>
-								<td>name</td>
-								<td>Returns all elements whose NAME attribute matches the search value.</td>
-							</tr>
-							<tr>
-								<td>link text</td>
-								<td>Returns all anchor elements whose visible text matches the search value.</td>
-							</tr>
-							<tr>
-								<td>partial link text</td>
-								<td>Returns all anchor elements whose visible text partially matches the search value.</td>
-							</tr>
-							<tr>
-								<td>tag name</td>
-								<td>Returns all elements whose tag name matches the search value.</td>
-							</tr>
-							<tr>
-								<td>xpath</td>
-								<td>Returns all elements matching an XPath expression.</td>
-							</tr>
-						</tbody>
-					</table>
+
 					<p></p>
 					<p></p>
 				</dd>
@@ -2987,22 +3002,24 @@
 						</dd>
 					</dl>
 				</dd>
-				<dd>
+
+
+				<dd class='edit'>
 					<dl>
 						<dt>
 							<strong>JSON Parameters:</strong>
 						</dt>
 						<dd>
-							<tt>using</tt>
+							<tt>depth</tt>
 							-
-							<tt>{string}</tt>
-							The locator strategy to use.
+							<tt>{int}</tt>
+							the depth the element tree to be considered for the search
 						</dd>
 						<dd>
-							<tt>value</tt>
+							<tt>criteria</tt>
 							-
-							<tt>{string}</tt>
-							The The search target.
+							<tt>{object}</tt>
+							The criteria used to filter the result. <a href='#criteria'>criteria</a>
 						</dd>
 					</dl>
 				</dd>
@@ -3176,50 +3193,7 @@
 					should support. Each locator must return the first matching element located in the DOM.
 					<p></p>
 					<p></p>
-					<table class="wikitable">
-						<tbody>
-							<tr>
-								<td><strong>Strategy</strong>
-								</td>
-								<td><strong>Description</strong>
-								</td>
-							</tr>
-							<tr>
-								<td>class name</td>
-								<td>Returns an element whose class name contains the search value; compound class names are not permitted.</td>
-							</tr>
-							<tr>
-								<td>css selector</td>
-								<td>Returns an element matching a CSS selector.</td>
-							</tr>
-							<tr>
-								<td>id</td>
-								<td>Returns an element whose ID attribute matches the search value.</td>
-							</tr>
-							<tr>
-								<td>name</td>
-								<td>Returns an element whose NAME attribute matches the search value.</td>
-							</tr>
-							<tr>
-								<td>link text</td>
-								<td>Returns an anchor element whose visible text matches the search value.</td>
-							</tr>
-							<tr>
-								<td>partial link text</td>
-								<td>Returns an anchor element whose visible text partially matches the search value.</td>
-							</tr>
-							<tr>
-								<td>tag name</td>
-								<td>Returns an element whose tag name matches the search value.</td>
-							</tr>
-							<tr>
-								<td>xpath</td>
-								<td>Returns an element matching an XPath expression. The provided XPath expression must be applied to the server "as is"; if the
-									expression is not relative to the element root, the server should not modify it. Consequently, an XPath query may return elements not
-									contained in the root element's subtree.</td>
-							</tr>
-						</tbody>
-					</table>
+
 					<p></p>
 					<p></p>
 				</dd>
@@ -3238,22 +3212,22 @@
 						</dd>
 					</dl>
 				</dd>
-				<dd>
+				<dd class='edit'>
 					<dl>
 						<dt>
 							<strong>JSON Parameters:</strong>
 						</dt>
 						<dd>
-							<tt>using</tt>
+							<tt>depth</tt>
 							-
-							<tt>{string}</tt>
-							The locator strategy to use.
+							<tt>{int}</tt>
+							the depth the element tree to be considered for the search
 						</dd>
 						<dd>
-							<tt>value</tt>
+							<tt>criteria</tt>
 							-
-							<tt>{string}</tt>
-							The The search target.
+							<tt>{object}</tt>
+							The criteria used to filter the result. <a href='#criteria'>criteria</a>
 						</dd>
 					</dl>
 				</dd>
@@ -3320,50 +3294,7 @@
 					should support. Elements should be returned in the order located in the DOM.
 					<p></p>
 					<p></p>
-					<table class="wikitable">
-						<tbody>
-							<tr>
-								<td><strong>Strategy</strong>
-								</td>
-								<td><strong>Description</strong>
-								</td>
-							</tr>
-							<tr>
-								<td>class name</td>
-								<td>Returns all elements whose class name contains the search value; compound class names are not permitted.</td>
-							</tr>
-							<tr>
-								<td>css selector</td>
-								<td>Returns all elements matching a CSS selector.</td>
-							</tr>
-							<tr>
-								<td>id</td>
-								<td>Returns all elements whose ID attribute matches the search value.</td>
-							</tr>
-							<tr>
-								<td>name</td>
-								<td>Returns all elements whose NAME attribute matches the search value.</td>
-							</tr>
-							<tr>
-								<td>link text</td>
-								<td>Returns all anchor elements whose visible text matches the search value.</td>
-							</tr>
-							<tr>
-								<td>partial link text</td>
-								<td>Returns all anchor elements whose visible text partially matches the search value.</td>
-							</tr>
-							<tr>
-								<td>tag name</td>
-								<td>Returns all elements whose tag name matches the search value.</td>
-							</tr>
-							<tr>
-								<td>xpath</td>
-								<td>Returns all elements matching an XPath expression. The provided XPath expression must be applied to the server "as is"; if the
-									expression is not relative to the element root, the server should not modify it. Consequently, an XPath query may return elements not
-									contained in the root element's subtree.</td>
-							</tr>
-						</tbody>
-					</table>
+
 					<p></p>
 					<p></p>
 				</dd>
@@ -3382,22 +3313,22 @@
 						</dd>
 					</dl>
 				</dd>
-				<dd>
+				<dd class='edit'>
 					<dl>
 						<dt>
 							<strong>JSON Parameters:</strong>
 						</dt>
 						<dd>
-							<tt>using</tt>
+							<tt>depth</tt>
 							-
-							<tt>{string}</tt>
-							The locator strategy to use.
+							<tt>{int}</tt>
+							the depth the element tree to be considered for the search
 						</dd>
 						<dd>
-							<tt>value</tt>
+							<tt>criteria</tt>
 							-
-							<tt>{string}</tt>
-							The The search target.
+							<tt>{object}</tt>
+							The criteria used to filter the result. <a href='#criteria'>criteria</a>
 						</dd>
 					</dl>
 				</dd>

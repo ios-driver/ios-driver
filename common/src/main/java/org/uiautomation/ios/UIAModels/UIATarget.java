@@ -26,7 +26,7 @@ public interface UIATarget {
   public UIARect getRect();
 
 
-  public void takeScreenshot(String path);
+  
 
   public UIAApplication getFrontMostApp();
 

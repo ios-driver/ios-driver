@@ -38,23 +38,7 @@ public class RemoteUIATarget extends RemoteObject implements UIATarget {
 
 
 
-  private JSONObject getJSONResult(WebDriverLikeCommand command) {
-
-    String genericPath = command.path();
-    String path =
-        genericPath.replace(":sessionId", getSessionId()).replace(":reference", getReference());
-    WebDriverLikeRequest request =
-        new WebDriverLikeRequest(command.method(), path, new JSONObject());
-    WebDriverLikeResponse response;
-    try {
-      response = getDriver().execute(request);
-      return ((JSONObject) response.getValue());
-    } catch (Exception e1) {
-      // TODO Auto-generated catch block
-      e1.printStackTrace();
-      return null;
-    }
-  }
+ 
 
 
   @Override
@@ -64,24 +48,7 @@ public class RemoteUIATarget extends RemoteObject implements UIATarget {
 
 
 
-  @Override
-  public void takeScreenshot(String path) {
-    try {
-      // TODO freynaud use getObject ?
-      JSONObject res = getJSONResult(WebDriverLikeCommand.SCREENSHOT_WITH_NAME);
-      String content = res.getString("64encoded");
-      createFileFrom64EncodedString(new File(path), content);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
 
-  public static void createFileFrom64EncodedString(File f, String encoded64) throws IOException {
-    byte[] img64 = Base64.decodeBase64(encoded64);
-    FileOutputStream os = new FileOutputStream(f);
-    os.write(img64);
-    os.close();
-  }
 
   @Override
   public RemoteUIAApplication getFrontMostApp() {

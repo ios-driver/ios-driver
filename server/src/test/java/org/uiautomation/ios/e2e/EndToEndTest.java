@@ -103,12 +103,11 @@ public class EndToEndTest {
           new RemoteUIADriver("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub",
               SampleApps.uiCatalogCap());
 
-      RemoteUIATarget target = driver.getLocalTarget();
-
       File to = new File("ss.png");
       to.delete();
+      
       Assert.assertFalse(to.exists());
-      target.takeScreenshot(to.getAbsolutePath());
+      driver.takeScreenshot(to.getAbsolutePath());
       Assert.assertTrue(to.exists());
     } finally {
       if (driver != null) {
@@ -135,7 +134,7 @@ public class EndToEndTest {
     }
   }
 
- 
+
 
   @Test
   public void mainWindow() throws InterruptedException {

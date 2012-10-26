@@ -46,7 +46,7 @@ public enum WebDriverLikeCommand {
   TARGET_TAP("GET","/session/:sessionId/tap/:reference",Void.class),
   SET_ORIENTATION("POST","/session/:sessionId/uiaTarget/:reference/oriantation",Void.class),
   
-  SCREENSHOT_WITH_NAME("POST","/session/:sessionId/uiaTarget/:reference/screenshotWithName",Void.class),
+  SCREENSHOT("GET","/session/:sessionId/screenshot",Void.class),
   
    // UIAHost
   PERFORM_TASK_WITH_PATH_ARGUMENTS_TIMEOUT("POST","/session/:sessionId/host/:reference",null), 

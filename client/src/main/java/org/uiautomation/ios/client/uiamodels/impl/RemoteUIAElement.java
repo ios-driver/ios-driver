@@ -170,7 +170,7 @@ public class RemoteUIAElement extends RemoteObject implements UIAElement {
           if (screenshot != null) {
             JSONObject screen = res.getJSONObject("screenshot");
             String content = screen.getString("64encoded");
-            RemoteUIATarget.createFileFrom64EncodedString(screenshot, content);
+            RemoteUIADriver.createFileFrom64EncodedString(screenshot, content);
           }
           res.remove("screenshot");
           return res;

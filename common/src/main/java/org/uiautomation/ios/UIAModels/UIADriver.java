@@ -43,5 +43,7 @@ public interface UIADriver {
   public UIAElement findElement(Criteria c) throws NoSuchElementException;
 
   public UIAElementArray<UIAElement> findElements(Criteria c);
+  
+  public void takeScreenshot(String path);
 
 }

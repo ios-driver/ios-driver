@@ -14,10 +14,13 @@
 package org.uiautomation.ios.client.uiamodels.impl;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -291,7 +294,8 @@ public class RemoteUIADriver implements UIADriver {
       JSONObject payload = new JSONObject();
       payload.put("depth", -1);
       payload.put("criteria", c.getJSONRepresentation());
-      return (UIAElementArray<UIAElement>) getRemoteObject(WebDriverLikeCommand.ELEMENTS_ROOT, payload);
+      return (UIAElementArray<UIAElement>) getRemoteObject(WebDriverLikeCommand.ELEMENTS_ROOT,
+          payload);
     } catch (JSONException e) {
       throw new IOSAutomationException(e);
     }
@@ -311,6 +315,42 @@ public class RemoteUIADriver implements UIADriver {
     } catch (Exception e) {
       throw new IOSAutomationException("bug", e);
     }
+  }
+
+  @Override
+  public void takeScreenshot(String path) {
+    try {
+      // TODO freynaud use getObject ?
+      JSONObject res = getJSONResult(WebDriverLikeCommand.SCREENSHOT);
+      String content = res.getString("64encoded");
+      createFileFrom64EncodedString(new File(path), content);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  private JSONObject getJSONResult(WebDriverLikeCommand command) {
+
+    String genericPath = command.path();
+    String path = genericPath.replace(":sessionId", session.getSessionId());
+    WebDriverLikeRequest request =
+        new WebDriverLikeRequest(command.method(), path, new JSONObject());
+    WebDriverLikeResponse response;
+    try {
+      response = execute(request);
+      return ((JSONObject) response.getValue());
+    } catch (Exception e1) {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+      return null;
+    }
+  }
+
+  public static void createFileFrom64EncodedString(File f, String encoded64) throws IOException {
+    byte[] img64 = Base64.decodeBase64(encoded64);
+    FileOutputStream os = new FileOutputStream(f);
+    os.write(img64);
+    os.close();
   }
 
 }

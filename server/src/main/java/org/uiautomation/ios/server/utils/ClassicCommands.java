@@ -90,7 +90,7 @@ public class ClassicCommands {
     c.registerListener(grep);
     c.executeAndWait();
     List<String> res =  grep.getMatching();
-    if (res.size()!=1){
+    if (res.size()==0){
       throw new IOSAutomationException("expected 1 result for automation on instruments -s , got "+res);
     }
     String path = res.get(0);

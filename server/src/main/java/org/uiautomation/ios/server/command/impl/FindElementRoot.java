@@ -18,8 +18,9 @@ public class FindElementRoot extends UIAScriptHandler {
       int depth = request.getPayload().getInt("depth");
       String criteria = request.getPayload().getString("criteria");
       String js =
-          jsTemplate.replace(":sessionId", request.getSession()).replace(":depth", "" + depth)
-              .replace(":criteria", criteria);
+          jsTemplate.replace(":sessionId", request.getSession())
+          .replace(":depth", "" + depth)
+          .replace(":criteria", criteria);
       setJS(js);
     } catch (Exception e) {
       throw new IOSAutomationException("error parsing the payload", e);
