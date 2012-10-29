@@ -30,7 +30,6 @@ public class IOSCapabilities {
 
   // UIAutomation properties called from instuments
   // UIAAplication.bundleID();
-  public static final String UI_BUNDLE_ID = "bundleid";
   // UIATarget.systemName();
   public static final String UI_SYSTEM_NAME = "systemName";
   // UIATarget.systemVersion();
@@ -100,6 +99,11 @@ public class IOSCapabilities {
     setCapability(TIME_HACK, true);
   }
 
+  public String getBundleId() {
+    Object o = raw.get(BUNDLE_ID);
+    return ((String) o);
+  }
+  
   public String getBundleName() {
     Object o = raw.get(BUNDLE_NAME);
     return ((String) o);
@@ -270,4 +274,8 @@ public class IOSCapabilities {
     }
 
   }
+
+
+
+
 }

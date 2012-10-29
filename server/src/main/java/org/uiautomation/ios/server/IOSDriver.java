@@ -15,6 +15,7 @@ package org.uiautomation.ios.server;
 
 import static org.uiautomation.ios.IOSCapabilities.MAGIC_PREFIX;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -65,7 +66,13 @@ public class IOSDriver {
     app.setLanguage(capabilities.getLanguage());
     if (capabilities.getSDKVersion() == null) {
       capabilities.setSDKVersion(ClassicCommands.getDefaultSDK());
+    }else {
+      String version = capabilities.getSDKVersion();
+      if (!hostInfo.getInstalledSDKs().contains(version)){
+        throw new SessionNotCreatedException("Cannot start on version "+version+".Installed : "+hostInfo.getInstalledSDKs());
+      }
     }
+   
     ServerSideSession session = new ServerSideSession(app, hostInfo.getPort());
     sessions.add(session);
     try {
@@ -201,6 +208,8 @@ public class IOSDriver {
     private final String javaVersion;
 
     private final String simulatorVersion;
+    private final List<String> installedSimulators;
+    private final File xCodeInstall;
 
     private final BuildInfo info = new BuildInfo();
     private final int port;
@@ -214,12 +223,21 @@ public class IOSDriver {
 
       String sdk = ClassicCommands.getDefaultSDK();
       simulatorVersion = sdk;
-
+      installedSimulators = ClassicCommands.getInstalledSDKs();
       this.port = port;
+      xCodeInstall = ClassicCommands.getXCodeInstall();
     }
 
     public String getSDK() {
       return simulatorVersion;
+    }
+    
+    public File getXCodeInstall(){
+      return xCodeInstall;
+    }
+    
+    public List<String> getInstalledSDKs(){
+      return installedSimulators;
     }
 
     public int getPort() {

@@ -64,8 +64,7 @@ public class InstrumentsManager {
         throw new IOSAutomationSetupException("Invalid app :" + application);
       }
       this.application = application;
-
-
+      
       if (isWarmupRequired(sdkVersion)) {
         warmup();
       }
@@ -104,6 +103,10 @@ public class InstrumentsManager {
 
 
     } catch (Exception e) {
+      if (simulatorProcess!=null){
+        simulatorProcess.forceStop();
+      }
+      killSimulator();
       throw new IOSAutomationSetupException("error starting instrument for session " + sessionId, e);
     } finally {
       if (sim != null) {

@@ -158,8 +158,8 @@ var UIAutomation = {
 		// en_GB
 		result.locale = app.preferencesValueForKey("AppleLocale");
 		result.version = app.version();
-		result.bundleid = app.bundleID();
-		result.bundleVersion = app.bundleVersion();
+		result.CFBundleIdentifier = app.bundleID();
+		result.CFBundleVersion = app.bundleVersion();
 		result.device = target.model();
 		result.name = target.name();
 		result.systemName = target.systemName();

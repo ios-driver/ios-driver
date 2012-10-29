@@ -77,7 +77,7 @@ public class EndToEndTest {
       Assert.assertEquals(actual.getCapability(IOSCapabilities.UI_SYSTEM_NAME), "iPhone OS");
       Assert.assertEquals(actual.getSDKVersion(), sdk);
       Assert.assertNull(actual.getCapability(IOSCapabilities.UI_VERSION));
-      Assert.assertEquals(actual.getCapability(IOSCapabilities.UI_BUNDLE_ID),
+      Assert.assertEquals(actual.getCapability(IOSCapabilities.BUNDLE_ID),
           "com.yourcompany.UICatalog");
       Assert.assertEquals(actual.getCapability(IOSCapabilities.UI_BUNDLE_VERSION), "2.10");
 

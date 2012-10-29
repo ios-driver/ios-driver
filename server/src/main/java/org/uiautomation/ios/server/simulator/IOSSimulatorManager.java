@@ -91,8 +91,11 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   }
 
   public void forceDefaultSDK(String desiredSDKVersion) {
+    Float desiredVersion = Float.parseFloat(desiredSDKVersion);
     for (String v : sdks) {
-      if (!v.equals(desiredSDKVersion)) {
+      
+      Float version = Float.parseFloat(v);
+      if (version > desiredVersion) {
         File f =
             new File(xcodeInstall,
                 "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator"
@@ -106,7 +109,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
                       + v + ".sdk");
           boolean ok = f.renameTo(renamed);
           if (!ok) {
-            throw new IOSAutomationException("failed to move " + f + " to " + renamed
+            throw new IOSAutomationException("Starting the non default SDK requires some more setup.Failed to move " + f + " to " + renamed
                 + getErrorMessageMoveSDK());
           }
         }
