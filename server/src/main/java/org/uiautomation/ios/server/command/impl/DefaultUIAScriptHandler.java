@@ -13,6 +13,7 @@
  */
 package org.uiautomation.ios.server.command.impl;
 
+import org.json.JSONObject;
 import org.uiautomation.ios.UIAModels.UIAAlert;
 import org.uiautomation.ios.UIAModels.UIAApplication;
 import org.uiautomation.ios.UIAModels.UIAButton;
@@ -66,7 +67,7 @@ public class DefaultUIAScriptHandler extends UIAScriptHandler {
 
   private String findTemplate(Class<?> returnType) {
     if (returnType == String.class || returnType == UIARect.class || returnType == Integer.class
-        || returnType == Boolean.class) {
+        || returnType == Boolean.class || returnType == JSONObject.class) {
       return stringTemplate;
     } else if (isAUIASimpleObject(returnType)) {
       return objectTemplate;

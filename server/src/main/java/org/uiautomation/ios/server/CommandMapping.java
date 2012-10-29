@@ -54,7 +54,8 @@ public enum CommandMapping {
   // UIATarget
   LOCAL_TARGET(LocalTarget.class),
   HOST(NotImplementedHandler.class),
-  TREE(LogElementTree.class,".tree(:attachScreenshot)"),
+  TREE(LogElementTree.class),
+  TREE_ROOT(LogElementTree.class),
   
   TARGET_RECT(".rect()"),
   TARGET_TAP(".tap({x::x,y::y})"),
@@ -86,8 +87,11 @@ public enum CommandMapping {
   ELEMENT_ROOT(FindElementRoot.class),
   ELEMENTS_ROOT(FindElementsRoot.class),
   
-  ELEMENT(".element(:depth,:criteria)"),
+  ELEMENT(FindElementRoot.class),
   ELEMENTS(".elements2(:depth,:criteria)"),
+  
+  //ELEMENT(".element(:depth,:criteria)"),
+  //ELEMENTS(".elements2(:depth,:criteria)"),
   ANCESTRY(NotImplementedHandler.class),
 
   IS_VISIBLE(".isVisible()"),
@@ -174,7 +178,6 @@ public enum CommandMapping {
   
   public String jsMethod(JSONObject payload, IOSApplication aut) {
     if (payload != null) {
-      payload = serverSidePayloadChanges(payload, aut);
       String res = jsMethod;
       Iterator<String> iter = payload.keys();
       while (iter.hasNext()) {
@@ -182,9 +185,6 @@ public enum CommandMapping {
         Object value = payload.opt(key);
         res = res.replace(":" + key, value.toString());
       }
-
-
-
       return res;
     } else {
       return jsMethod;
@@ -192,12 +192,12 @@ public enum CommandMapping {
   }
 
  
-  private CriteriaDecorator getDecorator(IOSApplication aut){
+ /* private CriteriaDecorator getDecorator(IOSApplication aut){
     ServerSideL10NDecorator decorator = new ServerSideL10NDecorator(aut);
     return decorator;
-  }
+  }*/
 
-  private JSONObject serverSidePayloadChanges(JSONObject payload, IOSApplication aut) {
+  /*private JSONObject serverSidePayloadChanges(JSONObject payload, IOSApplication aut) {
     if (payload.has("criteria")){
       try {
         JSONObject json = payload.getJSONObject("criteria");
@@ -209,7 +209,7 @@ public enum CommandMapping {
       }
     }
     return payload;
-  }
+  }*/
 
   public Handler createHandler(IOSDriver driver,WebDriverLikeRequest request) throws Exception{
    

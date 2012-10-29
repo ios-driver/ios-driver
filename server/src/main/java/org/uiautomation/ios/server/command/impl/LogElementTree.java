@@ -24,21 +24,47 @@ import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
+import org.uiautomation.ios.server.command.UIAScriptHandler;
 import org.uiautomation.ios.server.utils.FileTo64EncodedStringUtils;
 
-public class LogElementTree extends DefaultUIAScriptHandler {
+public class LogElementTree extends UIAScriptHandler {
+
+
+  private static final String jsTemplate = "var root = UIAutomation.cache.get(':reference');"
+      + "var result = root.tree(:attachScreenshot);"
+      + "UIAutomation.createJSONResponse(':sessionId',0,result);";
 
   public LogElementTree(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
+
+    String reference = "0";
+    if (request.hasVariable(":reference")) {
+      reference = request.getVariableValue(":reference");
+    }
+
     addDecorator(new AttachScreenshotToLog(driver));
     try {
-      if (request.getPayload().getBoolean("translation")){
+      if (request.getPayload().getBoolean("translation")) {
         addDecorator(new AddTranslationToLog(driver));
       }
     } catch (JSONException e) {
       e.printStackTrace();
     }
-   
+
+    String js;
+    try {
+      js =
+          jsTemplate
+              .replace(":sessionId", request.getSession())
+              .replace(":attachScreenshot",
+                  "" + request.getPayload().getBoolean("attachScreenshot"))
+              .replace(":reference", reference);
+    } catch (JSONException e) {
+      throw new IOSAutomationException("wrong params", e);
+    }
+
+    setJS(js);
+
   }
 
 
@@ -94,8 +120,8 @@ public class LogElementTree extends DefaultUIAScriptHandler {
 
       if (screenshot) {
         String path =
-            getDriver().getSession(response.getSessionId()).getOutputFolder() + "/Run 1/" + TakeScreenshot.SCREEN_NAME
-                + ".png";
+            getDriver().getSession(response.getSessionId()).getOutputFolder() + "/Run 1/"
+                + TakeScreenshot.SCREEN_NAME + ".png";
         File source = new File(path);
         FileTo64EncodedStringUtils encoder = new FileTo64EncodedStringUtils(source);
         try {

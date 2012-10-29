@@ -164,8 +164,8 @@
 		<li class='na'><a href="#/session/:sessionId/window/:windowHandle/maximize">/session/:sessionId/window/:windowHandle/maximize</a></li>
 		<li class='na'><a href="#/session/:sessionId/cookie">/session/:sessionId/cookie</a></li>
 		<li class='na'><a href="#/session/:sessionId/cookie/:name">/session/:sessionId/cookie/:name</a></li>
-		<li><a href="#/session/:sessionId/source">/session/:sessionId/source</a></li>
-		<li><a href="#/session/:sessionId/title">/session/:sessionId/title</a></li>
+		<li class='done'><a href="#/session/:sessionId/source">/session/:sessionId/source</a></li>
+		<li class='na'><a href="#/session/:sessionId/title">/session/:sessionId/title</a></li>
 		<li class='done'><a href="#/session/:sessionId/element">/session/:sessionId/element</a></li>
 		<li class='done'><a href="#/session/:sessionId/elements">/session/:sessionId/elements</a></li>
 		<li><a href="#/session/:sessionId/element/active">/session/:sessionId/element/active</a></li>
@@ -411,7 +411,12 @@
 			<tr>
 				<td>GET</td>
 				<td><a href="#GET_/session/:sessionId/source">/session/:sessionId/source</a></td>
-				<td>Get the current page source.</td>
+				<td class='edit'>Get the entire object tree.</td>
+			</tr>
+			<tr class='edit'>
+				<td>GET</td>
+				<td><a href="#GET_/session/:sessionId/element/:id/source">/session/:sessionId/element/:id/source</a></td>
+				<td>Get the object tree starting from the specified element</td>
 			</tr>
 			<tr>
 				<td>GET</td>
@@ -2797,118 +2802,7 @@
 		</dd>
 		<dd>
 			<dl>
-				<dd>Get the current page source.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Returns:</strong>
-						</dt>
-						<dd>
-							<tt>{string}</tt>
-							The current page source.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/title"></a>/session/:sessionId/title<a href="#/session/:sessionId/title" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="GET_/session/:sessionId/title"></a>GET /session/:sessionId/title<a href="#GET_/session/:sessionId/title" class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Get the current page title.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Returns:</strong>
-						</dt>
-						<dd>
-							<tt>{string}</tt>
-							The current page title.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/element"></a>/session/:sessionId/element<a href="#/session/:sessionId/element" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="POST_/session/:sessionId/element"></a>POST /session/:sessionId/element<a href="#POST_/session/:sessionId/element" class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>
-					Search for an element on the page, starting from the document root <span class='edit'>(its main window)</span>. The located element will be
-					returned as a WebElement<a href="http://code.google.com/p/selenium/w/edit/WebElement">?</a> JSON object. The table below lists the locator
-					strategies that each server should support. Each locator must return the first matching element located in the DOM.
-					<p></p>
-				</dd>
+				<dd class='edit'>Get the entire object tree.</dd>
 				<dd>
 					<dl>
 						<dt>
@@ -2926,1379 +2820,14 @@
 							<strong>JSON Parameters:</strong>
 						</dt>
 						<dd>
-							<tt>depth</tt>
-							-
-							<tt>{int}</tt>
-							the depth the element tree to be considered for the search
-						</dd>
-						<dd>
-							<tt>criteria</tt>
-							-
-							<tt>{object}</tt>
-							The criteria used to filter the result. <a href='#criteria'>criteria</a>
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Returns:</strong>
-						</dt>
-						<dd>
-							<tt>{ELEMENT:string}</tt>
-							A WebElement<a href="http://code.google.com/p/selenium/w/edit/WebElement">?</a> JSON object for the located element.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchElement</tt>
-							- If the element cannot be found.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/elements"></a>/session/:sessionId/elements<a href="#/session/:sessionId/elements" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="POST_/session/:sessionId/elements"></a>POST /session/:sessionId/elements<a href="#POST_/session/:sessionId/elements"
-					class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>
-					Search for multiple elements on the page, starting from the document root. The located elements will be returned as a WebElement<a
-						href="http://code.google.com/p/selenium/w/edit/WebElement">?</a> JSON objects. The table below lists the locator strategies that each server
-					should support. Elements should be returned in the order located in the DOM.
-					<p></p>
-					<p></p>
-
-					<p></p>
-					<p></p>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-
-
-				<dd class='edit'>
-					<dl>
-						<dt>
-							<strong>JSON Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>depth</tt>
-							-
-							<tt>{int}</tt>
-							the depth the element tree to be considered for the search
-						</dd>
-						<dd>
-							<tt>criteria</tt>
-							-
-							<tt>{object}</tt>
-							The criteria used to filter the result. <a href='#criteria'>criteria</a>
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Returns:</strong>
-						</dt>
-						<dd>
-							<tt>{Array.&lt;{ELEMENT:string}&gt;}</tt>
-							A list of WebElement<a href="http://code.google.com/p/selenium/w/edit/WebElement">?</a> JSON objects for the located elements.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-						<dd>
-							<tt>XPathLookupError</tt>
-							- If using XPath and the input expression is invalid.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/element/active"></a>/session/:sessionId/element/active<a href="#/session/:sessionId/element/active"
-			class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="POST_/session/:sessionId/element/active"></a>POST /session/:sessionId/element/active<a href="#POST_/session/:sessionId/element/active"
-					class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>
-					Get the element on the page that currently has focus. The element will be returned as a WebElement<a
-						href="http://code.google.com/p/selenium/w/edit/WebElement">?</a> JSON object.
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Returns:</strong>
-						</dt>
-						<dd>
-							<tt>{ELEMENT:string}</tt>
-							A WebElement<a href="http://code.google.com/p/selenium/w/edit/WebElement">?</a> JSON object for the active element.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/element/:id"></a>/session/:sessionId/element/:id<a href="#/session/:sessionId/element/:id" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="GET_/session/:sessionId/element/:id"></a>GET /session/:sessionId/element/:id<a href="#GET_/session/:sessionId/element/:id"
-					class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>
-					Describe the identified element.
-					<p></p>
-					<p>
-						<strong>Note:</strong> This command is reserved for future use; its return type is currently undefined.
-					</p>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-						<dd>
-							<tt>:id</tt>
-							- ID of the element to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-						<dd>
-							<tt>StaleElementReference</tt>
-							- If the element referenced by
-							<tt>:id</tt>
-							is no longer attached to the page's DOM.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/element/:id/element"></a>/session/:sessionId/element/:id/element<a href="#/session/:sessionId/element/:id/element"
-			class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="POST_/session/:sessionId/element/:id/element"></a>POST /session/:sessionId/element/:id/element<a
-					href="#POST_/session/:sessionId/element/:id/element" class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>
-					Search for an element on the page, starting from the identified element. The located element will be returned as a WebElement<a
-						href="http://code.google.com/p/selenium/w/edit/WebElement">?</a> JSON object. The table below lists the locator strategies that each server
-					should support. Each locator must return the first matching element located in the DOM.
-					<p></p>
-					<p></p>
-
-					<p></p>
-					<p></p>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-						<dd>
-							<tt>:id</tt>
-							- ID of the element to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd class='edit'>
-					<dl>
-						<dt>
-							<strong>JSON Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>depth</tt>
-							-
-							<tt>{int}</tt>
-							the depth the element tree to be considered for the search
-						</dd>
-						<dd>
-							<tt>criteria</tt>
-							-
-							<tt>{object}</tt>
-							The criteria used to filter the result. <a href='#criteria'>criteria</a>
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Returns:</strong>
-						</dt>
-						<dd>
-							<tt>{ELEMENT:string}</tt>
-							A WebElement<a href="http://code.google.com/p/selenium/w/edit/WebElement">?</a> JSON object for the located element.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-						<dd>
-							<tt>StaleElementReference</tt>
-							- If the element referenced by
-							<tt>:id</tt>
-							is no longer attached to the page's DOM.
-						</dd>
-						<dd>
-							<tt>NoSuchElement</tt>
-							- If the element cannot be found.
-						</dd>
-						<dd>
-							<tt>XPathLookupError</tt>
-							- If using XPath and the input expression is invalid.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/element/:id/elements"></a>/session/:sessionId/element/:id/elements<a href="#/session/:sessionId/element/:id/elements"
-			class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="POST_/session/:sessionId/element/:id/elements"></a>POST /session/:sessionId/element/:id/elements<a
-					href="#POST_/session/:sessionId/element/:id/elements" class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>
-					Search for multiple elements on the page, starting from the identified element. The located elements will be returned as a WebElement<a
-						href="http://code.google.com/p/selenium/w/edit/WebElement">?</a> JSON objects. The table below lists the locator strategies that each server
-					should support. Elements should be returned in the order located in the DOM.
-					<p></p>
-					<p></p>
-
-					<p></p>
-					<p></p>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-						<dd>
-							<tt>:id</tt>
-							- ID of the element to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd class='edit'>
-					<dl>
-						<dt>
-							<strong>JSON Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>depth</tt>
-							-
-							<tt>{int}</tt>
-							the depth the element tree to be considered for the search
-						</dd>
-						<dd>
-							<tt>criteria</tt>
-							-
-							<tt>{object}</tt>
-							The criteria used to filter the result. <a href='#criteria'>criteria</a>
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Returns:</strong>
-						</dt>
-						<dd>
-							<tt>{Array.&lt;{ELEMENT:string}&gt;}</tt>
-							A list of WebElement<a href="http://code.google.com/p/selenium/w/edit/WebElement">?</a> JSON objects for the located elements.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-						<dd>
-							<tt>StaleElementReference</tt>
-							- If the element referenced by
-							<tt>:id</tt>
-							is no longer attached to the page's DOM.
-						</dd>
-						<dd>
-							<tt>XPathLookupError</tt>
-							- If using XPath and the input expression is invalid.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/element/:id/click"></a>/session/:sessionId/element/:id/click<a href="#/session/:sessionId/element/:id/click"
-			class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="POST_/session/:sessionId/element/:id/click"></a>POST /session/:sessionId/element/:id/click<a
-					href="#POST_/session/:sessionId/element/:id/click" class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Click on an element.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-						<dd>
-							<tt>:id</tt>
-							- ID of the element to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-						<dd>
-							<tt>StaleElementReference</tt>
-							- If the element referenced by
-							<tt>:id</tt>
-							is no longer attached to the page's DOM.
-						</dd>
-						<dd>
-							<tt>ElementNotVisible</tt>
-							- If the referenced element is not visible on the page (either is hidden by CSS, has 0-width, or has 0-height)
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/element/:id/submit"></a>/session/:sessionId/element/:id/submit<a href="#/session/:sessionId/element/:id/submit"
-			class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="POST_/session/:sessionId/element/:id/submit"></a>POST /session/:sessionId/element/:id/submit<a
-					href="#POST_/session/:sessionId/element/:id/submit" class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>
-					Submit a
-					<tt>FORM</tt>
-					element. The submit command may also be applied to any element that is a descendant of a
-					<tt>FORM</tt>
-					element.
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-						<dd>
-							<tt>:id</tt>
-							- ID of the element to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-						<dd>
-							<tt>StaleElementReference</tt>
-							- If the element referenced by
-							<tt>:id</tt>
-							is no longer attached to the page's DOM.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/element/:id/text"></a>/session/:sessionId/element/:id/text<a href="#/session/:sessionId/element/:id/text"
-			class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="GET_/session/:sessionId/element/:id/text"></a>GET /session/:sessionId/element/:id/text<a href="#GET_/session/:sessionId/element/:id/text"
-					class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Returns the visible text for the element.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-						<dd>
-							<tt>:id</tt>
-							- ID of the element to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-						<dd>
-							<tt>StaleElementReference</tt>
-							- If the element referenced by
-							<tt>:id</tt>
-							is no longer attached to the page's DOM.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/element/:id/value"></a>/session/:sessionId/element/:id/value<a href="#/session/:sessionId/element/:id/value"
-			class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="POST_/session/:sessionId/element/:id/value"></a>POST /session/:sessionId/element/:id/value<a
-					href="#POST_/session/:sessionId/element/:id/value" class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>
-					Send a sequence of key strokes to an element.
-					<p></p>
-					<p>
-						Any UTF-8 character may be specified, however, if the server does not support native key events, it should simulate key strokes for a standard
-						US keyboard layout. The Unicode <a href="http://unicode.org/faq/casemap_charprop.html#8" rel="nofollow">Private Use Area</a> code points,
-						0xE000-0xF8FF, are used to represent pressable, non-text keys (see table below).
-					</p>
-					<p></p>
-					<table cellpadding="5" cellspacing="5">
-						<tbody>
-							<tr>
-								<td valign="top">
-									<table class="wikitable">
-										<tbody>
-											<tr>
-												<td><strong>Key</strong>
-												</td>
-												<td><strong>Code</strong>
-												</td>
-											</tr>
-											<tr>
-												<td>NULL</td>
-												<td>U+E000</td>
-											</tr>
-											<tr>
-												<td>Cancel</td>
-												<td>U+E001</td>
-											</tr>
-											<tr>
-												<td>Help</td>
-												<td>U+E002</td>
-											</tr>
-											<tr>
-												<td>Back space</td>
-												<td>U+E003</td>
-											</tr>
-											<tr>
-												<td>Tab</td>
-												<td>U+E004</td>
-											</tr>
-											<tr>
-												<td>Clear</td>
-												<td>U+E005</td>
-											</tr>
-											<tr>
-												<td>Return<sup>1</sup>
-												</td>
-												<td>U+E006</td>
-											</tr>
-											<tr>
-												<td>Enter<sup>1</sup>
-												</td>
-												<td>U+E007</td>
-											</tr>
-											<tr>
-												<td>Shift</td>
-												<td>U+E008</td>
-											</tr>
-											<tr>
-												<td>Control</td>
-												<td>U+E009</td>
-											</tr>
-											<tr>
-												<td>Alt</td>
-												<td>U+E00A</td>
-											</tr>
-											<tr>
-												<td>Pause</td>
-												<td>U+E00B</td>
-											</tr>
-											<tr>
-												<td>Escape</td>
-												<td>U+E00C</td>
-											</tr>
-										</tbody>
-									</table>
-									<p></p>
-									<p></p>
-								</td>
-								<td valign="top">
-									<table class="wikitable">
-										<tbody>
-											<tr>
-												<td><strong>Key</strong>
-												</td>
-												<td><strong>Code</strong>
-												</td>
-											</tr>
-											<tr>
-												<td>Space</td>
-												<td>U+E00D</td>
-											</tr>
-											<tr>
-												<td>Pageup</td>
-												<td>U+E00E</td>
-											</tr>
-											<tr>
-												<td>Pagedown</td>
-												<td>U+E00F</td>
-											</tr>
-											<tr>
-												<td>End</td>
-												<td>U+E010</td>
-											</tr>
-											<tr>
-												<td>Home</td>
-												<td>U+E011</td>
-											</tr>
-											<tr>
-												<td>Left arrow</td>
-												<td>U+E012</td>
-											</tr>
-											<tr>
-												<td>Up arrow</td>
-												<td>U+E013</td>
-											</tr>
-											<tr>
-												<td>Right arrow</td>
-												<td>U+E014</td>
-											</tr>
-											<tr>
-												<td>Down arrow</td>
-												<td>U+E015</td>
-											</tr>
-											<tr>
-												<td>Insert</td>
-												<td>U+E016</td>
-											</tr>
-											<tr>
-												<td>Delete</td>
-												<td>U+E017</td>
-											</tr>
-											<tr>
-												<td>Semicolon</td>
-												<td>U+E018</td>
-											</tr>
-											<tr>
-												<td>Equals</td>
-												<td>U+E019</td>
-											</tr>
-										</tbody>
-									</table>
-									<p></p>
-									<p></p>
-								</td>
-								<td valign="top">
-									<table class="wikitable">
-										<tbody>
-											<tr>
-												<td><strong>Key</strong>
-												</td>
-												<td><strong>Code</strong>
-												</td>
-											</tr>
-											<tr>
-												<td>Numpad 0</td>
-												<td>U+E01A</td>
-											</tr>
-											<tr>
-												<td>Numpad 1</td>
-												<td>U+E01B</td>
-											</tr>
-											<tr>
-												<td>Numpad 2</td>
-												<td>U+E01C</td>
-											</tr>
-											<tr>
-												<td>Numpad 3</td>
-												<td>U+E01D</td>
-											</tr>
-											<tr>
-												<td>Numpad 4</td>
-												<td>U+E01E</td>
-											</tr>
-											<tr>
-												<td>Numpad 5</td>
-												<td>U+E01F</td>
-											</tr>
-											<tr>
-												<td>Numpad 6</td>
-												<td>U+E020</td>
-											</tr>
-											<tr>
-												<td>Numpad 7</td>
-												<td>U+E021</td>
-											</tr>
-											<tr>
-												<td>Numpad 8</td>
-												<td>U+E022</td>
-											</tr>
-											<tr>
-												<td>Numpad 9</td>
-												<td>U+E023</td>
-											</tr>
-										</tbody>
-									</table>
-									<p></p>
-									<p></p>
-								</td>
-								<td valign="top">
-									<table class="wikitable">
-										<tbody>
-											<tr>
-												<td><strong>Key</strong>
-												</td>
-												<td><strong>Code</strong>
-												</td>
-											</tr>
-											<tr>
-												<td>Multiply</td>
-												<td>U+E024</td>
-											</tr>
-											<tr>
-												<td>Add</td>
-												<td>U+E025</td>
-											</tr>
-											<tr>
-												<td>Separator</td>
-												<td>U+E026</td>
-											</tr>
-											<tr>
-												<td>Subtract</td>
-												<td>U+E027</td>
-											</tr>
-											<tr>
-												<td>Decimal</td>
-												<td>U+E028</td>
-											</tr>
-											<tr>
-												<td>Divide</td>
-												<td>U+E029</td>
-											</tr>
-										</tbody>
-									</table>
-									<p></p>
-									<p></p>
-								</td>
-								<td valign="top">
-									<table class="wikitable">
-										<tbody>
-											<tr>
-												<td><strong>Key</strong>
-												</td>
-												<td><strong>Code</strong>
-												</td>
-											</tr>
-											<tr>
-												<td>F1</td>
-												<td>U+E031</td>
-											</tr>
-											<tr>
-												<td>F2</td>
-												<td>U+E032</td>
-											</tr>
-											<tr>
-												<td>F3</td>
-												<td>U+E033</td>
-											</tr>
-											<tr>
-												<td>F4</td>
-												<td>U+E034</td>
-											</tr>
-											<tr>
-												<td>F5</td>
-												<td>U+E035</td>
-											</tr>
-											<tr>
-												<td>F6</td>
-												<td>U+E036</td>
-											</tr>
-											<tr>
-												<td>F7</td>
-												<td>U+E037</td>
-											</tr>
-											<tr>
-												<td>F8</td>
-												<td>U+E038</td>
-											</tr>
-											<tr>
-												<td>F9</td>
-												<td>U+E039</td>
-											</tr>
-											<tr>
-												<td>F10</td>
-												<td>U+E03A</td>
-											</tr>
-											<tr>
-												<td>F11</td>
-												<td>U+E03B</td>
-											</tr>
-											<tr>
-												<td>F12</td>
-												<td>U+E03C</td>
-											</tr>
-											<tr>
-												<td>Command/Meta</td>
-												<td>U+E03D</td>
-											</tr>
-										</tbody>
-									</table>
-									<p></p>
-									<p></p>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="5"><sup>1</sup> The return key is <i>not the same</i> as the <a href="http://en.wikipedia.org/wiki/Enter_key" rel="nofollow">enter
-										key</a>.</td>
-							</tr>
-						</tbody>
-					</table>
-					<p></p>
-					<p>The server must process the key sequence as follows:</p>
-					<ul>
-						<li>Each key that appears on the keyboard without requiring modifiers are sent as a keydown followed by a key up.</li>
-						<li>If the server does not support native events and must simulate key strokes with JavaScript, it must generate keydown, keypress, and
-							keyup events, in that order. The keypress event should only be fired when the corresponding key is for a printable character.</li>
-						<li>If a key requires a modifier key (e.g. "!" on a standard US keyboard), the sequence is: <var>modifier</var> down, <var>key</var> down,
-							<var>key</var> up, <var>modifier</var> up, where <var>key</var> is the ideal unmodified key value (using the previous example, a "1").</li>
-						<li>Modifier keys (Ctrl, Shift, Alt, and Command/Meta) are assumed to be "sticky"; each modifier should be held down (e.g. only a keydown
-							event) until either the modifier is encountered again in the sequence, or the <tt>NULL</tt> (U+E000) key is encountered.</li>
-						<li>Each key sequence is terminated with an implicit <tt>NULL</tt> key. Subsequently, all depressed modifier keys must be released (with
-							corresponding keyup events) at the end of the sequence.</li>
-					</ul>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-						<dd>
-							<tt>:id</tt>
-							- ID of the element to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>JSON Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>value</tt>
-							-
-							<tt>{Array.&lt;string&gt;}</tt>
-							The sequence of keys to type. An array must be provided. The server should flatten the array items to a single string to be typed.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-						<dd>
-							<tt>StaleElementReference</tt>
-							- If the element referenced by
-							<tt>:id</tt>
-							is no longer attached to the page's DOM.
-						</dd>
-						<dd>
-							<tt>ElementNotVisible</tt>
-							- If the referenced element is not visible on the page (either is hidden by CSS, has 0-width, or has 0-height)
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/keys"></a>/session/:sessionId/keys<a href="#/session/:sessionId/keys" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="POST_/session/:sessionId/keys"></a>POST /session/:sessionId/keys<a href="#POST_/session/:sessionId/keys" class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>
-					Send a sequence of key strokes to the active element. This command is similar to the <a
-						href="http://code.google.com/p/selenium/wiki/JsonWireProtocol#/session/:sessionId/element/:id/value">send keys</a> command in every aspect
-					except the implicit termination: The modifiers are <strong>not</strong> released at the end of the call. Rather, the state of the modifier keys
-					is kept between calls, so mouse interactions can be performed while modifier keys are depressed.
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>JSON Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>value</tt>
-							-
-							<tt>{Array.&lt;string&gt;}</tt>
-							The keys sequence to be sent. The sequence is defined in the<a
-								href="http://code.google.com/p/selenium/wiki/JsonWireProtocol#/session/:sessionId/element/:id/value">send keys</a> command.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/element/:id/name"></a>/session/:sessionId/element/:id/name<a href="#/session/:sessionId/element/:id/name"
-			class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="GET_/session/:sessionId/element/:id/name"></a>GET /session/:sessionId/element/:id/name<a href="#GET_/session/:sessionId/element/:id/name"
-					class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Query for an element's tag name.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-						<dd>
-							<tt>:id</tt>
-							- ID of the element to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Returns:</strong>
-						</dt>
-						<dd>
-							<tt>{string}</tt>
-							The element's tag name, as a lowercase string.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-						<dd>
-							<tt>StaleElementReference</tt>
-							- If the element referenced by
-							<tt>:id</tt>
-							is no longer attached to the page's DOM.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/element/:id/clear"></a>/session/:sessionId/element/:id/clear<a href="#/session/:sessionId/element/:id/clear"
-			class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="POST_/session/:sessionId/element/:id/clear"></a>POST /session/:sessionId/element/:id/clear<a
-					href="#POST_/session/:sessionId/element/:id/clear" class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>
-					Clear a
-					<tt>TEXTAREA</tt>
-					or
-					<tt>text INPUT</tt>
-					element's value.
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-						<dd>
-							<tt>:id</tt>
-							- ID of the element to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-						<dd>
-							<tt>StaleElementReference</tt>
-							- If the element referenced by
-							<tt>:id</tt>
-							is no longer attached to the page's DOM.
-						</dd>
-						<dd>
-							<tt>ElementNotVisible</tt>
-							- If the referenced element is not visible on the page (either is hidden by CSS, has 0-width, or has 0-height)
-						</dd>
-						<dd>
-							<tt>InvalidElementState</tt>
-							- If the referenced element is disabled.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/element/:id/selected"></a>/session/:sessionId/element/:id/selected<a href="#/session/:sessionId/element/:id/selected"
-			class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="GET_/session/:sessionId/element/:id/selected"></a>GET /session/:sessionId/element/:id/selected<a
-					href="#GET_/session/:sessionId/element/:id/selected" class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>
-					Determine if an
-					<tt>OPTION</tt>
-					element, or an
-					<tt>INPUT</tt>
-					element of type
-					<tt>checkbox</tt>
-					or
-					<tt>radiobutton</tt>
-					is currently selected.
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-						<dd>
-							<tt>:id</tt>
-							- ID of the element to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Returns:</strong>
-						</dt>
-						<dd>
+							<tt>attachScreenshot</tt>
 							<tt>{boolean}</tt>
-							Whether the element is selected.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
+							if true, a 64 encoded screenshot of the element is returned.
 						</dd>
 						<dd>
-							<tt>StaleElementReference</tt>
-							- If the element referenced by
-							<tt>:id</tt>
-							is no longer attached to the page's DOM.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/element/:id/enabled"></a>/session/:sessionId/element/:id/enabled<a href="#/session/:sessionId/element/:id/enabled"
-			class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="GET_/session/:sessionId/element/:id/enabled"></a>GET /session/:sessionId/element/:id/enabled<a
-					href="#GET_/session/:sessionId/element/:id/enabled" class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Determine if an element is currently enabled.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-						<dd>
-							<tt>:id</tt>
-							- ID of the element to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Returns:</strong>
-						</dt>
-						<dd>
+							<tt>translation</tt>
 							<tt>{boolean}</tt>
-							Whether the element is enabled.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-						<dd>
-							<tt>StaleElementReference</tt>
-							- If the element referenced by
-							<tt>:id</tt>
-							is no longer attached to the page's DOM.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/element/:id/attribute/:name"></a>/session/:sessionId/element/:id/attribute/:name<a
-			href="#/session/:sessionId/element/:id/attribute/:name" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="GET_/session/:sessionId/element/:id/attribute/:name"></a>GET /session/:sessionId/element/:id/attribute/:name<a
-					href="#GET_/session/:sessionId/element/:id/attribute/:name" class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Get the value of an element's attribute.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-						<dd>
-							<tt>:id</tt>
-							- ID of the element to route the command to.
+							if true, the server side l10n is returned.
 						</dd>
 					</dl>
 				</dd>
@@ -4308,8 +2837,8 @@
 							<strong>Returns:</strong>
 						</dt>
 						<dd>
-							<tt>{string|null}</tt>
-							The value of the attribute, or null if it is not set on the element.
+							<tt class='edit'>{object}</tt>
+							the current object tree.
 						</dd>
 					</dl>
 				</dd>
@@ -4322,2299 +2851,3839 @@
 							<tt>NoSuchWindow</tt>
 							- If the currently selected window has been closed.
 						</dd>
+					</dl>
+				</dd>
+				<dd class='edit'>
+					<dl>
+						<dt>
+							<strong>Example</strong>
+						</dt>
 						<dd>
-							<tt>StaleElementReference</tt>
-							- If the element referenced by
-							<tt>:id</tt>
-							is no longer attached to the page's DOM.
+							<pre>
+{
+  "deviceOrientation": 1,
+  "screenshot" : "......"
+  "tree": {
+    "l10n": {
+      "key": "sentenceFormat",
+      "langs": [
+        {"en": ["8,848 mètres was first climbed on Montagne 1 and has a height of 29 May 1953"]},
+        {"zh": ["8,848 mètres ?Montagne 1??????????29 May 1953?"]},
+        {"fr": ["Bien que 8,848 mètres de haut, Montagne 1 aient été montés la première fois 29 May 1953."]}
+      ],
+      "matches": 1
+    },
+    "label": "Bien que 8,848 mètres de haut, Montagne 1 aient été montés la première fois 29 May 1953.",
+    "name": "Bien que 8,848 mètres de haut, Montagne 1 aient été montés la première fois 29 May 1953.",
+    "rect": {
+      "origin": {
+        "x": 34,
+        "y": 168
+      },
+      "size": {
+        "height": 164,
+        "width": 251
+      }
+    },
+    "ref": 5,
+    "type": "UIAStaticText",
+    "value": "Bien que 8,848 mètres de haut, Montagne 1 aient été montés la première fois 29 May 1953."
+  }
+}
+							</pre>
 						</dd>
 					</dl>
 				</dd>
 			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/element/:id/equals/:other"></a>/session/:sessionId/element/:id/equals/:other<a
-			href="#/session/:sessionId/element/:id/equals/:other" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
 			<p></p>
-			<h4>
-				<a name="GET_/session/:sessionId/element/:id/equals/:other"></a>GET /session/:sessionId/element/:id/equals/:other<a
-					href="#GET_/session/:sessionId/element/:id/equals/:other" class="section_anchor"></a>
-			</h4>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/title"></a>/session/:sessionId/title<a href="#/session/:sessionId/title" class="section_anchor"></a>
+			</h3>
 			<p></p>
-		</dd>
-		<dd>
 			<dl>
-				<dd>Test if two element IDs refer to the same DOM element.</dd>
 				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-						<dd>
-							<tt>:id</tt>
-							- ID of the element to route the command to.
-						</dd>
-						<dd>
-							<tt>:other</tt>
-							- ID of the element to compare against.
-						</dd>
-					</dl>
+					<p></p>
+					<h4>
+						<a name="GET_/session/:sessionId/title"></a>GET /session/:sessionId/title<a href="#GET_/session/:sessionId/title" class="section_anchor"></a>
+					</h4>
+					<p></p>
 				</dd>
 				<dd>
 					<dl>
-						<dt>
-							<strong>Returns:</strong>
-						</dt>
+						<dd>Get the current page title.</dd>
 						<dd>
-							<tt>{boolean}</tt>
-							Whether the two IDs refer to the same element.
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
 						</dd>
+
+						<dd>
+							<dl>
+								<dt>
+									<strong>Returns:</strong>
+								</dt>
+								<dd>
+									<tt>{string}</tt>
+									The current page title.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+							</dl>
+						</dd>
+
+
+
 					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/element"></a>/session/:sessionId/element<a href="#/session/:sessionId/element" class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_/session/:sessionId/element"></a>POST /session/:sessionId/element<a href="#POST_/session/:sessionId/element"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
 				</dd>
 				<dd>
 					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
 						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
+							Search for an element on the page, starting from the document root <span class='edit'>(its main window)</span>. The located element will be
+							returned as a WebElement<a href="http://code.google.com/p/selenium/w/edit/WebElement">?</a> JSON object. The table below lists the locator
+							strategies that each server should support. Each locator must return the first matching element located in the DOM.
+							<p></p>
 						</dd>
 						<dd>
-							<tt>StaleElementReference</tt>
-							- If either the element refered to by
-							<tt>:id</tt>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd class='edit'>
+							<dl>
+								<dt>
+									<strong>JSON Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>depth</tt>
+									-
+									<tt>{int}</tt>
+									the depth the element tree to be considered for the search
+								</dd>
+								<dd>
+									<tt>criteria</tt>
+									-
+									<tt>{object}</tt>
+									The criteria used to filter the result. <a href='#criteria'>criteria</a>
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Returns:</strong>
+								</dt>
+								<dd>
+									<tt>{ELEMENT:string}</tt>
+									A WebElement<a href="http://code.google.com/p/selenium/w/edit/WebElement">?</a> JSON object for the located element.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchElement</tt>
+									- If the element cannot be found.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/elements"></a>/session/:sessionId/elements<a href="#/session/:sessionId/elements" class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_/session/:sessionId/elements"></a>POST /session/:sessionId/elements<a href="#POST_/session/:sessionId/elements"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>
+							Search for multiple elements on the page, starting from the document root. The located elements will be returned as a WebElement<a
+								href="http://code.google.com/p/selenium/w/edit/WebElement">?</a> JSON objects. The table below lists the locator strategies that each server
+							should support. Elements should be returned in the order located in the DOM.
+							<p></p>
+							<p></p>
+
+							<p></p>
+							<p></p>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+
+
+						<dd class='edit'>
+							<dl>
+								<dt>
+									<strong>JSON Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>depth</tt>
+									-
+									<tt>{int}</tt>
+									the depth the element tree to be considered for the search
+								</dd>
+								<dd>
+									<tt>criteria</tt>
+									-
+									<tt>{object}</tt>
+									The criteria used to filter the result. <a href='#criteria'>criteria</a>
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Returns:</strong>
+								</dt>
+								<dd>
+									<tt>{Array.&lt;{ELEMENT:string}&gt;}</tt>
+									A list of WebElement<a href="http://code.google.com/p/selenium/w/edit/WebElement">?</a> JSON objects for the located elements.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+								<dd>
+									<tt>XPathLookupError</tt>
+									- If using XPath and the input expression is invalid.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/element/active"></a>/session/:sessionId/element/active<a href="#/session/:sessionId/element/active"
+					class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_/session/:sessionId/element/active"></a>POST /session/:sessionId/element/active<a href="#POST_/session/:sessionId/element/active"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>
+							Get the element on the page that currently has focus. The element will be returned as a WebElement<a
+								href="http://code.google.com/p/selenium/w/edit/WebElement">?</a> JSON object.
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Returns:</strong>
+								</dt>
+								<dd>
+									<tt>{ELEMENT:string}</tt>
+									A WebElement<a href="http://code.google.com/p/selenium/w/edit/WebElement">?</a> JSON object for the active element.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/element/:id"></a>/session/:sessionId/element/:id<a href="#/session/:sessionId/element/:id" class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="GET_/session/:sessionId/element/:id"></a>GET /session/:sessionId/element/:id<a href="#GET_/session/:sessionId/element/:id"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>
+							Describe the identified element.
+							<p></p>
+							<p>
+								<strong>Note:</strong> This command is reserved for future use; its return type is currently undefined.
+							</p>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+								<dd>
+									<tt>:id</tt>
+									- ID of the element to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+								<dd>
+									<tt>StaleElementReference</tt>
+									- If the element referenced by
+									<tt>:id</tt>
+									is no longer attached to the page's DOM.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/element/:id/element"></a>/session/:sessionId/element/:id/element<a href="#/session/:sessionId/element/:id/element"
+					class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_/session/:sessionId/element/:id/element"></a>POST /session/:sessionId/element/:id/element<a
+							href="#POST_/session/:sessionId/element/:id/element" class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>
+							Search for an element on the page, starting from the identified element. The located element will be returned as a WebElement<a
+								href="http://code.google.com/p/selenium/w/edit/WebElement">?</a> JSON object. The table below lists the locator strategies that each server
+							should support. Each locator must return the first matching element located in the DOM.
+							<p></p>
+							<p></p>
+
+							<p></p>
+							<p></p>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+								<dd>
+									<tt>:id</tt>
+									- ID of the element to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd class='edit'>
+							<dl>
+								<dt>
+									<strong>JSON Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>depth</tt>
+									-
+									<tt>{int}</tt>
+									the depth the element tree to be considered for the search
+								</dd>
+								<dd>
+									<tt>criteria</tt>
+									-
+									<tt>{object}</tt>
+									The criteria used to filter the result. <a href='#criteria'>criteria</a>
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Returns:</strong>
+								</dt>
+								<dd>
+									<tt>{ELEMENT:string}</tt>
+									A WebElement<a href="http://code.google.com/p/selenium/w/edit/WebElement">?</a> JSON object for the located element.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+								<dd>
+									<tt>StaleElementReference</tt>
+									- If the element referenced by
+									<tt>:id</tt>
+									is no longer attached to the page's DOM.
+								</dd>
+								<dd>
+									<tt>NoSuchElement</tt>
+									- If the element cannot be found.
+								</dd>
+								<dd>
+									<tt>XPathLookupError</tt>
+									- If using XPath and the input expression is invalid.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/element/:id/elements"></a>/session/:sessionId/element/:id/elements<a href="#/session/:sessionId/element/:id/elements"
+					class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_/session/:sessionId/element/:id/elements"></a>POST /session/:sessionId/element/:id/elements<a
+							href="#POST_/session/:sessionId/element/:id/elements" class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>
+							Search for multiple elements on the page, starting from the identified element. The located elements will be returned as a WebElement<a
+								href="http://code.google.com/p/selenium/w/edit/WebElement">?</a> JSON objects. The table below lists the locator strategies that each server
+							should support. Elements should be returned in the order located in the DOM.
+							<p></p>
+							<p></p>
+
+							<p></p>
+							<p></p>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+								<dd>
+									<tt>:id</tt>
+									- ID of the element to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd class='edit'>
+							<dl>
+								<dt>
+									<strong>JSON Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>depth</tt>
+									-
+									<tt>{int}</tt>
+									the depth the element tree to be considered for the search
+								</dd>
+								<dd>
+									<tt>criteria</tt>
+									-
+									<tt>{object}</tt>
+									The criteria used to filter the result. <a href='#criteria'>criteria</a>
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Returns:</strong>
+								</dt>
+								<dd>
+									<tt>{Array.&lt;{ELEMENT:string}&gt;}</tt>
+									A list of WebElement<a href="http://code.google.com/p/selenium/w/edit/WebElement">?</a> JSON objects for the located elements.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+								<dd>
+									<tt>StaleElementReference</tt>
+									- If the element referenced by
+									<tt>:id</tt>
+									is no longer attached to the page's DOM.
+								</dd>
+								<dd>
+									<tt>XPathLookupError</tt>
+									- If using XPath and the input expression is invalid.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/element/:id/click"></a>/session/:sessionId/element/:id/click<a href="#/session/:sessionId/element/:id/click"
+					class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_/session/:sessionId/element/:id/click"></a>POST /session/:sessionId/element/:id/click<a
+							href="#POST_/session/:sessionId/element/:id/click" class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Click on an element.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+								<dd>
+									<tt>:id</tt>
+									- ID of the element to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+								<dd>
+									<tt>StaleElementReference</tt>
+									- If the element referenced by
+									<tt>:id</tt>
+									is no longer attached to the page's DOM.
+								</dd>
+								<dd>
+									<tt>ElementNotVisible</tt>
+									- If the referenced element is not visible on the page (either is hidden by CSS, has 0-width, or has 0-height)
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/element/:id/submit"></a>/session/:sessionId/element/:id/submit<a href="#/session/:sessionId/element/:id/submit"
+					class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_/session/:sessionId/element/:id/submit"></a>POST /session/:sessionId/element/:id/submit<a
+							href="#POST_/session/:sessionId/element/:id/submit" class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>
+							Submit a
+							<tt>FORM</tt>
+							element. The submit command may also be applied to any element that is a descendant of a
+							<tt>FORM</tt>
+							element.
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+								<dd>
+									<tt>:id</tt>
+									- ID of the element to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+								<dd>
+									<tt>StaleElementReference</tt>
+									- If the element referenced by
+									<tt>:id</tt>
+									is no longer attached to the page's DOM.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/element/:id/text"></a>/session/:sessionId/element/:id/text<a href="#/session/:sessionId/element/:id/text"
+					class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="GET_/session/:sessionId/element/:id/text"></a>GET /session/:sessionId/element/:id/text<a
+							href="#GET_/session/:sessionId/element/:id/text" class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Returns the visible text for the element.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+								<dd>
+									<tt>:id</tt>
+									- ID of the element to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+								<dd>
+									<tt>StaleElementReference</tt>
+									- If the element referenced by
+									<tt>:id</tt>
+									is no longer attached to the page's DOM.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/element/:id/value"></a>/session/:sessionId/element/:id/value<a href="#/session/:sessionId/element/:id/value"
+					class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_/session/:sessionId/element/:id/value"></a>POST /session/:sessionId/element/:id/value<a
+							href="#POST_/session/:sessionId/element/:id/value" class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>
+							Send a sequence of key strokes to an element.
+							<p></p>
+							<p>
+								Any UTF-8 character may be specified, however, if the server does not support native key events, it should simulate key strokes for a standard
+								US keyboard layout. The Unicode <a href="http://unicode.org/faq/casemap_charprop.html#8" rel="nofollow">Private Use Area</a> code points,
+								0xE000-0xF8FF, are used to represent pressable, non-text keys (see table below).
+							</p>
+							<p></p>
+							<table cellpadding="5" cellspacing="5">
+								<tbody>
+									<tr>
+										<td valign="top">
+											<table class="wikitable">
+												<tbody>
+													<tr>
+														<td><strong>Key</strong>
+														</td>
+														<td><strong>Code</strong>
+														</td>
+													</tr>
+													<tr>
+														<td>NULL</td>
+														<td>U+E000</td>
+													</tr>
+													<tr>
+														<td>Cancel</td>
+														<td>U+E001</td>
+													</tr>
+													<tr>
+														<td>Help</td>
+														<td>U+E002</td>
+													</tr>
+													<tr>
+														<td>Back space</td>
+														<td>U+E003</td>
+													</tr>
+													<tr>
+														<td>Tab</td>
+														<td>U+E004</td>
+													</tr>
+													<tr>
+														<td>Clear</td>
+														<td>U+E005</td>
+													</tr>
+													<tr>
+														<td>Return<sup>1</sup>
+														</td>
+														<td>U+E006</td>
+													</tr>
+													<tr>
+														<td>Enter<sup>1</sup>
+														</td>
+														<td>U+E007</td>
+													</tr>
+													<tr>
+														<td>Shift</td>
+														<td>U+E008</td>
+													</tr>
+													<tr>
+														<td>Control</td>
+														<td>U+E009</td>
+													</tr>
+													<tr>
+														<td>Alt</td>
+														<td>U+E00A</td>
+													</tr>
+													<tr>
+														<td>Pause</td>
+														<td>U+E00B</td>
+													</tr>
+													<tr>
+														<td>Escape</td>
+														<td>U+E00C</td>
+													</tr>
+												</tbody>
+											</table>
+											<p></p>
+											<p></p>
+										</td>
+										<td valign="top">
+											<table class="wikitable">
+												<tbody>
+													<tr>
+														<td><strong>Key</strong>
+														</td>
+														<td><strong>Code</strong>
+														</td>
+													</tr>
+													<tr>
+														<td>Space</td>
+														<td>U+E00D</td>
+													</tr>
+													<tr>
+														<td>Pageup</td>
+														<td>U+E00E</td>
+													</tr>
+													<tr>
+														<td>Pagedown</td>
+														<td>U+E00F</td>
+													</tr>
+													<tr>
+														<td>End</td>
+														<td>U+E010</td>
+													</tr>
+													<tr>
+														<td>Home</td>
+														<td>U+E011</td>
+													</tr>
+													<tr>
+														<td>Left arrow</td>
+														<td>U+E012</td>
+													</tr>
+													<tr>
+														<td>Up arrow</td>
+														<td>U+E013</td>
+													</tr>
+													<tr>
+														<td>Right arrow</td>
+														<td>U+E014</td>
+													</tr>
+													<tr>
+														<td>Down arrow</td>
+														<td>U+E015</td>
+													</tr>
+													<tr>
+														<td>Insert</td>
+														<td>U+E016</td>
+													</tr>
+													<tr>
+														<td>Delete</td>
+														<td>U+E017</td>
+													</tr>
+													<tr>
+														<td>Semicolon</td>
+														<td>U+E018</td>
+													</tr>
+													<tr>
+														<td>Equals</td>
+														<td>U+E019</td>
+													</tr>
+												</tbody>
+											</table>
+											<p></p>
+											<p></p>
+										</td>
+										<td valign="top">
+											<table class="wikitable">
+												<tbody>
+													<tr>
+														<td><strong>Key</strong>
+														</td>
+														<td><strong>Code</strong>
+														</td>
+													</tr>
+													<tr>
+														<td>Numpad 0</td>
+														<td>U+E01A</td>
+													</tr>
+													<tr>
+														<td>Numpad 1</td>
+														<td>U+E01B</td>
+													</tr>
+													<tr>
+														<td>Numpad 2</td>
+														<td>U+E01C</td>
+													</tr>
+													<tr>
+														<td>Numpad 3</td>
+														<td>U+E01D</td>
+													</tr>
+													<tr>
+														<td>Numpad 4</td>
+														<td>U+E01E</td>
+													</tr>
+													<tr>
+														<td>Numpad 5</td>
+														<td>U+E01F</td>
+													</tr>
+													<tr>
+														<td>Numpad 6</td>
+														<td>U+E020</td>
+													</tr>
+													<tr>
+														<td>Numpad 7</td>
+														<td>U+E021</td>
+													</tr>
+													<tr>
+														<td>Numpad 8</td>
+														<td>U+E022</td>
+													</tr>
+													<tr>
+														<td>Numpad 9</td>
+														<td>U+E023</td>
+													</tr>
+												</tbody>
+											</table>
+											<p></p>
+											<p></p>
+										</td>
+										<td valign="top">
+											<table class="wikitable">
+												<tbody>
+													<tr>
+														<td><strong>Key</strong>
+														</td>
+														<td><strong>Code</strong>
+														</td>
+													</tr>
+													<tr>
+														<td>Multiply</td>
+														<td>U+E024</td>
+													</tr>
+													<tr>
+														<td>Add</td>
+														<td>U+E025</td>
+													</tr>
+													<tr>
+														<td>Separator</td>
+														<td>U+E026</td>
+													</tr>
+													<tr>
+														<td>Subtract</td>
+														<td>U+E027</td>
+													</tr>
+													<tr>
+														<td>Decimal</td>
+														<td>U+E028</td>
+													</tr>
+													<tr>
+														<td>Divide</td>
+														<td>U+E029</td>
+													</tr>
+												</tbody>
+											</table>
+											<p></p>
+											<p></p>
+										</td>
+										<td valign="top">
+											<table class="wikitable">
+												<tbody>
+													<tr>
+														<td><strong>Key</strong>
+														</td>
+														<td><strong>Code</strong>
+														</td>
+													</tr>
+													<tr>
+														<td>F1</td>
+														<td>U+E031</td>
+													</tr>
+													<tr>
+														<td>F2</td>
+														<td>U+E032</td>
+													</tr>
+													<tr>
+														<td>F3</td>
+														<td>U+E033</td>
+													</tr>
+													<tr>
+														<td>F4</td>
+														<td>U+E034</td>
+													</tr>
+													<tr>
+														<td>F5</td>
+														<td>U+E035</td>
+													</tr>
+													<tr>
+														<td>F6</td>
+														<td>U+E036</td>
+													</tr>
+													<tr>
+														<td>F7</td>
+														<td>U+E037</td>
+													</tr>
+													<tr>
+														<td>F8</td>
+														<td>U+E038</td>
+													</tr>
+													<tr>
+														<td>F9</td>
+														<td>U+E039</td>
+													</tr>
+													<tr>
+														<td>F10</td>
+														<td>U+E03A</td>
+													</tr>
+													<tr>
+														<td>F11</td>
+														<td>U+E03B</td>
+													</tr>
+													<tr>
+														<td>F12</td>
+														<td>U+E03C</td>
+													</tr>
+													<tr>
+														<td>Command/Meta</td>
+														<td>U+E03D</td>
+													</tr>
+												</tbody>
+											</table>
+											<p></p>
+											<p></p>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="5"><sup>1</sup> The return key is <i>not the same</i> as the <a href="http://en.wikipedia.org/wiki/Enter_key"
+											rel="nofollow">enter key</a>.</td>
+									</tr>
+								</tbody>
+							</table>
+							<p></p>
+							<p>The server must process the key sequence as follows:</p>
+							<ul>
+								<li>Each key that appears on the keyboard without requiring modifiers are sent as a keydown followed by a key up.</li>
+								<li>If the server does not support native events and must simulate key strokes with JavaScript, it must generate keydown, keypress, and
+									keyup events, in that order. The keypress event should only be fired when the corresponding key is for a printable character.</li>
+								<li>If a key requires a modifier key (e.g. "!" on a standard US keyboard), the sequence is: <var>modifier</var> down, <var>key</var>
+									down, <var>key</var> up, <var>modifier</var> up, where <var>key</var> is the ideal unmodified key value (using the previous example, a "1").</li>
+								<li>Modifier keys (Ctrl, Shift, Alt, and Command/Meta) are assumed to be "sticky"; each modifier should be held down (e.g. only a keydown
+									event) until either the modifier is encountered again in the sequence, or the <tt>NULL</tt> (U+E000) key is encountered.</li>
+								<li>Each key sequence is terminated with an implicit <tt>NULL</tt> key. Subsequently, all depressed modifier keys must be released (with
+									corresponding keyup events) at the end of the sequence.</li>
+							</ul>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+								<dd>
+									<tt>:id</tt>
+									- ID of the element to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>JSON Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>value</tt>
+									-
+									<tt>{Array.&lt;string&gt;}</tt>
+									The sequence of keys to type. An array must be provided. The server should flatten the array items to a single string to be typed.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+								<dd>
+									<tt>StaleElementReference</tt>
+									- If the element referenced by
+									<tt>:id</tt>
+									is no longer attached to the page's DOM.
+								</dd>
+								<dd>
+									<tt>ElementNotVisible</tt>
+									- If the referenced element is not visible on the page (either is hidden by CSS, has 0-width, or has 0-height)
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/keys"></a>/session/:sessionId/keys<a href="#/session/:sessionId/keys" class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_/session/:sessionId/keys"></a>POST /session/:sessionId/keys<a href="#POST_/session/:sessionId/keys" class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>
+							Send a sequence of key strokes to the active element. This command is similar to the <a
+								href="http://code.google.com/p/selenium/wiki/JsonWireProtocol#/session/:sessionId/element/:id/value">send keys</a> command in every aspect
+							except the implicit termination: The modifiers are <strong>not</strong> released at the end of the call. Rather, the state of the modifier keys
+							is kept between calls, so mouse interactions can be performed while modifier keys are depressed.
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>JSON Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>value</tt>
+									-
+									<tt>{Array.&lt;string&gt;}</tt>
+									The keys sequence to be sent. The sequence is defined in the<a
+										href="http://code.google.com/p/selenium/wiki/JsonWireProtocol#/session/:sessionId/element/:id/value">send keys</a> command.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/element/:id/name"></a>/session/:sessionId/element/:id/name<a href="#/session/:sessionId/element/:id/name"
+					class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="GET_/session/:sessionId/element/:id/name"></a>GET /session/:sessionId/element/:id/name<a
+							href="#GET_/session/:sessionId/element/:id/name" class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Query for an element's tag name.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+								<dd>
+									<tt>:id</tt>
+									- ID of the element to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Returns:</strong>
+								</dt>
+								<dd>
+									<tt>{string}</tt>
+									The element's tag name, as a lowercase string.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+								<dd>
+									<tt>StaleElementReference</tt>
+									- If the element referenced by
+									<tt>:id</tt>
+									is no longer attached to the page's DOM.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/element/:id/clear"></a>/session/:sessionId/element/:id/clear<a href="#/session/:sessionId/element/:id/clear"
+					class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_/session/:sessionId/element/:id/clear"></a>POST /session/:sessionId/element/:id/clear<a
+							href="#POST_/session/:sessionId/element/:id/clear" class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>
+							Clear a
+							<tt>TEXTAREA</tt>
 							or
-							<tt>:other</tt>
-							is no longer attached to the page's DOM.
+							<tt>text INPUT</tt>
+							element's value.
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+								<dd>
+									<tt>:id</tt>
+									- ID of the element to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+								<dd>
+									<tt>StaleElementReference</tt>
+									- If the element referenced by
+									<tt>:id</tt>
+									is no longer attached to the page's DOM.
+								</dd>
+								<dd>
+									<tt>ElementNotVisible</tt>
+									- If the referenced element is not visible on the page (either is hidden by CSS, has 0-width, or has 0-height)
+								</dd>
+								<dd>
+									<tt>InvalidElementState</tt>
+									- If the referenced element is disabled.
+								</dd>
+							</dl>
 						</dd>
 					</dl>
 				</dd>
 			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/element/:id/displayed"></a>/session/:sessionId/element/:id/displayed<a
-			href="#/session/:sessionId/element/:id/displayed" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
 			<p></p>
-			<h4>
-				<a name="GET_/session/:sessionId/element/:id/displayed"></a>GET /session/:sessionId/element/:id/displayed<a
-					href="#GET_/session/:sessionId/element/:id/displayed" class="section_anchor"></a>
-			</h4>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/element/:id/selected"></a>/session/:sessionId/element/:id/selected<a href="#/session/:sessionId/element/:id/selected"
+					class="section_anchor"></a>
+			</h3>
 			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Determine if an element is currently displayed.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-						<dd>
-							<tt>:id</tt>
-							- ID of the element to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Returns:</strong>
-						</dt>
-						<dd>
-							<tt>{boolean}</tt>
-							Whether the element is displayed.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-						<dd>
-							<tt>StaleElementReference</tt>
-							- If the element referenced by
-							<tt>:id</tt>
-							is no longer attached to the page's DOM.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/element/:id/location"></a>/session/:sessionId/element/:id/location<a href="#/session/:sessionId/element/:id/location"
-			class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="GET_/session/:sessionId/element/:id/location"></a>GET /session/:sessionId/element/:id/location<a
-					href="#GET_/session/:sessionId/element/:id/location" class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
 			<dl>
 				<dd>
-					Determine an element's location on the page. The point
-					<tt>(0, 0)</tt>
-					refers to the upper-left corner of the page. The element's coordinates are returned as a JSON object with
-					<tt>x</tt>
-					and
-					<tt>y</tt>
-					properties.
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-						<dd>
-							<tt>:id</tt>
-							- ID of the element to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Returns:</strong>
-						</dt>
-						<dd>
-							<tt>{x:number, y:number}</tt>
-							The X and Y coordinates for the element on the page.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-						<dd>
-							<tt>StaleElementReference</tt>
-							- If the element referenced by
-							<tt>:id</tt>
-							is no longer attached to the page's DOM.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/element/:id/location_in_view"></a>/session/:sessionId/element/:id/location_in_view<a
-			href="#/session/:sessionId/element/:id/location_in_view" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="GET_/session/:sessionId/element/:id/location_in_view"></a>GET /session/:sessionId/element/:id/location_in_view<a
-					href="#GET_/session/:sessionId/element/:id/location_in_view" class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>
-					Determine an element's location on the screen once it has been scrolled into view.
 					<p></p>
-					<p>
-						<strong>Note:</strong> This is considered an internal command and should <strong>only</strong> be used to determine an element's location for
-						correctly generating native events.
-					</p>
+					<h4>
+						<a name="GET_/session/:sessionId/element/:id/selected"></a>GET /session/:sessionId/element/:id/selected<a
+							href="#GET_/session/:sessionId/element/:id/selected" class="section_anchor"></a>
+					</h4>
+					<p></p>
 				</dd>
 				<dd>
 					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
 						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
+							Determine if an
+							<tt>OPTION</tt>
+							element, or an
+							<tt>INPUT</tt>
+							element of type
+							<tt>checkbox</tt>
+							or
+							<tt>radiobutton</tt>
+							is currently selected.
 						</dd>
 						<dd>
-							<tt>:id</tt>
-							- ID of the element to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Returns:</strong>
-						</dt>
-						<dd>
-							<tt>{x:number, y:number}</tt>
-							The X and Y coordinates for the element.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+								<dd>
+									<tt>:id</tt>
+									- ID of the element to route the command to.
+								</dd>
+							</dl>
 						</dd>
 						<dd>
-							<tt>StaleElementReference</tt>
-							- If the element referenced by
-							<tt>:id</tt>
-							is no longer attached to the page's DOM.
+							<dl>
+								<dt>
+									<strong>Returns:</strong>
+								</dt>
+								<dd>
+									<tt>{boolean}</tt>
+									Whether the element is selected.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+								<dd>
+									<tt>StaleElementReference</tt>
+									- If the element referenced by
+									<tt>:id</tt>
+									is no longer attached to the page's DOM.
+								</dd>
+							</dl>
 						</dd>
 					</dl>
 				</dd>
 			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/element/:id/size"></a>/session/:sessionId/element/:id/size<a href="#/session/:sessionId/element/:id/size"
-			class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
 			<p></p>
-			<h4>
-				<a name="GET_/session/:sessionId/element/:id/size"></a>GET /session/:sessionId/element/:id/size<a href="#GET_/session/:sessionId/element/:id/size"
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/element/:id/enabled"></a>/session/:sessionId/element/:id/enabled<a href="#/session/:sessionId/element/:id/enabled"
 					class="section_anchor"></a>
-			</h4>
+			</h3>
 			<p></p>
-		</dd>
-		<dd>
 			<dl>
 				<dd>
-					Determine an element's size in pixels. The size will be returned as a JSON object with
-					<tt>width</tt>
-					and
-					<tt>height</tt>
-					properties.
+					<p></p>
+					<h4>
+						<a name="GET_/session/:sessionId/element/:id/enabled"></a>GET /session/:sessionId/element/:id/enabled<a
+							href="#GET_/session/:sessionId/element/:id/enabled" class="section_anchor"></a>
+					</h4>
+					<p></p>
 				</dd>
 				<dd>
 					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
+						<dd>Determine if an element is currently enabled.</dd>
 						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+								<dd>
+									<tt>:id</tt>
+									- ID of the element to route the command to.
+								</dd>
+							</dl>
 						</dd>
 						<dd>
-							<tt>:id</tt>
-							- ID of the element to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Returns:</strong>
-						</dt>
-						<dd>
-							<tt>{width:number, height:number}</tt>
-							The width and height of the element, in pixels.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
+							<dl>
+								<dt>
+									<strong>Returns:</strong>
+								</dt>
+								<dd>
+									<tt>{boolean}</tt>
+									Whether the element is enabled.
+								</dd>
+							</dl>
 						</dd>
 						<dd>
-							<tt>StaleElementReference</tt>
-							- If the element referenced by
-							<tt>:id</tt>
-							is no longer attached to the page's DOM.
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+								<dd>
+									<tt>StaleElementReference</tt>
+									- If the element referenced by
+									<tt>:id</tt>
+									is no longer attached to the page's DOM.
+								</dd>
+							</dl>
 						</dd>
 					</dl>
 				</dd>
 			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/element/:id/css/:propertyName"></a>/session/:sessionId/element/:id/css/:propertyName<a
-			href="#/session/:sessionId/element/:id/css/:propertyName" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
 			<p></p>
-			<h4>
-				<a name="GET_/session/:sessionId/element/:id/css/:propertyName"></a>GET /session/:sessionId/element/:id/css/:propertyName<a
-					href="#GET_/session/:sessionId/element/:id/css/:propertyName" class="section_anchor"></a>
-			</h4>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/element/:id/attribute/:name"></a>/session/:sessionId/element/:id/attribute/:name<a
+					href="#/session/:sessionId/element/:id/attribute/:name" class="section_anchor"></a>
+			</h3>
 			<p></p>
-		</dd>
-		<dd>
 			<dl>
 				<dd>
-					Query the value of an element's computed CSS property. The CSS property to query should be specified using the CSS property name, <strong>not</strong>
-					the JavaScript property name (e.g.
-					<tt>background-color</tt>
-					instead of
-					<tt>backgroundColor</tt>
-					).
+					<p></p>
+					<h4>
+						<a name="GET_/session/:sessionId/element/:id/attribute/:name"></a>GET /session/:sessionId/element/:id/attribute/:name<a
+							href="#GET_/session/:sessionId/element/:id/attribute/:name" class="section_anchor"></a>
+					</h4>
+					<p></p>
 				</dd>
 				<dd>
 					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
+						<dd>Get the value of an element's attribute.</dd>
 						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+								<dd>
+									<tt>:id</tt>
+									- ID of the element to route the command to.
+								</dd>
+							</dl>
 						</dd>
 						<dd>
-							<tt>:id</tt>
-							- ID of the element to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Returns:</strong>
-						</dt>
-						<dd>
-							<tt>{string}</tt>
-							The value of the specified CSS property.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
+							<dl>
+								<dt>
+									<strong>Returns:</strong>
+								</dt>
+								<dd>
+									<tt>{string|null}</tt>
+									The value of the attribute, or null if it is not set on the element.
+								</dd>
+							</dl>
 						</dd>
 						<dd>
-							<tt>StaleElementReference</tt>
-							- If the element referenced by
-							<tt>:id</tt>
-							is no longer attached to the page's DOM.
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+								<dd>
+									<tt>StaleElementReference</tt>
+									- If the element referenced by
+									<tt>:id</tt>
+									is no longer attached to the page's DOM.
+								</dd>
+							</dl>
 						</dd>
 					</dl>
 				</dd>
 			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/orientation"></a>/session/:sessionId/orientation<a href="#/session/:sessionId/orientation" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
 			<p></p>
-			<h4>
-				<a name="GET_/session/:sessionId/orientation"></a>GET /session/:sessionId/orientation<a href="#GET_/session/:sessionId/orientation"
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/element/:id/equals/:other"></a>/session/:sessionId/element/:id/equals/:other<a
+					href="#/session/:sessionId/element/:id/equals/:other" class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="GET_/session/:sessionId/element/:id/equals/:other"></a>GET /session/:sessionId/element/:id/equals/:other<a
+							href="#GET_/session/:sessionId/element/:id/equals/:other" class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Test if two element IDs refer to the same DOM element.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+								<dd>
+									<tt>:id</tt>
+									- ID of the element to route the command to.
+								</dd>
+								<dd>
+									<tt>:other</tt>
+									- ID of the element to compare against.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Returns:</strong>
+								</dt>
+								<dd>
+									<tt>{boolean}</tt>
+									Whether the two IDs refer to the same element.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+								<dd>
+									<tt>StaleElementReference</tt>
+									- If either the element refered to by
+									<tt>:id</tt>
+									or
+									<tt>:other</tt>
+									is no longer attached to the page's DOM.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/element/:id/displayed"></a>/session/:sessionId/element/:id/displayed<a
+					href="#/session/:sessionId/element/:id/displayed" class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="GET_/session/:sessionId/element/:id/displayed"></a>GET /session/:sessionId/element/:id/displayed<a
+							href="#GET_/session/:sessionId/element/:id/displayed" class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Determine if an element is currently displayed.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+								<dd>
+									<tt>:id</tt>
+									- ID of the element to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Returns:</strong>
+								</dt>
+								<dd>
+									<tt>{boolean}</tt>
+									Whether the element is displayed.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+								<dd>
+									<tt>StaleElementReference</tt>
+									- If the element referenced by
+									<tt>:id</tt>
+									is no longer attached to the page's DOM.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/element/:id/location"></a>/session/:sessionId/element/:id/location<a href="#/session/:sessionId/element/:id/location"
 					class="section_anchor"></a>
-			</h4>
+			</h3>
 			<p></p>
-		</dd>
-		<dd>
 			<dl>
 				<dd>
-					Get the current browser orientation. The server should return a valid orientation value as defined in <a
-						href="http://selenium.googlecode.com/svn/trunk/docs/api/java/org/openqa/selenium/ScreenOrientation.html" rel="nofollow">ScreenOrientation</a>:
-					<tt>{LANDSCAPE|PORTRAIT}</tt>
-					.
+					<p></p>
+					<h4>
+						<a name="GET_/session/:sessionId/element/:id/location"></a>GET /session/:sessionId/element/:id/location<a
+							href="#GET_/session/:sessionId/element/:id/location" class="section_anchor"></a>
+					</h4>
+					<p></p>
 				</dd>
 				<dd>
 					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
 						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
+							Determine an element's location on the page. The point
+							<tt>(0, 0)</tt>
+							refers to the upper-left corner of the page. The element's coordinates are returned as a JSON object with
+							<tt>x</tt>
+							and
+							<tt>y</tt>
+							properties.
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+								<dd>
+									<tt>:id</tt>
+									- ID of the element to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Returns:</strong>
+								</dt>
+								<dd>
+									<tt>{x:number, y:number}</tt>
+									The X and Y coordinates for the element on the page.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+								<dd>
+									<tt>StaleElementReference</tt>
+									- If the element referenced by
+									<tt>:id</tt>
+									is no longer attached to the page's DOM.
+								</dd>
+							</dl>
 						</dd>
 					</dl>
 				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/element/:id/location_in_view"></a>/session/:sessionId/element/:id/location_in_view<a
+					href="#/session/:sessionId/element/:id/location_in_view" class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="GET_/session/:sessionId/element/:id/location_in_view"></a>GET /session/:sessionId/element/:id/location_in_view<a
+							href="#GET_/session/:sessionId/element/:id/location_in_view" class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
 				<dd>
 					<dl>
-						<dt>
-							<strong>Returns:</strong>
-						</dt>
 						<dd>
-							<tt>{string}</tt>
-							The current browser orientation corresponding to a value defined in <a
+							Determine an element's location on the screen once it has been scrolled into view.
+							<p></p>
+							<p>
+								<strong>Note:</strong> This is considered an internal command and should <strong>only</strong> be used to determine an element's location for
+								correctly generating native events.
+							</p>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+								<dd>
+									<tt>:id</tt>
+									- ID of the element to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Returns:</strong>
+								</dt>
+								<dd>
+									<tt>{x:number, y:number}</tt>
+									The X and Y coordinates for the element.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+								<dd>
+									<tt>StaleElementReference</tt>
+									- If the element referenced by
+									<tt>:id</tt>
+									is no longer attached to the page's DOM.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/element/:id/size"></a>/session/:sessionId/element/:id/size<a href="#/session/:sessionId/element/:id/size"
+					class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="GET_/session/:sessionId/element/:id/size"></a>GET /session/:sessionId/element/:id/size<a
+							href="#GET_/session/:sessionId/element/:id/size" class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>
+							Determine an element's size in pixels. The size will be returned as a JSON object with
+							<tt>width</tt>
+							and
+							<tt>height</tt>
+							properties.
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+								<dd>
+									<tt>:id</tt>
+									- ID of the element to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Returns:</strong>
+								</dt>
+								<dd>
+									<tt>{width:number, height:number}</tt>
+									The width and height of the element, in pixels.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+								<dd>
+									<tt>StaleElementReference</tt>
+									- If the element referenced by
+									<tt>:id</tt>
+									is no longer attached to the page's DOM.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/element/:id/css/:propertyName"></a>/session/:sessionId/element/:id/css/:propertyName<a
+					href="#/session/:sessionId/element/:id/css/:propertyName" class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="GET_/session/:sessionId/element/:id/css/:propertyName"></a>GET /session/:sessionId/element/:id/css/:propertyName<a
+							href="#GET_/session/:sessionId/element/:id/css/:propertyName" class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>
+							Query the value of an element's computed CSS property. The CSS property to query should be specified using the CSS property name, <strong>not</strong>
+							the JavaScript property name (e.g.
+							<tt>background-color</tt>
+							instead of
+							<tt>backgroundColor</tt>
+							).
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+								<dd>
+									<tt>:id</tt>
+									- ID of the element to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Returns:</strong>
+								</dt>
+								<dd>
+									<tt>{string}</tt>
+									The value of the specified CSS property.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+								<dd>
+									<tt>StaleElementReference</tt>
+									- If the element referenced by
+									<tt>:id</tt>
+									is no longer attached to the page's DOM.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/orientation"></a>/session/:sessionId/orientation<a href="#/session/:sessionId/orientation" class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="GET_/session/:sessionId/orientation"></a>GET /session/:sessionId/orientation<a href="#GET_/session/:sessionId/orientation"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>
+							Get the current browser orientation. The server should return a valid orientation value as defined in <a
 								href="http://selenium.googlecode.com/svn/trunk/docs/api/java/org/openqa/selenium/ScreenOrientation.html" rel="nofollow">ScreenOrientation</a>:
 							<tt>{LANDSCAPE|PORTRAIT}</tt>
 							.
 						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
 						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Returns:</strong>
+								</dt>
+								<dd>
+									<tt>{string}</tt>
+									The current browser orientation corresponding to a value defined in <a
+										href="http://selenium.googlecode.com/svn/trunk/docs/api/java/org/openqa/selenium/ScreenOrientation.html" rel="nofollow">ScreenOrientation</a>:
+									<tt>{LANDSCAPE|PORTRAIT}</tt>
+									.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+							</dl>
 						</dd>
 					</dl>
 				</dd>
 			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<p></p>
-	<dl>
-		<dd>
 			<p></p>
-			<h4>
-				<a name="POST_/session/:sessionId/orientation"></a>POST /session/:sessionId/orientation<a href="#POST_/session/:sessionId/orientation"
-					class="section_anchor"></a>
-			</h4>
 			<p></p>
-		</dd>
-		<dd>
 			<dl>
 				<dd>
-					Set the browser orientation. The orientation should be specified as defined in <a
-						href="http://selenium.googlecode.com/svn/trunk/docs/api/java/org/openqa/selenium/ScreenOrientation.html" rel="nofollow">ScreenOrientation</a>:
-					<tt>{LANDSCAPE|PORTRAIT}</tt>
-					.
+					<p></p>
+					<h4>
+						<a name="POST_/session/:sessionId/orientation"></a>POST /session/:sessionId/orientation<a href="#POST_/session/:sessionId/orientation"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
 				</dd>
 				<dd>
 					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
 						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>JSON Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>orientation</tt>
-							-
-							<tt>{string}</tt>
-							The new browser orientation as defined in <a
+							Set the browser orientation. The orientation should be specified as defined in <a
 								href="http://selenium.googlecode.com/svn/trunk/docs/api/java/org/openqa/selenium/ScreenOrientation.html" rel="nofollow">ScreenOrientation</a>:
 							<tt>{LANDSCAPE|PORTRAIT}</tt>
 							.
 						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
 						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>JSON Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>orientation</tt>
+									-
+									<tt>{string}</tt>
+									The new browser orientation as defined in <a
+										href="http://selenium.googlecode.com/svn/trunk/docs/api/java/org/openqa/selenium/ScreenOrientation.html" rel="nofollow">ScreenOrientation</a>:
+									<tt>{LANDSCAPE|PORTRAIT}</tt>
+									.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+							</dl>
 						</dd>
 					</dl>
 				</dd>
 			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/alert_text"></a>/session/:sessionId/alert_text<a href="#/session/:sessionId/alert_text" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
 			<p></p>
-			<h4>
-				<a name="GET_/session/:sessionId/alert_text"></a>GET /session/:sessionId/alert_text<a href="#GET_/session/:sessionId/alert_text"
-					class="section_anchor"></a>
-			</h4>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/alert_text"></a>/session/:sessionId/alert_text<a href="#/session/:sessionId/alert_text" class="section_anchor"></a>
+			</h3>
 			<p></p>
-		</dd>
-		<dd>
 			<dl>
 				<dd>
-					Gets the text of the currently displayed JavaScript<a href="http://code.google.com/p/selenium/w/edit/JavaScript">?</a>
-					<tt>alert()</tt>
-					,
-					<tt>confirm()</tt>
-					, or
-					<tt>prompt()</tt>
-					dialog.
+					<p></p>
+					<h4>
+						<a name="GET_/session/:sessionId/alert_text"></a>GET /session/:sessionId/alert_text<a href="#GET_/session/:sessionId/alert_text"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
 				</dd>
 				<dd>
 					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
 						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Returns:</strong>
-						</dt>
-						<dd>
-							<tt>{string}</tt>
-							The text of the currently displayed alert.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoAlertPresent</tt>
-							- If there is no alert displayed.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="POST_/session/:sessionId/alert_text"></a>POST /session/:sessionId/alert_text<a href="#POST_/session/:sessionId/alert_text"
-					class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>
-					Sends keystrokes to a JavaScript<a href="http://code.google.com/p/selenium/w/edit/JavaScript">?</a>
-					<tt>prompt()</tt>
-					dialog.
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>JSON Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>text</tt>
-							-
-							<tt>{string}</tt>
-							Keystrokes to send to the
+							Gets the text of the currently displayed JavaScript<a href="http://code.google.com/p/selenium/w/edit/JavaScript">?</a>
+							<tt>alert()</tt>
+							,
+							<tt>confirm()</tt>
+							, or
 							<tt>prompt()</tt>
 							dialog.
 						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
 						<dd>
-							<tt>NoAlertPresent</tt>
-							- If there is no alert displayed.
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Returns:</strong>
+								</dt>
+								<dd>
+									<tt>{string}</tt>
+									The text of the currently displayed alert.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoAlertPresent</tt>
+									- If there is no alert displayed.
+								</dd>
+							</dl>
 						</dd>
 					</dl>
 				</dd>
 			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/accept_alert"></a>/session/:sessionId/accept_alert<a href="#/session/:sessionId/accept_alert" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
 			<p></p>
-			<h4>
-				<a name="POST_/session/:sessionId/accept_alert"></a>POST /session/:sessionId/accept_alert<a href="#POST_/session/:sessionId/accept_alert"
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_/session/:sessionId/alert_text"></a>POST /session/:sessionId/alert_text<a href="#POST_/session/:sessionId/alert_text"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>
+							Sends keystrokes to a JavaScript<a href="http://code.google.com/p/selenium/w/edit/JavaScript">?</a>
+							<tt>prompt()</tt>
+							dialog.
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>JSON Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>text</tt>
+									-
+									<tt>{string}</tt>
+									Keystrokes to send to the
+									<tt>prompt()</tt>
+									dialog.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoAlertPresent</tt>
+									- If there is no alert displayed.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/accept_alert"></a>/session/:sessionId/accept_alert<a href="#/session/:sessionId/accept_alert" class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_/session/:sessionId/accept_alert"></a>POST /session/:sessionId/accept_alert<a href="#POST_/session/:sessionId/accept_alert"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Accepts the currently displayed alert dialog. Usually, this is equivalent to clicking on the 'OK' button in the dialog.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoAlertPresent</tt>
+									- If there is no alert displayed.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/dismiss_alert"></a>/session/:sessionId/dismiss_alert<a href="#/session/:sessionId/dismiss_alert"
 					class="section_anchor"></a>
-			</h4>
+			</h3>
 			<p></p>
-		</dd>
-		<dd>
 			<dl>
-				<dd>Accepts the currently displayed alert dialog. Usually, this is equivalent to clicking on the 'OK' button in the dialog.</dd>
 				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
+					<p></p>
+					<h4>
+						<a name="POST_/session/:sessionId/dismiss_alert"></a>POST /session/:sessionId/dismiss_alert<a href="#POST_/session/:sessionId/dismiss_alert"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
 				</dd>
 				<dd>
 					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
 						<dd>
-							<tt>NoAlertPresent</tt>
-							- If there is no alert displayed.
+							Dismisses the currently displayed alert dialog. For
+							<tt>confirm()</tt>
+							and
+							<tt>prompt()</tt>
+							dialogs, this is equivalent to clicking the 'Cancel' button. For
+							<tt>alert()</tt>
+							dialogs, this is equivalent to clicking the 'OK' button.
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoAlertPresent</tt>
+									- If there is no alert displayed.
+								</dd>
+							</dl>
 						</dd>
 					</dl>
 				</dd>
 			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/dismiss_alert"></a>/session/:sessionId/dismiss_alert<a href="#/session/:sessionId/dismiss_alert" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
 			<p></p>
-			<h4>
-				<a name="POST_/session/:sessionId/dismiss_alert"></a>POST /session/:sessionId/dismiss_alert<a href="#POST_/session/:sessionId/dismiss_alert"
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/moveto"></a>/session/:sessionId/moveto<a href="#/session/:sessionId/moveto" class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_/session/:sessionId/moveto"></a>POST /session/:sessionId/moveto<a href="#POST_/session/:sessionId/moveto" class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Move the mouse by an offset of the specificed element. If no element is specified, the move is relative to the current mouse cursor. If
+							an element is provided but no offset, the mouse will be moved to the center of the element. If the element is not visible, it will be scrolled
+							into view.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>JSON Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>element</tt>
+									-
+									<tt>{string}</tt>
+									Opaque ID assigned to the element to move to, as described in the WebElement<a href="http://code.google.com/p/selenium/w/edit/WebElement">?</a>
+									JSON Object. If not specified or is null, the offset is relative to current position of the mouse.
+								</dd>
+								<dd>
+									<tt>xoffset</tt>
+									-
+									<tt>{number}</tt>
+									X offset to move to, relative to the top-left corner of the element. If not specified, the mouse will move to the middle of the element.
+								</dd>
+								<dd>
+									<tt>yoffset</tt>
+									-
+									<tt>{number}</tt>
+									Y offset to move to, relative to the top-left corner of the element. If not specified, the mouse will move to the middle of the element.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/click"></a>/session/:sessionId/click<a href="#/session/:sessionId/click" class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_/session/:sessionId/click"></a>POST /session/:sessionId/click<a href="#POST_/session/:sessionId/click" class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Click any mouse button (at the coordinates set by the last moveto command). Note that calling this command after calling buttondown and
+							before calling button up (or any out-of-order interactions sequence) will yield undefined behaviour).</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>JSON Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>button</tt>
+									-
+									<tt>{number}</tt>
+									Which button, enum:
+									<tt>{LEFT = 0, MIDDLE = 1 , RIGHT = 2}</tt>
+									. Defaults to the left mouse button if not specified.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/buttondown"></a>/session/:sessionId/buttondown<a href="#/session/:sessionId/buttondown" class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_/session/:sessionId/buttondown"></a>POST /session/:sessionId/buttondown<a href="#POST_/session/:sessionId/buttondown"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Click and hold the left mouse button (at the coordinates set by the last moveto command). Note that the next mouse-related command that
+							should follow is buttondown . Any other mouse command (such as click or another call to buttondown) will yield undefined behaviour.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>JSON Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>button</tt>
+									-
+									<tt>{number}</tt>
+									Which button, enum:
+									<tt>{LEFT = 0, MIDDLE = 1 , RIGHT = 2}</tt>
+									. Defaults to the left mouse button if not specified.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/buttonup"></a>/session/:sessionId/buttonup<a href="#/session/:sessionId/buttonup" class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_/session/:sessionId/buttonup"></a>POST /session/:sessionId/buttonup<a href="#POST_/session/:sessionId/buttonup"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Releases the mouse button previously held (where the mouse is currently at). Must be called once for every buttondown command issued.
+							See the note in click and buttondown about implications of out-of-order commands.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>JSON Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>button</tt>
+									-
+									<tt>{number}</tt>
+									Which button, enum:
+									<tt>{LEFT = 0, MIDDLE = 1 , RIGHT = 2}</tt>
+									. Defaults to the left mouse button if not specified.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/doubleclick"></a>/session/:sessionId/doubleclick<a href="#/session/:sessionId/doubleclick" class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_/session/:sessionId/doubleclick"></a>POST /session/:sessionId/doubleclick<a href="#POST_/session/:sessionId/doubleclick"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Double-clicks at the current mouse coordinates (set by moveto).</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/touch/click"></a>/session/:sessionId/touch/click<a href="#/session/:sessionId/touch/click" class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_/session/:sessionId/touch/click"></a>POST /session/:sessionId/touch/click<a href="#POST_/session/:sessionId/touch/click"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Single tap on the touch enabled device.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>JSON Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>element</tt>
+									-
+									<tt>{string}</tt>
+									ID of the element to single tap on.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/touch/down"></a>/session/:sessionId/touch/down<a href="#/session/:sessionId/touch/down" class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_/session/:sessionId/touch/down"></a>POST /session/:sessionId/touch/down<a href="#POST_/session/:sessionId/touch/down"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Finger down on the screen.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>JSON Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>x</tt>
+									-
+									<tt>{number}</tt>
+									X coordinate on the screen.
+								</dd>
+								<dd>
+									<tt>y</tt>
+									-
+									<tt>{number}</tt>
+									Y coordinate on the screen.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/touch/up"></a>/session/:sessionId/touch/up<a href="#/session/:sessionId/touch/up" class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_/session/:sessionId/touch/up"></a>POST /session/:sessionId/touch/up<a href="#POST_/session/:sessionId/touch/up"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Finger up on the screen.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>JSON Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>x</tt>
+									-
+									<tt>{number}</tt>
+									X coordinate on the screen.
+								</dd>
+								<dd>
+									<tt>y</tt>
+									-
+									<tt>{number}</tt>
+									Y coordinate on the screen.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="session/:sessionId/touch/move"></a>session/:sessionId/touch/move<a href="#session/:sessionId/touch/move" class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_session/:sessionId/touch/move"></a>POST session/:sessionId/touch/move<a href="#POST_session/:sessionId/touch/move"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Finger move on the screen.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>JSON Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>x</tt>
+									-
+									<tt>{number}</tt>
+									X coordinate on the screen.
+								</dd>
+								<dd>
+									<tt>y</tt>
+									-
+									<tt>{number}</tt>
+									Y coordinate on the screen.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="session/:sessionId/touch/scroll"></a>session/:sessionId/touch/scroll<a href="#session/:sessionId/touch/scroll" class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_session/:sessionId/touch/scroll"></a>POST session/:sessionId/touch/scroll<a href="#POST_session/:sessionId/touch/scroll"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Scroll on the touch screen using finger based motion events. Use this command to start scrolling at a particular screen location.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>JSON Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>element</tt>
+									-
+									<tt>{string}</tt>
+									ID of the element where the scroll starts.
+								</dd>
+								<dd>
+									<tt>xoffset</tt>
+									-
+									<tt>{number}</tt>
+									The x offset in pixels to scroll by.
+								</dd>
+								<dd>
+									<tt>yoffset</tt>
+									-
+									<tt>{number}</tt>
+									The y offset in pixels to scroll by.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="session/:sessionId/touch/scroll"></a>session/:sessionId/touch/scroll<a href="#session/:sessionId/touch/scroll" class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_session/:sessionId/touch/scroll"></a>POST session/:sessionId/touch/scroll<a href="#POST_session/:sessionId/touch/scroll"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Scroll on the touch screen using finger based motion events. Use this command if you don't care where the scroll starts on the screen.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>JSON Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>xoffset</tt>
+									-
+									<tt>{number}</tt>
+									The x offset in pixels to scrollby.
+								</dd>
+								<dd>
+									<tt>yoffset</tt>
+									-
+									<tt>{number}</tt>
+									The y offset in pixels to scrollby.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="session/:sessionId/touch/doubleclick"></a>session/:sessionId/touch/doubleclick<a href="#session/:sessionId/touch/doubleclick"
 					class="section_anchor"></a>
-			</h4>
+			</h3>
 			<p></p>
-		</dd>
-		<dd>
 			<dl>
 				<dd>
-					Dismisses the currently displayed alert dialog. For
-					<tt>confirm()</tt>
-					and
-					<tt>prompt()</tt>
-					dialogs, this is equivalent to clicking the 'Cancel' button. For
-					<tt>alert()</tt>
-					dialogs, this is equivalent to clicking the 'OK' button.
+					<p></p>
+					<h4>
+						<a name="POST_session/:sessionId/touch/doubleclick"></a>POST session/:sessionId/touch/doubleclick<a
+							href="#POST_session/:sessionId/touch/doubleclick" class="section_anchor"></a>
+					</h4>
+					<p></p>
 				</dd>
 				<dd>
 					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
+						<dd>Double tap on the touch screen using finger motion events.</dd>
 						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
 						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
 						<dd>
-							<tt>NoAlertPresent</tt>
-							- If there is no alert displayed.
+							<dl>
+								<dt>
+									<strong>JSON Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>element</tt>
+									-
+									<tt>{string}</tt>
+									ID of the element to double tap on.
+								</dd>
+							</dl>
 						</dd>
 					</dl>
 				</dd>
 			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/moveto"></a>/session/:sessionId/moveto<a href="#/session/:sessionId/moveto" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
 			<p></p>
-			<h4>
-				<a name="POST_/session/:sessionId/moveto"></a>POST /session/:sessionId/moveto<a href="#POST_/session/:sessionId/moveto" class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Move the mouse by an offset of the specificed element. If no element is specified, the move is relative to the current mouse cursor. If
-					an element is provided but no offset, the mouse will be moved to the center of the element. If the element is not visible, it will be scrolled
-					into view.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>JSON Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>element</tt>
-							-
-							<tt>{string}</tt>
-							Opaque ID assigned to the element to move to, as described in the WebElement<a href="http://code.google.com/p/selenium/w/edit/WebElement">?</a>
-							JSON Object. If not specified or is null, the offset is relative to current position of the mouse.
-						</dd>
-						<dd>
-							<tt>xoffset</tt>
-							-
-							<tt>{number}</tt>
-							X offset to move to, relative to the top-left corner of the element. If not specified, the mouse will move to the middle of the element.
-						</dd>
-						<dd>
-							<tt>yoffset</tt>
-							-
-							<tt>{number}</tt>
-							Y offset to move to, relative to the top-left corner of the element. If not specified, the mouse will move to the middle of the element.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/click"></a>/session/:sessionId/click<a href="#/session/:sessionId/click" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="POST_/session/:sessionId/click"></a>POST /session/:sessionId/click<a href="#POST_/session/:sessionId/click" class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Click any mouse button (at the coordinates set by the last moveto command). Note that calling this command after calling buttondown and
-					before calling button up (or any out-of-order interactions sequence) will yield undefined behaviour).</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>JSON Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>button</tt>
-							-
-							<tt>{number}</tt>
-							Which button, enum:
-							<tt>{LEFT = 0, MIDDLE = 1 , RIGHT = 2}</tt>
-							. Defaults to the left mouse button if not specified.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/buttondown"></a>/session/:sessionId/buttondown<a href="#/session/:sessionId/buttondown" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="POST_/session/:sessionId/buttondown"></a>POST /session/:sessionId/buttondown<a href="#POST_/session/:sessionId/buttondown"
+			<hr>
+			<h3>
+				<a name="session/:sessionId/touch/longclick"></a>session/:sessionId/touch/longclick<a href="#session/:sessionId/touch/longclick"
 					class="section_anchor"></a>
-			</h4>
+			</h3>
 			<p></p>
-		</dd>
-		<dd>
 			<dl>
-				<dd>Click and hold the left mouse button (at the coordinates set by the last moveto command). Note that the next mouse-related command that
-					should follow is buttondown . Any other mouse command (such as click or another call to buttondown) will yield undefined behaviour.</dd>
 				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
+					<p></p>
+					<h4>
+						<a name="POST_session/:sessionId/touch/longclick"></a>POST session/:sessionId/touch/longclick<a href="#POST_session/:sessionId/touch/longclick"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
 				</dd>
 				<dd>
 					<dl>
-						<dt>
-							<strong>JSON Parameters:</strong>
-						</dt>
+						<dd>Long press on the touch screen using finger motion events.</dd>
 						<dd>
-							<tt>button</tt>
-							-
-							<tt>{number}</tt>
-							Which button, enum:
-							<tt>{LEFT = 0, MIDDLE = 1 , RIGHT = 2}</tt>
-							. Defaults to the left mouse button if not specified.
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>JSON Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>element</tt>
+									-
+									<tt>{string}</tt>
+									ID of the element to long press on.
+								</dd>
+							</dl>
 						</dd>
 					</dl>
 				</dd>
 			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/buttonup"></a>/session/:sessionId/buttonup<a href="#/session/:sessionId/buttonup" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
 			<p></p>
-			<h4>
-				<a name="POST_/session/:sessionId/buttonup"></a>POST /session/:sessionId/buttonup<a href="#POST_/session/:sessionId/buttonup"
+			<hr>
+			<h3>
+				<a name="session/:sessionId/touch/flick"></a>session/:sessionId/touch/flick<a href="#session/:sessionId/touch/flick" class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_session/:sessionId/touch/flick"></a>POST session/:sessionId/touch/flick<a href="#POST_session/:sessionId/touch/flick"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Flick on the touch screen using finger motion events. This flickcommand starts at a particulat screen location.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>JSON Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>element</tt>
+									-
+									<tt>{string}</tt>
+									ID of the element where the flick starts.
+								</dd>
+								<dd>
+									<tt>xoffset</tt>
+									-
+									<tt>{number}</tt>
+									The x offset in pixels to flick by.
+								</dd>
+								<dd>
+									<tt>yoffset</tt>
+									-
+									<tt>{number}</tt>
+									The y offset in pixels to flick by.
+								</dd>
+								<dd>
+									<tt>speed</tt>
+									-
+									<tt>{number}</tt>
+									The speed in pixels per seconds.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="session/:sessionId/touch/flick"></a>session/:sessionId/touch/flick<a href="#session/:sessionId/touch/flick" class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_session/:sessionId/touch/flick"></a>POST session/:sessionId/touch/flick<a href="#POST_session/:sessionId/touch/flick"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Flick on the touch screen using finger motion events. Use this flick command if you don't care where the flick starts on the screen.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>JSON Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>xSpeed</tt>
+									-
+									<tt>{number}</tt>
+									The x speed in pixels per second.
+								</dd>
+								<dd>
+									<tt>ySpeed</tt>
+									-
+									<tt>{number}</tt>
+									The y speed in pixels per second.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/location"></a>/session/:sessionId/location<a href="#/session/:sessionId/location" class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="GET_/session/:sessionId/location"></a>GET /session/:sessionId/location<a href="#GET_/session/:sessionId/location"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Get the current geo location.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Returns:</strong>
+								</dt>
+								<dd>
+									<tt>{latitude: number, longitude: number, altitude: number}</tt>
+									The current geo location.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_/session/:sessionId/location"></a>POST /session/:sessionId/location<a href="#POST_/session/:sessionId/location"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Set the current geo location.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>JSON Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>location</tt>
+									-
+									<tt>{latitude: number, longitude: number, altitude: number}</tt>
+									The new location.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/local_storage"></a>/session/:sessionId/local_storage<a href="#/session/:sessionId/local_storage"
 					class="section_anchor"></a>
-			</h4>
+			</h3>
 			<p></p>
-		</dd>
-		<dd>
 			<dl>
-				<dd>Releases the mouse button previously held (where the mouse is currently at). Must be called once for every buttondown command issued. See
-					the note in click and buttondown about implications of out-of-order commands.</dd>
 				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
+					<p></p>
+					<h4>
+						<a name="GET_/session/:sessionId/local_storage"></a>GET /session/:sessionId/local_storage<a href="#GET_/session/:sessionId/local_storage"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
 				</dd>
 				<dd>
 					<dl>
-						<dt>
-							<strong>JSON Parameters:</strong>
-						</dt>
+						<dd>Get all keys of the storage.</dd>
 						<dd>
-							<tt>button</tt>
-							-
-							<tt>{number}</tt>
-							Which button, enum:
-							<tt>{LEFT = 0, MIDDLE = 1 , RIGHT = 2}</tt>
-							. Defaults to the left mouse button if not specified.
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Returns:</strong>
+								</dt>
+								<dd>
+									<tt>{Array.&lt;string&gt;}</tt>
+									The list of keys.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+							</dl>
 						</dd>
 					</dl>
 				</dd>
 			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/doubleclick"></a>/session/:sessionId/doubleclick<a href="#/session/:sessionId/doubleclick" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
 			<p></p>
-			<h4>
-				<a name="POST_/session/:sessionId/doubleclick"></a>POST /session/:sessionId/doubleclick<a href="#POST_/session/:sessionId/doubleclick"
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_/session/:sessionId/local_storage"></a>POST /session/:sessionId/local_storage<a href="#POST_/session/:sessionId/local_storage"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Set the storage item for the given key.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>JSON Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>key</tt>
+									-
+									<tt>{string}</tt>
+									The key to set.
+								</dd>
+								<dd>
+									<tt>value</tt>
+									-
+									<tt>{string}</tt>
+									The value to set.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="DELETE_/session/:sessionId/local_storage"></a>DELETE /session/:sessionId/local_storage<a
+							href="#DELETE_/session/:sessionId/local_storage" class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Clear the storage.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/local_storage/key/:key"></a>/session/:sessionId/local_storage/key/:key<a
+					href="#/session/:sessionId/local_storage/key/:key" class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="GET_/session/:sessionId/local_storage/key/:key"></a>GET /session/:sessionId/local_storage/key/:key<a
+							href="#GET_/session/:sessionId/local_storage/key/:key" class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Get the storage item for the given key.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+								<dd>
+									<tt>:key</tt>
+									- The key to get.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="DELETE_/session/:sessionId/local_storage/key/:key"></a>DELETE /session/:sessionId/local_storage/key/:key<a
+							href="#DELETE_/session/:sessionId/local_storage/key/:key" class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Remove the storage item for the given key.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+								<dd>
+									<tt>:key</tt>
+									- The key to remove.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/local_storage/size"></a>/session/:sessionId/local_storage/size<a href="#/session/:sessionId/local_storage/size"
 					class="section_anchor"></a>
-			</h4>
+			</h3>
 			<p></p>
-		</dd>
-		<dd>
 			<dl>
-				<dd>Double-clicks at the current mouse coordinates (set by moveto).</dd>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="GET_/session/:sessionId/local_storage/size"></a>GET /session/:sessionId/local_storage/size<a
+							href="#GET_/session/:sessionId/local_storage/size" class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
 				<dd>
 					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
+						<dd>Get the number of items in the storage.</dd>
 						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Returns:</strong>
+								</dt>
+								<dd>
+									<tt>{number}</tt>
+									The number of items in the storage.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+							</dl>
 						</dd>
 					</dl>
 				</dd>
 			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/touch/click"></a>/session/:sessionId/touch/click<a href="#/session/:sessionId/touch/click" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
 			<p></p>
-			<h4>
-				<a name="POST_/session/:sessionId/touch/click"></a>POST /session/:sessionId/touch/click<a href="#POST_/session/:sessionId/touch/click"
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/session_storage"></a>/session/:sessionId/session_storage<a href="#/session/:sessionId/session_storage"
 					class="section_anchor"></a>
-			</h4>
+			</h3>
 			<p></p>
-		</dd>
-		<dd>
 			<dl>
-				<dd>Single tap on the touch enabled device.</dd>
 				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
+					<p></p>
+					<h4>
+						<a name="GET_/session/:sessionId/session_storage"></a>GET /session/:sessionId/session_storage<a href="#GET_/session/:sessionId/session_storage"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
 				</dd>
 				<dd>
 					<dl>
-						<dt>
-							<strong>JSON Parameters:</strong>
-						</dt>
+						<dd>Get all keys of the storage.</dd>
 						<dd>
-							<tt>element</tt>
-							-
-							<tt>{string}</tt>
-							ID of the element to single tap on.
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Returns:</strong>
+								</dt>
+								<dd>
+									<tt>{Array.&lt;string&gt;}</tt>
+									The list of keys.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+							</dl>
 						</dd>
 					</dl>
 				</dd>
 			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/touch/down"></a>/session/:sessionId/touch/down<a href="#/session/:sessionId/touch/down" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
 			<p></p>
-			<h4>
-				<a name="POST_/session/:sessionId/touch/down"></a>POST /session/:sessionId/touch/down<a href="#POST_/session/:sessionId/touch/down"
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="POST_/session/:sessionId/session_storage"></a>POST /session/:sessionId/session_storage<a
+							href="#POST_/session/:sessionId/session_storage" class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Set the storage item for the given key.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>JSON Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>key</tt>
+									-
+									<tt>{string}</tt>
+									The key to set.
+								</dd>
+								<dd>
+									<tt>value</tt>
+									-
+									<tt>{string}</tt>
+									The value to set.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="DELETE_/session/:sessionId/session_storage"></a>DELETE /session/:sessionId/session_storage<a
+							href="#DELETE_/session/:sessionId/session_storage" class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Clear the storage.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/session_storage/key/:key"></a>/session/:sessionId/session_storage/key/:key<a
+					href="#/session/:sessionId/session_storage/key/:key" class="section_anchor"></a>
+			</h3>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="GET_/session/:sessionId/session_storage/key/:key"></a>GET /session/:sessionId/session_storage/key/:key<a
+							href="#GET_/session/:sessionId/session_storage/key/:key" class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Get the storage item for the given key.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+								<dd>
+									<tt>:key</tt>
+									- The key to get.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<p></p>
+			<dl>
+				<dd>
+					<p></p>
+					<h4>
+						<a name="DELETE_/session/:sessionId/session_storage/key/:key"></a>DELETE /session/:sessionId/session_storage/key/:key<a
+							href="#DELETE_/session/:sessionId/session_storage/key/:key" class="section_anchor"></a>
+					</h4>
+					<p></p>
+				</dd>
+				<dd>
+					<dl>
+						<dd>Remove the storage item for the given key.</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+								<dd>
+									<tt>:key</tt>
+									- The key to remove.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+			</dl>
+			<p></p>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/session_storage/size"></a>/session/:sessionId/session_storage/size<a href="#/session/:sessionId/session_storage/size"
 					class="section_anchor"></a>
-			</h4>
+			</h3>
 			<p></p>
-		</dd>
-		<dd>
 			<dl>
-				<dd>Finger down on the screen.</dd>
 				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
+					<p></p>
+					<h4>
+						<a name="GET_/session/:sessionId/session_storage/size"></a>GET /session/:sessionId/session_storage/size<a
+							href="#GET_/session/:sessionId/session_storage/size" class="section_anchor"></a>
+					</h4>
+					<p></p>
 				</dd>
 				<dd>
 					<dl>
-						<dt>
-							<strong>JSON Parameters:</strong>
-						</dt>
+						<dd>Get the number of items in the storage.</dd>
 						<dd>
-							<tt>x</tt>
-							-
-							<tt>{number}</tt>
-							X coordinate on the screen.
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
 						</dd>
 						<dd>
-							<tt>y</tt>
-							-
-							<tt>{number}</tt>
-							Y coordinate on the screen.
+							<dl>
+								<dt>
+									<strong>Returns:</strong>
+								</dt>
+								<dd>
+									<tt>{number}</tt>
+									The number of items in the storage.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Potential Errors:</strong>
+								</dt>
+								<dd>
+									<tt>NoSuchWindow</tt>
+									- If the currently selected window has been closed.
+								</dd>
+							</dl>
 						</dd>
 					</dl>
 				</dd>
 			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/touch/up"></a>/session/:sessionId/touch/up<a href="#/session/:sessionId/touch/up" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
 			<p></p>
-			<h4>
-				<a name="POST_/session/:sessionId/touch/up"></a>POST /session/:sessionId/touch/up<a href="#POST_/session/:sessionId/touch/up"
-					class="section_anchor"></a>
-			</h4>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/log"></a>/session/:sessionId/log<a href="#/session/:sessionId/log" class="section_anchor"></a>
+			</h3>
 			<p></p>
-		</dd>
-		<dd>
 			<dl>
-				<dd>Finger up on the screen.</dd>
 				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
+					<p></p>
+					<h4>
+						<a name="POST_/session/:sessionId/log"></a>POST /session/:sessionId/log<a href="#POST_/session/:sessionId/log" class="section_anchor"></a>
+					</h4>
+					<p></p>
 				</dd>
 				<dd>
 					<dl>
-						<dt>
-							<strong>JSON Parameters:</strong>
-						</dt>
+						<dd>Get the log for a given log type. Log buffer is reset after each request.</dd>
 						<dd>
-							<tt>x</tt>
-							-
-							<tt>{number}</tt>
-							X coordinate on the screen.
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
 						</dd>
 						<dd>
-							<tt>y</tt>
-							-
-							<tt>{number}</tt>
-							Y coordinate on the screen.
+							<dl>
+								<dt>
+									<strong>JSON Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>type</tt>
+									-
+									<tt>{string}</tt>
+									The <a href="#Log_Type">log type</a>. This must be provided.
+								</dd>
+							</dl>
+						</dd>
+						<dd>
+							<dl>
+								<dt>
+									<strong>Returns:</strong>
+								</dt>
+								<dd>
+									<tt>{Array.&lt;object&gt;}</tt>
+									The list of <a href="#Log_Entry_JSON_Object">log entries</a>.
+								</dd>
+							</dl>
 						</dd>
 					</dl>
 				</dd>
 			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="session/:sessionId/touch/move"></a>session/:sessionId/touch/move<a href="#session/:sessionId/touch/move" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
 			<p></p>
-			<h4>
-				<a name="POST_session/:sessionId/touch/move"></a>POST session/:sessionId/touch/move<a href="#POST_session/:sessionId/touch/move"
-					class="section_anchor"></a>
-			</h4>
+			<hr>
+			<h3>
+				<a name="/session/:sessionId/log/types"></a>/session/:sessionId/log/types<a href="#/session/:sessionId/log/types" class="section_anchor"></a>
+			</h3>
 			<p></p>
-		</dd>
-		<dd>
 			<dl>
-				<dd>Finger move on the screen.</dd>
 				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
+					<p></p>
+					<h4>
+						<a name="GET_/session/:sessionId/log/types"></a>GET /session/:sessionId/log/types<a href="#GET_/session/:sessionId/log/types"
+							class="section_anchor"></a>
+					</h4>
+					<p></p>
 				</dd>
 				<dd>
 					<dl>
-						<dt>
-							<strong>JSON Parameters:</strong>
-						</dt>
+						<dd>Get available log types.</dd>
 						<dd>
-							<tt>x</tt>
-							-
-							<tt>{number}</tt>
-							X coordinate on the screen.
+							<dl>
+								<dt>
+									<strong>URL Parameters:</strong>
+								</dt>
+								<dd>
+									<tt>:sessionId</tt>
+									- ID of the session to route the command to.
+								</dd>
+							</dl>
 						</dd>
 						<dd>
-							<tt>y</tt>
-							-
-							<tt>{number}</tt>
-							Y coordinate on the screen.
+							<dl>
+								<dt>
+									<strong>Returns:</strong>
+								</dt>
+								<dd>
+									<tt>{Array.&lt;string&gt;}</tt>
+									The list of available <a href="#Log_Type">log types</a>.
+								</dd>
+							</dl>
 						</dd>
 					</dl>
 				</dd>
 			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="session/:sessionId/touch/scroll"></a>session/:sessionId/touch/scroll<a href="#session/:sessionId/touch/scroll" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
 			<p></p>
-			<h4>
-				<a name="POST_session/:sessionId/touch/scroll"></a>POST session/:sessionId/touch/scroll<a href="#POST_session/:sessionId/touch/scroll"
-					class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Scroll on the touch screen using finger based motion events. Use this command to start scrolling at a particular screen location.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>JSON Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>element</tt>
-							-
-							<tt>{string}</tt>
-							ID of the element where the scroll starts.
-						</dd>
-						<dd>
-							<tt>xoffset</tt>
-							-
-							<tt>{number}</tt>
-							The x offset in pixels to scroll by.
-						</dd>
-						<dd>
-							<tt>yoffset</tt>
-							-
-							<tt>{number}</tt>
-							The y offset in pixels to scroll by.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="session/:sessionId/touch/scroll"></a>session/:sessionId/touch/scroll<a href="#session/:sessionId/touch/scroll" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="POST_session/:sessionId/touch/scroll"></a>POST session/:sessionId/touch/scroll<a href="#POST_session/:sessionId/touch/scroll"
-					class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Scroll on the touch screen using finger based motion events. Use this command if you don't care where the scroll starts on the screen.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>JSON Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>xoffset</tt>
-							-
-							<tt>{number}</tt>
-							The x offset in pixels to scrollby.
-						</dd>
-						<dd>
-							<tt>yoffset</tt>
-							-
-							<tt>{number}</tt>
-							The y offset in pixels to scrollby.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="session/:sessionId/touch/doubleclick"></a>session/:sessionId/touch/doubleclick<a href="#session/:sessionId/touch/doubleclick"
-			class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="POST_session/:sessionId/touch/doubleclick"></a>POST session/:sessionId/touch/doubleclick<a
-					href="#POST_session/:sessionId/touch/doubleclick" class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Double tap on the touch screen using finger motion events.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>JSON Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>element</tt>
-							-
-							<tt>{string}</tt>
-							ID of the element to double tap on.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="session/:sessionId/touch/longclick"></a>session/:sessionId/touch/longclick<a href="#session/:sessionId/touch/longclick"
-			class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="POST_session/:sessionId/touch/longclick"></a>POST session/:sessionId/touch/longclick<a href="#POST_session/:sessionId/touch/longclick"
-					class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Long press on the touch screen using finger motion events.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>JSON Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>element</tt>
-							-
-							<tt>{string}</tt>
-							ID of the element to long press on.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="session/:sessionId/touch/flick"></a>session/:sessionId/touch/flick<a href="#session/:sessionId/touch/flick" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="POST_session/:sessionId/touch/flick"></a>POST session/:sessionId/touch/flick<a href="#POST_session/:sessionId/touch/flick"
-					class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Flick on the touch screen using finger motion events. This flickcommand starts at a particulat screen location.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>JSON Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>element</tt>
-							-
-							<tt>{string}</tt>
-							ID of the element where the flick starts.
-						</dd>
-						<dd>
-							<tt>xoffset</tt>
-							-
-							<tt>{number}</tt>
-							The x offset in pixels to flick by.
-						</dd>
-						<dd>
-							<tt>yoffset</tt>
-							-
-							<tt>{number}</tt>
-							The y offset in pixels to flick by.
-						</dd>
-						<dd>
-							<tt>speed</tt>
-							-
-							<tt>{number}</tt>
-							The speed in pixels per seconds.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="session/:sessionId/touch/flick"></a>session/:sessionId/touch/flick<a href="#session/:sessionId/touch/flick" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="POST_session/:sessionId/touch/flick"></a>POST session/:sessionId/touch/flick<a href="#POST_session/:sessionId/touch/flick"
-					class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Flick on the touch screen using finger motion events. Use this flick command if you don't care where the flick starts on the screen.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>JSON Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>xSpeed</tt>
-							-
-							<tt>{number}</tt>
-							The x speed in pixels per second.
-						</dd>
-						<dd>
-							<tt>ySpeed</tt>
-							-
-							<tt>{number}</tt>
-							The y speed in pixels per second.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/location"></a>/session/:sessionId/location<a href="#/session/:sessionId/location" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="GET_/session/:sessionId/location"></a>GET /session/:sessionId/location<a href="#GET_/session/:sessionId/location" class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Get the current geo location.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Returns:</strong>
-						</dt>
-						<dd>
-							<tt>{latitude: number, longitude: number, altitude: number}</tt>
-							The current geo location.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="POST_/session/:sessionId/location"></a>POST /session/:sessionId/location<a href="#POST_/session/:sessionId/location"
-					class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Set the current geo location.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>JSON Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>location</tt>
-							-
-							<tt>{latitude: number, longitude: number, altitude: number}</tt>
-							The new location.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/local_storage"></a>/session/:sessionId/local_storage<a href="#/session/:sessionId/local_storage" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="GET_/session/:sessionId/local_storage"></a>GET /session/:sessionId/local_storage<a href="#GET_/session/:sessionId/local_storage"
-					class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Get all keys of the storage.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Returns:</strong>
-						</dt>
-						<dd>
-							<tt>{Array.&lt;string&gt;}</tt>
-							The list of keys.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="POST_/session/:sessionId/local_storage"></a>POST /session/:sessionId/local_storage<a href="#POST_/session/:sessionId/local_storage"
-					class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Set the storage item for the given key.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>JSON Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>key</tt>
-							-
-							<tt>{string}</tt>
-							The key to set.
-						</dd>
-						<dd>
-							<tt>value</tt>
-							-
-							<tt>{string}</tt>
-							The value to set.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="DELETE_/session/:sessionId/local_storage"></a>DELETE /session/:sessionId/local_storage<a href="#DELETE_/session/:sessionId/local_storage"
-					class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Clear the storage.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/local_storage/key/:key"></a>/session/:sessionId/local_storage/key/:key<a
-			href="#/session/:sessionId/local_storage/key/:key" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="GET_/session/:sessionId/local_storage/key/:key"></a>GET /session/:sessionId/local_storage/key/:key<a
-					href="#GET_/session/:sessionId/local_storage/key/:key" class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Get the storage item for the given key.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-						<dd>
-							<tt>:key</tt>
-							- The key to get.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="DELETE_/session/:sessionId/local_storage/key/:key"></a>DELETE /session/:sessionId/local_storage/key/:key<a
-					href="#DELETE_/session/:sessionId/local_storage/key/:key" class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Remove the storage item for the given key.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-						<dd>
-							<tt>:key</tt>
-							- The key to remove.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/local_storage/size"></a>/session/:sessionId/local_storage/size<a href="#/session/:sessionId/local_storage/size"
-			class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="GET_/session/:sessionId/local_storage/size"></a>GET /session/:sessionId/local_storage/size<a
-					href="#GET_/session/:sessionId/local_storage/size" class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Get the number of items in the storage.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Returns:</strong>
-						</dt>
-						<dd>
-							<tt>{number}</tt>
-							The number of items in the storage.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/session_storage"></a>/session/:sessionId/session_storage<a href="#/session/:sessionId/session_storage"
-			class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="GET_/session/:sessionId/session_storage"></a>GET /session/:sessionId/session_storage<a href="#GET_/session/:sessionId/session_storage"
-					class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Get all keys of the storage.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Returns:</strong>
-						</dt>
-						<dd>
-							<tt>{Array.&lt;string&gt;}</tt>
-							The list of keys.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="POST_/session/:sessionId/session_storage"></a>POST /session/:sessionId/session_storage<a href="#POST_/session/:sessionId/session_storage"
-					class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Set the storage item for the given key.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>JSON Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>key</tt>
-							-
-							<tt>{string}</tt>
-							The key to set.
-						</dd>
-						<dd>
-							<tt>value</tt>
-							-
-							<tt>{string}</tt>
-							The value to set.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="DELETE_/session/:sessionId/session_storage"></a>DELETE /session/:sessionId/session_storage<a
-					href="#DELETE_/session/:sessionId/session_storage" class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Clear the storage.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/session_storage/key/:key"></a>/session/:sessionId/session_storage/key/:key<a
-			href="#/session/:sessionId/session_storage/key/:key" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="GET_/session/:sessionId/session_storage/key/:key"></a>GET /session/:sessionId/session_storage/key/:key<a
-					href="#GET_/session/:sessionId/session_storage/key/:key" class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Get the storage item for the given key.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-						<dd>
-							<tt>:key</tt>
-							- The key to get.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="DELETE_/session/:sessionId/session_storage/key/:key"></a>DELETE /session/:sessionId/session_storage/key/:key<a
-					href="#DELETE_/session/:sessionId/session_storage/key/:key" class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Remove the storage item for the given key.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-						<dd>
-							<tt>:key</tt>
-							- The key to remove.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/session_storage/size"></a>/session/:sessionId/session_storage/size<a href="#/session/:sessionId/session_storage/size"
-			class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="GET_/session/:sessionId/session_storage/size"></a>GET /session/:sessionId/session_storage/size<a
-					href="#GET_/session/:sessionId/session_storage/size" class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Get the number of items in the storage.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Returns:</strong>
-						</dt>
-						<dd>
-							<tt>{number}</tt>
-							The number of items in the storage.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Potential Errors:</strong>
-						</dt>
-						<dd>
-							<tt>NoSuchWindow</tt>
-							- If the currently selected window has been closed.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/log"></a>/session/:sessionId/log<a href="#/session/:sessionId/log" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="POST_/session/:sessionId/log"></a>POST /session/:sessionId/log<a href="#POST_/session/:sessionId/log" class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Get the log for a given log type. Log buffer is reset after each request.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>JSON Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>type</tt>
-							-
-							<tt>{string}</tt>
-							The <a href="#Log_Type">log type</a>. This must be provided.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Returns:</strong>
-						</dt>
-						<dd>
-							<tt>{Array.&lt;object&gt;}</tt>
-							The list of <a href="#Log_Entry_JSON_Object">log entries</a>.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
-	<hr>
-	<h3>
-		<a name="/session/:sessionId/log/types"></a>/session/:sessionId/log/types<a href="#/session/:sessionId/log/types" class="section_anchor"></a>
-	</h3>
-	<p></p>
-	<dl>
-		<dd>
-			<p></p>
-			<h4>
-				<a name="GET_/session/:sessionId/log/types"></a>GET /session/:sessionId/log/types<a href="#GET_/session/:sessionId/log/types"
-					class="section_anchor"></a>
-			</h4>
-			<p></p>
-		</dd>
-		<dd>
-			<dl>
-				<dd>Get available log types.</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>URL Parameters:</strong>
-						</dt>
-						<dd>
-							<tt>:sessionId</tt>
-							- ID of the session to route the command to.
-						</dd>
-					</dl>
-				</dd>
-				<dd>
-					<dl>
-						<dt>
-							<strong>Returns:</strong>
-						</dt>
-						<dd>
-							<tt>{Array.&lt;string&gt;}</tt>
-							The list of available <a href="#Log_Type">log types</a>.
-						</dd>
-					</dl>
-				</dd>
-			</dl>
-		</dd>
-	</dl>
-	<p></p>
 </body>
 </html>

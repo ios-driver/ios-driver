@@ -40,7 +40,8 @@ public enum WebDriverLikeCommand {
   
   // UIATarget
   LOCAL_TARGET("GET","/session/:sessionId/localTarget",UIATarget.class),
-  TREE("GET","/session/:sessionId/tree/:reference",String.class),
+  TREE("GET","/session/:sessionId/element/:reference/source",String.class),
+  TREE_ROOT("GET","/session/:sessionId/source",JSONObject.class),
   HOST("GET","/session/:sessionId/uiaTarget/:reference/host",UIHost.class),
   TARGET_RECT("GET","/session/:sessionId/uiaTarget/:reference/rect",UIARect.class),
   TARGET_TAP("GET","/session/:sessionId/tap/:reference",Void.class),

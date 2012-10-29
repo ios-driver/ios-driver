@@ -192,8 +192,8 @@ public class RemoteUIADriver implements UIADriver {
   @Override
   public JSONObject logElementTree(File screenshot, boolean translation)
       throws IOSAutomationException {
-    WebDriverLikeCommand command = WebDriverLikeCommand.TREE;
-    Path p = new Path(command).withSession(session.getSessionId()).withoutReference();
+    WebDriverLikeCommand command = WebDriverLikeCommand.TREE_ROOT;
+    Path p = new Path(command).withSession(session.getSessionId());
     return RemoteUIAElement.logElementTree(screenshot, translation, p, command, this);
   }
 
