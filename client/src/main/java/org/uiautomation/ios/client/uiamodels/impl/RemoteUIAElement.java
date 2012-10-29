@@ -44,21 +44,23 @@ public class RemoteUIAElement extends RemoteObject implements UIAElement {
   public RemoteUIAElement(RemoteUIADriver driver, String reference) {
     super(driver, reference);
   }
+  
+  
 
 
   @Override
   public String getLabel() {
-    return getObject(WebDriverLikeCommand.LABEL);
+    return getAttribute("label");
   }
 
   @Override
   public String getName() {
-    return getObject(WebDriverLikeCommand.NAME);
+    return getAttribute("name");
   }
 
   @Override
   public String getValue() {
-    return getObject(WebDriverLikeCommand.VALUE);
+    return getAttribute("value");
   }
 
 

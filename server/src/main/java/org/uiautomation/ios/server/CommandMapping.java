@@ -28,6 +28,7 @@ import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.application.ServerSideL10NDecorator;
 import org.uiautomation.ios.server.command.Handler;
 import org.uiautomation.ios.server.command.NotImplementedHandler;
+import org.uiautomation.ios.server.command.impl.AttributeCommand;
 import org.uiautomation.ios.server.command.impl.DefaultUIAScriptHandler;
 import org.uiautomation.ios.server.command.impl.FindElementRoot;
 import org.uiautomation.ios.server.command.impl.FindElementsRoot;
@@ -98,12 +99,13 @@ public enum CommandMapping {
   IS_STALE(".isStale()"),
   
   
-  LABEL(".label()"),
-  NAME(".name()"),
-  VALUE(".value()"),
-  WITH_NAME(".withName(:name)"),
-  WITH_PREDICATE(".withPredicate(PredicateString predicateString)"),
-  WITH_VALUE_FOR_KEY(".withValueForKey(Object value,String key)"),
+  //LABEL(".label()"),
+  //NAME(".name()"),
+  //VALUE(".value()"),
+  ATTRIBUTE(AttributeCommand.class),
+  //WITH_NAME(".withName(:name)"),
+  //WITH_PREDICATE(".withPredicate(PredicateString predicateString)"),
+  //WITH_VALUE_FOR_KEY(".withValueForKey(Object value,String key)"),
   
   
   TAP(".tap2()"),

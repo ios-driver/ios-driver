@@ -87,9 +87,12 @@ public enum WebDriverLikeCommand {
   IS_VISIBLE("GET" , "/session/:sessionId/uiaElement/:reference/isVisible",Boolean.class),
   IS_STALE("GET" , "/session/:sessionId/uiaElement/:reference/isStale",Boolean.class),
   
-  LABEL("GET" , "/session/:sessionId/uiaElement/:reference/label",String.class),
-  NAME("GET" , "/session/:sessionId/uiaElement/:reference/name",String.class),
-  VALUE("GET" , "/session/:sessionId/uiaElement/:reference/value",String.class),
+  //LABEL("GET" , "/session/:sessionId/uiaElement/:reference/label",String.class),
+  //NAME("GET" , "/session/:sessionId/uiaElement/:reference/name",String.class),
+  //VALUE("GET" , "/session/:sessionId/uiaElement/:reference/value",String.class),
+  
+  ATTRIBUTE("GET","/session/:sessionId/element/:reference/attribute/:name",String.class),
+  
   WITH_NAME("GET" , "/session/:sessionId/uiaElement/:reference/withName",UIAElement.class),
   WITH_PREDICATE("GET" , "/session/:sessionId/uiaElement/:reference/withPredicate",UIAElement.class),
   WITH_VALUE_FOR_KEY("GET" , "/session/:sessionId/uiaElement/:reference/withValueForKey",UIAElement.class),

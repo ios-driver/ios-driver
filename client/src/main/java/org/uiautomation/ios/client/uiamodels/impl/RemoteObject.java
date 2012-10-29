@@ -188,6 +188,26 @@ public abstract class RemoteObject {
       }
     }
   }
+  
+  protected String getAttribute(String name){
+    WebDriverLikeCommand command = WebDriverLikeCommand.ATTRIBUTE;
+    Path p = new Path(WebDriverLikeCommand.ATTRIBUTE).withSession(getSessionId()).withReference(getReference());
+    p.validateAndReplace(":name", name);
+    WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, null);
+    WebDriverLikeResponse response = execute(request);
+    if (response.getValue() == JSONObject.NULL) {
+      return null;
+    } else {
+      try {
+        return (String) response.getValue();
+      } catch (ClassCastException castException) {
+        throw new IOSAutomationException("couldn't cast from " + response.getValue().getClass());
+      }
+    }
+  }
+  
+ 
+
 
 
   private WebDriverLikeResponse execute(WebDriverLikeRequest request) {

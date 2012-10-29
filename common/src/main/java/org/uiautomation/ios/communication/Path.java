@@ -63,7 +63,7 @@ public class Path {
 
 
 
-  private void validateAndReplace(String variable, String value) {
+  public void validateAndReplace(String variable, String value) {
     validateContains(variable);
     replace(variable, value);
   }
