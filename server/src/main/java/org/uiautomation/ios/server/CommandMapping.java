@@ -88,7 +88,7 @@ public enum CommandMapping {
   ELEMENTS_ROOT(FindElementsRoot.class),
   
   ELEMENT(FindElementRoot.class),
-  ELEMENTS(".elements2(:depth,:criteria)"),
+  ELEMENTS(FindElementsRoot.class),
   
   //ELEMENT(".element(:depth,:criteria)"),
   //ELEMENTS(".elements2(:depth,:criteria)"),

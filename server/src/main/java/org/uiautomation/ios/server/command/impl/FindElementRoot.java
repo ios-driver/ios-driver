@@ -8,14 +8,14 @@ import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.ServerSideL10NDecorator;
-import org.uiautomation.ios.server.command.PreHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 
 public class FindElementRoot extends UIAScriptHandler {
 
 
 
-  private static final String jsTemplate = "var root = UIAutomation.cache.get(':reference');"
+  private static final String jsTemplate = 
+      "var root = UIAutomation.cache.get(':reference');"
       + "var result = root.element(:depth,:criteria);"
       + "UIAutomation.createJSONResponse(':sessionId',0,result);";
   
