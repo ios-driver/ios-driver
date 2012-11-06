@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>__argument</key>
+		<dict>
+			<key>WIRApplicationIdentifierKey</key>
+			<string>com.apple.mobilesafari</string>
+			<key>WIRConnectionIdentifierKey</key>
+			<string>41DC39AA-55A7-4C85-9566-B58E6627DD62</string>
+			<key>WIRPageIdentifierKey</key>
+			<integer>1</integer>
+			<key>WIRSenderKey</key>
+			<string>E0F4C128-F4FF-4D45-A538-BA382CD66017</string>
+			<key>WIRSocketDataKey</key>
+			<!--<data>eyJtZXRob2QiOiJSdW50aW1lLmV2YWx1YXRlIiwicGFyYW1zIjp7ImV4cHJlc3Npb24iOiJhbGVydCgndHQxMjMnKSIsIm9iamVjdEdyb3VwIjoiY29uc29sZSIsImluY2x1ZGVDb21tYW5kTGluZUFQSSI6dHJ1ZSwiZG9Ob3RQYXVzZU9uRXhjZXB0aW9uc0FuZE11dGVDb25zb2xlIjp0cnVlLCJyZXR1cm5CeVZhbHVlIjpmYWxzZX0sImlkIjo1N30=</data>-->
+			<data>$json_encoded</data>
+		</dict>
+		<key>__selector</key>
+		<string>_rpc_forwardSocketData:</string>
+	</dict>
+</plist>

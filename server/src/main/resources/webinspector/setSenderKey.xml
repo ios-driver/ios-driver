@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>__argument</key>
+		<dict>
+			<key>WIRApplicationIdentifierKey</key>
+			<string>com.apple.mobilesafari</string>
+			<key>WIRConnectionIdentifierKey</key>
+			<string>41DC39AA-55A7-4C85-9566-B58E6627DD62</string>
+			<key>WIRPageIdentifierKey</key>
+			<integer>1</integer>
+			<key>WIRSenderKey</key>
+			<string>E0F4C128-F4FF-4D45-A538-BA382CD66017</string>
+		</dict>
+		<key>__selector</key>
+		<string>_rpc_forwardSocketSetup:</string>
+	</dict>
+</plist>
