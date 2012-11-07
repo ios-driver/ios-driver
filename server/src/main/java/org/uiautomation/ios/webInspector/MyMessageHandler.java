@@ -18,10 +18,10 @@ import org.uiautomation.ios.webInspector.DOM.SetChildNodes;
 public class MyMessageHandler implements MessageHandler {
 
 
-  private final DOMCache cache;
+  private final DOMContext cache;
   private final List<JSONObject> responses = new CopyOnWriteArrayList<JSONObject>();
 
-  public MyMessageHandler(DOMCache cache) {
+  public MyMessageHandler(DOMContext cache) {
     this.cache = cache;
   }
 
@@ -50,7 +50,7 @@ public class MyMessageHandler implements MessageHandler {
 
             SetChildNodes notification = new SetChildNodes(o);
             cache.addIframe(notification.getIFrames());
-            System.out.println("cache : " + cache);
+           
 
           } else {
             System.err.println(o.toString(2));
@@ -76,7 +76,7 @@ public class MyMessageHandler implements MessageHandler {
   public JSONObject getResponse(int id) {
     while (true) {
       try {
-        Thread.sleep(250);
+        Thread.sleep(10);
         for (JSONObject o : responses) {
           if (o.optInt("id") == id) {
             // responses.remove(o);

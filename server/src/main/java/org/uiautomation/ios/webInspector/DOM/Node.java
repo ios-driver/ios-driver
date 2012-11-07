@@ -6,15 +6,25 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.uiautomation.ios.webInspector.NodeId;
 
 public class Node {
 
+  
+  public static Node create(JSONObject o) throws Exception{
+   if ("IFRAME".equals(o.optString("nodeName"))){
+     return new IFrame(o);
+   }else {
+     return new Node(o);
+   }
+  }
+  
   public String getDocumentURL() {
     return documentURL;
   }
 
   private final JSONObject raw;
-  private int nodeId;
+  private NodeId nodeId;
   private int childCount;
   private List<Node> children = new ArrayList<Node>();
   private String nodeName;
@@ -23,20 +33,17 @@ public class Node {
   private int nodeType;
 
 
-  public Node(JSONObject o) throws JSONException {
+   Node(JSONObject o) throws JSONException {
     this.raw = o;
 
-    this.nodeId = o.getInt("nodeId");
+    this.nodeId = new NodeId(o.getInt("nodeId"));
     this.nodeName = o.optString("nodeName");
     this.childCount = o.optInt("childCount", 0);
 
     this.documentURL = o.optString("documentURL");
     this.nodeType = o.optInt("nodeType", 0);
     
-    JSONObject document = o.optJSONObject("contentDocument");
-    if (document!=null){
-      contentDocument = new Node(document);
-    }
+   
 
     JSONArray children = o.optJSONArray("children");
     if (children != null) {
@@ -53,14 +60,12 @@ public class Node {
   }
 
 
-  public int getId() {
+  public NodeId getNodeId() {
     return nodeId;
   }
 
 
-  public void setId(int id) {
-    this.nodeId = id;
-  }
+
 
 
   public int getChildCount() {

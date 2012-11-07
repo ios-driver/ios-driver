@@ -2,16 +2,11 @@ package org.uiautomation.ios.webInspector.DOM;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
-import org.uiautomation.ios.webInspector.WebInspector;
+import org.uiautomation.ios.webInspector.NodeId;
 
 public class DOM {
 
-  private final WebInspector inspector;
 
-  public DOM(WebInspector inspector) {
-    this.inspector = inspector;
-  }
 
   public static JSONObject getDocument() throws JSONException {
     JSONObject cmd = new JSONObject();
@@ -19,20 +14,11 @@ public class DOM {
     return cmd;
   }
 
-  public RemoteObject resolveNode(int nodeId) {
+  public static JSONObject resolveNode(NodeId id) throws JSONException {
     JSONObject cmd = new JSONObject();
-    try {
-      cmd.put("method", "DOM.resolveNode");
-      cmd.put("params", new JSONObject().put("nodeId", nodeId));
-
-      JSONObject t = inspector.sendCommand(cmd);
-      RemoteObject remoteObject =
-          new RemoteObject(t.getJSONObject("result").getJSONObject("object"));
-      return remoteObject;
-    } catch (Exception e) {
-      throw new IOSAutomationException("error remote debugging " + e.getMessage(), e);
-    }
-
+    cmd.put("method", "DOM.resolveNode");
+    cmd.put("params", new JSONObject().put("nodeId", id.getId()));
+    return cmd;
   }
 
 
@@ -44,8 +30,19 @@ public class DOM {
   }
 
 
-  public static JSONObject setChildNodes(JSONObject o) {
-    return null;
+  public static JSONObject highlightNode(NodeId id) throws JSONException{
+    JSONObject color = new JSONObject().put("a", 0.5).put("r",50).put("g",100).put("b",255);
+    
+    JSONObject cmd = new JSONObject();
+    cmd.put("method", "DOM.highlightNode");
+    cmd.put("params", new JSONObject()
+    .put("nodeId", id.getId())
+    .put("highlightConfig", new JSONObject()
+                .put("showInfo", true)
+                .put("contentColor",color)
+              
+    ));
+    return cmd;
   }
 
 
