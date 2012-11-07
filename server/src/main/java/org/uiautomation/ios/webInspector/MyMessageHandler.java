@@ -11,14 +11,19 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.uiautomation.ios.webInspector.DOM.SetChildNodes;
 
 public class MyMessageHandler implements MessageHandler {
 
 
+  private final DOMCache cache;
   private final List<JSONObject> responses = new CopyOnWriteArrayList<JSONObject>();
+
+  public MyMessageHandler(DOMCache cache) {
+    this.cache = cache;
+  }
 
   @Override
   public void handle(String msg) {
@@ -41,16 +46,16 @@ public class MyMessageHandler implements MessageHandler {
         if (id != -1) {
           responses.add(o);
         } else {
-          if ("DOM.setChildNodes".equals(o.optString("method"))){
-            JSONArray nodes = o.getJSONObject("params").getJSONArray("nodes");
-           for (int i = 0;i<nodes.length();i++){
-             JSONObject d = nodes.getJSONObject(i).optJSONObject("contentDocument");
-             System.out.println("documents : "+d);
-           }
-          }else{
+          if ("DOM.setChildNodes".equals(o.optString("method"))) {
+
+            SetChildNodes notification = new SetChildNodes(o);
+            cache.addIframe(notification.getIFrames());
+            System.out.println("cache : " + cache);
+
+          } else {
             System.err.println(o.toString(2));
           }
-         
+
         }
 
 

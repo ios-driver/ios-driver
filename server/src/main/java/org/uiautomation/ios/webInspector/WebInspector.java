@@ -24,19 +24,24 @@ public class WebInspector {
 
   private final String LOCALHOST_IPV6 = "::1";
   private final int port = 27753;
-  
-  private int commandId = 0;  
+
+  private int commandId = 0;
+
+  private final DOMCache cache;
 
   public WebInspector() throws UnknownHostException, IOException, InterruptedException {
+
+    cache = new DOMCache();
+
     socket = new Socket(LOCALHOST_IPV6, port);
     sendCommand(PlistManager.SET_CONNECTION_KEY);
     sendCommand(PlistManager.CONNECT_TO_APP);
     sendCommand(PlistManager.SET_SENDER_KEY);
-    
-    setMessageHandler(new MyMessageHandler());
-    
-    
-    
+
+    setMessageHandler(new MyMessageHandler(cache));
+
+
+
     Thread listen = new Thread(new Runnable() {
 
       @Override
@@ -56,136 +61,136 @@ public class WebInspector {
   }
 
 
+
   public static void main(String[] args) throws Exception {
     WebInspector inspector = new WebInspector();
 
-    //String ref = inspector.findSearchButton();
-    //inspector.callFunctionOn(ref);
-    //inspector.getDocument();
-    
+    // String ref = inspector.findSearchButton();
+    // inspector.callFunctionOn(ref);
+    // inspector.getDocument();
+
     JSONObject res = inspector.sendCommand(DOM.getDocument());
-    
-    //System.out.println(res.toString(2));
+
+    DOM dom = new DOM(inspector);
 
     Node n = new Node(res.getJSONObject("result").getJSONObject("root"));
     Node body = n.getBody();
-    JSONObject b = inspector.sendCommand(DOM.resolveNode(body.getId()));
-    RemoteObject remoteBody = new RemoteObject(b.getJSONObject("result").getJSONObject("object"));
-    
-    
+
+    RemoteObject remoteBody = dom.resolveNode(body.getId());
+
+
     JSONObject r = inspector.sendCommand(DOM.requestNode(remoteBody));
-    System.err.println("node for body : "+r.toString(2));
-    
+    System.err.println("node for body : " + r.toString(2));
+
     RemoteObject frame = inspector.findIframe();
     JSONObject r2 = inspector.sendCommand(DOM.requestNode(frame));
-    
+
     System.err.println(r2.toString(2));
-    
-    int id = 595;
-    JSONObject t = inspector.sendCommand(DOM.resolveNode(id));
-    RemoteObject remoteDocument = new RemoteObject(t.getJSONObject("result").getJSONObject("object"));
-    inspector.findElementById(remoteDocument);
-    
-    
+
+
+    for (Node iframe : inspector.cache.getIFrame()) {
+      System.out.println("iframe =" + iframe.getId());
+      RemoteObject document = dom.resolveNode(iframe.getContentDocument().getId());
+      inspector.findElementById(document,"srchFrm");
+      inspector.findElementById(document,"gh-btn");
+    }
+
+
+
   }
-  
-  
-  private void findElementById(RemoteObject docRef) throws Exception{
+
+
+  private void findElementById(RemoteObject docRef,String id) throws Exception {
     JSONObject cmd = new JSONObject();
-    
+
     cmd.put("method", "Runtime.callFunctionOn");
-    
+
     JSONArray args = new JSONArray();
-    args.put(new JSONObject().put("value","srchFrm"));
-    
+    args.put(new JSONObject().put("value", id));
+
     cmd.put(
         "params",
-        new JSONObject().put("objectId", docRef.getId())
-        .put("functionDeclaration", "(function(arg) { var el = this.getElementById('srchFrm'); alert(el.innerHTML); return el;})")
-        .put("arguments",args )
-        .put("returnByValue", false)
-        );
-    
-    
-            
-            
+        new JSONObject()
+            .put("objectId", docRef.getId())
+            .put("functionDeclaration",
+                "(function(arg) { var el = this.getElementById(arg);alert(el); return el;})")
+            .put("arguments", args).put("returnByValue", false));
+
+
+
     JSONObject response = sendCommand(cmd);
     System.out.println(cmd.toString(2));
     System.out.println(response.toString(2));
   }
-  
+
   private void callFunctionOn(String ref) throws Exception {
     JSONObject cmd = new JSONObject();
     cmd.put("id", 3);
     cmd.put("method", "Runtime.callFunctionOn");
-    
+
     JSONArray args = new JSONArray();
-    args.put(new JSONObject().put("value","type"));
-    
+    args.put(new JSONObject().put("value", "type"));
+
     cmd.put(
         "params",
         new JSONObject().put("objectId", ref)
-        .put("functionDeclaration", "(function(arg) {return this.getAttribute(arg);})")
-        .put("arguments",args )
-        .put("returnByValue", true)
-        );
-    
+            .put("functionDeclaration", "(function(arg) {return this.getAttribute(arg);})")
+            .put("arguments", args).put("returnByValue", true));
+
     System.out.println(cmd.toString(2));
-            
-            
+
+
     JSONObject response = sendCommand(cmd);
     System.out.println(response.toString(2));
-    
+
   }
 
-  public RemoteObject findIframe() throws Exception{
+  public RemoteObject findIframe() throws Exception {
     JSONObject cmd = new JSONObject();
     cmd.put("id", 1);
     cmd.put("method", "Runtime.evaluate");
     cmd.put(
         "params",
-        new JSONObject().put("expression", "document.getElementsByTagName('iframe')[0];")
-            .put("returnByValue", false));
+        new JSONObject().put("expression", "document.getElementsByTagName('iframe')[0];").put(
+            "returnByValue", false));
     JSONObject response = sendCommand(cmd);
     System.out.println(response.toString(2));
     JSONObject res = response.getJSONObject("result").getJSONObject("result");
-  
+
     return new RemoteObject(res);
   }
-  public String findSearchButton() throws Exception{
+
+  public String findSearchButton() throws Exception {
     JSONObject cmd = new JSONObject();
     cmd.put("id", 1);
     cmd.put("method", "Runtime.evaluate");
     cmd.put(
         "params",
-        new JSONObject().put("expression", "document.getElementById('gh-btn');")
-            .put("returnByValue", false));
+        new JSONObject().put("expression", "document.getElementById('gh-btn');").put(
+            "returnByValue", false));
     JSONObject response = sendCommand(cmd);
     System.out.println(response.toString(2));
     String res = response.getJSONObject("result").getJSONObject("result").getString("objectId");
-  
+
     return res;
   }
 
-  public void getDocument() throws Exception{
+  public void getDocument() throws Exception {
     JSONObject cmd = new JSONObject();
     cmd.put("id", 3);
     cmd.put("method", "DOM.getDocument");
     JSONObject response = sendCommand(cmd);
     System.out.println(response.toString(2));
   }
-  
-  
-  public void getText(String ref) throws Exception{
+
+
+  public void getText(String ref) throws Exception {
     JSONObject cmd = new JSONObject();
     cmd.put("id", 2);
     cmd.put("method", "Runtime.getProperties");
-    cmd.put(
-        "params",
-        new JSONObject().put("objectId", ref)
-        .put("ownProperties", true));
-            
-            
+    cmd.put("params", new JSONObject().put("objectId", ref).put("ownProperties", true));
+
+
     JSONObject response = sendCommand(cmd);
     System.out.println(response.toString(2));
   }
@@ -195,7 +200,7 @@ public class WebInspector {
   }
 
 
-  public JSONObject sendCommand(JSONObject json) throws  Exception {
+  public JSONObject sendCommand(JSONObject json) throws Exception {
     commandId++;
     json.put("id", commandId);
     String xml = plist.JSONCommand(json);

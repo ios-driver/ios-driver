@@ -9,16 +9,34 @@ import org.json.JSONObject;
 
 public class Node {
 
-  private int id;
+  public String getDocumentURL() {
+    return documentURL;
+  }
+
+  private final JSONObject raw;
+  private int nodeId;
   private int childCount;
   private List<Node> children = new ArrayList<Node>();
   private String nodeName;
+  private Node contentDocument;
+  private String documentURL;
+  private int nodeType;
 
 
   public Node(JSONObject o) throws JSONException {
-    this.id = o.getInt("nodeId");
+    this.raw = o;
+
+    this.nodeId = o.getInt("nodeId");
     this.nodeName = o.optString("nodeName");
-    this.childCount = o.optInt("childCount",0);
+    this.childCount = o.optInt("childCount", 0);
+
+    this.documentURL = o.optString("documentURL");
+    this.nodeType = o.optInt("nodeType", 0);
+    
+    JSONObject document = o.optJSONObject("contentDocument");
+    if (document!=null){
+      contentDocument = new Node(document);
+    }
 
     JSONArray children = o.optJSONArray("children");
     if (children != null) {
@@ -30,13 +48,18 @@ public class Node {
   }
 
 
+  public Node getContentDocument() {
+    return contentDocument;
+  }
+
+
   public int getId() {
-    return id;
+    return nodeId;
   }
 
 
   public void setId(int id) {
-    this.id = id;
+    this.nodeId = id;
   }
 
 
@@ -68,24 +91,28 @@ public class Node {
   public void setNodeName(String nodeName) {
     this.nodeName = nodeName;
   }
-  
-  public Node getBody(){
+
+  public Node getBody() {
     Node res = null;
-    for (Node c :  getChildren()){
-      if ("BODY".equals(c.getNodeName())){
+    for (Node c : getChildren()) {
+      if ("BODY".equals(c.getNodeName())) {
         res = c;
         return res;
       }
       res = c.getBody();
-      if (res !=null){
+      if (res != null) {
         return res;
       }
     }
     return null;
   }
-  
+
   @Override
   public String toString() {
-    return "node : "+getId();
+    try {
+      return raw.toString(2);
+    } catch (JSONException e) {
+      return "ERROR parsing the raw node.";
+    }
   }
 }
