@@ -93,11 +93,12 @@ UIAElement.prototype.isScrollable = function() {
 
 	while(parent.type() != "UIAElementNil" && parent.type() != "UIATarget") {
 		if(parent.type() == "UIATableView" || parent.type() == "UIAWebView") {
+			log(this.type() + "isScollable : " + false);
 			return true;
 		}
 		parent = parent.parent();
 	}
-
+	log(this.type() + "isScollable : " + false);
 	return false;
 }
 
@@ -176,9 +177,7 @@ UIAElement.prototype.scrollToVisibleSafe = function() {
  * Trying to scroll to the element seems like a valid approximation.
  */
 UIAElement.prototype.isStale = function() {
-	log(this + "checkISValid :" + this.checkIsValid());
 	if(this.checkIsValid() == false) {
-		log("checkISValid returns false");
 		return true;
 	} else {
 		try {
@@ -194,6 +193,7 @@ UIAElement.prototype.isStale = function() {
 			}
 		}
 	}
+	log(this.type() + "default false");
 	return false;
 }
 
@@ -218,7 +218,7 @@ UIAElement.prototype.element_or = function(depth, criteria) {
 
 UIAElement.prototype.element = function(depth, criteria) {
 
-	if( UIAutomation.getTimeout('implicit') == 0) {
+	if(UIAutomation.getTimeout('implicit') == 0) {
 		return this._element(depth, criteria);
 	} else {
 		var timeout = UIAutomation.getTimeout('implicit');
