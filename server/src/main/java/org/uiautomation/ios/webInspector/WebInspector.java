@@ -2,6 +2,7 @@ package org.uiautomation.ios.webInspector;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.rmi.RemoteException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,30 +18,85 @@ public class WebInspector {
   private final DOMContext cache;
 
 
+  public DOMContext getCache() {
+    return cache;
+  }
+
   public static void main(String[] args) throws Exception {
     WebInspector inspector = new WebInspector();
 
     Node document = inspector.getDocument();
+    inspector.cache.setContextToBase(document);
+    
     RemoteObject ro = inspector.resolveNode(document.getNodeId());
 
     Iterable<RemoteObject> frames = inspector.getAllIFrames();
 
 
+    RemoteObject input = inspector.findElementById(null, "gh-ac");
+    System.out.println(input);
+    inspector.highlightNode(inspector.requestNode(input));
+    RemoteObject rect = inspector.findPosition(input);
+    int top = rect.call(".top");
+    System.out.println(top);
+    int left = rect.call(".left");
+    System.out.println(left);
 
-    for (RemoteObject o : frames) {
+    /*for (RemoteObject o : frames) {
       NodeId id = inspector.requestNode(o);
       IFrame iframe = inspector.cache.getIFrame(id);
       inspector.cache.setContext(iframe);
-      RemoteObject el = inspector.findElementById("srchFrm");
-      NodeId nodeId = inspector.requestNode(el);
+      RemoteObject el = inspector.findElementById(null,"srchFrm");
+      System.out.println(el);
+      RemoteObject found = inspector.findElementById(el,"srchFrm");
+      NodeId nodeId = inspector.requestNode(found);
       inspector.highlightNode(nodeId);
 
-    }
+    }*/
+  }
+  
+  
+
+  public RemoteObject findPosition(RemoteObject el) throws Exception {
+    String f =  "(function(arg) { " +
+        "var el = this;"+ 
+        "var _x = 0; "+
+        "var _y = 0;"+
+        
+        "while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {"+
+        "    _x += el.offsetLeft - el.scrollLeft;"+
+        "    _y += el.offsetTop - el.scrollTop;"+
+        "    el = el.offsetParent;"+
+        "};"+
+        "alert('w: '+ this.offsetWidth);"+
+        "var res = { top: _y, left: _x , width: this.offsetWidth , height: this.offsetHeight };" +
+    	//"alert(res.top +','+res.left);" +
+    	"return res;"+
+    	"})";
+     
+    JSONObject cmd = new JSONObject();
+
+    cmd.put("method", "Runtime.callFunctionOn");
+
+    JSONArray args = new JSONArray();
+    args.put(new JSONObject().put("value", el.getId()));
+
+    cmd.put(
+        "params",
+        new JSONObject()
+            .put("objectId", el.getId())
+            .put("functionDeclaration",f)
+            .put("arguments", args).put("returnByValue", false));
+
+
+
+    JSONObject response = protocol.sendCommand(cmd);
+   return protocol.cast(response);
   }
 
   public WebInspector() throws UnknownHostException, IOException, InterruptedException {
     cache = new DOMContext();
-    MessageHandler handler = new MyMessageHandler(cache);
+    MessageHandler handler = new MyMessageHandler(cache,this);
     protocol = new DebugProtocol(handler);
 
   }
@@ -80,8 +136,20 @@ public class WebInspector {
     JSONObject response = protocol.sendCommand(cmd);
     return protocol.cast(response);
   }
+  
+  public int getInnerWidth() throws JSONException, Exception {
+    JSONObject cmd = new JSONObject();
+    cmd.put("method", "Runtime.evaluate");
+    cmd.put("params", new JSONObject()
+        .put("expression", "window.innerWidth;").put("returnByValue", true));
+    JSONObject response = protocol.sendCommand(cmd);
+    return protocol.cast(response);
+  }
+  
+  
+  
 
-  private RemoteObject findElementById(String id) throws Exception {
+  public RemoteObject findElementById(RemoteObject element,String id) throws Exception {
     JSONObject cmd = new JSONObject();
 
     cmd.put("method", "Runtime.callFunctionOn");
@@ -89,18 +157,19 @@ public class WebInspector {
     JSONArray args = new JSONArray();
     args.put(new JSONObject().put("value", id));
 
-    Node document = cache.getCurrentDocument();
-    RemoteObject remoteDocument = resolveNode(document.getNodeId());
+    if (element == null){
+      Node document = cache.getCurrentDocument();
+      element = resolveNode(document.getNodeId());
+    }
+    
 
     cmd.put(
         "params",
         new JSONObject()
-            .put("objectId", remoteDocument.getId())
+            .put("objectId", element.getId())
             .put("functionDeclaration",
                 "(function(arg) { var el = this.getElementById(arg);return el;})")
             .put("arguments", args).put("returnByValue", false));
-
-
 
     JSONObject response = protocol.sendCommand(cmd);
     return protocol.cast(response);

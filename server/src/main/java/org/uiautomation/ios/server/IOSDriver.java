@@ -66,13 +66,14 @@ public class IOSDriver {
     app.setLanguage(capabilities.getLanguage());
     if (capabilities.getSDKVersion() == null) {
       capabilities.setSDKVersion(ClassicCommands.getDefaultSDK());
-    }else {
+    } else {
       String version = capabilities.getSDKVersion();
-      if (!hostInfo.getInstalledSDKs().contains(version)){
-        throw new SessionNotCreatedException("Cannot start on version "+version+".Installed : "+hostInfo.getInstalledSDKs());
+      if (!hostInfo.getInstalledSDKs().contains(version)) {
+        throw new SessionNotCreatedException("Cannot start on version " + version + ".Installed : "
+            + hostInfo.getInstalledSDKs());
       }
     }
-   
+
     ServerSideSession session = new ServerSideSession(app, hostInfo.getPort());
     sessions.add(session);
     try {
@@ -144,7 +145,12 @@ public class IOSDriver {
     if (desiredCapabilities.getBundleName() == null) {
       throw new IOSAutomationException("you need to specify the bundle to test.");
     }
-    if (!desiredCapabilities.getBundleName().equals(applicationCapabilities.getBundleName())) {
+    String desired = desiredCapabilities.getBundleName();
+    String appName =
+        (String) (applicationCapabilities.getBundleName() != null ? applicationCapabilities
+            .getBundleName() : applicationCapabilities.getCapability("CFBundleDisplayName"));
+
+    if (!desired.equals(appName)) {
       return false;
     }
     if (desiredCapabilities.getBundleVersion() != null
@@ -231,12 +237,12 @@ public class IOSDriver {
     public String getSDK() {
       return simulatorVersion;
     }
-    
-    public File getXCodeInstall(){
+
+    public File getXCodeInstall() {
       return xCodeInstall;
     }
-    
-    public List<String> getInstalledSDKs(){
+
+    public List<String> getInstalledSDKs() {
       return installedSimulators;
     }
 

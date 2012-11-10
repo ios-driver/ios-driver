@@ -20,13 +20,27 @@ public class MyMessageHandler implements MessageHandler {
 
   private final DOMContext cache;
   private final List<JSONObject> responses = new CopyOnWriteArrayList<JSONObject>();
+  private final WebInspector inspector;
 
-  public MyMessageHandler(DOMContext cache) {
+  public MyMessageHandler(DOMContext cache, WebInspector inspector) {
+    this.inspector = inspector;
     this.cache = cache;
   }
 
   @Override
-  public void handle(String msg) {
+  public void handle(final String msg) {
+    Thread t = new Thread(new Runnable() {
+
+      @Override
+      public void run() {
+        process(msg);
+      }
+    });
+    t.start();
+  }
+
+
+  private void process(String msg) {
     // System.out.println("got message : " + msg);
 
     msg =
@@ -50,15 +64,20 @@ public class MyMessageHandler implements MessageHandler {
 
             SetChildNodes notification = new SetChildNodes(o);
             cache.addIframe(notification.getIFrames());
-           
-
+          } else if ("DOM.documentUpdated".equals(o.optString("method"))) {
+            try {
+              System.out.println("UPDATED 1/3");
+              org.uiautomation.ios.webInspector.DOM.Node d = inspector.getDocument();
+              System.out.println("UPDATED 2/3");
+              cache.onLoad(d);
+              System.out.println("UPDATED 3/3");
+            } catch (Exception e) {
+              e.printStackTrace();
+            }
           } else {
-            System.err.println(o.toString(2));
+            System.err.println(o.toString());
           }
-
         }
-
-
       }
 
     } catch (DocumentException e) {
@@ -67,8 +86,6 @@ public class MyMessageHandler implements MessageHandler {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-
-
   }
 
 

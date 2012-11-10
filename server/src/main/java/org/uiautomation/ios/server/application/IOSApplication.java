@@ -233,7 +233,8 @@ public class IOSApplication {
  
   public String getMetadata(String key) {
     if (!metadata.has(key)) {
-      throw new IOSAutomationException("no property " + key + " for this app.");
+      return "";
+      //throw new IOSAutomationException("no property " + key + " for this app.");
     }
     try {
       return metadata.getString(key);

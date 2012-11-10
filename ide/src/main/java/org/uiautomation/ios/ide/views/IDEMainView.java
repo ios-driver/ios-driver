@@ -193,12 +193,17 @@ public class IDEMainView implements View {
   private String getIcon() throws Exception {
 
     JSONObject app = getAppFromStatus();
-    JSONObject resources = app.getJSONObject("resources");
-    String icon = resources.getString("CFBundleIconFile");
+    JSONObject resources = app.optJSONObject("resources");
+    if (resources!=null){
+      String icon = resources.getString("CFBundleIconFile");
 
-    String h = model.getEndPoint().getHost();
-    int p = model.getEndPoint().getPort();
-    return "http://" + h + ":" + p + icon;
+      String h = model.getEndPoint().getHost();
+      int p = model.getEndPoint().getPort();
+      return "http://" + h + ":" + p + icon;
+    }else{
+      return "no icon found";
+    }
+    
 
   }
 
@@ -224,8 +229,9 @@ public class IDEMainView implements View {
     JSONArray array = status.getJSONObject("value").getJSONArray("supportedApps");
     for (int i = 0; i < array.length(); i++) {
       JSONObject jsonApp = array.getJSONObject(i);
-      if (jsonApp.get("CFBundleIdentifier").equals(
-          model.getCapabilities().getRawCapabilities().get("bundleid"))) {
+      String other = (String)jsonApp.get("CFBundleIdentifier");
+      String me = (String)model.getCapabilities().getRawCapabilities().get("CFBundleIdentifier");
+      if (other.equals(me)) {
         return jsonApp;
       }
     }

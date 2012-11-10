@@ -65,7 +65,9 @@ public class LanguageDictionary {
       this.language = Localizable.createFromNewName(language);
       this.legacyFormat = false;
     } else {
-      throw new IOSAutomationException(language + " isn't recognized.");
+      this.language = Localizable.en;
+      this.legacyFormat = false;
+      //throw new IOSAutomationException(language + " isn't recognized.");
     }
   }
 
