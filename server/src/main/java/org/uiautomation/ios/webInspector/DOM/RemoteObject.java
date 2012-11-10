@@ -11,10 +11,18 @@ public class RemoteObject {
   private final DebugProtocol protocol;
   private final JSONObject raw;
 
-  public RemoteObject(JSONObject o,DebugProtocol protocol) throws JSONException {
+  public RemoteObject(JSONObject o, DebugProtocol protocol) throws JSONException {
     this.raw = o;
     this.protocol = protocol;
     this.id = o.optString("objectId");
+  }
+
+  public DebugProtocol getProtocol() {
+    return protocol;
+  }
+
+  public JSONObject getRaw() {
+    return raw;
   }
 
   public String getId() {
@@ -34,7 +42,7 @@ public class RemoteObject {
       return "Error parsing the raw remote object" + e.getMessage();
     }
   }
-  
+
   public <T> T call(String function) throws Exception {
     JSONObject cmd = new JSONObject();
     cmd.put("method", "Runtime.callFunctionOn");

@@ -204,14 +204,40 @@ UIAKeyboard.prototype.scrollToVisible = function() {
 };
 
 UIAElement.prototype.element_or = function(depth, criteria) {
+	log("using element_or");
 	var all = this.getChildren(depth);
 	var res = new Array();
 
+	var keys = getKeys(criteria);
+
+	var possibleResult;
+	var resultArea = 10000 * 10000;
 	for(var i = 0; i < all.length; i++) {
 		var element = all[i];
 		if(element.matches(criteria)) {
-			return element;
+			if(keys.length === 2) {// if location criteria, need to find the smallest element containing the location
+				var elementArea = element.rect().size.width * element.rect().size.height;
+				// the = is critical. the 'all' collection has the elements listed in order. For the given tree:
+				// parent
+				//	- child1
+				//		- child2
+				//  - child3
+				// all will be parent , child1, child2 , child3.
+				// if child1 and child2 have the same area, the assumption is that child1 is a container, while child2 is the element
+				// the user will interact with.
+				// <= instead of < garantees to return child2 and not child1
+				if(elementArea <= resultArea) {
+					possibleResult = element;
+					resultArea = elementArea;
+				}
+			} else {
+				return element;
+			}
+
 		}
+	}
+	if(possibleResult) {
+		return possibleResult;
 	}
 	throw new UIAutomationException("cannot find element for criteria :" + JSON.stringify(criteria), 7);
 }
@@ -353,6 +379,24 @@ var getKeys = function(obj) {
 	}
 	return keys;
 }
+// returns true is the point (x,y) is contained is the element.
+UIAElement.prototype.contains = function(x, y) {
+	var rect = this.rect();
+	if(x < rect.origin.x) {
+		return false;
+	}
+	if(y < rect.origin.y) {
+		return false;
+	}
+	if(x > rect.origin.x + rect.size.width) {
+		return false;
+	}
+	if(y > rect.origin.y + rect.size.height) {
+		return false;
+	}
+	log(x + ',' + y + ' belongs to ' + this)
+	return true;
+}
 
 UIAElement.prototype.matches = function(criteria) {
 	if(!criteria) {
@@ -394,9 +438,13 @@ UIAElement.prototype.matches = function(criteria) {
 		} else {
 			throw new UIAutomationException("not a valid criteria, -> " + JSON.stringify(criteria), 32);
 		}
-	}
-	// property match
-	else if(keys.length == 4) {
+
+	} else if(keys.length == 2) {// location match
+
+		var x = criteria['x'];
+		var y = criteria['y'];
+		return this.contains(x, y);
+	} else if(keys.length == 4) {// property match
 		var method = criteria['method'];
 		var expected = criteria['expected'];
 		var strategy = criteria['matching'];

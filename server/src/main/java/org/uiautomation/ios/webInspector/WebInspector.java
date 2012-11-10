@@ -7,15 +7,21 @@ import java.rmi.RemoteException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.uiautomation.ios.IOSCapabilities;
+import org.uiautomation.ios.UIAModels.UIADriver;
+import org.uiautomation.ios.UIAModels.UIARect;
 import org.uiautomation.ios.webInspector.DOM.DOM;
 import org.uiautomation.ios.webInspector.DOM.IFrame;
 import org.uiautomation.ios.webInspector.DOM.Node;
 import org.uiautomation.ios.webInspector.DOM.RemoteObject;
+import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 
 public class WebInspector {
 
   private final DebugProtocol protocol;
+  private final UIADriver nativeDriver;
   private final DOMContext cache;
+  private final int width;
 
 
   public DOMContext getCache() {
@@ -23,11 +29,11 @@ public class WebInspector {
   }
 
   public static void main(String[] args) throws Exception {
-    WebInspector inspector = new WebInspector();
+    WebInspector inspector = new WebInspector(null);
 
     Node document = inspector.getDocument();
     inspector.cache.setContextToBase(document);
-    
+
     RemoteObject ro = inspector.resolveNode(document.getNodeId());
 
     Iterable<RemoteObject> frames = inspector.getAllIFrames();
@@ -42,38 +48,33 @@ public class WebInspector {
     int left = rect.call(".left");
     System.out.println(left);
 
-    /*for (RemoteObject o : frames) {
-      NodeId id = inspector.requestNode(o);
-      IFrame iframe = inspector.cache.getIFrame(id);
-      inspector.cache.setContext(iframe);
-      RemoteObject el = inspector.findElementById(null,"srchFrm");
-      System.out.println(el);
-      RemoteObject found = inspector.findElementById(el,"srchFrm");
-      NodeId nodeId = inspector.requestNode(found);
-      inspector.highlightNode(nodeId);
-
-    }*/
+    /*
+     * for (RemoteObject o : frames) { NodeId id = inspector.requestNode(o); IFrame iframe =
+     * inspector.cache.getIFrame(id); inspector.cache.setContext(iframe); RemoteObject el =
+     * inspector.findElementById(null,"srchFrm"); System.out.println(el); RemoteObject found =
+     * inspector.findElementById(el,"srchFrm"); NodeId nodeId = inspector.requestNode(found);
+     * inspector.highlightNode(nodeId);
+     * 
+     * }
+     */
   }
-  
-  
+
+
 
   public RemoteObject findPosition(RemoteObject el) throws Exception {
-    String f =  "(function(arg) { " +
-        "var el = this;"+ 
-        "var _x = 0; "+
-        "var _y = 0;"+
-        
-        "while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {"+
-        "    _x += el.offsetLeft - el.scrollLeft;"+
-        "    _y += el.offsetTop - el.scrollTop;"+
-        "    el = el.offsetParent;"+
-        "};"+
-        "alert('w: '+ this.offsetWidth);"+
-        "var res = { top: _y, left: _x , width: this.offsetWidth , height: this.offsetHeight };" +
-    	//"alert(res.top +','+res.left);" +
-    	"return res;"+
-    	"})";
-     
+    String f =
+        "(function(arg) { " + "var el = this;" + "var _x = 0; " + "var _y = 0;" +
+
+        "while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {"
+            + "    _x += el.offsetLeft - el.scrollLeft;" + "    _y += el.offsetTop - el.scrollTop;"
+            + "    el = el.offsetParent;" + "};"
+            +
+            // "alert('w: '+ this.offsetWidth);"+
+            "var res = { top: _y, left: _x , width: this.offsetWidth , height: this.offsetHeight };"
+            +
+            // "alert(res.top +','+res.left);" +
+            "return res;" + "})";
+
     JSONObject cmd = new JSONObject();
 
     cmd.put("method", "Runtime.callFunctionOn");
@@ -81,26 +82,31 @@ public class WebInspector {
     JSONArray args = new JSONArray();
     args.put(new JSONObject().put("value", el.getId()));
 
-    cmd.put(
-        "params",
-        new JSONObject()
-            .put("objectId", el.getId())
-            .put("functionDeclaration",f)
-            .put("arguments", args).put("returnByValue", false));
+    cmd.put("params", new JSONObject().put("objectId", el.getId()).put("functionDeclaration", f)
+        .put("arguments", args).put("returnByValue", false));
 
 
 
     JSONObject response = protocol.sendCommand(cmd);
-   return protocol.cast(response);
+    return protocol.cast(response);
   }
 
-  public WebInspector() throws UnknownHostException, IOException, InterruptedException {
+  public WebInspector(UIADriver nativeDriver) throws Exception {
+    this.nativeDriver = nativeDriver;
+    IOSCapabilities caps = nativeDriver.getCapabilities();
+    JSONObject json = (JSONObject) caps.getRawCapabilities().get("rect");
+    UIARect rect = new UIARect(json);
+    width = rect.getWidth();
     cache = new DOMContext();
-    MessageHandler handler = new MyMessageHandler(cache,this);
+    MessageHandler handler = new MyMessageHandler(cache, this);
     protocol = new DebugProtocol(handler);
 
   }
 
+
+  public int getNativePageWidth() {
+    return width;
+  }
 
   public Node getDocument() throws JSONException, Exception {
     JSONObject result = protocol.sendCommand(DOM.getDocument());
@@ -136,20 +142,19 @@ public class WebInspector {
     JSONObject response = protocol.sendCommand(cmd);
     return protocol.cast(response);
   }
-  
+
   public int getInnerWidth() throws JSONException, Exception {
     JSONObject cmd = new JSONObject();
     cmd.put("method", "Runtime.evaluate");
-    cmd.put("params", new JSONObject()
-        .put("expression", "window.innerWidth;").put("returnByValue", true));
+    cmd.put("params",
+        new JSONObject().put("expression", "window.innerWidth;").put("returnByValue", true));
     JSONObject response = protocol.sendCommand(cmd);
     return protocol.cast(response);
   }
-  
-  
-  
 
-  public RemoteObject findElementById(RemoteObject element,String id) throws Exception {
+
+
+  public RemoteWebElement findElementById(RemoteObject element, String id) throws Exception {
     JSONObject cmd = new JSONObject();
 
     cmd.put("method", "Runtime.callFunctionOn");
@@ -157,11 +162,11 @@ public class WebInspector {
     JSONArray args = new JSONArray();
     args.put(new JSONObject().put("value", id));
 
-    if (element == null){
+    if (element == null) {
       Node document = cache.getCurrentDocument();
       element = resolveNode(document.getNodeId());
     }
-    
+
 
     cmd.put(
         "params",
@@ -172,7 +177,40 @@ public class WebInspector {
             .put("arguments", args).put("returnByValue", false));
 
     JSONObject response = protocol.sendCommand(cmd);
-    return protocol.cast(response);
+    RemoteObject ro = protocol.cast(response);
+    RemoteWebElement res = new RemoteWebElement(ro.getRaw(), protocol, nativeDriver, this);
+    return res;
+  }
+
+
+
+  public RemoteWebElement findElementByCSSSelector(RemoteObject element, String selector)
+      throws Exception {
+    JSONObject cmd = new JSONObject();
+
+    cmd.put("method", "Runtime.callFunctionOn");
+
+    JSONArray args = new JSONArray();
+    args.put(new JSONObject().put("value", selector));
+
+    if (element == null) {
+      Node document = cache.getCurrentDocument();
+      element = resolveNode(document.getNodeId());
+    }
+
+
+    cmd.put(
+        "params",
+        new JSONObject()
+            .put("objectId", element.getId())
+            .put("functionDeclaration",
+                "(function(arg) { var el = this.querySelector(arg);return el;})")
+            .put("arguments", args).put("returnByValue", false));
+
+    JSONObject response = protocol.sendCommand(cmd);
+    RemoteObject ro = protocol.cast(response);
+    RemoteWebElement res = new RemoteWebElement(ro.getRaw(), protocol, nativeDriver, this);
+    return res;
   }
 
 
