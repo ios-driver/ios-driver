@@ -35,11 +35,15 @@ public abstract class AbstractCriteria implements Criteria {
     int nbKeys = serialized.length();
     switch (nbKeys) {
       case KEYS_IN_EMPTY_CRITERIA:
-        return (T)new EmptyCriteria();
+        return (T) new EmptyCriteria();
       case KEYS_IN_COMPOSED_CRITERIA:
         String key = (String) serialized.keys().next();
         CompositionType type = CompositionType.valueOf(key);
         return (T) buildComposedCriteria(serialized, type, decorator);
+      case KEYS_IN_LOCATION_CRITERIA:
+        int x = serialized.getInt("x");
+        int y = serialized.getInt("y");
+        return (T) buildLocationCriteria(serialized, x, y, decorator);
       case KEYS_IN_PROPERTY_CRITERIA:
         String method = serialized.getString("method");
         String tmp =
@@ -57,7 +61,15 @@ public abstract class AbstractCriteria implements Criteria {
   private static final int KEYS_IN_EMPTY_CRITERIA = 0;
   private static final int KEYS_IN_COMPOSED_CRITERIA = 1;
   private static final int KEYS_IN_PROPERTY_CRITERIA = 4;
+  private static final int KEYS_IN_LOCATION_CRITERIA = 2;
 
+
+  private static LocationCriteria buildLocationCriteria(JSONObject serialized, int x, int y,
+      CriteriaDecorator decorator) {
+    LocationCriteria res = new LocationCriteria(x, y);
+    res.addDecorator(decorator);
+    return res;
+  }
 
   private static ComposedCriteria buildComposedCriteria(JSONObject serialized,
       CompositionType type, CriteriaDecorator decorator) throws Exception {
@@ -88,10 +100,11 @@ public abstract class AbstractCriteria implements Criteria {
     String expected = serialized.getString("expected");
     String matching = serialized.getString("matching");
     String l10n = serialized.getString("l10n");
-    
 
-    Object[] args = new Object[] {expected, L10NStrategy.valueOf(l10n),MatchingStrategy.valueOf(matching)};
-    Class<?>[] argsClass = new Class[] {String.class, L10NStrategy.class,MatchingStrategy.class};
+
+    Object[] args =
+        new Object[] {expected, L10NStrategy.valueOf(l10n), MatchingStrategy.valueOf(matching)};
+    Class<?>[] argsClass = new Class[] {String.class, L10NStrategy.class, MatchingStrategy.class};
 
     Constructor<?> c = clazz.getConstructor(argsClass);
     PropertyEqualCriteria crit = (PropertyEqualCriteria) c.newInstance(args);
