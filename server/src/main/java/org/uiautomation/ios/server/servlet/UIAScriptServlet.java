@@ -77,7 +77,22 @@ public class UIAScriptServlet extends DriverBasedServlet {
       String json = writer.toString();
       json = Normalizer.normalize(json, LanguageDictionary.norme);
       UIAScriptResponse r = new UIAScriptResponse(json);
-      communication(request).setNextResponse(r);
+      System.out.println("got response : "+json);
+      if (!"init".equals(r.getResponse().opt("value"))){
+        communication(request).setNextResponse(r);
+      }
+     
+      
+      System.out.println("getting next command");
+      UIAScriptRequest nextCommand = communication(request).getNextCommand();
+      String script = nextCommand.getScript();
+
+      System.out.println("command = "+script);
+      response.setContentType("text/html");
+      response.setCharacterEncoding("UTF-8");
+      response.setStatus(200);
+      response.getWriter().print(script);
+      response.getWriter().close();
     }
 
 

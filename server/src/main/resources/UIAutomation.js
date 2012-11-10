@@ -108,14 +108,6 @@ var UIAutomation = {
 			throw new UIAutomationException("error registering. exit code : " + result.exitCode);
 		}
 	},
-	getNextCommand : function() {
-		var result = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.COMMAND], 3600);
-		if(result.exitCode != 0) {
-			throw new UIAutomationException("error getting new command. exit code : " + result.exitCode);
-		}
-		log("command : " + result.stdout);
-		return result.stdout;
-	},
 	createJSONResponse : function(sessionId, status, value) {
 		var result = {};
 		result.sessionId = sessionId;
@@ -140,13 +132,15 @@ var UIAutomation = {
 		var json = JSON.stringify(result);
 		return json;
 	},
-	sendResponse : function(jsonResponse) {
-		log("response : " + jsonResponse);
-		var result = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.COMMAND, "--data-binary", jsonResponse], 90);
-		if(result.exitCode != 0) {
-			throw new UIAutomationException("error sending response. exit code : " + result.exitCode);
+	postResponseAndGetNextCommand : function(jsonResponse) {
+		log("posting response : " + jsonResponse);
+		var nextCommand = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.COMMAND, "--data-binary", jsonResponse], 90);
+		if(nextCommand.exitCode != 0) {
+			throw new UIAutomationException("error getting new command. exit code : " + result.exitCode);
 		}
-		return result;
+		log("command : " + nextCommand.stdout);
+		return nextCommand.stdout;
+
 	},
 	getCapabilities : function() {
 		var result = new Object();
@@ -181,26 +175,28 @@ var UIAutomation = {
 		}
 	},
 	commandLoop : function() {
-		while(true) {
+		var response = this.createJSONResponse(this.SESSION, 0, "init");
+		var ok = true;
+		while(ok) {
 			try {
-				var request = this.getNextCommand();
+				var request = this.postResponseAndGetNextCommand(response);
 				if(request === "stop") {
-					var response = this.createJSONResponse(this.SESSION, 0, "ok");
-					this.sendResponse(response);
+					ok = false;
+					log("end of the command loop.");
+					
 					return;
 				} else {
-					var response = "unknown state.";
 					try {
 						response = eval(request);
 					} catch (err) {
-						log("err : " + JSON.stringify(err));
+						log("err1 : " + JSON.stringify(err));
 						response = this.createJSONResponse(this.SESSION, err.status, err);
 					}
-					this.sendResponse(response);
 				}
 			} catch (err) {
 				var response = this.createJSONResponse(this.SESSION, 13, err);
-				this.sendResponse(response);
+				log("err2 : " + JSON.stringify(err));
+				return;
 			}
 		}
 	}

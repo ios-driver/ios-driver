@@ -79,7 +79,7 @@ public class EndToEndTest {
       Assert.assertNull(actual.getCapability(IOSCapabilities.UI_VERSION));
       Assert.assertEquals(actual.getCapability(IOSCapabilities.BUNDLE_ID),
           "com.yourcompany.UICatalog");
-      Assert.assertEquals(actual.getCapability(IOSCapabilities.UI_BUNDLE_VERSION), "2.10");
+      Assert.assertEquals(actual.getCapability(IOSCapabilities.BUNDLE_VERSION), "2.10");
 
       UIARect rect = target.getRect();
       Assert.assertEquals(rect.getX(), 0);

@@ -44,13 +44,20 @@ public abstract class UIAScriptHandler extends BaseCommandHandler {
     }
     UIAScriptRequest r = new UIAScriptRequest(js);
     communication().sendNextCommand(r);
-    UIAScriptResponse resp = communication().waitForResponse();
+
     WebDriverLikeResponse webDriverLikeResponse;
-    try {
-      JSONObject json = resp.getResponse();
-      webDriverLikeResponse = new WebDriverLikeResponse(json);
-    } catch (Exception e) {
-      return new FailedWebDriverLikeResponse(getRequest().getSession(), e);
+    // Stop if a fire and forget response. It will kill the instruments script, so the script cannot
+    // send a response.
+    if ("stop".equals(js)) {
+      webDriverLikeResponse = new WebDriverLikeResponse(getRequest().getSession(), 0, "ok");
+    } else {
+      UIAScriptResponse resp = communication().waitForResponse();
+      try {
+        JSONObject json = resp.getResponse();
+        webDriverLikeResponse = new WebDriverLikeResponse(json);
+      } catch (Exception e) {
+        return new FailedWebDriverLikeResponse(getRequest().getSession(), e);
+      }
     }
     return webDriverLikeResponse;
   }
