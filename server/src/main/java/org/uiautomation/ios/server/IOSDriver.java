@@ -254,4 +254,8 @@ public class IOSDriver {
   public Set<IOSApplication> getSupportedApplications() {
     return supportedApplications;
   }
+  
+  
+
+ 
 }

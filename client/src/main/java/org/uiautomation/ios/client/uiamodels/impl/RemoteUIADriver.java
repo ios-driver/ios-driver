@@ -18,7 +18,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpHost;
@@ -26,8 +28,10 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriver;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.UIAModels.UIADriver;
@@ -317,6 +321,8 @@ public class RemoteUIADriver implements UIADriver {
     }
   }
 
+
+
   @Override
   public void takeScreenshot(String path) {
     try {
@@ -352,5 +358,47 @@ public class RemoteUIADriver implements UIADriver {
     os.write(img64);
     os.close();
   }
+
+  @Override
+  public Set<String> getWindowHandles() {
+
+    try {
+      JSONObject payload = new JSONObject();
+      WebDriverLikeCommand command = WebDriverLikeCommand.WINDOW_HANDLES;
+      Path p = new Path(command).withSession(getSession().getSessionId());
+
+      WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, payload);
+      WebDriverLikeResponse response = execute(request);
+      JSONArray array = ((JSONArray) response.getValue());
+
+      Set<String> handles = new HashSet<String>();
+      for (int i = 0; i < array.length(); i++) {
+        handles.add(array.getString(i));
+      }
+      return handles;
+    } catch (IOSAutomationException e) {
+      throw e;
+    } catch (Exception e) {
+      throw new IOSAutomationException("bug", e);
+    }
+
+  }
+
+  @Override
+  public void setWindow(String handle) {
+    try {
+      JSONObject payload = new JSONObject();
+      WebDriverLikeCommand command = WebDriverLikeCommand.WINDOW;
+      Path p = new Path(command).withSession(getSession().getSessionId());
+
+      WebDriverLikeRequest request =
+          new WebDriverLikeRequest(command.method(), p, new JSONObject().put("name", handle));
+      execute(request);
+    } catch (Exception e) {
+      throw new IOSAutomationException("bug", e);
+    }
+
+  }
+
 
 }

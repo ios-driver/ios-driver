@@ -13,6 +13,8 @@
  */
 package org.uiautomation.ios.communication;
 
+import java.util.Set;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.uiautomation.ios.UIAModels.UIAApplication;
@@ -37,6 +39,9 @@ public enum WebDriverLikeCommand {
  
   SET_TIMEOUT("POST", "/session/:sessionId/timeouts",Void.class),
   GET_TIMEOUT("GET", "/session/:sessionId/timeouts",Integer.class),
+  
+  WINDOW_HANDLES("GET","/session/:sessionId/window_handles",Set.class),
+  WINDOW("POST" ,"/session/:sessionId/window",String.class),
   
   // UIATarget
   LOCAL_TARGET("GET","/session/:sessionId/localTarget",UIATarget.class),
