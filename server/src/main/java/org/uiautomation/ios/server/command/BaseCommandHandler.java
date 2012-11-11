@@ -26,6 +26,7 @@ import org.uiautomation.ios.server.instruments.CommunicationChannel;
 public abstract class BaseCommandHandler implements Handler {
 
   private final IOSDriver driver;
+  private final ServerSideSession session;
   private final WebDriverLikeRequest request;
   private final List<PreHandleDecorator> preDecorators = new ArrayList<PreHandleDecorator>();
   private final List<PostHandleDecorator> postDecorators = new ArrayList<PostHandleDecorator>();
@@ -33,7 +34,19 @@ public abstract class BaseCommandHandler implements Handler {
   public BaseCommandHandler(IOSDriver driver, WebDriverLikeRequest request) {
     this.driver = driver;
     this.request = request;
+
+    if (request.hasVariable(":sessionId")) {
+      session = driver.getSession(request.getSession());
+    } else {
+      session = null;
+    }
   }
+
+  public ServerSideSession getSession() {
+    return session;
+  }
+
+
 
   @Override
   public void addDecorator(PostHandleDecorator decorator) {

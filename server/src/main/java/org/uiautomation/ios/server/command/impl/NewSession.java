@@ -24,22 +24,25 @@ import org.uiautomation.ios.server.command.BaseCommandHandler;
 
 public class NewSession extends BaseCommandHandler {
 
-  private final JSONObject capabilities;
+  private final ServerSideSession session;
 
   public NewSession(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
 
     try {
       JSONObject payload = request.getPayload();
-      capabilities = payload.getJSONObject("desiredCapabilities");
+      IOSCapabilities capabilities =
+          new IOSCapabilities(payload.getJSONObject("desiredCapabilities"));
+      session = getDriver().createSession(capabilities);
     } catch (Exception e) {
       throw new IOSAutomationException(e);
     }
   }
 
   public WebDriverLikeResponse handle() throws Exception {
-    IOSCapabilities cap = new IOSCapabilities(capabilities);
-    ServerSideSession session = getDriver().startSession(cap);
+
+    session.start();
+
     JSONObject json = new JSONObject();
     json.put("sessionId", session.getSessionId());
     json.put("status", 0);
@@ -48,8 +51,6 @@ public class NewSession extends BaseCommandHandler {
     return r;
   }
 
-
-  
 
 
 }

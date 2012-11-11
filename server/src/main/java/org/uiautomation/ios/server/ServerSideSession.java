@@ -1,7 +1,6 @@
 package org.uiautomation.ios.server;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.UUID;
 
@@ -9,29 +8,42 @@ import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.UIAModels.UIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.exceptions.SessionNotCreatedException;
 import org.uiautomation.ios.mobileSafari.WebInspector;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
 import org.uiautomation.ios.server.instruments.InstrumentsManager;
+import org.uiautomation.ios.server.utils.ClassicCommands;
 
 public class ServerSideSession extends Session {
 
   private final IOSApplication application;
+  private final IOSCapabilities capabilities;
   private final InstrumentsManager instruments;
   private WebInspector inspector;
   public UIADriver nativeDriver;
+  public IOSDriver driver;
 
   private String context;
   private boolean nativeMode = true;
-  private int serverPort;
 
-
-
-  public ServerSideSession(IOSApplication application, int serverPort) {
+  ServerSideSession(IOSDriver driver, IOSCapabilities capabilities) {
     super(UUID.randomUUID().toString());
-    this.application = application;
-    this.serverPort = serverPort;
+    this.driver = driver;
+    this.capabilities = capabilities;
 
+    application = driver.findMatchingApplication(capabilities);
+    application.setLanguage(capabilities.getLanguage());
+    if (capabilities.getSDKVersion() == null) {
+      capabilities.setSDKVersion(ClassicCommands.getDefaultSDK());
+    } else {
+      String version = capabilities.getSDKVersion();
+      if (!driver.getHostInfo().getInstalledSDKs().contains(version)) {
+        throw new SessionNotCreatedException("Cannot start on version " + version + ".Installed : "
+            + driver.getHostInfo().getInstalledSDKs());
+      }
+    }
+    instruments = new InstrumentsManager(driver.getPort());
 
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
@@ -39,10 +51,21 @@ public class ServerSideSession extends Session {
         forceStop();
       }
     });
-    instruments = new InstrumentsManager(serverPort);
-    
-  
   }
+
+
+
+  /*
+   * public ServerSideSession(IOSApplication application, int serverPort) {
+   * super(UUID.randomUUID().toString()); this.application = application; this.serverPort =
+   * serverPort;
+   * 
+   * 
+   * Runtime.getRuntime().addShutdownHook(new Thread() {
+   * 
+   * @Override public void run() { forceStop(); } }); instruments = new
+   * InstrumentsManager(serverPort); }
+   */
 
   public UIADriver getNativeDriver() {
     return nativeDriver;
@@ -73,14 +96,14 @@ public class ServerSideSession extends Session {
 
   }
 
-  public void start(IOSCapabilities capabilities) {
+  public void start() {
     instruments.startSession(capabilities.getDevice(), capabilities.getSDKVersion(),
         capabilities.getLocale(), capabilities.getLanguage(), application.getApplicationPath(),
         getSessionId(), capabilities.isTimeHack(), capabilities.getExtraSwitches());
-    
+
     URL url = null;
     try {
-      url = new URL("http://localhost:" + serverPort + "/wd/hub");
+      url = new URL("http://localhost:" + driver.getHostInfo().getPort() + "/wd/hub");
     } catch (Exception e) {
       e.printStackTrace();
     }

@@ -53,6 +53,10 @@ public class IOSDriver {
     cache.cacheResource(application);
   }
 
+  public HostInfo getHostInfo() {
+    return hostInfo;
+  }
+
   public ResourceCache getCache() {
     return cache;
   }
@@ -61,30 +65,14 @@ public class IOSDriver {
     return hostInfo.getPort();
   }
 
-  public ServerSideSession startSession(IOSCapabilities capabilities) {
-    IOSApplication app = findMatchingApplication(capabilities);
-    app.setLanguage(capabilities.getLanguage());
-    if (capabilities.getSDKVersion() == null) {
-      capabilities.setSDKVersion(ClassicCommands.getDefaultSDK());
-    } else {
-      String version = capabilities.getSDKVersion();
-      if (!hostInfo.getInstalledSDKs().contains(version)) {
-        throw new SessionNotCreatedException("Cannot start on version " + version + ".Installed : "
-            + hostInfo.getInstalledSDKs());
-      }
-    }
-
-    ServerSideSession session = new ServerSideSession(app, hostInfo.getPort());
+  
+  public ServerSideSession createSession(IOSCapabilities cap){
+    ServerSideSession session = new ServerSideSession(this,cap);
     sessions.add(session);
-    try {
-      session.start(capabilities);
-    } catch (IOSAutomationException e) {
-      sessions.remove(session);
-      throw new SessionNotCreatedException("Error starting the session.", e);
-    }
-
     return session;
   }
+  
+ 
 
   public void stop(String opaqueKey) {
     ServerSideSession session = getSession(opaqueKey);
@@ -119,7 +107,7 @@ public class IOSDriver {
     return cap;
   }
 
-  private IOSApplication findMatchingApplication(IOSCapabilities desiredCapabilities) {
+  public IOSApplication findMatchingApplication(IOSCapabilities desiredCapabilities) {
     for (IOSApplication app : supportedApplications) {
       IOSCapabilities appCapabilities = getCapabilities(app);
       if (IOSDriver.matches(appCapabilities, desiredCapabilities)) {
