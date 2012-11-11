@@ -1,20 +1,13 @@
 package org.uiautomation.ios.e2e;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
-import org.uiautomation.ios.UIAModels.UIAApplication;
 import org.uiautomation.ios.UIAModels.UIARect;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAApplication;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;

@@ -3,7 +3,7 @@ package org.uiautomation.ios.webInspector.DOM;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.uiautomation.ios.webInspector.DebugProtocol;
+import org.uiautomation.ios.mobileSafari.DebugProtocol;
 
 public class RemoteObject {
 

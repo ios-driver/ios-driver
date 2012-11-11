@@ -8,8 +8,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
-import org.uiautomation.ios.server.application.LanguageDictionary;
-import org.uiautomation.ios.server.application.Localizable;
 
 public class LanguageDictionaryTests {
 

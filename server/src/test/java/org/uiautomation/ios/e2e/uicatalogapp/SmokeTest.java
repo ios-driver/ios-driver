@@ -2,7 +2,6 @@ package org.uiautomation.ios.e2e.uicatalogapp;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.UIARect;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAWindow;

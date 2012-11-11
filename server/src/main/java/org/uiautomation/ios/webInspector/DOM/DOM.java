@@ -2,7 +2,7 @@ package org.uiautomation.ios.webInspector.DOM;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.uiautomation.ios.webInspector.NodeId;
+import org.uiautomation.ios.mobileSafari.NodeId;
 
 public class DOM {
 

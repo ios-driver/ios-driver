@@ -4,6 +4,7 @@ package org.uiautomation.ios.mobileSafari;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
@@ -21,6 +22,7 @@ public class MyMessageHandler implements MessageHandler {
   private final DOMContext cache;
   private final List<JSONObject> responses = new CopyOnWriteArrayList<JSONObject>();
   private final WebInspector inspector;
+  private Thread t;
 
   public MyMessageHandler(DOMContext cache, WebInspector inspector) {
     this.inspector = inspector;
@@ -41,7 +43,7 @@ public class MyMessageHandler implements MessageHandler {
 
 
   private void process(String msg) {
-    // System.out.println("got message : " + msg);
+    //System.out.println("got message : " + msg);
 
     msg =
         msg.replace(
@@ -90,8 +92,15 @@ public class MyMessageHandler implements MessageHandler {
 
 
   @Override
-  public JSONObject getResponse(int id) {
+  public JSONObject getResponse(int id) throws TimeoutException {
+    long timeout = 2 * 1000;
+    // TODO handle stop() in there
+    long end = System.currentTimeMillis() + timeout;
     while (true) {
+
+      if (System.currentTimeMillis() > end) {
+        throw new TimeoutException("timeout waiting for a response for request id : " + id);
+      }
       try {
         Thread.sleep(10);
         for (JSONObject o : responses) {
@@ -108,5 +117,14 @@ public class MyMessageHandler implements MessageHandler {
       }
 
     }
+  }
+
+  @Override
+  public void stop() {
+    if (t!=null){
+      t.interrupt();
+    }
+    
+
   }
 }

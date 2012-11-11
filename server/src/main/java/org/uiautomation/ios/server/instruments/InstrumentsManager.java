@@ -35,6 +35,10 @@ public class InstrumentsManager {
   private IOSDeviceManager simulator;
   private String sessionId;
   private final int port;
+  public String getSessionId() {
+    return sessionId;
+  }
+
   private List<String> extraEnvtParams;
   private CommunicationChannel communicationChannel;
   private Command simulatorProcess;

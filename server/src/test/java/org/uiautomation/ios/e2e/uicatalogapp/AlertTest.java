@@ -5,7 +5,6 @@ import org.testng.annotations.Test;
 import org.uiautomation.ios.UIAModels.UIAAlert;
 import org.uiautomation.ios.UIAModels.UIAButton;
 import org.uiautomation.ios.UIAModels.UIAElement;
-import org.uiautomation.ios.UIAModels.UIALink;
 import org.uiautomation.ios.UIAModels.UIAStaticText;
 import org.uiautomation.ios.UIAModels.UIATableCell;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;

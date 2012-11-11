@@ -14,15 +14,12 @@
 package org.uiautomation.ios.server.servlet;
 
 import java.io.IOException;
-import java.io.StringWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
-import org.omg.CORBA.ExceptionList;
 import org.uiautomation.ios.communication.FailedWebDriverLikeResponse;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
@@ -68,15 +65,21 @@ public class IOSServlet extends DriverBasedServlet {
   }
 
   private void process(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+
     WebDriverLikeRequest req = new WebDriverLikeRequest(request);
-    WebDriverLikeResponse resp = getResponse(req);
 
     response.setContentType("application/json;charset=UTF-8");
     response.setCharacterEncoding("UTF-8");
+    response.setStatus(200);
+    WebDriverLikeResponse resp;
+
+
 
     // TODO implement the json protocol properly.
     if (req.getGenericCommand() == WebDriverLikeCommand.NEW_SESSION) {
       response.setStatus(301);
+      resp = getResponse(req);
       String session = resp.getSessionId();
 
       String scheme = request.getScheme(); // http
@@ -87,9 +90,14 @@ public class IOSServlet extends DriverBasedServlet {
       // Reconstruct original requesting URL
       String url = scheme + "://" + serverName + ":" + serverPort + contextPath;
       response.setHeader("location", url + "/session/" + session);
+    } else if (getDriver().getSession(req.getSession()).isNative() || req.getGenericCommand() == WebDriverLikeCommand.WINDOW) {
+      System.out.println("doing some native stuff."+req.getMethod()+" - "+req.getPath());
+      resp = getResponse(req);
     } else {
-      response.setStatus(200);
+      System.out.println("doing some web stuff.");
+      resp = new WebDriverLikeResponse(req.getSession(), 0, new JSONObject());
     }
+
     response.getWriter().print(resp.stringify());
     response.getWriter().close();
 

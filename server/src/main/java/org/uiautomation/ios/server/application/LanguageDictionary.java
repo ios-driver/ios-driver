@@ -16,8 +16,6 @@ package org.uiautomation.ios.server.application;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.StringWriter;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.ArrayList;
@@ -27,12 +25,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.PatternSyntaxException;
 
-import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
-import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
-import org.uiautomation.ios.server.utils.Command;
 import org.uiautomation.ios.server.utils.PlistFileUtils;
 
 /**

@@ -16,7 +16,7 @@ import org.uiautomation.ios.webInspector.DOM.RemoteObject;
 import org.uiautomation.ios.webInspector.DOM.RemoteObjectArray;
 
 public class DebugProtocol {
-  private final Socket socket;
+  private Socket socket;
   private ByteArrayOutputStream buf = new ByteArrayOutputStream();
   private final PlistManager plist = new PlistManager();
   private final MessageHandler handler;
@@ -27,6 +27,9 @@ public class DebugProtocol {
   private int commandId = 0;
 
   private final boolean displayPerformance = false;
+  private Thread listen;
+  private volatile boolean keepGoing=true;
+  private final String bundleId;
 
   /**
    * connect to the webview
@@ -36,22 +39,21 @@ public class DebugProtocol {
    * @throws IOException
    * @throws InterruptedException
    */
-  public DebugProtocol(MessageHandler handler) throws UnknownHostException, IOException,
+  public DebugProtocol(MessageHandler handler,String bundleId) throws UnknownHostException, IOException,
       InterruptedException {
     this.handler = handler;
+    this.bundleId =bundleId;
 
-    socket = new Socket(LOCALHOST_IPV6, port);
-    sendCommand(PlistManager.SET_CONNECTION_KEY);
-    sendCommand(PlistManager.CONNECT_TO_APP);
-    sendCommand(PlistManager.SET_SENDER_KEY);
+    
+   
+    init();
 
-
-    Thread listen = new Thread(new Runnable() {
+    listen = new Thread(new Runnable() {
 
       @Override
       public void run() {
         try {
-          while (true) {
+          while (keepGoing) {
             Thread.sleep(50);
             listenOnce();
           }
@@ -62,6 +64,16 @@ public class DebugProtocol {
     });
 
     listen.start();
+  }
+  
+  public void init() throws IOException, InterruptedException{
+    if (socket!=null && (socket.isConnected() || !socket.isClosed())){
+      socket.close();
+    }
+    socket = new Socket(LOCALHOST_IPV6, port);
+    sendCommand(PlistManager.SET_CONNECTION_KEY);
+    sendCommand(PlistManager.CONNECT_TO_APP);
+    sendCommand(PlistManager.SET_SENDER_KEY);
   }
 
 
@@ -78,11 +90,15 @@ public class DebugProtocol {
     commandId++;
     command.put("id", commandId);
     String xml = plist.JSONCommand(command);
+    xml = xml.replace("$bundleId", this.bundleId);
     byte[] bytes = plist.plistXmlToBinary(xml);
     perf("prepared request \t" + (System.currentTimeMillis() - start) + "ms.");
     sendBinaryMessage(bytes);
     perf("sent request \t\t" + (System.currentTimeMillis() - start) + "ms.");
+    
+    //System.out.println("waiting for response ....");
     JSONObject response = handler.getResponse(command.getInt("id"));
+    //System.out.println("waited");
     perf("got response\t\t" + (System.currentTimeMillis() - start) + "ms.");
     JSONObject error = response.optJSONObject("error");
     if (error != null) {
@@ -115,6 +131,7 @@ public class DebugProtocol {
    */
   private void sendCommand(String command) throws IOException, InterruptedException {
     String xml = plist.loadFromTemplate(command);
+    xml = xml.replace("$bundleId", bundleId);
     byte[] bytes = plist.plistXmlToBinary(xml);
     sendBinaryMessage(bytes);
   }
@@ -177,7 +194,7 @@ public class DebugProtocol {
     while (is.available() > 0) {
       byte[] bytes = new byte[is.available()];
       is.read(bytes);
-      // System.err.println("Received " + bytes.length + " bytes.");
+      //System.err.println("Received " + bytes.length + " bytes.");
       pushInput(bytes);
     }
   }
@@ -216,5 +233,25 @@ public class DebugProtocol {
   private int byteToInt(byte b) {
     int i = (int) b;
     return i >= 0 ? i : i + 256;
+  }
+
+
+  public void stop() {
+    if (handler!=null){
+      handler.stop();
+    }
+    
+    try {
+      socket.close();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    keepGoing = false;
+    if (listen!=null){
+      listen.interrupt();
+    }
+    keepGoing = true;
+    
+    
   }
 }

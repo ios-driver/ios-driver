@@ -1,10 +1,7 @@
 package org.uiautomation.ios.server.application;
 
-import static org.uiautomation.ios.server.application.Localizable.de;
 import static org.uiautomation.ios.server.application.Localizable.en;
-import static org.uiautomation.ios.server.application.Localizable.es;
 import static org.uiautomation.ios.server.application.Localizable.fr;
-import static org.uiautomation.ios.server.application.Localizable.zh;
 
 import java.util.List;
 
@@ -13,9 +10,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
-import org.uiautomation.ios.server.application.ContentResult;
-import org.uiautomation.ios.server.application.IOSApplication;
-import org.uiautomation.ios.server.application.Localizable;
 
 public class IOSL10NTests {
 

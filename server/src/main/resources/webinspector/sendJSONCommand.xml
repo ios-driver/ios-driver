@@ -5,7 +5,7 @@
 		<key>__argument</key>
 		<dict>
 			<key>WIRApplicationIdentifierKey</key>
-			<string>com.apple.mobilesafari</string>
+			<string>$bundleId</string>
 			<key>WIRConnectionIdentifierKey</key>
 			<string>41DC39AA-55A7-4C85-9566-B58E6627DD62</string>
 			<key>WIRPageIdentifierKey</key>

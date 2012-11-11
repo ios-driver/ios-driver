@@ -14,12 +14,12 @@
 package org.uiautomation.ios.UIAModels;
 
 import java.io.File;
+import java.util.Set;
 
-import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriver;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
-import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.exceptions.NoSuchElementException;
 
@@ -27,23 +27,28 @@ import org.uiautomation.ios.exceptions.NoSuchElementException;
 public interface UIADriver {
 
   public Session getSession();
-  
+
   public UIATarget getLocalTarget();
 
   public IOSCapabilities getCapabilities() throws Exception;
 
-  public JSONObject logElementTree(File screenshot,boolean translation) throws IOSAutomationException;
+  public JSONObject logElementTree(File screenshot, boolean translation)
+      throws IOSAutomationException;
 
   public void quit();
-  
-  public void setTimeout(String type,int timeoutInSeconds);
- 
+
+  public void setTimeout(String type, int timeoutInSeconds);
+
   public int getTimeout(String type);
 
   public UIAElement findElement(Criteria c) throws NoSuchElementException;
 
   public UIAElementArray<UIAElement> findElements(Criteria c);
-  
+
   public void takeScreenshot(String path);
+  
+  public Set<String> getWindowHandles();
+  
+  public void setWindow(String handle);
 
 }

@@ -3,7 +3,6 @@ package org.uiautomation.ios.server.application;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
-import org.uiautomation.ios.server.application.Localizable;
 
 public class LocalizableTests {
 

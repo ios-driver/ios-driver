@@ -15,15 +15,11 @@
 package org.uiautomation.ios.server.application;
 
 
-import static org.uiautomation.ios.IOSCapabilities.BUNDLE_NAME;
-import static org.uiautomation.ios.IOSCapabilities.BUNDLE_VERSION;
 import static org.uiautomation.ios.IOSCapabilities.DEVICE_FAMILLY;
 import static org.uiautomation.ios.IOSCapabilities.ICON;
-import static org.uiautomation.ios.IOSCapabilities.MAGIC_PREFIX;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -33,9 +29,7 @@ import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
-import org.uiautomation.ios.server.utils.Command;
 import org.uiautomation.ios.server.utils.PlistFileUtils;
 
 

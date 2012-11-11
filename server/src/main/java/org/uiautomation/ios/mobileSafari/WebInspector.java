@@ -1,5 +1,7 @@
 package org.uiautomation.ios.mobileSafari;
 
+import java.io.IOException;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,9 +16,9 @@ import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 public class WebInspector {
 
   private final DebugProtocol protocol;
-  private final UIADriver nativeDriver;
+  public final UIADriver nativeDriver;
   private final DOMContext cache;
-  private final int width;
+  private int width = -1;
 
 
   public DOMContext getCache() {
@@ -24,7 +26,7 @@ public class WebInspector {
   }
 
   public static void main(String[] args) throws Exception {
-    WebInspector inspector = new WebInspector(null);
+    WebInspector inspector = new WebInspector(null,null);
 
     Node document = inspector.getDocument();
     inspector.cache.setContextToBase(document);
@@ -86,20 +88,25 @@ public class WebInspector {
     return protocol.cast(response);
   }
 
-  public WebInspector(UIADriver nativeDriver) throws Exception {
+  public WebInspector(UIADriver nativeDriver,String bundleId) throws Exception {
     this.nativeDriver = nativeDriver;
-    IOSCapabilities caps = nativeDriver.getCapabilities();
-    JSONObject json = (JSONObject) caps.getRawCapabilities().get("rect");
-    UIARect rect = new UIARect(json);
-    width = rect.getWidth();
     cache = new DOMContext();
     MessageHandler handler = new MyMessageHandler(cache, this);
-    protocol = new DebugProtocol(handler);
+    protocol = new DebugProtocol(handler,bundleId);
 
   }
 
+  public DebugProtocol getProtocol(){
+    return protocol;
+  }
 
-  public int getNativePageWidth() {
+  public int getNativePageWidth() throws Exception {
+    if (width == -1) {
+      IOSCapabilities caps = nativeDriver.getCapabilities();
+      JSONObject json = (JSONObject) caps.getRawCapabilities().get("rect");
+      UIARect rect = new UIARect(json);
+      width = rect.getWidth();
+    }
     return width;
   }
 
@@ -206,6 +213,10 @@ public class WebInspector {
     RemoteObject ro = protocol.cast(response);
     RemoteWebElement res = new RemoteWebElement(ro.getRaw(), protocol, nativeDriver, this);
     return res;
+  }
+
+  public void stop() {
+    protocol.stop();
   }
 
 

@@ -9,8 +9,8 @@ import org.uiautomation.ios.UIAModels.UIARect;
 import org.uiautomation.ios.UIAModels.UIAScrollView;
 import org.uiautomation.ios.UIAModels.predicate.LocationCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
-import org.uiautomation.ios.webInspector.DebugProtocol;
-import org.uiautomation.ios.webInspector.WebInspector;
+import org.uiautomation.ios.mobileSafari.DebugProtocol;
+import org.uiautomation.ios.mobileSafari.WebInspector;
 
 public class RemoteWebElement extends RemoteObject {
 

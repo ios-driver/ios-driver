@@ -1,5 +1,11 @@
 package org.uiautomation.ios.e2e;
 
+import static org.uiautomation.ios.IOSCapabilities.BUNDLE_DISPLAY_NAME;
+import static org.uiautomation.ios.IOSCapabilities.BUNDLE_ID;
+import static org.uiautomation.ios.IOSCapabilities.BUNDLE_NAME;
+import static org.uiautomation.ios.IOSCapabilities.BUNDLE_VERSION;
+import static org.uiautomation.ios.IOSCapabilities.SUPPORTED_LANGUAGES;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +20,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAApplication;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
@@ -24,9 +29,6 @@ import org.uiautomation.ios.communication.Helper;
 import org.uiautomation.ios.communication.HttpClientFactory;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
-
-
-import static org.uiautomation.ios.IOSCapabilities.*;
 
 public class StatusTest {
 
