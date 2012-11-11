@@ -69,7 +69,7 @@ public enum WebDriverLikeCommand {
   
   PARENT("GET" , "/session/:sessionId/uiaElement/:reference/parent",UIAElement.class),
   
-  ELEMENT_ROOT("POST" , "/session/:sessionId/elements",UIAElement.class),
+  ELEMENT_ROOT("POST" , "/session/:sessionId/element",UIAElement.class),
   ELEMENTS_ROOT("POST" , "/session/:sessionId/elements2",UIAElementArray.class),
   
   ELEMENT("POST" , "/session/:sessionId/element/:reference/elements",UIAElement.class),

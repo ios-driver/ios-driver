@@ -32,6 +32,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.HttpCommandExecutor;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.UIAModels.UIADriver;
@@ -48,7 +50,7 @@ import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.exceptions.NoSuchElementException;
 
-public class RemoteUIADriver implements UIADriver {
+public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
 
   private final String remoteURL;
   private final Map<String, Object> requestedCapabilities;
@@ -82,6 +84,10 @@ public class RemoteUIADriver implements UIADriver {
       port = url.getPort();
       host = url.getHost();
       session = start();
+
+      setSessionId(session.getSessionId());
+      setCommandExecutor(new HttpCommandExecutor(url));
+
     } catch (MalformedURLException e) {
       throw new IOSAutomationException("invalid URL " + remoteURL, e);
     } catch (IOSAutomationException e) {

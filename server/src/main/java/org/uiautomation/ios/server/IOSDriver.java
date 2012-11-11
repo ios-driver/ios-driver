@@ -109,7 +109,7 @@ public class IOSDriver {
 
       try {
         Object value = application.getMetadata().get(key);
-        cap.getRawCapabilities().put(key, value);
+        cap.setCapability(key, value);
       } catch (JSONException e) {
         throw new IOSAutomationException("cannot get metadata", e);
       }

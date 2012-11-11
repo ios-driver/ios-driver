@@ -103,7 +103,7 @@ var UIAutomation = {
 
 	register : function() {
 		log("registering to " + this.REGISTER);
-		var result = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.REGISTER, "-d", "sessionId=" + this.SESSION], 90);
+		var result = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.REGISTER, "-d", "sessionId=" + this.SESSION], 600);
 		if(result.exitCode != 0) {
 			throw new UIAutomationException("error registering. exit code : " + result.exitCode);
 		}

@@ -74,12 +74,22 @@ public class IOSServlet extends DriverBasedServlet {
     response.setStatus(200);
     WebDriverLikeResponse resp;
 
-
-
+    boolean nativeMode = true;
+    try  {
+     nativeMode =  getDriver().getSession(req.getSession()).isNative();
+    }catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
+    
+   
+    System.out.println("native mode ? : "+nativeMode+" -- "+req.getMethod()+" - "+req.getPath());
+    
+    resp = getResponse(req);
+    
+    
     // TODO implement the json protocol properly.
     if (req.getGenericCommand() == WebDriverLikeCommand.NEW_SESSION) {
       response.setStatus(301);
-      resp = getResponse(req);
       String session = resp.getSessionId();
 
       String scheme = request.getScheme(); // http
@@ -90,13 +100,7 @@ public class IOSServlet extends DriverBasedServlet {
       // Reconstruct original requesting URL
       String url = scheme + "://" + serverName + ":" + serverPort + contextPath;
       response.setHeader("location", url + "/session/" + session);
-    } else if (getDriver().getSession(req.getSession()).isNative() || req.getGenericCommand() == WebDriverLikeCommand.WINDOW) {
-      System.out.println("doing some native stuff."+req.getMethod()+" - "+req.getPath());
-      resp = getResponse(req);
-    } else {
-      System.out.println("doing some web stuff.");
-      resp = new WebDriverLikeResponse(req.getSession(), 0, new JSONObject());
-    }
+    } 
 
     response.getWriter().print(resp.stringify());
     response.getWriter().close();

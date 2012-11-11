@@ -23,10 +23,11 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.uiautomation.ios.communication.IOSDevice;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 
-public class IOSCapabilities {
+public class IOSCapabilities extends DesiredCapabilities {
 
   // UIAutomation properties called from instuments
   // UIAAplication.bundleID();
@@ -63,7 +64,7 @@ public class IOSCapabilities {
   public static final String MAGIC_PREFIX = "plist_";
 
 
-  private final Map<String, Object> raw = new HashMap<String, Object>();
+  // private final Map<String, Object> raw = new HashMap<String, Object>();
 
   public static IOSCapabilities iphone(String bundleName, String bundleVersion) {
     IOSCapabilities res = new IOSCapabilities();
@@ -96,42 +97,40 @@ public class IOSCapabilities {
   }
 
   public IOSCapabilities() {
-    setCapability(TIME_HACK, true);
+    setCapability(TIME_HACK, false);
+  }
+
+  public IOSCapabilities(Map<String, Object> from) {
+    for (String key : from.keySet()) {
+      setCapability(key, from.get(key));
+    }
   }
 
   public String getBundleId() {
-    Object o = raw.get(BUNDLE_ID);
+    Object o = asMap().get(BUNDLE_ID);
     return ((String) o);
   }
-  
+
   public String getBundleName() {
-    Object o = raw.get(BUNDLE_NAME);
+    Object o = asMap().get(BUNDLE_NAME);
     return ((String) o);
   }
 
   public String getBundleVersion() {
-    Object o = raw.get(BUNDLE_VERSION);
+    Object o = asMap().get(BUNDLE_VERSION);
     return ((String) o);
   }
 
-  public IOSCapabilities(Map<String, Object> from) {
-    raw.putAll(from);
-  }
 
   public IOSCapabilities(JSONObject json) throws JSONException {
     Iterator<String> iter = json.keys();
     while (iter.hasNext()) {
       String key = iter.next();
       Object value = json.get(key);
-      raw.put(key, decode(value));
+      setCapability(key, decode(value));
     }
   }
 
-
-
-  public void setCapability(String key, Object value) {
-    raw.put(key, value);
-  }
 
 
   private Object decode(Object o) throws JSONException {
@@ -149,11 +148,11 @@ public class IOSCapabilities {
   }
 
   public Map<String, Object> getRawCapabilities() {
-    return raw;
+    return (Map<String, Object>) asMap();
   }
 
   public IOSDevice getDeviceFromDeviceFamily() {
-    JSONArray o = (JSONArray) raw.get(DEVICE_FAMILLY);
+    JSONArray o = (JSONArray) asMap().get(DEVICE_FAMILLY);
     if (o.length() != 1) {
       throw new IOSAutomationException(
           "Cannot find the capability for the app.Supported only 1, and got " + o);
@@ -169,59 +168,59 @@ public class IOSCapabilities {
   }
 
   public IOSDevice getDevice() {
-    Object o = raw.get(DEVICE);
+    Object o = getCapability(DEVICE);
     return IOSDevice.valueOf(o);
   }
 
   public String getSDKVersion() {
-    Object o = raw.get(UI_SDK_VERSION);
+    Object o = getCapability(UI_SDK_VERSION);
     return ((String) o);
   }
 
   public String getApplication() {
-    Object o = raw.get(AUT);
+    Object o = getCapability(AUT);
     return ((String) o);
   }
 
   public String getLocale() {
-    Object o = raw.get(LOCALE);
+    Object o = getCapability(LOCALE);
     return ((String) o);
   }
 
   public String getLanguage() {
-    Object o = raw.get(LANGUAGE);
+    Object o = getCapability(LANGUAGE);
     return ((String) o);
 
   }
 
   public void setDevice(IOSDevice device) {
-    raw.put(DEVICE, device);
+    setCapability(DEVICE, device);
 
   }
 
   public void setSDKVersion(String sdkVersion) {
-    raw.put(UI_SDK_VERSION, sdkVersion);
+    setCapability(UI_SDK_VERSION, sdkVersion);
   }
 
   public void setLocale(String locale) {
-    raw.put(LOCALE, locale);
+    setCapability(LOCALE, locale);
 
   }
 
   public void setLanguage(String language) {
-    raw.put(LANGUAGE, language);
+    setCapability(LANGUAGE, language);
   }
 
   public List<String> getExtraSwitches() {
     List<String> res = new ArrayList<String>();
-    if (raw.get(IOS_SWITCHES) != null) {
+    if (getCapability(IOS_SWITCHES) != null) {
       res.addAll(getList(IOS_SWITCHES));
     }
     return res;
   }
 
   public boolean isTimeHack() {
-    Object o = raw.get(TIME_HACK);
+    Object o = getCapability(TIME_HACK);
     if (o == null) {
       return false;
     } else if (o instanceof Boolean) {
@@ -232,7 +231,7 @@ public class IOSCapabilities {
   }
 
   private List<String> getList(String key) {
-    Object o = raw.get(key);
+    Object o = getCapability(key);
     if (o instanceof List<?>) {
       return (List<String>) o;
     } else if (o instanceof JSONArray) {
@@ -256,7 +255,7 @@ public class IOSCapabilities {
   }
 
   public void setSupportedLanguages(List<String> supportedLanguages) {
-    raw.put(SUPPORTED_LANGUAGES, supportedLanguages);
+    setCapability(SUPPORTED_LANGUAGES, supportedLanguages);
   }
 
 
@@ -274,7 +273,6 @@ public class IOSCapabilities {
     }
 
   }
-
 
 
 
