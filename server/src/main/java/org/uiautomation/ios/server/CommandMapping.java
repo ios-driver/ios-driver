@@ -43,101 +43,153 @@ import org.uiautomation.ios.server.command.web.FindElement;
 
 public enum CommandMapping {
 
-  NEW_SESSION(NewSession.class), GET_SESSION(GetCapabilitiesCommandHandler.class), SESSIONS(
-      GetSessions.class), DELETE_SESSION(StopSession.class), SET_TIMEOUT(
-      SetTimeoutCommandHandler.class), GET_TIMEOUT(GetTimeoutCommandHandler.class),
+  NEW_SESSION(NewSession.class),
+  GET_SESSION(GetCapabilitiesCommandHandler.class),
+  SESSIONS(GetSessions.class),
+  DELETE_SESSION(StopSession.class),
+  SET_TIMEOUT(SetTimeoutCommandHandler.class),
+  GET_TIMEOUT(GetTimeoutCommandHandler.class),
+  
+  WINDOW_HANDLES(GetWindowHandlesCommandHandler.class),
+  WINDOW(SetCurrentContext.class),
 
-  WINDOW_HANDLES(GetWindowHandlesCommandHandler.class), WINDOW(SetCurrentContext.class),
-
+  
   // UIATarget
-  LOCAL_TARGET(LocalTarget.class), HOST(NotImplementedHandler.class), TREE(LogElementTree.class), TREE_ROOT(
-      LogElementTree.class),
-
-  TARGET_RECT(".rect()"), TARGET_TAP(".tap({x::x,y::y})"), SET_ORIENTATION(
-      ".setDeviceOrientation(:orientation)"),
-
+  LOCAL_TARGET(LocalTarget.class),
+  HOST(NotImplementedHandler.class),
+  TREE(LogElementTree.class),
+  TREE_ROOT(LogElementTree.class),
+  
+  TARGET_RECT(".rect()"),
+  TARGET_TAP(".tap({x::x,y::y})"),
+  SET_ORIENTATION(".setDeviceOrientation(:orientation)"),
+  
   SCREENSHOT(TakeScreenshot.class),
-
+  
   FONT_MOST_APP(".frontMostApp()"),
-
-
+  
+ 
   // UIAApplication
-  MAIN_WINDOW(".mainWindow()"), WINDOWS(".windows()"), KEYBOARD(".keyboard2()"), KEYBOARD_KEYS(
-      ".keys()"), KEYBOARD_BUTTONS(".buttons()"), TYPE_STRING(".typeString(:string)"),
-  // UIAHost
-  // PERFORM_TASK_WITH_PATH_ARGUMENTS_TIMEOUT(null),
-
-
+  MAIN_WINDOW(".mainWindow()"),
+  WINDOWS(".windows()"),
+  KEYBOARD(".keyboard2()"), 
+  KEYBOARD_KEYS(".keys()"), 
+  KEYBOARD_BUTTONS (".buttons()"),
+  TYPE_STRING(".typeString(:string)"),
+    // UIAHost
+   //PERFORM_TASK_WITH_PATH_ARGUMENTS_TIMEOUT(null),
+  
+ 
   // UIAElement
-  HIT_POINT(NotImplementedHandler.class), RECT(".rect()"),
-
+  HIT_POINT(NotImplementedHandler.class),
+  RECT(".rect()"),
+  
   PARENT(NotImplementedHandler.class),
+  
 
-
-  ELEMENT_ROOT(FindElementRoot.class), ELEMENTS_ROOT(FindElementsRoot.class),
-
-  ELEMENT(FindElementRoot.class), ELEMENTS(FindElementsRoot.class),
-
-  // ELEMENT(".element(:depth,:criteria)"),
-  // ELEMENTS(".elements2(:depth,:criteria)"),
+  ELEMENT_ROOT(FindElementRoot.class,FindElement.class),
+  ELEMENTS_ROOT(FindElementsRoot.class),
+  
+  ELEMENT(FindElementRoot.class),
+  ELEMENTS(FindElementsRoot.class),
+  
+  //ELEMENT(".element(:depth,:criteria)"),
+  //ELEMENTS(".elements2(:depth,:criteria)"),
   ANCESTRY(NotImplementedHandler.class),
 
-  IS_VISIBLE(".isVisible()"), IS_STALE(".isStale()"),
-
-
-  // LABEL(".label()"),
-  // NAME(".name()"),
-  // VALUE(".value()"),
+  IS_VISIBLE(".isVisible()"),
+  IS_STALE(".isStale()"),
+  
+  
+  //LABEL(".label()"),
+  //NAME(".name()"),
+  //VALUE(".value()"),
   ATTRIBUTE(AttributeCommand.class),
-  // WITH_NAME(".withName(:name)"),
-  // WITH_PREDICATE(".withPredicate(PredicateString predicateString)"),
-  // WITH_VALUE_FOR_KEY(".withValueForKey(Object value,String key)"),
-
-
-  TAP(".tap2()"), TOUCH_AND_HOLD(".touchAndHold(:duration)"), DOUBLE_TAP(".doubleTap()"), TWO_FINGER_TAP(
-      ".twoFingerTap()"), TAP_WITH_OPTIONS(""), DRAG_INSIDE_WITH_OPTIONS(""), FLICK_INSIDE_WITH_OPTIONS(
-      ""), SCROLL_TO_VISIBLE(".scrollToVisible()"), ROTATE_WITH_OPTIONS(NotImplementedHandler.class),
-
+  //WITH_NAME(".withName(:name)"),
+  //WITH_PREDICATE(".withPredicate(PredicateString predicateString)"),
+  //WITH_VALUE_FOR_KEY(".withValueForKey(Object value,String key)"),
+  
+  
+  TAP(".tap2()"),
+  TOUCH_AND_HOLD(".touchAndHold(:duration)"),
+  DOUBLE_TAP(".doubleTap()"),
+  TWO_FINGER_TAP(".twoFingerTap()"),
+  TAP_WITH_OPTIONS(""),
+  DRAG_INSIDE_WITH_OPTIONS(""),
+  FLICK_INSIDE_WITH_OPTIONS(""),
+  SCROLL_TO_VISIBLE(".scrollToVisible()"),
+  ROTATE_WITH_OPTIONS(NotImplementedHandler.class),
+  
   // UIAElementArray
-  GET(".toArray()[:index]"), FIRST_WITH_NAME(".firstWithName(:name)"), FIRST_WITH_PREDICATE(
-      ".firstWithPredicate()"), FIRST_WITH_VALUE_FOR_KEY(NotImplementedHandler.class), ARRAY_WITH_NAME(
-      ".withName(:name)"), ARRAY_WITH_PREDICATE(NotImplementedHandler.class), ARRAY_WITH_VALUE_FOR_KEY(
-      NotImplementedHandler.class),
+  GET(".toArray()[:index]"),
+  FIRST_WITH_NAME(".firstWithName(:name)"),
+  FIRST_WITH_PREDICATE(".firstWithPredicate()"),
+  FIRST_WITH_VALUE_FOR_KEY(NotImplementedHandler.class),
+  ARRAY_WITH_NAME(".withName(:name)"),
+  ARRAY_WITH_PREDICATE(NotImplementedHandler.class),
+  ARRAY_WITH_VALUE_FOR_KEY(NotImplementedHandler.class),
 
-  // UIANavigationBar
-  LEFT_BUTTON(".leftButton()"), RIGHT_BUTTON(".rightButton()"),
-
+  //UIANavigationBar
+  LEFT_BUTTON(".leftButton()"),
+  RIGHT_BUTTON(".rightButton()"),
+  
   // UIATextField
   SET_VALUE(".setValue(:value)"),
-
-  // UIATableView
-  TABLE_GROUPS(".groups()"), TABLE_CELLS(".cells()"), TABLE_VISIBLE_CELLS(".visibleCells()"),
-
-  ALERT_CANCEL_BUTTON(".cancelButton2()"), ALERT_DEFAULT_BUTTON(".defaultButton2()"),
-
+  
+  //UIATableView
+  TABLE_GROUPS(".groups()"),
+  TABLE_CELLS(".cells()"),
+  TABLE_VISIBLE_CELLS(".visibleCells()"),
+  
+  ALERT_CANCEL_BUTTON(".cancelButton2()"),
+  ALERT_DEFAULT_BUTTON(".defaultButton2()"),
+  
   STATUS(ServerStatus.class);
 
 
   private WebDriverLikeCommand command;
-  private final Class<? extends Handler> handlerClass;
-  private final String jsMethod;
+  private final Class<? extends Handler> nativeHandlerClass;
+  private final Class<? extends Handler> webHandlerClass;
+  private final String nativeJSMethod;
 
+  private CommandMapping(String jsMethod, Class<? extends Handler> webHandlerClass) {
+    this.command = WebDriverLikeCommand.valueOf(this.name());
+    this.nativeHandlerClass = DefaultUIAScriptHandler.class;
+    this.nativeJSMethod = jsMethod;
+    this.webHandlerClass = null;
+  }
+  
+  
   private CommandMapping(String jsMethod) {
     this.command = WebDriverLikeCommand.valueOf(this.name());
-    this.handlerClass = DefaultUIAScriptHandler.class;
-    this.jsMethod = jsMethod;
+    this.nativeHandlerClass = DefaultUIAScriptHandler.class;
+    this.nativeJSMethod = jsMethod;
+    this.webHandlerClass = null;
+  }
+  
+ 
+  private CommandMapping(Class<? extends Handler> nativeHandlerClass, String nativeJSMethod,
+      Class<? extends Handler> webHandlerClass) {
+    this.command = WebDriverLikeCommand.valueOf(this.name());
+    this.nativeHandlerClass = nativeHandlerClass;
+    this.webHandlerClass = webHandlerClass;
+    this.nativeJSMethod = nativeJSMethod;
   }
 
-  private CommandMapping(Class<? extends Handler> handlerClass, String jsMethod) {
+  private CommandMapping(Class<? extends Handler> nativeHandlerClass,
+      Class<? extends Handler> webHandlerClass) {
     this.command = WebDriverLikeCommand.valueOf(this.name());
-    this.handlerClass = handlerClass;
-    this.jsMethod = jsMethod;
+    this.nativeHandlerClass = nativeHandlerClass;
+    this.webHandlerClass = webHandlerClass;
+    this.nativeJSMethod = null;
+
   }
 
   private CommandMapping(Class<? extends Handler> handlerClass) {
     this.command = WebDriverLikeCommand.valueOf(this.name());
-    this.handlerClass = handlerClass;
-    this.jsMethod = null;
+    this.nativeHandlerClass = handlerClass;
+    this.webHandlerClass = null;
+    this.nativeJSMethod = null;
   }
 
 
@@ -153,7 +205,7 @@ public enum CommandMapping {
 
   public String jsMethod(JSONObject payload, IOSApplication aut) {
     if (payload != null) {
-      String res = jsMethod;
+      String res = nativeJSMethod;
       Iterator<String> iter = payload.keys();
       while (iter.hasNext()) {
         String key = iter.next();
@@ -162,23 +214,11 @@ public enum CommandMapping {
       }
       return res;
     } else {
-      return jsMethod;
+      return nativeJSMethod;
     }
   }
 
 
-  /*
-   * private CriteriaDecorator getDecorator(IOSApplication aut){ ServerSideL10NDecorator decorator =
-   * new ServerSideL10NDecorator(aut); return decorator; }
-   */
-
-  /*
-   * private JSONObject serverSidePayloadChanges(JSONObject payload, IOSApplication aut) { if
-   * (payload.has("criteria")){ try { JSONObject json = payload.getJSONObject("criteria"); Criteria
-   * decorated = AbstractCriteria.parse(json,getDecorator(aut)); payload.put("criteria",
-   * decorated.getJSONRepresentation().toString()); } catch (Exception e) { // TODO Auto-generated
-   * catch block e.printStackTrace(); } } return payload; }
-   */
 
   public Handler createHandler(IOSDriver driver, WebDriverLikeRequest request) throws Exception {
     boolean isNative = true;
@@ -186,37 +226,27 @@ public enum CommandMapping {
       ServerSideSession sss = driver.getSession(request.getSession());
       isNative = sss.isNative();
     }
-    
-    
-    
-    if (request.getGenericCommand() == WebDriverLikeCommand.GET_SESSION || request.getGenericCommand() == WebDriverLikeCommand.DELETE_SESSION){
-      isNative = true;
-    }
 
-   
-    System.out.println("creating a " + (isNative ? " native " : "web") + " handler");
-    if (isNative ) {
-      
-      Class<?> clazz = handlerClass;
-      if (clazz == null) {
-        throw new RuntimeException("handler NI");
-      }
+    Class<?> clazz;
 
-      Object[] args = new Object[] {driver, request};
-      Class<?>[] argsClass = new Class[] {IOSDriver.class, WebDriverLikeRequest.class};
-
-      Constructor<?> c = clazz.getConstructor(argsClass);
-      Handler handler = (Handler) c.newInstance(args);
-      System.out.println("created "+handler.getClass());
-      return handler;
-
-
+    if (isNative) {
+      clazz = nativeHandlerClass;
     } else {
-      Handler handler =  new FindElement(driver, request);
-      System.out.println("created "+handler.getClass());
-      return handler;
+      clazz = webHandlerClass != null ? webHandlerClass : nativeHandlerClass;
     }
 
+
+    if (clazz == null) {
+      throw new RuntimeException("handler NI");
+    }
+
+    Object[] args = new Object[] {driver, request};
+    Class<?>[] argsClass = new Class[] {IOSDriver.class, WebDriverLikeRequest.class};
+
+    Constructor<?> c = clazz.getConstructor(argsClass);
+    Handler handler = (Handler) c.newInstance(args);
+    System.out.println("created " + handler.getClass());
+    return handler;
 
   }
 

@@ -20,9 +20,11 @@ public class ServerSideSession extends Session {
   private final IOSApplication application;
   private final IOSCapabilities capabilities;
   private final InstrumentsManager instruments;
+  public IOSDriver driver;
+
+
   private WebInspector inspector;
   public UIADriver nativeDriver;
-  public IOSDriver driver;
 
   private String context;
   private boolean nativeMode = true;
@@ -55,17 +57,7 @@ public class ServerSideSession extends Session {
 
 
 
-  /*
-   * public ServerSideSession(IOSApplication application, int serverPort) {
-   * super(UUID.randomUUID().toString()); this.application = application; this.serverPort =
-   * serverPort;
-   * 
-   * 
-   * Runtime.getRuntime().addShutdownHook(new Thread() {
-   * 
-   * @Override public void run() { forceStop(); } }); instruments = new
-   * InstrumentsManager(serverPort); }
-   */
+  
 
   public UIADriver getNativeDriver() {
     return nativeDriver;
