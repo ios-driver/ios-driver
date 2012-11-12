@@ -98,7 +98,6 @@ UIAElement.prototype.isScrollable = function() {
 		}
 		parent = parent.parent();
 	}
-	log(this.type() + "isScollable : " + false);
 	return false;
 }
 
@@ -204,7 +203,6 @@ UIAKeyboard.prototype.scrollToVisible = function() {
 };
 
 UIAElement.prototype.element_or = function(depth, criteria) {
-	log("using element_or");
 	var all = this.getChildren(depth);
 	var res = new Array();
 
@@ -394,7 +392,6 @@ UIAElement.prototype.contains = function(x, y) {
 	if(y > rect.origin.y + rect.size.height) {
 		return false;
 	}
-	log(x + ',' + y + ' belongs to ' + this)
 	return true;
 }
 

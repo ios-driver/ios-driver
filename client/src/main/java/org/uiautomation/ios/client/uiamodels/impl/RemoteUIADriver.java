@@ -221,35 +221,42 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
 
   }
 
+  private IOSCapabilities cached;
   @Override
   public IOSCapabilities getCapabilities() {
-    WebDriverLikeCommand command = WebDriverLikeCommand.GET_SESSION;
-    Path p = new Path(command).withSession(session.getSessionId());
-    WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, new JSONObject());
-    WebDriverLikeResponse response;
-    try {
-      response = execute(request);
-    } catch (IOSAutomationException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new IOSAutomationException(e);
-    }
-    if (response.getValue() == JSONObject.NULL) {
-      return null;
-    } else {
-      Object v = response.getValue();
-      if (v instanceof String) {
-        try {
-          JSONObject o = new JSONObject((String) v);
-          return new IOSCapabilities(o);
-        } catch (JSONException e) {
-          throw new IOSAutomationException(e);
-        }
-      } else {
-        throw new IOSAutomationException("can't guess type, got " + v.getClass());
+    if (cached ==null){
+      WebDriverLikeCommand command = WebDriverLikeCommand.GET_SESSION;
+      Path p = new Path(command).withSession(session.getSessionId());
+      WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, new JSONObject());
+      WebDriverLikeResponse response;
+      try {
+        response = execute(request);
+      } catch (IOSAutomationException e) {
+        throw e;
+      } catch (Exception e) {
+        throw new IOSAutomationException(e);
       }
-
+      if (response.getValue() == JSONObject.NULL) {
+        return null;
+      } else {
+        Object v = response.getValue();
+        if (v instanceof String) {
+          try {
+            JSONObject o = new JSONObject((String) v);
+            IOSCapabilities res  =  new IOSCapabilities(o);
+            //cached = res;
+            return res;
+          } catch (JSONException e) {
+            throw new IOSAutomationException(e);
+          }
+        } else {
+          throw new IOSAutomationException("can't guess type, got " + v.getClass());
+        }
+      }
+    }else{
+      return cached;
     }
+    
   }
 
   @Override
@@ -390,21 +397,7 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
 
   }
 
-  @Override
-  public void setWindow(String handle) {
-    try {
-      JSONObject payload = new JSONObject();
-      WebDriverLikeCommand command = WebDriverLikeCommand.WINDOW;
-      Path p = new Path(command).withSession(getSession().getSessionId());
-
-      WebDriverLikeRequest request =
-          new WebDriverLikeRequest(command.method(), p, new JSONObject().put("name", handle));
-      execute(request);
-    } catch (Exception e) {
-      throw new IOSAutomationException("bug", e);
-    }
-
-  }
+  
 
 
 }

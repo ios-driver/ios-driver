@@ -43,7 +43,7 @@ public class MyMessageHandler implements MessageHandler {
 
 
   private void process(String msg) {
-    //System.out.println("got message : " + msg);
+    // System.out.println("got message : " + msg);
 
     msg =
         msg.replace(
@@ -68,11 +68,10 @@ public class MyMessageHandler implements MessageHandler {
             cache.addIframe(notification.getIFrames());
           } else if ("DOM.documentUpdated".equals(o.optString("method"))) {
             try {
-              System.out.println("UPDATED 1/3");
+
               org.uiautomation.ios.webInspector.DOM.Node d = inspector.getDocument();
-              System.out.println("UPDATED 2/3");
               cache.onLoad(d);
-              System.out.println("UPDATED 3/3");
+              System.out.println("new page fully loaded event.");
             } catch (Exception e) {
               e.printStackTrace();
             }
@@ -93,7 +92,7 @@ public class MyMessageHandler implements MessageHandler {
 
   @Override
   public JSONObject getResponse(int id) throws TimeoutException {
-    long timeout = 2 * 1000;
+    long timeout = 50* 1000;
     // TODO handle stop() in there
     long end = System.currentTimeMillis() + timeout;
     while (true) {
@@ -121,10 +120,10 @@ public class MyMessageHandler implements MessageHandler {
 
   @Override
   public void stop() {
-    if (t!=null){
+    if (t != null) {
       t.interrupt();
     }
-    
+
 
   }
 }

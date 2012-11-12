@@ -100,6 +100,7 @@ var UIAutomation = {
 		"implicit" : 0
 	},
 	SESSION : "$SESSION",
+	CAPABILITIES : -1,
 
 	register : function() {
 		log("registering to " + this.REGISTER);
@@ -142,8 +143,7 @@ var UIAutomation = {
 		return nextCommand.stdout;
 
 	},
-	getCapabilities : function() {
-
+	loadCapabilities : function() {
 		var result = new Object();
 		var target = UIATarget.localTarget();
 		var app = target.frontMostApp();
@@ -161,8 +161,16 @@ var UIAutomation = {
 		result.sdkVersion = target.systemVersion();
 		result.aut = "$AUT";
 		result.rect = target.rect();
-		return JSON.stringify(result);
-
+		return result;
+	},
+	getCapabilities : function() {
+		if (this.CAPABILITIES === -1){
+			this.CAPABILITIES = this.loadCapabilities();
+		}
+		var result = this.CAPABILITIES;
+		var target = UIATarget.localTarget();
+		result.rect = target.rect();
+		return JSON.stringify(result)
 	},
 	setTimeout : function(type, timeoutInSeconds) {
 		this.TIMEOUT_IN_SEC[type] = timeoutInSeconds;

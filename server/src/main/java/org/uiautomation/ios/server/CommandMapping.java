@@ -223,7 +223,7 @@ public enum CommandMapping {
 
   public Handler createHandler(IOSDriver driver, WebDriverLikeRequest request) throws Exception {
     boolean isNative = true;
-    if (request.getGenericCommand() != WebDriverLikeCommand.NEW_SESSION) {
+    if (request.getGenericCommand() != WebDriverLikeCommand.NEW_SESSION && request.getGenericCommand() != WebDriverLikeCommand.STATUS) {
       ServerSideSession sss = driver.getSession(request.getSession());
       isNative = sss.isNative();
     }

@@ -46,9 +46,8 @@ public interface UIADriver {
   public UIAElementArray<UIAElement> findElements(Criteria c);
 
   public void takeScreenshot(String path);
-  
-  public Set<String> getWindowHandles();
-  
-  public void setWindow(String handle);
+
+  //public Set<String> getWindowHandles();
+
 
 }
