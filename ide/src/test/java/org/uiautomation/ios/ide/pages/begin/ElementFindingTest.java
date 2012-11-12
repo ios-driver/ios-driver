@@ -151,7 +151,7 @@ public class ElementFindingTest {
     Assert.assertFalse(element.isSelected());
   }
 
-  /*@Test
+  @Test
   public void testShouldNotBeAbleTofindElementsBasedOnIdIfTheElementIsNotThere() {
     driver.get(pages.formPage);
 
