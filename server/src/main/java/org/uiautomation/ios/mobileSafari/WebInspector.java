@@ -1,5 +1,8 @@
 package org.uiautomation.ios.mobileSafari;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,6 +14,7 @@ import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.webInspector.DOM.DOM;
 import org.uiautomation.ios.webInspector.DOM.Node;
 import org.uiautomation.ios.webInspector.DOM.RemoteObject;
+import org.uiautomation.ios.webInspector.DOM.RemoteObjectArray;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 
 public class WebInspector {
@@ -26,7 +30,6 @@ public class WebInspector {
     return cache;
   }
 
- 
 
 
   public RemoteObject findPosition(RemoteObject el) throws Exception {
@@ -92,7 +95,6 @@ public class WebInspector {
   }
 
 
- 
 
   public RemoteObject resolveNode(NodeId id) throws JSONException, Exception {
     JSONObject result = protocol.sendCommand(DOM.resolveNode(id));
@@ -126,39 +128,31 @@ public class WebInspector {
 
 
   public RemoteWebElement findElementById(RemoteObject element, String id) throws Exception {
-    JSONObject cmd = new JSONObject();
+    /*
+     * JSONObject cmd = new JSONObject();
+     * 
+     * cmd.put("method", "Runtime.callFunctionOn");
+     * 
+     * JSONArray args = new JSONArray(); args.put(new JSONObject().put("value", id));
+     * 
+     * 
+     * if (element == null) { Node document = cache.getCurrentDocument(); if (document == null) {
+     * System.err.println("document should be initialized"); document = getDocument(); } element =
+     * resolveNode(document.getNodeId()); }
+     * 
+     * cmd.put( "params", new JSONObject() .put("objectId", element.getId())
+     * .put("functionDeclaration",
+     * "(function(arg) { var el = this.getElementById(arg);return el;})") .put("arguments",
+     * args).put("returnByValue", false)); JSONObject response = protocol.sendCommand(cmd);
+     * RemoteObject ro = protocol.cast(response); if (ro == null) { return null; } else {
+     * RemoteWebElement res = new RemoteWebElement(ro.getId(), session); return res; }
+     */
+    return findElementByCSSSelector(element, "#" + id);
 
-    cmd.put("method", "Runtime.callFunctionOn");
+  }
 
-    JSONArray args = new JSONArray();
-    args.put(new JSONObject().put("value", id));
-
-    if (element == null) {
-      Node document = cache.getCurrentDocument();
-      if (document == null) {
-        System.err.println("document should be initialized");
-        document = getDocument();
-      }
-      element = resolveNode(document.getNodeId());
-    }
-
-
-    cmd.put(
-        "params",
-        new JSONObject()
-            .put("objectId", element.getId())
-            .put("functionDeclaration",
-                "(function(arg) { var el = this.getElementById(arg);return el;})")
-            .put("arguments", args).put("returnByValue", false));
-    JSONObject response = protocol.sendCommand(cmd);
-    RemoteObject ro = protocol.cast(response);
-    if (ro == null) {
-      return null;
-    } else {
-      RemoteWebElement res = new RemoteWebElement(ro.getId(), session);
-      return res;
-    }
-
+  public List<RemoteWebElement> findElementsById(RemoteObject element, String id) throws Exception {
+    return findElementsByCSSSelector(element, "#" + id);
   }
 
 
@@ -198,6 +192,52 @@ public class WebInspector {
       RemoteWebElement res = new RemoteWebElement(ro.getId(), session);
       return res;
     }
+  }
+
+  public List<RemoteWebElement> findElementsByTagName(RemoteObject element, String tagName)
+      throws Exception {
+    return findElementsByCSSSelector(element, tagName);
+  }
+
+  public List<RemoteWebElement> findElementsByCSSSelector(RemoteObject element, String selector)
+      throws Exception {
+    JSONObject cmd = new JSONObject();
+
+    cmd.put("method", "Runtime.callFunctionOn");
+
+    JSONArray args = new JSONArray();
+    args.put(new JSONObject().put("value", selector));
+
+    if (element == null) {
+      Node document = cache.getCurrentDocument();
+      if (document == null) {
+        System.err.println("Error, needs to be fixed in the switch window command somewhere");
+        document = getDocument();
+      }
+      element = resolveNode(document.getNodeId());
+    }
+
+
+    cmd.put(
+        "params",
+        new JSONObject()
+            .put("objectId", element.getId())
+            .put("functionDeclaration",
+                "(function(arg) { var el = this.querySelectorAll(arg);return el;})")
+            .put("arguments", args).put("returnByValue", false));
+
+    JSONObject response = protocol.sendCommand(cmd);
+    RemoteObjectArray ra = protocol.cast(response);
+
+    List<RemoteWebElement> res = new ArrayList<RemoteWebElement>();
+    if (ra != null) {
+      for (RemoteObject ro : ra) {
+        RemoteWebElement rwe = new RemoteWebElement(ro.getId(), session);
+        res.add(rwe);
+      }
+
+    }
+    return res;
   }
 
   public void stop() {

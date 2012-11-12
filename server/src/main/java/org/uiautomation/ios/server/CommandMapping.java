@@ -44,6 +44,7 @@ import org.uiautomation.ios.server.command.impl.StopSession;
 import org.uiautomation.ios.server.command.impl.TakeScreenshot;
 import org.uiautomation.ios.server.command.web.Click;
 import org.uiautomation.ios.server.command.web.FindElement;
+import org.uiautomation.ios.server.command.web.FindElements;
 import org.uiautomation.ios.server.command.web.IsSelectedCommandHandler;
 import org.uiautomation.ios.server.command.web.WebAttributeCommandHandler;
 import org.uiautomation.ios.server.command.web.WebGetTitle;
@@ -98,10 +99,10 @@ public enum CommandMapping {
   
 
   ELEMENT_ROOT(FindElementRoot.class,FindElement.class),
-  ELEMENTS_ROOT(FindElementsRoot.class),
+  ELEMENTS_ROOT(FindElementsRoot.class,FindElements.class),
   
-  ELEMENT(FindElementRoot.class),
-  ELEMENTS(FindElementsRoot.class),
+  ELEMENT(FindElementRoot.class,FindElement.class),
+  ELEMENTS(FindElementsRoot.class,FindElements.class),
   
   //ELEMENT(".element(:depth,:criteria)"),
   //ELEMENTS(".elements2(:depth,:criteria)"),

@@ -61,7 +61,7 @@ public class RemoteWebElement extends RemoteObject {
   }
 
   private UIAElement getNativeElement() throws Exception {
-    highlight();
+    //highlight();
     if (nativeElement == null) {
       String origin = getSession().getWindowHandle();
       UIARect rect = null;
@@ -103,7 +103,7 @@ public class RemoteWebElement extends RemoteObject {
 
       int x = rect.getX() + left;
       int y = rect.getY() + top;
-      System.out.println("looking for the element at : " + x + "," + y);
+      //System.out.println("looking for the element at : " + x + "," + y);
       // find the corresponding native element
       try {
         getSession().setNativeContext();
@@ -111,8 +111,8 @@ public class RemoteWebElement extends RemoteObject {
         // nativeElement = nativeDriver.findElement(new AndCriteria(new
         // TypeCriteria(UIALink.class),new LocationCriteria(x, y)));
         nativeElement = nativeDriver.findElement(new LocationCriteria(x, y));
-        System.out.println(nativeElement + "---" + nativeElement.getRect() + "---"
-            + nativeElement.isVisible() + " --- " + nativeElement.isValid());
+        //System.out.println(nativeElement + "---" + nativeElement.getRect() + "---"
+        //    + nativeElement.isVisible() + " --- " + nativeElement.isValid());
       } finally {
         getSession().setCurrentContext(origin);
       }

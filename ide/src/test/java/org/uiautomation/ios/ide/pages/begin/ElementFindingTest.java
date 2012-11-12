@@ -1,6 +1,8 @@
 package org.uiautomation.ios.ide.pages.begin;
 
 
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Pages;
@@ -163,16 +165,25 @@ public class ElementFindingTest {
     }
   }
 
-  /*@Test
+  @Test(enabled=false)
   public void testShouldBeAbleToFindChildrenOfANode() {
     driver.get(pages.selectableItemsPage);
-    List<WebElement> elements = driver.findElements(By.xpath("/html/head"));
+   List<WebElement> elements = driver.findElements(By.xpath("/html/head"));
     WebElement head = elements.get(0);
     List<WebElement> importedScripts = head.findElements(By.tagName("script"));
-    assertThat(importedScripts.size(), equalTo(3));
+    Assert.assertEquals(importedScripts.size(),3);
+  }
+  
+  @Test
+  public void testShouldBeAbleToFindChildrenOfANode2() {
+    driver.get(pages.selectableItemsPage);
+   List<WebElement> elements = driver.findElements(By.cssSelector("html>head"));
+    WebElement head = elements.get(0);
+    List<WebElement> importedScripts = head.findElements(By.tagName("script"));
+    Assert.assertEquals(importedScripts.size(),3);
   }
 
-  @Test
+  /*@Test
   public void testReturnAnEmptyListWhenThereAreNoChildrenOfANode() {
     driver.get(pages.xhtmlTestPage);
     WebElement table = driver.findElement(By.id("table"));
