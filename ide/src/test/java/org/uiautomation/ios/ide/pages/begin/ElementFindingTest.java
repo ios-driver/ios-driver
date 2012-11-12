@@ -183,16 +183,16 @@ public class ElementFindingTest {
     Assert.assertEquals(importedScripts.size(),3);
   }
 
-  /*@Test
+  @Test
   public void testReturnAnEmptyListWhenThereAreNoChildrenOfANode() {
     driver.get(pages.xhtmlTestPage);
     WebElement table = driver.findElement(By.id("table"));
     List<WebElement> rows = table.findElements(By.tagName("tr"));
 
-    assertThat(rows.size(), equalTo(0));
+    Assert.assertEquals(rows.size(), 0);
   }
 
-  @Ignore(value = SELENESE, reason = "Value returned as 'off'")
+  /*@Ignore(value = SELENESE, reason = "Value returned as 'off'")
   @Test
   public void testShouldFindElementsByName() {
     driver.get(pages.formPage);
