@@ -41,6 +41,7 @@ import org.uiautomation.ios.server.command.impl.StopSession;
 import org.uiautomation.ios.server.command.impl.TakeScreenshot;
 import org.uiautomation.ios.server.command.web.Click;
 import org.uiautomation.ios.server.command.web.FindElement;
+import org.uiautomation.ios.server.command.web.WebAttributeCommandHandler;
 
 public enum CommandMapping {
 
@@ -105,7 +106,7 @@ public enum CommandMapping {
   //LABEL(".label()"),
   //NAME(".name()"),
   //VALUE(".value()"),
-  ATTRIBUTE(AttributeCommand.class),
+  ATTRIBUTE(AttributeCommand.class,WebAttributeCommandHandler.class),
   //WITH_NAME(".withName(:name)"),
   //WITH_PREDICATE(".withPredicate(PredicateString predicateString)"),
   //WITH_VALUE_FOR_KEY(".withValueForKey(Object value,String key)"),

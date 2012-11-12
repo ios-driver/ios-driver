@@ -128,4 +128,9 @@ public class RemoteWebElement extends RemoteObject {
     return getProtocol().cast(response);
   }
 
+
+  public String getAttribute(String attributeName) throws Exception {
+    return call(".getAttribute('"+attributeName+"')");
+  }
+
 }

@@ -2,6 +2,8 @@ package org.uiautomation.ios.e2e.hybrid;
 
 import java.util.Set;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -74,8 +76,8 @@ public class ContextSwitchingTest {
       handles = nativeDriver.getWindowHandles();
       System.out.println("h:" + handles);
       Assert.assertEquals(handles.size(), 2);
-      
-      
+
+
       UIAElement back =
           nativeDriver.findElement(new AndCriteria(new TypeCriteria(UIAButton.class),
               new NameCriteria("Back")));
@@ -83,7 +85,31 @@ public class ContextSwitchingTest {
       handles = nativeDriver.getWindowHandles();
       System.out.println("h:" + handles);
       Assert.assertEquals(handles.size(), 1);
+
+    } finally {
+      nativeDriver.quit();
+    }
+  }
+
+
+  @Test
+  public void html() throws Exception {
+    IOSCapabilities safari = IOSCapabilities.iphone("UICatalog");
+    safari.setCapability(IOSCapabilities.TIME_HACK, false);
+
+    nativeDriver = new RemoteUIADriver(url, safari);
+    try {
+      UIAElement webCell =
+          nativeDriver.findElement(new AndCriteria(new TypeCriteria(UIATableCell.class),
+              new NameCriteria("Web", MatchingStrategy.starts)));
+      webCell.tap();
+      nativeDriver.switchTo().window("webView_1");
+
       
+      WebElement el = nativeDriver.findElement(By.cssSelector("a[href='http://store.apple.com/']"));
+      System.out.println(el.getAttribute("href"));
+      el.click();
+
     } finally {
       nativeDriver.quit();
     }
