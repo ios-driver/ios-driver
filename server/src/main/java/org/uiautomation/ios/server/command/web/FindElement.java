@@ -24,8 +24,7 @@ public class FindElement extends BaseCommandHandler {
     JSONObject element = new JSONObject();
     RemoteWebElement rmo;
     if ("css selector".equals(type)) {
-      rmo = getSession().getWebInspector().findElementByCSSSelector(null, value);
-      element.put("ELEMENT", rmo.getId());
+      rmo = getSession().getWebInspector().findElementByCSSSelector(null, value);   
     } else if ("id".equals(type)) {
       rmo = getSession().getWebInspector().findElementById(null, value);
     } else {
@@ -35,11 +34,9 @@ public class FindElement extends BaseCommandHandler {
     if (rmo == null){
       return new WebDriverLikeResponse(getRequest().getSession(), 7,"No element found for "+type+"="+value );
     }else{
+      element.put("ELEMENT", rmo.getId());
       return new WebDriverLikeResponse(getRequest().getSession(), 0, element);
     }
-   
-    
-    
   }
 
 }

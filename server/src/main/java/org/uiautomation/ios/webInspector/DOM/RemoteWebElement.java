@@ -5,10 +5,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.UIAModels.UIADriver;
 import org.uiautomation.ios.UIAModels.UIAElement;
+import org.uiautomation.ios.UIAModels.UIALink;
 import org.uiautomation.ios.UIAModels.UIARect;
 import org.uiautomation.ios.UIAModels.UIAScrollView;
+import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.LocationCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
+import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.mobileSafari.WebInspector;
 import org.uiautomation.ios.server.ServerSideSession;
 
@@ -38,8 +41,27 @@ public class RemoteWebElement extends RemoteObject {
 
   }
 
-
+  public NodeId getNodeId() throws JSONException, Exception {
+    JSONObject result = inspector.getProtocol().sendCommand(DOM.requestNode(this));
+    int id = result.getInt("nodeId");
+    NodeId nodeId = new NodeId(id);
+    return nodeId;
+  } 
+  
+  public void highlight(){
+    try {
+      inspector.highlightNode(getNodeId());
+    } catch (JSONException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+  
   private UIAElement getNativeElement() throws Exception {
+    highlight();
     if (nativeElement == null) {
       String origin = getSession().getWindowHandle();
       UIARect rect = null;
@@ -48,6 +70,7 @@ public class RemoteWebElement extends RemoteObject {
         UIAElement sv = nativeDriver.findElement(new TypeCriteria(UIAScrollView.class));
 
         // scrollview container. Doesn't start in 0,0
+        // x=0,y=96,h=928w=768
         rect = sv.getRect();
       } finally {
         getSession().setCurrentContext(origin);
@@ -84,7 +107,9 @@ public class RemoteWebElement extends RemoteObject {
       // find the corresponding native element
       try {
         getSession().setNativeContext();
-        nativeElement = nativeDriver.findElement(new LocationCriteria(x, y));
+        // Rect: x=6,y=102,h=14w=94
+        nativeElement = nativeDriver.findElement(new AndCriteria(new TypeCriteria(UIALink.class),new LocationCriteria(x, y)));
+        System.out.println(nativeElement+"---"+nativeElement.getRect());
       } finally {
         getSession().setCurrentContext(origin);
       }

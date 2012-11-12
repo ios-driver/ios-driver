@@ -26,37 +26,7 @@ public class WebInspector {
     return cache;
   }
 
-  public static void main(String[] args) throws Exception {
-    WebInspector inspector = new WebInspector(null, null, null);
-
-    Node document = inspector.getDocument();
-    inspector.cache.setContextToBase(document);
-
-    RemoteObject ro = inspector.resolveNode(document.getNodeId());
-
-    Iterable<RemoteObject> frames = inspector.getAllIFrames();
-
-
-    RemoteObject input = inspector.findElementById(null, "gh-ac");
-    System.out.println(input);
-    inspector.highlightNode(inspector.requestNode(input));
-    RemoteObject rect = inspector.findPosition(input);
-    int top = rect.call(".top");
-    System.out.println(top);
-    int left = rect.call(".left");
-    System.out.println(left);
-
-    /*
-     * for (RemoteObject o : frames) { NodeId id = inspector.requestNode(o); IFrame iframe =
-     * inspector.cache.getIFrame(id); inspector.cache.setContext(iframe); RemoteObject el =
-     * inspector.findElementById(null,"srchFrm"); System.out.println(el); RemoteObject found =
-     * inspector.findElementById(el,"srchFrm"); NodeId nodeId = inspector.requestNode(found);
-     * inspector.highlightNode(nodeId);
-     * 
-     * }
-     */
-  }
-
+ 
 
 
   public RemoteObject findPosition(RemoteObject el) throws Exception {
@@ -122,12 +92,7 @@ public class WebInspector {
   }
 
 
-  public NodeId requestNode(RemoteObject ro) throws JSONException, Exception {
-    JSONObject result = protocol.sendCommand(DOM.requestNode(ro));
-    int id = result.getInt("nodeId");
-    NodeId nodeId = new NodeId(id);
-    return nodeId;
-  }
+ 
 
   public RemoteObject resolveNode(NodeId id) throws JSONException, Exception {
     JSONObject result = protocol.sendCommand(DOM.resolveNode(id));
@@ -227,8 +192,12 @@ public class WebInspector {
 
     JSONObject response = protocol.sendCommand(cmd);
     RemoteObject ro = protocol.cast(response);
-    RemoteWebElement res = new RemoteWebElement(ro.getId(), session);
-    return res;
+    if (ro == null) {
+      return null;
+    } else {
+      RemoteWebElement res = new RemoteWebElement(ro.getId(), session);
+      return res;
+    }
   }
 
   public void stop() {

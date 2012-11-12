@@ -1,8 +1,10 @@
-package org.uiautomation.ios.e2e.hybrid;
+package org.uiautomation.ios.ide.pages.begin;
+
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Pages;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.environment.webserver.AppServer;
 import org.openqa.selenium.environment.webserver.WebbitAppServer;
 import org.testng.Assert;
@@ -24,8 +26,7 @@ public class ElementFindingTest {
   private static String safari =
       "/Applications/Xcode4.5.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.0.sdk/Applications/MobileSafari.app";
   private IOSServer server;
-  private static String[] args = {"-port", "4444", "-host", "localhost", "-aut", safari, "-aut",
-      SampleApps.getUICatalogFile()};
+  private static String[] args = {"-port", "4444", "-host", "localhost", "-aut", safari};
   private static IOSServerConfiguration config = IOSServerConfiguration.create(args);
   private RemoteMobileSafariDriver driver = null;
   private String url = "http://" + config.getHost() + ":" + config.getPort() + "/wd/hub";
@@ -96,8 +97,10 @@ public class ElementFindingTest {
   public void testDriverShouldBeAbleToFindElementsAfterLoadingMoreThanOnePageAtATime() {
     driver.get(pages.formPage);
     driver.get(pages.xhtmlTestPage);
-    driver.findElement(By.cssSelector("a[href='resultPage.html']")).click();
+    WebElement el = driver.findElement(By.cssSelector("div[class='content']>a[href='resultPage.html']"));
+    el.click();
 
+    System.out.println(driver.getTitle());
     waitFor(pageTitleToBe(driver, "We Arrive Here"));
 
     Assert.assertEquals(driver.getTitle(), "We Arrive Here");
@@ -625,3 +628,4 @@ public class ElementFindingTest {
   
 
 }
+
