@@ -118,7 +118,7 @@ public class ElementFindingTest {
 
     Assert.assertEquals(driver.getTitle(), "We Arrive Here");
   }
-  /*
+  
 
   @Test
   public void testshouldBeAbleToClickOnLinkIdentifiedById() {
@@ -127,10 +127,10 @@ public class ElementFindingTest {
 
     waitFor(pageTitleToBe(driver, "We Arrive Here"));
 
-    assertThat(driver.getTitle(), equalTo("We Arrive Here"));
+    Assert.assertEquals(driver.getTitle(), "We Arrive Here");
   }
 
-  @Test
+ /* @Test
   public void testShouldThrowAnExceptionWhenThereIsNoLinkToClickAndItIsFoundWithLinkText() {
     driver.get(pages.xhtmlTestPage);
 

@@ -93,7 +93,7 @@ UIAElement.prototype.isScrollable = function() {
 
 	while(parent.type() != "UIAElementNil" && parent.type() != "UIATarget") {
 		if(parent.type() == "UIATableView" || parent.type() == "UIAWebView") {
-			log(this.type() + "isScollable : " + false);
+			//log(this.type() + "isScollable : " + false);
 			return true;
 		}
 		parent = parent.parent();
@@ -192,7 +192,7 @@ UIAElement.prototype.isStale = function() {
 			}
 		}
 	}
-	log(this.type() + "default false");
+	//log(this.type() + "default false");
 	return false;
 }
 
@@ -380,18 +380,20 @@ var getKeys = function(obj) {
 // returns true is the point (x,y) is contained is the element.
 UIAElement.prototype.contains = function(x, y) {
 	var rect = this.rect();
-	if(x < rect.origin.x) {
+	
+	if(x < Math.floor(rect.origin.x)) {
 		return false;
 	}
-	if(y < rect.origin.y) {
+	if(y < Math.floor(rect.origin.y)) {
 		return false;
 	}
-	if(x > rect.origin.x + rect.size.width) {
+	if(x > (Math.floor(rect.origin.x) + Math.floor(rect.size.width))) {
 		return false;
 	}
-	if(y > rect.origin.y + rect.size.height) {
+	if(y > (Math.floor(rect.origin.y) + Math.floor(rect.size.height))) {
 		return false;
 	}
+	log("match "+x+","+y+" is in "+ JSON.stringify(this.rect())+","+this.name());
 	return true;
 }
 
