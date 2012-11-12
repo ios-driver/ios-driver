@@ -103,7 +103,7 @@ var UIAutomation = {
 
 	register : function() {
 		log("registering to " + this.REGISTER);
-		var result = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.REGISTER, "-d", "sessionId=" + this.SESSION], 600);
+		var result = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.REGISTER, "-d", "sessionId=" + this.SESSION], 90);
 		if(result.exitCode != 0) {
 			throw new UIAutomationException("error registering. exit code : " + result.exitCode);
 		}
@@ -134,7 +134,7 @@ var UIAutomation = {
 	},
 	postResponseAndGetNextCommand : function(jsonResponse) {
 		log("posting response : " + jsonResponse);
-		var nextCommand = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.COMMAND, "--data-binary", jsonResponse], 90);
+		var nextCommand = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.COMMAND, "--data-binary", jsonResponse], 600);
 		if(nextCommand.exitCode != 0) {
 			throw new UIAutomationException("error getting new command. exit code : " + result.exitCode);
 		}
@@ -143,6 +143,7 @@ var UIAutomation = {
 
 	},
 	getCapabilities : function() {
+
 		var result = new Object();
 		var target = UIATarget.localTarget();
 		var app = target.frontMostApp();
@@ -161,6 +162,7 @@ var UIAutomation = {
 		result.aut = "$AUT";
 		result.rect = target.rect();
 		return JSON.stringify(result);
+
 	},
 	setTimeout : function(type, timeoutInSeconds) {
 		this.TIMEOUT_IN_SEC[type] = timeoutInSeconds;
@@ -183,7 +185,7 @@ var UIAutomation = {
 				if(request === "stop") {
 					ok = false;
 					log("end of the command loop.");
-					
+
 					return;
 				} else {
 					try {

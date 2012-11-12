@@ -106,7 +106,7 @@ public class RemoteUIAElement extends RemoteObject implements UIAElement {
 
   @Override
   public void tap() {
-    execute(WebDriverLikeCommand.TAP);
+    execute(WebDriverLikeCommand.CLICK);
   }
 
   @Override

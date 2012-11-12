@@ -223,6 +223,8 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
 
   @Override
   public IOSCapabilities getCapabilities() {
+    
+    System.err.println("CALLING GET CAPABILITY");
     WebDriverLikeCommand command = WebDriverLikeCommand.GET_SESSION;
     Path p = new Path(command).withSession(session.getSessionId());
     WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, new JSONObject());

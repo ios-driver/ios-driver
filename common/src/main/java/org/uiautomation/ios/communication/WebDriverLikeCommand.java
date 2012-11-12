@@ -102,7 +102,7 @@ public enum WebDriverLikeCommand {
   WITH_PREDICATE("GET" , "/session/:sessionId/uiaElement/:reference/withPredicate",UIAElement.class),
   WITH_VALUE_FOR_KEY("GET" , "/session/:sessionId/uiaElement/:reference/withValueForKey",UIAElement.class),
   
-  TAP("POST" , "/session/:sessionId/uiaElement/:reference/tap",Void.class),
+  CLICK("POST" , "/session/:sessionId/element/:reference/click",Void.class),
   TOUCH_AND_HOLD("POST" , "/session/:sessionId/uiaElement/:reference/touchAndHold",Void.class),
   DOUBLE_TAP("POST" , "/session/:sessionId/uiaElement/:reference/doubleTap",Void.class),
   TWO_FINGER_TAP("POST" , "/session/:sessionId/uiaElement/:reference/twoFingerTap",Void.class),

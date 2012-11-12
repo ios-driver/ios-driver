@@ -4,43 +4,39 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.mobileSafari.DebugProtocol;
+import org.uiautomation.ios.server.ServerSideSession;
 
 public class RemoteObject {
 
-  private String id;
+  private final String id;
+  private final ServerSideSession session;
   private final DebugProtocol protocol;
-  private final JSONObject raw;
 
-  public RemoteObject(JSONObject o, DebugProtocol protocol) throws JSONException {
-    this.raw = o;
-    this.protocol = protocol;
-    this.id = o.optString("objectId");
+  public RemoteObject(String id, ServerSideSession session) throws JSONException {
+    this.session = session;
+    this.protocol = session.getWebInspector().getProtocol();
+    this.id = id;
   }
 
   public DebugProtocol getProtocol() {
     return protocol;
   }
 
-  public JSONObject getRaw() {
-    return raw;
-  }
+
 
   public String getId() {
     return id;
   }
 
-  public void setId(String id) {
-    this.id = id;
+  protected ServerSideSession getSession(){
+    return session;
   }
+  
 
 
   @Override
   public String toString() {
-    try {
-      return raw.toString(2);
-    } catch (JSONException e) {
-      return "Error parsing the raw remote object" + e.getMessage();
-    }
+    return id;
   }
 
   public <T> T call(String function) throws Exception {

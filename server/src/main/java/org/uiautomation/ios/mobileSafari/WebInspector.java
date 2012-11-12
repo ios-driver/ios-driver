@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.UIADriver;
 import org.uiautomation.ios.UIAModels.UIARect;
+import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.webInspector.DOM.DOM;
 import org.uiautomation.ios.webInspector.DOM.Node;
 import org.uiautomation.ios.webInspector.DOM.RemoteObject;
@@ -15,6 +16,7 @@ import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 
 public class WebInspector {
 
+  private final ServerSideSession session;
   private final DebugProtocol protocol;
   public final UIADriver nativeDriver;
   private final DOMContext cache;
@@ -26,7 +28,7 @@ public class WebInspector {
   }
 
   public static void main(String[] args) throws Exception {
-    WebInspector inspector = new WebInspector(null,null);
+    WebInspector inspector = new WebInspector(null, null, null);
 
     Node document = inspector.getDocument();
     inspector.cache.setContextToBase(document);
@@ -88,15 +90,17 @@ public class WebInspector {
     return protocol.cast(response);
   }
 
-  public WebInspector(UIADriver nativeDriver,String bundleId) throws Exception {
+  public WebInspector(UIADriver nativeDriver, String bundleId, ServerSideSession session)
+      throws Exception {
     this.nativeDriver = nativeDriver;
+    this.session = session;
     cache = new DOMContext();
     MessageHandler handler = new MyMessageHandler(cache, this);
-    protocol = new DebugProtocol(handler,bundleId);
+    protocol = new DebugProtocol(handler, bundleId, session);
 
   }
 
-  public DebugProtocol getProtocol(){
+  public DebugProtocol getProtocol() {
     return protocol;
   }
 
@@ -108,6 +112,7 @@ public class WebInspector {
       width = rect.getWidth();
     }
     return width;
+
   }
 
   public Node getDocument() throws JSONException, Exception {
@@ -128,7 +133,7 @@ public class WebInspector {
   public RemoteObject resolveNode(NodeId id) throws JSONException, Exception {
     JSONObject result = protocol.sendCommand(DOM.resolveNode(id));
     JSONObject remoteObject = result.getJSONObject("object");
-    RemoteObject res = new RemoteObject(remoteObject, protocol);
+    RemoteObject res = new RemoteObject(remoteObject.getString("objectId"), session);
     return res;
   }
 
@@ -180,7 +185,7 @@ public class WebInspector {
 
     JSONObject response = protocol.sendCommand(cmd);
     RemoteObject ro = protocol.cast(response);
-    RemoteWebElement res = new RemoteWebElement(ro.getRaw(), protocol, nativeDriver, this);
+    RemoteWebElement res = new RemoteWebElement(ro.getId(), session);
     return res;
   }
 
@@ -197,6 +202,10 @@ public class WebInspector {
 
     if (element == null) {
       Node document = cache.getCurrentDocument();
+      if (document == null) {
+        System.err.println("Error, needs to be fixed in the switch window command somewhere");
+        document = getDocument();
+      }
       element = resolveNode(document.getNodeId());
     }
 
@@ -211,7 +220,7 @@ public class WebInspector {
 
     JSONObject response = protocol.sendCommand(cmd);
     RemoteObject ro = protocol.cast(response);
-    RemoteWebElement res = new RemoteWebElement(ro.getRaw(), protocol, nativeDriver, this);
+    RemoteWebElement res = new RemoteWebElement(ro.getId(), session);
     return res;
   }
 

@@ -12,14 +12,17 @@ import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.webInspector.DOM.RemoteObject;
 import org.uiautomation.ios.webInspector.DOM.RemoteObjectArray;
 
 public class DebugProtocol {
+  
   private Socket socket;
   private ByteArrayOutputStream buf = new ByteArrayOutputStream();
   private final PlistManager plist = new PlistManager();
   private final MessageHandler handler;
+  private final ServerSideSession session;
 
   private final String LOCALHOST_IPV6 = "::1";
   private final int port = 27753;
@@ -39,10 +42,11 @@ public class DebugProtocol {
    * @throws IOException
    * @throws InterruptedException
    */
-  public DebugProtocol(MessageHandler handler,String bundleId) throws UnknownHostException, IOException,
+  public DebugProtocol(MessageHandler handler,String bundleId,ServerSideSession session) throws UnknownHostException, IOException,
       InterruptedException {
     this.handler = handler;
     this.bundleId =bundleId;
+    this.session = session;
 
     
    
@@ -215,10 +219,10 @@ public class DebugProtocol {
         return (T) value;
       } else if ("object".equals(type)) { // object
         if ("array".equals(result.optString("subtype"))) {
-          RemoteObject array = new RemoteObject(result, this);
+          RemoteObject array = new RemoteObject(result.getString("objectId"), session);
           return (T) new RemoteObjectArray(array);
         } else {
-          return (T) new RemoteObject(result, this);
+          return (T) new RemoteObject(result.getString("objectId"), session);
         }
 
       } else {

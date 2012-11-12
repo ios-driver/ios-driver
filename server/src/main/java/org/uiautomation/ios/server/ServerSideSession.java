@@ -107,7 +107,7 @@ public class ServerSideSession extends Session {
     if (inspector == null) {
       String bundleId = application.getMetadata("CFBundleIdentifier");
       try {
-        this.inspector = new WebInspector(nativeDriver, bundleId);
+        this.inspector = new WebInspector(nativeDriver, bundleId,this);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -115,13 +115,23 @@ public class ServerSideSession extends Session {
     return inspector;
   }
 
+  public void setNativeContext(){
+    setCurrentContext("nativeView");
+  }
+  
   public void setCurrentContext(String context) {
+    this.context =context;
+    
     if ("nativeView".equals(context)) {
       nativeMode = true;
     } else {
       nativeMode = false;
+      
     }
-
+  }
+  
+  public String getContext(){
+    return context;
   }
 
   public boolean isNative() {

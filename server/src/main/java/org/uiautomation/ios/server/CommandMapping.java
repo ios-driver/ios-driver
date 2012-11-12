@@ -39,6 +39,7 @@ import org.uiautomation.ios.server.command.impl.SetCurrentContext;
 import org.uiautomation.ios.server.command.impl.SetTimeoutCommandHandler;
 import org.uiautomation.ios.server.command.impl.StopSession;
 import org.uiautomation.ios.server.command.impl.TakeScreenshot;
+import org.uiautomation.ios.server.command.web.Click;
 import org.uiautomation.ios.server.command.web.FindElement;
 
 public enum CommandMapping {
@@ -110,7 +111,7 @@ public enum CommandMapping {
   //WITH_VALUE_FOR_KEY(".withValueForKey(Object value,String key)"),
   
   
-  TAP(".tap2()"),
+  CLICK(".tap2()",Click.class),
   TOUCH_AND_HOLD(".touchAndHold(:duration)"),
   DOUBLE_TAP(".doubleTap()"),
   TWO_FINGER_TAP(".twoFingerTap()"),
@@ -156,7 +157,7 @@ public enum CommandMapping {
     this.command = WebDriverLikeCommand.valueOf(this.name());
     this.nativeHandlerClass = DefaultUIAScriptHandler.class;
     this.nativeJSMethod = jsMethod;
-    this.webHandlerClass = null;
+    this.webHandlerClass = webHandlerClass;
   }
   
   
@@ -245,7 +246,7 @@ public enum CommandMapping {
 
     Constructor<?> c = clazz.getConstructor(argsClass);
     Handler handler = (Handler) c.newInstance(args);
-    System.out.println("created " + handler.getClass());
+    //System.out.println("created " + handler.getClass());
     return handler;
 
   }

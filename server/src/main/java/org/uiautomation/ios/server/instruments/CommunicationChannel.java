@@ -56,6 +56,9 @@ public class CommunicationChannel {
   }
 
   public void sendNextCommand(UIAScriptRequest r) {
+    if (responseQueue.size()!=0){
+      System.err.println("adding command but reponse not read.");
+    }
     requestQueue.add(r);
   }
 
