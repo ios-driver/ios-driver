@@ -30,7 +30,7 @@ server/uiamasterscript.js
 server/ss.png
 instruments*
 server/src/test/resources/fr.json
-java
+/java/*
 common/src/web
 third_party
 javascript
