@@ -84,6 +84,7 @@ public class DOMContext {
     }
     synchronized (newPageLoaded) {
       newPageLoaded = false;
+      currentDocument = null;
     }
 
   }

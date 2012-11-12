@@ -27,8 +27,10 @@ public class GetCommand extends BaseCommandHandler {
   public WebDriverLikeResponse handle() throws Exception {
 
     String url = getRequest().getPayload().getString("url");
-    //typeURLNative(url);
+    // typeURLNative(url);
     fakeTypeURL(url);
+    getSession().getWebInspector().waitForPageToLoad();
+    
     return new WebDriverLikeResponse(getSession().getSessionId(), 0, new JSONObject());
   }
 
@@ -53,21 +55,22 @@ public class GetCommand extends BaseCommandHandler {
           getSession().getNativeDriver().getLocalTarget().getFrontMostApp().getKeyboard();
       keyboard.typeString(url);
       keyboard.findElement(new NameCriteria("Go")).tap();
-      getSession().getWebInspector().waitForPageToLoad();
 
     } finally {
       getSession().setCurrentContext(base);
     }
   }
-  
-  private void fakeTypeURL(String url){
+
+  private void fakeTypeURL(String url) {
     try {
       getSession().getWebInspector().get(url);
+
     } catch (Exception e) {
-      throw new IOSAutomationException("cannot navigate to URL "+url+", error "+e.getMessage());
+      throw new IOSAutomationException("cannot navigate to URL " + url + ", error "
+          + e.getMessage());
     }
   }
-  
-  
+
+
 
 }

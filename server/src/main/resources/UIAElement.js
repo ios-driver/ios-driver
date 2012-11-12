@@ -440,7 +440,9 @@ UIAElement.prototype.matches = function(criteria) {
 
 		var x = criteria['x'];
 		var y = criteria['y'];
-		return this.contains(x, y);
+		if (this.contains(x, y)){
+			return !this.isStale();
+		}
 	} else if(keys.length == 4) {// property match
 		var method = criteria['method'];
 		var expected = criteria['expected'];

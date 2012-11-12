@@ -108,8 +108,9 @@ public class RemoteWebElement extends RemoteObject {
       try {
         getSession().setNativeContext();
         // Rect: x=6,y=102,h=14w=94
-        nativeElement = nativeDriver.findElement(new AndCriteria(new TypeCriteria(UIALink.class),new LocationCriteria(x, y)));
-        System.out.println(nativeElement+"---"+nativeElement.getRect());
+        //nativeElement = nativeDriver.findElement(new AndCriteria(new TypeCriteria(UIALink.class),new LocationCriteria(x, y)));
+        nativeElement = nativeDriver.findElement(new LocationCriteria(x, y));
+        //System.out.println(nativeElement+"---"+nativeElement.getRect()+"---"+nativeElement.isVisible() +" --- "+ nativeElement.isValid());
       } finally {
         getSession().setCurrentContext(origin);
       }

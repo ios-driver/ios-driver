@@ -83,7 +83,7 @@ public class ElementFindingTest {
     }
   }
 
-  @Test(enabled=true)
+  @Test(enabled=false)
   public void testShouldBeAbleToClickOnLinkIdentifiedByText() {
     driver.get(pages.xhtmlTestPage);
     driver.findElement(By.linkText("click me")).click();
@@ -96,6 +96,19 @@ public class ElementFindingTest {
   @Test
   public void testDriverShouldBeAbleToFindElementsAfterLoadingMoreThanOnePageAtATime() {
     driver.get(pages.formPage);
+    driver.get(pages.xhtmlTestPage);
+    WebElement el = driver.findElement(By.cssSelector("div[class='content']>a[href='resultPage.html']"));
+    el.click();
+
+    System.out.println(driver.getTitle());
+    waitFor(pageTitleToBe(driver, "We Arrive Here"));
+
+    Assert.assertEquals(driver.getTitle(), "We Arrive Here");
+  }
+  
+  
+  @Test
+  public void testDriverShouldBeAbleToFindElementsWithImagesOnTop() {
     driver.get(pages.xhtmlTestPage);
     WebElement el = driver.findElement(By.cssSelector("div[class='content']>a[href='resultPage.html']"));
     el.click();
