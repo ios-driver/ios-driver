@@ -11,16 +11,12 @@ public class Click extends BaseCommandHandler {
 
   public Click(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
-    System.out.println("web click element");
   }
 
   @Override
   public WebDriverLikeResponse handle() throws Exception {
-
-   
     String id = getRequest().getVariableValue(":reference");
-    RemoteWebElement element = FindElement.el;
-    //RemoteWebElement element = new RemoteWebElement(id, getSession());
+    RemoteWebElement element = new RemoteWebElement(id, getSession());
     element.click();
     return new WebDriverLikeResponse(getSession().getSessionId(), 0, new JSONObject());
   }
