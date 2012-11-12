@@ -46,9 +46,9 @@ public class RemoteWebElement extends RemoteObject {
     int id = result.getInt("nodeId");
     NodeId nodeId = new NodeId(id);
     return nodeId;
-  } 
-  
-  public void highlight(){
+  }
+
+  public void highlight() {
     try {
       inspector.highlightNode(getNodeId());
     } catch (JSONException e) {
@@ -59,7 +59,7 @@ public class RemoteWebElement extends RemoteObject {
       e.printStackTrace();
     }
   }
-  
+
   private UIAElement getNativeElement() throws Exception {
     highlight();
     if (nativeElement == null) {
@@ -103,14 +103,16 @@ public class RemoteWebElement extends RemoteObject {
 
       int x = rect.getX() + left;
       int y = rect.getY() + top;
-      System.out.println("looking for the element at : "+x+","+y);
+      System.out.println("looking for the element at : " + x + "," + y);
       // find the corresponding native element
       try {
         getSession().setNativeContext();
         // Rect: x=6,y=102,h=14w=94
-        //nativeElement = nativeDriver.findElement(new AndCriteria(new TypeCriteria(UIALink.class),new LocationCriteria(x, y)));
+        // nativeElement = nativeDriver.findElement(new AndCriteria(new
+        // TypeCriteria(UIALink.class),new LocationCriteria(x, y)));
         nativeElement = nativeDriver.findElement(new LocationCriteria(x, y));
-        System.out.println(nativeElement+"---"+nativeElement.getRect()+"---"+nativeElement.isVisible() +" --- "+ nativeElement.isValid());
+        System.out.println(nativeElement + "---" + nativeElement.getRect() + "---"
+            + nativeElement.isVisible() + " --- " + nativeElement.isValid());
       } finally {
         getSession().setCurrentContext(origin);
       }
@@ -156,7 +158,13 @@ public class RemoteWebElement extends RemoteObject {
 
 
   public String getAttribute(String attributeName) throws Exception {
-    return call(".getAttribute('"+attributeName+"')");
+    return call(".getAttribute('" + attributeName + "')");
+  }
+
+
+  public boolean isSelected() throws Exception {
+    String checked = getAttribute("checked");
+    return "checked".equals(checked);
   }
 
 }

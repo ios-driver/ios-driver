@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.command.BaseCommandHandler;
 import org.uiautomation.ios.server.command.Handler;
 import org.uiautomation.ios.server.command.NotImplementedHandler;
 import org.uiautomation.ios.server.command.impl.AttributeCommand;
@@ -43,6 +44,7 @@ import org.uiautomation.ios.server.command.impl.StopSession;
 import org.uiautomation.ios.server.command.impl.TakeScreenshot;
 import org.uiautomation.ios.server.command.web.Click;
 import org.uiautomation.ios.server.command.web.FindElement;
+import org.uiautomation.ios.server.command.web.IsSelectedCommandHandler;
 import org.uiautomation.ios.server.command.web.WebAttributeCommandHandler;
 import org.uiautomation.ios.server.command.web.WebGetTitle;
 
@@ -75,7 +77,7 @@ public enum CommandMapping {
   SCREENSHOT(TakeScreenshot.class),
   
   FONT_MOST_APP(".frontMostApp()"),
-  
+  SELECTED((String)null,IsSelectedCommandHandler.class),
  
   // UIAApplication
   MAIN_WINDOW(".mainWindow()"),

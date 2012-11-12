@@ -130,13 +130,13 @@ public class ElementFindingTest {
     Assert.assertEquals(driver.getTitle(), "We Arrive Here");
   }
 
- /* @Test
+  @Test(enabled=false)
   public void testShouldThrowAnExceptionWhenThereIsNoLinkToClickAndItIsFoundWithLinkText() {
     driver.get(pages.xhtmlTestPage);
 
     try {
       driver.findElement(By.linkText("Not here either"));
-      fail("Should not have succeeded");
+      Assert.fail("Should not have succeeded");
     } catch (NoSuchElementException e) {
       // this is expected
     }
@@ -148,22 +148,22 @@ public class ElementFindingTest {
 
     WebElement element = driver.findElement(By.id("checky"));
 
-    assertThat(element.isSelected(), is(false));
+    Assert.assertFalse(element.isSelected());
   }
 
-  @Test
+  /*@Test
   public void testShouldNotBeAbleTofindElementsBasedOnIdIfTheElementIsNotThere() {
     driver.get(pages.formPage);
 
     try {
       driver.findElement(By.id("notThere"));
-      fail("Should not have succeeded");
+      Assert.fail("Should not have succeeded");
     } catch (NoSuchElementException e) {
       // this is expected
     }
   }
 
-  @Test
+  /*@Test
   public void testShouldBeAbleToFindChildrenOfANode() {
     driver.get(pages.selectableItemsPage);
     List<WebElement> elements = driver.findElements(By.xpath("/html/head"));

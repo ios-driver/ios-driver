@@ -54,6 +54,7 @@ public enum WebDriverLikeCommand {
   TARGET_RECT("GET","/session/:sessionId/uiaTarget/:reference/rect",UIARect.class),
   TARGET_TAP("GET","/session/:sessionId/tap/:reference",Void.class),
   SET_ORIENTATION("POST","/session/:sessionId/uiaTarget/:reference/oriantation",Void.class),
+  SELECTED("GET","/session/:sessionId/element/:reference/selected",Boolean.class),
   
   SCREENSHOT("GET","/session/:sessionId/screenshot",Void.class),
   
