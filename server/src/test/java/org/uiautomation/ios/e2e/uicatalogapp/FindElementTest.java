@@ -9,6 +9,7 @@ import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.exceptions.NoSuchElementException;
 
 public class FindElementTest extends UICatalogTestsBase {
 
@@ -87,6 +88,26 @@ public class FindElementTest extends UICatalogTestsBase {
 
       UIAElementArray<UIAElement> array = win.findElements(cell);
       System.out.println(array.size());
+    } finally {
+      if (driver != null) {
+        driver.quit();
+      }
+    }
+  }
+
+  @Test(expectedExceptions=NoSuchElementException.class)
+  public void noSuchElementElement() throws InterruptedException {
+    RemoteUIADriver driver = null;
+    try {
+      driver = getDriver();
+
+
+      Criteria cell = new NameCriteria("I do not exist.");
+
+
+      driver.findElement(cell);
+    
+
     } finally {
       if (driver != null) {
         driver.quit();

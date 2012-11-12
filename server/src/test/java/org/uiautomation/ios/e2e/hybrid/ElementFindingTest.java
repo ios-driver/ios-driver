@@ -1,6 +1,7 @@
 package org.uiautomation.ios.e2e.hybrid;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Pages;
 import org.openqa.selenium.environment.webserver.AppServer;
 import org.openqa.selenium.environment.webserver.WebbitAppServer;
@@ -11,10 +12,11 @@ import org.testng.annotations.Test;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteMobileSafariDriver;
-import org.uiautomation.ios.exceptions.NoSuchElementException;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
-import static org.testng.Assert.*;
+import static org.openqa.selenium.TestWaiter.waitFor;
+import static org.openqa.selenium.WaitingConditions.pageTitleToBe;
+
 
 public class ElementFindingTest {
   
@@ -80,17 +82,17 @@ public class ElementFindingTest {
     }
   }
 
-  /*@Test
+  @Test
   public void testShouldBeAbleToClickOnLinkIdentifiedByText() {
     driver.get(pages.xhtmlTestPage);
     driver.findElement(By.linkText("click me")).click();
 
     waitFor(pageTitleToBe(driver, "We Arrive Here"));
 
-    assertThat(driver.getTitle(), equalTo("We Arrive Here"));
+    Assert.assertEquals(driver.getTitle(), "We Arrive Here");
   }
 
-  @Test
+  /*@Test
   public void testDriverShouldBeAbleToFindElementsAfterLoadingMoreThanOnePageAtATime() {
     driver.get(pages.formPage);
     driver.get(pages.xhtmlTestPage);

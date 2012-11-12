@@ -22,15 +22,24 @@ public class FindElement extends BaseCommandHandler {
     String value = payload.getString("value");
 
     JSONObject element = new JSONObject();
-
+    RemoteWebElement rmo;
     if ("css selector".equals(type)) {
-      RemoteWebElement rmo = getSession().getWebInspector().findElementByCSSSelector(null, value);
+      rmo = getSession().getWebInspector().findElementByCSSSelector(null, value);
       element.put("ELEMENT", rmo.getId());
+    } else if ("id".equals(type)) {
+      rmo = getSession().getWebInspector().findElementById(null, value);
     } else {
-      throw new IOSAutomationException("selector not implemented");
+      throw new IOSAutomationException("selector not implemented : " + type);
     }
-
-    return new WebDriverLikeResponse(getRequest().getSession(), 0, element);
+    
+    if (rmo == null){
+      return new WebDriverLikeResponse(getRequest().getSession(), 7,"No element found for "+type+"="+value );
+    }else{
+      return new WebDriverLikeResponse(getRequest().getSession(), 0, element);
+    }
+   
+    
+    
   }
 
 }

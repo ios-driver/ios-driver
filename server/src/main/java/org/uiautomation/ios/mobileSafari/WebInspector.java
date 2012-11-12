@@ -1,10 +1,9 @@
 package org.uiautomation.ios.mobileSafari;
 
-import java.io.IOException;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.NoSuchElementException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.UIADriver;
 import org.uiautomation.ios.UIAModels.UIARect;
@@ -171,6 +170,10 @@ public class WebInspector {
 
     if (element == null) {
       Node document = cache.getCurrentDocument();
+      if (document == null) {
+        System.err.println("document should be initialized");
+        document = getDocument();
+      }
       element = resolveNode(document.getNodeId());
     }
 
@@ -182,11 +185,15 @@ public class WebInspector {
             .put("functionDeclaration",
                 "(function(arg) { var el = this.getElementById(arg);return el;})")
             .put("arguments", args).put("returnByValue", false));
-
     JSONObject response = protocol.sendCommand(cmd);
     RemoteObject ro = protocol.cast(response);
-    RemoteWebElement res = new RemoteWebElement(ro.getId(), session);
-    return res;
+    if (ro == null) {
+      return null;
+    } else {
+      RemoteWebElement res = new RemoteWebElement(ro.getId(), session);
+      return res;
+    }
+
   }
 
 

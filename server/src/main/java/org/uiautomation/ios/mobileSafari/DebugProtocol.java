@@ -218,7 +218,9 @@ public class DebugProtocol {
         Object value = result.get("value");
         return (T) value;
       } else if ("object".equals(type)) { // object
-        if ("array".equals(result.optString("subtype"))) {
+        if (result.isNull("value")){
+          return null;
+        }else if ("array".equals(result.optString("subtype"))) {
           RemoteObject array = new RemoteObject(result.getString("objectId"), session);
           return (T) new RemoteObjectArray(array);
         } else {

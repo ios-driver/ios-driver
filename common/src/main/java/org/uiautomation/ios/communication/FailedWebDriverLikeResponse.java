@@ -20,6 +20,8 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.exceptions.ExceptionStatus;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 
@@ -31,6 +33,9 @@ public class FailedWebDriverLikeResponse extends WebDriverLikeResponse {
 
   public FailedWebDriverLikeResponse(String sessionId, Exception e) {
     super(sessionId, 13, null);
+    
+    
+   
     try {
       setValue(serializeException(e));
     } catch (JSONException e2) {
