@@ -3,7 +3,12 @@ package org.uiautomation.ios.e2e.hybrid;
 import java.util.Set;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Pages;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.environment.GlobalTestEnvironment;
+import org.openqa.selenium.environment.InProcessTestEnvironment;
+import org.openqa.selenium.environment.webserver.AppServer;
+import org.openqa.selenium.environment.webserver.WebbitAppServer;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -12,11 +17,14 @@ import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.UIAButton;
 import org.uiautomation.ios.UIAModels.UIAElement;
+import org.uiautomation.ios.UIAModels.UIAKeyboard;
 import org.uiautomation.ios.UIAModels.UIATableCell;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
+import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
+import org.uiautomation.ios.UIAModels.predicate.ValueCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSServer;
@@ -46,6 +54,47 @@ public class ContextSwitchingTest {
     safari.setCapability(IOSCapabilities.TIME_HACK, false);
 
     nativeDriver = new RemoteUIADriver(url, safari);
+    Set<String> handles = nativeDriver.getWindowHandles();
+
+    Assert.assertEquals(handles.size(), 2);
+
+
+    nativeDriver.quit();
+  }
+  
+  public static void main(String[] args) {
+    AppServer appServer =  new WebbitAppServer();
+    appServer.start();
+    Pages p = new Pages(appServer);
+    System.out.println(p.alertsPage);
+  }
+  
+  @Test
+  public void seleniumTests() throws Exception {
+
+
+    IOSCapabilities safari = IOSCapabilities.ipad("Safari");
+    safari.setCapability(IOSCapabilities.TIME_HACK, false);
+
+    nativeDriver = new RemoteUIADriver(url, safari);
+    
+    Criteria urlAddressBar =
+        new AndCriteria(new TypeCriteria(UIAElement.class), new ValueCriteria(
+            "Go to this address"));
+
+    nativeDriver.findElement(urlAddressBar).tap();
+
+
+    UIAKeyboard keyboard = nativeDriver.getLocalTarget().getFrontMostApp().getKeyboard();
+
+    AppServer appServer =  new WebbitAppServer();
+    appServer.start();
+    Pages p = new Pages(appServer);
+    
+    keyboard.typeString(p.alertsPage);
+    // keyboard.typeString("http://pages.ebay.co.uk/sitemap.html");
+    // screenshot();
+    keyboard.findElement(new NameCriteria("Go")).tap();
     Set<String> handles = nativeDriver.getWindowHandles();
 
     Assert.assertEquals(handles.size(), 2);
