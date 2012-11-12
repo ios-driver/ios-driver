@@ -1,5 +1,6 @@
 package org.uiautomation.ios.e2e.hybrid;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.Pages;
 import org.openqa.selenium.environment.webserver.AppServer;
 import org.openqa.selenium.environment.webserver.WebbitAppServer;
@@ -10,8 +11,10 @@ import org.testng.annotations.Test;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteMobileSafariDriver;
+import org.uiautomation.ios.exceptions.NoSuchElementException;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
+import static org.testng.Assert.*;
 
 public class ElementFindingTest {
   
@@ -65,19 +68,19 @@ public class ElementFindingTest {
   }
   
 
-  /*@Test
+  @Test
   public void testShouldNotBeAbleToLocateASingleElementThatDoesNotExist() {
     driver.get(pages.formPage);
 
     try {
       driver.findElement(By.id("nonExistantButton"));
-      fail("Should not have succeeded");
+      Assert.fail("Should not have succeeded");
     } catch (NoSuchElementException e) {
       // this is expected
     }
   }
 
-  @Test
+  /*@Test
   public void testShouldBeAbleToClickOnLinkIdentifiedByText() {
     driver.get(pages.xhtmlTestPage);
     driver.findElement(By.linkText("click me")).click();

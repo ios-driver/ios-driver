@@ -10,6 +10,7 @@ import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.UIAModels.predicate.ValueCriteria;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
+import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.BaseCommandHandler;
 
@@ -26,7 +27,8 @@ public class GetCommand extends BaseCommandHandler {
   public WebDriverLikeResponse handle() throws Exception {
 
     String url = getRequest().getPayload().getString("url");
-    typeURLNative(url);
+    //typeURLNative(url);
+    fakeTypeURL(url);
     return new WebDriverLikeResponse(getSession().getSessionId(), 0, new JSONObject());
   }
 
@@ -40,7 +42,7 @@ public class GetCommand extends BaseCommandHandler {
     return addressBar;
   }
 
-  public void typeURLNative(String url) {
+  private void typeURLNative(String url) {
 
     String base = getSession().getWindowHandle();
     try {
@@ -56,8 +58,16 @@ public class GetCommand extends BaseCommandHandler {
     } finally {
       getSession().setCurrentContext(base);
     }
-
-
   }
+  
+  private void fakeTypeURL(String url){
+    try {
+      getSession().getWebInspector().get(url);
+    } catch (Exception e) {
+      throw new IOSAutomationException("cannot navigate to URL "+url+", error "+e.getMessage());
+    }
+  }
+  
+  
 
 }

@@ -242,6 +242,13 @@ public class WebInspector {
 
   }
 
+  public void get(String url) throws Exception {
+    JSONObject cmd = new JSONObject();
+    cmd.put("method", "Page.navigate");
+    cmd.put("params", new JSONObject().put("url", url));
+    JSONObject response = protocol.sendCommand(cmd);
+  }
+
 
 
 }
