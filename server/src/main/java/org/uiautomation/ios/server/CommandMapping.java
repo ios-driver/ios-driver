@@ -28,6 +28,8 @@ import org.uiautomation.ios.server.command.impl.DefaultUIAScriptHandler;
 import org.uiautomation.ios.server.command.impl.FindElementRoot;
 import org.uiautomation.ios.server.command.impl.FindElementsRoot;
 import org.uiautomation.ios.server.command.impl.GetCapabilitiesCommandHandler;
+import org.uiautomation.ios.server.command.impl.GetCommand;
+import org.uiautomation.ios.server.command.impl.GetCurrentContext;
 import org.uiautomation.ios.server.command.impl.GetSessions;
 import org.uiautomation.ios.server.command.impl.GetTimeoutCommandHandler;
 import org.uiautomation.ios.server.command.impl.GetWindowHandlesCommandHandler;
@@ -42,6 +44,7 @@ import org.uiautomation.ios.server.command.impl.TakeScreenshot;
 import org.uiautomation.ios.server.command.web.Click;
 import org.uiautomation.ios.server.command.web.FindElement;
 import org.uiautomation.ios.server.command.web.WebAttributeCommandHandler;
+import org.uiautomation.ios.server.command.web.WebGetTitle;
 
 public enum CommandMapping {
 
@@ -54,6 +57,9 @@ public enum CommandMapping {
   
   WINDOW_HANDLES(GetWindowHandlesCommandHandler.class),
   WINDOW(SetCurrentContext.class),
+  GET_WINDOW_HANDLE(GetCurrentContext.class),
+  TITLE(null,null,WebGetTitle.class),
+  URL(GetCommand.class,GetCommand.class),
 
   
   // UIATarget

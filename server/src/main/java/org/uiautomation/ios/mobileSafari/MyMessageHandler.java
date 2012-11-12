@@ -66,9 +66,9 @@ public class MyMessageHandler implements MessageHandler {
 
             SetChildNodes notification = new SetChildNodes(o);
             cache.addIframe(notification.getIFrames());
-          } else if ("DOM.documentUpdated".equals(o.optString("method"))) {
+          } // else if ("DOM.documentUpdated".equals(o.optString("method"))) {
+          else if ("Profiler.resetProfiles".equals(o.optString("method"))) {
             try {
-
               org.uiautomation.ios.webInspector.DOM.Node d = inspector.getDocument();
               cache.onLoad(d);
               System.out.println("new page fully loaded event.");
@@ -92,7 +92,7 @@ public class MyMessageHandler implements MessageHandler {
 
   @Override
   public JSONObject getResponse(int id) throws TimeoutException {
-    long timeout = 50* 1000;
+    long timeout = 50 * 1000;
     // TODO handle stop() in there
     long end = System.currentTimeMillis() + timeout;
     while (true) {

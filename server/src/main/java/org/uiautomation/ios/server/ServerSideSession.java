@@ -130,7 +130,7 @@ public class ServerSideSession extends Session {
     }
   }
   
-  public String getContext(){
+  public String getWindowHandle(){
     return context;
   }
 

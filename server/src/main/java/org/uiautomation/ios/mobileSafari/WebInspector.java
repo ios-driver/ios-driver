@@ -228,6 +228,20 @@ public class WebInspector {
     protocol.stop();
   }
 
+  public String getPageTitle() throws Exception {
+    JSONObject cmd = new JSONObject();
+    cmd.put("method", "Runtime.evaluate");
+    cmd.put("params",
+        new JSONObject().put("expression", "document.title;").put("returnByValue", true));
+    JSONObject response = protocol.sendCommand(cmd);
+    return protocol.cast(response);
+  }
+
+  public void waitForPageToLoad() {
+    cache.waitForPageToLoad();
+
+  }
+
 
 
 }

@@ -77,6 +77,10 @@ public class IOSCapabilities extends DesiredCapabilities {
   }
 
 
+  public static IOSCapabilities mobileSafariIpad() {
+    return IOSCapabilities.ipad("Safari");
+  }
+
 
   public static IOSCapabilities iphone(String bundleName) {
     IOSCapabilities res = new IOSCapabilities();

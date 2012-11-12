@@ -28,7 +28,7 @@ public class RemoteWebElement extends RemoteObject {
 
   public void click() throws Exception {
     UIAElement el = getNativeElement();
-    String origin = getSession().getContext();
+    String origin = getSession().getWindowHandle();
     try {
       getSession().setNativeContext();
       el.tap();
@@ -41,7 +41,7 @@ public class RemoteWebElement extends RemoteObject {
 
   private UIAElement getNativeElement() throws Exception {
     if (nativeElement == null) {
-      String origin = getSession().getContext();
+      String origin = getSession().getWindowHandle();
       UIARect rect = null;
       try {
         getSession().setNativeContext();
