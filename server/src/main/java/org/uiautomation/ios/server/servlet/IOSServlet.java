@@ -81,8 +81,8 @@ public class IOSServlet extends DriverBasedServlet {
       System.out.println(e.getMessage());
     }
     
-   
-    System.out.println("native mode ? : "+nativeMode+" -- "+req.getMethod()+" - "+req.getPath());
+    String mode = nativeMode ? "native" : "web";
+    System.out.println(mode+"\t"+req.getMethod()+"\t"+req.getPath());
     
     resp = getResponse(req);
     

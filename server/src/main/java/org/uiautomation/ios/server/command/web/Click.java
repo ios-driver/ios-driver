@@ -17,9 +17,10 @@ public class Click extends BaseCommandHandler {
   @Override
   public WebDriverLikeResponse handle() throws Exception {
 
-    System.out.println("width = "+getSession().getWebInspector().getNativePageWidth());
+   
     String id = getRequest().getVariableValue(":reference");
-    RemoteWebElement element = new RemoteWebElement(id, getSession());
+    RemoteWebElement element = FindElement.el;
+    //RemoteWebElement element = new RemoteWebElement(id, getSession());
     element.click();
     return new WebDriverLikeResponse(getSession().getSessionId(), 0, new JSONObject());
   }

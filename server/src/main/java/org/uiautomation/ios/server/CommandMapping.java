@@ -246,7 +246,6 @@ public enum CommandMapping {
 
     Constructor<?> c = clazz.getConstructor(argsClass);
     Handler handler = (Handler) c.newInstance(args);
-    //System.out.println("created " + handler.getClass());
     return handler;
 
   }
