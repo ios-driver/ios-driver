@@ -69,9 +69,7 @@ public class MyMessageHandler implements MessageHandler {
           } // else if ("DOM.documentUpdated".equals(o.optString("method"))) {
           else if ("Profiler.resetProfiles".equals(o.optString("method"))) {
             try {
-              org.uiautomation.ios.webInspector.DOM.Node d = inspector.getDocument();
-              cache.onLoad(d);
-              System.out.println("new page fully loaded event.");
+              cache.onLoad();
             } catch (Exception e) {
               e.printStackTrace();
             }
@@ -123,7 +121,6 @@ public class MyMessageHandler implements MessageHandler {
     if (t != null) {
       t.interrupt();
     }
-
 
   }
 }
