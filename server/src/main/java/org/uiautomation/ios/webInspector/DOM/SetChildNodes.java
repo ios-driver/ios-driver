@@ -5,12 +5,15 @@ import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.uiautomation.ios.mobileSafari.WebInspector;
 
 public class SetChildNodes {
 
   private List<Node> nodes;
+  private final WebInspector inspector;
 
-  public SetChildNodes(JSONObject raw) {
+  public SetChildNodes(JSONObject raw, WebInspector inspector) {
+    this.inspector = inspector;
     try {
       nodes = parse(raw);
     } catch (Exception e) {
@@ -32,13 +35,12 @@ public class SetChildNodes {
     return res;
   }
 
-
   private List<Node> parse(JSONObject raw) throws Exception {
     List<Node> res = new ArrayList<Node>();
     JSONArray a = raw.getJSONObject("params").getJSONArray("nodes");
 
     for (int i = 0; i < a.length(); i++) {
-      Node nn = Node.create(a.getJSONObject(i));
+      Node nn = Node.create(a.getJSONObject(i), inspector);
       res.add(nn);
       if (nn.getContentDocument() != null) {
         res.add(nn.getContentDocument());
@@ -46,7 +48,6 @@ public class SetChildNodes {
     }
     return res;
   }
-
 
   @Override
   public String toString() {

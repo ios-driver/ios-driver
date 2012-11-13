@@ -2,6 +2,7 @@ package org.uiautomation.ios.webInspector.DOM;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.uiautomation.ios.mobileSafari.WebInspector;
 
 public class IFrame extends Node {
 
@@ -9,11 +10,11 @@ public class IFrame extends Node {
   private String documentURL;
 
 
-  IFrame(JSONObject o) throws JSONException {
-    super(o);
+  IFrame(JSONObject o,WebInspector inspector) throws JSONException {
+    super(o,inspector);
     JSONObject document = o.optJSONObject("contentDocument");
     if (document != null) {
-      contentDocument = new Node(document);
+      contentDocument = new Node(document,inspector);
     }
   }
 

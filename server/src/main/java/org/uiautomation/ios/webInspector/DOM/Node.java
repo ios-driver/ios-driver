@@ -7,21 +7,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.mobileSafari.NodeId;
+import org.uiautomation.ios.mobileSafari.WebInspector;
 
 public class Node {
-
-  
-  public static Node create(JSONObject o) throws Exception{
-   if ("IFRAME".equals(o.optString("nodeName"))){
-     return new IFrame(o);
-   }else {
-     return new Node(o);
-   }
-  }
-  
-  public String getDocumentURL() {
-    return documentURL;
-  }
 
   private final JSONObject raw;
   private NodeId nodeId;
@@ -31,67 +19,66 @@ public class Node {
   private Node contentDocument;
   private String documentURL;
   private int nodeType;
+  private final WebInspector inspector;
 
+  public static Node create(JSONObject o, WebInspector inspector) throws Exception {
+    if ("IFRAME".equals(o.optString("nodeName"))) {
+      return new IFrame(o, inspector);
+    } else {
+      return new Node(o, inspector);
+    }
+  }
 
-   Node(JSONObject o) throws JSONException {
+  public String getDocumentURL() {
+    return documentURL;
+  }
+
+  Node(JSONObject o, WebInspector inspector) throws JSONException {
     this.raw = o;
-
+    this.inspector = inspector;
     this.nodeId = new NodeId(o.getInt("nodeId"));
     this.nodeName = o.optString("nodeName");
     this.childCount = o.optInt("childCount", 0);
 
     this.documentURL = o.optString("documentURL");
     this.nodeType = o.optInt("nodeType", 0);
-    
-   
 
     JSONArray children = o.optJSONArray("children");
     if (children != null) {
       for (int i = 0; i < children.length(); i++) {
         JSONObject child = children.getJSONObject(i);
-        this.children.add(new Node(child));
+        this.children.add(new Node(child, inspector));
       }
     }
   }
-
 
   public Node getContentDocument() {
     return contentDocument;
   }
 
-
   public NodeId getNodeId() {
     return nodeId;
   }
-
-
-
-
 
   public int getChildCount() {
     return childCount;
   }
 
-
   public void setChildCount(int childCount) {
     this.childCount = childCount;
   }
-
 
   public List<Node> getChildren() {
     return children;
   }
 
-
   public void setChildren(List<Node> children) {
     this.children = children;
   }
 
-
   public String getNodeName() {
     return nodeName;
   }
-
 
   public void setNodeName(String nodeName) {
     this.nodeName = nodeName;
@@ -119,5 +106,9 @@ public class Node {
     } catch (JSONException e) {
       return "ERROR parsing the raw node.";
     }
+  }
+
+  public RemoteObject getRemoteObject() throws Exception {
+    return inspector.resolveNode(nodeId);
   }
 }

@@ -80,7 +80,7 @@ public class WebInspector {
   public Node getDocument() throws JSONException, Exception {
     JSONObject result = protocol.sendCommand(DOM.getDocument());
     JSONObject root = result.getJSONObject("root");
-    Node res = Node.create(root);
+    Node res = Node.create(root,this);
     return res;
   }
 
@@ -91,7 +91,7 @@ public class WebInspector {
       RemoteObject res = new RemoteObject(remoteObject.getString("objectId"), session);
       return res;
     } catch (Exception e) {
-      System.err.println("WebInspector.resolveNode() " +result.toString(2));
+      System.err.println("WebInspector.resolveNode() " + result.toString(2));
       return null;
     }
 
@@ -131,7 +131,7 @@ public class WebInspector {
 
       if (element == null) {
         document = cache.getCurrentDocument();
-        element = resolveNode(document.getNodeId());
+        element = document.getRemoteObject();
       }
 
       cmd.put(
@@ -157,40 +157,45 @@ public class WebInspector {
   }
 
   public List<RemoteWebElement> findElementsByCSSSelector(RemoteObject element, String selector) throws Exception {
-    JSONObject cmd = new JSONObject();
+    Node document = null;
+    try {
+      
+      JSONObject cmd = new JSONObject();
 
-    cmd.put("method", "Runtime.callFunctionOn");
+      cmd.put("method", "Runtime.callFunctionOn");
 
-    JSONArray args = new JSONArray();
-    args.put(new JSONObject().put("value", selector));
+      JSONArray args = new JSONArray();
+      args.put(new JSONObject().put("value", selector));
 
-    if (element == null) {
-      Node document = cache.getCurrentDocument();
-      if (document == null) {
-        System.err.println("Error, needs to be fixed in the switch window command somewhere");
-        document = getDocument();
-      }
-      element = resolveNode(document.getNodeId());
-    }
-
-    cmd.put(
-        "params",
-        new JSONObject().put("objectId", element.getId())
-            .put("functionDeclaration", "(function(arg) { var el = this.querySelectorAll(arg);return el;})")
-            .put("arguments", args).put("returnByValue", false));
-
-    JSONObject response = protocol.sendCommand(cmd);
-    RemoteObjectArray ra = protocol.cast(response);
-
-    List<RemoteWebElement> res = new ArrayList<RemoteWebElement>();
-    if (ra != null) {
-      for (RemoteObject ro : ra) {
-        RemoteWebElement rwe = new RemoteWebElement(ro.getId(), session);
-        res.add(rwe);
+      if (element == null) {
+        document = cache.getCurrentDocument();
+        element = document.getRemoteObject();
       }
 
+      cmd.put(
+          "params",
+          new JSONObject().put("objectId", element.getId())
+              .put("functionDeclaration", "(function(arg) { var el = this.querySelectorAll(arg);return el;})")
+              .put("arguments", args).put("returnByValue", false));
+
+      JSONObject response = protocol.sendCommand(cmd);
+      RemoteObjectArray ra = protocol.cast(response);
+
+      List<RemoteWebElement> res = new ArrayList<RemoteWebElement>();
+      if (ra != null) {
+        for (RemoteObject ro : ra) {
+          RemoteWebElement rwe = new RemoteWebElement(ro.getId(), session);
+          res.add(rwe);
+        }
+
+      }
+      return res;
+    } catch (Exception e) {
+      System.err.println(document.getNodeId()+" -- "+e.getMessage());
+      e.printStackTrace();
+      return null;
     }
-    return res;
+
   }
 
   public void stop() {

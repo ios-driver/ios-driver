@@ -28,6 +28,7 @@ public class GetCommand extends BaseCommandHandler {
 
     String url = getRequest().getPayload().getString("url");
     // typeURLNative(url);
+    getSession().getWebInspector().getCache().setContextToBase(null);
     fakeTypeURL(url);
     getSession().getWebInspector().waitForPageToLoad();
     
