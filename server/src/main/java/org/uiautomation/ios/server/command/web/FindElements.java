@@ -29,10 +29,19 @@ public class FindElements extends BaseCommandHandler {
       String id = getRequest().getVariableValue(":reference");
       element = new RemoteWebElement(id, getSession());
     }
-    String cssSelector = ToCSSSelectorConvertor.convertToCSSSelector(type, value);
-
+    
+    List<RemoteWebElement> res;
+    if ("link text".equals(type)){
+      res = getSession().getWebInspector().findElementsByLinkText(element, value,false);
+    } else if ("partial link text".equals(type)) {
+      res = getSession().getWebInspector().findElementsByLinkText(element, value,true);
+    }else{
+      String cssSelector = ToCSSSelectorConvertor.convertToCSSSelector(type, value);
+      res = getSession().getWebInspector().findElementsByCSSSelector(element, cssSelector);
+    }
+ 
     JSONArray array = new JSONArray();
-    List<RemoteWebElement> res = getSession().getWebInspector().findElementsByCSSSelector(element, cssSelector);
+    
 
     for (RemoteWebElement el : res) {
       array.put(new JSONObject().put("ELEMENT", el.getId()));

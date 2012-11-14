@@ -118,6 +118,111 @@ public class WebInspector {
     return protocol.cast(response);
   }
 
+
+  public List<RemoteWebElement> findElementsByLinkText(RemoteObject element, String text,boolean partialMatch) throws Exception {
+    Node document = null;
+    if (element == null) {
+      document = cache.getCurrentDocument();
+      element = document.getRemoteObject();
+    }
+    
+    String ifStatement;
+    if (partialMatch){
+      ifStatement = "if ( elements[i].innerText.indexOf(text) != -1 ){";
+    }else {
+      ifStatement = "if (text === elements[i].innerText ){";
+    }
+    
+    
+    String f =
+        "(function(text) { "
+            + "var elements = this.querySelectorAll('a');"
+            + "var result = new Array();"
+            + "for ( var i =0;i<elements.length;i++){"
+            + ifStatement
+            + "  result.push(elements[i]);"
+            + "}" // end if
+            +"}" // end for
+            +"return result;"
+            + "})"; // end function
+    
+  
+
+    JSONObject cmd = new JSONObject();
+
+    cmd.put("method", "Runtime.callFunctionOn");
+
+    JSONArray args = new JSONArray();
+    args.put(new JSONObject().put("value", text));
+
+    cmd.put("params", new JSONObject().put("objectId", element.getId())
+        .put("functionDeclaration", f)
+        .put("arguments", args)
+        .put("returnByValue", false));
+
+    JSONObject response = protocol.sendCommand(cmd);
+    RemoteObjectArray ra = protocol.cast(response);
+
+    List<RemoteWebElement> res = new ArrayList<RemoteWebElement>();
+    if (ra != null) {
+      for (RemoteObject ro : ra) {
+        RemoteWebElement rwe = new RemoteWebElement(ro.getId(), session);
+        res.add(rwe);
+      }
+
+    }
+    return res;
+  }
+  
+  
+  public RemoteWebElement findElementByLinkText(RemoteObject element, String text,boolean partialMatch) throws Exception{
+    Node document = null;
+    
+    String ifStatement;
+    if (partialMatch){
+      ifStatement = "if ( elements[i].innerText.indexOf(text) != -1 ){";
+    }else {
+      ifStatement = "if (text === elements[i].innerText ){";
+    }
+    String f =
+        "(function(text) { "
+            + "var elements = this.querySelectorAll('a');"
+            + "for ( var i =0;i<elements.length;i++){"
+            
+            + ifStatement
+            + "  return elements[i];"
+            + "}" // end if
+            +"}" // end for
+            +"return null;"
+            + "})"; // end function
+    
+    if (element == null) {
+      document = cache.getCurrentDocument();
+      element = document.getRemoteObject();
+    }
+
+    JSONObject cmd = new JSONObject();
+
+    cmd.put("method", "Runtime.callFunctionOn");
+
+    JSONArray args = new JSONArray();
+    args.put(new JSONObject().put("value", text));
+
+    cmd.put("params", new JSONObject().put("objectId", element.getId())
+        .put("functionDeclaration", f)
+        .put("arguments", args)
+        .put("returnByValue", false));
+
+    JSONObject response = getProtocol().sendCommand(cmd);
+    RemoteObject ro =  protocol.cast(response);
+    if (ro == null) {
+      return null;
+    } else {
+      RemoteWebElement res = new RemoteWebElement(ro.getId(), session);
+      return res;
+    }
+  }
+  
   public RemoteWebElement findElementByCSSSelector(RemoteObject element, String selector) throws Exception {
     Node document = null;
     try {
@@ -221,5 +326,6 @@ public class WebInspector {
     cmd.put("params", new JSONObject().put("url", url));
     JSONObject response = protocol.sendCommand(cmd);
   }
+
 
 }

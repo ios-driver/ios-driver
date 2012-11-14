@@ -188,7 +188,7 @@ public class RemoteUIAElement extends RemoteObject implements UIAElement {
   // TODO freynaud fix that server side.
   @Override
   public boolean isVisible() {
-    Integer i = getObject(WebDriverLikeCommand.IS_VISIBLE);
+    Integer i = getObject(WebDriverLikeCommand.DISPLAYED);
     if (i == 1) {
       return true;
     } else {

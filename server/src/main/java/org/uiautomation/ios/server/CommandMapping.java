@@ -21,7 +21,6 @@ import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.application.IOSApplication;
-import org.uiautomation.ios.server.command.BaseCommandHandler;
 import org.uiautomation.ios.server.command.Handler;
 import org.uiautomation.ios.server.command.NotImplementedHandler;
 import org.uiautomation.ios.server.command.impl.AttributeCommand;
@@ -43,9 +42,11 @@ import org.uiautomation.ios.server.command.impl.SetTimeoutCommandHandler;
 import org.uiautomation.ios.server.command.impl.StopSession;
 import org.uiautomation.ios.server.command.impl.TakeScreenshot;
 import org.uiautomation.ios.server.command.web.Click;
+import org.uiautomation.ios.server.command.web.DisplayedCommandHanlder;
 import org.uiautomation.ios.server.command.web.FindElement;
 import org.uiautomation.ios.server.command.web.FindElements;
-import org.uiautomation.ios.server.command.web.IsSelectedCommandHandler;
+import org.uiautomation.ios.server.command.web.GetTextCommandHandler;
+import org.uiautomation.ios.server.command.web.SelectedCommandHandler;
 import org.uiautomation.ios.server.command.web.WebAttributeCommandHandler;
 import org.uiautomation.ios.server.command.web.WebGetTitle;
 
@@ -78,7 +79,7 @@ public enum CommandMapping {
   SCREENSHOT(TakeScreenshot.class),
   
   FONT_MOST_APP(".frontMostApp()"),
-  SELECTED((String)null,IsSelectedCommandHandler.class),
+  SELECTED((String)null,SelectedCommandHandler.class),
  
   // UIAApplication
   MAIN_WINDOW(".mainWindow()"),
@@ -108,7 +109,7 @@ public enum CommandMapping {
   //ELEMENTS(".elements2(:depth,:criteria)"),
   ANCESTRY(NotImplementedHandler.class),
 
-  IS_VISIBLE(".isVisible()"),
+  DISPLAYED(".isVisible()",DefaultUIAScriptHandler.class,DisplayedCommandHanlder.class),
   IS_STALE(".isStale()"),
   
   
@@ -116,6 +117,7 @@ public enum CommandMapping {
   //NAME(".name()"),
   //VALUE(".value()"),
   ATTRIBUTE(AttributeCommand.class,WebAttributeCommandHandler.class),
+  TEXT(null,null,GetTextCommandHandler.class),
   //WITH_NAME(".withName(:name)"),
   //WITH_PREDICATE(".withPredicate(PredicateString predicateString)"),
   //WITH_VALUE_FOR_KEY(".withValueForKey(Object value,String key)"),
@@ -179,7 +181,7 @@ public enum CommandMapping {
   }
   
  
-  private CommandMapping(Class<? extends Handler> nativeHandlerClass, String nativeJSMethod,
+  private CommandMapping(String nativeJSMethod,Class<? extends Handler> nativeHandlerClass, 
       Class<? extends Handler> webHandlerClass) {
     this.command = WebDriverLikeCommand.valueOf(this.name());
     this.nativeHandlerClass = nativeHandlerClass;

@@ -6,9 +6,9 @@ import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.BaseCommandHandler;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 
-public class IsSelectedCommandHandler extends BaseCommandHandler {
+public class GetTextCommandHandler extends BaseCommandHandler {
 
-  public IsSelectedCommandHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public GetTextCommandHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
 
@@ -16,8 +16,8 @@ public class IsSelectedCommandHandler extends BaseCommandHandler {
   public WebDriverLikeResponse handle() throws Exception {
     String id = getRequest().getVariableValue(":reference");
     RemoteWebElement element = new RemoteWebElement(id, getSession());
-    boolean isSelected = element.isSelected();
-    return new WebDriverLikeResponse(getSession().getSessionId(), 0,isSelected);
+    String text = element.getText();
+    return new WebDriverLikeResponse(getSession().getSessionId(), 0,text);
   }
 
 }

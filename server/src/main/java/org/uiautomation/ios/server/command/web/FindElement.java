@@ -21,21 +21,26 @@ public class FindElement extends BaseCommandHandler {
     String value = payload.getString("value");
 
     RemoteWebElement element = null;
-    
-    if (getRequest().hasVariable(":reference")){
+
+    if (getRequest().hasVariable(":reference")) {
       String id = getRequest().getVariableValue(":reference");
       element = new RemoteWebElement(id, getSession());
     }
-    
-    
-    
-    String cssSelector = ToCSSSelectorConvertor.convertToCSSSelector(type, value); 
+
+    RemoteWebElement rmo;
+    if ("link text".equals(type)) {
+      rmo = getSession().getWebInspector().findElementByLinkText(element, value,false);
+    } else if ("partial link text".equals(type)) {
+      rmo = getSession().getWebInspector().findElementByLinkText(element, value,true);
+    } else {
+      String cssSelector = ToCSSSelectorConvertor.convertToCSSSelector(type, value);
+      rmo = getSession().getWebInspector().findElementByCSSSelector(element, cssSelector);
+    }
+
     JSONObject res = new JSONObject();
-    RemoteWebElement rmo = getSession().getWebInspector().findElementByCSSSelector(element, cssSelector);
-    
-    if (rmo == null){
-      return new WebDriverLikeResponse(getRequest().getSession(), 7,"No element found for "+type+"="+value );
-    }else{
+    if (rmo == null) {
+      return new WebDriverLikeResponse(getRequest().getSession(), 7, "No element found for " + type + "=" + value);
+    } else {
       res.put("ELEMENT", rmo.getId());
       return new WebDriverLikeResponse(getRequest().getSession(), 0, res);
     }

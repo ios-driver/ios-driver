@@ -46,6 +46,7 @@ public class DOMContext {
 
   public Node getCurrentDocument() {
     synchronized (lock) {
+      getCurrentDocumentAndCheckTheRemoteObject();
       return currentDocument;
     }
   }
@@ -80,7 +81,7 @@ public class DOMContext {
   public void onLoad() {
     synchronized (lock) {
       newPageLoaded = true;
-      // System.out.println("new page loaded = " + newPageLoaded);
+      System.out.println("new page loaded event");
     }
   }
 
@@ -89,7 +90,7 @@ public class DOMContext {
     while (!newPageLoaded) {
       cpt++;
       try {
-        System.out.println("waiting ...new page loaded = " + newPageLoaded);
+        //System.out.println("waiting ...new page loaded = " + newPageLoaded);
         Thread.sleep(250);
       } catch (InterruptedException e) {
       }

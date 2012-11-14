@@ -11,7 +11,8 @@ public class ToCSSSelectorConvertor {
       return value;
     }
     if ("id".equals(type)){
-      return "#" + value;
+      //return "#" + value; // doesn't work for id starting with an int.
+      return "[id='"+value+"']";
     }
     if ("tag name".equals(type)){
       return value;

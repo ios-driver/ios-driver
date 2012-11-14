@@ -93,7 +93,7 @@ public enum WebDriverLikeCommand {
   KEYBOARD_KEYS("GET","/session/:sessionId/uiaKeyboard/:reference/keys",UIAElementArray.class),
   TYPE_STRING("POST","/session/:sessionId/uiaKeyboard/:reference",Void.class),
   
-  IS_VISIBLE("GET" , "/session/:sessionId/uiaElement/:reference/isVisible",Boolean.class),
+  DISPLAYED("GET" , "/session/:sessionId/element/:reference/displayed",Boolean.class),
   IS_STALE("GET" , "/session/:sessionId/uiaElement/:reference/isStale",Boolean.class),
   
   //LABEL("GET" , "/session/:sessionId/uiaElement/:reference/label",String.class),
@@ -101,6 +101,7 @@ public enum WebDriverLikeCommand {
   //VALUE("GET" , "/session/:sessionId/uiaElement/:reference/value",String.class),
   
   ATTRIBUTE("GET","/session/:sessionId/element/:reference/attribute/:name",String.class),
+  TEXT("GET", "/session/:sessionId/element/:reference/text",String.class),
   
   WITH_NAME("GET" , "/session/:sessionId/uiaElement/:reference/withName",UIAElement.class),
   WITH_PREDICATE("GET" , "/session/:sessionId/uiaElement/:reference/withPredicate",UIAElement.class),

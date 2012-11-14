@@ -20,6 +20,7 @@ public class Node {
   private String documentURL;
   private int nodeType;
   private final WebInspector inspector;
+  private final RemoteObject remoteObject;
 
   public static Node create(JSONObject o, WebInspector inspector) throws Exception {
     if ("IFRAME".equals(o.optString("nodeName"))) {
@@ -33,7 +34,8 @@ public class Node {
     return documentURL;
   }
 
-  Node(JSONObject o, WebInspector inspector) throws JSONException {
+  Node(JSONObject o, WebInspector inspector) throws Exception {
+
     this.raw = o;
     this.inspector = inspector;
     this.nodeId = new NodeId(o.getInt("nodeId"));
@@ -50,6 +52,22 @@ public class Node {
         this.children.add(new Node(child, inspector));
       }
     }
+
+    RemoteObject ro = null;
+    try {
+      ro = inspector.resolveNode(nodeId);
+    } catch (Exception e) {
+
+      Thread.sleep(2000);
+      try {
+        ro = inspector.resolveNode(nodeId);
+        System.err.println("waiting helped");
+      } catch (Exception e1) {
+        //System.err.println(e1.getMessage() + "error building node :" + getNodeId() + " -- " + o.toString());
+      }
+    }
+    remoteObject = ro;
+
   }
 
   public Node getContentDocument() {
@@ -108,7 +126,16 @@ public class Node {
     }
   }
 
+  public boolean isStale() {
+    try {
+      inspector.resolveNode(getNodeId());
+      return false;
+    } catch (Exception e) {
+      return true;
+    }
+  }
+
   public RemoteObject getRemoteObject() throws Exception {
-    return inspector.resolveNode(nodeId);
+    return remoteObject;
   }
 }
