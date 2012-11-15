@@ -13,6 +13,7 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.server.ServerSideSession;
+import org.uiautomation.ios.webInspector.DOM.RemoteExceptionException;
 import org.uiautomation.ios.webInspector.DOM.RemoteObject;
 import org.uiautomation.ios.webInspector.DOM.RemoteObjectArray;
 
@@ -106,7 +107,7 @@ public class DebugProtocol {
     perf("got response\t\t" + (System.currentTimeMillis() - start) + "ms.");
     JSONObject error = response.optJSONObject("error");
     if (error != null) {
-      throw new Exception(error.toString(2));
+      throw new RemoteExceptionException(error,command);
     } else if (response.optBoolean("wasThrown", false)) {
       throw new Exception("remote JS exception " + response.toString(2));
     } else {
@@ -209,7 +210,8 @@ public class DebugProtocol {
     primitives.add("number");
     primitives.add("string");
 
-    JSONObject result = response.optJSONObject("result");
+    JSONObject result = response.has("result") ? response.getJSONObject("result") : response.getJSONObject("object");
+    
     if (result != null) {
       String type = result.getString("type");
 

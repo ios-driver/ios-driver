@@ -496,7 +496,6 @@ public class ElementFindingTest {
     Assert.assertTrue(toBeDeleted.isDisplayed());
 
     driver.findElement(By.id("delete")).click();
-    //WebElement toBeDeleted2 = driver.findElement(By.id("deleted"));
     boolean wasStale = waitFor(elementToBeStale(toBeDeleted));
     Assert.assertTrue(wasStale, "Element should be stale at this point");
   }

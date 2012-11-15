@@ -22,10 +22,10 @@ public class DOM {
   }
 
 
-  public static JSONObject requestNode(RemoteObject ro) throws JSONException {
+  public static JSONObject requestNode(String objectId) throws JSONException {
     JSONObject cmd = new JSONObject();
     cmd.put("method", "DOM.requestNode");
-    cmd.put("params", new JSONObject().put("objectId", ro.getId()));
+    cmd.put("params", new JSONObject().put("objectId", objectId));
     return cmd;
   }
 

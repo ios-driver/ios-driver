@@ -3,8 +3,10 @@ package org.uiautomation.ios.server.command.web;
 import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
+import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.BaseCommandHandler;
+import org.uiautomation.ios.webInspector.DOM.Node;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 
 public class FindElement extends BaseCommandHandler {
@@ -23,25 +25,28 @@ public class FindElement extends BaseCommandHandler {
     RemoteWebElement element = null;
 
     if (getRequest().hasVariable(":reference")) {
-      String id = getRequest().getVariableValue(":reference");
-      element = new RemoteWebElement(id, getSession());
+      int id = Integer.parseInt(getRequest().getVariableValue(":reference"));
+      element = new RemoteWebElement(new NodeId(id), getSession());
+    } else {
+      element = getSession().getWebInspector().getCache().getCurrentDocument();
     }
 
-    RemoteWebElement rmo;
+    RemoteWebElement rwe;
+
     if ("link text".equals(type)) {
-      rmo = getSession().getWebInspector().findElementByLinkText(element, value,false);
+      rwe = element.findElementByLinkText(value, false);
     } else if ("partial link text".equals(type)) {
-      rmo = getSession().getWebInspector().findElementByLinkText(element, value,true);
+      rwe = element.findElementByLinkText(value, true);
     } else {
       String cssSelector = ToCSSSelectorConvertor.convertToCSSSelector(type, value);
-      rmo = getSession().getWebInspector().findElementByCSSSelector(element, cssSelector);
+      rwe = element.findElementByCSSSelector(cssSelector);
     }
 
     JSONObject res = new JSONObject();
-    if (rmo == null) {
+    if (rwe == null) {
       return new WebDriverLikeResponse(getRequest().getSession(), 7, "No element found for " + type + "=" + value);
     } else {
-      res.put("ELEMENT", rmo.getId());
+      res.put("ELEMENT", rwe.getNodeId().getId());
       return new WebDriverLikeResponse(getRequest().getSession(), 0, res);
     }
   }

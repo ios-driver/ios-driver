@@ -59,13 +59,11 @@ public class Node {
     } catch (Exception e) {
 
       Thread.sleep(2000);
-      try {
-        ro = inspector.resolveNode(nodeId);
-        System.err.println("waiting helped");
-      } catch (Exception e1) {
-        //System.err.println(e1.getMessage() + "error building node :" + getNodeId() + " -- " + o.toString());
-      }
+
+      ro = inspector.resolveNode(nodeId);
+      System.err.println(e.getMessage() + "error building node :" + getNodeId() + " -- " + o.toString());
     }
+
     remoteObject = ro;
 
   }

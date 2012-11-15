@@ -64,8 +64,8 @@ public class MyMessageHandler implements MessageHandler {
         } else {
           if ("DOM.setChildNodes".equals(o.optString("method"))) {
 
-            SetChildNodes notification = new SetChildNodes(o,inspector);
-            cache.addIframe(notification.getIFrames());
+            //SetChildNodes notification = new SetChildNodes(o,inspector);
+            //cache.addIframe(notification.getIFrames());
           } // else if ("DOM.documentUpdated".equals(o.optString("method"))) {
           else if ("Profiler.resetProfiles".equals(o.optString("method")) || "DOM.documentUpdated".equals(o.optString("method"))) {
             try {

@@ -6,8 +6,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
+import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.BaseCommandHandler;
+import org.uiautomation.ios.webInspector.DOM.Node;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 
 public class FindElements extends BaseCommandHandler {
@@ -26,25 +28,26 @@ public class FindElements extends BaseCommandHandler {
     RemoteWebElement element = null;
 
     if (getRequest().hasVariable(":reference")) {
-      String id = getRequest().getVariableValue(":reference");
-      element = new RemoteWebElement(id, getSession());
+      int id = Integer.parseInt(getRequest().getVariableValue(":reference"));
+      element = new RemoteWebElement(new NodeId(id), getSession());
+    } else {
+      element = getSession().getWebInspector().getCache().getCurrentDocument();
     }
-    
+
     List<RemoteWebElement> res;
-    if ("link text".equals(type)){
-      res = getSession().getWebInspector().findElementsByLinkText(element, value,false);
+    if ("link text".equals(type)) {
+      res = element.findElementsByLinkText(value, false);
     } else if ("partial link text".equals(type)) {
-      res = getSession().getWebInspector().findElementsByLinkText(element, value,true);
-    }else{
+      res = element.findElementsByLinkText(value, true);
+    } else {
       String cssSelector = ToCSSSelectorConvertor.convertToCSSSelector(type, value);
-      res = getSession().getWebInspector().findElementsByCSSSelector(element, cssSelector);
+      res = element.findElementsByCSSSelector(cssSelector);
     }
- 
+
     JSONArray array = new JSONArray();
-    
 
     for (RemoteWebElement el : res) {
-      array.put(new JSONObject().put("ELEMENT", el.getId()));
+      array.put(new JSONObject().put("ELEMENT", el.getNodeId().getId()));
     }
 
     return new WebDriverLikeResponse(getRequest().getSession(), 0, array);
