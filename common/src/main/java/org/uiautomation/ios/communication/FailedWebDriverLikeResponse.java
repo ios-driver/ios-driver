@@ -22,11 +22,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.remote.ErrorCodes;
 import org.uiautomation.ios.exceptions.ExceptionStatus;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 
 public class FailedWebDriverLikeResponse extends WebDriverLikeResponse {
 
+  ErrorCodes codes = new ErrorCodes();
+  
   public FailedWebDriverLikeResponse(JSONObject content) throws JSONException {
     super(content);
   }
@@ -34,8 +37,8 @@ public class FailedWebDriverLikeResponse extends WebDriverLikeResponse {
   public FailedWebDriverLikeResponse(String sessionId, Exception e) {
     super(sessionId, 13, null);
     
-    
-   
+    int code = codes.toStatusCode(e);
+    setStatus(code);
     try {
       setValue(serializeException(e));
     } catch (JSONException e2) {

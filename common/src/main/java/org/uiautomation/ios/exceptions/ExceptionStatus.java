@@ -31,7 +31,8 @@ public enum ExceptionStatus {
     this.status = status;
   }
 
-
+  
+  
   public static Class<? extends Exception> getExceptionForStatus(int status) {
     for (ExceptionStatus e : values()) {
       if (e.status == status) {

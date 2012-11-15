@@ -50,12 +50,19 @@ public class DOMContext {
   }
 
   public RemoteWebElement getCurrentDocument() {
+    long start = System.currentTimeMillis();
     synchronized (lock) {
       try {
-        System.out.println("returning document : "+document.readyState());
+         document.readyState();
       } catch (Exception e) {
-        System.err.println("returning a corrupted document "+e.getMessage());
+        System.err.println("corrupted document " + e.getMessage());
+        try {
+          document = getCurrentDocumentAndCheckTheRemoteObject();
+        } catch (Exception e2) {
+          System.err.println("returning a corrupted document " + e.getMessage());
+        }
       }
+      System.err.println("getting document : "+(System.currentTimeMillis() - start)+"ms.");
       return document;
     }
   }
@@ -93,13 +100,14 @@ public class DOMContext {
       if (currentDocument == null) {
         document = getCurrentDocumentAndCheckTheRemoteObject();
       }
-      //System.out.println("new page loaded event" + currentDocument.getNodeName());
+      // System.out.println("new page loaded event" +
+      // currentDocument.getNodeName());
     }
   }
 
   public void waitForPageToLoad() {
     int cpt = 0;
-    
+
     while (!newPageLoaded) {
       cpt++;
       try {
@@ -111,7 +119,7 @@ public class DOMContext {
         break;
       }
     }
-    
+
     synchronized (lock) {
       newPageLoaded = false;
     }
@@ -128,7 +136,6 @@ public class DOMContext {
         NodeId id = currentDocument.getNodeId();
         try {
           RemoteWebElement element = new RemoteWebElement(id, session);
-          System.out.println("page loaded :"+element.readyState());
           return element;
         } catch (Exception e) {
           e.printStackTrace();

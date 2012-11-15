@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
+import org.testng.Reporter;
 import org.uiautomation.ios.communication.FailedWebDriverLikeResponse;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
@@ -32,8 +33,7 @@ public class IOSServlet extends DriverBasedServlet {
   private static final long serialVersionUID = -1190162363756488569L;
 
   @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     try {
       process(request, response);
     } catch (Exception e) {
@@ -43,8 +43,7 @@ public class IOSServlet extends DriverBasedServlet {
   }
 
   @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     try {
       process(request, response);
     } catch (Exception e) {
@@ -54,8 +53,8 @@ public class IOSServlet extends DriverBasedServlet {
   }
 
   @Override
-  protected void doDelete(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+  protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+      IOException {
     try {
       process(request, response);
     } catch (Exception e) {
@@ -66,7 +65,6 @@ public class IOSServlet extends DriverBasedServlet {
 
   private void process(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-
     WebDriverLikeRequest req = new WebDriverLikeRequest(request);
 
     response.setContentType("application/json;charset=UTF-8");
@@ -75,18 +73,17 @@ public class IOSServlet extends DriverBasedServlet {
     WebDriverLikeResponse resp;
 
     boolean nativeMode = true;
-    try  {
-     nativeMode =  getDriver().getSession(req.getSession()).isNative();
-    }catch (Exception e) {
+    try {
+      nativeMode = getDriver().getSession(req.getSession()).isNative();
+    } catch (Exception e) {
       System.out.println(e.getMessage());
     }
-    
+
     String mode = nativeMode ? "native" : "web";
-    //System.out.println(mode+"\t"+req.getMethod()+"\t"+req.getPath());
-    
+    // System.out.println(mode+"\t"+req.getMethod()+"\t"+req.getPath());
+
     resp = getResponse(req);
-    
-    
+
     // TODO implement the json protocol properly.
     if (req.getGenericCommand() == WebDriverLikeCommand.NEW_SESSION) {
       response.setStatus(301);
@@ -100,7 +97,7 @@ public class IOSServlet extends DriverBasedServlet {
       // Reconstruct original requesting URL
       String url = scheme + "://" + serverName + ":" + serverPort + contextPath;
       response.setHeader("location", url + "/session/" + session);
-    } 
+    }
 
     response.getWriter().print(resp.stringify());
     response.getWriter().close();
@@ -108,9 +105,12 @@ public class IOSServlet extends DriverBasedServlet {
   }
 
   private WebDriverLikeResponse getResponse(WebDriverLikeRequest request) {
+    long start = System.currentTimeMillis();
+    String command ="";
     try {
       WebDriverLikeCommand wdlc = request.getGenericCommand();
       Handler h = CommandMapping.get(wdlc).createHandler(getDriver(), request);
+      command = wdlc.method()+"\t "+wdlc.path();
       return h.handleAndRunDecorators();
     } catch (Exception e) {
       try {
@@ -118,6 +118,10 @@ public class IOSServlet extends DriverBasedServlet {
       } catch (Exception e1) {
         return new FailedWebDriverLikeResponse(null, e);
       }
+    } finally {
+      String message  = command + "\t\t\t" + (System.currentTimeMillis() - start) + "ms.";
+      System.out.println(message);
+      Reporter.log(message);
     }
 
   }

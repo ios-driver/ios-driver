@@ -15,6 +15,7 @@ package org.uiautomation.ios.server.command.impl;
 
 import java.util.List;
 
+import org.apache.xalan.xsltc.compiler.sym;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,6 +30,8 @@ import org.uiautomation.ios.server.command.UIAScriptHandler;
 
 public class GetCapabilitiesCommandHandler extends UIAScriptHandler {
 
+  private static WebDriverLikeResponse cachedResponse = null;
+
   private static final String capabilities = "var json = UIAutomation.getCapabilities();"
       + "UIAutomation.createJSONResponse(':sessionId',0,json)";
 
@@ -38,6 +41,13 @@ public class GetCapabilitiesCommandHandler extends UIAScriptHandler {
     addDecorator(new AddAllSupportedLocalesDecorator(getDriver()));
   }
 
+  @Override
+  public WebDriverLikeResponse handle() throws Exception {
+    if (cachedResponse == null) {
+      cachedResponse = super.handle();
+    }
+    return cachedResponse;
+  }
 
   class AddAllSupportedLocalesDecorator extends PostHandleDecorator {
 
@@ -65,6 +75,5 @@ public class GetCapabilitiesCommandHandler extends UIAScriptHandler {
 
     }
   }
-
 
 }

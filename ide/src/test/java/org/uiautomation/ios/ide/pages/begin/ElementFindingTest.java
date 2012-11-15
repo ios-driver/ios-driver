@@ -421,10 +421,17 @@ public class ElementFindingTest {
 
   @Test
   public void testShouldfindElementsBasedOnTagName() {
+    //long start = System.currentTimeMillis();
+    //System.out.println("-----------A------------");
+    
     driver.get(pages.formPage);
+    //System.out.println("-----------A------------"+(System.currentTimeMillis() - start)+"ms");
+    
 
+    //System.out.println("-----------B------------");
     List<WebElement> elements = driver.findElements(By.tagName("input"));
-
+    //System.out.println("-----------B------------"+(System.currentTimeMillis() - start)+"ms");
+    
     Assert.assertNotNull(elements);
   }
 

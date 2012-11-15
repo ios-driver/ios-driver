@@ -30,7 +30,7 @@ public class DebugProtocol {
 
   private int commandId = 0;
 
-  private final boolean displayPerformance = false;
+  private final boolean displayPerformance = true;
   private Thread listen;
   private volatile boolean keepGoing=true;
   private final String bundleId;
