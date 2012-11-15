@@ -210,6 +210,9 @@ public class DebugProtocol {
     primitives.add("number");
     primitives.add("string");
 
+    
+    // evaluate : 
+    
     JSONObject result = response.has("result") ? response.getJSONObject("result") : response.getJSONObject("object");
     
     if (result != null) {

@@ -6,6 +6,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.uiautomation.ios.UIAModels.UIADriver;
 import org.uiautomation.ios.UIAModels.UIAElement;
@@ -21,8 +22,6 @@ import org.uiautomation.ios.mobileSafari.WebInspector;
 import org.uiautomation.ios.server.ServerSideSession;
 
 public class RemoteWebElement {
-  
-  
 
   private final UIADriver nativeDriver;
   private final WebInspector inspector;
@@ -73,7 +72,8 @@ public class RemoteWebElement {
       }
       RemoteObject o = inspector.getProtocol().cast(response);
       remoteObject = o;
-      System.err.println("getting remote object ofr node ID:"+nodeId + "\t"+(System.currentTimeMillis()-start)+".ms");
+      System.err.println("getting remote object ofr node ID:" + nodeId + "\t" + (System.currentTimeMillis() - start)
+          + ".ms");
     }
     return remoteObject;
   }
@@ -313,7 +313,7 @@ public class RemoteWebElement {
     return res;
   }
 
-  public RemoteWebElement findElementByCSSSelector(String selector) throws Exception {
+  public RemoteWebElement findElementByCSSSelectorOld(String selector) throws Exception {
     try {
 
       JSONObject cmd = new JSONObject();
@@ -342,6 +342,18 @@ public class RemoteWebElement {
       return null;
     }
 
+  }
+
+  public RemoteWebElement findElementByCSSSelector(String selector) throws Exception {
+    JSONObject response = protocol.sendCommand(DOM.querySelector(nodeId, selector));
+    // TODO freynaud
+    NodeId id = new NodeId(response.optInt("nodeId"));
+    if (!id.exist()){
+      throw new NoSuchElementException("no element matching "+selector);
+    }
+    RemoteWebElement res= new RemoteWebElement(id, session);
+    //RemoteWebElement res = protocol.cast(response);
+    return res;
   }
 
   public List<RemoteWebElement> findElementsByCSSSelector(String selector) throws Exception {

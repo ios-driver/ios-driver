@@ -35,5 +35,9 @@ public class NodeId {
     return true;
   }
 
+  public boolean exist() {
+    return id > 0;
+  }
+
 
 }
