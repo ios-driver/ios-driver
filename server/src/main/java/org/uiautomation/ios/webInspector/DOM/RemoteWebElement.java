@@ -348,46 +348,24 @@ public class RemoteWebElement {
     JSONObject response = protocol.sendCommand(DOM.querySelector(nodeId, selector));
     // TODO freynaud
     NodeId id = new NodeId(response.optInt("nodeId"));
-    if (!id.exist()){
-      throw new NoSuchElementException("no element matching "+selector);
+    if (!id.exist()) {
+      throw new NoSuchElementException("no element matching " + selector);
     }
-    RemoteWebElement res= new RemoteWebElement(id, session);
-    //RemoteWebElement res = protocol.cast(response);
+    RemoteWebElement res = new RemoteWebElement(id, session);
+    // RemoteWebElement res = protocol.cast(response);
     return res;
   }
 
   public List<RemoteWebElement> findElementsByCSSSelector(String selector) throws Exception {
-    try {
-
-      JSONObject cmd = new JSONObject();
-
-      cmd.put("method", "Runtime.callFunctionOn");
-
-      JSONArray args = new JSONArray();
-      args.put(new JSONObject().put("value", selector));
-
-      cmd.put(
-          "params",
-          new JSONObject().put("objectId", getRemoteObject().getId())
-              .put("functionDeclaration", "(function(arg) { var el = this.querySelectorAll(arg);return el;})")
-              .put("arguments", args).put("returnByValue", false));
-
-      JSONObject response = protocol.sendCommand(cmd);
-      RemoteObjectArray ra = protocol.cast(response);
-
-      List<RemoteWebElement> res = new ArrayList<RemoteWebElement>();
-      if (ra != null) {
-        for (RemoteObject ro : ra) {
-          res.add(ro.getWebElement());
-        }
-
-      }
-      return res;
-    } catch (Exception e) {
-      System.err.println(e.getMessage());
-      e.printStackTrace();
-      return null;
+    JSONObject response = protocol.sendCommand(DOM.querySelectorAll(nodeId, selector));
+    JSONArray nodesId = response.optJSONArray("nodeIds");
+    ArrayList<RemoteWebElement> res = new ArrayList<RemoteWebElement>();
+    for (int i = 0; i < nodesId.length(); i++) {
+      NodeId id = new NodeId(nodesId.getInt(i));
+      res.add(new RemoteWebElement(id, session));
     }
+    // TODO freynaud
+    return res;
 
   }
 
@@ -412,8 +390,9 @@ public class RemoteWebElement {
   @Override
   public String toString() {
     try {
-      String remoteElement = getRemoteObject().getId();
+      //String remoteElement = getRemoteObject().getId();
       // String text = getText();
+      String remoteElement = remoteObject == null ? "not loaded" : remoteObject.getId();
       return "nodeId=" + nodeId + " , remoteElement " + remoteElement; // +
                                                                        // "text:"
                                                                        // +

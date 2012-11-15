@@ -32,6 +32,14 @@ public class DOM {
     cmd.put("params", new JSONObject().put("nodeId", id.getId()).put("selector", selector));
     return cmd;
   }
+  
+  public static JSONObject querySelectorAll(NodeId id, String selector) throws JSONException {
+    JSONObject cmd = new JSONObject();
+    cmd.put("method", "DOM.querySelectorAll");
+    cmd.put("params", new JSONObject().put("nodeId", id.getId()).put("selector", selector));
+    return cmd;
+  }
+  
 
   public static JSONObject highlightNode(NodeId id) throws JSONException {
     JSONObject color = new JSONObject().put("a", 0.5).put("r", 50).put("g", 100).put("b", 255);
