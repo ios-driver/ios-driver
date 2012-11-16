@@ -570,7 +570,7 @@ public class ElementFindingTest {
     Assert.assertEquals("child", child.getAttribute("id"));
   }
 
-  @Test(enabled = false)
+  @Test
   public void testAnElementFoundInADifferentFrameIsStale() {
     driver.get(pages.missedJsReferencePage);
     driver.switchTo().frame("inner");

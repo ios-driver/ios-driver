@@ -31,7 +31,7 @@ public class FindElements extends BaseCommandHandler {
       int id = Integer.parseInt(getRequest().getVariableValue(":reference"));
       element = new RemoteWebElement(new NodeId(id), getSession());
     } else {
-      element = getSession().getWebInspector().getCache().getCurrentDocument();
+      element = getSession().getWebInspector().getDocument();
     }
 
     List<RemoteWebElement> res;

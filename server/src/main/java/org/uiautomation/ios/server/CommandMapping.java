@@ -47,6 +47,7 @@ import org.uiautomation.ios.server.command.web.FindElement;
 import org.uiautomation.ios.server.command.web.FindElements;
 import org.uiautomation.ios.server.command.web.GetTextCommandHandler;
 import org.uiautomation.ios.server.command.web.SelectedCommandHandler;
+import org.uiautomation.ios.server.command.web.SetFrame;
 import org.uiautomation.ios.server.command.web.WebAttributeCommandHandler;
 import org.uiautomation.ios.server.command.web.WebGetTitle;
 
@@ -61,6 +62,7 @@ public enum CommandMapping {
   
   WINDOW_HANDLES(GetWindowHandlesCommandHandler.class),
   WINDOW(SetCurrentContext.class),
+  FRAME((String)null,SetFrame.class),
   GET_WINDOW_HANDLE(GetCurrentContext.class),
   TITLE(null,null,WebGetTitle.class),
   URL(GetCommand.class,GetCommand.class),
@@ -237,7 +239,7 @@ public enum CommandMapping {
     boolean isNative = true;
     if (request.getGenericCommand() != WebDriverLikeCommand.NEW_SESSION && request.getGenericCommand() != WebDriverLikeCommand.STATUS) {
       ServerSideSession sss = driver.getSession(request.getSession());
-      isNative = sss.isNative();
+      isNative = sss.getMode() == WorkingMode.Native;
     }
 
     Class<?> clazz;

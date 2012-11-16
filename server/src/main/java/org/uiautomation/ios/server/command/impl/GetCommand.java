@@ -12,6 +12,7 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.WorkingMode;
 import org.uiautomation.ios.server.command.BaseCommandHandler;
 
 public class GetCommand extends BaseCommandHandler {
@@ -27,7 +28,6 @@ public class GetCommand extends BaseCommandHandler {
   public WebDriverLikeResponse handle() throws Exception {
     String url = getRequest().getPayload().getString("url");
     //typeURLNative(url);
-    getSession().getWebInspector().getCache().setContextToBase(null);
     fakeTypeURL(url);
     getSession().getWebInspector().waitForPageToLoad();
     return new WebDriverLikeResponse(getSession().getSessionId(), 0, new JSONObject());
@@ -45,10 +45,10 @@ public class GetCommand extends BaseCommandHandler {
 
   private void typeURLNative(String url) {
 
-    String base = getSession().getWindowHandle();
+    WorkingMode base = getSession().getMode();
     try {
 
-      getSession().setCurrentContext("nativeView");
+      getSession().setMode(WorkingMode.Native);
       getAddressBar().tap();
       UIAKeyboard keyboard =
           getSession().getNativeDriver().getLocalTarget().getFrontMostApp().getKeyboard();
@@ -56,7 +56,7 @@ public class GetCommand extends BaseCommandHandler {
       keyboard.findElement(new NameCriteria("Go")).tap();
 
     } finally {
-      getSession().setCurrentContext(base);
+      getSession().setMode(base);
     }
   }
 

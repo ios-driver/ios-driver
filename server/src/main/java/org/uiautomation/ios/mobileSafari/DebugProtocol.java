@@ -9,6 +9,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeoutException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,7 +25,6 @@ public class DebugProtocol {
   private ByteArrayOutputStream buf = new ByteArrayOutputStream();
   private final PlistManager plist = new PlistManager();
   private final MessageHandler handler;
-  private final ServerSideSession session;
 
   private final String LOCALHOST_IPV6 = "::1";
   private final int port = 27753;
@@ -34,6 +35,7 @@ public class DebugProtocol {
   private Thread listen;
   private volatile boolean keepGoing=true;
   private final String bundleId;
+  
 
   /**
    * connect to the webview
@@ -43,13 +45,10 @@ public class DebugProtocol {
    * @throws IOException
    * @throws InterruptedException
    */
-  public DebugProtocol(MessageHandler handler,String bundleId,ServerSideSession session) throws UnknownHostException, IOException,
+  public DebugProtocol(EventListener listener,String bundleId,ServerSideSession session) throws UnknownHostException, IOException,
       InterruptedException {
-    this.handler = handler;
+    this.handler = new DefaultMessageHandler(listener);
     this.bundleId =bundleId;
-    this.session = session;
-
-    
    
     init();
 
@@ -205,42 +204,7 @@ public class DebugProtocol {
     }
   }
 
-  public <T> T cast(JSONObject response) throws JSONException {
-    List<String> primitives = new ArrayList<String>();
-    primitives.add("boolean");
-    primitives.add("number");
-    primitives.add("string");
-
-    
-    // evaluate : 
-    
-    JSONObject result = response.has("result") ? response.getJSONObject("result") : response.getJSONObject("object");
-    
-    if (result != null) {
-      String type = result.getString("type");
-
-
-      if (primitives.contains(type)) { // primitive type.
-        Object value = result.get("value");
-        return (T) value;
-      } else if ("object".equals(type)) { // object
-        if (result.has("value") && result.isNull("value")){
-          return null;
-        }else if ("array".equals(result.optString("subtype"))) {
-          RemoteObject array = new RemoteObject(result.getString("objectId"), session);
-          return (T) new RemoteObjectArray(array);
-        } else {
-          return (T) new RemoteObject(result.getString("objectId"), session);
-        }
-
-      } else {
-        throw new RuntimeException("NI " + response.toString(2));
-      }
-    } else {
-      throw new RuntimeException("bug, null result ");
-    }
-  }
-
+ 
 
   private int byteToInt(byte b) {
     int i = (int) b;
@@ -266,4 +230,5 @@ public class DebugProtocol {
     
     
   }
+
 }

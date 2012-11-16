@@ -61,7 +61,7 @@ public class RemoteObject {
 
 
     JSONObject response = protocol.sendCommand(cmd);
-    return protocol.cast(response);
+    return session.getWebInspector().cast(response);
 
   }
 }

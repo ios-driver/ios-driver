@@ -20,14 +20,12 @@ public class ServerSideSession extends Session {
   private final IOSApplication application;
   private final IOSCapabilities capabilities;
   private final InstrumentsManager instruments;
-  public IOSDriver driver;
-
+  public final IOSDriver driver;
 
   private WebInspector inspector;
-  public UIADriver nativeDriver;
+  private UIADriver nativeDriver;
 
-  private String context;
-  private boolean nativeMode = true;
+  private final Context context;
 
   ServerSideSession(IOSDriver driver, IOSCapabilities capabilities) {
     super(UUID.randomUUID().toString());
@@ -46,6 +44,8 @@ public class ServerSideSession extends Session {
       }
     }
     instruments = new InstrumentsManager(driver.getPort());
+    context = new Context();
+    
 
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
@@ -54,10 +54,6 @@ public class ServerSideSession extends Session {
       }
     });
   }
-
-
-
-  
 
   public UIADriver getNativeDriver() {
     return nativeDriver;
@@ -89,9 +85,9 @@ public class ServerSideSession extends Session {
   }
 
   public void start() {
-    instruments.startSession(capabilities.getDevice(), capabilities.getSDKVersion(),
-        capabilities.getLocale(), capabilities.getLanguage(), application.getApplicationPath(),
-        getSessionId(), capabilities.isTimeHack(), capabilities.getExtraSwitches());
+    instruments.startSession(capabilities.getDevice(), capabilities.getSDKVersion(), capabilities.getLocale(),
+        capabilities.getLanguage(), application.getApplicationPath(), getSessionId(), capabilities.isTimeHack(),
+        capabilities.getExtraSwitches());
 
     URL url = null;
     try {
@@ -102,12 +98,11 @@ public class ServerSideSession extends Session {
     nativeDriver = new RemoteUIADriver(url, new Session(instruments.getSessionId()));
   }
 
-
   public WebInspector getWebInspector() {
     if (inspector == null) {
       String bundleId = application.getMetadata("CFBundleIdentifier");
       try {
-        this.inspector = new WebInspector(nativeDriver, bundleId,this);
+        this.inspector = new WebInspector(nativeDriver, bundleId, this);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -115,27 +110,16 @@ public class ServerSideSession extends Session {
     return inspector;
   }
 
-  public void setNativeContext(){
-    setCurrentContext("nativeView");
-  }
-  
-  public void setCurrentContext(String context) {
-    this.context =context;
-    
-    if ("nativeView".equals(context)) {
-      nativeMode = true;
-    } else {
-      nativeMode = false;
-      
-    }
-  }
-  
-  public String getWindowHandle(){
-    return context;
+  public void setMode(WorkingMode mode) {
+    context.switchToMode(mode);
   }
 
-  public boolean isNative() {
-    return nativeMode;
+  public WorkingMode getMode() {
+    return context.getWorkingMode();
+  }
+
+  public Context getContext() {
+    return context;
   }
 
 }

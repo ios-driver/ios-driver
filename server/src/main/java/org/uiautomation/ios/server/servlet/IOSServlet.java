@@ -26,6 +26,8 @@ import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.server.CommandMapping;
+import org.uiautomation.ios.server.ServerSideSession;
+import org.uiautomation.ios.server.WorkingMode;
 import org.uiautomation.ios.server.command.Handler;
 
 public class IOSServlet extends DriverBasedServlet {
@@ -74,7 +76,8 @@ public class IOSServlet extends DriverBasedServlet {
 
     boolean nativeMode = true;
     try {
-      nativeMode = getDriver().getSession(req.getSession()).isNative();
+      ServerSideSession session = getDriver().getSession(req.getSession());
+      nativeMode = session.getMode() == WorkingMode.Native;
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }
@@ -106,11 +109,11 @@ public class IOSServlet extends DriverBasedServlet {
 
   private WebDriverLikeResponse getResponse(WebDriverLikeRequest request) {
     long start = System.currentTimeMillis();
-    String command ="";
+    String command = "";
     try {
       WebDriverLikeCommand wdlc = request.getGenericCommand();
       Handler h = CommandMapping.get(wdlc).createHandler(getDriver(), request);
-      command = wdlc.method()+"\t "+wdlc.path();
+      command = wdlc.method() + "\t " + wdlc.path();
       return h.handleAndRunDecorators();
     } catch (Exception e) {
       try {
@@ -119,7 +122,7 @@ public class IOSServlet extends DriverBasedServlet {
         return new FailedWebDriverLikeResponse(null, e);
       }
     } finally {
-      String message  = command + "\t\t\t" + (System.currentTimeMillis() - start) + "ms.";
+      String message = command + "\t\t\t" + (System.currentTimeMillis() - start) + "ms.";
       System.out.println(message);
       Reporter.log(message);
     }

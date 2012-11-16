@@ -1,17 +1,29 @@
-package org.uiautomation.ios.mobileSafari;
+package org.uiautomation.ios.server;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeoutException;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.io.SAXReader;
 import org.json.JSONException;
-import org.uiautomation.ios.server.ServerSideSession;
+import org.json.JSONObject;
+import org.uiautomation.ios.mobileSafari.DOMMessageHandler;
+import org.uiautomation.ios.mobileSafari.EventListener;
+import org.uiautomation.ios.mobileSafari.MessageHandler;
+import org.uiautomation.ios.mobileSafari.NodeId;
+import org.uiautomation.ios.mobileSafari.WebInspector;
 import org.uiautomation.ios.webInspector.DOM.IFrame;
 import org.uiautomation.ios.webInspector.DOM.Node;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
+import org.uiautomation.ios.webInspector.DOM.SetChildNodes;
 
-public class DOMContext {
+public class DOMContext implements EventListener {
 
-  private final List<IFrame> knownIFrame = new CopyOnWriteArrayList<IFrame>();
+  /*private final List<IFrame> knownIFrame = new CopyOnWriteArrayList<IFrame>();
   private IFrame current;
   private Node currentDocument;
   private RemoteWebElement document;
@@ -19,10 +31,55 @@ public class DOMContext {
   public static Object lock = new Object();
   private final WebInspector inspector;
   private final ServerSideSession session;
+  private final List<JSONObject> responses = new CopyOnWriteArrayList<JSONObject>();*/
+  
+  
+  private volatile boolean pageLoaded = false;
+  private RemoteWebElement document;
+  private RemoteWebElement iframe;
 
-  public DOMContext(WebInspector inspector, ServerSideSession session) {
-    this.inspector = inspector;
+  
+  public RemoteWebElement getDocument(){
+    return document;
+  }
+  
+  public void setCurrentFrame(RemoteWebElement iframe,RemoteWebElement document){
+    this.iframe = iframe;
+    this.document = document;
+  }
+  
+  public RemoteWebElement getCurrentFrame(){
+    return iframe;
+  }
+  
+  @Override
+  public void onPageLoad() {
+   pageLoaded = true;
+    
+  }
+  
+  public void waitForPageToLoad() {
+    while (!pageLoaded){
+      try {
+        Thread.sleep(50);
+      } catch (InterruptedException e) {
+        //ignore
+      }
+    }
+    pageLoaded = false;
+    return;
+  }
+  
+  
+  public DOMContext(){
+    System.out.println("CREATING DOM CONTEXT");
+  }
+
+ 
+  
+  /*public DOMContext(ServerSideSession session) {
     this.session = session;
+    this.inspector = session.getWebInspector();
   }
 
   // id - {string|number|null|WebElement JSON Object} Identifier for the frame
@@ -53,7 +110,7 @@ public class DOMContext {
     long start = System.currentTimeMillis();
     synchronized (lock) {
       try {
-         document.readyState();
+        document.readyState();
       } catch (Exception e) {
         System.err.println("corrupted document " + e.getMessage());
         try {
@@ -62,7 +119,7 @@ public class DOMContext {
           System.err.println("returning a corrupted document " + e.getMessage());
         }
       }
-      System.err.println("getting document : "+(System.currentTimeMillis() - start)+"ms.");
+      System.err.println("getting document : " + (System.currentTimeMillis() - start) + "ms.");
       return document;
     }
   }
@@ -148,5 +205,51 @@ public class DOMContext {
     }
     return document;
   }
+
+  private Thread t;
+
+  private void process(String msg) {
+    // System.out.println("got message : " + msg);
+
+    msg = msg.replace(
+        "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">",
+        "");
+    SAXReader reader = new SAXReader();
+    try {
+      Document document = reader.read(IOUtils.toInputStream(msg));
+      org.dom4j.Node n = document.selectSingleNode("/plist/dict/dict/data");
+      if (n != null) {
+        String encoded = n.getText();
+        byte[] bytes = Base64.decodeBase64(encoded);
+        String s = new String(bytes);
+        JSONObject o = new JSONObject(s);
+        int id = o.optInt("id", -1);
+        if (id != -1) {
+          responses.add(o);
+        } else {
+          if ("DOM.setChildNodes".equals(o.optString("method"))) {
+            SetChildNodes notification = new SetChildNodes(o, inspector);
+            addIframe(notification.getIFrames());
+          } // else if ("DOM.documentUpdated".equals(o.optString("method"))) {
+          else if ("Profiler.resetProfiles".equals(o.optString("method"))
+              || "DOM.documentUpdated".equals(o.optString("method"))) {
+            try {
+              onLoad();
+            } catch (Exception e) {
+              e.printStackTrace();
+            }
+          } else {
+            System.err.println(o.toString());
+          }
+        }
+      }
+
+    } catch (DocumentException e) {
+      e.printStackTrace();
+    } catch (JSONException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }*/
 
 }

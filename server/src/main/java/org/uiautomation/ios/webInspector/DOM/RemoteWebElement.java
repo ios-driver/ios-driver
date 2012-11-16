@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.uiautomation.ios.UIAModels.UIADriver;
 import org.uiautomation.ios.UIAModels.UIAElement;
@@ -21,12 +22,13 @@ import org.uiautomation.ios.mobileSafari.DebugProtocol;
 import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.mobileSafari.WebInspector;
 import org.uiautomation.ios.server.ServerSideSession;
+import org.uiautomation.ios.server.WorkingMode;
 
 public class RemoteWebElement {
 
   private final UIADriver nativeDriver;
-  private final WebInspector inspector;
-  private final DebugProtocol protocol;
+  protected final WebInspector inspector;
+  protected final DebugProtocol protocol;
   private UIAElement nativeElement;
   private final ServerSideSession session;
   private final NodeId nodeId;
@@ -47,12 +49,12 @@ public class RemoteWebElement {
 
   public void click() throws Exception {
     UIAElement el = getNativeElement();
-    String origin = session.getWindowHandle();
+    WorkingMode origin = session.getMode();
     try {
-      session.setNativeContext();
+      session.setMode(WorkingMode.Native);
       el.tap();
     } finally {
-      session.setCurrentContext(origin);
+      session.setMode(origin);
     }
   }
 
@@ -71,7 +73,7 @@ public class RemoteWebElement {
           throw new StaleElementReferenceException(getNodeId() + " is stale.");
         }
       }
-      RemoteObject o = inspector.getProtocol().cast(response);
+      RemoteObject o = inspector.cast(response);
       remoteObject = o;
       System.err.println("getting remote object ofr node ID:" + nodeId + "\t" + (System.currentTimeMillis() - start)
           + ".ms");
@@ -84,9 +86,7 @@ public class RemoteWebElement {
         + "var result = content.replace(regex,'');" + "return result;" + "})";
 
     String func = Atoms.getText();
-    f =  "(function(arg) { " 
-    + "var text = "+func+"(arg);" 
-    + "return text;})";
+    f = "(function(arg) { " + "var text = " + func + "(arg);" + "return text;})";
     JSONObject cmd = new JSONObject();
 
     cmd.put("method", "Runtime.callFunctionOn");
@@ -99,7 +99,7 @@ public class RemoteWebElement {
             .put("arguments", args).put("returnByValue", true));
 
     JSONObject response = inspector.getProtocol().sendCommand(cmd);
-    return inspector.getProtocol().cast(response);
+    return inspector.cast(response);
   }
 
   public void highlight() {
@@ -117,17 +117,17 @@ public class RemoteWebElement {
   private UIAElement getNativeElement() throws Exception {
     // highlight();
     if (nativeElement == null) {
-      String origin = session.getWindowHandle();
+      WorkingMode origin = session.getMode();
       UIARect rect = null;
       try {
-        session.setNativeContext();
+        session.setMode(WorkingMode.Native);
         UIAElement sv = nativeDriver.findElement(new TypeCriteria(UIAScrollView.class));
 
         // scrollview container. Doesn't start in 0,0
         // x=0,y=96,h=928w=768
         rect = sv.getRect();
       } finally {
-        session.setCurrentContext(origin);
+        session.setMode(origin);
       }
 
       // get the web element
@@ -156,7 +156,7 @@ public class RemoteWebElement {
       // System.out.println("looking for the element at : " + x + "," + y);
       // find the corresponding native element
       try {
-        session.setNativeContext();
+        session.setMode(WorkingMode.Native);
         // Rect: x=6,y=102,h=14w=94
         // nativeElement = nativeDriver.findElement(new AndCriteria(new
         // TypeCriteria(UIALink.class),new LocationCriteria(x, y)));
@@ -165,7 +165,7 @@ public class RemoteWebElement {
         // "---"
         // + nativeElement.isVisible() + " --- " + nativeElement.isValid());
       } finally {
-        session.setCurrentContext(origin);
+        session.setMode(origin);
       }
 
     }
@@ -192,7 +192,7 @@ public class RemoteWebElement {
             .put("arguments", args).put("returnByValue", false));
 
     JSONObject response = inspector.getProtocol().sendCommand(cmd);
-    return inspector.getProtocol().cast(response);
+    return inspector.cast(response);
   }
 
   public String getAttribute(String attributeName) throws Exception {
@@ -204,12 +204,9 @@ public class RemoteWebElement {
     return "checked".equals(checked);
   }
 
-  
   public boolean isDisplayed() throws Exception {
     String func = Atoms.isDisplayed();
-    String f =  "(function(arg) { " 
-    + "var isDisplayed = "+func+"(arg);" 
-    + "return isDisplayed;})";
+    String f = "(function(arg) { " + "var isDisplayed = " + func + "(arg);" + "return isDisplayed;})";
     JSONObject cmd = new JSONObject();
 
     cmd.put("method", "Runtime.callFunctionOn");
@@ -222,48 +219,7 @@ public class RemoteWebElement {
             .put("arguments", args).put("returnByValue", true));
 
     JSONObject response = inspector.getProtocol().sendCommand(cmd);
-    return inspector.getProtocol().cast(response);
-  }
-  
-  /**
-   * doesn't check for dispaly= none, just that there is no other div above it
-   * and that's in the viewport
-   * 
-   * @return
-   * @throws Exception
-   */
-  public boolean isDisplayedOld() throws Exception {
-    highlight();
-    String f = "(function(element,document) {"
-        + "  if (element.offsetWidth === 0 || element.offsetHeight === 0){ return false;}"
-        + "  var height = document.documentElement.clientHeight;" + "  var rects = element.getClientRects();"
-        + "  var on_top = function(r) {"
-        + "        var x = (r.left + r.right)/2, y = (r.top + r.bottom)/2;"
-        + "        var isOnTop = document.elementFromPoint(x, y) === element;"
-        // +"alert(x+' -- '+isOnTop);"
-        + "        return isOnTop; " + "      };" + "  for (var i = 0, l = rects.length; i < l; i++) {"
-        + "    var r = rects[i];"
-        // +"alert(r.top>0+' -- '+r.top <= height+'---'+r.bottom > 0+'--'+r.bottom <= height);"
-        + "    var in_viewport = r.top > 0 ? r.top <= height : (r.bottom > 0 && r.bottom <= height);"
-        + "    if (in_viewport && on_top(r))" + " {return true;}" + "  }" + "  return false;" + "})";
-
-    RemoteWebElement document = inspector.getCache().getCurrentDocument();
-
-    JSONObject cmd = new JSONObject();
-
-    cmd.put("method", "Runtime.callFunctionOn");
-
-    JSONArray args = new JSONArray();
-    args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
-    args.put(new JSONObject().put("objectId", document.getRemoteObject().getId()));
-
-    cmd.put("params",
-        new JSONObject().put("objectId", getRemoteObject().getId()).put("functionDeclaration", f)
-            .put("arguments", args).put("returnByValue", true));
-
-    JSONObject response = inspector.getProtocol().sendCommand(cmd);
-    return inspector.getProtocol().cast(response);
-
+    return inspector.cast(response);
   }
 
   public RemoteWebElement findElementByLinkText(String text, boolean partialMatch) throws Exception {
@@ -292,7 +248,7 @@ public class RemoteWebElement {
             .put("arguments", args).put("returnByValue", false));
 
     JSONObject response = inspector.getProtocol().sendCommand(cmd);
-    RemoteObject ro = inspector.getProtocol().cast(response);
+    RemoteObject ro = inspector.cast(response);
     if (ro == null) {
       return null;
     } else {
@@ -328,7 +284,7 @@ public class RemoteWebElement {
             .put("arguments", args).put("returnByValue", false));
 
     JSONObject response = protocol.sendCommand(cmd);
-    RemoteObjectArray ra = protocol.cast(response);
+    RemoteObjectArray ra = inspector.cast(response);
 
     List<RemoteWebElement> res = new ArrayList<RemoteWebElement>();
     if (ra != null) {
@@ -357,7 +313,7 @@ public class RemoteWebElement {
               .put("arguments", args).put("returnByValue", false));
 
       JSONObject response = protocol.sendCommand(cmd);
-      RemoteObject ro = protocol.cast(response);
+      RemoteObject ro = inspector.cast(response);
       if (ro == null) {
         return null;
       } else {
@@ -411,13 +367,13 @@ public class RemoteWebElement {
             .put("arguments", args).put("returnByValue", true));
 
     JSONObject response = protocol.sendCommand(cmd);
-    return protocol.cast(response);
+    return inspector.cast(response);
   }
 
   @Override
   public String toString() {
     try {
-      //String remoteElement = getRemoteObject().getId();
+      // String remoteElement = getRemoteObject().getId();
       // String text = getText();
       String remoteElement = remoteObject == null ? "not loaded" : remoteObject.getId();
       return "nodeId=" + nodeId + " , remoteElement " + remoteElement; // +
@@ -426,6 +382,29 @@ public class RemoteWebElement {
                                                                        // text;
     } catch (Exception e) {
       return e.getMessage();
+    }
+  }
+
+  public RemoteWebElement getContentDocument() throws Exception {
+
+    JSONObject cmd = new JSONObject();
+
+    cmd.put("method", "Runtime.callFunctionOn");
+
+    JSONArray args = new JSONArray();
+
+    cmd.put(
+        "params",
+        new JSONObject().put("objectId", getRemoteObject().getId())
+            .put("functionDeclaration", "(function(arg) { var document = this.contentDocument; return document;})")
+            .put("arguments", args).put("returnByValue", false));
+
+    JSONObject response = protocol.sendCommand(cmd);
+    RemoteObject ro = inspector.cast(response);
+    if (ro == null) {
+      throw new NoSuchFrameException("Cannot find the document associated with the frame.");
+    } else {
+      return ro.getWebElement();
     }
   }
 }

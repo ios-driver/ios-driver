@@ -42,6 +42,7 @@ public enum WebDriverLikeCommand {
   
   WINDOW_HANDLES("GET","/session/:sessionId/window_handles",Set.class),
   WINDOW("POST" ,"/session/:sessionId/window",String.class),
+  FRAME("POST", "/session/:sessionId/frame",Void.class),
   GET_WINDOW_HANDLE("GET", "/session/:sessionId/window_handle",String.class),
   TITLE("GET","/session/:sessionId/title",String.class),
   URL("POST","/session/:sessionId/url",Void.class),

@@ -3,6 +3,7 @@ package org.uiautomation.ios.server.command.impl;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.WorkingMode;
 import org.uiautomation.ios.server.command.BaseCommandHandler;
 
 public class GetCurrentContext extends BaseCommandHandler {
@@ -14,8 +15,8 @@ public class GetCurrentContext extends BaseCommandHandler {
 
   @Override
   public WebDriverLikeResponse handle() throws Exception {
-    String handle = getSession().getWindowHandle();
-    return new WebDriverLikeResponse(getSession().getSessionId(), 0, handle);
+    WorkingMode mode = getSession().getMode();
+    return new WebDriverLikeResponse(getSession().getSessionId(), 0, mode);
   }
 
 }
