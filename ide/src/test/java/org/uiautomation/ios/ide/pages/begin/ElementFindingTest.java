@@ -32,6 +32,7 @@ public class ElementFindingTest {
   private RemoteMobileSafariDriver driver = null;
   private String url = "http://" + config.getHost() + ":" + config.getPort() + "/wd/hub";
   private Pages pages;
+  private AppServer appServer;
 
   @BeforeClass
   public void setup() throws Exception {
@@ -43,7 +44,7 @@ public class ElementFindingTest {
     safari.setCapability(IOSCapabilities.TIME_HACK, false);
 
     driver = new RemoteMobileSafariDriver(url, safari);
-    AppServer appServer = new WebbitAppServer();
+    appServer = new WebbitAppServer();
     appServer.start();
     pages = new Pages(appServer);
   }
@@ -421,17 +422,9 @@ public class ElementFindingTest {
 
   @Test
   public void testShouldfindElementsBasedOnTagName() {
-    //long start = System.currentTimeMillis();
-    //System.out.println("-----------A------------");
-    
     driver.get(pages.formPage);
-    //System.out.println("-----------A------------"+(System.currentTimeMillis() - start)+"ms");
-    
-
-    //System.out.println("-----------B------------");
     List<WebElement> elements = driver.findElements(By.tagName("input"));
-    //System.out.println("-----------B------------"+(System.currentTimeMillis() - start)+"ms");
-    
+
     Assert.assertNotNull(elements);
   }
 
@@ -521,72 +514,76 @@ public class ElementFindingTest {
     };
   }
 
+  @Test(enabled = false)
+  public void testFindingALinkByXpathUsingContainsKeywordShouldWork() {
+    driver.get(pages.nestedPage);
+
+    try {
+      driver.findElement(By.xpath("//a[contains(.,'hello world')]"));
+    } catch (Exception e) {
+      Assert.fail("Should not have thrown an exception");
+    }
+  }
+
+  @Test
+  public void testShouldBeAbleToFindAnElementByCssSelector() {
+    driver.get(pages.xhtmlTestPage);
+    driver.findElement(By.cssSelector("div.content"));
+  }
+
+  @Test
+  public void testShouldBeAbleToFindElementsByCssSelector() {
+    driver.get(pages.xhtmlTestPage);
+    driver.findElements(By.cssSelector("p"));
+  }
+
+  @Test
+  public void testShouldBeAbleToFindAnElementByCompoundCssSelector() {
+    driver.get(pages.xhtmlTestPage);
+    WebElement element = driver.findElement(By.cssSelector("div.extraDiv, div.content"));
+    Assert.assertEquals("content", element.getAttribute("class"));
+  }
+
+  @Test
+  public void testShouldBeAbleToFindElementsByCompoundCssSelector() {
+    driver.get(pages.xhtmlTestPage);
+    List<WebElement> elements = driver.findElements(By.cssSelector("div.extraDiv, div.content"));
+    Assert.assertEquals("content", elements.get(0).getAttribute("class"));
+    Assert.assertEquals("extraDiv", elements.get(1).getAttribute("class"));
+  }
+
+  @Test
+  public void testFindingByTagNameShouldNotIncludeParentElementIfSameTagType() {
+    driver.get(pages.xhtmlTestPage);
+    WebElement parent = driver.findElement(By.id("my_span"));
+
+    Assert.assertEquals(2, parent.findElements(By.tagName("div")).size());
+    Assert.assertEquals(2, parent.findElements(By.tagName("span")).size());
+  }
+
+  @Test
+  public void testFindingByCssShouldNotIncludeParentElementIfSameTagType() {
+    driver.get(pages.xhtmlTestPage);
+    WebElement parent = driver.findElement(By.cssSelector("div#parent"));
+    WebElement child = parent.findElement(By.cssSelector("div"));
+
+    Assert.assertEquals("child", child.getAttribute("id"));
+  }
+
+  @Test(enabled = false)
+  public void testAnElementFoundInADifferentFrameIsStale() {
+    driver.get(pages.missedJsReferencePage);
+    driver.switchTo().frame("inner");
+    WebElement element = driver.findElement(By.id("oneline"));
+    driver.switchTo().defaultContent();
+    try {
+      element.getText();
+      Assert.fail("Expected exception");
+    } catch (StaleElementReferenceException expected) { // Expected
+    }
+  }
+
   /*
-   * @Test public void testFindingALinkByXpathUsingContainsKeywordShouldWork() {
-   * driver.get(pages.nestedPage);
-   * 
-   * try { driver.findElement(By.xpath("//a[contains(.,'hello world')]")); }
-   * catch (Exception e) { fail("Should not have thrown an exception"); } }
-   * 
-   * @JavascriptEnabled
-   * 
-   * @Test public void testShouldBeAbleToFindAnElementByCssSelector() {
-   * driver.get(pages.xhtmlTestPage);
-   * driver.findElement(By.cssSelector("div.content")); }
-   * 
-   * @JavascriptEnabled
-   * 
-   * @Test public void testShouldBeAbleToFindElementsByCssSelector() {
-   * driver.get(pages.xhtmlTestPage); driver.findElements(By.cssSelector("p"));
-   * }
-   * 
-   * @JavascriptEnabled
-   * 
-   * @Ignore(CHROME)
-   * 
-   * @Test public void testShouldBeAbleToFindAnElementByCompoundCssSelector() {
-   * driver.get(pages.xhtmlTestPage); WebElement element =
-   * driver.findElement(By.cssSelector("div.extraDiv, div.content"));
-   * assertEquals("content", element.getAttribute("class")); }
-   * 
-   * @JavascriptEnabled
-   * 
-   * @Ignore(CHROME)
-   * 
-   * @Test public void testShouldBeAbleToFindElementsByCompoundCssSelector() {
-   * driver.get(pages.xhtmlTestPage); List<WebElement> elements =
-   * driver.findElements(By.cssSelector("div.extraDiv, div.content"));
-   * assertEquals("content", elements.get(0).getAttribute("class"));
-   * assertEquals("extraDiv", elements.get(1).getAttribute("class")); }
-   * 
-   * @Test public void
-   * testFindingByTagNameShouldNotIncludeParentElementIfSameTagType() {
-   * driver.get(pages.xhtmlTestPage); WebElement parent =
-   * driver.findElement(By.id("my_span"));
-   * 
-   * assertEquals(2, parent.findElements(By.tagName("div")).size());
-   * assertEquals(2, parent.findElements(By.tagName("span")).size()); }
-   * 
-   * @Test public void
-   * testFindingByCssShouldNotIncludeParentElementIfSameTagType() {
-   * driver.get(pages.xhtmlTestPage); WebElement parent =
-   * driver.findElement(By.cssSelector("div#parent")); WebElement child =
-   * parent.findElement(By.cssSelector("div"));
-   * 
-   * assertEquals("child", child.getAttribute("id")); }
-   * 
-   * // TODO(danielwh): Add extensive CSS selector tests
-   * 
-   * @Ignore(value = {ANDROID, OPERA, SELENESE, OPERA_MOBILE}, reason =
-   * "Just not working")
-   * 
-   * @Test public void testAnElementFoundInADifferentFrameIsStale() {
-   * driver.get(pages.missedJsReferencePage); driver.switchTo().frame("inner");
-   * WebElement element = driver.findElement(By.id("oneline"));
-   * driver.switchTo().defaultContent(); try { element.getText();
-   * fail("Expected exception"); } catch (StaleElementReferenceException
-   * expected) { // Expected } }
-   * 
    * @JavascriptEnabled
    * 
    * @Ignore({ANDROID, IPHONE, OPERA, SELENESE, OPERA_MOBILE})
@@ -608,15 +605,13 @@ public class ElementFindingTest {
    * 
    * assertEquals(first, element); assertEquals(second, element); } finally {
    * driver.switchTo().defaultContent(); } }
-   * 
-   * @Test
-   * 
-   * @Ignore({CHROME, OPERA}) public void findsByLinkTextOnXhtmlPage() { if
-   * (isOldIe(driver)) { // Old IE doesn't render XHTML pages, don't try loading
-   * XHTML pages in it return; }
-   * driver.get(appServer.whereIs("actualXhtmlPage.xhtml")); String linkText =
-   * "Foo"; WebElement element = driver.findElement(By.linkText(linkText));
-   * assertEquals(linkText, element.getText()); }
    */
+  @Test
+  public void findsByLinkTextOnXhtmlPage() {
+    driver.get(appServer.whereIs("actualXhtmlPage.xhtml"));
+    String linkText = "Foo";
+    WebElement element = driver.findElement(By.linkText(linkText));
+    Assert.assertEquals(linkText, element.getText());
+  }
 
 }

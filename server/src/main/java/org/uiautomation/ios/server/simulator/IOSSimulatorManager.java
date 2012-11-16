@@ -240,7 +240,6 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     out.write(content.toString(2));
     out.close();
     return res;
-
   }
 
   private void writeOnDisk(JSONObject plistJSON) throws IOException, JSONException {

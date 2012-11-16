@@ -30,7 +30,7 @@ public class DebugProtocol {
 
   private int commandId = 0;
 
-  private final boolean displayPerformance = true;
+  private final boolean displayPerformance = false;
   private Thread listen;
   private volatile boolean keepGoing=true;
   private final String bundleId;
@@ -154,8 +154,9 @@ public class DebugProtocol {
     os.write((byte) ((bytes.length >> 16) & 0xFF));
     os.write((byte) ((bytes.length >> 8) & 0xFF));
     os.write((byte) (bytes.length & 0xFF));
+    //System.err.println("about to send " + bytes.length + " bytes.");
     os.write(bytes);
-    // System.err.println("Sending " + bytes.length + " bytes.");
+    //System.err.println("Sending " + bytes.length + " bytes.");
   }
 
 
@@ -181,7 +182,7 @@ public class DebugProtocol {
         buf = new ByteArrayOutputStream();
         buf.write(bytes, 4 + size, bytes.length - size - 4);
       } else {
-        System.err.println("Expecting " + size + " + 4 bytes. Buffered " + bytes.length + ".");
+        //System.err.println("Expecting " + size + " + 4 bytes. Buffered " + bytes.length + ".");
         break;
       }
     }

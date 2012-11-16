@@ -16,6 +16,7 @@ import org.uiautomation.ios.UIAModels.UIAScrollView;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.LocationCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
+import org.uiautomation.ios.mobileSafari.Atoms;
 import org.uiautomation.ios.mobileSafari.DebugProtocol;
 import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.mobileSafari.WebInspector;
@@ -82,11 +83,16 @@ public class RemoteWebElement {
     String f = "(function(arg) { " + "var el = this;" + "var regex = /(<([^>]+)>)/ig;" + "var content = el.innerHTML;"
         + "var result = content.replace(regex,'');" + "return result;" + "})";
 
+    String func = Atoms.getText();
+    f =  "(function(arg) { " 
+    + "var text = "+func+"(arg);" 
+    + "return text;})";
     JSONObject cmd = new JSONObject();
 
     cmd.put("method", "Runtime.callFunctionOn");
 
     JSONArray args = new JSONArray();
+    args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
 
     cmd.put("params",
         new JSONObject().put("objectId", getRemoteObject().getId()).put("functionDeclaration", f)
@@ -198,6 +204,27 @@ public class RemoteWebElement {
     return "checked".equals(checked);
   }
 
+  
+  public boolean isDisplayed() throws Exception {
+    String func = Atoms.isDisplayed();
+    String f =  "(function(arg) { " 
+    + "var isDisplayed = "+func+"(arg);" 
+    + "return isDisplayed;})";
+    JSONObject cmd = new JSONObject();
+
+    cmd.put("method", "Runtime.callFunctionOn");
+
+    JSONArray args = new JSONArray();
+    args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
+
+    cmd.put("params",
+        new JSONObject().put("objectId", getRemoteObject().getId()).put("functionDeclaration", f)
+            .put("arguments", args).put("returnByValue", true));
+
+    JSONObject response = inspector.getProtocol().sendCommand(cmd);
+    return inspector.getProtocol().cast(response);
+  }
+  
   /**
    * doesn't check for dispaly= none, just that there is no other div above it
    * and that's in the viewport
@@ -205,7 +232,7 @@ public class RemoteWebElement {
    * @return
    * @throws Exception
    */
-  public boolean isDisplayed() throws Exception {
+  public boolean isDisplayedOld() throws Exception {
     highlight();
     String f = "(function(element,document) {"
         + "  if (element.offsetWidth === 0 || element.offsetHeight === 0){ return false;}"
@@ -401,5 +428,4 @@ public class RemoteWebElement {
       return e.getMessage();
     }
   }
-
 }
