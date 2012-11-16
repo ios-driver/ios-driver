@@ -32,8 +32,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.DriverCommand;
 import org.openqa.selenium.remote.HttpCommandExecutor;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.internal.WebElementToJsonConverter;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.UIAModels.UIADriver;
@@ -49,6 +51,10 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.exceptions.NoSuchElementException;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
 
@@ -87,6 +93,7 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
 
       setSessionId(session.getSessionId());
       setCommandExecutor(new HttpCommandExecutor(url));
+      
 
     } catch (MalformedURLException e) {
       throw new IOSAutomationException("invalid URL " + remoteURL, e);
@@ -397,7 +404,17 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
 
   }
 
-  
+  @Override
+  public Object executeScript(String script, Object... args) {
+    // Escape the quote marks
+    script = script.replaceAll("\"", "\\\"");
+
+    Iterable<Object> convertedArgs = Iterables.transform(Lists.newArrayList(args), new WebElementToJsonConverter());
+
+    Map<String, ?> params = ImmutableMap.of("script", script, "args", Lists.newArrayList(convertedArgs));
+
+    return execute(DriverCommand.EXECUTE_SCRIPT, params).getValue();
+  }
 
 
 }
