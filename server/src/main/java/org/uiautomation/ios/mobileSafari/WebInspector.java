@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.UIADriver;
 import org.uiautomation.ios.UIAModels.UIARect;
+import org.uiautomation.ios.server.DOMContext;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.webInspector.DOM.DOM;
 import org.uiautomation.ios.webInspector.DOM.Node;
@@ -25,9 +26,11 @@ public class WebInspector {
   private int width = -1;
 
   public RemoteWebElement getDocument() throws Exception {
-    RemoteWebElement result = session.getContext().getDOMContext().getDocument();
+    DOMContext context = session.getContext().getDOMContext();
+    RemoteWebElement result = context.getDocument();
     if (result == null) {
       result = retrieveDocumentAndCheckReady();
+      context.setCurrentFrame(null, result);
     }
     return result;
   }

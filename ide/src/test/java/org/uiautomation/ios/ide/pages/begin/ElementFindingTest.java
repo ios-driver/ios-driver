@@ -587,7 +587,7 @@ public class ElementFindingTest {
   }
 
   // switching frames seems to break references
-  @Test(enabled = false)
+  @Test//(enabled = false)
   public void testAnElementFoundInADifferentFrameViaJsCanBeUsed() {
     driver.get(pages.missedJsReferencePage);
 

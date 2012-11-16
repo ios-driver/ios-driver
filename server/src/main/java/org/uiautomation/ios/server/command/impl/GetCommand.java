@@ -27,6 +27,7 @@ public class GetCommand extends BaseCommandHandler {
   @Override
   public WebDriverLikeResponse handle() throws Exception {
     String url = getRequest().getPayload().getString("url");
+    getSession().getContext().getDOMContext().reset();
     //typeURLNative(url);
     fakeTypeURL(url);
     getSession().getWebInspector().waitForPageToLoad();
