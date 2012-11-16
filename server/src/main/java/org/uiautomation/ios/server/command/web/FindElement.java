@@ -40,6 +40,7 @@ public class FindElement extends BaseCommandHandler {
     } else {
       String cssSelector = ToCSSSelectorConvertor.convertToCSSSelector(type, value);
       rwe = element.findElementByCSSSelector(cssSelector);
+      System.out.println("found element nodeId"+rwe.getNodeId()+" , objectId:"+rwe.getRemoteObject().getId());
     }
 
     JSONObject res = new JSONObject();

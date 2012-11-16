@@ -43,6 +43,8 @@ import org.uiautomation.ios.server.command.impl.StopSession;
 import org.uiautomation.ios.server.command.impl.TakeScreenshot;
 import org.uiautomation.ios.server.command.web.Click;
 import org.uiautomation.ios.server.command.web.DisplayedCommandHanlder;
+import org.uiautomation.ios.server.command.web.Equality;
+import org.uiautomation.ios.server.command.web.ExecuteScript;
 import org.uiautomation.ios.server.command.web.FindElement;
 import org.uiautomation.ios.server.command.web.FindElements;
 import org.uiautomation.ios.server.command.web.GetTextCommandHandler;
@@ -67,7 +69,8 @@ public enum CommandMapping {
   TITLE(null,null,WebGetTitle.class),
   URL(GetCommand.class,GetCommand.class),
 
-  
+  EXECUTE_SCRIPT(NotImplementedHandler.class,ExecuteScript.class),
+  EQUAL(NotImplementedHandler.class,Equality.class),
   // UIATarget
   LOCAL_TARGET(LocalTarget.class),
   HOST(NotImplementedHandler.class),

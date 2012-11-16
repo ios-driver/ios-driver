@@ -136,10 +136,46 @@ public class WebInspector {
   public int getInnerWidth() throws JSONException, Exception {
     JSONObject cmd = new JSONObject();
     cmd.put("method", "Runtime.evaluate");
-    cmd.put("params", new JSONObject().put("expression", "window.innerWidth;").put("returnByValue", true));
+    cmd.put("params", new JSONObject().put("expression", "window.innerWidth;"));
+  
     JSONObject response = protocol.sendCommand(cmd);
     return cast(response);
   }
+  
+  public Object executeScriptOld(String script, JSONArray args) throws Exception {
+    JSONObject cmd = new JSONObject();
+    cmd.put("method", "Runtime.evaluate");
+    cmd.put("params", new JSONObject()
+      .put("expression", "(function(args) {  alert('args');"+script+"})();")
+      .put("arguments", new JSONObject().put("value", "5"))
+      .put("returnByValue", false)
+      );
+    JSONObject response = protocol.sendCommand(cmd);
+    return cast(response);
+  }
+  
+  
+  public Object executeScript(String script, JSONArray args) throws Exception {
+    RemoteWebElement document = getDocument();
+    JSONObject cmd = new JSONObject();
+    
+    
+    
+    JSONArray arguments = new JSONArray();
+    arguments.put(new JSONObject().put("value", "5"));
+    
+    cmd.put("method", "Runtime.callFunctionOn");
+    cmd.put("params", new JSONObject()
+      .put("objectId",document.getRemoteObject().getId())
+      .put("functionDeclaration", "(function(args) { "+script+"})")
+      .put("arguments", arguments)
+      .put("returnByValue", false)
+      );
+    JSONObject response = protocol.sendCommand(cmd);
+    return cast(response);
+  }
+  
+  
 
   public void stop() {
     protocol.stop();
@@ -202,6 +238,8 @@ public class WebInspector {
     session.getContext().getDOMContext().waitForPageToLoad();
     
   }
+
+ 
 
 
 }

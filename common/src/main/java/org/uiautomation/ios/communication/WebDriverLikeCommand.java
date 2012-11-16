@@ -47,6 +47,9 @@ public enum WebDriverLikeCommand {
   TITLE("GET","/session/:sessionId/title",String.class),
   URL("POST","/session/:sessionId/url",Void.class),
   
+  EXECUTE_SCRIPT("POST", "/session/:sessionId/execute",Object.class),
+  EQUAL("GET","/session/:sessionId/element/:reference/equals/:other",Boolean.class),
+  
   // UIATarget
   LOCAL_TARGET("GET","/session/:sessionId/localTarget",UIATarget.class),
   TREE("GET","/session/:sessionId/element/:reference/source",String.class),

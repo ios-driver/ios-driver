@@ -75,7 +75,7 @@ public class RemoteWebElement {
       }
       RemoteObject o = inspector.cast(response);
       remoteObject = o;
-      System.err.println("getting remote object ofr node ID:" + nodeId + "\t" + (System.currentTimeMillis() - start)
+      System.err.println("getting remote object for node ID:" + nodeId + "\t" + (System.currentTimeMillis() - start)
           + ".ms");
     }
     return remoteObject;
@@ -407,4 +407,29 @@ public class RemoteWebElement {
       return ro.getWebElement();
     }
   }
+
+  public boolean equalsRemoteWebElement(RemoteWebElement other) throws Exception {
+
+    JSONObject cmd = new JSONObject();
+
+    cmd.put("method", "Runtime.callFunctionOn");
+
+    JSONArray args = new JSONArray();
+    String objectId = other.getRemoteObject().getId();
+    args.put(new JSONObject().put("objectId", objectId));
+
+    cmd.put(
+        "params",
+        new JSONObject()
+            .put("objectId", getRemoteObject().getId())
+            .put("functionDeclaration",
+                "(function(args) { var me = this; var other=args;alert(me +' -- '+other);return me === other;})")
+            .put("arguments", args).put("returnByValue", false));
+
+    JSONObject response = protocol.sendCommand(cmd);
+    boolean equal = inspector.cast(response);
+    return equal;
+
+  }
+
 }
