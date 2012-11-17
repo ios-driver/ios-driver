@@ -27,10 +27,12 @@ public class Atoms {
   
   private static String getText; 
   private static String isDisplayed; 
+  private static String click;
   static {
     try {
       getText = load("atoms/getVisibleText.js");
       isDisplayed = load("atoms/isVisible.js");
+      click = load("atoms/click.js");
     } catch (Exception e) {
       throw new RuntimeException("Cannot load atoms");
     }
@@ -42,6 +44,9 @@ public class Atoms {
   }
   public static String isDisplayed(){
     return isDisplayed;
+  }
+  public static String click(){
+    return click;
   }
   
   

@@ -12,7 +12,7 @@
  * the License.
  */
 
-package org.uiautomation.ios.server.command.impl;
+package org.uiautomation.ios.server.command.uiautomation;
 
 import java.util.List;
 import java.util.Map;

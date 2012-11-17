@@ -1,6 +1,11 @@
 package org.uiautomation.ios.ide.pages.begin;
 
+import static org.openqa.selenium.TestWaiter.waitFor;
+import static org.openqa.selenium.WaitingConditions.pageTitleToBe;
+
+import org.openqa.selenium.By;
 import org.openqa.selenium.Pages;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.environment.webserver.AppServer;
 import org.openqa.selenium.environment.webserver.WebbitAppServer;
 import org.testng.Assert;
@@ -79,5 +84,22 @@ public class ConfigurationTest {
         driver.quit();
       }
     }
+  }
+  
+  @Test
+  public void testDriverShouldBeAbleToClickNativeAndAtom() {
+    driver.get(pages.xhtmlTestPage);
+    WebElement el = driver.findElement(By.cssSelector("div[class='content']>a[href='resultPage.html']"));
+    driver.configure(WebDriverLikeCommand.CLICK).set("nativeEvents", true);
+    el.click();
+    waitFor(pageTitleToBe(driver, "We Arrive Here"));
+
+    
+    driver.get(pages.xhtmlTestPage);
+    el = driver.findElement(By.cssSelector("div[class='content']>a[href='resultPage.html']"));
+    driver.configure(WebDriverLikeCommand.CLICK).set("nativeEvents", false);
+    el.click();
+    waitFor(pageTitleToBe(driver, "We Arrive Here"));
+   
   }
 }

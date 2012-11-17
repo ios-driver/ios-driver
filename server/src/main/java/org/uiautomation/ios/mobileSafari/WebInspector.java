@@ -3,6 +3,8 @@ package org.uiautomation.ios.mobileSafari;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sound.midi.VoiceStatus;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -230,7 +232,12 @@ public class WebInspector {
         }
 
       } else {
-        throw new RuntimeException("NI " + response.toString(2));
+        if ("undefined".equals(type)){ 
+          return null;
+        }else{
+          throw new RuntimeException("NI " + response.toString(2));
+        }
+       
       }
     } else {
       throw new RuntimeException("bug, null result ");

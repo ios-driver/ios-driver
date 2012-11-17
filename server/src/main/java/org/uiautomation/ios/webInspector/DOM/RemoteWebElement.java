@@ -48,6 +48,31 @@ public class RemoteWebElement {
   }
 
   public void click(boolean nativeEvents) throws Exception {
+    if (nativeEvents) {
+      clickNative();
+    } else {
+      clickAtom();
+    }
+  }
+
+  private void clickAtom() throws Exception {
+    String f = "(function(arg) { " + "var text = " + Atoms.click() + "(arg);" + "return text;})";
+    JSONObject cmd = new JSONObject();
+
+    cmd.put("method", "Runtime.callFunctionOn");
+
+    JSONArray args = new JSONArray();
+    args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
+
+    cmd.put("params",
+        new JSONObject().put("objectId", getRemoteObject().getId()).put("functionDeclaration", f)
+            .put("arguments", args).put("returnByValue", true));
+
+    JSONObject response = inspector.getProtocol().sendCommand(cmd);
+    inspector.cast(response);
+  }
+
+  private void clickNative() throws Exception {
     UIAElement el = getNativeElement();
     WorkingMode origin = session.getMode();
     try {
@@ -82,11 +107,7 @@ public class RemoteWebElement {
   }
 
   public String getText() throws Exception {
-    String f = "(function(arg) { " + "var el = this;" + "var regex = /(<([^>]+)>)/ig;" + "var content = el.innerHTML;"
-        + "var result = content.replace(regex,'');" + "return result;" + "})";
-
-    String func = Atoms.getText();
-    f = "(function(arg) { " + "var text = " + func + "(arg);" + "return text;})";
+    String f = "(function(arg) { " + "var text = " + Atoms.getText() + "(arg);" + "return text;})";
     JSONObject cmd = new JSONObject();
 
     cmd.put("method", "Runtime.callFunctionOn");

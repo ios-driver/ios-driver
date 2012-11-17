@@ -1,4 +1,4 @@
-package org.uiautomation.ios.server.command.impl;
+package org.uiautomation.ios.server.command.uiautomation;
 
 import java.util.List;
 

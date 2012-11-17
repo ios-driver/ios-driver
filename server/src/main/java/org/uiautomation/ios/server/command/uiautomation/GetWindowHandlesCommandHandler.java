@@ -1,4 +1,4 @@
-package org.uiautomation.ios.server.command.impl;
+package org.uiautomation.ios.server.command.uiautomation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
