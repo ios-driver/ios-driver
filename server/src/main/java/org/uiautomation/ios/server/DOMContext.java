@@ -21,6 +21,10 @@ public class DOMContext implements EventListener {
     mainDocument = null;
   }
 
+  // TODO freynaud. Cleanup. A reference to the main document of the page needs
+  // to be kept.
+  // calling getDocument again to have the document after siwtching to an iframe
+  // breaks the nodeId reference.
   public void setCurrentFrame(RemoteWebElement iframe, RemoteWebElement document) {
     this.iframe = iframe;
     this.document = document;
@@ -43,9 +47,9 @@ public class DOMContext implements EventListener {
 
   @Override
   public void onPageLoad() {
+    System.err.println("PAGE LOADED");
     pageLoaded = true;
     reset();
-
   }
 
   public void waitForPageToLoad() {

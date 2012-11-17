@@ -586,8 +586,7 @@ public class ElementFindingTest {
     }
   }
 
-  // switching frames seems to break references
-  @Test//(enabled = false)
+  @Test
   public void testAnElementFoundInADifferentFrameViaJsCanBeUsed() {
     driver.get(pages.missedJsReferencePage);
 
@@ -626,8 +625,7 @@ public class ElementFindingTest {
       driver.switchTo().defaultContent();
     }
   }
-  
-  
+
   @Test
   public void test2() {
     driver.get(pages.missedJsReferencePage);
@@ -641,7 +639,6 @@ public class ElementFindingTest {
       driver.switchTo().frame("inner");
       System.out.println(first.getText());
 
-     
     } finally {
       driver.switchTo().defaultContent();
     }

@@ -36,7 +36,9 @@ public class SetFrame extends BaseCommandHandler {
   private RemoteWebElement getIframe(String id) throws Exception {
     RemoteWebElement currentDocument = getSession().getWebInspector().getDocument();
 
-    List<RemoteWebElement> iframes = currentDocument.findElementsByCSSSelector("iframe");
+    
+    
+    List<RemoteWebElement> iframes = currentDocument.findElementsByCSSSelector("iframe,frame");
     // string|number|null|WebElement JSON Object
     for (RemoteWebElement iframe : iframes) {
       String name = iframe.getAttribute("name");
@@ -44,6 +46,16 @@ public class SetFrame extends BaseCommandHandler {
         return iframe;
       }
     }
+    
+    try {
+      int index = Integer.parseInt(id);
+      return iframes.get(index);
+    }catch (NumberFormatException e) {
+      //ignore
+    }catch(IndexOutOfBoundsException i){
+      throw new NoSuchFrameException("detected "+iframes.size()+" frames. Cannot get index = "+id);
+    }
+    
     throw new NoSuchFrameException("Cannot find frame " + id);
   }
 }
