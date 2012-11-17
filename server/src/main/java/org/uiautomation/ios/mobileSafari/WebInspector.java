@@ -249,6 +249,44 @@ public class WebInspector {
     
   }
 
+  public void back() throws Exception {
+    RemoteWebElement document = getDocument();
+    String f = "(function(arg) { var f=" + Atoms.back() + "(arg);})";
+    JSONObject cmd = new JSONObject();
+
+    cmd.put("method", "Runtime.callFunctionOn");
+
+    JSONArray args = new JSONArray();
+
+    cmd.put("params", new JSONObject()
+      .put("objectId", document.getRemoteObject().getId())
+      .put("functionDeclaration", f)
+      .put("arguments", args)
+      .put("returnByValue", true));
+
+    JSONObject response = getProtocol().sendCommand(cmd);
+    cast(response);
+  }
+  
+  public void forward() throws Exception {
+    RemoteWebElement document = getDocument();
+    String f = "(function(arg) { var f=" + Atoms.forward() + "(arg);})";
+    JSONObject cmd = new JSONObject();
+
+    cmd.put("method", "Runtime.callFunctionOn");
+
+    JSONArray args = new JSONArray();
+
+    cmd.put("params", new JSONObject()
+      .put("objectId", document.getRemoteObject().getId())
+      .put("functionDeclaration", f)
+      .put("arguments", args)
+      .put("returnByValue", true));
+
+    JSONObject response = getProtocol().sendCommand(cmd);
+    cast(response);
+  }
+
  
 
 

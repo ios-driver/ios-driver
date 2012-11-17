@@ -46,10 +46,12 @@ import org.uiautomation.ios.server.command.uiautomation.SetCurrentContext;
 import org.uiautomation.ios.server.command.uiautomation.SetTimeoutCommandHandler;
 import org.uiautomation.ios.server.command.uiautomation.StopSession;
 import org.uiautomation.ios.server.command.uiautomation.TakeScreenshot;
+import org.uiautomation.ios.server.command.web.BackHandler;
 import org.uiautomation.ios.server.command.web.ClickHandler;
 import org.uiautomation.ios.server.command.web.ExecuteScriptHandler;
 import org.uiautomation.ios.server.command.web.FindElementHandler;
 import org.uiautomation.ios.server.command.web.FindElementsHandler;
+import org.uiautomation.ios.server.command.web.ForwardHandler;
 import org.uiautomation.ios.server.command.web.GetAttributeHandler;
 import org.uiautomation.ios.server.command.web.GetHandler;
 import org.uiautomation.ios.server.command.web.GetTextHandler;
@@ -76,7 +78,9 @@ public enum CommandMapping {
   FRAME(NotImplementedNativeHandler.class,SetFrameHandler.class),
   GET_WINDOW_HANDLE(GetCurrentContext.class),
   TITLE(null,null,GetTitleHandler.class),
-  URL((String)null,GetHandler.class),
+  URL(NotImplementedNativeHandler.class,GetHandler.class),
+  BACK(NotImplementedNativeHandler.class,BackHandler.class),
+  FORWARD(NotImplementedNativeHandler.class,ForwardHandler.class),
 
   EXECUTE_SCRIPT(NotImplementedNativeHandler.class,ExecuteScriptHandler.class),
   EQUAL(NotImplementedNativeHandler.class,IsEqualHandler.class),

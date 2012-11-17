@@ -154,21 +154,20 @@ public class PageLoadingTest {
     driver.navigate().back();
     // We may have returned to the browser's home page
     assertThat(driver.getTitle(), anyOf(equalTo(originalTitle), equalTo("We Leave From Here")));
-  }
+  }*/
 
-  @Ignore(value = {ANDROID, SAFARI, SELENESE}, issues = {3771})
   @Test
   public void testShouldBeAbleToNavigateBackInTheBrowserHistory() {
     driver.get(pages.formPage);
 
-    driver.findElement(By.id("imageButton")).submit();
-    assertThat(driver.getTitle(), equalTo("We Arrive Here"));
+    driver.findElement(By.id("imageButton")).click();
+    Assert.assertEquals(driver.getTitle(),"We Arrive Here");
 
     driver.navigate().back();
-    assertThat(driver.getTitle(), equalTo("We Leave From Here"));
+    Assert.assertEquals(driver.getTitle(),"We Leave From Here");
   }
 
-  @Ignore(value = {SAFARI, SELENESE}, issues = {3771})
+ /* @Ignore(value = {SAFARI, SELENESE}, issues = {3771})
   @Test
   public void testShouldBeAbleToNavigateBackInTheBrowserHistoryInPresenceOfIframes() {
     driver.get(pages.xhtmlTestPage);
@@ -183,25 +182,25 @@ public class PageLoadingTest {
     assertThat(driver.getTitle(), equalTo("XHTML Test Page"));
   }
 
-  @Ignore(value = {ANDROID, SAFARI, SELENESE}, issues = {3771})
+  @Ignore(value = {ANDROID, SAFARI, SELENESE}, issues = {3771})*/
   @Test
   public void testShouldBeAbleToNavigateForwardsInTheBrowserHistory() {
     driver.get(pages.formPage);
 
-    driver.findElement(By.id("imageButton")).submit();
+    driver.findElement(By.id("imageButton")).click();
     waitFor(pageTitleToBe(driver, "We Arrive Here"));
-    assertThat(driver.getTitle(), equalTo("We Arrive Here"));
+    Assert.assertEquals(driver.getTitle(), ("We Arrive Here"));
 
     driver.navigate().back();
     waitFor(pageTitleToBe(driver, "We Leave From Here"));
-    assertThat(driver.getTitle(), equalTo("We Leave From Here"));
+    Assert.assertEquals(driver.getTitle(), ("We Leave From Here"));
 
     driver.navigate().forward();
     waitFor(pageTitleToBe(driver, "We Arrive Here"));
-    assertThat(driver.getTitle(), equalTo("We Arrive Here"));
+    Assert.assertEquals(driver.getTitle(), ("We Arrive Here"));
   }
 
-  @Ignore(value = {IE, CHROME, SELENESE, IPHONE, OPERA, ANDROID, SAFARI, OPERA_MOBILE},
+  /*@Ignore(value = {IE, CHROME, SELENESE, IPHONE, OPERA, ANDROID, SAFARI, OPERA_MOBILE},
           reason = "Safari: does not support insecure SSL")
   @Test
   public void testShouldBeAbleToAccessPagesWithAnInsecureSslCertificate() {

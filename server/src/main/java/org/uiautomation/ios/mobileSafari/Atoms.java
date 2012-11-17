@@ -10,47 +10,54 @@ import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
 /**
  * in selenium/javascript/atoms.
  * 
- * Edit build.desc
- * find the function in dom.js , for instance isShown
- * edit selenium/javascript/atoms/build.desc
- * add 
+ * Edit build.desc find the function in dom.js , for instance isShown edit
+ * selenium/javascript/atoms/build.desc add
  * 
- * js_fragment(name="isVisible",
- * module="bot.dom",
- * function="bot.dom.isShown",
+ * js_fragment(name="isVisible", module="bot.dom", function="bot.dom.isShown",
  * deps=["//javascript/atoms:all_js"])
- *
+ * 
  * selenium ./go //javascript/atoms:isVisible
  */
 public class Atoms {
-  
-  
-  private static String getText; 
-  private static String isDisplayed; 
+
+  private static String getText;
+  private static String isDisplayed;
   private static String click;
+  private static String back;
+  private static String forward;
   static {
     try {
       getText = load("atoms/getVisibleText.js");
       isDisplayed = load("atoms/isVisible.js");
       click = load("atoms/click.js");
+      back = load("atoms/back.js");
+      forward = load("atoms/forward.js");
     } catch (Exception e) {
       throw new RuntimeException("Cannot load atoms");
     }
   }
-  
-  
-  public static String getText(){
+
+  public static String getText() {
     return getText;
   }
-  public static String isDisplayed(){
+
+  public static String isDisplayed() {
     return isDisplayed;
   }
-  public static String click(){
+
+  public static String click() {
     return click;
   }
-  
-  
-  private static String load(String resource) throws IOException  {
+
+  public static String back() {
+    return back;
+  }
+
+  public static String forward() {
+    return forward;
+  }
+
+  private static String load(String resource) throws IOException {
     InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
     if (is == null) {
       throw new IOSAutomationSetupException("cannot load : " + resource);
@@ -60,8 +67,9 @@ public class Atoms {
     String content = writer.toString();
     return content;
   }
-  
+
   public static void main(String[] args) {
     System.out.println(getText());
   }
+
 }

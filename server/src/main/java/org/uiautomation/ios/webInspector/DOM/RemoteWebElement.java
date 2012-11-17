@@ -55,6 +55,7 @@ public class RemoteWebElement {
     }
   }
 
+  // TODO freyanud no return here.
   private void clickAtom() throws Exception {
     String f = "(function(arg) { " + "var text = " + Atoms.click() + "(arg);" + "return text;})";
     JSONObject cmd = new JSONObject();
