@@ -144,5 +144,10 @@ public class LogElementTree extends UIAScriptHandler {
       }
     }
   }
+  
+  @Override
+  public JSONObject configurationDescription() throws JSONException {
+    return noConfigDefined();
+  }
 
 }

@@ -16,6 +16,7 @@ package org.uiautomation.ios.server.command.impl;
 
 import java.io.File;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
@@ -25,16 +26,15 @@ import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 import org.uiautomation.ios.server.utils.FileTo64EncodedStringUtils;
 
-
 public class TakeScreenshot extends UIAScriptHandler {
 
   public static final String SCREEN_NAME = "tmpScreenshot";
-  private static final String jsTemplate = "UIATarget.localTarget().captureScreenWithName('"+ SCREEN_NAME + "');" +
-      		"UIAutomation.createJSONResponse(':sessionId',0,'ok');";
+  private static final String jsTemplate = "UIATarget.localTarget().captureScreenWithName('" + SCREEN_NAME + "');"
+      + "UIAutomation.createJSONResponse(':sessionId',0,'ok');";
 
   public TakeScreenshot(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
-    setJS(jsTemplate.replace(":sessionId",request.getSession()));
+    setJS(jsTemplate.replace(":sessionId", request.getSession()));
     addDecorator(new SendBack64EncodedStringDecorator(driver));
   }
 
@@ -47,9 +47,8 @@ public class TakeScreenshot extends UIAScriptHandler {
     @Override
     public void decorate(WebDriverLikeResponse response) {
 
-      String path =
-          getDriver().getSession(getRequest().getSession()).getOutputFolder() + "/Run 1/"
-              + SCREEN_NAME + ".png";
+      String path = getDriver().getSession(getRequest().getSession()).getOutputFolder() + "/Run 1/" + SCREEN_NAME
+          + ".png";
       File source = new File(path);
       FileTo64EncodedStringUtils encoder = new FileTo64EncodedStringUtils(source);
       try {
@@ -59,12 +58,17 @@ public class TakeScreenshot extends UIAScriptHandler {
         value.put("64encoded", content64);
         response.setValue(value);
       } catch (Exception e) {
-        throw new IOSAutomationException("Error converting " + source.getAbsolutePath()
-            + " to a 64 encoded string " + e.getMessage(), e);
+        throw new IOSAutomationException("Error converting " + source.getAbsolutePath() + " to a 64 encoded string "
+            + e.getMessage(), e);
       } finally {
         source.delete();
       }
 
     }
+  }
+
+  @Override
+  public JSONObject configurationDescription() throws JSONException {
+    return noConfigDefined();
   }
 }

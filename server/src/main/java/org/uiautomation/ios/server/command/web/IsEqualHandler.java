@@ -1,5 +1,7 @@
 package org.uiautomation.ios.server.command.web;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.mobileSafari.NodeId;
@@ -17,7 +19,7 @@ public class IsEqualHandler extends BaseWebCommandHandler {
   public WebDriverLikeResponse handle() throws Exception {
     int id = Integer.parseInt(getRequest().getVariableValue(":reference"));
     int other = Integer.parseInt(getRequest().getVariableValue(":other"));
-    boolean equal = equal(id,other);
+    boolean equal = equal(id, other);
     return new WebDriverLikeResponse(getRequest().getSession(), 0, equal);
   }
 
@@ -28,6 +30,11 @@ public class IsEqualHandler extends BaseWebCommandHandler {
     RemoteWebElement rwe1 = new RemoteWebElement(new NodeId(id), getSession());
     RemoteWebElement rwe2 = new RemoteWebElement(new NodeId(other), getSession());
     return rwe1.equalsRemoteWebElement(rwe2);
+  }
+
+  @Override
+  public JSONObject configurationDescription() throws JSONException {
+    return noConfigDefined();
   }
 
 }

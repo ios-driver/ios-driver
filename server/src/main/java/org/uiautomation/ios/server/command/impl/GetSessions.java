@@ -3,6 +3,7 @@ package org.uiautomation.ios.server.command.impl;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
@@ -11,8 +12,9 @@ import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.command.BaseCommandHandler;
+import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
 
-public class GetSessions extends BaseCommandHandler {
+public class GetSessions extends BaseNativeCommandHandler {
 
   public GetSessions(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -34,5 +36,10 @@ public class GetSessions extends BaseCommandHandler {
       res.put(session);
     }
     return new WebDriverLikeResponse(null, 0, res);
+  }
+  
+  @Override
+  public JSONObject configurationDescription() throws JSONException {
+    return noConfigDefined();
   }
 }

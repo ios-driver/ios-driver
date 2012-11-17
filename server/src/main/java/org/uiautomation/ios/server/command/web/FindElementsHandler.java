@@ -3,6 +3,7 @@ package org.uiautomation.ios.server.command.web;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
@@ -50,6 +51,11 @@ public class FindElementsHandler extends BaseWebCommandHandler {
     }
 
     return new WebDriverLikeResponse(getRequest().getSession(), 0, array);
+  }
+
+  @Override
+  public JSONObject configurationDescription() throws JSONException {
+    return noConfigDefined();
   }
 
 }

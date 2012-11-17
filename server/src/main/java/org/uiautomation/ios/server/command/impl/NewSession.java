@@ -13,6 +13,7 @@
  */
 package org.uiautomation.ios.server.command.impl;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
@@ -21,8 +22,9 @@ import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.command.BaseCommandHandler;
+import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
 
-public class NewSession extends BaseCommandHandler {
+public class NewSession extends BaseNativeCommandHandler {
 
   private final ServerSideSession session;
 
@@ -51,6 +53,9 @@ public class NewSession extends BaseCommandHandler {
     return r;
   }
 
-
+  @Override
+  public JSONObject configurationDescription() throws JSONException {
+    return noConfigDefined();
+  }
 
 }

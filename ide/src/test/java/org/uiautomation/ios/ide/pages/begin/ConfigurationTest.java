@@ -65,12 +65,15 @@ public class ConfigurationTest {
   @Test
   public void configuration() {
     try {
-      driver.configure(WebDriverLikeCommand.URL).set("mode", WorkingMode.Native);
+      driver.configure(WebDriverLikeCommand.URL).set("nativeEvents", true);
       driver.get(pages.xhtmlTestPage);
       Assert.assertEquals(driver.getTitle(), "XHTML Test Page");
-      driver.configure(WebDriverLikeCommand.URL).set("mode", WorkingMode.Web);
+      driver.configure(WebDriverLikeCommand.URL).set("nativeEvents", false);
       driver.get(pages.simpleTestPage);
       Assert.assertEquals(driver.getTitle(), "Hello WebDriver");
+      driver.configure(WebDriverLikeCommand.URL).set("nativeEvents", true);
+      driver.get(pages.xhtmlTestPage);
+      Assert.assertEquals(driver.getTitle(), "XHTML Test Page");
     } finally {
       if (driver != null) {
         driver.quit();

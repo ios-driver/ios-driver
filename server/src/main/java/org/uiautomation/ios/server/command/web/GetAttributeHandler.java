@@ -1,5 +1,7 @@
 package org.uiautomation.ios.server.command.web;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.mobileSafari.NodeId;
@@ -21,6 +23,11 @@ public class GetAttributeHandler extends BaseWebCommandHandler {
     RemoteWebElement element = new RemoteWebElement(new NodeId(id), getSession());
     String value = element.getAttribute(attributeName);
     return new WebDriverLikeResponse(getSession().getSessionId(), 0, value);
+  }
+
+  @Override
+  public JSONObject configurationDescription() throws JSONException {
+    return noConfigDefined();
   }
 
 }

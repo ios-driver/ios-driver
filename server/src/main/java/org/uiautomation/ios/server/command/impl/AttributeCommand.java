@@ -1,5 +1,7 @@
 package org.uiautomation.ios.server.command.impl;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
@@ -20,6 +22,11 @@ public class AttributeCommand extends UIAScriptHandler {
             .replace(":attribute",attributeMethod)
             .replace(":reference", request.getVariableValue(":reference"));
     setJS(js);
+  }
+  
+  @Override
+  public JSONObject configurationDescription() throws JSONException {
+    return noConfigDefined();
   }
 
 }

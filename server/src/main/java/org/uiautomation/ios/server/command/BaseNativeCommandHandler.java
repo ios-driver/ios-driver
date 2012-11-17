@@ -10,13 +10,18 @@ public abstract class BaseNativeCommandHandler extends BaseCommandHandler{
     super(driver, request);
   }
 
-  @Override
-  protected  <T> T  getConfiguration(String key) {
-    T webSpecific = getConfiguration(WorkingMode.Native+"." + key);
-    if (webSpecific != null) {
-      return webSpecific;
+ 
+  protected <T> T getConfiguration(String key) {
+    return getConfiguration(key, (T) null);
+  }
+  
+  
+  protected  <T> T  getConfiguration(String key,T defaultValue) {
+    T nativeSpecific = getConf(WorkingMode.Native+"." + key);
+    if (nativeSpecific != null) {
+      return nativeSpecific;
     } else {
-      return super.getConfiguration(key);
+      return super.getConf(key,defaultValue);
     }
   }
 

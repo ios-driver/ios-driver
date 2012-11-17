@@ -1,5 +1,6 @@
 package org.uiautomation.ios.server.command.web;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
@@ -39,7 +40,7 @@ public class FindElementHandler extends BaseWebCommandHandler {
     } else {
       String cssSelector = ToCSSSelectorConvertor.convertToCSSSelector(type, value);
       rwe = element.findElementByCSSSelector(cssSelector);
-      System.out.println("found element nodeId"+rwe.getNodeId()+" , objectId:"+rwe.getRemoteObject().getId());
+      System.out.println("found element nodeId" + rwe.getNodeId() + " , objectId:" + rwe.getRemoteObject().getId());
     }
 
     JSONObject res = new JSONObject();
@@ -49,6 +50,11 @@ public class FindElementHandler extends BaseWebCommandHandler {
       res.put("ELEMENT", rwe.getNodeId().getId());
       return new WebDriverLikeResponse(getRequest().getSession(), 0, res);
     }
+  }
+
+  @Override
+  public JSONObject configurationDescription() throws JSONException {
+    return noConfigDefined();
   }
 
 }

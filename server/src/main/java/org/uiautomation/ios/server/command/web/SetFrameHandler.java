@@ -2,6 +2,7 @@ package org.uiautomation.ios.server.command.web;
 
 import java.util.List;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.NoSuchFrameException;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
@@ -35,8 +36,6 @@ public class SetFrameHandler extends BaseWebCommandHandler {
   private RemoteWebElement getIframe(String id) throws Exception {
     RemoteWebElement currentDocument = getSession().getWebInspector().getDocument();
 
-    
-    
     List<RemoteWebElement> iframes = currentDocument.findElementsByCSSSelector("iframe,frame");
     // string|number|null|WebElement JSON Object
     for (RemoteWebElement iframe : iframes) {
@@ -45,16 +44,21 @@ public class SetFrameHandler extends BaseWebCommandHandler {
         return iframe;
       }
     }
-    
+
     try {
       int index = Integer.parseInt(id);
       return iframes.get(index);
-    }catch (NumberFormatException e) {
-      //ignore
-    }catch(IndexOutOfBoundsException i){
-      throw new NoSuchFrameException("detected "+iframes.size()+" frames. Cannot get index = "+id);
+    } catch (NumberFormatException e) {
+      // ignore
+    } catch (IndexOutOfBoundsException i) {
+      throw new NoSuchFrameException("detected " + iframes.size() + " frames. Cannot get index = " + id);
     }
-    
+
     throw new NoSuchFrameException("Cannot find frame " + id);
+  }
+
+  @Override
+  public JSONObject configurationDescription() throws JSONException {
+    return noConfigDefined();
   }
 }

@@ -1,5 +1,6 @@
 package org.uiautomation.ios.server.command.impl;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.UIAModels.predicate.AbstractCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
@@ -51,8 +52,10 @@ public class FindElementRoot extends UIAScriptHandler {
     } catch (Exception e) {
       throw new IOSAutomationException("error parsing the payload", e);
     }
-
-
-
+  }
+  
+  @Override
+  public JSONObject configurationDescription() throws JSONException {
+    return noConfigDefined();
   }
 }

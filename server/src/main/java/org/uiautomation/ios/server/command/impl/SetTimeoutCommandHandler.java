@@ -14,6 +14,8 @@
 
 package org.uiautomation.ios.server.command.impl;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
@@ -24,12 +26,10 @@ import org.uiautomation.ios.server.utils.hack.TimeSpeeder;
 
 public class SetTimeoutCommandHandler extends UIAScriptHandler {
 
-
   private static final String setTimeout = "UIAutomation.setTimeout(':type',:timeout);"
       + "UIAutomation.createJSONResponse(':sessionId',0,'')";
 
-  public SetTimeoutCommandHandler(IOSDriver driver, WebDriverLikeRequest request)
-      throws Exception {
+  public SetTimeoutCommandHandler(IOSDriver driver, WebDriverLikeRequest request) throws Exception {
     super(driver, request);
     addDecorator(new CorrectTimeout(driver));
   }
@@ -38,7 +38,7 @@ public class SetTimeoutCommandHandler extends UIAScriptHandler {
     int timeout = r.getPayload().getInt("timeout");
     String type = r.getPayload().getString("type");
     String s = setTimeout.replace(":timeout", String.format("%d", timeout));
-    s = s.replace(":type",type);
+    s = s.replace(":type", type);
     return s;
   }
 
@@ -62,11 +62,15 @@ public class SetTimeoutCommandHandler extends UIAScriptHandler {
         float correctTimeout = timeout * timeCorrection;
         request.getPayload().put("timeout", (int) correctTimeout);
       } catch (Exception e) {
-        throw new IOSAutomationException(
-            "error correcting the timeout to take the timespeeder into account." + e.getMessage(),
-            e);
+        throw new IOSAutomationException("error correcting the timeout to take the timespeeder into account."
+            + e.getMessage(), e);
       }
 
     }
+  }
+
+  @Override
+  public JSONObject configurationDescription() throws JSONException {
+    return noConfigDefined();
   }
 }

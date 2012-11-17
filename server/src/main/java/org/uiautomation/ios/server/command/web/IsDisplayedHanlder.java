@@ -1,5 +1,7 @@
 package org.uiautomation.ios.server.command.web;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.mobileSafari.NodeId;
@@ -18,7 +20,12 @@ public class IsDisplayedHanlder extends BaseWebCommandHandler {
     int id = Integer.parseInt(getRequest().getVariableValue(":reference"));
     RemoteWebElement element = new RemoteWebElement(new NodeId(id), getSession());
     boolean isDisplayed = element.isDisplayed();
-    return new WebDriverLikeResponse(getSession().getSessionId(), 0,isDisplayed);
+    return new WebDriverLikeResponse(getSession().getSessionId(), 0, isDisplayed);
+  }
+
+  @Override
+  public JSONObject configurationDescription() throws JSONException {
+    return noConfigDefined();
   }
 
 }

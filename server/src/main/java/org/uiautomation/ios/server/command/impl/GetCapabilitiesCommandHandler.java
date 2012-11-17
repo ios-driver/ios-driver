@@ -75,5 +75,10 @@ public class GetCapabilitiesCommandHandler extends UIAScriptHandler {
 
     }
   }
+  
+  @Override
+  public JSONObject configurationDescription() throws JSONException {
+    return noConfigDefined();
+  }
 
 }

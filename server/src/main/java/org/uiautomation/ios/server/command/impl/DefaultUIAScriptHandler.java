@@ -13,6 +13,7 @@
  */
 package org.uiautomation.ios.server.command.impl;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.UIAModels.UIAAlert;
 import org.uiautomation.ios.UIAModels.UIAApplication;
@@ -111,7 +112,10 @@ public class DefaultUIAScriptHandler extends UIAScriptHandler {
 
     return js;
   }
-
+  @Override
+  public JSONObject configurationDescription() throws JSONException {
+    return noConfigDefined();
+  }
 
 
 }

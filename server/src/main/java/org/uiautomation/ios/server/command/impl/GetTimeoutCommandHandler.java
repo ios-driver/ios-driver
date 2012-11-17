@@ -14,6 +14,8 @@
 
 package org.uiautomation.ios.server.command.impl;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
@@ -59,6 +61,11 @@ public class GetTimeoutCommandHandler extends UIAScriptHandler {
 
     }
 
+  }
+  
+  @Override
+  public JSONObject configurationDescription() throws JSONException {
+    return noConfigDefined();
   }
 
 }

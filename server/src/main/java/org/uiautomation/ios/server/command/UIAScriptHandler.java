@@ -25,7 +25,7 @@ import org.uiautomation.ios.server.IOSDriver;
  * @author freynaud
  * 
  */
-public abstract class UIAScriptHandler extends BaseCommandHandler {
+public abstract class UIAScriptHandler extends BaseNativeCommandHandler {
   private String js;
 
   public UIAScriptHandler(IOSDriver driver, WebDriverLikeRequest request) {

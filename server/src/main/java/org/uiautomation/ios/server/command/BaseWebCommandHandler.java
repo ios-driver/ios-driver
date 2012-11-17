@@ -10,13 +10,18 @@ public abstract class BaseWebCommandHandler extends BaseCommandHandler {
     super(driver, request);
   }
 
-  @Override
-  protected  <T> T  getConfiguration(String key) {
-    T webSpecific = super.getConfiguration(WorkingMode.Web+"." + key);
+ 
+  protected <T> T getConfiguration(String key) {
+    return getConfiguration(key, (T) null);
+  }
+
+  
+  protected <T> T getConfiguration(String key, T defaultValue) {
+    T webSpecific = getConf(WorkingMode.Web + "." + key);
     if (webSpecific != null) {
       return webSpecific;
     } else {
-      return super.getConfiguration(key);
+      return getConf(key, defaultValue);
     }
   }
 }

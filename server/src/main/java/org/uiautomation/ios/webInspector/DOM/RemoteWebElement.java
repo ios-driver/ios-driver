@@ -47,7 +47,7 @@ public class RemoteWebElement {
     this.remoteObject = remoteObject;
   }
 
-  public void click() throws Exception {
+  public void click(boolean nativeEvents) throws Exception {
     UIAElement el = getNativeElement();
     WorkingMode origin = session.getMode();
     try {

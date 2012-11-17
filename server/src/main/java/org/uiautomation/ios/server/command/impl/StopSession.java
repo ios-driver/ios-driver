@@ -13,6 +13,7 @@
  */
 package org.uiautomation.ios.server.command.impl;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
@@ -30,8 +31,7 @@ public class StopSession extends UIAScriptHandler {
     super.handle();
     String opaqueKey = getRequest().getSession();
     getDriver().stop(opaqueKey);
-    
-    
+
     JSONObject o = new JSONObject();
     try {
       o.put("sessionId", opaqueKey);
@@ -43,8 +43,13 @@ public class StopSession extends UIAScriptHandler {
       // TODO Auto-generated catch block
       e.printStackTrace();
       return null;
-    } 
+    }
 
+  }
+
+  @Override
+  public JSONObject configurationDescription() throws JSONException {
+    return noConfigDefined();
   }
 
 }

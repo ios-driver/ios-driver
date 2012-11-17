@@ -1,5 +1,6 @@
 package org.uiautomation.ios.server.command.web;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIAKeyboard;
@@ -19,10 +20,21 @@ public class GetHandler extends BaseWebCommandHandler {
 
   // TODO freynaud cached by session.
   private static UIAElement addressBar;
-  private static final String defaultMode = WorkingMode.Web.toString();
+  private static final boolean nativeEvents = false;
 
   public GetHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
+  }
+
+  @Override
+  public JSONObject configurationDescription() throws JSONException {
+    JSONObject desc = new JSONObject();
+    desc.put(
+        "nativeEvents",
+        "{boolean}, default to "
+            + nativeEvents
+            + ".true = UIAutomation native events will be used to enter the URL (slow) , Web =  WebKit remote debugging will be used.Faster.");
+    return desc;
   }
 
   @Override
@@ -30,18 +42,12 @@ public class GetHandler extends BaseWebCommandHandler {
     String url = getRequest().getPayload().getString("url");
     getSession().getContext().getDOMContext().reset();
 
-    String mode = getConfiguration("mode");
-    if (mode == null) {
-      mode = defaultMode;
-    }
+    boolean useNativeEvents = getConfiguration("nativeEvents", nativeEvents);
 
-    switch (WorkingMode.valueOf(mode)) {
-    case Native:
+    if (useNativeEvents) {
       typeURLNative(url);
-      break;
-    case Web:
+    } else {
       fakeTypeURL(url);
-      break;
     }
 
     getSession().getWebInspector().waitForPageToLoad();
@@ -81,5 +87,7 @@ public class GetHandler extends BaseWebCommandHandler {
       throw new IOSAutomationException("cannot navigate to URL " + url + ", error " + e.getMessage());
     }
   }
+  
+  
 
 }

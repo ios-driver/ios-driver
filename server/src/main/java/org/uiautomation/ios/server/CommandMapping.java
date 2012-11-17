@@ -22,8 +22,11 @@ import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
+import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.server.command.Handler;
-import org.uiautomation.ios.server.command.NotImplementedHandler;
+import org.uiautomation.ios.server.command.NotImplementedNativeHandler;
+import org.uiautomation.ios.server.command.NotImplementedWebHandler;
 import org.uiautomation.ios.server.command.impl.AttributeCommand;
 import org.uiautomation.ios.server.command.impl.ConfigurationGetter;
 import org.uiautomation.ios.server.command.impl.ConfigurationSetter;
@@ -44,17 +47,17 @@ import org.uiautomation.ios.server.command.impl.SetTimeoutCommandHandler;
 import org.uiautomation.ios.server.command.impl.StopSession;
 import org.uiautomation.ios.server.command.impl.TakeScreenshot;
 import org.uiautomation.ios.server.command.web.ClickHandler;
-import org.uiautomation.ios.server.command.web.IsDisplayedHanlder;
-import org.uiautomation.ios.server.command.web.IsEqualHandler;
 import org.uiautomation.ios.server.command.web.ExecuteScriptHandler;
 import org.uiautomation.ios.server.command.web.FindElementHandler;
 import org.uiautomation.ios.server.command.web.FindElementsHandler;
+import org.uiautomation.ios.server.command.web.GetAttributeHandler;
 import org.uiautomation.ios.server.command.web.GetHandler;
 import org.uiautomation.ios.server.command.web.GetTextHandler;
+import org.uiautomation.ios.server.command.web.GetTitleHandler;
+import org.uiautomation.ios.server.command.web.IsDisplayedHanlder;
+import org.uiautomation.ios.server.command.web.IsEqualHandler;
 import org.uiautomation.ios.server.command.web.IsSelectedHandler;
 import org.uiautomation.ios.server.command.web.SetFrameHandler;
-import org.uiautomation.ios.server.command.web.GetAttributeHandler;
-import org.uiautomation.ios.server.command.web.GetTitleHandler;
 
 public enum CommandMapping {
 
@@ -69,17 +72,17 @@ public enum CommandMapping {
   GET_CONFIGURATION(ConfigurationGetter.class),
   
   WINDOW_HANDLES(GetWindowHandlesCommandHandler.class),
-  WINDOW(SetCurrentContext.class),
-  FRAME((String)null,SetFrameHandler.class),
+  WINDOW(SetCurrentContext.class,NotImplementedWebHandler.class),
+  FRAME(NotImplementedNativeHandler.class,SetFrameHandler.class),
   GET_WINDOW_HANDLE(GetCurrentContext.class),
   TITLE(null,null,GetTitleHandler.class),
   URL((String)null,GetHandler.class),
 
-  EXECUTE_SCRIPT(NotImplementedHandler.class,ExecuteScriptHandler.class),
-  EQUAL(NotImplementedHandler.class,IsEqualHandler.class),
+  EXECUTE_SCRIPT(NotImplementedNativeHandler.class,ExecuteScriptHandler.class),
+  EQUAL(NotImplementedNativeHandler.class,IsEqualHandler.class),
   // UIATarget
   LOCAL_TARGET(LocalTarget.class),
-  HOST(NotImplementedHandler.class),
+  //HOST(NotImplementedHandler.class),
   TREE(LogElementTree.class),
   TREE_ROOT(LogElementTree.class),
   
@@ -104,10 +107,10 @@ public enum CommandMapping {
   
  
   // UIAElement
-  HIT_POINT(NotImplementedHandler.class),
+  HIT_POINT(NotImplementedNativeHandler.class,NotImplementedWebHandler.class),
   RECT(".rect()"),
   
-  PARENT(NotImplementedHandler.class),
+  PARENT(NotImplementedNativeHandler.class,NotImplementedWebHandler.class),
   
 
   ELEMENT_ROOT(FindElementRoot.class,FindElementHandler.class),
@@ -118,7 +121,7 @@ public enum CommandMapping {
   
   //ELEMENT(".element(:depth,:criteria)"),
   //ELEMENTS(".elements2(:depth,:criteria)"),
-  ANCESTRY(NotImplementedHandler.class),
+  ANCESTRY(NotImplementedNativeHandler.class,NotImplementedWebHandler.class),
 
   DISPLAYED(".isVisible()",DefaultUIAScriptHandler.class,IsDisplayedHanlder.class),
   IS_STALE(".isStale()"),
@@ -142,16 +145,16 @@ public enum CommandMapping {
   DRAG_INSIDE_WITH_OPTIONS(""),
   FLICK_INSIDE_WITH_OPTIONS(""),
   SCROLL_TO_VISIBLE(".scrollToVisible()"),
-  ROTATE_WITH_OPTIONS(NotImplementedHandler.class),
+  ROTATE_WITH_OPTIONS(NotImplementedNativeHandler.class,NotImplementedWebHandler.class),
   
   // UIAElementArray
   GET(".toArray()[:index]"),
   FIRST_WITH_NAME(".firstWithName(:name)"),
   FIRST_WITH_PREDICATE(".firstWithPredicate()"),
-  FIRST_WITH_VALUE_FOR_KEY(NotImplementedHandler.class),
-  ARRAY_WITH_NAME(".withName(:name)"),
-  ARRAY_WITH_PREDICATE(NotImplementedHandler.class),
-  ARRAY_WITH_VALUE_FOR_KEY(NotImplementedHandler.class),
+  //FIRST_WITH_VALUE_FOR_KEY(NotImplementedHandler.class),
+  //ARRAY_WITH_NAME(".withName(:name)"),
+  //ARRAY_WITH_PREDICATE(NotImplementedHandler.class),
+  //ARRAY_WITH_VALUE_FOR_KEY(NotImplementedHandler.class),
 
   //UIANavigationBar
   LEFT_BUTTON(".leftButton()"),
@@ -172,11 +175,11 @@ public enum CommandMapping {
 
 
   private WebDriverLikeCommand command;
-  private final Class<? extends Handler> nativeHandlerClass;
-  private final Class<? extends Handler> webHandlerClass;
+  private final Class<? extends BaseNativeCommandHandler> nativeHandlerClass;
+  private final Class<? extends BaseWebCommandHandler> webHandlerClass;
   private final String nativeJSMethod;
 
-  private CommandMapping(String jsMethod, Class<? extends Handler> webHandlerClass) {
+  private CommandMapping(String jsMethod, Class<? extends BaseWebCommandHandler> webHandlerClass) {
     this.command = WebDriverLikeCommand.valueOf(this.name());
     this.nativeHandlerClass = DefaultUIAScriptHandler.class;
     this.nativeJSMethod = jsMethod;
@@ -192,16 +195,15 @@ public enum CommandMapping {
   }
   
  
-  private CommandMapping(String nativeJSMethod,Class<? extends Handler> nativeHandlerClass, 
-      Class<? extends Handler> webHandlerClass) {
+  private CommandMapping(String nativeJSMethod,Class<? extends BaseNativeCommandHandler> nativeHandlerClass, 
+      Class<? extends BaseWebCommandHandler> webHandlerClass) {
     this.command = WebDriverLikeCommand.valueOf(this.name());
     this.nativeHandlerClass = nativeHandlerClass;
     this.webHandlerClass = webHandlerClass;
     this.nativeJSMethod = nativeJSMethod;
   }
 
-  private CommandMapping(Class<? extends Handler> nativeHandlerClass,
-      Class<? extends Handler> webHandlerClass) {
+  private CommandMapping(Class<? extends BaseNativeCommandHandler> nativeHandlerClass, Class<? extends BaseWebCommandHandler> webHandlerClass) {
     this.command = WebDriverLikeCommand.valueOf(this.name());
     this.nativeHandlerClass = nativeHandlerClass;
     this.webHandlerClass = webHandlerClass;
@@ -209,7 +211,7 @@ public enum CommandMapping {
 
   }
 
-  private CommandMapping(Class<? extends Handler> handlerClass) {
+  private CommandMapping(Class<? extends BaseNativeCommandHandler> handlerClass) {
     this.command = WebDriverLikeCommand.valueOf(this.name());
     this.nativeHandlerClass = handlerClass;
     this.webHandlerClass = null;

@@ -14,6 +14,8 @@
 
 package org.uiautomation.ios.server.command.impl;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
@@ -28,6 +30,9 @@ public class LocalTarget extends UIAScriptHandler {
     String js = jsTemplate.replace(":sessionId", request.getSession());
     setJS(js);
   }
-
+  @Override
+  public JSONObject configurationDescription() throws JSONException {
+    return noConfigDefined();
+  }
 
 }

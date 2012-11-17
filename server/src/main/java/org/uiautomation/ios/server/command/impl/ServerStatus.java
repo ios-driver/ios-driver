@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
@@ -25,11 +26,11 @@ import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.IOSApplication;
-import org.uiautomation.ios.server.command.BaseCommandHandler;
+import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
 import org.uiautomation.ios.server.utils.BuildInfo;
 import org.uiautomation.ios.server.utils.ClassicCommands;
 
-public class ServerStatus extends BaseCommandHandler {
+public class ServerStatus extends BaseNativeCommandHandler {
 
   public ServerStatus(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -89,7 +90,10 @@ public class ServerStatus extends BaseCommandHandler {
     } else {
       throw new IOSAutomationException("NI multi sessions per server.");
     }
-
-
+  }
+  
+  @Override
+  public JSONObject configurationDescription() throws JSONException {
+    return noConfigDefined();
   }
 }

@@ -17,6 +17,8 @@ package org.uiautomation.ios.server.command;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
@@ -84,11 +86,21 @@ public abstract class BaseCommandHandler implements Handler {
     return response;
   }
 
-  protected <T> T getConfiguration(String key){
+  protected <T> T getConf(String key) {
+    return getConf(key, (T) null);
+  }
+
+  protected <T> T getConf(String key, T defaultValue) {
     CommandConfiguration conf = getSession().configure(getRequest().getGenericCommand());
-    T res = (T)conf.get(key);
+    T res = (T) conf.get(key);
+    return res != null ? res : defaultValue;
+  }
+
+  public abstract JSONObject configurationDescription() throws JSONException;
+
+  protected JSONObject noConfigDefined() throws JSONException {
+    JSONObject res = new JSONObject().put("No config for this command", "");
     return res;
   }
-  
 
 }
