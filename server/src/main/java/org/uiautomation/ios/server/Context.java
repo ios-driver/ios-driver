@@ -1,5 +1,7 @@
 package org.uiautomation.ios.server;
 
+import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
+
 
 /**
  * state of the current application under test

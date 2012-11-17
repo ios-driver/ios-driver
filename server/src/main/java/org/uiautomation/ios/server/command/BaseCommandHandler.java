@@ -17,6 +17,8 @@ package org.uiautomation.ios.server.command;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
+import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.server.IOSDriver;
@@ -46,8 +48,6 @@ public abstract class BaseCommandHandler implements Handler {
     return session;
   }
 
-
-
   @Override
   public void addDecorator(PostHandleDecorator decorator) {
     postDecorators.add(decorator);
@@ -62,7 +62,6 @@ public abstract class BaseCommandHandler implements Handler {
   protected IOSDriver getDriver() {
     return driver;
   }
-
 
   protected WebDriverLikeRequest getRequest() {
     return request;
@@ -83,6 +82,10 @@ public abstract class BaseCommandHandler implements Handler {
       post.decorate(response);
     }
     return response;
+  }
+
+  protected CommandConfiguration getConfiguration(WorkingMode mode) {
+    return getSession().getConf(mode).get(getRequest().getGenericCommand());
   }
 
 }

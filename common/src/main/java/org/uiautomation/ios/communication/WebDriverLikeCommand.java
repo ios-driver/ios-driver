@@ -36,7 +36,9 @@ public enum WebDriverLikeCommand {
   GET_SESSION("GET", "/session/:sessionId",JSONObject.class),
   DELETE_SESSION("DELETE","/session/:sessionId",null),
   SESSIONS("GET","/sessions",JSONArray.class),
- 
+
+  CONFIGURE("POST","/session/:sessionId/subdriver/:subdriver/command/:command",Void.class),
+  GET_CONFIGURATION("GET","/session/:sessionId/subdriver/:subdriver/command/:command",Object.class),
   SET_TIMEOUT("POST", "/session/:sessionId/timeouts",Void.class),
   GET_TIMEOUT("GET", "/session/:sessionId/timeouts",Integer.class),
   

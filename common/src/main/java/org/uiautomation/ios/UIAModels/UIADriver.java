@@ -19,12 +19,13 @@ import java.util.Set;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriver;
 import org.uiautomation.ios.IOSCapabilities;
+import org.uiautomation.ios.UIAModels.configuration.Configurable;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.exceptions.NoSuchElementException;
 
 
-public interface UIADriver {
+public interface UIADriver extends Configurable{
 
   public Session getSession();
 

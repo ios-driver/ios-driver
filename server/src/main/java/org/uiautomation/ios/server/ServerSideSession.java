@@ -7,10 +7,13 @@ import java.util.UUID;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.UIAModels.UIADriver;
+import org.uiautomation.ios.UIAModels.configuration.DriverConfiguration;
+import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.exceptions.SessionNotCreatedException;
 import org.uiautomation.ios.mobileSafari.WebInspector;
 import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
 import org.uiautomation.ios.server.instruments.InstrumentsManager;
 import org.uiautomation.ios.server.utils.ClassicCommands;
@@ -26,6 +29,9 @@ public class ServerSideSession extends Session {
   private UIADriver nativeDriver;
 
   private final Context context;
+
+  private final DriverConfiguration nativeConf;
+  private final DriverConfiguration webConf;
 
   ServerSideSession(IOSDriver driver, IOSCapabilities capabilities) {
     super(UUID.randomUUID().toString());
@@ -45,7 +51,8 @@ public class ServerSideSession extends Session {
     }
     instruments = new InstrumentsManager(driver.getPort());
     context = new Context();
-    
+    nativeConf = new DriverConfigurationStore();
+    webConf = new DriverConfigurationStore();
 
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
@@ -53,6 +60,18 @@ public class ServerSideSession extends Session {
         forceStop();
       }
     });
+  }
+
+  public DriverConfiguration getConf(WorkingMode mode) {
+    switch (mode) {
+    case Native:
+      return nativeConf;
+    case Web:
+      return webConf;
+    default:
+      throw new RuntimeException("NI");
+    }
+
   }
 
   public UIADriver getNativeDriver() {

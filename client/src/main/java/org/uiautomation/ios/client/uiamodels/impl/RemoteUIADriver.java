@@ -41,7 +41,10 @@ import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.UIAModels.UIADriver;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIAElementArray;
+import org.uiautomation.ios.UIAModels.configuration.DriverConfiguration;
+import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
+import org.uiautomation.ios.client.uiamodels.impl.configuration.RemoteDriverConfiguration;
 import org.uiautomation.ios.communication.FailedWebDriverLikeResponse;
 import org.uiautomation.ios.communication.Helper;
 import org.uiautomation.ios.communication.HttpClientFactory;
@@ -63,9 +66,12 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
   private final Session session;
   private final String host;
   private final int port;
+  private final DriverConfiguration nativeConf;
+  private final DriverConfiguration webConf;
 
   /**
-   * create the remote driver, starting the remote session with the requested capabilities.
+   * create the remote driver, starting the remote session with the requested
+   * capabilities.
    * 
    * @see #RemoteUIADriver(String, Map)
    * @param remoteURL
@@ -76,7 +82,8 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
   }
 
   /**
-   * create the remote driver, starting the remote session with the requested capabilities.
+   * create the remote driver, starting the remote session with the requested
+   * capabilities.
    * 
    * @param remoteURL
    * @param requestedCapabilities
@@ -93,7 +100,8 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
 
       setSessionId(session.getSessionId());
       setCommandExecutor(new HttpCommandExecutor(url));
-      
+      nativeConf = new RemoteDriverConfiguration(WorkingMode.Native, this);
+      webConf = new RemoteDriverConfiguration(WorkingMode.Web, this);
 
     } catch (MalformedURLException e) {
       throw new IOSAutomationException("invalid URL " + remoteURL, e);
@@ -105,8 +113,8 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
   }
 
   /**
-   * create a RemoteDriver attaching itself to an already created session. Useful for debugging, not
-   * for normal tests.
+   * create a RemoteDriver attaching itself to an already created session.
+   * Useful for debugging, not for normal tests.
    * 
    * @param remoteURL
    * @param session
@@ -119,6 +127,8 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
     this.session = session;
     // TODO freynaud how safe is that ?
     this.requestedCapabilities = null;
+    nativeConf = new RemoteDriverConfiguration(WorkingMode.Native, this);
+    webConf = new RemoteDriverConfiguration(WorkingMode.Web, this);
 
   }
 
@@ -153,10 +163,10 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
     try {
       HttpClient client = HttpClientFactory.getClient();
       String url = remoteURL + request.getPath();
-      BasicHttpEntityEnclosingRequest r =
-          new BasicHttpEntityEnclosingRequest(request.getMethod(), url);
+      BasicHttpEntityEnclosingRequest r = new BasicHttpEntityEnclosingRequest(request.getMethod(), url);
       if (request.hasPayload()) {
-        // String normalizedOriginalText = Normalizer.normalize(request.getPayload().toString(),
+        // String normalizedOriginalText =
+        // Normalizer.normalize(request.getPayload().toString(),
         // Form.NFC);
         r.setEntity(new StringEntity(request.getPayload().toString(), "UTF-8"));
       }
@@ -172,7 +182,6 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
     } catch (Exception e) {
       throw new IOSAutomationException(e);
     }
-
 
     if (returnCode == 0) {
       return new WebDriverLikeResponse(o);
@@ -196,19 +205,20 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
   @Override
   public RemoteUIATarget getLocalTarget() {
     /*
-     * WebDriverLikeCommand command = WebDriverLikeCommand.LOCAL_TARGET; String genericPath =
-     * command.path(); String path = genericPath.replace(":sessionId", session.getSessionId());
-     * WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), path); try {
-     * WebDriverLikeResponse response = execute(request); return new RemoteUIATarget(this,
-     * ((JSONObject) response.getValue()).getString("ref")); } catch (Exception e) { throw new
+     * WebDriverLikeCommand command = WebDriverLikeCommand.LOCAL_TARGET; String
+     * genericPath = command.path(); String path =
+     * genericPath.replace(":sessionId", session.getSessionId());
+     * WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(),
+     * path); try { WebDriverLikeResponse response = execute(request); return
+     * new RemoteUIATarget(this, ((JSONObject)
+     * response.getValue()).getString("ref")); } catch (Exception e) { throw new
      * IOSAutomationException("Cannot get the localTarget() for the AUT.", e); }
      */
     return new RemoteUIATarget(this, "2");
   }
 
   @Override
-  public JSONObject logElementTree(File screenshot, boolean translation)
-      throws IOSAutomationException {
+  public JSONObject logElementTree(File screenshot, boolean translation) throws IOSAutomationException {
     WebDriverLikeCommand command = WebDriverLikeCommand.TREE_ROOT;
     Path p = new Path(command).withSession(session.getSessionId());
     return RemoteUIAElement.logElementTree(screenshot, translation, p, command, this);
@@ -225,13 +235,13 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
     WebDriverLikeRequest request = new WebDriverLikeRequest("DELETE", p);
     execute(request);
 
-
   }
 
   private IOSCapabilities cached;
+
   @Override
   public IOSCapabilities getCapabilities() {
-    if (cached ==null){
+    if (cached == null) {
       WebDriverLikeCommand command = WebDriverLikeCommand.GET_SESSION;
       Path p = new Path(command).withSession(session.getSessionId());
       WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, new JSONObject());
@@ -250,8 +260,8 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
         if (v instanceof String) {
           try {
             JSONObject o = new JSONObject((String) v);
-            IOSCapabilities res  =  new IOSCapabilities(o);
-            //cached = res;
+            IOSCapabilities res = new IOSCapabilities(o);
+            // cached = res;
             return res;
           } catch (JSONException e) {
             throw new IOSAutomationException(e);
@@ -260,10 +270,10 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
           throw new IOSAutomationException("can't guess type, got " + v.getClass());
         }
       }
-    }else{
+    } else {
       return cached;
     }
-    
+
   }
 
   @Override
@@ -280,8 +290,6 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
       e.printStackTrace();
     }
   }
-
-
 
   @Override
   public int getTimeout(String type) {
@@ -318,8 +326,7 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
       JSONObject payload = new JSONObject();
       payload.put("depth", -1);
       payload.put("criteria", c.getJSONRepresentation());
-      return (UIAElementArray<UIAElement>) getRemoteObject(WebDriverLikeCommand.ELEMENTS_ROOT,
-          payload);
+      return (UIAElementArray<UIAElement>) getRemoteObject(WebDriverLikeCommand.ELEMENTS_ROOT, payload);
     } catch (JSONException e) {
       throw new IOSAutomationException(e);
     }
@@ -341,8 +348,6 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
     }
   }
 
-
-
   @Override
   public void takeScreenshot(String path) {
     try {
@@ -359,8 +364,7 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
 
     String genericPath = command.path();
     String path = genericPath.replace(":sessionId", session.getSessionId());
-    WebDriverLikeRequest request =
-        new WebDriverLikeRequest(command.method(), path, new JSONObject());
+    WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), path, new JSONObject());
     WebDriverLikeResponse response;
     try {
       response = execute(request);
@@ -416,5 +420,14 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
     return execute(DriverCommand.EXECUTE_SCRIPT, params).getValue();
   }
 
+  @Override
+  public DriverConfiguration nativeConf() {
+    return nativeConf;
+  }
+
+  @Override
+  public DriverConfiguration webConf() {
+    return webConf;
+  }
 
 }

@@ -1,10 +1,10 @@
 package org.uiautomation.ios.server.command.impl;
 
 import org.json.JSONObject;
+import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.server.IOSDriver;
-import org.uiautomation.ios.server.WorkingMode;
 import org.uiautomation.ios.server.command.BaseCommandHandler;
 
 public class SetCurrentContext extends BaseCommandHandler {

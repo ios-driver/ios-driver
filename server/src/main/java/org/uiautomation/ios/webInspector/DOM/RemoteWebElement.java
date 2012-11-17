@@ -14,6 +14,7 @@ import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIALink;
 import org.uiautomation.ios.UIAModels.UIARect;
 import org.uiautomation.ios.UIAModels.UIAScrollView;
+import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.LocationCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
@@ -22,7 +23,6 @@ import org.uiautomation.ios.mobileSafari.DebugProtocol;
 import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.mobileSafari.WebInspector;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.server.WorkingMode;
 
 public class RemoteWebElement {
 

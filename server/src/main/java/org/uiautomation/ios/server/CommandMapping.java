@@ -18,17 +18,19 @@ import java.lang.reflect.Constructor;
 import java.util.Iterator;
 
 import org.json.JSONObject;
+import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.command.Handler;
 import org.uiautomation.ios.server.command.NotImplementedHandler;
 import org.uiautomation.ios.server.command.impl.AttributeCommand;
+import org.uiautomation.ios.server.command.impl.ConfigurationGetter;
+import org.uiautomation.ios.server.command.impl.ConfigurationSetter;
 import org.uiautomation.ios.server.command.impl.DefaultUIAScriptHandler;
 import org.uiautomation.ios.server.command.impl.FindElementRoot;
 import org.uiautomation.ios.server.command.impl.FindElementsRoot;
 import org.uiautomation.ios.server.command.impl.GetCapabilitiesCommandHandler;
-import org.uiautomation.ios.server.command.impl.GetCommand;
 import org.uiautomation.ios.server.command.impl.GetCurrentContext;
 import org.uiautomation.ios.server.command.impl.GetSessions;
 import org.uiautomation.ios.server.command.impl.GetTimeoutCommandHandler;
@@ -47,6 +49,7 @@ import org.uiautomation.ios.server.command.web.Equality;
 import org.uiautomation.ios.server.command.web.ExecuteScript;
 import org.uiautomation.ios.server.command.web.FindElement;
 import org.uiautomation.ios.server.command.web.FindElements;
+import org.uiautomation.ios.server.command.web.GetCommand;
 import org.uiautomation.ios.server.command.web.GetTextCommandHandler;
 import org.uiautomation.ios.server.command.web.SelectedCommandHandler;
 import org.uiautomation.ios.server.command.web.SetFrame;
@@ -62,12 +65,15 @@ public enum CommandMapping {
   SET_TIMEOUT(SetTimeoutCommandHandler.class),
   GET_TIMEOUT(GetTimeoutCommandHandler.class),
   
+  CONFIGURE(ConfigurationSetter.class),
+  GET_CONFIGURATION(ConfigurationGetter.class),
+  
   WINDOW_HANDLES(GetWindowHandlesCommandHandler.class),
   WINDOW(SetCurrentContext.class),
   FRAME((String)null,SetFrame.class),
   GET_WINDOW_HANDLE(GetCurrentContext.class),
   TITLE(null,null,WebGetTitle.class),
-  URL(GetCommand.class,GetCommand.class),
+  URL((String)null,GetCommand.class),
 
   EXECUTE_SCRIPT(NotImplementedHandler.class,ExecuteScript.class),
   EQUAL(NotImplementedHandler.class,Equality.class),

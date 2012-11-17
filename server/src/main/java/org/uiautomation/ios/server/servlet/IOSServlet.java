@@ -21,13 +21,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 import org.testng.Reporter;
+import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.communication.FailedWebDriverLikeResponse;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.server.CommandMapping;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.server.WorkingMode;
 import org.uiautomation.ios.server.command.Handler;
 
 public class IOSServlet extends DriverBasedServlet {
