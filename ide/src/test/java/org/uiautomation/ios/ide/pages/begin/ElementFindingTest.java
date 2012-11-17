@@ -3,7 +3,6 @@ package org.uiautomation.ios.ide.pages.begin;
 import static org.openqa.selenium.TestWaiter.waitFor;
 import static org.openqa.selenium.WaitingConditions.pageTitleToBe;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 

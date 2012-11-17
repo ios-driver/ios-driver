@@ -101,8 +101,6 @@ public class RemoteWebElement {
       }
       RemoteObject o = inspector.cast(response);
       remoteObject = o;
-      System.err.println("getting remote object for node ID:" + nodeId + "\t" + (System.currentTimeMillis() - start)
-          + ".ms");
     }
     return remoteObject;
   }
