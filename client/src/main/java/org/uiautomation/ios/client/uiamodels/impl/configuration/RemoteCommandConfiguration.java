@@ -11,13 +11,11 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 public class RemoteCommandConfiguration implements CommandConfiguration {
 
   private final WebDriverLikeCommand command;
-  private final WorkingMode mode;
   private final RemoteUIADriver driver;
 
-  public RemoteCommandConfiguration(WebDriverLikeCommand command, RemoteUIADriver driver, WorkingMode mode) {
+  public RemoteCommandConfiguration(WebDriverLikeCommand command, RemoteUIADriver driver) {
     this.command = command;
     this.driver = driver;
-    this.mode = mode;
   }
 
   @Override
@@ -25,9 +23,8 @@ public class RemoteCommandConfiguration implements CommandConfiguration {
     try {
       JSONObject payload = new JSONObject().put(key, value);
       Path p = new Path(WebDriverLikeCommand.CONFIGURE);
-      // session/:sessionId/subdriver/:subdriver/command/:command
+      // session/:sessionId/configure/command/:command
       p.validateAndReplace(":sessionId", driver.getSession().getSessionId());
-      p.validateAndReplace(":subdriver", mode.toString());
       p.validateAndReplace(":command", command.name());
       WebDriverLikeRequest request = new WebDriverLikeRequest("POST", p, payload);
       driver.execute(request);

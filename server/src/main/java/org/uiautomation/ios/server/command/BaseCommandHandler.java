@@ -84,8 +84,11 @@ public abstract class BaseCommandHandler implements Handler {
     return response;
   }
 
-  protected CommandConfiguration getConfiguration(WorkingMode mode) {
-    return getSession().getConf(mode).get(getRequest().getGenericCommand());
+  protected <T> T getConfiguration(String key){
+    CommandConfiguration conf = getSession().configure(getRequest().getGenericCommand());
+    T res = (T)conf.get(key);
+    return res;
   }
+  
 
 }

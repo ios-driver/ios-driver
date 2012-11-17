@@ -13,14 +13,15 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSDriver;
-import org.uiautomation.ios.server.command.BaseCommandHandler;
+import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 
-public class GetCommand extends BaseCommandHandler {
+public class GetHandler extends BaseWebCommandHandler {
 
   // TODO freynaud cached by session.
   private static UIAElement addressBar;
+  private static final String defaultMode = WorkingMode.Web.toString();
 
-  public GetCommand(IOSDriver driver, WebDriverLikeRequest request) {
+  public GetHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
 
@@ -29,12 +30,18 @@ public class GetCommand extends BaseCommandHandler {
     String url = getRequest().getPayload().getString("url");
     getSession().getContext().getDOMContext().reset();
 
-    WorkingMode mode = WorkingMode.valueOf((String) getConfiguration(WorkingMode.Web).opt("mode",
-        WorkingMode.Native.toString()));
-    if (WorkingMode.Native == mode) {
+    String mode = getConfiguration("mode");
+    if (mode == null) {
+      mode = defaultMode;
+    }
+
+    switch (WorkingMode.valueOf(mode)) {
+    case Native:
       typeURLNative(url);
-    } else {
+      break;
+    case Web:
       fakeTypeURL(url);
+      break;
     }
 
     getSession().getWebInspector().waitForPageToLoad();

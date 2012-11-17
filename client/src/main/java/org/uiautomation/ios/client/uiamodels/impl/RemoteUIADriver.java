@@ -41,6 +41,7 @@ import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.UIAModels.UIADriver;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIAElementArray;
+import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
 import org.uiautomation.ios.UIAModels.configuration.DriverConfiguration;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
@@ -66,8 +67,7 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
   private final Session session;
   private final String host;
   private final int port;
-  private final DriverConfiguration nativeConf;
-  private final DriverConfiguration webConf;
+  private final DriverConfiguration configuration;
 
   /**
    * create the remote driver, starting the remote session with the requested
@@ -100,8 +100,7 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
 
       setSessionId(session.getSessionId());
       setCommandExecutor(new HttpCommandExecutor(url));
-      nativeConf = new RemoteDriverConfiguration(WorkingMode.Native, this);
-      webConf = new RemoteDriverConfiguration(WorkingMode.Web, this);
+      configuration = new RemoteDriverConfiguration(this);
 
     } catch (MalformedURLException e) {
       throw new IOSAutomationException("invalid URL " + remoteURL, e);
@@ -127,8 +126,7 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
     this.session = session;
     // TODO freynaud how safe is that ?
     this.requestedCapabilities = null;
-    nativeConf = new RemoteDriverConfiguration(WorkingMode.Native, this);
-    webConf = new RemoteDriverConfiguration(WorkingMode.Web, this);
+    configuration = new RemoteDriverConfiguration(this);
 
   }
 
@@ -421,13 +419,8 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
   }
 
   @Override
-  public DriverConfiguration nativeConf() {
-    return nativeConf;
-  }
+  public CommandConfiguration configure(WebDriverLikeCommand command) {
+    return configuration.configure(command);
 
-  @Override
-  public DriverConfiguration webConf() {
-    return webConf;
   }
-
 }

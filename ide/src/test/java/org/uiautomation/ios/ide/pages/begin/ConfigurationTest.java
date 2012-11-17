@@ -65,10 +65,10 @@ public class ConfigurationTest {
   @Test
   public void configuration() {
     try {
-      driver.webConf().get(WebDriverLikeCommand.URL).set("mode", WorkingMode.Native);
+      driver.configure(WebDriverLikeCommand.URL).set("mode", WorkingMode.Native);
       driver.get(pages.xhtmlTestPage);
       Assert.assertEquals(driver.getTitle(), "XHTML Test Page");
-      driver.webConf().get(WebDriverLikeCommand.URL).set("mode", WorkingMode.Web);
+      driver.configure(WebDriverLikeCommand.URL).set("mode", WorkingMode.Web);
       driver.get(pages.simpleTestPage);
       Assert.assertEquals(driver.getTitle(), "Hello WebDriver");
     } finally {

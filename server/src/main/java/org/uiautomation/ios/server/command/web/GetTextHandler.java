@@ -4,12 +4,12 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.server.IOSDriver;
-import org.uiautomation.ios.server.command.BaseCommandHandler;
+import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 
-public class GetTextCommandHandler extends BaseCommandHandler {
+public class GetTextHandler extends BaseWebCommandHandler {
 
-  public GetTextCommandHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public GetTextHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
 

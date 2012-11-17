@@ -16,7 +16,7 @@ public class DriverConfigurationStore implements DriverConfiguration {
     System.out.println("driver store created");
   }
   @Override
-  public CommandConfiguration get(WebDriverLikeCommand command) {
+  public CommandConfiguration configure(WebDriverLikeCommand command) {
     CommandConfiguration config = configurations.get(command);
     if (config == null) {
       System.out.println("creating store for "+command);

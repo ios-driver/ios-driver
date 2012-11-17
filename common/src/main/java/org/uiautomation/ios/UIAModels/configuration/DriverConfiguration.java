@@ -4,5 +4,5 @@ import org.uiautomation.ios.communication.WebDriverLikeCommand;
 
 public interface DriverConfiguration {
 
-  public CommandConfiguration get(WebDriverLikeCommand command);
+  public CommandConfiguration configure(WebDriverLikeCommand command);
 }

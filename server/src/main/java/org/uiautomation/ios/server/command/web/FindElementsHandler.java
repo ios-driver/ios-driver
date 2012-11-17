@@ -1,17 +1,19 @@
 package org.uiautomation.ios.server.command.web;
 
+import java.util.List;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.server.IOSDriver;
-import org.uiautomation.ios.server.command.BaseCommandHandler;
-import org.uiautomation.ios.webInspector.DOM.Node;
+import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 
-public class FindElement extends BaseCommandHandler {
+public class FindElementsHandler extends BaseWebCommandHandler {
 
-  public FindElement(IOSDriver driver, WebDriverLikeRequest request) {
+  public FindElementsHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
 
@@ -31,25 +33,23 @@ public class FindElement extends BaseCommandHandler {
       element = getSession().getWebInspector().getDocument();
     }
 
-    RemoteWebElement rwe;
-
+    List<RemoteWebElement> res;
     if ("link text".equals(type)) {
-      rwe = element.findElementByLinkText(value, false);
+      res = element.findElementsByLinkText(value, false);
     } else if ("partial link text".equals(type)) {
-      rwe = element.findElementByLinkText(value, true);
+      res = element.findElementsByLinkText(value, true);
     } else {
       String cssSelector = ToCSSSelectorConvertor.convertToCSSSelector(type, value);
-      rwe = element.findElementByCSSSelector(cssSelector);
-      System.out.println("found element nodeId"+rwe.getNodeId()+" , objectId:"+rwe.getRemoteObject().getId());
+      res = element.findElementsByCSSSelector(cssSelector);
     }
 
-    JSONObject res = new JSONObject();
-    if (rwe == null) {
-      return new WebDriverLikeResponse(getRequest().getSession(), 7, "No element found for " + type + "=" + value);
-    } else {
-      res.put("ELEMENT", rwe.getNodeId().getId());
-      return new WebDriverLikeResponse(getRequest().getSession(), 0, res);
+    JSONArray array = new JSONArray();
+
+    for (RemoteWebElement el : res) {
+      array.put(new JSONObject().put("ELEMENT", el.getNodeId().getId()));
     }
+
+    return new WebDriverLikeResponse(getRequest().getSession(), 0, array);
   }
 
 }

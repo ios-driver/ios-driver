@@ -1,20 +1,16 @@
 package org.uiautomation.ios.server.command.web;
 
-import java.util.List;
-
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.server.IOSDriver;
-import org.uiautomation.ios.server.command.BaseCommandHandler;
-import org.uiautomation.ios.webInspector.DOM.Node;
+import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 
-public class FindElements extends BaseCommandHandler {
+public class FindElementHandler extends BaseWebCommandHandler {
 
-  public FindElements(IOSDriver driver, WebDriverLikeRequest request) {
+  public FindElementHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
 
@@ -34,23 +30,25 @@ public class FindElements extends BaseCommandHandler {
       element = getSession().getWebInspector().getDocument();
     }
 
-    List<RemoteWebElement> res;
+    RemoteWebElement rwe;
+
     if ("link text".equals(type)) {
-      res = element.findElementsByLinkText(value, false);
+      rwe = element.findElementByLinkText(value, false);
     } else if ("partial link text".equals(type)) {
-      res = element.findElementsByLinkText(value, true);
+      rwe = element.findElementByLinkText(value, true);
     } else {
       String cssSelector = ToCSSSelectorConvertor.convertToCSSSelector(type, value);
-      res = element.findElementsByCSSSelector(cssSelector);
+      rwe = element.findElementByCSSSelector(cssSelector);
+      System.out.println("found element nodeId"+rwe.getNodeId()+" , objectId:"+rwe.getRemoteObject().getId());
     }
 
-    JSONArray array = new JSONArray();
-
-    for (RemoteWebElement el : res) {
-      array.put(new JSONObject().put("ELEMENT", el.getNodeId().getId()));
+    JSONObject res = new JSONObject();
+    if (rwe == null) {
+      return new WebDriverLikeResponse(getRequest().getSession(), 7, "No element found for " + type + "=" + value);
+    } else {
+      res.put("ELEMENT", rwe.getNodeId().getId());
+      return new WebDriverLikeResponse(getRequest().getSession(), 0, res);
     }
-
-    return new WebDriverLikeResponse(getRequest().getSession(), 0, array);
   }
 
 }

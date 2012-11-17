@@ -43,18 +43,18 @@ import org.uiautomation.ios.server.command.impl.SetCurrentContext;
 import org.uiautomation.ios.server.command.impl.SetTimeoutCommandHandler;
 import org.uiautomation.ios.server.command.impl.StopSession;
 import org.uiautomation.ios.server.command.impl.TakeScreenshot;
-import org.uiautomation.ios.server.command.web.Click;
-import org.uiautomation.ios.server.command.web.DisplayedCommandHanlder;
-import org.uiautomation.ios.server.command.web.Equality;
-import org.uiautomation.ios.server.command.web.ExecuteScript;
-import org.uiautomation.ios.server.command.web.FindElement;
-import org.uiautomation.ios.server.command.web.FindElements;
-import org.uiautomation.ios.server.command.web.GetCommand;
-import org.uiautomation.ios.server.command.web.GetTextCommandHandler;
-import org.uiautomation.ios.server.command.web.SelectedCommandHandler;
-import org.uiautomation.ios.server.command.web.SetFrame;
-import org.uiautomation.ios.server.command.web.WebAttributeCommandHandler;
-import org.uiautomation.ios.server.command.web.WebGetTitle;
+import org.uiautomation.ios.server.command.web.ClickHandler;
+import org.uiautomation.ios.server.command.web.IsDisplayedHanlder;
+import org.uiautomation.ios.server.command.web.IsEqualHandler;
+import org.uiautomation.ios.server.command.web.ExecuteScriptHandler;
+import org.uiautomation.ios.server.command.web.FindElementHandler;
+import org.uiautomation.ios.server.command.web.FindElementsHandler;
+import org.uiautomation.ios.server.command.web.GetHandler;
+import org.uiautomation.ios.server.command.web.GetTextHandler;
+import org.uiautomation.ios.server.command.web.IsSelectedHandler;
+import org.uiautomation.ios.server.command.web.SetFrameHandler;
+import org.uiautomation.ios.server.command.web.GetAttributeHandler;
+import org.uiautomation.ios.server.command.web.GetTitleHandler;
 
 public enum CommandMapping {
 
@@ -70,13 +70,13 @@ public enum CommandMapping {
   
   WINDOW_HANDLES(GetWindowHandlesCommandHandler.class),
   WINDOW(SetCurrentContext.class),
-  FRAME((String)null,SetFrame.class),
+  FRAME((String)null,SetFrameHandler.class),
   GET_WINDOW_HANDLE(GetCurrentContext.class),
-  TITLE(null,null,WebGetTitle.class),
-  URL((String)null,GetCommand.class),
+  TITLE(null,null,GetTitleHandler.class),
+  URL((String)null,GetHandler.class),
 
-  EXECUTE_SCRIPT(NotImplementedHandler.class,ExecuteScript.class),
-  EQUAL(NotImplementedHandler.class,Equality.class),
+  EXECUTE_SCRIPT(NotImplementedHandler.class,ExecuteScriptHandler.class),
+  EQUAL(NotImplementedHandler.class,IsEqualHandler.class),
   // UIATarget
   LOCAL_TARGET(LocalTarget.class),
   HOST(NotImplementedHandler.class),
@@ -90,7 +90,7 @@ public enum CommandMapping {
   SCREENSHOT(TakeScreenshot.class),
   
   FONT_MOST_APP(".frontMostApp()"),
-  SELECTED((String)null,SelectedCommandHandler.class),
+  SELECTED((String)null,IsSelectedHandler.class),
  
   // UIAApplication
   MAIN_WINDOW(".mainWindow()"),
@@ -110,31 +110,31 @@ public enum CommandMapping {
   PARENT(NotImplementedHandler.class),
   
 
-  ELEMENT_ROOT(FindElementRoot.class,FindElement.class),
-  ELEMENTS_ROOT(FindElementsRoot.class,FindElements.class),
+  ELEMENT_ROOT(FindElementRoot.class,FindElementHandler.class),
+  ELEMENTS_ROOT(FindElementsRoot.class,FindElementsHandler.class),
   
-  ELEMENT(FindElementRoot.class,FindElement.class),
-  ELEMENTS(FindElementsRoot.class,FindElements.class),
+  ELEMENT(FindElementRoot.class,FindElementHandler.class),
+  ELEMENTS(FindElementsRoot.class,FindElementsHandler.class),
   
   //ELEMENT(".element(:depth,:criteria)"),
   //ELEMENTS(".elements2(:depth,:criteria)"),
   ANCESTRY(NotImplementedHandler.class),
 
-  DISPLAYED(".isVisible()",DefaultUIAScriptHandler.class,DisplayedCommandHanlder.class),
+  DISPLAYED(".isVisible()",DefaultUIAScriptHandler.class,IsDisplayedHanlder.class),
   IS_STALE(".isStale()"),
   
   
   //LABEL(".label()"),
   //NAME(".name()"),
   //VALUE(".value()"),
-  ATTRIBUTE(AttributeCommand.class,WebAttributeCommandHandler.class),
-  TEXT(null,null,GetTextCommandHandler.class),
+  ATTRIBUTE(AttributeCommand.class,GetAttributeHandler.class),
+  TEXT(null,null,GetTextHandler.class),
   //WITH_NAME(".withName(:name)"),
   //WITH_PREDICATE(".withPredicate(PredicateString predicateString)"),
   //WITH_VALUE_FOR_KEY(".withValueForKey(Object value,String key)"),
   
   
-  CLICK(".tap2()",Click.class),
+  CLICK(".tap2()",ClickHandler.class),
   TOUCH_AND_HOLD(".touchAndHold(:duration)"),
   DOUBLE_TAP(".doubleTap()"),
   TWO_FINGER_TAP(".twoFingerTap()"),
