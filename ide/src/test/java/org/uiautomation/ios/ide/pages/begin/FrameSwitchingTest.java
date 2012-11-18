@@ -65,6 +65,8 @@ public class FrameSwitchingTest {
     appServer.start();
     pages = new Pages(appServer);
     
+    System.out.println(pages.framesetPage);
+    
     driver = new RemoteMobileSafariDriver(url, safari);
   }
 
@@ -149,7 +151,7 @@ public class FrameSwitchingTest {
    assertEquals(driver.findElement(By.name("id-name1")).getAttribute("value"), ("name"));
  }
 
- @Test
+ @Test  // TODO freynaud
  @Ignore({OPERA, OPERA_MOBILE})
  public void testShouldBeAbleToSwitchToFrameWithNameContainingDot() {
    driver.get(pages.framesetPage);
@@ -158,7 +160,7 @@ public class FrameSwitchingTest {
  }
 
  @Ignore(value = {SELENESE}, reason = "switchTo().frame(WebElement) not supported with Selenium")
- @Test
+ @Test // TODO freynaud
  public void testShouldBeAbleToSwitchToAFrameUsingAPreviouslyLocatedWebElement() {
    driver.get(pages.framesetPage);
    WebElement frame = driver.findElement(By.tagName("frame"));
@@ -167,7 +169,7 @@ public class FrameSwitchingTest {
    assertEquals(driver.findElement(By.id("pageNumber")).getText(), ("1"));
  }
 
- @Test
+ @Test  // TODO freynaud
  public void testShouldBeAbleToSwitchToAnIFrameUsingAPreviouslyLocatedWebElement() {
    driver.get(pages.iframePage);
    WebElement frame = driver.findElement(By.tagName("iframe"));
@@ -276,7 +278,7 @@ public class FrameSwitchingTest {
  // ----------------------------------------------------------------------------------------------
 
  @Ignore(ANDROID)
- @Test
+ @Test  // TODO freynaud
  public void testShouldContinueToReferToTheSameFrameOnceItHasBeenSelected() {
    driver.get(pages.framesetPage);
 
@@ -322,7 +324,7 @@ public class FrameSwitchingTest {
  }
 
  @Ignore(ANDROID)
- @Test
+ @Test // TODO freynaud
  public void testShouldAllowTheUserToSwitchToAnIFrameAndRemainFocusedOnIt() {
    driver.get(pages.iframePage);
    driver.switchTo().frame(0);
@@ -337,7 +339,7 @@ public class FrameSwitchingTest {
  }
 
  @Ignore({OPERA, ANDROID, OPERA_MOBILE})
- @Test
+ @Test // TODO freynaud
  public void testShouldBeAbleToClickInAFrame() {
    driver.get(pages.framesetPage);
    driver.switchTo().frame("third");
@@ -352,7 +354,7 @@ public class FrameSwitchingTest {
  }
 
  @Ignore({OPERA, ANDROID, OPERA_MOBILE})
- @Test
+ @Test // TODO freynaud
  public void testShouldBeAbleToClickInASubFrame() {
    driver.get(pages.framesetPage);
    driver.switchTo().frame("sixth")
@@ -453,7 +455,7 @@ public class FrameSwitchingTest {
  }
 
  @JavascriptEnabled
- @Test
+ @Test // TODO freynaud
  public void testJavaScriptShouldExecuteInTheContextOfTheCurrentFrame() {
    JavascriptExecutor executor = (JavascriptExecutor) driver;
 

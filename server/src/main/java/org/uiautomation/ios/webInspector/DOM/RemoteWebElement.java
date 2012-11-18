@@ -611,5 +611,27 @@ public class RemoteWebElement {
     
   }
 
+  public RemoteWebElement getContentWindow() throws  Exception {
+    JSONObject cmd = new JSONObject();
+
+    cmd.put("method", "Runtime.callFunctionOn");
+
+    JSONArray args = new JSONArray();
+
+    cmd.put(
+        "params",
+        new JSONObject().put("objectId", getRemoteObject().getId())
+            .put("functionDeclaration", "(function(arg) { var window = this.contentWindow; return window;})")
+            .put("arguments", args).put("returnByValue", false));
+
+    JSONObject response = protocol.sendCommand(cmd);
+    RemoteObject ro = inspector.cast(response);
+    if (ro == null) {
+      throw new NoSuchFrameException("Cannot find the window associated with the frame.");
+    } else {
+      return ro.getWebElement();
+    }
+  }
+
 
 }

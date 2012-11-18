@@ -23,11 +23,12 @@ public class SetFrameHandler extends BaseWebCommandHandler {
   public WebDriverLikeResponse handle() throws Exception {
     String frameId = getRequest().getPayload().getString("id");
     if ("null".equals(frameId)) {
-      getSession().getContext().getDOMContext().setCurrentFrame(null, null);
+      getSession().getContext().getDOMContext().setCurrentFrame(null, null,null);
     } else {
       RemoteWebElement iframe = getIframe(frameId);
       RemoteWebElement document = iframe.getContentDocument();
-      getSession().getContext().getDOMContext().setCurrentFrame(iframe, document);
+      RemoteWebElement window = iframe.getContentWindow();
+      getSession().getContext().getDOMContext().setCurrentFrame(iframe, document,window);
     }
 
     return new WebDriverLikeResponse(getSession().getSessionId(), 0, new JSONObject());

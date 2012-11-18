@@ -8,6 +8,7 @@ import javax.sound.midi.VoiceStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.NoSuchElementException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.UIADriver;
 import org.uiautomation.ios.UIAModels.UIARect;
@@ -35,7 +36,8 @@ public class WebInspector {
     RemoteWebElement result = context.getDocument();
     if (result == null) {
       result = retrieveDocumentAndCheckReady();
-      context.setCurrentFrame(null, result);
+      RemoteWebElement window = getMainWindow();
+      context.setCurrentFrame(null, result,window);
     }
     return result;
   }
@@ -152,6 +154,20 @@ public class WebInspector {
     JSONObject response = protocol.sendCommand(cmd);
     return cast(response);
   }
+  
+  public RemoteWebElement getMainWindow() throws JSONException, Exception {
+    JSONObject cmd = new JSONObject();
+    cmd.put("method", "Runtime.evaluate");
+    cmd.put("params", new JSONObject().put("expression", "window;"));
+
+    JSONObject response = protocol.sendCommand(cmd);
+    RemoteObject ro =  cast(response);
+    if (ro == null){
+      throw new NoSuchElementException("cannot find window");
+    }else {
+      return ro.getWebElement();
+    }
+  }
 
   public Object executeScriptOld(String script, JSONArray args) throws Exception {
     JSONObject cmd = new JSONObject();
@@ -166,17 +182,23 @@ public class WebInspector {
 
   public Object executeScript(String script, JSONArray args) throws Exception {
     RemoteWebElement document = getDocument();
+    RemoteWebElement window = session.getContext().getDOMContext().getWindow();
     JSONObject cmd = new JSONObject();
 
+    script = script.replace("document", "realDocument");
+    script = script.replace("window", "realWindow");
+    
+    
     JSONArray arguments = new JSONArray();
-    arguments.put(new JSONObject().put("value", "5"));
+    arguments.put(new JSONObject().put("objectId", window.getRemoteObject().getId()));
+    arguments.put(new JSONObject().put("objectId", document.getRemoteObject().getId()));
 
     cmd.put("method", "Runtime.callFunctionOn");
-    cmd.put(
-        "params",
-        new JSONObject().put("objectId", document.getRemoteObject().getId())
-            .put("functionDeclaration", "(function(args) { " + script + "})").put("arguments", arguments)
-            .put("returnByValue", false));
+    cmd.put("params", new JSONObject()
+        .put("objectId", document.getRemoteObject().getId())
+        .put("functionDeclaration", "(function(realWindow,realDocument) { " + script + "})")
+        .put("arguments", arguments)
+        .put("returnByValue", false));
     JSONObject response = protocol.sendCommand(cmd);
     return cast(response);
   }
@@ -194,11 +216,6 @@ public class WebInspector {
   }
   
   public String getPageURL() throws Exception {
-    /*JSONObject cmd = new JSONObject();
-    cmd.put("method", "Runtime.evaluate");
-    cmd.put("params", new JSONObject().put("expression", "window.location.href;").put("returnByValue", true));
-    JSONObject response = protocol.sendCommand(cmd);
-    return cast(response);*/
     RemoteWebElement document = getDocument();
     String f = "(function(arg) { var url=this.URL;return url;})";
     JSONObject cmd = new JSONObject();

@@ -7,6 +7,8 @@ import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 public class DOMContext implements EventListener {
 
   private volatile boolean pageLoaded = false;
+  
+  private RemoteWebElement window;
   private RemoteWebElement document;
   private RemoteWebElement iframe;
 
@@ -15,8 +17,13 @@ public class DOMContext implements EventListener {
   public RemoteWebElement getDocument() {
     return document;
   }
+  
+  public RemoteWebElement getWindow() {
+    return window;
+  }
 
   public void reset() {
+    window = null;
     document = null;
     iframe = null;
     mainDocument = null;
@@ -26,9 +33,10 @@ public class DOMContext implements EventListener {
   // to be kept.
   // calling getDocument again to have the document after siwtching to an iframe
   // breaks the nodeId reference.
-  public void setCurrentFrame(RemoteWebElement iframe, RemoteWebElement document) {
+  public void setCurrentFrame(RemoteWebElement iframe, RemoteWebElement document,RemoteWebElement window) {
     this.iframe = iframe;
     this.document = document;
+    this.window = window;
 
     // switchToDefaultContent. revert to main document if it was set.
     if (iframe == null && document == null) {
