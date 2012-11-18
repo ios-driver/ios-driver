@@ -158,7 +158,7 @@ public class ElementFindingTest {
     }
   }
 
-  @Test(enabled = false)
+  @Test
   public void testShouldBeAbleToFindChildrenOfANode() {
     driver.get(pages.selectableItemsPage);
     List<WebElement> elements = driver.findElements(By.xpath("/html/head"));
