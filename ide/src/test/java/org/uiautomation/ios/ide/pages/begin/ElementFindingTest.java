@@ -255,7 +255,7 @@ public class ElementFindingTest {
     }
   }
 
-  @Test(enabled = false)
+  @Test
   public void testShouldBeAbleToFindMultipleElementsByXPath() {
     driver.get(pages.xhtmlTestPage);
     List<WebElement> elements = driver.findElements(By.xpath("//div"));
@@ -515,7 +515,7 @@ public class ElementFindingTest {
     };
   }
 
-  @Test(enabled = false)
+  @Test
   public void testFindingALinkByXpathUsingContainsKeywordShouldWork() {
     driver.get(pages.nestedPage);
 
