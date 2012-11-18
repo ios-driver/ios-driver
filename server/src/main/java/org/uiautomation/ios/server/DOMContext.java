@@ -1,5 +1,6 @@
 package org.uiautomation.ios.server;
 
+import org.openqa.selenium.TimeoutException;
 import org.uiautomation.ios.mobileSafari.EventListener;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 
@@ -47,13 +48,17 @@ public class DOMContext implements EventListener {
 
   @Override
   public void onPageLoad() {
-    System.err.println("PAGE LOADED");
     pageLoaded = true;
     reset();
   }
 
-  public void waitForPageToLoad() {
+  public void waitForPageToLoad(long timeout) {
+    long start = System.currentTimeMillis();
+    long deadLine = start + timeout;
     while (!pageLoaded) {
+      if (System.currentTimeMillis() > deadLine) {
+        throw new TimeoutException("failed to load the page after " + timeout + " ms.");
+      }
       try {
         Thread.sleep(50);
       } catch (InterruptedException e) {

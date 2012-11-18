@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.UIADriver;
 import org.uiautomation.ios.UIAModels.UIARect;
+import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.server.DOMContext;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.webInspector.DOM.DOM;
@@ -24,8 +25,10 @@ public class WebInspector {
   private final ServerSideSession session;
   private final DebugProtocol protocol;
   public final UIADriver nativeDriver;
- 
+
   private int width = -1;
+
+  private static final Long defaultPageLoadTimeoutInMs = 30000L;
 
   public RemoteWebElement getDocument() throws Exception {
     DOMContext context = session.getContext().getDOMContext();
@@ -42,7 +45,11 @@ public class WebInspector {
     while (true) {
       try {
         element = retrieveDocument();
-        if (element.getNodeId().exist() && "complete".equals(element.readyState())) {
+        String state = element.readyState();
+        if (element.getNodeId().exist() && ("complete".equals(state) || "loading".equals(state))) {
+          if (!"complete".equals(state)){
+            System.err.println("retruening a document not yet completed :"+state);
+          }
           break;
         }
       } catch (Exception e) {
@@ -52,9 +59,6 @@ public class WebInspector {
     }
     return element;
   }
-  
-  
- 
 
   private RemoteWebElement retrieveDocument() throws Exception {
     JSONObject result = protocol.sendCommand(DOM.getDocument());
@@ -92,6 +96,8 @@ public class WebInspector {
     this.nativeDriver = nativeDriver;
     this.session = session;
     protocol = new DebugProtocol(session.getContext().getDOMContext(), bundleId, session);
+    
+    enablePageEvent();
 
   }
 
@@ -142,45 +148,38 @@ public class WebInspector {
     JSONObject cmd = new JSONObject();
     cmd.put("method", "Runtime.evaluate");
     cmd.put("params", new JSONObject().put("expression", "window.innerWidth;"));
-  
+
     JSONObject response = protocol.sendCommand(cmd);
     return cast(response);
   }
-  
+
   public Object executeScriptOld(String script, JSONArray args) throws Exception {
     JSONObject cmd = new JSONObject();
     cmd.put("method", "Runtime.evaluate");
-    cmd.put("params", new JSONObject()
-      .put("expression", "(function(args) {  alert('args');"+script+"})();")
-      .put("arguments", new JSONObject().put("value", "5"))
-      .put("returnByValue", false)
-      );
+    cmd.put(
+        "params",
+        new JSONObject().put("expression", "(function(args) {  alert('args');" + script + "})();")
+            .put("arguments", new JSONObject().put("value", "5")).put("returnByValue", false));
     JSONObject response = protocol.sendCommand(cmd);
     return cast(response);
   }
-  
-  
+
   public Object executeScript(String script, JSONArray args) throws Exception {
     RemoteWebElement document = getDocument();
     JSONObject cmd = new JSONObject();
-    
-    
-    
+
     JSONArray arguments = new JSONArray();
     arguments.put(new JSONObject().put("value", "5"));
-    
+
     cmd.put("method", "Runtime.callFunctionOn");
-    cmd.put("params", new JSONObject()
-      .put("objectId",document.getRemoteObject().getId())
-      .put("functionDeclaration", "(function(args) { "+script+"})")
-      .put("arguments", arguments)
-      .put("returnByValue", false)
-      );
+    cmd.put(
+        "params",
+        new JSONObject().put("objectId", document.getRemoteObject().getId())
+            .put("functionDeclaration", "(function(args) { " + script + "})").put("arguments", arguments)
+            .put("returnByValue", false));
     JSONObject response = protocol.sendCommand(cmd);
     return cast(response);
   }
-  
-  
 
   public void stop() {
     protocol.stop();
@@ -194,8 +193,6 @@ public class WebInspector {
     return cast(response);
   }
 
- 
-
   public void get(String url) throws Exception {
     JSONObject cmd = new JSONObject();
     cmd.put("method", "Page.navigate");
@@ -203,28 +200,33 @@ public class WebInspector {
     JSONObject response = protocol.sendCommand(cmd);
   }
   
+  public void enablePageEvent() throws Exception {
+    JSONObject cmd = new JSONObject();
+    cmd.put("method", "Page.enable");
+    JSONObject response = protocol.sendCommand(cmd);
+  }
+ 
+
   public <T> T cast(JSONObject response) throws JSONException {
     List<String> primitives = new ArrayList<String>();
     primitives.add("boolean");
     primitives.add("number");
     primitives.add("string");
 
-    
-    // evaluate : 
-    
+    // evaluate :
+
     JSONObject result = response.has("result") ? response.getJSONObject("result") : response.getJSONObject("object");
-    
+
     if (result != null) {
       String type = result.getString("type");
-
 
       if (primitives.contains(type)) { // primitive type.
         Object value = result.get("value");
         return (T) value;
       } else if ("object".equals(type)) { // object
-        if (result.has("value") && result.isNull("value")){
+        if (result.has("value") && result.isNull("value")) {
           return null;
-        }else if ("array".equals(result.optString("subtype"))) {
+        } else if ("array".equals(result.optString("subtype"))) {
           RemoteObject array = new RemoteObject(result.getString("objectId"), session);
           return (T) new RemoteObjectArray(array);
         } else {
@@ -232,12 +234,12 @@ public class WebInspector {
         }
 
       } else {
-        if ("undefined".equals(type)){ 
+        if ("undefined".equals(type)) {
           return null;
-        }else{
+        } else {
           throw new RuntimeException("NI " + response.toString(2));
         }
-       
+
       }
     } else {
       throw new RuntimeException("bug, null result ");
@@ -245,8 +247,12 @@ public class WebInspector {
   }
 
   public void waitForPageToLoad() {
-    session.getContext().getDOMContext().waitForPageToLoad();
-    
+    long timeout = (Long) session.configure(WebDriverLikeCommand.URL).opt("page load", defaultPageLoadTimeoutInMs);
+    if (timeout < 0) {
+      timeout = defaultPageLoadTimeoutInMs;
+    }
+    session.getContext().getDOMContext().waitForPageToLoad(timeout);
+
   }
 
   public void back() throws Exception {
@@ -258,16 +264,19 @@ public class WebInspector {
 
     JSONArray args = new JSONArray();
 
-    cmd.put("params", new JSONObject()
-      .put("objectId", document.getRemoteObject().getId())
-      .put("functionDeclaration", f)
-      .put("arguments", args)
-      .put("returnByValue", true));
+    cmd.put("params", new JSONObject().put("objectId", document.getRemoteObject().getId())
+        .put("functionDeclaration", f).put("arguments", args).put("returnByValue", true));
 
     JSONObject response = getProtocol().sendCommand(cmd);
     cast(response);
   }
-  
+
+  public void refresh() throws Exception {
+    JSONObject cmd = new JSONObject();
+    cmd.put("method", "Page.reload");
+    JSONObject response = getProtocol().sendCommand(cmd);
+  }
+
   public void forward() throws Exception {
     RemoteWebElement document = getDocument();
     String f = "(function(arg) { var f=" + Atoms.forward() + "(arg);})";
@@ -277,17 +286,11 @@ public class WebInspector {
 
     JSONArray args = new JSONArray();
 
-    cmd.put("params", new JSONObject()
-      .put("objectId", document.getRemoteObject().getId())
-      .put("functionDeclaration", f)
-      .put("arguments", args)
-      .put("returnByValue", true));
+    cmd.put("params", new JSONObject().put("objectId", document.getRemoteObject().getId())
+        .put("functionDeclaration", f).put("arguments", args).put("returnByValue", true));
 
     JSONObject response = getProtocol().sendCommand(cmd);
     cast(response);
   }
-
- 
-
 
 }

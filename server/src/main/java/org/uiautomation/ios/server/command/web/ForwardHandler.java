@@ -19,14 +19,15 @@ public class ForwardHandler extends BaseWebCommandHandler {
   @Override
   public WebDriverLikeResponse handle() throws Exception {
     boolean useNativeEvents = getConfiguration("nativeEvents", nativeEvents);
-
+    getSession().getContext().getDOMContext().reset();
     if (useNativeEvents) {
       // forwardNative();
     } else {
       getSession().getWebInspector().forward();
     }
 
-    getSession().getWebInspector().waitForPageToLoad();
+    // no page loading event for forward ?
+    //getSession().getWebInspector().waitForPageToLoad();
     return new WebDriverLikeResponse(getSession().getSessionId(), 0, new JSONObject());
   }
 

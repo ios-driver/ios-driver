@@ -40,6 +40,8 @@ public class GetHandler extends BaseWebCommandHandler {
   @Override
   public WebDriverLikeResponse handle() throws Exception {
     String url = getRequest().getPayload().getString("url");
+   //getSession().getWebInspector().enablePageEvent();
+    
     getSession().getContext().getDOMContext().reset();
 
     boolean useNativeEvents = getConfiguration("nativeEvents", nativeEvents);

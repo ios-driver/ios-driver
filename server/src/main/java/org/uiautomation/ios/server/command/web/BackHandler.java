@@ -18,7 +18,7 @@ public class BackHandler extends BaseWebCommandHandler {
   @Override
   public WebDriverLikeResponse handle() throws Exception {
     boolean useNativeEvents = getConfiguration("nativeEvents", nativeEvents);
-
+    getSession().getContext().getDOMContext().reset();
     if (useNativeEvents) {
       //backNative();
     } else {

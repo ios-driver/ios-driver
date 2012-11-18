@@ -55,7 +55,8 @@ public class DefaultMessageHandler implements MessageHandler {
 
   private boolean isPageLoad(JSONObject message) {
     String method = message.optString("method");
-    return "Profiler.resetProfiles".equals(method) || "DOM.documentUpdated".equals(method);
+    return "Page.loadEventFired".equals(method);
+    //return "Profiler.resetProfiles".equals(method) || "DOM.documentUpdated".equals(method);
   }
 
   private JSONObject extractResponse(String message) throws Exception {

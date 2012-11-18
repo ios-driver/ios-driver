@@ -20,7 +20,8 @@ public class CommandConfigurationStore implements CommandConfiguration {
 
   @Override
   public Object get(String key) {
-    return config.opt(key);
+    Object res = config.opt(key);
+    return res;
   }
 
   @Override

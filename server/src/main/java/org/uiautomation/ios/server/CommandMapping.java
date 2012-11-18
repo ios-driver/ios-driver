@@ -59,7 +59,9 @@ import org.uiautomation.ios.server.command.web.GetTitleHandler;
 import org.uiautomation.ios.server.command.web.IsDisplayedHanlder;
 import org.uiautomation.ios.server.command.web.IsEqualHandler;
 import org.uiautomation.ios.server.command.web.IsSelectedHandler;
+import org.uiautomation.ios.server.command.web.RefreshHandler;
 import org.uiautomation.ios.server.command.web.SetFrameHandler;
+import org.uiautomation.ios.server.command.web.SetTimeoutHandler;
 import org.uiautomation.ios.server.command.web.SubmitHandler;
 
 public enum CommandMapping {
@@ -68,7 +70,7 @@ public enum CommandMapping {
   GET_SESSION(GetCapabilitiesCommandHandler.class),
   SESSIONS(GetSessions.class),
   DELETE_SESSION(StopSession.class),
-  SET_TIMEOUT(SetTimeoutCommandHandler.class),
+  SET_TIMEOUT(SetTimeoutCommandHandler.class,SetTimeoutHandler.class),
   GET_TIMEOUT(GetTimeoutCommandHandler.class),
   
   CONFIGURE(ConfigurationSetter.class),
@@ -82,6 +84,7 @@ public enum CommandMapping {
   URL(NotImplementedNativeHandler.class,GetHandler.class),
   BACK(NotImplementedNativeHandler.class,BackHandler.class),
   FORWARD(NotImplementedNativeHandler.class,ForwardHandler.class),
+  REFRESH(NotImplementedNativeHandler.class,RefreshHandler.class),
   SUBMIT(NotImplementedNativeHandler.class,SubmitHandler.class),
 
   EXECUTE_SCRIPT(NotImplementedNativeHandler.class,ExecuteScriptHandler.class),
