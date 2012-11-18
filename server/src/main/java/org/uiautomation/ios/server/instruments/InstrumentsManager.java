@@ -143,6 +143,7 @@ public class InstrumentsManager {
     IOSDeviceManager simulator = new IOSSimulatorManager(sdkVersion, device);
     simulator.resetContentAndSettings();
     simulator.setL10N(locale, language);
+    simulator.setKeyboardOptions();
     return simulator;
   }
 

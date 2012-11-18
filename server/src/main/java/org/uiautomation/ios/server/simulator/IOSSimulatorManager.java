@@ -35,13 +35,13 @@ import org.uiautomation.ios.server.instruments.IOSDeviceManager;
 import org.uiautomation.ios.server.utils.ClassicCommands;
 import org.uiautomation.ios.server.utils.Command;
 
-
 // java version ( simplified )
 // of http://code.google.com/p/ios-sim-locale/source/browse/trunk/ios-sim-locale.m
 /**
- * setting the plist file to the correct local. Tested on mac 10.7. May work on other version. The
- * assumption made is that the plist file read by the ios simulator is of binary1 format. See the
- * mac command line plutils for the formats.
+ * setting the plist file to the correct local. Tested on mac 10.7. May work on
+ * other version. The assumption made is that the plist file read by the ios
+ * simulator is of binary1 format. See the mac command line plutils for the
+ * formats.
  * 
  * 
  */
@@ -53,23 +53,22 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   private static File xcodeInstall;
   private static final Logger log = Logger.getLogger(IOSSimulatorManager.class.getName());
 
-
   private final String desiredSDKVersion;
   private File contentAndSettingsFolder;
   // simulator plist, to choose language and locale
   private File globalPreferencePlist;
   public static final String SIMULATOR_PROCESS_NAME = "iPhone Simulator";
 
-
   /**
-   * manages a single instance of the instruments process. Only 1 process can run at a given time.
+   * manages a single instance of the instruments process. Only 1 process can
+   * run at a given time.
    * 
-   * @param desiredSDKVersion the SDK version. For instance 5.0 or 4.3
+   * @param desiredSDKVersion
+   *          the SDK version. For instance 5.0 or 4.3
    * @param device
    * @throws IOSAutomationSetupException
    */
-  public IOSSimulatorManager(String desiredSDKVersion, IOSDevice device)
-      throws IOSAutomationSetupException {
+  public IOSSimulatorManager(String desiredSDKVersion, IOSDevice device) throws IOSAutomationSetupException {
     if (isSimulatorRunning() && !isWarmupRequired()) {
       throw new IOSAutomationSetupException("another instance of the simulator is already running.");
     }
@@ -93,24 +92,21 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   public void forceDefaultSDK(String desiredSDKVersion) {
     Float desiredVersion = Float.parseFloat(desiredSDKVersion);
     for (String v : sdks) {
-      
+
       Float version = Float.parseFloat(v);
       if (version > desiredVersion) {
-        File f =
-            new File(xcodeInstall,
-                "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator"
-                    + v + ".sdk");
+        File f = new File(xcodeInstall,
+            "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator" + v + ".sdk");
         if (!f.exists()) {
           System.err.println("doesn't exist " + f);
         } else {
-          File renamed =
-              new File(xcodeInstall,
-                  "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs/iPhoneSimulator"
-                      + v + ".sdk");
+          File renamed = new File(xcodeInstall,
+              "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs/iPhoneSimulator" + v
+                  + ".sdk");
           boolean ok = f.renameTo(renamed);
           if (!ok) {
-            throw new IOSAutomationException("Starting the non default SDK requires some more setup.Failed to move " + f + " to " + renamed
-                + getErrorMessageMoveSDK());
+            throw new IOSAutomationException("Starting the non default SDK requires some more setup.Failed to move "
+                + f + " to " + renamed + getErrorMessageMoveSDK());
           }
         }
       }
@@ -118,12 +114,8 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   }
 
   private String getErrorMessageMoveSDK() {
-    File sdk =
-        new File(xcodeInstall,
-            "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs");
-    File exiled =
-        new File(xcodeInstall,
-            "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs");
+    File sdk = new File(xcodeInstall, "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs");
+    File exiled = new File(xcodeInstall, "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs");
     String msg = "Cannot move folders from " + sdk + " to " + exiled;
     msg += " Make sure the rights are correct (chmod -R +rw ... )";
     return msg;
@@ -131,9 +123,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   }
 
   public void restoreExiledSDKs() {
-    File exiled =
-        new File(xcodeInstall,
-            "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs/");
+    File exiled = new File(xcodeInstall, "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs/");
     if (!exiled.exists()) {
       log.warning(exiled.getAbsolutePath() + " doesn't exist." + getErrorMessageMoveSDK());
       return;
@@ -151,15 +141,14 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   }
 
   /**
-   * update the preference of the simulator. Similar to using the IOS Simulator menu > Hardware >
-   * [Device | Version ]
+   * update the preference of the simulator. Similar to using the IOS Simulator
+   * menu > Hardware > [Device | Version ]
    * 
    * @param key
    * @param value
    * @throws IOSAutomationSetupException
    */
-  private void setDefaultSimulatorPreference(String key, String value)
-      throws IOSAutomationSetupException {
+  private void setDefaultSimulatorPreference(String key, String value) throws IOSAutomationSetupException {
     List<String> com = new ArrayList<String>();
     com.add("defaults");
     com.add("write");
@@ -171,35 +160,31 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     updatePreference.executeAndWait();
   }
 
-
-
   private String validateSDK(String sdk) throws IOSAutomationSetupException {
     if (!sdks.contains(sdk)) {
-      throw new IOSAutomationSetupException("desired sdk " + sdk + " isn't installed. Installed :"
-          + sdks);
+      throw new IOSAutomationSetupException("desired sdk " + sdk + " isn't installed. Installed :" + sdks);
     }
     return sdk;
   }
-
 
   private boolean isSimulatorRunning() throws IOSAutomationSetupException {
     return ClassicCommands.isRunning(SIMULATOR_PROCESS_NAME);
   }
 
-
-
   /**
-   * set the emulator to the given locale.Required a clean context (can only be done after "reset
-   * content and settings" )
+   * set the emulator to the given locale.Required a clean context (can only be
+   * done after "reset content and settings" )
    * 
-   * @param locale fr_FR
-   * @param language fr
+   * @param locale
+   *          fr_FR
+   * @param language
+   *          fr
    * @throws IOSAutomationSetupException
    */
   public void setL10N(String locale, String language) throws IOSAutomationSetupException {
     try {
       JSONObject plistJSON = getPreferenceFile(locale, language);
-      writeOnDisk(plistJSON);
+      writeOnDisk(plistJSON, globalPreferencePlist);
     } catch (Exception e) {
       throw new IOSAutomationSetupException("cannot configure simulator", e);
     }
@@ -207,8 +192,8 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   }
 
   /**
-   * Does what IOS Simulator - Reset content and settings menu does, by deleting the files on disk.
-   * The simulator shouldn't be running when that is done.
+   * Does what IOS Simulator - Reset content and settings menu does, by deleting
+   * the files on disk. The simulator shouldn't be running when that is done.
    */
   public void resetContentAndSettings() {
     if (hasContentAndSettingsFolder()) {
@@ -232,8 +217,6 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     ClassicCommands.killall(SIMULATOR_PROCESS_NAME);
   }
 
-
-
   private File createTmpFile(JSONObject content) throws IOException, JSONException {
     File res = File.createTempFile("global", ".json");
     BufferedWriter out = new BufferedWriter(new FileWriter(res));
@@ -242,13 +225,14 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     return res;
   }
 
-  private void writeOnDisk(JSONObject plistJSON) throws IOException, JSONException {
-    if (globalPreferencePlist.exists()) {
-      // to be on the safe side. If the emulator already runs, it won't work anyway.
+  private void writeOnDisk(JSONObject plistJSON, File destination) throws IOException, JSONException {
+    if (destination.exists()) {
+      // to be on the safe side. If the emulator already runs, it won't work
+      // anyway.
       throw new IOSAutomationException(globalPreferencePlist + "already exists.Cannot create it.");
     }
     // make sure the folder is ready for the plist file
-    globalPreferencePlist.getParentFile().mkdirs();
+    destination.getParentFile().mkdirs();
 
     checkPlUtil();
 
@@ -259,7 +243,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     command.add("-convert");
     command.add("binary1");
     command.add("-o");
-    command.add(globalPreferencePlist.getAbsolutePath());
+    command.add(destination.getAbsolutePath());
     command.add(from.getAbsolutePath());
 
     ProcessBuilder b = new ProcessBuilder(command);
@@ -275,8 +259,6 @@ public class IOSSimulatorManager implements IOSDeviceManager {
 
   }
 
-
-
   private void checkPlUtil() {
     File f = new File(PLUTIL);
     if (!f.exists() || !f.canExecute()) {
@@ -285,12 +267,9 @@ public class IOSSimulatorManager implements IOSDeviceManager {
 
   }
 
-
   private File getContentAndSettingsFolder() {
     String home = System.getProperty("user.home");
-    String s =
-        String
-            .format("%s/Library/Application Support/iPhone Simulator/%s", home, desiredSDKVersion);
+    String s = String.format("%s/Library/Application Support/iPhone Simulator/%s", home, desiredSDKVersion);
     File f = new File(s);
     if (!f.exists()) {
       f.mkdirs();
@@ -304,8 +283,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     return global;
   }
 
-  private JSONObject getPreferenceFile(String locale, String language) throws JSONException,
-      IOException {
+  private JSONObject getPreferenceFile(String locale, String language) throws JSONException, IOException {
     JSONObject res = loadGlobalPreferencesTemplate();
     JSONArray languages = new JSONArray();
     languages.put(language);
@@ -324,7 +302,6 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     return config;
   }
 
-
   private boolean deleteRecursive(File folder) {
     if (folder.isDirectory()) {
       String[] children = folder.list();
@@ -339,13 +316,26 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     return folder.delete();
   }
 
-
-
   private boolean hasContentAndSettingsFolder() {
     File f = getContentAndSettingsFolder();
     return f.exists();
   }
 
+  @Override
+  public void setKeyboardOptions() {
+    File folder = new File(contentAndSettingsFolder + "/Library/Preferences/");
+    File preferenceFile = new File(folder, "com.apple.Preferences.plist");
 
+    try {
+      JSONObject preferences = new JSONObject();
+      preferences.put("KeyboardAutocapitalization", false);
+      preferences.put("KeyboardAutocorrection", false);
+      preferences.put("KeyboardCapsLock", false);
+      preferences.put("KeyboardCheckSpelling", false);
+      writeOnDisk(preferences, preferenceFile);
+    } catch (Exception e) {
+      throw new IOSAutomationException("cannot set options in " + preferenceFile.getAbsolutePath());
+    }
+  }
 
 }

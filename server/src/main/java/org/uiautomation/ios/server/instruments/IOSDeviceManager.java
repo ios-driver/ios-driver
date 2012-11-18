@@ -24,4 +24,6 @@ public interface IOSDeviceManager {
   public void resetContentAndSettings() throws IOSAutomationSetupException;
 
   public void cleanupDevice() throws IOSAutomationSetupException;
+
+  public void setKeyboardOptions();
 }
