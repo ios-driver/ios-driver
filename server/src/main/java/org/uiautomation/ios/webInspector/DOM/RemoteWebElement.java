@@ -218,10 +218,10 @@ public class RemoteWebElement {
   }
 
   public String getAttribute(String attributeName) throws Exception {
-    String res = getRemoteObject().call(".getAttribute('" + attributeName + "')");
+    String res = getRemoteObject().call("." + attributeName);
     if (res == null) {
       // textarea.value != testarea.getAttribute("value");
-      res = getRemoteObject().call("." + attributeName);
+      getRemoteObject().call(".getAttribute('" + attributeName + "')");
     }
     if (res == null) {
       return "";
@@ -568,9 +568,18 @@ public class RemoteWebElement {
     WorkingMode origin = session.getMode();
     try {
       session.setMode(WorkingMode.Native);
-      el.tap();
+      UIARect rect =el.getRect();
+      int x = rect.getX()+rect.getWidth()-1;
+      int y = rect.getY()+rect.getHeight()/2;
+      // TODO freynaud : tap() should take a param like middle, topLeft, bottomRight to save 1 call.
+      session.getNativeDriver().getLocalTarget().tap(x, y);
       UIAKeyboard keyboard = session.getNativeDriver().getLocalTarget().getFrontMostApp().getKeyboard();
-      keyboard.typeString(value);
+      if ("\n".equals(value)){
+        keyboard.findElement(new NameCriteria("Return")).tap();
+      }else{
+        keyboard.typeString(value);
+      }
+     
       
      //System.out.println(keyboard.logElementTree(null, false).toString(2));
       //keyboard.findElement(new NameCriteria("Return")).tap();
@@ -579,6 +588,26 @@ public class RemoteWebElement {
     } finally {
       session.setMode(origin);
     }
+    
+  }
+
+  public void clear() throws Exception {
+    String f = "(function(element) { " + "var text = " + Atoms.clear() + "(element);" + "return text;})";
+    JSONObject cmd = new JSONObject();
+
+    cmd.put("method", "Runtime.callFunctionOn");
+
+    JSONArray args = new JSONArray();
+    args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
+
+    cmd.put("params",new JSONObject()
+      .put("objectId", getRemoteObject().getId())
+      .put("functionDeclaration", f)
+      .put("arguments", args)
+      .put("returnByValue", true));
+
+    JSONObject response = inspector.getProtocol().sendCommand(cmd);
+    inspector.cast(response);
     
   }
 

@@ -146,6 +146,7 @@ public enum WebDriverLikeCommand {
   
   // UIATextField and UIATextView
   SET_VALUE("POST","/session/:sessionId/element/:reference/value",Void.class), 
+  CLEAR("POST", "/session/:sessionId/element/:reference/clear",Void.class),
   
   //UIATableView
   TABLE_GROUPS("GET","/session/:sessionId/uiaElement/:reference/getGroups",UIAElementArray.class), 

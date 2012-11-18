@@ -47,6 +47,7 @@ import org.uiautomation.ios.server.command.uiautomation.SetTimeoutCommandHandler
 import org.uiautomation.ios.server.command.uiautomation.StopSession;
 import org.uiautomation.ios.server.command.uiautomation.TakeScreenshot;
 import org.uiautomation.ios.server.command.web.BackHandler;
+import org.uiautomation.ios.server.command.web.ClearHandler;
 import org.uiautomation.ios.server.command.web.ClickHandler;
 import org.uiautomation.ios.server.command.web.ExecuteScriptHandler;
 import org.uiautomation.ios.server.command.web.FindElementHandler;
@@ -172,6 +173,7 @@ public enum CommandMapping {
   
   // UIATextField
   SET_VALUE(".setValue(:value)",DefaultUIAScriptHandler.class,SetValueHandler.class),
+  CLEAR(NotImplementedNativeHandler.class,ClearHandler.class),
   
   //UIATableView
   TABLE_GROUPS(".groups()"),

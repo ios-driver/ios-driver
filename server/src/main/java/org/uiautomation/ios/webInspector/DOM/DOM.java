@@ -40,6 +40,13 @@ public class DOM {
     return cmd;
   }
   
+  public static JSONObject getAttributes(NodeId id) throws JSONException {
+    JSONObject cmd = new JSONObject();
+    cmd.put("method", "DOM.getAttributes");
+    cmd.put("params", new JSONObject().put("nodeId", id.getId()));
+    return cmd;
+  }
+  
 
   public static JSONObject highlightNode(NodeId id) throws JSONException {
     JSONObject color = new JSONObject().put("a", 0.5).put("r", 50).put("g", 100).put("b", 255);
