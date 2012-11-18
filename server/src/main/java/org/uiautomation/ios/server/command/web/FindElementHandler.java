@@ -37,7 +37,9 @@ public class FindElementHandler extends BaseWebCommandHandler {
       rwe = element.findElementByLinkText(value, false);
     } else if ("partial link text".equals(type)) {
       rwe = element.findElementByLinkText(value, true);
-    } else {
+    } else if ("xpath".equals(type)){
+      rwe = element.findElementByXpath(value);
+    }else {
       String cssSelector = ToCSSSelectorConvertor.convertToCSSSelector(type, value);
       rwe = element.findElementByCSSSelector(cssSelector);
       System.out.println("found element nodeId" + rwe.getNodeId() + " , objectId:" + rwe.getRemoteObject().getId());

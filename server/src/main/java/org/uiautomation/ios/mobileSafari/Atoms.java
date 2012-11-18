@@ -27,6 +27,7 @@ public class Atoms {
   private static String forward;
   private static String submit;
   private static String refresh;
+  private static String findByXpath;
   static {
     try {
       getText = load("atoms/getVisibleText.js");
@@ -36,6 +37,7 @@ public class Atoms {
       forward = load("atoms/forward.js");
       submit = load("atoms/submit.js");
       refresh = load("atoms/refresh.js");
+      findByXpath = load("atoms/findByXpath.js");
     } catch (Exception e) {
       throw new RuntimeException("Cannot load atoms");
     }
@@ -59,6 +61,10 @@ public class Atoms {
 
   public static String forward() {
     return forward;
+  }
+  
+  public static String findByXpath() {
+    return findByXpath;
   }
 
   private static String load(String resource) throws IOException {

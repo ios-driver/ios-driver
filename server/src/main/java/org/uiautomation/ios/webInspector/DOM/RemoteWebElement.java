@@ -470,6 +470,32 @@ public class RemoteWebElement {
     
   }
 
- 
+  public RemoteWebElement findElementByXpath(String xpath) throws Exception {
+    String f = "(function(xpath,element) { var result = " + Atoms.findByXpath() + "(xpath,element);" + "return result;})";
+    JSONObject cmd = new JSONObject();
+
+    cmd.put("method", "Runtime.callFunctionOn");
+
+    JSONArray args = new JSONArray();
+    args.put(new JSONObject().put("value", xpath));
+    args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
+
+    cmd.put("params",
+        new JSONObject().put("objectId", getRemoteObject().getId()).put("functionDeclaration", f)
+            .put("arguments", args).put("returnByValue", false));
+
+    JSONObject response = inspector.getProtocol().sendCommand(cmd);
+    RemoteObject ro = inspector.cast(response);
+    if (ro == null) {
+      throw new NoSuchElementException("cannot find element by Xpath "+xpath);
+    } else {
+      return ro.getWebElement();
+    }
+  }
+
+ public static void main(String[] args) {
+  System.out.println(Atoms.findByXpath());
+ }
+
 
 }
