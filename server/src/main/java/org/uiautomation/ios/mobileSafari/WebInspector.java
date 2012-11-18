@@ -192,6 +192,15 @@ public class WebInspector {
     JSONObject response = protocol.sendCommand(cmd);
     return cast(response);
   }
+  
+  public String getPageURL() throws Exception {
+    JSONObject cmd = new JSONObject();
+    cmd.put("method", "Runtime.evaluate");
+    cmd.put("params", new JSONObject().put("expression", "window.location.href;").put("returnByValue", true));
+    JSONObject response = protocol.sendCommand(cmd);
+    return cast(response);
+  }
+  
 
   public void get(String url) throws Exception {
     JSONObject cmd = new JSONObject();

@@ -40,9 +40,19 @@ public class GetHandler extends BaseWebCommandHandler {
   @Override
   public WebDriverLikeResponse handle() throws Exception {
     String url = getRequest().getPayload().getString("url");
-   //getSession().getWebInspector().enablePageEvent();
-    
-    getSession().getContext().getDOMContext().reset();
+    String currentURL = getSession().getWebInspector().getPageURL();
+    int index = url.indexOf(currentURL);
+    boolean newPageWillBeLoaded = true;
+    if (index == 0) {
+      String delta = url.replace(currentURL, "");
+      if (delta.startsWith("#")) {
+        newPageWillBeLoaded = false;
+      }
+    }
+
+    if (newPageWillBeLoaded) {
+      getSession().getContext().getDOMContext().reset();
+    }
 
     boolean useNativeEvents = getConfiguration("nativeEvents", nativeEvents);
 
@@ -52,7 +62,10 @@ public class GetHandler extends BaseWebCommandHandler {
       fakeTypeURL(url);
     }
 
-    getSession().getWebInspector().waitForPageToLoad();
+    if (newPageWillBeLoaded) {
+      getSession().getWebInspector().waitForPageToLoad();
+    }
+
     return new WebDriverLikeResponse(getSession().getSessionId(), 0, new JSONObject());
   }
 
@@ -89,7 +102,5 @@ public class GetHandler extends BaseWebCommandHandler {
       throw new IOSAutomationException("cannot navigate to URL " + url + ", error " + e.getMessage());
     }
   }
-  
-  
 
 }

@@ -95,12 +95,20 @@ public class PageLoadingTest {
   }
 
   
-  @Test(enabled=false) // no page load sent in that case. Need to be handled 
-  // as a edge case.
+  @Test
   public void testShouldBeAbleToGetAFragmentOnTheCurrentPage() {
     driver.get(pages.xhtmlTestPage);
     driver.get(pages.xhtmlTestPage + "#text");
     driver.findElement(By.id("id1"));
+  }
+  
+  @Test(enabled = false)
+  public void testShouldBeAbleToGetAFragmentOnTheCurrentPageBackForward() {
+    driver.get(pages.xhtmlTestPage);
+    driver.get(pages.xhtmlTestPage + "#text");
+    driver.findElement(By.id("id1"));
+    driver.navigate().back();
+    driver.navigate().forward();
   }
   
   @Test(enabled=false) // throw a timeout exception

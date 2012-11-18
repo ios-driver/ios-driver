@@ -572,7 +572,7 @@ public class ElementFindingTest {
   }
 
   @Test(enabled = false)
-  // don't understand the test.
+  // TODO freynaud : test makes no sense.
   public void testAnElementFoundInADifferentFrameIsStale() {
     driver.get(pages.missedJsReferencePage);
     driver.switchTo().frame("inner");
