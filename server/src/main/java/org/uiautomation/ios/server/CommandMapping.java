@@ -62,6 +62,7 @@ import org.uiautomation.ios.server.command.web.IsSelectedHandler;
 import org.uiautomation.ios.server.command.web.RefreshHandler;
 import org.uiautomation.ios.server.command.web.SetFrameHandler;
 import org.uiautomation.ios.server.command.web.SetTimeoutHandler;
+import org.uiautomation.ios.server.command.web.SetValueHandler;
 import org.uiautomation.ios.server.command.web.SubmitHandler;
 
 public enum CommandMapping {
@@ -170,7 +171,7 @@ public enum CommandMapping {
   RIGHT_BUTTON(".rightButton()"),
   
   // UIATextField
-  SET_VALUE(".setValue(:value)"),
+  SET_VALUE(".setValue(:value)",DefaultUIAScriptHandler.class,SetValueHandler.class),
   
   //UIATableView
   TABLE_GROUPS(".groups()"),

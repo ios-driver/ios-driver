@@ -56,12 +56,35 @@ public class RemoteObject {
             .put("objectId", this.getId())
             .put("functionDeclaration",
                 "(function(arg) { var res = this" + function + "; return res;})")
-            .put("arguments", args).put("returnByValue", false));
+            .put("arguments", args)
+            .put("returnByValue", true));
 
 
 
     JSONObject response = protocol.sendCommand(cmd);
     return session.getWebInspector().cast(response);
 
+  }
+  
+  public String getTextAreaValue() throws Exception{
+    JSONObject cmd = new JSONObject();
+    cmd.put("method", "Runtime.callFunctionOn");
+
+    JSONArray args = new JSONArray();
+    args.put(new JSONObject().put("value", ""));
+
+    cmd.put(
+        "params",
+        new JSONObject()
+            .put("objectId", this.getId())
+            .put("functionDeclaration",
+                "(function(arg) { var res = this.value; return res;})")
+            .put("arguments", args)
+            .put("returnByValue", true));
+
+
+
+    JSONObject response = protocol.sendCommand(cmd);
+    return session.getWebInspector().cast(response);
   }
 }

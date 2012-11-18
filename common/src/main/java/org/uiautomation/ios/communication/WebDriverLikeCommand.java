@@ -145,7 +145,7 @@ public enum WebDriverLikeCommand {
   RIGHT_BUTTON("GET","/session/:sessionId/uiaElement/:reference/rightButton",UIAButton.class),
   
   // UIATextField and UIATextView
-  SET_VALUE("POST","/session/:sessionId/uiaElement/:reference/setValue",Void.class), 
+  SET_VALUE("POST","/session/:sessionId/element/:reference/value",Void.class), 
   
   //UIATableView
   TABLE_GROUPS("GET","/session/:sessionId/uiaElement/:reference/getGroups",UIAElementArray.class), 

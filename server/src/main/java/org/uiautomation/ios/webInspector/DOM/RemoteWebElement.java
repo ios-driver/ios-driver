@@ -11,12 +11,14 @@ import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.uiautomation.ios.UIAModels.UIADriver;
 import org.uiautomation.ios.UIAModels.UIAElement;
+import org.uiautomation.ios.UIAModels.UIAKeyboard;
 import org.uiautomation.ios.UIAModels.UIALink;
 import org.uiautomation.ios.UIAModels.UIARect;
 import org.uiautomation.ios.UIAModels.UIAScrollView;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.LocationCriteria;
+import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.mobileSafari.Atoms;
 import org.uiautomation.ios.mobileSafari.DebugProtocol;
@@ -216,7 +218,16 @@ public class RemoteWebElement {
   }
 
   public String getAttribute(String attributeName) throws Exception {
-    return getRemoteObject().call(".getAttribute('" + attributeName + "')");
+    String res = getRemoteObject().call(".getAttribute('" + attributeName + "')");
+    if (res == null) {
+      // textarea.value != testarea.getAttribute("value");
+      res = getRemoteObject().call("." + attributeName);
+    }
+    if (res == null) {
+      return "";
+    } else {
+      return res;
+    }
   }
 
   public boolean isSelected() throws Exception {
@@ -527,9 +538,49 @@ public class RemoteWebElement {
     return res;
   }
 
- public static void main(String[] args) {
-  System.out.println(Atoms.findByXpath());
- }
+  public static void main(String[] args) {
+    System.out.println(Atoms.findByXpath());
+  }
+
+  public void setValueAtoms(String value) throws Exception {
+    String f = "(function(element,value) { var result = " + Atoms.type() + "(element,value);" + "return result;})";
+    JSONObject cmd = new JSONObject();
+
+  cmd.put("method", "Runtime.callFunctionOn");
+
+  JSONArray args = new JSONArray();
+  args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
+  args.put(new JSONObject().put("value", value));
+
+  cmd.put("params",
+      new JSONObject()
+        .put("objectId", getRemoteObject().getId())
+        .put("functionDeclaration", f)
+        .put("arguments", args)
+        .put("returnByValue", false));
+
+  JSONObject response = inspector.getProtocol().sendCommand(cmd);
+  System.out.println(response);
+}
+
+  public void setValueNative(String value) throws Exception {
+    UIAElement el = getNativeElement();
+    WorkingMode origin = session.getMode();
+    try {
+      session.setMode(WorkingMode.Native);
+      el.tap();
+      UIAKeyboard keyboard = session.getNativeDriver().getLocalTarget().getFrontMostApp().getKeyboard();
+      keyboard.typeString(value);
+      
+     //System.out.println(keyboard.logElementTree(null, false).toString(2));
+      //keyboard.findElement(new NameCriteria("Return")).tap();
+     keyboard.findElement(new NameCriteria("Hide keyboard")).tap();
+    
+    } finally {
+      session.setMode(origin);
+    }
+    
+  }
 
 
 }

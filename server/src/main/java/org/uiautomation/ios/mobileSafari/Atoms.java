@@ -29,6 +29,7 @@ public class Atoms {
   private static String refresh;
   private static String findByXpath;
   private static String findsByXpath;
+  private static String type;
   static {
     try {
       getText = load("atoms/getVisibleText.js");
@@ -40,6 +41,7 @@ public class Atoms {
       refresh = load("atoms/refresh.js");
       findByXpath = load("atoms/findByXpath.js");
       findsByXpath = load("atoms/findsByXpath.js");
+      type = load("atoms/type.js");
     } catch (Exception e) {
       throw new RuntimeException("Cannot load atoms");
     }
@@ -47,6 +49,10 @@ public class Atoms {
 
   public static String getText() {
     return getText;
+  }
+  
+  public static String type() {
+    return type;
   }
 
   public static String isDisplayed() {

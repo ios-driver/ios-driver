@@ -22,6 +22,7 @@ public class GetAttributeHandler extends BaseWebCommandHandler {
     int id = Integer.parseInt(getRequest().getVariableValue(":reference"));
     RemoteWebElement element = new RemoteWebElement(new NodeId(id), getSession());
     String value = element.getAttribute(attributeName);
+    //String value = element.getRemoteObject().getTextAreaValue();
     return new WebDriverLikeResponse(getSession().getSessionId(), 0, value);
   }
 
