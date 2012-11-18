@@ -28,6 +28,7 @@ public class Atoms {
   private static String submit;
   private static String refresh;
   private static String findByXpath;
+  private static String findsByXpath;
   static {
     try {
       getText = load("atoms/getVisibleText.js");
@@ -38,6 +39,7 @@ public class Atoms {
       submit = load("atoms/submit.js");
       refresh = load("atoms/refresh.js");
       findByXpath = load("atoms/findByXpath.js");
+      findsByXpath = load("atoms/findsByXpath.js");
     } catch (Exception e) {
       throw new RuntimeException("Cannot load atoms");
     }
@@ -65,6 +67,9 @@ public class Atoms {
   
   public static String findByXpath() {
     return findByXpath;
+  }
+  public static String findsByXpath() {
+    return findsByXpath;
   }
 
   private static String load(String resource) throws IOException {

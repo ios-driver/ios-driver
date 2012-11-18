@@ -481,8 +481,11 @@ public class RemoteWebElement {
     args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
 
     cmd.put("params",
-        new JSONObject().put("objectId", getRemoteObject().getId()).put("functionDeclaration", f)
-            .put("arguments", args).put("returnByValue", false));
+        new JSONObject()
+          .put("objectId", getRemoteObject().getId())
+          .put("functionDeclaration", f)
+          .put("arguments", args)
+          .put("returnByValue", false));
 
     JSONObject response = inspector.getProtocol().sendCommand(cmd);
     RemoteObject ro = inspector.cast(response);
@@ -491,6 +494,37 @@ public class RemoteWebElement {
     } else {
       return ro.getWebElement();
     }
+  }
+  
+  public List<RemoteWebElement> findElementsByXpath(String xpath) throws Exception {
+    String f = "(function(xpath,element) { var results = " + Atoms.findsByXpath() + "(xpath,element);" + "return results;})";
+    JSONObject cmd = new JSONObject();
+
+    cmd.put("method", "Runtime.callFunctionOn");
+
+    JSONArray args = new JSONArray();
+    args.put(new JSONObject().put("value", xpath));
+    args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
+
+    cmd.put("params",
+        new JSONObject()
+            .put("objectId", getRemoteObject().getId())
+            .put("functionDeclaration", f)
+            .put("arguments", args)
+            .put("returnByValue", false));
+
+    JSONObject response = inspector.getProtocol().sendCommand(cmd);
+   
+    RemoteObjectArray ra = inspector.cast(response);
+
+    List<RemoteWebElement> res = new ArrayList<RemoteWebElement>();
+    if (ra != null) {
+      for (RemoteObject ro : ra) {
+        res.add(ro.getWebElement());
+      }
+
+    }
+    return res;
   }
 
  public static void main(String[] args) {
