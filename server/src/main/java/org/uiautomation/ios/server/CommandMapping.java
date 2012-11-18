@@ -60,6 +60,7 @@ import org.uiautomation.ios.server.command.web.IsDisplayedHanlder;
 import org.uiautomation.ios.server.command.web.IsEqualHandler;
 import org.uiautomation.ios.server.command.web.IsSelectedHandler;
 import org.uiautomation.ios.server.command.web.SetFrameHandler;
+import org.uiautomation.ios.server.command.web.SubmitHandler;
 
 public enum CommandMapping {
 
@@ -81,6 +82,7 @@ public enum CommandMapping {
   URL(NotImplementedNativeHandler.class,GetHandler.class),
   BACK(NotImplementedNativeHandler.class,BackHandler.class),
   FORWARD(NotImplementedNativeHandler.class,ForwardHandler.class),
+  SUBMIT(NotImplementedNativeHandler.class,SubmitHandler.class),
 
   EXECUTE_SCRIPT(NotImplementedNativeHandler.class,ExecuteScriptHandler.class),
   EQUAL(NotImplementedNativeHandler.class,IsEqualHandler.class),

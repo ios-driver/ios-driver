@@ -50,6 +50,8 @@ public enum WebDriverLikeCommand {
   URL("POST","/session/:sessionId/url",Void.class),
   BACK("POST", "/session/:sessionId/back",Void.class),
   FORWARD("POST", "/session/:sessionId/forward",Void.class),
+  SUBMIT("POST", "/session/:sessionId/element/:reference/submit",Void.class),
+  
  
   
   EXECUTE_SCRIPT("POST", "/session/:sessionId/execute",Object.class),

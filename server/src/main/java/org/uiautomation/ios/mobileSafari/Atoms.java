@@ -25,6 +25,8 @@ public class Atoms {
   private static String click;
   private static String back;
   private static String forward;
+  private static String submit;
+  private static String refresh;
   static {
     try {
       getText = load("atoms/getVisibleText.js");
@@ -32,6 +34,8 @@ public class Atoms {
       click = load("atoms/click.js");
       back = load("atoms/back.js");
       forward = load("atoms/forward.js");
+      submit = load("atoms/submit.js");
+      refresh = load("atoms/refresh.js");
     } catch (Exception e) {
       throw new RuntimeException("Cannot load atoms");
     }
@@ -70,6 +74,13 @@ public class Atoms {
 
   public static void main(String[] args) {
     System.out.println(getText());
+  }
+
+  public static String submit() {
+    return submit;
+  }
+  public static String refresh() {
+    return refresh;
   }
 
 }

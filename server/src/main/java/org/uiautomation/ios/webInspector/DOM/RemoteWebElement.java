@@ -452,4 +452,22 @@ public class RemoteWebElement {
 
   }
 
+  public void submit() throws Exception {
+    String f = "(function(arg) { " + "var text = " + Atoms.submit() + "(arg);" + "return text;})";
+    JSONObject cmd = new JSONObject();
+
+    cmd.put("method", "Runtime.callFunctionOn");
+
+    JSONArray args = new JSONArray();
+    args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
+
+    cmd.put("params",
+        new JSONObject().put("objectId", getRemoteObject().getId()).put("functionDeclaration", f)
+            .put("arguments", args).put("returnByValue", true));
+
+    JSONObject response = inspector.getProtocol().sendCommand(cmd);
+    inspector.cast(response);
+    
+  }
+
 }

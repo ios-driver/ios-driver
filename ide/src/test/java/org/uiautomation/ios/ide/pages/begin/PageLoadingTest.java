@@ -160,7 +160,7 @@ public class PageLoadingTest {
   public void testShouldBeAbleToNavigateBackInTheBrowserHistory() {
     driver.get(pages.formPage);
 
-    driver.findElement(By.id("imageButton")).click();
+    driver.findElement(By.id("imageButton")).submit();
     Assert.assertEquals(driver.getTitle(),"We Arrive Here");
 
     driver.navigate().back();
