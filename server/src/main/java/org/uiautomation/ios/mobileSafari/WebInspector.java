@@ -194,10 +194,26 @@ public class WebInspector {
   }
   
   public String getPageURL() throws Exception {
-    JSONObject cmd = new JSONObject();
+    /*JSONObject cmd = new JSONObject();
     cmd.put("method", "Runtime.evaluate");
     cmd.put("params", new JSONObject().put("expression", "window.location.href;").put("returnByValue", true));
     JSONObject response = protocol.sendCommand(cmd);
+    return cast(response);*/
+    RemoteWebElement document = getDocument();
+    String f = "(function(arg) { var url=this.URL;return url;})";
+    JSONObject cmd = new JSONObject();
+
+    cmd.put("method", "Runtime.callFunctionOn");
+
+    JSONArray args = new JSONArray();
+
+    cmd.put("params", new JSONObject()
+      .put("objectId", document.getRemoteObject().getId())
+      .put("functionDeclaration", f)
+      .put("arguments", args)
+      .put("returnByValue", true));
+
+    JSONObject response = getProtocol().sendCommand(cmd);
     return cast(response);
   }
   

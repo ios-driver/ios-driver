@@ -57,6 +57,7 @@ import org.uiautomation.ios.server.command.web.GetAttributeHandler;
 import org.uiautomation.ios.server.command.web.GetHandler;
 import org.uiautomation.ios.server.command.web.GetTextHandler;
 import org.uiautomation.ios.server.command.web.GetTitleHandler;
+import org.uiautomation.ios.server.command.web.GetURL;
 import org.uiautomation.ios.server.command.web.IsDisplayedHanlder;
 import org.uiautomation.ios.server.command.web.IsEqualHandler;
 import org.uiautomation.ios.server.command.web.IsSelectedHandler;
@@ -84,6 +85,7 @@ public enum CommandMapping {
   GET_WINDOW_HANDLE(GetCurrentContext.class),
   TITLE(null,null,GetTitleHandler.class),
   URL(NotImplementedNativeHandler.class,GetHandler.class),
+  CURRENT_URL(NotImplementedNativeHandler.class,GetURL.class),
   BACK(NotImplementedNativeHandler.class,BackHandler.class),
   FORWARD(NotImplementedNativeHandler.class,ForwardHandler.class),
   REFRESH(NotImplementedNativeHandler.class,RefreshHandler.class),
