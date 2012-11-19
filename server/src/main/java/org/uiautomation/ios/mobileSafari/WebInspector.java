@@ -39,6 +39,7 @@ public class WebInspector {
       RemoteWebElement window = getMainWindow();
       context.setCurrentFrame(null, result,window);
     }
+    //System.out.println("USING DOCUMENT "+result.getNodeId().getId());
     return result;
   }
 
@@ -180,13 +181,14 @@ public class WebInspector {
     return cast(response);
   }
 
+  // TODO freynaud fix the element swapping.
   public Object executeScript(String script, JSONArray args) throws Exception {
     RemoteWebElement document = getDocument();
     RemoteWebElement window = session.getContext().getDOMContext().getWindow();
     JSONObject cmd = new JSONObject();
 
-    script = script.replace("document", "realDocument");
-    script = script.replace("window", "realWindow");
+    script = script.replace(" document", " realDocument");
+    script = script.replace(" window", " realWindow");
     
     
     JSONArray arguments = new JSONArray();

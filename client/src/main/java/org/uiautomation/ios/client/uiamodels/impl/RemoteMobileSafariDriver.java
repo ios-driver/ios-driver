@@ -1,15 +1,6 @@
 package org.uiautomation.ios.client.uiamodels.impl;
 
-import java.util.Map;
-
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.remote.DriverCommand;
-import org.openqa.selenium.remote.internal.WebElementToJsonConverter;
 import org.uiautomation.ios.IOSCapabilities;
-
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 public class RemoteMobileSafariDriver extends RemoteUIADriver {
 

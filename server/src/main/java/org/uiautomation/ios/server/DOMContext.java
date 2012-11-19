@@ -1,9 +1,5 @@
 package org.uiautomation.ios.server;
 
-import java.util.List;
-
-import org.gjt.xpp.impl.node.Node;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.TimeoutException;
 import org.uiautomation.ios.mobileSafari.EventListener;
@@ -24,6 +20,7 @@ public class DOMContext implements EventListener {
   private RemoteWebElement iframe;
 
   private RemoteWebElement mainDocument;
+  private RemoteWebElement mainWindow;
 
   public RemoteWebElement getDocument() {
     int cpt = 0;
@@ -34,7 +31,7 @@ public class DOMContext implements EventListener {
         throw new TimeoutException("doc not ready.");
       }
       try {
-        System.err.println("cannot get document. Something is happening.");
+        //System.err.println("cannot get document. Something is happening.");
         Thread.sleep(250);
       } catch (InterruptedException e) {
         e.printStackTrace();
@@ -64,18 +61,21 @@ public class DOMContext implements EventListener {
     this.window = window;
 
     if (iframe != null) {
-      System.out.println("new frame focus : " + iframe.getNodeId() + ",document " + document.getNodeId() + ",window "
-          + window.getNodeId());
+      /*System.out.println("SWITCH TO NEW FRAME : " + iframe.getNodeId() + ",document " + document.getNodeId() + ",window "
+          + window.getNodeId());*/
     }
 
     // switchToDefaultContent. revert to main document if it was set.
     if (iframe == null && document == null) {
       this.document = mainDocument;
+      this.window = mainWindow;
     }
 
     // setting the main document for the first time
     if (iframe == null && document != null) {
+      //System.out.println("BACKUP DOCUMENT "+document.getNodeId().getId());
       mainDocument = document;
+      mainWindow = window;
     }
 
   }
@@ -123,7 +123,7 @@ public class DOMContext implements EventListener {
         int nodeId = params.getInt("nodeId");
         int parentNodeId = params.getInt("parentNodeId");
         if (iframe != null ? nodeId == iframe.getNodeId().getId() : false) {
-          System.err.println("current frame " + nodeId + " is gone.Parent : " + parentNodeId);
+          //System.err.println("current frame " + nodeId + " is gone.Parent : " + parentNodeId);
           isReady = false;
           parent = new NodeId(parentNodeId);
 
@@ -145,7 +145,7 @@ public class DOMContext implements EventListener {
             JSONObject node = params.getJSONObject("node");
             int frameId = node.getInt("nodeId");
             RemoteWebElement frame = new RemoteWebElement(new NodeId(frameId), session);
-            System.out.println("should be a (i)frame, it's :" + node.getString("nodeName"));
+            //System.out.println("should be a (i)frame, it's :" + node.getString("nodeName"));
             JSONObject contentDoc = node.getJSONObject("contentDocument");
             int contentDocId = contentDoc.getInt("nodeId");
             RemoteWebElement document = new RemoteWebElement(new NodeId(contentDocId), session);

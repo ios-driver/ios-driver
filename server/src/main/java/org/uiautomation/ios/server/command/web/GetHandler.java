@@ -40,14 +40,19 @@ public class GetHandler extends BaseWebCommandHandler {
   @Override
   public WebDriverLikeResponse handle() throws Exception {
     String url = getRequest().getPayload().getString("url");
-    String currentURL = getSession().getWebInspector().getPageURL();
-    int index = url.indexOf(currentURL);
     boolean newPageWillBeLoaded = true;
-    if (index == 0) {
-      String delta = url.replace(currentURL, "");
-      if (delta.startsWith("#")) {
-        newPageWillBeLoaded = false;
+    try {
+      String currentURL = getSession().getWebInspector().getPageURL();
+      int index = url.indexOf(currentURL);
+
+      if (index == 0) {
+        String delta = url.replace(currentURL, "");
+        if (delta.startsWith("#")) {
+          newPageWillBeLoaded = false;
+        }
       }
+    } catch (Exception e) {
+      // ignore.
     }
 
     if (newPageWillBeLoaded) {

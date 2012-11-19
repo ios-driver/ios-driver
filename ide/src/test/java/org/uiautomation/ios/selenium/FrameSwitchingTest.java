@@ -65,8 +65,6 @@ public class FrameSwitchingTest {
     appServer.start();
     pages = new Pages(appServer);
     
-    System.out.println(pages.framesetPage);
-    
     driver = new RemoteMobileSafariDriver(url, safari);
   }
 
@@ -79,6 +77,7 @@ public class FrameSwitchingTest {
       System.err.println("cannot quit properly :" + e.getMessage());
     }
     server.stop();
+    appServer.stop();
   }
   
   

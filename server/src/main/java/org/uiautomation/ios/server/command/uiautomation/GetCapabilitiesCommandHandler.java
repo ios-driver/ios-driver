@@ -30,7 +30,8 @@ import org.uiautomation.ios.server.command.UIAScriptHandler;
 
 public class GetCapabilitiesCommandHandler extends UIAScriptHandler {
 
-  private static WebDriverLikeResponse cachedResponse = null;
+  // TODO freynaud
+  public static WebDriverLikeResponse cachedResponse = null;
 
   private static final String capabilities = "var json = UIAutomation.getCapabilities();"
       + "UIAutomation.createJSONResponse(':sessionId',0,json)";

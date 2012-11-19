@@ -71,6 +71,7 @@ public class PageLoadingTest {
       System.err.println("cannot quit properly :" + e.getMessage());
     }
     server.stop();
+    appServer.stop();
   }
   
   @Test

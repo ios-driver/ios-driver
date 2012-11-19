@@ -59,6 +59,8 @@ public class ChildrenFindingTest {
       System.err.println("cannot quit properly :" + e.getMessage());
     }
     server.stop();
+    appServer.stop();
+    
   }
   @Test
   public void testFindElementByXPath() {

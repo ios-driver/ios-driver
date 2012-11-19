@@ -30,7 +30,7 @@ public class NewSession extends BaseNativeCommandHandler {
 
   public NewSession(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
-
+    GetCapabilitiesCommandHandler.cachedResponse =null;
     try {
       JSONObject payload = request.getPayload();
       IOSCapabilities capabilities =

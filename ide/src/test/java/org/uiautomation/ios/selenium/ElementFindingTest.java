@@ -50,14 +50,7 @@ public class ElementFindingTest {
     pages = new Pages(appServer);
   }
 
-  @Test
-  public void testShouldReturnTitleOfPageIfSet() {
-    driver.get(pages.xhtmlTestPage);
-    Assert.assertEquals(driver.getTitle(), "XHTML Test Page");
-
-    driver.get(pages.simpleTestPage);
-    Assert.assertEquals(driver.getTitle(), "Hello WebDriver");
-  }
+ 
 
   @AfterClass
   public void tearDown() throws Exception {
@@ -68,6 +61,7 @@ public class ElementFindingTest {
       System.err.println("cannot quit properly :" + e.getMessage());
     }
     server.stop();
+    appServer.stop();
   }
 
   @Test
@@ -82,6 +76,15 @@ public class ElementFindingTest {
     }
   }
 
+  @Test
+  public void testShouldReturnTitleOfPageIfSet() {
+    driver.get(pages.xhtmlTestPage);
+    Assert.assertEquals(driver.getTitle(), "XHTML Test Page");
+
+    driver.get(pages.simpleTestPage);
+    Assert.assertEquals(driver.getTitle(), "Hello WebDriver");
+  }
+  
   @Test
   public void testShouldBeAbleToClickOnLinkIdentifiedByText() {
     driver.get(pages.xhtmlTestPage);
