@@ -90,6 +90,17 @@ public class RemoteWebElement {
     return nodeId;
   }
 
+  public boolean exists() {
+    try {
+      JSONObject response = inspector.getProtocol().sendCommand(DOM.resolveNode(nodeId));
+      return true;
+    } catch (Exception e) {
+      if ("No node with given id found".equals(e.getMessage())) {
+       return false;
+      }
+    }
+    throw new RuntimeException("case not implemented");
+  }
   public RemoteObject getRemoteObject() throws JSONException, Exception {
     JSONObject response = null;
     if (remoteObject == null) {

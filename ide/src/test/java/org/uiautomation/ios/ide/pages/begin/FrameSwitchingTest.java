@@ -423,7 +423,7 @@ public class FrameSwitchingTest {
  @Ignore(value = {ANDROID, OPERA, OPERA_MOBILE})
  @JavascriptEnabled
  @Test
- public void testShouldBeAbleToCarryOnWorkingIfTheFrameIsDeletedFromUnderUs() {
+ public void testShouldBeAbleToCarryOnWorkingIfTheFrameIsDeletedFromUnderUs() throws InterruptedException {
    driver.get(pages.deletingFrame);
 
    driver.switchTo().frame("iframe1");
@@ -431,6 +431,7 @@ public class FrameSwitchingTest {
    // TODO freynaud {"method":"Page.frameDetached","params":{"frameId":"0.86"}}
    WebElement killIframe = driver.findElement(By.id("killIframe"));
    killIframe.click();
+   Thread.sleep(1000);
    driver.switchTo().defaultContent();
 
    assertFrameNotPresent(driver, "iframe1");

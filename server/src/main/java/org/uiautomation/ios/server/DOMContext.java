@@ -196,12 +196,9 @@ public class DOMContext implements EventListener {
   public void frameDied(JSONObject message) {
     // if that's the one we're working on, deselect it.
     if (iframe != null) {
-      try {
-        iframe.getRemoteObject();
-      } catch (Exception e) {
+      if (!iframe.exists()) {
         System.err
-            .println("the current frame is dead. Will need to switch to default content or another frame before being able to do anything."
-                + e.getMessage());
+            .println("the current frame is dead. Will need to switch to default content or another frame before being able to do anything.");
         isReady = true;
       }
     }
