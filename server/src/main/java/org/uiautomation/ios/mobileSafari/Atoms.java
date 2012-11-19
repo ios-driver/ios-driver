@@ -32,6 +32,7 @@ public class Atoms {
   private static String type;
   private static String attribute;
   private static String clear;
+  private static String isSelected;
   
   static {
     try {
@@ -47,6 +48,7 @@ public class Atoms {
       type = load("atoms/type.js");
       attribute = load("atoms/getAttribute.js");
       clear = load("atoms/clear.js");
+      isSelected = load("atoms/isSelected.js");
     } catch (Exception e) {
       throw new RuntimeException("Cannot load atoms");
     }
@@ -54,6 +56,10 @@ public class Atoms {
 
   public static String getText() {
     return getText;
+  }
+  
+  public static String isSelected() {
+    return isSelected;
   }
   
   public static String type() {

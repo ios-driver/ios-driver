@@ -242,8 +242,23 @@ public class RemoteWebElement {
   }
 
   public boolean isSelected() throws Exception {
-    String checked = getAttribute("checked");
-    return "checked".equals(checked);
+    String func = Atoms.isSelected();
+    String f = "(function(arg) { " + "var isDisplayed = " + func + "(arg);" + "return isDisplayed;})";
+    JSONObject cmd = new JSONObject();
+
+    cmd.put("method", "Runtime.callFunctionOn");
+
+    JSONArray args = new JSONArray();
+    args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
+
+    cmd.put("params", new JSONObject()
+          .put("objectId", getRemoteObject().getId())
+          .put("functionDeclaration", f)
+          .put("arguments", args)
+          .put("returnByValue", true));
+
+    JSONObject response = inspector.getProtocol().sendCommand(cmd);
+    return inspector.cast(response);
   }
 
   public boolean isDisplayed() throws Exception {
