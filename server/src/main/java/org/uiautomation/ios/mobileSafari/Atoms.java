@@ -33,7 +33,8 @@ public class Atoms {
   private static String attribute;
   private static String clear;
   private static String isSelected;
-  
+  private static String stringify;
+
   static {
     try {
       getText = load("atoms/getVisibleText.js");
@@ -49,6 +50,7 @@ public class Atoms {
       attribute = load("atoms/getAttribute.js");
       clear = load("atoms/clear.js");
       isSelected = load("atoms/isSelected.js");
+      stringify = load("atoms/stringify.js");
     } catch (Exception e) {
       throw new RuntimeException("Cannot load atoms");
     }
@@ -57,11 +59,15 @@ public class Atoms {
   public static String getText() {
     return getText;
   }
-  
+
+  public static String stringify() {
+    return stringify;
+  }
+
   public static String isSelected() {
     return isSelected;
   }
-  
+
   public static String type() {
     return type;
   }
@@ -81,10 +87,11 @@ public class Atoms {
   public static String forward() {
     return forward;
   }
-  
+
   public static String findByXpath() {
     return findByXpath;
   }
+
   public static String findsByXpath() {
     return findsByXpath;
   }
@@ -107,6 +114,7 @@ public class Atoms {
   public static String submit() {
     return submit;
   }
+
   public static String refresh() {
     return refresh;
   }

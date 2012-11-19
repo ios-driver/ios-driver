@@ -53,6 +53,7 @@ public enum WebDriverLikeCommand {
   FORWARD("POST", "/session/:sessionId/forward",Void.class),
   REFRESH("POST", "/session/:sessionId/refresh",Void.class),
   SUBMIT("POST", "/session/:sessionId/element/:reference/submit",Void.class),
+  TAG_NAME("GET", "/session/:sessionId/element/:reference/name",String.class),
   
   
  

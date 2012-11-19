@@ -3,6 +3,7 @@ package org.uiautomation.ios.webInspector.DOM;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.uiautomation.ios.mobileSafari.Atoms;
 import org.uiautomation.ios.mobileSafari.DebugProtocol;
 import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.server.ServerSideSession;
@@ -64,6 +65,26 @@ public class RemoteObject {
     JSONObject response = protocol.sendCommand(cmd);
     return session.getWebInspector().cast(response);
 
+  }
+  
+  public String stringify() throws Exception{
+    JSONObject cmd = new JSONObject();
+    cmd.put("method", "Runtime.callFunctionOn");
+
+    JSONArray args = new JSONArray();
+    
+
+    cmd.put(
+        "params",
+        new JSONObject()
+            .put("objectId", this.getId())
+            .put("functionDeclaration",
+                "(function() { var res = "+Atoms.stringify()+"(this); return res;})")
+            .put("arguments", args)
+            .put("returnByValue", true));
+
+    JSONObject response = protocol.sendCommand(cmd);
+    return session.getWebInspector().cast(response);
   }
   
   public String getTextAreaValue() throws Exception{

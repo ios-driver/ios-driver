@@ -1,0 +1,4 @@
+- file ( image ) upload isn't implemented
+- SSL need to be trusted
+- JS doesn't accept an array for an argument.
+- Excecuting Jquery fails.

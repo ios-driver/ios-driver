@@ -2,7 +2,7 @@ package org.uiautomation.ios.webInspector.DOM;
 
 import java.util.Iterator;
 
-public class RemoteObjectIterator implements Iterator<RemoteObject> {
+public class RemoteObjectIterator implements Iterator<Object> {
 
 
   private final RemoteObject underlyingObject;
@@ -21,8 +21,8 @@ public class RemoteObjectIterator implements Iterator<RemoteObject> {
   }
 
   @Override
-  public RemoteObject next() {
-    RemoteObject res;
+  public Object next() {
+    Object res;
     try {
       res = underlyingObject.call("[" + index + "]");
       index++;

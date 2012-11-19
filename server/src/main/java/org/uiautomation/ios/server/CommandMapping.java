@@ -55,6 +55,7 @@ import org.uiautomation.ios.server.command.web.FindElementsHandler;
 import org.uiautomation.ios.server.command.web.ForwardHandler;
 import org.uiautomation.ios.server.command.web.GetAttributeHandler;
 import org.uiautomation.ios.server.command.web.GetHandler;
+import org.uiautomation.ios.server.command.web.GetTagNameHandler;
 import org.uiautomation.ios.server.command.web.GetTextHandler;
 import org.uiautomation.ios.server.command.web.GetTitleHandler;
 import org.uiautomation.ios.server.command.web.GetURL;
@@ -90,6 +91,7 @@ public enum CommandMapping {
   FORWARD(NotImplementedNativeHandler.class,ForwardHandler.class),
   REFRESH(NotImplementedNativeHandler.class,RefreshHandler.class),
   SUBMIT(NotImplementedNativeHandler.class,SubmitHandler.class),
+  TAG_NAME(NotImplementedNativeHandler.class,GetTagNameHandler.class),
 
   EXECUTE_SCRIPT(NotImplementedNativeHandler.class,ExecuteScriptHandler.class),
   EQUAL(NotImplementedNativeHandler.class,IsEqualHandler.class),

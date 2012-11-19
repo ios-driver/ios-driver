@@ -2,7 +2,7 @@ package org.uiautomation.ios.webInspector.DOM;
 
 import java.util.Iterator;
 
-public class RemoteObjectArray implements Iterable<RemoteObject> {
+public class RemoteObjectArray implements Iterable<Object> {
 
   private final RemoteObject remoteArray;
   private final int size;
@@ -17,7 +17,7 @@ public class RemoteObjectArray implements Iterable<RemoteObject> {
   }
 
   @Override
-  public Iterator<RemoteObject> iterator() {
+  public Iterator<Object> iterator() {
     return new RemoteObjectIterator(remoteArray, size);
   }
 }

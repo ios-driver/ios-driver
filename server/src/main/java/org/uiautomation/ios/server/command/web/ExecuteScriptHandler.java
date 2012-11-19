@@ -28,6 +28,10 @@ public class ExecuteScriptHandler extends BaseWebCommandHandler {
       RemoteWebElement rwe = ro.getWebElement();
       JSONObject jo = new JSONObject().put("ELEMENT", rwe.getNodeId().getId());
       return new WebDriverLikeResponse(getRequest().getSession(), 0, jo);
+    } else  if (res instanceof Integer){
+      return new WebDriverLikeResponse(getRequest().getSession(), 0, res);
+    }else  if (res instanceof Boolean){
+      return new WebDriverLikeResponse(getRequest().getSession(), 0, res);
     } else {
       System.err.println("don't understand the return of the script." + res);
       return new WebDriverLikeResponse(getRequest().getSession(), 0, res);

@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.UIADriver;
 import org.uiautomation.ios.UIAModels.UIARect;
@@ -37,9 +38,9 @@ public class WebInspector {
     if (result == null) {
       result = retrieveDocumentAndCheckReady();
       RemoteWebElement window = getMainWindow();
-      context.setCurrentFrame(null, result,window);
+      context.setCurrentFrame(null, result, window);
     }
-    //System.out.println("USING DOCUMENT "+result.getNodeId().getId());
+    // System.out.println("USING DOCUMENT "+result.getNodeId().getId());
     return result;
   }
 
@@ -50,8 +51,8 @@ public class WebInspector {
         element = retrieveDocument();
         String state = element.readyState();
         if (element.getNodeId().exist() && ("complete".equals(state) || "loading".equals(state))) {
-          if (!"complete".equals(state)){
-            System.err.println("retruening a document not yet completed :"+state);
+          if (!"complete".equals(state)) {
+            System.err.println("retruening a document not yet completed :" + state);
           }
           break;
         }
@@ -99,7 +100,7 @@ public class WebInspector {
     this.nativeDriver = nativeDriver;
     this.session = session;
     protocol = new DebugProtocol(session.getContext().getDOMContext(), bundleId, session);
-    
+
     enablePageEvent();
 
   }
@@ -155,17 +156,17 @@ public class WebInspector {
     JSONObject response = protocol.sendCommand(cmd);
     return cast(response);
   }
-  
+
   public RemoteWebElement getMainWindow() throws JSONException, Exception {
     JSONObject cmd = new JSONObject();
     cmd.put("method", "Runtime.evaluate");
     cmd.put("params", new JSONObject().put("expression", "window;"));
 
     JSONObject response = protocol.sendCommand(cmd);
-    RemoteObject ro =  cast(response);
-    if (ro == null){
+    RemoteObject ro = cast(response);
+    if (ro == null) {
       throw new NoSuchElementException("cannot find window");
-    }else {
+    } else {
       return ro.getWebElement();
     }
   }
@@ -187,22 +188,52 @@ public class WebInspector {
     RemoteWebElement window = session.getContext().getDOMContext().getWindow();
     JSONObject cmd = new JSONObject();
 
-    script = script.replace(" document", " realDocument");
-    script = script.replace(" window", " realWindow");
-    
-    
     JSONArray arguments = new JSONArray();
-    arguments.put(new JSONObject().put("objectId", window.getRemoteObject().getId()));
+    int nbParam = args.length();
+    for (int i = 0; i < nbParam; i++) {
+      Object arg = args.get(i);
+      System.out.println("working on" + arg);
+      if (arg instanceof JSONObject) {
+        JSONObject jsonArg = (JSONObject) arg;
+        if (jsonArg.optInt("ELEMENT") > 0) {
+          RemoteWebElement rwep = new RemoteWebElement(new NodeId(jsonArg.optInt("ELEMENT")), session);
+          arguments.put(new JSONObject().put("objectId", rwep.getRemoteObject().getId()));
+        }
+      } else if (arg instanceof JSONArray) {
+        JSONArray jsonArr = (JSONArray) arg;
+        // maybe by executing some JS returning the array, and using that result
+        // as a param ?
+        throw new WebDriverException("no support argument = array.");
+      } else {
+        arguments.put(new JSONObject().put("value", arg));
+      }
+
+    }
     arguments.put(new JSONObject().put("objectId", document.getRemoteObject().getId()));
+    arguments.put(new JSONObject().put("objectId", window.getRemoteObject().getId()));
+
+    script = script.replace(" document", " arguments[" + nbParam + "]");
+    script = script.replace(" window", "  arguments[" + (nbParam + 1) + "]");
 
     cmd.put("method", "Runtime.callFunctionOn");
-    cmd.put("params", new JSONObject()
-        .put("objectId", document.getRemoteObject().getId())
-        .put("functionDeclaration", "(function(realWindow,realDocument) { " + script + "})")
-        .put("arguments", arguments)
-        .put("returnByValue", false));
+    cmd.put(
+        "params",
+        new JSONObject().put("objectId", document.getRemoteObject().getId())
+            .put("functionDeclaration", "(function() { " + script + "})").put("arguments", arguments)
+            .put("returnByValue", false));
     JSONObject response = protocol.sendCommand(cmd);
-    return cast(response);
+    checkForJSErrors(response);
+    Object o = cast(response);
+    return o;
+  }
+
+  private void checkForJSErrors(JSONObject response) throws Exception {
+    // {"result":{"description":"TypeError: 'undefined' is not an object (evaluating 'arguments[0][0].tagName')","objectId":"{\"injectedScriptId\":2,\"id\":7}","className":"Error","type":"object"},"wasThrown":true}
+    if (response.optBoolean("wasThrown")) {
+      JSONObject details = response.getJSONObject("result");
+      String desc = details.optString("description");
+      throw new WebDriverException("JS error :" + desc);
+    }
   }
 
   public void stop() {
@@ -216,7 +247,7 @@ public class WebInspector {
     JSONObject response = protocol.sendCommand(cmd);
     return cast(response);
   }
-  
+
   public String getPageURL() throws Exception {
     RemoteWebElement document = getDocument();
     String f = "(function(arg) { var url=this.URL;return url;})";
@@ -226,16 +257,12 @@ public class WebInspector {
 
     JSONArray args = new JSONArray();
 
-    cmd.put("params", new JSONObject()
-      .put("objectId", document.getRemoteObject().getId())
-      .put("functionDeclaration", f)
-      .put("arguments", args)
-      .put("returnByValue", true));
+    cmd.put("params", new JSONObject().put("objectId", document.getRemoteObject().getId())
+        .put("functionDeclaration", f).put("arguments", args).put("returnByValue", true));
 
     JSONObject response = getProtocol().sendCommand(cmd);
     return cast(response);
   }
-  
 
   public void get(String url) throws Exception {
     JSONObject cmd = new JSONObject();
@@ -243,51 +270,74 @@ public class WebInspector {
     cmd.put("params", new JSONObject().put("url", url));
     JSONObject response = protocol.sendCommand(cmd);
   }
-  
+
   public void enablePageEvent() throws Exception {
     JSONObject cmd = new JSONObject();
     cmd.put("method", "Page.enable");
     JSONObject response = protocol.sendCommand(cmd);
   }
- 
 
-  public <T> T cast(JSONObject response) throws JSONException {
+  public <T> T cast(JSONObject response) throws Exception {
+    JSONObject body = response.has("result") ? response.getJSONObject("result") : response.getJSONObject("object");
+
+    if (body == null) {
+      throw new RuntimeException("Error parsting " + response);
+    }
+
+    return cast_(body);
+
+  }
+
+  private <T> T cast_(JSONObject body) throws Exception {
     List<String> primitives = new ArrayList<String>();
     primitives.add("boolean");
     primitives.add("number");
     primitives.add("string");
 
-    // evaluate :
+    String type = body.getString("type");
+    // handle null return
+    if ("undefined".equals(type)) {
+      return (T) null;
+    }
 
-    JSONObject result = response.has("result") ? response.getJSONObject("result") : response.getJSONObject("object");
+    // handle primitive types.
+    if (primitives.contains(type)) { // primitive type.
+      Object value = body.get("value");
+      return (T) value;
+    }
 
-    if (result != null) {
-      String type = result.getString("type");
+    // handle objects
+    if ("object".equals(type)) {
+      if (body.has("value") && body.isNull("value")) {
+        return (T) null;
+      }
 
-      if (primitives.contains(type)) { // primitive type.
-        Object value = result.get("value");
-        return (T) value;
-      } else if ("object".equals(type)) { // object
-        if (result.has("value") && result.isNull("value")) {
-          return null;
-        } else if ("array".equals(result.optString("subtype"))) {
-          RemoteObject array = new RemoteObject(result.getString("objectId"), session);
-          return (T) new RemoteObjectArray(array);
-        } else {
-          return (T) new RemoteObject(result.getString("objectId"), session);
+      if ("array".equals(body.optString("subtype"))) {
+        RemoteObject array = new RemoteObject(body.getString("objectId"), session);
+        RemoteObjectArray a = new RemoteObjectArray(array);
+        ArrayList<Object> res = new ArrayList<Object>();
+        for (Object ro : a) {
+          res.add(ro);
         }
+        return (T) res;
+      }
 
-      } else {
-        if ("undefined".equals(type)) {
-          return null;
+      if (body.has("objectId")) {
+        if ("node".equals(body.optString("subtype")) || "Window".equals(body.optString("className"))) {
+          return (T) new RemoteObject(body.getString("objectId"), session);
         } else {
-          throw new RuntimeException("NI " + response.toString(2));
+          System.out.println("remote object, but not a node." + body);
+          RemoteObject ro = new RemoteObject(body.getString("objectId"), session);
+          JSONObject o = new JSONObject(ro.stringify());
+          return (T) o;
         }
 
       }
-    } else {
-      throw new RuntimeException("bug, null result ");
+      System.out.println("last type " + body);
+      return (T) new RemoteObject(body.getString("objectId"), session);
+
     }
+    throw new RuntimeException("NI " + body);
   }
 
   public void waitForPageToLoad() {
