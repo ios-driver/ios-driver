@@ -151,16 +151,16 @@ public class FrameSwitchingTest {
    assertEquals(driver.findElement(By.name("id-name1")).getAttribute("value"), ("name"));
  }
 
- @Test  // TODO freynaud
+ @Test
  @Ignore({OPERA, OPERA_MOBILE})
  public void testShouldBeAbleToSwitchToFrameWithNameContainingDot() {
    driver.get(pages.framesetPage);
    driver.switchTo().frame("sixth.iframe1");
-   assertEquals(driver.findElement(By.tagName("body")).getText(), ("Page number 3"));
+   assertTrue(driver.findElement(By.tagName("body")).getText().contains("Page number 3"));
  }
 
  @Ignore(value = {SELENESE}, reason = "switchTo().frame(WebElement) not supported with Selenium")
- @Test // TODO freynaud
+ @Test 
  public void testShouldBeAbleToSwitchToAFrameUsingAPreviouslyLocatedWebElement() {
    driver.get(pages.framesetPage);
    WebElement frame = driver.findElement(By.tagName("frame"));
@@ -169,7 +169,7 @@ public class FrameSwitchingTest {
    assertEquals(driver.findElement(By.id("pageNumber")).getText(), ("1"));
  }
 
- @Test  // TODO freynaud
+ @Test 
  public void testShouldBeAbleToSwitchToAnIFrameUsingAPreviouslyLocatedWebElement() {
    driver.get(pages.iframePage);
    WebElement frame = driver.findElement(By.tagName("iframe"));
@@ -324,12 +324,13 @@ public class FrameSwitchingTest {
  }
 
  @Ignore(ANDROID)
- @Test // TODO freynaud
+ @Test 
  public void testShouldAllowTheUserToSwitchToAnIFrameAndRemainFocusedOnIt() {
    driver.get(pages.iframePage);
    driver.switchTo().frame(0);
 
-   driver.findElement(By.id("submitButton")).click();
+   WebElement element = driver.findElement(By.id("submitButton"));
+   element.click();
 
    assertEquals(getTextOfGreetingElement(), ("Success!"));
  }
@@ -455,7 +456,7 @@ public class FrameSwitchingTest {
  }
 
  @JavascriptEnabled
- @Test // TODO freynaud
+ @Test 
  public void testJavaScriptShouldExecuteInTheContextOfTheCurrentFrame() {
    JavascriptExecutor executor = (JavascriptExecutor) driver;
 

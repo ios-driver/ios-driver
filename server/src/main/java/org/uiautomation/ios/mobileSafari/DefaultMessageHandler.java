@@ -37,13 +37,15 @@ public class DefaultMessageHandler implements MessageHandler {
   private void process(String rawMessage) {
     try {
       JSONObject message = extractResponse(rawMessage);
-      if (message == null){
+      if (message == null) {
         return;
       }
       if (message.optInt("id", -1) != -1) {
         responses.add(message);
       } else if (isPageLoad(message)) {
         listener.onPageLoad();
+      } else if ("Page.frameNavigated".equals(message.optString("method"))) {
+        listener.frameNavigated(message);
       } else {
         System.err.println(message.toString());
       }
@@ -56,7 +58,8 @@ public class DefaultMessageHandler implements MessageHandler {
   private boolean isPageLoad(JSONObject message) {
     String method = message.optString("method");
     return "Page.loadEventFired".equals(method);
-    //return "Profiler.resetProfiles".equals(method) || "DOM.documentUpdated".equals(method);
+    // return "Profiler.resetProfiles".equals(method) ||
+    // "DOM.documentUpdated".equals(method);
   }
 
   private JSONObject extractResponse(String message) throws Exception {
