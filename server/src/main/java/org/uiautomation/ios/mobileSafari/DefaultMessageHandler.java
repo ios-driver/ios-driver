@@ -42,17 +42,35 @@ public class DefaultMessageHandler implements MessageHandler {
       }
       if (message.optInt("id", -1) != -1) {
         responses.add(message);
-      } else if (isPageLoad(message)) {
+        return;
+      } 
+      
+      if (isPageLoad(message)){
         listener.onPageLoad();
-      } else if ("Page.frameNavigated".equals(message.optString("method"))) {
-        listener.frameNavigated(message);
-      } else {
+        return;
+      } 
+      
+      if (isImportantDOMChange(message)){
+        listener.domHasChanged(message);
+      } 
+      
+      if ("Page.frameDetached".equals(message.optString("method"))){
+        System.out.println("frame is dead.");
+        listener.frameDied(message);
+      }
+      
+      else {
         System.err.println(message.toString());
       }
     } catch (Exception e) {
       e.printStackTrace();
     }
 
+  }
+  
+  private boolean isImportantDOMChange(JSONObject message){
+    String method = message.optString("method");
+    return ("DOM.childNodeRemoved".equals(method) || "DOM.childNodeInserted".equals(method));
   }
 
   private boolean isPageLoad(JSONObject message) {

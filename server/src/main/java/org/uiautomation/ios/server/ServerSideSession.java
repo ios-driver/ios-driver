@@ -51,7 +51,7 @@ public class ServerSideSession extends Session {
       }
     }
     instruments = new InstrumentsManager(driver.getPort());
-    context = new Context();
+    context = new Context(this);
     configuration = new DriverConfigurationStore();
 
     Runtime.getRuntime().addShutdownHook(new Thread() {

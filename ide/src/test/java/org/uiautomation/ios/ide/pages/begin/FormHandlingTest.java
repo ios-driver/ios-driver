@@ -18,6 +18,7 @@ import static org.testng.Assert.fail;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -56,11 +57,10 @@ public class FormHandlingTest {
     IOSCapabilities safari = IOSCapabilities.ipad("Safari");
     safari.setCapability(IOSCapabilities.TIME_HACK, false);
 
-    
     appServer = new WebbitAppServer();
     appServer.start();
     pages = new Pages(appServer);
-    
+
     driver = new RemoteMobileSafariDriver(url, safari);
   }
 
@@ -134,7 +134,8 @@ public class FormHandlingTest {
   }
 
   @Test
-  @Ignore(OPERA_MOBILE) // TODO freynaud find how to disable auto capitalisation. 
+  @Ignore(OPERA_MOBILE)
+  // TODO freynaud find how to disable auto capitalisation.
   public void testShouldBeAbleToEnterTextIntoATextAreaBySettingItsValue() {
     driver.get(pages.javascriptPage);
     WebElement textarea = driver.findElement(By.id("keyUpArea"));
@@ -154,7 +155,7 @@ public class FormHandlingTest {
   }
 
   @Ignore(value = { SELENESE, IPHONE, ANDROID, OPERA_MOBILE })
-  @Test(enabled=false)
+  @Test(enabled = false)
   public void testShouldSubmitAFormUsingTheNewlineLiteral() {
     driver.get(pages.formPage);
     WebElement nestedForm = driver.findElement(By.id("nested_form"));
@@ -165,7 +166,7 @@ public class FormHandlingTest {
   }
 
   @Ignore({ SELENESE, IPHONE, ANDROID, OPERA_MOBILE })
-  @Test(enabled=false)
+  @Test(enabled = false)
   public void testShouldSubmitAFormUsingTheEnterKey() {
     driver.get(pages.formPage);
     WebElement nestedForm = driver.findElement(By.id("nested_form"));
@@ -191,7 +192,7 @@ public class FormHandlingTest {
   }
 
   @Ignore(value = { SELENESE, IPHONE, ANDROID, SAFARI, OPERA, OPERA_MOBILE }, reason = "Does not yet support file uploads", issues = { 4220 })
-  @Test(enabled=false) 
+  @Test(enabled = false)
   public void testShouldBeAbleToAlterTheContentsOfAFileUploadInputElement() throws IOException {
     driver.get(pages.formPage);
     WebElement uploadElement = driver.findElement(By.id("upload"));
@@ -206,8 +207,29 @@ public class FormHandlingTest {
     assertTrue(uploadPath.endsWith(file.getName()));
   }
 
+  // will add a picture in the default "saved picture" album.
+  public void addPictures() {
+    File folder = new File("/Users/freynaud/Library/Application Support/iPhone Simulator/6.0/Media/DCIM/100APPLE/");
+    File image = new File("/Users/freynaud/image.png");
+
+    File plistFolder = new File("/Users/freynaud/Library/Application Support/iPhone Simulator/6.0/Media/PhotoData/MISC");
+    File plist = new File("/Users/freynaud/DCIM_APPLE.plist");
+
+    try {
+      File dest = new File(folder, "image.png");
+      FileUtils.copyFile(image, dest);
+      System.out.println("file : " + dest.getAbsolutePath());
+      dest = new File(plistFolder, "DCIM_APPLE.plist");
+      FileUtils.copyFile(plist, dest);
+      System.out.println("file : " + dest.getAbsolutePath());
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+
   @Ignore(value = { ANDROID, IPHONE, OPERA, SAFARI, SELENESE, OPERA_MOBILE }, reason = "Does not yet support file uploads", issues = { 4220 })
-  @Test(enabled=false)
+  @Test (enabled=false)
   public void testShouldBeAbleToSendKeysToAFileUploadInputElementInAnXhtmlDocument() throws IOException {
     // IE before 9 doesn't handle pages served with an XHTML content type, and
     // just prompts for to
@@ -216,6 +238,7 @@ public class FormHandlingTest {
     // !TestUtilities.isOldIe(driver));
 
     driver.get(pages.xhtmlFormPage);
+    addPictures();
     WebElement uploadElement = driver.findElement(By.id("file"));
     assertEquals(uploadElement.getAttribute("value"), (""));
 
@@ -229,7 +252,7 @@ public class FormHandlingTest {
   }
 
   @Ignore(value = { SELENESE, IPHONE, ANDROID, OPERA, SAFARI }, reason = "Does not yet support file uploads", issues = { 4220 })
-  @Test(enabled=false)
+  @Test(enabled = false)
   public void testShouldBeAbleToUploadTheSameFileTwice() throws IOException {
     File file = File.createTempFile("test", "txt");
     file.deleteOnExit();
@@ -252,7 +275,9 @@ public class FormHandlingTest {
   }
 
   @Ignore(value = { IPHONE, OPERA }, reason = "iPhone: sendKeys implemented incorrectly.")
-  @Test // doesn't work if the text is longer than the input size, as the cursor will end up where the tap was done.
+  @Test
+  // doesn't work if the text is longer than the input size, as the cursor will
+  // end up where the tap was done.
   public void testSendingKeyboardEventsShouldAppendTextInInputs() {
     driver.get(pages.formPage);
     WebElement element = driver.findElement(By.id("working"));
@@ -324,7 +349,8 @@ public class FormHandlingTest {
     assertEquals(value.length(), (0));
   }
 
-  @Test(enabled=false) // alert not done yet
+  @Test(enabled = false)
+  // alert not done yet
   @Ignore(value = { ANDROID, CHROME, HTMLUNIT, IE, IPHONE, OPERA, SAFARI, SELENESE, OPERA_MOBILE }, reason = "Untested on all other browsers, fails on chrome, fails on IE.", issues = { 3508 })
   public void handleFormWithJavascriptAction() {
     String url = appServer.whereIs("form_handling_js_submit.html");

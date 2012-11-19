@@ -428,6 +428,7 @@ public class FrameSwitchingTest {
 
    driver.switchTo().frame("iframe1");
 
+   // TODO freynaud {"method":"Page.frameDetached","params":{"frameId":"0.86"}}
    WebElement killIframe = driver.findElement(By.id("killIframe"));
    killIframe.click();
    driver.switchTo().defaultContent();

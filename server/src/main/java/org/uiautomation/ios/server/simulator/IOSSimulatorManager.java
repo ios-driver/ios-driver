@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -325,7 +326,8 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   public void setKeyboardOptions() {
     File folder = new File(contentAndSettingsFolder + "/Library/Preferences/");
     File preferenceFile = new File(folder, "com.apple.Preferences.plist");
-
+ 
+  
     try {
       JSONObject preferences = new JSONObject();
       preferences.put("KeyboardAutocapitalization", false);
@@ -337,5 +339,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
       throw new IOSAutomationException("cannot set options in " + preferenceFile.getAbsolutePath());
     }
   }
+  
+ 
 
 }

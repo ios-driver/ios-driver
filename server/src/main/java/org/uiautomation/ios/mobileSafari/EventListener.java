@@ -4,5 +4,6 @@ import org.json.JSONObject;
 
 public interface EventListener {
   public void onPageLoad();
-  public void frameNavigated(JSONObject message);
+  public void domHasChanged(JSONObject message);
+  public void frameDied(JSONObject message);
 }

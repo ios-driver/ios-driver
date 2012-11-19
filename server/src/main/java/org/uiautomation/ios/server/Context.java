@@ -11,8 +11,8 @@ public class Context {
   private WorkingMode mode = WorkingMode.Native;
   private final DOMContext context;
 
-  public Context() {
-    context = new DOMContext();
+  public Context(ServerSideSession session) {
+    context = new DOMContext(session);
   }
 
   public void switchToMode(WorkingMode mode) {
