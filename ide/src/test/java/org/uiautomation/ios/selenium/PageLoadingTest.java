@@ -1,4 +1,4 @@
-package org.uiautomation.ios.ide.pages.begin;
+package org.uiautomation.ios.selenium;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 

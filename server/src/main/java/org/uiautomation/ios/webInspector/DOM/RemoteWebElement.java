@@ -230,9 +230,9 @@ public class RemoteWebElement {
 
   public String getAttribute(String attributeName) throws Exception {
     String res = getRemoteObject().call("." + attributeName);
-    if (res == null) {
+    if (res == null || "class".equals(attributeName)) {
       // textarea.value != testarea.getAttribute("value");
-      getRemoteObject().call(".getAttribute('" + attributeName + "')");
+      res = getRemoteObject().call(".getAttribute('" + attributeName + "')");
     }
     if (res == null) {
       return "";

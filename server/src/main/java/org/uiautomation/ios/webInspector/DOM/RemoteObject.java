@@ -57,7 +57,7 @@ public class RemoteObject {
             .put("functionDeclaration",
                 "(function(arg) { var res = this" + function + "; return res;})")
             .put("arguments", args)
-            .put("returnByValue", true));
+            .put("returnByValue", false));
 
 
 
