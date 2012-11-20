@@ -399,7 +399,6 @@ public class RemoteWebElement {
       NodeId id = new NodeId(nodesId.getInt(i));
       res.add(new RemoteWebElement(id, session));
     }
-    // TODO freynaud
     return res;
 
   }
@@ -411,14 +410,15 @@ public class RemoteWebElement {
     cmd.put("method", "Runtime.callFunctionOn");
 
     JSONArray args = new JSONArray();
-
+    long start = System.currentTimeMillis();
     cmd.put(
         "params",
         new JSONObject().put("objectId", getRemoteObject().getId())
             .put("functionDeclaration", "(function(arg) { var state = document.readyState; return state;})")
             .put("arguments", args).put("returnByValue", true));
-
+    System.out.println("ready state ,new JSONObject().put(objectId, getRemoteObject().getId())"+(System.currentTimeMillis()-start)+"ms");
     JSONObject response = protocol.sendCommand(cmd);
+    System.out.println("ready state execution "+(System.currentTimeMillis()-start)+"ms");
     return inspector.cast(response);
   }
 
@@ -527,6 +527,11 @@ public class RemoteWebElement {
       return ro.getWebElement();
     }
   }
+  
+  
+
+  
+  
   
   public List<RemoteWebElement> findElementsByXpath(String xpath) throws Exception {
     String f = "(function(xpath,element) { var results = " + Atoms.findsByXpath() + "(xpath,element);" + "return results;})";

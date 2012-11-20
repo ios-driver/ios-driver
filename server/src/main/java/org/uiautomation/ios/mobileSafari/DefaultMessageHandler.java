@@ -17,7 +17,9 @@ public class DefaultMessageHandler implements MessageHandler {
   private final List<JSONObject> responses = new CopyOnWriteArrayList<JSONObject>();
   private final EventListener listener;
   private Thread t;
-
+  private static boolean showIgnoredMessaged = false;
+  
+  
   public DefaultMessageHandler(EventListener listener) {
     this.listener = listener;
   }
@@ -60,7 +62,10 @@ public class DefaultMessageHandler implements MessageHandler {
       }
       
       else {
-        System.err.println(message.toString());
+        if (showIgnoredMessaged){
+          System.err.println(message.toString());
+        }
+        
       }
     } catch (Exception e) {
       e.printStackTrace();

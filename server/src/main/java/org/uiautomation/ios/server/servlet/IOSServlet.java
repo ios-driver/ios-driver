@@ -122,7 +122,7 @@ public class IOSServlet extends DriverBasedServlet {
         return new FailedWebDriverLikeResponse(null, e);
       }
     } finally {
-      String message = command + "\t\t\t" + (System.currentTimeMillis() - start) + "ms.";
+      String message = command + "\t\t\t\t" + (System.currentTimeMillis() - start) + "ms.";
       System.out.println(message);
       Reporter.log(message);
     }

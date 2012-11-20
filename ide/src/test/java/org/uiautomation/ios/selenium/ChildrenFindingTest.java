@@ -256,9 +256,8 @@ public class ChildrenFindingTest {
   public void testShouldBeAbleToFindAnElementsByCssSelector() {
     driver.get(pages.nestedPage);
     WebElement parent = driver.findElement(By.name("form2"));
-
+   
     List<WebElement> elements = parent.findElements(By.cssSelector("*[name=\"selectomatic\"]"));
-
     assertEquals(2, elements.size());
   }
 }

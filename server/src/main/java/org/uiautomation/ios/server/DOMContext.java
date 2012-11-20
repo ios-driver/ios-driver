@@ -19,6 +19,7 @@ public class DOMContext implements EventListener {
   private RemoteWebElement document;
   private RemoteWebElement iframe;
 
+  private boolean isOnMainFrame = true;
   private RemoteWebElement mainDocument;
   private RemoteWebElement mainWindow;
 
@@ -61,8 +62,9 @@ public class DOMContext implements EventListener {
     this.window = window;
 
     if (iframe != null) {
-      /*System.out.println("SWITCH TO NEW FRAME : " + iframe.getNodeId() + ",document " + document.getNodeId() + ",window "
-          + window.getNodeId());*/
+     isOnMainFrame=false;
+    }else{
+      isOnMainFrame = true;
     }
 
     // switchToDefaultContent. revert to main document if it was set.
@@ -80,6 +82,9 @@ public class DOMContext implements EventListener {
 
   }
 
+  public boolean isOnMainFrame(){
+    return isOnMainFrame;
+  }
   public RemoteWebElement getCurrentFrame() {
     return iframe;
   }
