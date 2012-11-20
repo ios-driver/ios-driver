@@ -635,11 +635,10 @@ public class ElementFindingTest {
     try {
       driver.switchTo().frame("inner");
       WebElement first = driver.findElement(By.id("oneline"));
-      System.out.println(first.getText());
       driver.switchTo().defaultContent();
-      System.out.println(first.getText());
+      first.getText();
       driver.switchTo().frame("inner");
-      System.out.println(first.getText());
+      first.getText();
 
     } finally {
       driver.switchTo().defaultContent();

@@ -62,23 +62,11 @@ public class SetFrameHandler extends BaseWebCommandHandler {
   private RemoteWebElement getIframe(String id) throws Exception {
     RemoteWebElement currentDocument = getSession().getWebInspector().getDocument();
 
-    List<RemoteWebElement> iframes = currentDocument.findElementsByCSSSelector("iframe,frame");
+    String selector = "iframe[name='"+id+"'],iframe[id='"+id+"'],frame[name='"+id+"'],frame[id='"+id+"']";
+    RemoteWebElement frame = currentDocument.findElementByCSSSelector(selector);
+    return frame;
     // string|number|null|WebElement JSON Object
-    for (RemoteWebElement iframe : iframes) {
-      String fid = iframe.getAttribute("id");
-      if (id.equals(fid)) {
-        return iframe;
-      }
-    }
-
-    for (RemoteWebElement iframe : iframes) {
-      String name = iframe.getAttribute("name");
-      if (id.equals(name)) {
-        return iframe;
-      }
-    }
-
-    throw new NoSuchFrameException("Cannot find frame " + id);
+    
   }
 
   @Override

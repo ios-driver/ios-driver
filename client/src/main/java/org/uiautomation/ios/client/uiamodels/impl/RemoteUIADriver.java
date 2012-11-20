@@ -31,6 +31,7 @@ import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DriverCommand;
 import org.openqa.selenium.remote.HttpCommandExecutor;
@@ -94,6 +95,43 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
 
     try {
       URL url = new URL(remoteURL);
+      port = url.getPort();
+      host = url.getHost();
+      session = start();
+
+      setSessionId(session.getSessionId());
+      setCommandExecutor(new HttpCommandExecutor(url));
+      configuration = new RemoteDriverConfiguration(this);
+
+    } catch (MalformedURLException e) {
+      throw new IOSAutomationException("invalid URL " + remoteURL, e);
+    } catch (IOSAutomationException e) {
+      throw e;
+    } catch (Exception e) {
+      throw new IOSAutomationException(e);
+    }
+  }
+
+  @Override
+  protected void startClient() {
+  }
+
+  @Override
+  protected void startSession(Capabilities desiredCapabilities, Capabilities requiredCapabilities) {
+    try {
+      start();
+    } catch (Exception e) {
+      throw new IOSAutomationException(e.getMessage(), e);
+    }
+  }
+
+  public RemoteUIADriver(URL url, IOSCapabilities cap) {
+    super(url, cap);
+    this.remoteURL = url.toExternalForm();
+    this.requestedCapabilities = cap.getRawCapabilities();
+
+    try {
+
       port = url.getPort();
       host = url.getHost();
       session = start();
