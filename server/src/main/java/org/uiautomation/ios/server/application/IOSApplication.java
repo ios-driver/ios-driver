@@ -109,7 +109,7 @@ public class IOSApplication {
    * 
    * @throws Exception
    */
-  public void loadAllContent() throws IOSAutomationException {
+  private void loadAllContent() throws IOSAutomationException {
     if (!dictionaries.isEmpty()) {
       throw new IOSAutomationException("Content already present.");
     }
