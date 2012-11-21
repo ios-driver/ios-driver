@@ -19,7 +19,7 @@ public class IOSL10NTests {
   public void setup() throws Exception {
 
     app = new IOSApplication(SampleApps.getIntlMountainsFile());
-    app.loadAllContent();
+    //app.loadAllContent();
     app.setLanguage("en");
   }
 
