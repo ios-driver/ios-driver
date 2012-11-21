@@ -54,6 +54,8 @@ public class PlistManager {
     return content;
   }
 
+  
+  
   public String JSONCommand(JSONObject command) throws IOException {
     String json = command.toString();
     String s = Base64.encodeBase64String(json.getBytes());

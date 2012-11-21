@@ -157,11 +157,6 @@ public class LanguageDictionary {
           res.add(potential);
         }
       }
-      /*
-       * File resource = new File(f, "Localizable.strings"); if (!resource.exists()) { throw new
-       * IOSAutomationException("expected a l10n file here : " + resource); } else {
-       * res.add(resource); }
-       */
     }
     return res;
   }

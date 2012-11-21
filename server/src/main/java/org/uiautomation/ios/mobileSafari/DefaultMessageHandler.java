@@ -17,7 +17,7 @@ public class DefaultMessageHandler implements MessageHandler {
   private final List<JSONObject> responses = new CopyOnWriteArrayList<JSONObject>();
   private final EventListener listener;
   private Thread t;
-  private static boolean showIgnoredMessaged = false;
+  private static boolean showIgnoredMessaged = true;
   
   
   public DefaultMessageHandler(EventListener listener) {
@@ -57,13 +57,13 @@ public class DefaultMessageHandler implements MessageHandler {
       } 
       
       if ("Page.frameDetached".equals(message.optString("method"))){
-        System.out.println("frame is dead.");
         listener.frameDied(message);
+        return;
       }
       
       else {
         if (showIgnoredMessaged){
-          System.err.println(message.toString());
+          System.err.println(System.currentTimeMillis()+"\t"+message.toString());
         }
         
       }

@@ -66,6 +66,12 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>com.googlecode.plist</groupId>
+			<artifactId>dd-plist</artifactId>
+			<version>1.0</version> <!-- corresponds to r73 -->
+		</dependency>
+
 	</dependencies>
 
 	<build>

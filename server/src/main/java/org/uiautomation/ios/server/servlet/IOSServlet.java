@@ -122,9 +122,8 @@ public class IOSServlet extends DriverBasedServlet {
         return new FailedWebDriverLikeResponse(null, e);
       }
     } finally {
-      String message = (System.currentTimeMillis() - start) + "ms.\t"+command;
-      System.out.println(message);
-      Reporter.log(message);
+      String message = (System.currentTimeMillis()+"\t"+(System.currentTimeMillis() - start) + "ms.\t"+command);
+      //System.out.println(message);
     }
 
   }

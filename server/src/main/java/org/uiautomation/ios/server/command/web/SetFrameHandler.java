@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.UnsupportedCommandException;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
@@ -63,8 +64,13 @@ public class SetFrameHandler extends BaseWebCommandHandler {
     RemoteWebElement currentDocument = getSession().getWebInspector().getDocument();
 
     String selector = "iframe[name='"+id+"'],iframe[id='"+id+"'],frame[name='"+id+"'],frame[id='"+id+"']";
-    RemoteWebElement frame = currentDocument.findElementByCSSSelector(selector);
-    return frame;
+    try {
+      RemoteWebElement frame = currentDocument.findElementByCSSSelector(selector);
+      return frame;
+    }catch (NoSuchElementException e) {
+      throw new NoSuchFrameException(e.getMessage(),e);
+    }
+   
     // string|number|null|WebElement JSON Object
     
   }

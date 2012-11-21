@@ -66,8 +66,8 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
   private final String remoteURL;
   private final Map<String, Object> requestedCapabilities;
   private final Session session;
-  private final String host;
-  private final int port;
+  private String host;
+  private int port;
   private final DriverConfiguration configuration;
 
   /**
@@ -118,18 +118,13 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
 
   @Override
   protected void startSession(Capabilities desiredCapabilities, Capabilities requiredCapabilities) {
-    try {
-      start();
-    } catch (Exception e) {
-      throw new IOSAutomationException(e.getMessage(), e);
-    }
+
   }
 
   public RemoteUIADriver(URL url, IOSCapabilities cap) {
     super(url, cap);
     this.remoteURL = url.toExternalForm();
     this.requestedCapabilities = cap.getRawCapabilities();
-
     try {
 
       port = url.getPort();

@@ -91,6 +91,7 @@ public class DOMContext implements EventListener {
 
   @Override
   public void onPageLoad() {
+   // System.out.println(System.currentTimeMillis()+" recieved page load event");
     pageLoaded = true;
     reset();
   }
@@ -116,8 +117,7 @@ public class DOMContext implements EventListener {
     this.session = session;
   }
 
-  // TODO freynaud completly wrong. Needs to keep track of the parent for a
-  // frame, not just the top level parent.
+  // TODO freynaud are the messages always in the correct order ?
   @Override
   public void domHasChanged(JSONObject message) {
     try {
@@ -128,7 +128,7 @@ public class DOMContext implements EventListener {
         int nodeId = params.getInt("nodeId");
         int parentNodeId = params.getInt("parentNodeId");
         if (iframe != null ? nodeId == iframe.getNodeId().getId() : false) {
-          //System.err.println("current frame " + nodeId + " is gone.Parent : " + parentNodeId);
+          System.err.println("current frame " + nodeId + " is gone.Parent : " + parentNodeId);
           isReady = false;
           parent = new NodeId(parentNodeId);
 

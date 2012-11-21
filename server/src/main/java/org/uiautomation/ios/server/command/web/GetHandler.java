@@ -39,20 +39,23 @@ public class GetHandler extends BaseWebCommandHandler {
 
   @Override
   public WebDriverLikeResponse handle() throws Exception {
+    long start = System.currentTimeMillis();
     String url = getRequest().getPayload().getString("url");
     boolean newPageWillBeLoaded = true;
-    try {
-      String currentURL = getSession().getWebInspector().getPageURL();
-      int index = url.indexOf(currentURL);
+    if (url.contains("#")) {
+      try {
+        String currentURL = getSession().getWebInspector().getPageURL();
+        int index = url.indexOf(currentURL);
 
-      if (index == 0) {
-        String delta = url.replace(currentURL, "");
-        if (delta.startsWith("#")) {
-          newPageWillBeLoaded = false;
+        if (index == 0) {
+          String delta = url.replace(currentURL, "");
+          if (delta.startsWith("#")) {
+            newPageWillBeLoaded = false;
+          }
         }
+      } catch (Exception e) {
+        // ignore.
       }
-    } catch (Exception e) {
-      // ignore.
     }
 
     if (newPageWillBeLoaded) {
@@ -66,11 +69,9 @@ public class GetHandler extends BaseWebCommandHandler {
     } else {
       fakeTypeURL(url);
     }
-
     if (newPageWillBeLoaded) {
       getSession().getWebInspector().waitForPageToLoad();
     }
-
     return new WebDriverLikeResponse(getSession().getSessionId(), 0, new JSONObject());
   }
 

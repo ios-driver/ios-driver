@@ -3,6 +3,7 @@ package org.uiautomation.ios.selenium;
 import static org.openqa.selenium.TestWaiter.waitFor;
 import static org.openqa.selenium.WaitingConditions.pageTitleToBe;
 
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -18,6 +19,7 @@ import org.openqa.selenium.environment.webserver.WebbitAppServer;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteMobileSafariDriver;
@@ -50,7 +52,10 @@ public class ElementFindingTest {
     pages = new Pages(appServer);
   }
 
- 
+ @BeforeMethod
+ public void before(Method method){
+   System.out.println(method.getName());
+ }
 
   @AfterClass
   public void tearDown() throws Exception {

@@ -354,7 +354,7 @@ public class FrameSwitchingTest {
  }
 
  @Ignore({OPERA, ANDROID, OPERA_MOBILE})
- @Test // TODO freynaud
+ @Test // TODO freynaud (invocationCount=50)
  public void testShouldBeAbleToClickInASubFrame() {
    driver.get(pages.framesetPage);
    driver.switchTo().frame("sixth")
