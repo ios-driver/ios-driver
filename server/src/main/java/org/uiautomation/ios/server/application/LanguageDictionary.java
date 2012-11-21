@@ -153,7 +153,8 @@ public class LanguageDictionary {
     for (File f : files) {
       File[] all = f.listFiles();
       for (File potential : all) {
-        if (potential.getAbsoluteFile().getAbsolutePath().endsWith(".strings")) {
+        String file = potential.getName();
+        if (file.endsWith(".strings") && !file.endsWith("InfoPlist.strings")) {
           res.add(potential);
         }
       }
