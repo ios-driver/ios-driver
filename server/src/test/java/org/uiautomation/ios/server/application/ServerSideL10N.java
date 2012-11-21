@@ -15,7 +15,7 @@ public class ServerSideL10N {
 
   private ServerSideL10NFactory create(Localizable l) {
     IOSApplication app = new IOSApplication(SampleApps.getIntlMountainsFile());
-    app.loadAllContent();
+    app.setLanguage(l.getName());
     ServerSideL10NFactory factory = new ServerSideL10NFactory(app);
     return factory;
   }

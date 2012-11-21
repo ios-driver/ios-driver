@@ -27,6 +27,7 @@ public class LanguageDictionaryTests {
     Assert.assertEquals(dict.getLanguage(), Localizable.fr);
   }
 
+  // TODO freynaud default to locale when no supported.
   @Test(expectedExceptions = {IOSAutomationException.class})
   public void notARecognizedLanguage() throws IOSAutomationException {
     String name = "Klingon";
