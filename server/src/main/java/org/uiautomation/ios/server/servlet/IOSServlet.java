@@ -26,6 +26,7 @@ import org.uiautomation.ios.communication.FailedWebDriverLikeResponse;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.communication.WebDriverLikeResponse;
+import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.CommandMapping;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.command.Handler;
@@ -74,17 +75,7 @@ public class IOSServlet extends DriverBasedServlet {
     response.setStatus(200);
     WebDriverLikeResponse resp;
 
-    boolean nativeMode = true;
-    try {
-      ServerSideSession session = getDriver().getSession(req.getSession());
-      nativeMode = session.getMode() == WorkingMode.Native;
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
-    }
-
-    String mode = nativeMode ? "native" : "web";
-    // System.out.println(mode+"\t"+req.getMethod()+"\t"+req.getPath());
-
+    
     resp = getResponse(req);
 
     // TODO implement the json protocol properly.
