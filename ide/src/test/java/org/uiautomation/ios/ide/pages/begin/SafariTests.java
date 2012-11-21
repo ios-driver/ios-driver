@@ -74,7 +74,7 @@ public class SafariTests {
       Assert.fail("no web handle.");
     }
 
-    nativeDriver.setWindow(webViewHandle);
+    //nativeDriver.setWindow(webViewHandle);
     
     WebElement el =
         nativeDriver.findElement(By.cssSelector("a[href='http://reviews.ebay.co.uk/']"));
@@ -100,7 +100,7 @@ public class SafariTests {
      * findOutMore = webdriver.findElementById(null, "gf-p"); RemoteWebElement reviews =
      * webdriver.findElementByCSSSelector(null, "a[href='http://reviews.ebay.co.uk/']");
      */
-    nativeDriver.setWindow("nativeView");
+    //nativeDriver.setWindow("nativeView");
     
     nativeDriver.quit();
   }

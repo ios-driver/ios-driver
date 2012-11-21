@@ -35,3 +35,7 @@ common/src/web
 third_party
 javascript
 client/src/web
+ide/src/test/java/org/uiautomation/ios/ide/pages/begin/SafariTests.java
+ide/src/test/java/org/uiautomation/ios/ide/pages/begin/eBayTests.java
+ide/src/test/java/org/uiautomation/ios/ide/pages/begin/SafariTests.java
+go.sh
