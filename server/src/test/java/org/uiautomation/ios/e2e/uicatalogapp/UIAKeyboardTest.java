@@ -70,7 +70,7 @@ public class UIAKeyboardTest extends UICatalogTestsBase {
       UIAElementArray<UIAKey> keys = keyboard.getKeys();
       Assert.assertTrue(keys.size() == 28 || keys.size() == 31);
       // GB, should be a qwerty
-      Assert.assertEquals(keys.get(0).getName(), "Q");
+      Assert.assertEquals(keys.get(0).getName(), "q");
 
     } finally {
       if (driver != null) {
@@ -79,12 +79,13 @@ public class UIAKeyboardTest extends UICatalogTestsBase {
     }
   }
 
-  // some timing issues here.Need a change server side.
-  @Test(groups = "broken")
+ 
+  @Test
   public void typeBasic() {
     RemoteUIADriver driver = null;
     try {
 
+      String message ="Francois 1234";
       driver = getDriver();
       RemoteUIATarget target = driver.getLocalTarget();
       RemoteUIAApplication app = target.getFrontMostApp();
@@ -94,11 +95,11 @@ public class UIAKeyboardTest extends UICatalogTestsBase {
       textfield.tap();
 
       UIAKeyboard keyboard = app.getKeyboard();
-      keyboard.typeString("F");
+      keyboard.typeString(message);
 
 
 
-      Assert.assertEquals(textfield.getValue(), "Francois");
+      Assert.assertEquals(textfield.getValue(), message);
 
     } finally {
       if (driver != null) {

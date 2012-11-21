@@ -228,4 +228,8 @@ public enum WebDriverLikeCommand {
     }
     throw new IOSAutomationException("cannot find the variable " + variable + " in " + path);
   }
+
+  public boolean isSessionLess() {
+    return !path.contains(":sessionId");
+  }
 }
