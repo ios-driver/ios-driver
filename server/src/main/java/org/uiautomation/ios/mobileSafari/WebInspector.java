@@ -369,7 +369,6 @@ public class WebInspector {
         if ("node".equals(body.optString("subtype")) || "Window".equals(body.optString("className"))) {
           return (T) new RemoteObject(body.getString("objectId"), session);
         } else {
-          System.out.println("remote object, but not a node." + body);
           RemoteObject ro = new RemoteObject(body.getString("objectId"), session);
           JSONObject o = new JSONObject(ro.stringify());
           return (T) o;

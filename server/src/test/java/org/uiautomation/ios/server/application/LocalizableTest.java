@@ -4,7 +4,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 
-public class LocalizableTests {
+public class LocalizableTest {
 
 
   @Test

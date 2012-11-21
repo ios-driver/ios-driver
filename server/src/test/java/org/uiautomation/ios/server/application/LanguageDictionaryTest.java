@@ -9,7 +9,7 @@ import org.testng.annotations.Test;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 
-public class LanguageDictionaryTests {
+public class LanguageDictionaryTest {
 
   @Test
   public void canGuessLegacyNaming() throws IOSAutomationException {

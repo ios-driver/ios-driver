@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
 import org.uiautomation.ios.server.utils.ClassicCommands;
 
-public class CommandTests {
+public class CommandTest {
 
 
   @Test

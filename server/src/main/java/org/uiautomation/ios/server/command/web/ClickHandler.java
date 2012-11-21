@@ -21,7 +21,7 @@ public class ClickHandler extends BaseWebCommandHandler {
   public WebDriverLikeResponse handle() throws Exception {
     int id = Integer.parseInt(getRequest().getVariableValue(":reference"));
     RemoteWebElement element = new RemoteWebElement(new NodeId(id), getSession());
-    element.highlight();
+    //element.highlight();
 
     boolean useNativeEvents = getConfiguration("nativeEvents", nativeEvents);
 

@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 
-public class IOSL10NTests {
+public class IOSL10NTest {
 
   private IOSApplication app;
 

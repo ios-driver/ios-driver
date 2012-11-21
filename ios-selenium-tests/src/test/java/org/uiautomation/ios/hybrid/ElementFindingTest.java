@@ -1,4 +1,4 @@
-package org.uiautomation.ios.e2e.hybrid;
+package org.uiautomation.ios.hybrid;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;

@@ -41,3 +41,4 @@ ide/src/test/java/org/uiautomation/ios/ide/pages/begin/SafariTests.java
 go.sh
 server-standalone-1.0.0-SNAPSHOT.jar
 ide/src/test/java/org/uiautomation/ios/selenium/PerformanceTest.java
+ios-selenium-tests/src/test/java/org/uiautomation/ios/selenium/PerformanceTest.java
