@@ -20,7 +20,7 @@ import org.uiautomation.ios.UIAModels.UIAKeyboard;
 import org.uiautomation.ios.UIAModels.UIAWindow;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 
-public class RemoteUIAApplication extends RemoteObject implements UIAApplication {
+public class RemoteUIAApplication extends RemoteIOSObject implements UIAApplication {
 
   public RemoteUIAApplication(RemoteUIADriver driver, String reference) {
     super(driver, reference);

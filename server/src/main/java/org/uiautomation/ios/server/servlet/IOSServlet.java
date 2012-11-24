@@ -19,21 +19,22 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
-import org.testng.Reporter;
-import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
-import org.uiautomation.ios.communication.FailedWebDriverLikeResponse;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.remote.BeanToJsonConverter;
+import org.openqa.selenium.remote.ErrorCodes;
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.communication.WebDriverLikeResponse;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.CommandMapping;
-import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.command.Handler;
 
 public class IOSServlet extends DriverBasedServlet {
 
   private static final long serialVersionUID = -1190162363756488569L;
+  private final ErrorCodes errorCodes = new ErrorCodes();
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -73,13 +74,11 @@ public class IOSServlet extends DriverBasedServlet {
     response.setContentType("application/json;charset=UTF-8");
     response.setCharacterEncoding("UTF-8");
     response.setStatus(200);
-    WebDriverLikeResponse resp;
 
-    
-    resp = getResponse(req);
+    Response resp = getResponse(req);
 
     // TODO implement the json protocol properly.
-    if (req.getGenericCommand() == WebDriverLikeCommand.NEW_SESSION) {
+    if (req.getGenericCommand() == WebDriverLikeCommand.NEW_SESSION && resp.getStatus() == 0) {
       response.setStatus(301);
       String session = resp.getSessionId();
 
@@ -92,30 +91,81 @@ public class IOSServlet extends DriverBasedServlet {
       String url = scheme + "://" + serverName + ":" + serverPort + contextPath;
       response.setHeader("location", url + "/session/" + session);
     }
-
-    response.getWriter().print(resp.stringify());
+    //String s = toString(resp);
+    BeanToJsonConverter convertor = new BeanToJsonConverter();
+    String s = convertor.convert(resp);
+    System.out.println("sending "+s);
+    response.getWriter().print(s);
     response.getWriter().close();
 
   }
+  
+  private String toString(Response r) throws Exception{
+    JSONObject o = new JSONObject();
+    o.put("sessionId", r.getSessionId());
+    o.put("status",r.getStatus());
+    o.put("value",r.getValue().toString());
+    return o.toString();
+  }
 
-  private WebDriverLikeResponse getResponse(WebDriverLikeRequest request) {
+  private Response getResponse(WebDriverLikeRequest request) {
     long start = System.currentTimeMillis();
     String command = "";
+    WebDriverLikeCommand wdlc = null;
     try {
-      WebDriverLikeCommand wdlc = request.getGenericCommand();
+      wdlc = request.getGenericCommand();
       Handler h = CommandMapping.get(wdlc).createHandler(getDriver(), request);
       command = wdlc.method() + "\t " + wdlc.path();
       return h.handleAndRunDecorators();
-    } catch (Exception e) {
-      try {
-        return new FailedWebDriverLikeResponse(request.getSession(), e);
-      } catch (Exception e1) {
-        return new FailedWebDriverLikeResponse(null, e);
+    } catch (WebDriverException we) {
+      Response response = new Response();
+      if (wdlc.isSessionLess()) {
+        response.setSessionId("");
+      } else {
+        response.setSessionId(request.getSession());
       }
-    } finally {
-      String message = (System.currentTimeMillis()+"\t"+(System.currentTimeMillis() - start) + "ms.\t"+command);
-      //System.out.println(message);
-    }
 
+      response.setStatus(errorCodes.toStatusCode(we));
+
+      try {
+        JSONObject o = serializeException(we);
+        response.setValue(o);
+      } catch (JSONException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      return response;
+    } catch (Exception e) {
+      throw new WebDriverException("bug.");
+    } finally {
+      String message = (System.currentTimeMillis() + "\t" + (System.currentTimeMillis() - start) + "ms.\t" + command);
+      // System.out.println(message);
+    }
+  }
+
+  private JSONObject serializeException(Throwable e) throws JSONException {
+    JSONObject res = new JSONObject();
+    res.put("message", e.getMessage());
+    res.put("class", e.getClass().getCanonicalName());
+    res.put("screen", JSONObject.NULL);
+    res.put("stackTrace", serializeStackTrace(e.getStackTrace()));
+    if (e.getCause() != null) {
+      res.put("cause", serializeException(e.getCause()));
+    }
+    return res;
+
+  }
+
+  private JSONArray serializeStackTrace(StackTraceElement[] els) throws JSONException {
+    JSONArray stacktace = new JSONArray();
+    for (StackTraceElement el : els) {
+      JSONObject stckEl = new JSONObject();
+      stckEl.put("fileName", el.getFileName());
+      stckEl.put("className", el.getClassName());
+      stckEl.put("methodName", el.getMethodName());
+      stckEl.put("lineNumber", el.getLineNumber());
+      stacktace.put(stckEl);
+    }
+    return stacktace;
   }
 }

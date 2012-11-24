@@ -24,7 +24,7 @@ public class RemoteCommandConfiguration implements CommandConfiguration {
       JSONObject payload = new JSONObject().put(key, value);
       Path p = new Path(WebDriverLikeCommand.CONFIGURE);
       // session/:sessionId/configure/command/:command
-      p.validateAndReplace(":sessionId", driver.getSession().getSessionId());
+      p.validateAndReplace(":sessionId", driver.getSessionId().toString());
       p.validateAndReplace(":command", command.name());
       WebDriverLikeRequest request = new WebDriverLikeRequest("POST", p, payload);
       driver.execute(request);

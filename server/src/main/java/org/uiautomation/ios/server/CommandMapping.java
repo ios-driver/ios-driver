@@ -43,6 +43,7 @@ import org.uiautomation.ios.server.command.uiautomation.LogElementTree;
 import org.uiautomation.ios.server.command.uiautomation.NewSession;
 import org.uiautomation.ios.server.command.uiautomation.ServerStatus;
 import org.uiautomation.ios.server.command.uiautomation.SetCurrentContext;
+import org.uiautomation.ios.server.command.uiautomation.SetImplicitWaitTimeout;
 import org.uiautomation.ios.server.command.uiautomation.SetTimeoutCommandHandler;
 import org.uiautomation.ios.server.command.uiautomation.StopSession;
 import org.uiautomation.ios.server.command.uiautomation.TakeScreenshot;
@@ -75,6 +76,7 @@ public enum CommandMapping {
   SESSIONS(GetSessions.class),
   DELETE_SESSION(StopSession.class),
   SET_TIMEOUT(SetTimeoutCommandHandler.class,SetTimeoutHandler.class),
+  IMPLICIT_WAIT(SetImplicitWaitTimeout.class,NotImplementedWebHandler.class),
   GET_TIMEOUT(GetTimeoutCommandHandler.class),
   
   CONFIGURE(ConfigurationSetter.class),
@@ -91,7 +93,7 @@ public enum CommandMapping {
   FORWARD(NotImplementedNativeHandler.class,ForwardHandler.class),
   REFRESH(NotImplementedNativeHandler.class,RefreshHandler.class),
   SUBMIT(NotImplementedNativeHandler.class,SubmitHandler.class),
-  TAG_NAME(NotImplementedNativeHandler.class,GetTagNameHandler.class),
+  TAG_NAME(".type()", DefaultUIAScriptHandler.class,GetTagNameHandler.class),
 
   EXECUTE_SCRIPT(NotImplementedNativeHandler.class,ExecuteScriptHandler.class),
   EQUAL(NotImplementedNativeHandler.class,IsEqualHandler.class),

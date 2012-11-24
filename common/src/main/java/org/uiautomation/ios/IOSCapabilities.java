@@ -104,11 +104,11 @@ public class IOSCapabilities extends DesiredCapabilities {
     setCapability(TIME_HACK, false);
   }
 
-  public IOSCapabilities(Map<String, Object> from) {
+  /*public IOSCapabilities(Map<String, Object> from) {
     for (String key : from.keySet()) {
       setCapability(key, from.get(key));
     }
-  }
+  }*/
 
   public String getBundleId() {
     Object o = asMap().get(BUNDLE_ID);
@@ -135,6 +135,13 @@ public class IOSCapabilities extends DesiredCapabilities {
     }
   }
 
+
+
+  public IOSCapabilities(Map<String, ?> from) {
+    for (String key : from.keySet()) {
+      setCapability(key, from.get(key));
+    }
+  }
 
 
   private Object decode(Object o) throws JSONException {

@@ -14,16 +14,17 @@
 package org.uiautomation.ios.client.uiamodels.impl;
 
 import java.lang.reflect.Constructor;
+import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.uiautomation.ios.UIAModels.Session;
+import org.openqa.selenium.remote.RemoteWebElement;
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.UIAModels.UIAElementArray;
 import org.uiautomation.ios.UIAModels.UIARect;
 import org.uiautomation.ios.communication.Path;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 
 /**
@@ -34,16 +35,19 @@ import org.uiautomation.ios.exceptions.IOSAutomationException;
  * several times in the cache with different references if retrieved several time.
  * 
  */
-public abstract class RemoteObject {
+public abstract class RemoteIOSObject extends RemoteWebElement{
 
   private final RemoteUIADriver driver;
   private final String reference;
 
 
-  public RemoteObject(RemoteUIADriver driver, String reference) {
+  public RemoteIOSObject(RemoteUIADriver driver, String reference) {
     this.driver = driver;
     this.reference = reference;
+    setParent(driver);
   }
+  
+  
 
 
   /**
@@ -51,7 +55,7 @@ public abstract class RemoteObject {
    * @param command
    * @return
    */
-  public RemoteObject getRemoteObject(WebDriverLikeCommand command) {
+  public RemoteIOSObject getRemoteObject(WebDriverLikeCommand command) {
     return getRemoteObject(command, new JSONObject());
   }
 
@@ -62,12 +66,12 @@ public abstract class RemoteObject {
    * @param payload the optional parameters, criteria for instance.
    * @return a lazy loaded remote object.
    */
-  public RemoteObject getRemoteObject(WebDriverLikeCommand command, JSONObject payload) {
+  public RemoteIOSObject getRemoteObject(WebDriverLikeCommand command, JSONObject payload) {
     try {
-      Path p = new Path(command).withSession(getSessionId()).withReference(getReference());
+      Path p = new Path(command).withSession(driver.getSessionId()).withReference(getReference());
 
       WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, payload);
-      WebDriverLikeResponse response = execute(request);
+      Response response = execute(request);
       JSONObject uiaObject = ((JSONObject) response.getValue());
 
       return createObject(getDriver(), uiaObject, command.returnType());
@@ -90,10 +94,10 @@ public abstract class RemoteObject {
    *         list for a UIAElementArray.
    * @throws Exception
    */
-  public static RemoteObject createObject(RemoteUIADriver driver, JSONObject uiObject, Class<?> expected)
+  public static RemoteIOSObject createObject(RemoteUIADriver driver, Map<String, Object> ro , Class<?> expected)
       throws Exception {
-    String ref = uiObject.getString("ref");
-    String type = uiObject.getString("type");
+    String ref = (String)ro.get("ELEMENT");
+    String type = (String)ro.get("type");
 
     String remoteObjectName = "org.uiautomation.ios.client.uiamodels.impl.Remote" + type;
 
@@ -105,14 +109,14 @@ public abstract class RemoteObject {
       }
     }
 
-    boolean isArray = uiObject.has("length");
+    boolean isArray = false; //uiObject.has("length");
 
-    Object[] args;
-    Class<?>[] argsClass;
+    Object[] args = null;
+    Class<?>[] argsClass = null;
 
     if (isArray) {
-      args = new Object[] {driver, ref, uiObject.getInt("length")};
-      argsClass = new Class[] {RemoteUIADriver.class, String.class, Integer.class};
+      //args = new Object[] {driver, ref, uiObject.getInt("length")};
+      //argsClass = new Class[] {RemoteUIADriver.class, String.class, Integer.class};
     } else {
       args = new Object[] {driver, ref};
       argsClass = new Class[] {RemoteUIADriver.class, String.class};
@@ -121,7 +125,7 @@ public abstract class RemoteObject {
     Class<?> clazz = Class.forName(remoteObjectName);
     Constructor<?> c = clazz.getConstructor(argsClass);
     Object o = c.newInstance(args);
-    return (RemoteObject) o;
+    return (RemoteIOSObject) o;
   }
 
   /**
@@ -132,9 +136,9 @@ public abstract class RemoteObject {
    */
   public UIARect getUIARect(WebDriverLikeCommand command) {
     try {
-      Path p = new Path(command).withSession(getSessionId()).withReference(getReference());
+      Path p = new Path(command).withSession(driver.getSessionId()).withReference(getReference());
       WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, null);
-      WebDriverLikeResponse response = execute(request);
+      Response response = execute(request);
       JSONObject rect = (JSONObject) response.getValue();
       return new UIARect(rect);
     } catch (JSONException e) {
@@ -161,7 +165,7 @@ public abstract class RemoteObject {
    * @param payload
    */
   public void execute(WebDriverLikeCommand command, JSONObject payload) {
-    Path p = new Path(command).withSession(getSessionId()).withReference(getReference());
+    Path p = new Path(command).withSession(driver.getSessionId()).withReference(getReference());
     WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, payload);
     execute(request);
   }
@@ -175,9 +179,9 @@ public abstract class RemoteObject {
    */
   @SuppressWarnings("unchecked")
   protected <T> T getObject(WebDriverLikeCommand command) {
-    Path p = new Path(command).withSession(getSessionId()).withReference(getReference());
+    Path p = new Path(command).withSession(driver.getSessionId()).withReference(getReference());
     WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, null);
-    WebDriverLikeResponse response = execute(request);
+    Response response = execute(request);
     if (response.getValue() == JSONObject.NULL) {
       return null;
     } else {
@@ -189,12 +193,12 @@ public abstract class RemoteObject {
     }
   }
   
-  protected String getAttribute(String name){
+  public String getAttribute(String name){
     WebDriverLikeCommand command = WebDriverLikeCommand.ATTRIBUTE;
-    Path p = new Path(WebDriverLikeCommand.ATTRIBUTE).withSession(getSessionId()).withReference(getReference());
+    Path p = new Path(WebDriverLikeCommand.ATTRIBUTE).withSession(driver.getSessionId()).withReference(getReference());
     p.validateAndReplace(":name", name);
     WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, null);
-    WebDriverLikeResponse response = execute(request);
+    Response response = execute(request);
     if (response.getValue() == JSONObject.NULL) {
       return null;
     } else {
@@ -210,7 +214,7 @@ public abstract class RemoteObject {
 
 
 
-  private WebDriverLikeResponse execute(WebDriverLikeRequest request) {
+  private Response execute(WebDriverLikeRequest request) {
     try {
       return driver.execute(request);
     } catch (IOSAutomationException ex) {
@@ -228,13 +232,7 @@ public abstract class RemoteObject {
     return reference;
   }
 
-  public Session getSession() {
-    return driver.getSession();
-  }
-
-  public String getSessionId() {
-    return getSession().getSessionId();
-  }
+  
 
   @Override
   public String toString() {

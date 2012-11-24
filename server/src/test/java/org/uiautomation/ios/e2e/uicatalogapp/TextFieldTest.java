@@ -2,6 +2,8 @@ package org.uiautomation.ios.e2e.uicatalogapp;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.uiautomation.ios.BaseIOSDriverTest;
+import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIATableCell;
 import org.uiautomation.ios.UIAModels.UIATextField;
@@ -14,34 +16,32 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIATarget;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAWindow;
 
-public class TextFieldTest extends UICatalogTestsBase {
+public class TextFieldTest extends BaseIOSDriverTest {
 
-
-  private UIATextField getTextField(RemoteUIAWindow win) {
+  private RemoteUIADriver driver = null;
+  
+  private UIATextField getTextField() {
     String name = "TextFields, Uses of UITextField";
     Criteria c1 = new TypeCriteria(UIATableCell.class);
     Criteria c2 = new NameCriteria(name);
     Criteria c = new AndCriteria(c1, c2);
-    UIAElement element = win.findElement(c);
+    UIAElement element = driver.findElement(c);
     element.tap();
     Criteria fieldC =
         new AndCriteria(new TypeCriteria(UIATextField.class), new NameCriteria("Normal"));
-    UIATextField textfield = (UIATextField) win.findElement(fieldC);
+    UIATextField textfield = (UIATextField) driver.findElement(fieldC);
     return textfield;
   }
 
 
   @Test
   public void valueIsSet() {
-    RemoteUIADriver driver = null;
+   
     try {
 
-      driver = getDriver();
-      RemoteUIATarget target = driver.getLocalTarget();
-      RemoteUIAApplication app = target.getFrontMostApp();
-      RemoteUIAWindow win = app.getMainWindow();
-
-      UIATextField textfield = getTextField(win);
+      driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
+      
+      UIATextField textfield = getTextField();
       
       String v = "ABC";
       textfield.setValue(v);

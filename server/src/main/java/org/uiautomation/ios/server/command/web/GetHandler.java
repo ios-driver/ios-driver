@@ -2,6 +2,7 @@ package org.uiautomation.ios.server.command.web;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIAKeyboard;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
@@ -11,7 +12,6 @@ import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.UIAModels.predicate.ValueCriteria;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
@@ -38,7 +38,7 @@ public class GetHandler extends BaseWebCommandHandler {
   }
 
   @Override
-  public WebDriverLikeResponse handle() throws Exception {
+  public Response handle() throws Exception {
     long start = System.currentTimeMillis();
     String url = getRequest().getPayload().getString("url");
     boolean newPageWillBeLoaded = true;
@@ -72,7 +72,11 @@ public class GetHandler extends BaseWebCommandHandler {
     if (newPageWillBeLoaded) {
       getSession().getWebInspector().waitForPageToLoad();
     }
-    return new WebDriverLikeResponse(getSession().getSessionId(), 0, new JSONObject());
+    Response res = new Response();
+    res.setSessionId(getSession().getSessionId());
+    res.setStatus(0);
+    res.setValue(new JSONObject());
+    return res;
   }
 
   private UIAElement getAddressBar() {

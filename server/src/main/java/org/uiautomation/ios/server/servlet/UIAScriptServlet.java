@@ -77,7 +77,8 @@ public class UIAScriptServlet extends DriverBasedServlet {
       String json = writer.toString();
       json = Normalizer.normalize(json, LanguageDictionary.norme);
       UIAScriptResponse r = new UIAScriptResponse(json);
-      if (!"init".equals(r.getResponse().opt("value"))) {
+      
+      if (!"init".equals(r.getResponse().getValue())) {
         communication(request).setNextResponse(r);
       }
       UIAScriptRequest nextCommand = communication(request).getNextCommand();

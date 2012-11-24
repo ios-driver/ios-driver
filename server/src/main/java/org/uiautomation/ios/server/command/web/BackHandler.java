@@ -2,35 +2,36 @@ package org.uiautomation.ios.server.command.web;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 
 public class BackHandler extends BaseWebCommandHandler {
 
   private static final boolean nativeEvents = false;
-  
+
   public BackHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
 
   @Override
-  public WebDriverLikeResponse handle() throws Exception {
+  public Response handle() throws Exception {
     boolean useNativeEvents = getConfiguration("nativeEvents", nativeEvents);
     getSession().getContext().getDOMContext().reset();
     if (useNativeEvents) {
-      //backNative();
+      // backNative();
     } else {
       backWeb();
     }
 
     getSession().getWebInspector().waitForPageToLoad();
-    return new WebDriverLikeResponse(getSession().getSessionId(), 0, new JSONObject());
+    Response resp = new Response();
+    resp.setSessionId(getSession().getSessionId());
+    resp.setStatus(0);
+    resp.setValue(new JSONObject());
+    return resp;
   }
-  
-  
-  
 
   private void backWeb() throws Exception {
     getSession().getWebInspector().back();

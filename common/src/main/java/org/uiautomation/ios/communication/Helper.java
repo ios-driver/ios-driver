@@ -18,8 +18,11 @@ import java.io.StringWriter;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
+import org.json.JSONException;
 import org.json.JSONObject;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.remote.JsonToBeanConverter;
+import org.openqa.selenium.remote.Response;
 
 public class Helper {
 
@@ -33,10 +36,29 @@ public class Helper {
       str = writer.toString();
       return new JSONObject(str);
     } catch (Exception e) {
-      throw new IOSAutomationException(str, e);
+      throw new WebDriverException(str, e);
     }
   }
 
+  public static String extractString(HttpResponse resp) {
+    String str = "";
+    try {
+      InputStream is = resp.getEntity().getContent();
+      StringWriter writer = new StringWriter();
+      IOUtils.copy(is, writer, "UTF-8");
 
+      str = writer.toString();
+      return str;
+    } catch (Exception e) {
+      throw new WebDriverException(str, e);
+    }
+  }
+
+  public static Response exctractResponse(HttpResponse resp) {
+    String s = extractString(resp);
+    Response response = new JsonToBeanConverter().convert(Response.class, s);
+    return response;
+
+  }
 
 }

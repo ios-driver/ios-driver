@@ -56,7 +56,7 @@ public class SampleApps {
 
   public static IOSCapabilities uiCatalogCap() {
     IOSCapabilities c = IOSCapabilities.iphone("UICatalog", "2.10");
-    c.setCapability(IOSCapabilities.TIME_HACK, true);
+    c.setCapability(IOSCapabilities.TIME_HACK, false);
     if (sdkVersion != null) {
       System.out.println("SET SDK to " + sdkVersion);
       c.setSDKVersion(sdkVersion);

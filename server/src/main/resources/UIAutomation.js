@@ -23,14 +23,14 @@ var Cache = function() {
 	};
 
 	this.get = function(reference) {
-		if(reference == 0) {
+		if (reference == 0) {
 			return UIATarget.localTarget().frontMostApp().mainWindow();
-		} else if(reference == 1) {
+		} else if (reference == 1) {
 			return UIATarget.localTarget().frontMostApp();
-		} else if(reference == 2) {
+		} else if (reference == 2) {
 			return UIATarget.localTarget();
-		} else if(reference == 3) {
-			if(this.storage[3]) {
+		} else if (reference == 3) {
+			if (this.storage[3]) {
 				return this.storage[3];
 			} else {
 				throw new UIAutomationException("No alert opened", 27);
@@ -41,24 +41,28 @@ var Cache = function() {
 		var res = this.storage[reference];
 
 		// there is an alert.
-		if(this.storage[3]) {
+		if (this.storage[3]) {
 
-			if(res.isInAlert()) {
+			if (res.isInAlert()) {
 				return res;
 			} else {
-				throw new UIAutomationException("cannot interact with object " + res + ". There is an alert.", 26);
+				throw new UIAutomationException("cannot interact with object "
+						+ res + ". There is an alert.", 26);
 			}
 
 		} else {
 			// target and app aren't stale.
-			if(!res) {
-				throw new UIAutomationException("can't find " + reference + " in cache.");
+			if (!res) {
+				throw new UIAutomationException("can't find " + reference
+						+ " in cache.");
 				// window an apps aren't stale ?
-			} else if(res.type && (res.type() == "UIAWindow" || res.type() == "UIAApplication")) {
+			} else if (res.type
+					&& (res.type() == "UIAWindow" || res.type() == "UIAApplication")) {
 				return res;
 				// on arrays, stale doesn't make sense.
-			} else if(res.isStale && res.isStale()) {
-				throw new UIAutomationException("elements ref:" + reference + " is stale", 10);
+			} else if (res.isStale && res.isStale()) {
+				throw new UIAutomationException("elements ref:" + reference
+						+ " is stale", 10);
 			} else {
 				return res;
 			}
@@ -104,9 +108,11 @@ var UIAutomation = {
 
 	register : function() {
 		log("registering to " + this.REGISTER);
-		var result = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.REGISTER, "-d", "sessionId=" + this.SESSION], 90);
-		if(result.exitCode != 0) {
-			throw new UIAutomationException("error registering. exit code : " + result.exitCode);
+		var result = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [
+				this.REGISTER, "-d", "sessionId=" + this.SESSION ], 90);
+		if (result.exitCode != 0) {
+			throw new UIAutomationException("error registering. exit code : "
+					+ result.exitCode);
 		}
 	},
 	createJSONResponse : function(sessionId, status, value) {
@@ -115,12 +121,24 @@ var UIAutomation = {
 		result.status = status;
 		var res = {};
 		try {
-			if(value && value.type && (value.type() === "UIAElementArray")) {
-				res.ref = value.reference();
-				res.type = value.type();
-				res.length = value.length;
-			} else if(value && value.type) {
-				res.ref = value.reference();
+			if (value && value.type && (value.type() === "UIAElementArray")) {
+				var all = new Array();
+				value = value.toArray();
+				for ( var i = 0; i < value.length; i++) {
+					var current = value[i];
+					log("current "+current);
+					var item = {};
+					item.ELEMENT = "" + current.reference();
+					item.type = current.type();
+					log("item "+item);
+					all.push(item);
+					log("all "+all.length);
+				}
+				log(JSON.stringify(all));
+				res = all;
+			} else if (value && value.type) {
+				// res.ref = value.reference();
+				res.ELEMENT = "" + value.reference();
 				res.type = value.type();
 			} else {
 				res = value;
@@ -135,9 +153,12 @@ var UIAutomation = {
 	},
 	postResponseAndGetNextCommand : function(jsonResponse) {
 		log("posting response : " + jsonResponse);
-		var nextCommand = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.COMMAND, "--data-binary", jsonResponse], 600);
-		if(nextCommand.exitCode != 0) {
-			throw new UIAutomationException("error getting new command. exit code : " + result.exitCode);
+		var nextCommand = this.HOST
+				.performTaskWithPathArgumentsTimeout(this.CURL, [ this.COMMAND,
+						"--data-binary", jsonResponse ], 600);
+		if (nextCommand.exitCode != 0) {
+			throw new UIAutomationException(
+					"error getting new command. exit code : " + result.exitCode);
 		}
 		log("command : " + nextCommand.stdout);
 		return nextCommand.stdout;
@@ -164,7 +185,7 @@ var UIAutomation = {
 		return result;
 	},
 	getCapabilities : function() {
-		if (this.CAPABILITIES === -1){
+		if (this.CAPABILITIES === -1) {
 			this.CAPABILITIES = this.loadCapabilities();
 		}
 		var result = this.CAPABILITIES;
@@ -187,10 +208,10 @@ var UIAutomation = {
 	commandLoop : function() {
 		var response = this.createJSONResponse(this.SESSION, 0, "init");
 		var ok = true;
-		while(ok) {
+		while (ok) {
 			try {
 				var request = this.postResponseAndGetNextCommand(response);
-				if(request === "stop") {
+				if (request === "stop") {
 					ok = false;
 					log("end of the command loop.");
 
@@ -200,7 +221,8 @@ var UIAutomation = {
 						response = eval(request);
 					} catch (err) {
 						log("err1 : " + JSON.stringify(err));
-						response = this.createJSONResponse(this.SESSION, err.status, err);
+						response = this.createJSONResponse(this.SESSION,
+								err.status, err);
 					}
 				}
 			} catch (err) {

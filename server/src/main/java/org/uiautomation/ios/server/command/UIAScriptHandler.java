@@ -13,14 +13,13 @@
  */
 package org.uiautomation.ios.server.command;
 
-import org.json.JSONObject;
-import org.uiautomation.ios.communication.FailedWebDriverLikeResponse;
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.server.IOSDriver;
 
 /**
- * execute a snipet of javascript in the instruments script context and returns the result.
+ * execute a snipet of javascript in the instruments script context and returns
+ * the result.
  * 
  * @author freynaud
  * 
@@ -36,29 +35,25 @@ public abstract class UIAScriptHandler extends BaseNativeCommandHandler {
     this.js = js;
   }
 
-
-
-  public WebDriverLikeResponse handle() throws Exception {
+  public Response handle() throws Exception {
     if (js == null) {
       throw new RuntimeException("need to specify the JS to run");
     }
     UIAScriptRequest r = new UIAScriptRequest(js);
     communication().sendNextCommand(r);
 
-    WebDriverLikeResponse webDriverLikeResponse;
-    // Stop if a fire and forget response. It will kill the instruments script, so the script cannot
+    Response response;
+    // Stop is a fire and forget response. It will kill the instruments script,
+    // so the script cannot
     // send a response.
     if ("stop".equals(js)) {
-      webDriverLikeResponse = new WebDriverLikeResponse(getRequest().getSession(), 0, "ok");
+      response = new Response();
+      response.setSessionId(getRequest().getSession());
+      response.setStatus(0);
+      response.setValue("ok");
     } else {
-      UIAScriptResponse resp = communication().waitForResponse();
-      try {
-        JSONObject json = resp.getResponse();
-        webDriverLikeResponse = new WebDriverLikeResponse(json);
-      } catch (Exception e) {
-        return new FailedWebDriverLikeResponse(getRequest().getSession(), e);
-      }
+      response = communication().waitForResponse().getResponse();
     }
-    return webDriverLikeResponse;
+    return response;
   }
 }

@@ -15,8 +15,8 @@ package org.uiautomation.ios.server.command.uiautomation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 
@@ -27,24 +27,16 @@ public class StopSession extends UIAScriptHandler {
     setJS("stop");
   }
 
-  public WebDriverLikeResponse handle() throws Exception {
+  public Response handle() throws Exception {
     super.handle();
     String opaqueKey = getRequest().getSession();
     getDriver().stop(opaqueKey);
 
-    JSONObject o = new JSONObject();
-    try {
-      o.put("sessionId", opaqueKey);
-      o.put("status", 0);
-      o.put("value", "");
-      WebDriverLikeResponse r = new WebDriverLikeResponse(o);
-      return r;
-    } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-      return null;
-    }
-
+    Response resp = new Response();
+    resp.setSessionId(opaqueKey);
+    resp.setStatus(0);
+    resp.setValue(new JSONObject());
+    return resp;
   }
 
   @Override

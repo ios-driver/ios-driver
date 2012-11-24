@@ -7,8 +7,8 @@ import org.json.JSONObject;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.UnsupportedCommandException;
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
@@ -23,7 +23,7 @@ public class SetFrameHandler extends BaseWebCommandHandler {
   // NoSuchWindow - If the currently selected window has been closed.
   // NoSuchFrame - If the frame specified by id cannot be found.
   @Override
-  public WebDriverLikeResponse handle() throws Exception {
+  public Response handle() throws Exception {
     Object p = getRequest().getPayload().get("id");
 
     if (JSONObject.NULL.equals(p)) {
@@ -47,7 +47,11 @@ public class SetFrameHandler extends BaseWebCommandHandler {
       getSession().getContext().getDOMContext().setCurrentFrame(iframe, document, window);
     }
 
-    return new WebDriverLikeResponse(getSession().getSessionId(), 0, new JSONObject());
+    Response res = new Response();
+    res.setSessionId(getSession().getSessionId());
+    res.setStatus(0);
+    res.setValue(new JSONObject());
+    return res;
   }
 
   private RemoteWebElement getIframe(Integer index) throws Exception {
@@ -63,16 +67,17 @@ public class SetFrameHandler extends BaseWebCommandHandler {
   private RemoteWebElement getIframe(String id) throws Exception {
     RemoteWebElement currentDocument = getSession().getWebInspector().getDocument();
 
-    String selector = "iframe[name='"+id+"'],iframe[id='"+id+"'],frame[name='"+id+"'],frame[id='"+id+"']";
+    String selector = "iframe[name='" + id + "'],iframe[id='" + id + "'],frame[name='" + id + "'],frame[id='" + id
+        + "']";
     try {
       RemoteWebElement frame = currentDocument.findElementByCSSSelector(selector);
       return frame;
-    }catch (NoSuchElementException e) {
-      throw new NoSuchFrameException(e.getMessage(),e);
+    } catch (NoSuchElementException e) {
+      throw new NoSuchFrameException(e.getMessage(), e);
     }
-   
+
     // string|number|null|WebElement JSON Object
-    
+
   }
 
   @Override

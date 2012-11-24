@@ -5,13 +5,13 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.remote.BeanToJsonConverter;
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.IOSApplication;
-import org.uiautomation.ios.server.command.BaseCommandHandler;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
 
 public class GetSessions extends BaseNativeCommandHandler {
@@ -21,7 +21,7 @@ public class GetSessions extends BaseNativeCommandHandler {
   }
 
   @Override
-  public WebDriverLikeResponse handle() throws Exception {
+  public Response handle() throws Exception {
     JSONArray res = new JSONArray();
 
     List<ServerSideSession> sessions = getDriver().getSessions();
@@ -35,7 +35,11 @@ public class GetSessions extends BaseNativeCommandHandler {
       session.put("capabilities", cap.getRawCapabilities());
       res.put(session);
     }
-    return new WebDriverLikeResponse(null, 0, res);
+    Response resp = new Response();
+    resp.setSessionId("dummy one");
+    resp.setStatus(0);
+    resp.setValue(res.toString());
+    return resp;
   }
   
   @Override

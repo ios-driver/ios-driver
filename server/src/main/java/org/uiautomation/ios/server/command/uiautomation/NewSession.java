@@ -15,42 +15,41 @@ package org.uiautomation.ios.server.command.uiautomation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.SessionNotCreatedException;
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.communication.WebDriverLikeResponse;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.server.command.BaseCommandHandler;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
 
 public class NewSession extends BaseNativeCommandHandler {
 
-  private final ServerSideSession session;
+  private ServerSideSession session;
 
   public NewSession(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
-    GetCapabilitiesCommandHandler.cachedResponse =null;
-    try {
-      JSONObject payload = request.getPayload();
-      IOSCapabilities capabilities =
-          new IOSCapabilities(payload.getJSONObject("desiredCapabilities"));
-      session = getDriver().createSession(capabilities);
-    } catch (Exception e) {
-      throw new IOSAutomationException(e);
-    }
+    
   }
 
-  public WebDriverLikeResponse handle() throws Exception {
+  public Response handle() throws Exception {
+    try {
+      GetCapabilitiesCommandHandler.cachedResponse = null;
+      JSONObject payload = getRequest().getPayload();
+      IOSCapabilities capabilities = new IOSCapabilities(payload.getJSONObject("desiredCapabilities"));
+      session = getDriver().createSession(capabilities);
+      session.start();
 
-    session.start();
 
-    JSONObject json = new JSONObject();
-    json.put("sessionId", session.getSessionId());
-    json.put("status", 0);
-    json.put("value", "");
-    WebDriverLikeResponse r = new WebDriverLikeResponse(json);
-    return r;
+      Response resp = new Response();
+      resp.setSessionId(session.getSessionId());
+      resp.setStatus(0);
+      resp.setValue("");
+      return resp;
+    } catch (Exception e) {
+      throw new SessionNotCreatedException(e.getMessage());
+    }
+
   }
 
   @Override

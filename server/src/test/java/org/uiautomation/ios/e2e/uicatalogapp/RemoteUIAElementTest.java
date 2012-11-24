@@ -182,7 +182,7 @@ public class RemoteUIAElementTest extends UICatalogTestsBase {
         if (v.contains(el.getName())) {
           visible = true;
         }
-        Assert.assertEquals(el.isVisible(), visible);
+        Assert.assertEquals(el.isDisplayed(), visible);
       }
 
     } finally {

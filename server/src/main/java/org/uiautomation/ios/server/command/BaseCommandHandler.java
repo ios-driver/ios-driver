@@ -19,10 +19,9 @@ import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
-import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
@@ -75,11 +74,11 @@ public abstract class BaseCommandHandler implements Handler {
   }
 
   @Override
-  public WebDriverLikeResponse handleAndRunDecorators() throws Exception {
+  public Response handleAndRunDecorators() throws Exception {
     for (PreHandleDecorator pre : preDecorators) {
       pre.decorate(request);
     }
-    WebDriverLikeResponse response = handle();
+    Response response = handle();
     for (PostHandleDecorator post : postDecorators) {
       post.decorate(response);
     }

@@ -14,6 +14,7 @@
 package org.uiautomation.ios.UIAModels;
 
 import java.io.File;
+import java.util.List;
 
 import org.json.JSONObject;
 import org.uiautomation.ios.IOSCapabilities;
@@ -25,7 +26,7 @@ import org.uiautomation.ios.exceptions.NoSuchElementException;
 
 public interface UIADriver extends DriverConfiguration{
 
-  public Session getSession();
+ 
 
   public UIATarget getLocalTarget();
 
@@ -36,15 +37,15 @@ public interface UIADriver extends DriverConfiguration{
 
   public void quit();
 
-  public void setTimeout(String type, int timeoutInSeconds);
+  //public void setTimeout(String type, int timeoutInSeconds);
 
-  public int getTimeout(String type);
+  //public int getTimeout(String type);
 
-  public UIAElement findElement(Criteria c) throws NoSuchElementException;
+  public <T extends UIAElement> T findElement(Criteria c) throws NoSuchElementException;
 
-  public UIAElementArray<UIAElement> findElements(Criteria c);
+  public List<UIAElement> findElements(Criteria c);
 
-  public void takeScreenshot(String path);
+  
 
   //public Set<String> getWindowHandles();
 

@@ -20,8 +20,9 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.ServerSideSession;
@@ -42,14 +43,11 @@ public class ServerStatus extends BaseNativeCommandHandler {
    * @see org.uiautomation.ios.server.command.Handler#handle()
    */
   @Override
-  public WebDriverLikeResponse handle() throws Exception {
+  public Response handle() throws Exception {
     JSONObject res = new JSONObject();
 
-    res.put(
-        "os",
-        new JSONObject().put("name", System.getProperty("os.name"))
-            .put("arch", System.getProperty("os.arch"))
-            .put("version", System.getProperty("os.version")));
+    res.put("os", new JSONObject().put("name", System.getProperty("os.name"))
+        .put("arch", System.getProperty("os.arch")).put("version", System.getProperty("os.version")));
 
     res.put("java", new JSONObject().put("version", System.getProperty("java.version")));
 
@@ -77,21 +75,23 @@ public class ServerStatus extends BaseNativeCommandHandler {
     res.put(
         "build",
         new JSONObject().put("version", BuildInfo.getAttribute("version"))
-            .put("time", BuildInfo.getAttribute("buildTimestamp"))
-            .put("revision", BuildInfo.getAttribute("sha")));
-
-
+            .put("time", BuildInfo.getAttribute("buildTimestamp")).put("revision", BuildInfo.getAttribute("sha")));
 
     List<ServerSideSession> sessions = getDriver().getSessions();
-    if (sessions.isEmpty()) {
-      return new WebDriverLikeResponse(null, 0, res);
+    Response resp = new Response();
+
+    resp.setStatus(0);
+    resp.setValue(res);
+    if (sessions.size() == 0) {
+      resp.setSessionId(null);
     } else if (sessions.size() == 1) {
-      return new WebDriverLikeResponse(sessions.get(0).getSessionId(), 0, res);
+      resp.setSessionId(sessions.get(0).getSessionId());
     } else {
-      throw new IOSAutomationException("NI multi sessions per server.");
+      throw new WebDriverException("NI multi sessions per server.");
     }
+    return resp;
   }
-  
+
   @Override
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();

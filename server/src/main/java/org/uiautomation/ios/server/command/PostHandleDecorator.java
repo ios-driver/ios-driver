@@ -13,7 +13,7 @@
  */
 package org.uiautomation.ios.server.command;
 
-import org.uiautomation.ios.communication.WebDriverLikeResponse;
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.server.IOSDriver;
 
 public abstract class PostHandleDecorator extends HandlerDecorator{
@@ -22,6 +22,6 @@ public abstract class PostHandleDecorator extends HandlerDecorator{
     super(driver);
   }
 
-  public abstract void decorate(WebDriverLikeResponse response);
+  public abstract void decorate(Response response);
 
 }

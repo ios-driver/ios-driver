@@ -13,11 +13,6 @@
  */
 package org.uiautomation.ios.client.uiamodels.impl;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import org.apache.commons.codec.binary.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.UIAModels.Orientation;
@@ -25,11 +20,9 @@ import org.uiautomation.ios.UIAModels.UIAAlert;
 import org.uiautomation.ios.UIAModels.UIARect;
 import org.uiautomation.ios.UIAModels.UIATarget;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
-import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.NoAlertOpenError;
 
-public class RemoteUIATarget extends RemoteObject implements UIATarget {
+public class RemoteUIATarget extends RemoteIOSObject implements UIATarget {
 
 
   public RemoteUIATarget(RemoteUIADriver driver, String id) {

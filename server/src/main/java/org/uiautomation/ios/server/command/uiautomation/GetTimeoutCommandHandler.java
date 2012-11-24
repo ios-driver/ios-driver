@@ -16,8 +16,8 @@ package org.uiautomation.ios.server.command.uiautomation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
@@ -46,7 +46,7 @@ public class GetTimeoutCommandHandler extends UIAScriptHandler {
     }
 
     @Override
-    public void decorate(WebDriverLikeResponse response) {
+    public void decorate(Response response) {
       try {
         Integer timeout = (Integer) response.getValue();
         float timeCorrection = TimeSpeeder.getInstance().getSecondDuration();

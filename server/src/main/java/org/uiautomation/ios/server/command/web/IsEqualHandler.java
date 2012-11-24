@@ -2,8 +2,8 @@ package org.uiautomation.ios.server.command.web;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
@@ -16,11 +16,15 @@ public class IsEqualHandler extends BaseWebCommandHandler {
   }
 
   @Override
-  public WebDriverLikeResponse handle() throws Exception {
+  public Response handle() throws Exception {
     int id = Integer.parseInt(getRequest().getVariableValue(":reference"));
     int other = Integer.parseInt(getRequest().getVariableValue(":other"));
     boolean equal = equal(id, other);
-    return new WebDriverLikeResponse(getRequest().getSession(), 0, equal);
+    Response res = new Response();
+    res.setSessionId(getSession().getSessionId());
+    res.setStatus(0);
+    res.setValue(equal);
+    return res;
   }
 
   private boolean equal(int id, int other) throws Exception {

@@ -23,7 +23,7 @@ import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 
-public class RemoteUIAElementArray<T extends UIAElement> extends RemoteObject
+public class RemoteUIAElementArray<T extends UIAElement> extends RemoteIOSObject
     implements
       UIAElementArray<T> {
 

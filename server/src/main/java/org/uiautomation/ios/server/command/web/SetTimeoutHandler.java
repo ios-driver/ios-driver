@@ -3,10 +3,10 @@ package org.uiautomation.ios.server.command.web;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.UnsupportedCommandException;
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 
@@ -22,7 +22,7 @@ public class SetTimeoutHandler extends BaseWebCommandHandler {
    * wait timeout and "page load" for setting a page load timeout.
    */
   @Override
-  public WebDriverLikeResponse handle() throws Exception {
+  public Response handle() throws Exception {
     JSONObject payload = getRequest().getPayload();
     String type = payload.optString("type");
     if ("page load".equals(type)){
@@ -34,7 +34,11 @@ public class SetTimeoutHandler extends BaseWebCommandHandler {
       throw new UnsupportedCommandException("timeout "+payload+" NI");
     }
     System.out.println(payload);
-    return new WebDriverLikeResponse(getRequest().getSession(), 0, new JSONObject());
+    Response res = new Response();
+    res.setSessionId(getSession().getSessionId());
+    res.setStatus(0);
+    res.setValue(new JSONObject());
+    return res;
   }
 
   @Override

@@ -2,8 +2,8 @@ package org.uiautomation.ios.server.command.web;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 
@@ -17,7 +17,7 @@ public class ForwardHandler extends BaseWebCommandHandler {
   }
 
   @Override
-  public WebDriverLikeResponse handle() throws Exception {
+  public Response handle() throws Exception {
     boolean useNativeEvents = getConfiguration("nativeEvents", nativeEvents);
     getSession().getContext().getDOMContext().reset();
     if (useNativeEvents) {
@@ -27,8 +27,12 @@ public class ForwardHandler extends BaseWebCommandHandler {
     }
 
     // no page loading event for forward ?
-    //getSession().getWebInspector().waitForPageToLoad();
-    return new WebDriverLikeResponse(getSession().getSessionId(), 0, new JSONObject());
+    // getSession().getWebInspector().waitForPageToLoad();
+    Response res = new Response();
+    res.setSessionId(getSession().getSessionId());
+    res.setStatus(0);
+    res.setValue(new JSONObject());
+    return res;
   }
 
   @Override

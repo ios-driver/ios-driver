@@ -15,13 +15,12 @@ package org.uiautomation.ios.server.command.uiautomation;
 
 import java.util.List;
 
-import org.apache.xalan.xsltc.compiler.sym;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.uiautomation.ios.communication.FailedWebDriverLikeResponse;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.Localizable;
@@ -31,7 +30,7 @@ import org.uiautomation.ios.server.command.UIAScriptHandler;
 public class GetCapabilitiesCommandHandler extends UIAScriptHandler {
 
   // TODO freynaud
-  public static WebDriverLikeResponse cachedResponse = null;
+  public static Response cachedResponse = null;
 
   private static final String capabilities = "var json = UIAutomation.getCapabilities();"
       + "UIAutomation.createJSONResponse(':sessionId',0,json)";
@@ -43,7 +42,7 @@ public class GetCapabilitiesCommandHandler extends UIAScriptHandler {
   }
 
   @Override
-  public WebDriverLikeResponse handle() throws Exception {
+  public Response handle() throws Exception {
     if (cachedResponse == null) {
       cachedResponse = super.handle();
     }
@@ -58,7 +57,7 @@ public class GetCapabilitiesCommandHandler extends UIAScriptHandler {
     }
 
     @Override
-    public void decorate(WebDriverLikeResponse response) {
+    public void decorate(Response response) {
       ServerSideSession session = getDriver().getSession(response.getSessionId());
       try {
         JSONObject o = new JSONObject((String) response.getValue());
@@ -69,14 +68,15 @@ public class GetCapabilitiesCommandHandler extends UIAScriptHandler {
           array.put(l.getName());
         }
         o.put("supportedLocales", array);
+        o.put("takesScreenshot", true);
         response.setValue(o);
       } catch (JSONException e) {
-        response = new FailedWebDriverLikeResponse(session.getSessionId(), e);
+        throw new WebDriverException(e.getMessage(), e);
       }
 
     }
   }
-  
+
   @Override
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();

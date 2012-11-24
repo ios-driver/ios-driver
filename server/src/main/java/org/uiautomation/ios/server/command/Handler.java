@@ -14,15 +14,15 @@
 
 package org.uiautomation.ios.server.command;
 
-import org.uiautomation.ios.communication.WebDriverLikeResponse;
+import org.openqa.selenium.remote.Response;
 
 public interface Handler {
 
-  public WebDriverLikeResponse handle() throws Exception;
+  public Response handle() throws Exception;
   
   public void addDecorator(PreHandleDecorator decorator);
   public void addDecorator(PostHandleDecorator decorator);
   
-  public WebDriverLikeResponse handleAndRunDecorators() throws Exception;
+  public Response handleAndRunDecorators() throws Exception;
   
 }

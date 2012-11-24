@@ -18,8 +18,8 @@ import java.io.File;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.application.IOSApplication;
@@ -75,7 +75,7 @@ public class LogElementTree extends UIAScriptHandler {
     }
 
     @Override
-    public void decorate(WebDriverLikeResponse response) {
+    public void decorate(Response response) {
       JSONObject value = (JSONObject) response.getValue();
       try {
         JSONObject rootNode = value.getJSONObject("tree");
@@ -109,7 +109,7 @@ public class LogElementTree extends UIAScriptHandler {
     }
 
     @Override
-    public void decorate(WebDriverLikeResponse response) {
+    public void decorate(Response response) {
       JSONObject value = (JSONObject) response.getValue();
       boolean screenshot;
       try {

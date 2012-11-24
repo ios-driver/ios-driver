@@ -41,6 +41,7 @@ public enum WebDriverLikeCommand {
   GET_CONFIGURATION("GET","/session/:sessionId/configure/command/:command",Object.class),
   SET_TIMEOUT("POST", "/session/:sessionId/timeouts",Void.class),
   GET_TIMEOUT("GET", "/session/:sessionId/timeouts",Integer.class),
+  IMPLICIT_WAIT("POST", "/session/:sessionId/timeouts/implicit_wait",Void.class),
   
   WINDOW_HANDLES("GET","/session/:sessionId/window_handles",Set.class),
   WINDOW("POST" ,"/session/:sessionId/window",String.class),

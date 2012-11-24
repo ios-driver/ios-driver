@@ -16,8 +16,8 @@ package org.uiautomation.ios.server.command.uiautomation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.PreHandleDecorator;
@@ -26,15 +26,19 @@ import org.uiautomation.ios.server.utils.hack.TimeSpeeder;
 
 public class SetTimeoutCommandHandler extends UIAScriptHandler {
 
-  private static final String setTimeout = "UIAutomation.setTimeout(':type',:timeout);"
+  protected static final String setTimeout = "UIAutomation.setTimeout(':type',:timeout);"
       + "UIAutomation.createJSONResponse(':sessionId',0,'')";
 
   public SetTimeoutCommandHandler(IOSDriver driver, WebDriverLikeRequest request) throws Exception {
     super(driver, request);
-    addDecorator(new CorrectTimeout(driver));
+    addDecorator(new CorrectTimeout(driver,this));
+  }
+  
+  protected String getVariableToCorrect(){
+    return "timeout";
   }
 
-  private String getScript(IOSDriver driver, WebDriverLikeRequest r) throws Exception {
+  protected String getScript(IOSDriver driver, WebDriverLikeRequest r) throws Exception {  
     int timeout = r.getPayload().getInt("timeout");
     String type = r.getPayload().getString("type");
     String s = setTimeout.replace(":timeout", String.format("%d", timeout));
@@ -43,24 +47,27 @@ public class SetTimeoutCommandHandler extends UIAScriptHandler {
   }
 
   @Override
-  public WebDriverLikeResponse handle() throws Exception {
+  public Response handle() throws Exception {
     setJS(getScript(getDriver(), getRequest()));
     return super.handle();
   }
 
   class CorrectTimeout extends PreHandleDecorator {
 
-    public CorrectTimeout(IOSDriver driver) {
+    private SetTimeoutCommandHandler handler;
+    
+    public CorrectTimeout(IOSDriver driver,SetTimeoutCommandHandler handler) {
       super(driver);
+      this.handler = handler;
     }
 
     @Override
     public void decorate(WebDriverLikeRequest request) {
       try {
-        int timeout = request.getPayload().getInt("timeout");
+        int timeout = request.getPayload().getInt(handler.getVariableToCorrect());
         float timeCorrection = TimeSpeeder.getInstance().getSecondDuration();
         float correctTimeout = timeout * timeCorrection;
-        request.getPayload().put("timeout", (int) correctTimeout);
+        request.getPayload().put(handler.getVariableToCorrect(), (int) correctTimeout);
       } catch (Exception e) {
         throw new IOSAutomationException("error correcting the timeout to take the timespeeder into account."
             + e.getMessage(), e);

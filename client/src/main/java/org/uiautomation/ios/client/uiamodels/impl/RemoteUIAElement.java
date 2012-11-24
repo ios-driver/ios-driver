@@ -17,6 +17,7 @@ import java.io.File;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIAElementArray;
 import org.uiautomation.ios.UIAModels.UIAPoint;
@@ -27,26 +28,22 @@ import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.communication.Path;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.exceptions.NoSuchElementException;
-import org.uiautomation.ios.exceptions.StaleReferenceException;
 
 /**
- * Main object for all the UIAutomation stuff. Implement part of the Apple API. Some methods are not
- * implemented as the findElement(s) are covering multiple cases.
+ * Main object for all the UIAutomation stuff. Implement part of the Apple API.
+ * Some methods are not implemented as the findElement(s) are covering multiple
+ * cases.
  * 
  * {@link <a href="http://developer.apple.com/library/ios/#documentation/ToolsLanguages/Reference/UIAElementClassReference/UIAElement/UIAElement.html"> Apple doc</a>
  * for UIAElement }
  */
-public class RemoteUIAElement extends RemoteObject implements UIAElement {
+public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
 
   public RemoteUIAElement(RemoteUIADriver driver, String reference) {
     super(driver, reference);
   }
-  
-  
-
 
   @Override
   public String getLabel() {
@@ -63,14 +60,11 @@ public class RemoteUIAElement extends RemoteObject implements UIAElement {
     return getAttribute("value");
   }
 
-
   @Override
   public <T> T findElement(Class<T> type, Criteria c) throws NoSuchElementException {
     Criteria newOne = new AndCriteria(new TypeCriteria(type), c);
     return (T) findElement(newOne);
   }
-
-
 
   @Override
   public UIAElement findElement(Criteria c) throws NoSuchElementException {
@@ -95,13 +89,6 @@ public class RemoteUIAElement extends RemoteObject implements UIAElement {
     } catch (JSONException e) {
       throw new IOSAutomationException(e);
     }
-  }
-
-
-  @Override
-  public UIAElementArray<UIAElement> getAncestry() {
-    // TODO Auto-generated method stub
-    return null;
   }
 
   @Override
@@ -142,13 +129,12 @@ public class RemoteUIAElement extends RemoteObject implements UIAElement {
   @Override
   public JSONObject logElementTree(File screenshot, boolean translation) throws Exception {
     WebDriverLikeCommand command = WebDriverLikeCommand.TREE;
-    Path p = new Path(command).withSession(getSessionId()).withReference(getReference());
+    Path p = new Path(command).withSession(getDriver().getSessionId()).withReference(getReference());
     return RemoteUIAElement.logElementTree(screenshot, translation, p, command, getDriver());
   }
 
-
-  static JSONObject logElementTree(File screenshot, boolean translation, Path path,
-      WebDriverLikeCommand command, RemoteUIADriver driver) {
+  static JSONObject logElementTree(File screenshot, boolean translation, Path path, WebDriverLikeCommand command,
+      RemoteUIADriver driver) {
     try {
 
       JSONObject payload = new JSONObject();
@@ -160,7 +146,7 @@ public class RemoteUIAElement extends RemoteObject implements UIAElement {
       payload.put("translation", translation);
 
       WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), path, payload);
-      WebDriverLikeResponse response = driver.execute(request);
+      Response response = driver.execute(request);
       if (response.getValue() == JSONObject.NULL) {
         return null;
       } else {
@@ -187,7 +173,7 @@ public class RemoteUIAElement extends RemoteObject implements UIAElement {
 
   // TODO freynaud fix that server side.
   @Override
-  public boolean isVisible() {
+  public boolean isDisplayed() {
     Integer i = getObject(WebDriverLikeCommand.DISPLAYED);
     if (i == 1) {
       return true;
@@ -197,31 +183,8 @@ public class RemoteUIAElement extends RemoteObject implements UIAElement {
   }
 
   @Override
-  public boolean isValid() {
-    try {
-      Boolean stale = getObject(WebDriverLikeCommand.IS_STALE);
-      return !stale;
-    } catch (StaleReferenceException e) {
-      return false;
-    }
-
-  }
-
-  @Override
-  public UIAPoint getHitPoint() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
   public UIARect getRect() {
     return getUIARect(WebDriverLikeCommand.RECT);
-  }
-
-  @Override
-  public UIAElement getParent() {
-    // TODO Auto-generated method stub
-    return null;
   }
 
   @Override
@@ -234,7 +197,6 @@ public class RemoteUIAElement extends RemoteObject implements UIAElement {
     builder.append(",label:" + getLabel());
     return builder.toString();
   }
-
 
   @Override
   public void flickInsideWithOptions(int touchCount, UIAPoint startOffset, UIAPoint endOffset) {
@@ -249,7 +211,5 @@ public class RemoteUIAElement extends RemoteObject implements UIAElement {
 
     }
   }
-
-
 
 }

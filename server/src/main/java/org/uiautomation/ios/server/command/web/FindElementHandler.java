@@ -2,8 +2,9 @@ package org.uiautomation.ios.server.command.web;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
@@ -16,7 +17,7 @@ public class FindElementHandler extends BaseWebCommandHandler {
   }
 
   @Override
-  public WebDriverLikeResponse handle() throws Exception {
+  public Response handle() throws Exception {
     JSONObject payload = getRequest().getPayload();
 
     String type = payload.getString("using");
@@ -46,10 +47,14 @@ public class FindElementHandler extends BaseWebCommandHandler {
 
     JSONObject res = new JSONObject();
     if (rwe == null) {
-      return new WebDriverLikeResponse(getRequest().getSession(), 7, "No element found for " + type + "=" + value);
+      throw new NoSuchElementException("No element found for " + type + "=" + value);
     } else {
       res.put("ELEMENT", rwe.getNodeId().getId());
-      return new WebDriverLikeResponse(getRequest().getSession(), 0, res);
+      Response resp = new Response();
+      resp.setSessionId(getSession().getSessionId());
+      resp.setStatus(0);
+      resp.setValue(res);
+      return resp;
     }
   }
 

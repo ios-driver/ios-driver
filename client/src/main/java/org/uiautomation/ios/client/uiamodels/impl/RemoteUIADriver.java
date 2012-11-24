@@ -16,9 +16,10 @@ package org.uiautomation.ios.client.uiamodels.impl;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,28 +33,28 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DriverCommand;
-import org.openqa.selenium.remote.HttpCommandExecutor;
+import org.openqa.selenium.remote.ErrorHandler;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.Response;
 import org.openqa.selenium.remote.internal.WebElementToJsonConverter;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.UIAModels.UIADriver;
 import org.uiautomation.ios.UIAModels.UIAElement;
-import org.uiautomation.ios.UIAModels.UIAElementArray;
 import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
 import org.uiautomation.ios.UIAModels.configuration.DriverConfiguration;
-import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.client.uiamodels.impl.configuration.RemoteDriverConfiguration;
-import org.uiautomation.ios.communication.FailedWebDriverLikeResponse;
 import org.uiautomation.ios.communication.Helper;
 import org.uiautomation.ios.communication.HttpClientFactory;
 import org.uiautomation.ios.communication.Path;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.exceptions.NoSuchElementException;
 
@@ -61,14 +62,15 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
+public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, TakesScreenshot {
 
   private final String remoteURL;
   private final Map<String, Object> requestedCapabilities;
-  private final Session session;
+  // private Session session;
   private String host;
   private int port;
   private final DriverConfiguration configuration;
+  private ErrorHandler errorHandler = new ErrorHandler();
 
   /**
    * create the remote driver, starting the remote session with the requested
@@ -78,9 +80,11 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
    * @param remoteURL
    * @param caps
    */
-  public RemoteUIADriver(String remoteURL, IOSCapabilities requestedCapabilities) {
-    this(remoteURL, requestedCapabilities.getRawCapabilities());
-  }
+  /*
+   * public RemoteUIADriver(String remoteURL, IOSCapabilities
+   * requestedCapabilities) { this(remoteURL,
+   * requestedCapabilities.getRawCapabilities()); }
+   */
 
   /**
    * create the remote driver, starting the remote session with the requested
@@ -89,54 +93,43 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
    * @param remoteURL
    * @param requestedCapabilities
    */
-  public RemoteUIADriver(String remoteURL, Map<String, Object> requestedCapabilities) {
-    this.remoteURL = remoteURL;
-    this.requestedCapabilities = requestedCapabilities;
+  /*
+   * public RemoteUIADriver(String remoteURL, Map<String, Object>
+   * requestedCapabilities) { this.remoteURL = remoteURL;
+   * this.requestedCapabilities = requestedCapabilities;
+   * 
+   * try { URL url = new URL(remoteURL); port = url.getPort(); host =
+   * url.getHost(); start();
+   * 
+   * setSessionId(getSessionId()); setCommandExecutor(new
+   * HttpCommandExecutor(url)); configuration = new
+   * RemoteDriverConfiguration(this);
+   * 
+   * } catch (MalformedURLException e) { throw new
+   * IOSAutomationException("invalid URL " + remoteURL, e); } catch
+   * (IOSAutomationException e) { throw e; } catch (Exception e) { throw new
+   * IOSAutomationException(e); } }
+   */
 
-    try {
-      URL url = new URL(remoteURL);
-      port = url.getPort();
-      host = url.getHost();
-      session = start();
-
-      setSessionId(session.getSessionId());
-      setCommandExecutor(new HttpCommandExecutor(url));
-      configuration = new RemoteDriverConfiguration(this);
-
-    } catch (MalformedURLException e) {
-      throw new IOSAutomationException("invalid URL " + remoteURL, e);
-    } catch (IOSAutomationException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new IOSAutomationException(e);
-    }
-  }
-
-  @Override
-  protected void startClient() {
-  }
-
-  @Override
-  protected void startSession(Capabilities desiredCapabilities, Capabilities requiredCapabilities) {
-
-  }
+  /*
+   * @Override protected void startClient() { }
+   * 
+   * @Override protected void startSession(Capabilities desiredCapabilities,
+   * Capabilities requiredCapabilities) { try { session = start();
+   * setSessionId(session.getSessionId());
+   * 
+   * 
+   * } catch (Exception e) { e.printStackTrace(); } }
+   */
 
   public RemoteUIADriver(URL url, IOSCapabilities cap) {
     super(url, cap);
     this.remoteURL = url.toExternalForm();
     this.requestedCapabilities = cap.getRawCapabilities();
     try {
-
       port = url.getPort();
       host = url.getHost();
-      session = start();
-
-      setSessionId(session.getSessionId());
-      setCommandExecutor(new HttpCommandExecutor(url));
       configuration = new RemoteDriverConfiguration(this);
-
-    } catch (MalformedURLException e) {
-      throw new IOSAutomationException("invalid URL " + remoteURL, e);
     } catch (IOSAutomationException e) {
       throw e;
     } catch (Exception e) {
@@ -152,11 +145,11 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
    * @param session
    */
   public RemoteUIADriver(URL remoteURL, Session session) {
+    // TODO freynaud
     this.remoteURL = remoteURL.toExternalForm();
     URL url = remoteURL;
     port = url.getPort();
     host = url.getHost();
-    this.session = session;
     // TODO freynaud how safe is that ?
     this.requestedCapabilities = null;
     configuration = new RemoteDriverConfiguration(this);
@@ -169,14 +162,38 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
    * @return
    * @throws Exception
    */
-  private Session start() throws Exception {
-    JSONObject payload = new JSONObject();
-    payload.put("desiredCapabilities", requestedCapabilities);
-    WebDriverLikeRequest request = new WebDriverLikeRequest("POST", "/session", payload);
-    WebDriverLikeResponse response = execute(request);
-    String sessionId = response.getSessionId();
-    Session session = new Session(sessionId);
-    return session;
+  /*
+   * private SessionId start() throws Exception { JSONObject payload = new
+   * JSONObject(); payload.put("desiredCapabilities", requestedCapabilities);
+   * WebDriverLikeRequest request = new WebDriverLikeRequest("POST", "/session",
+   * payload); WebDriverLikeResponse response = execute(request); String
+   * sessionId = response.getSessionId(); SessionId session = new
+   * SessionId(sessionId); return session; }
+   */
+
+  private IOSCapabilities loadCapabilities() {
+    WebDriverLikeCommand command = WebDriverLikeCommand.GET_SESSION;
+    Path p = new Path(command).withSession(getSessionId());
+    WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, new JSONObject());
+    Response response = execute(request);
+    response = errorHandler.throwIfResponseFailed(response, -1);
+
+    if (response.getValue() == JSONObject.NULL) {
+      return null;
+    } else {
+      Object v = response.getValue();
+      if (v instanceof String) {
+        try {
+          JSONObject o = new JSONObject((String) v);
+          IOSCapabilities res = new IOSCapabilities(o);
+          return res;
+        } catch (JSONException e) {
+          throw new IOSAutomationException(e);
+        }
+      } else {
+        throw new IOSAutomationException("can't guess type, got " + v.getClass());
+      }
+    }
   }
 
   /**
@@ -187,50 +204,28 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
    * @throws Exception
    */
   // TODO freynaud extract all the json parsing somwhere else.
-  public WebDriverLikeResponse execute(WebDriverLikeRequest request) throws IOSAutomationException {
-    int returnCode = 13;
-    JSONObject o = null;
-
+  public Response execute(WebDriverLikeRequest request) throws IOSAutomationException {
+    Response response = null;
+    long total = 0;
     try {
       HttpClient client = HttpClientFactory.getClient();
       String url = remoteURL + request.getPath();
       BasicHttpEntityEnclosingRequest r = new BasicHttpEntityEnclosingRequest(request.getMethod(), url);
       if (request.hasPayload()) {
-        // String normalizedOriginalText =
-        // Normalizer.normalize(request.getPayload().toString(),
-        // Form.NFC);
         r.setEntity(new StringEntity(request.getPayload().toString(), "UTF-8"));
       }
 
       HttpHost h = new HttpHost(host, port);
       long start = System.currentTimeMillis();
-      HttpResponse response = client.execute(h, r);
-      long total = System.currentTimeMillis() - start;
-      // System.out.println(total + " ms \tfor " + request.getGenericCommand());
+      HttpResponse res = client.execute(h, r);
+      total = System.currentTimeMillis() - start;
 
-      o = Helper.extractObject(response);
-      returnCode = o.getInt("status");
+      response = Helper.exctractResponse(res);
     } catch (Exception e) {
-      throw new IOSAutomationException(e);
+      throw new WebDriverException(e);
     }
 
-    if (returnCode == 0) {
-      return new WebDriverLikeResponse(o);
-    } else {
-      JSONObject value;
-      Throwable t = null;
-      try {
-        value = o.getJSONObject("value");
-      } catch (JSONException e) {
-        throw new IOSAutomationException(e);
-      }
-      t = FailedWebDriverLikeResponse.createThrowable(value);
-      if (t instanceof IOSAutomationException) {
-        throw (IOSAutomationException) t;
-      } else {
-        throw new IOSAutomationException("The server threw an unexpected exception", t);
-      }
-    }
+    return errorHandler.throwIfResponseFailed(response, total);
   }
 
   @Override
@@ -251,160 +246,151 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
   @Override
   public JSONObject logElementTree(File screenshot, boolean translation) throws IOSAutomationException {
     WebDriverLikeCommand command = WebDriverLikeCommand.TREE_ROOT;
-    Path p = new Path(command).withSession(session.getSessionId());
+    Path p = new Path(command).withSession(getSessionId());
     return RemoteUIAElement.logElementTree(screenshot, translation, p, command, this);
   }
 
-  @Override
-  public Session getSession() {
-    return session;
-  }
-
-  @Override
-  public void quit() {
-    Path p = new Path(WebDriverLikeCommand.DELETE_SESSION).withSession(session.getSessionId());
-    WebDriverLikeRequest request = new WebDriverLikeRequest("DELETE", p);
-    execute(request);
-
-  }
-
-  private IOSCapabilities cached;
+  /*
+   * @Override public void quit() { Path p = new
+   * Path(WebDriverLikeCommand.DELETE_SESSION).withSession(getSessionId());
+   * WebDriverLikeRequest request = new WebDriverLikeRequest("DELETE", p);
+   * execute(request);
+   * 
+   * }
+   */
 
   @Override
   public IOSCapabilities getCapabilities() {
-    if (cached == null) {
-      WebDriverLikeCommand command = WebDriverLikeCommand.GET_SESSION;
-      Path p = new Path(command).withSession(session.getSessionId());
-      WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, new JSONObject());
-      WebDriverLikeResponse response;
+    Capabilities cap = super.getCapabilities();
+    IOSCapabilities ioscap = new IOSCapabilities(cap.asMap());
+    return ioscap;
+  }
+
+  /*
+   * @Override public void setTimeout(String type, int timeoutInSeconds) {
+   * JSONObject to = new JSONObject(); try { to.put("timeout",
+   * timeoutInSeconds); to.put("type", type); WebDriverLikeCommand command =
+   * WebDriverLikeCommand.SET_TIMEOUT; Path p = new
+   * Path(command).withSession(getSessionId()); WebDriverLikeRequest request =
+   * new WebDriverLikeRequest(command.method(), p, to); execute(request); }
+   * catch (JSONException e) { e.printStackTrace(); } }
+   */
+
+  /*
+   * @Override public int getTimeout(String type) {
+   * 
+   * try { JSONObject payload = new JSONObject(); payload.put("type", type);
+   * WebDriverLikeCommand command = WebDriverLikeCommand.GET_TIMEOUT; Path p =
+   * new Path(command).withSession(getSessionId()); WebDriverLikeRequest request
+   * = new WebDriverLikeRequest(command.method(), p, payload);
+   * WebDriverLikeResponse response = execute(request); return (Integer)
+   * response.getValue(); } catch (JSONException e) { throw new
+   * IOSAutomationException("JSON error", e); }
+   * 
+   * }
+   */
+
+  @Override
+  protected WebElement findElement(String by, String using) {
+    if (using == null) {
+      throw new IllegalArgumentException("Cannot find elements when the selector is null.");
+    }
+
+    try {
+      JSONObject payload = new JSONObject();
+      payload.put("using", by);
+      payload.put("value", using);
+      UIAElement el = (UIAElement) getRemoteObject(WebDriverLikeCommand.ELEMENT_ROOT, payload);
+      setFoundBy(this, el, by, using);
+      return el;
+    } catch (Exception e) {
+      return null;
+    }
+  }
+
+  @Override
+  protected List<WebElement> findElements(String by, String using) {
+    if (using == null) {
+      throw new IllegalArgumentException("Cannot find elements when the selector is null.");
+    }
+    try {
+      JSONObject payload = new JSONObject();
+      payload.put("using", by);
+      payload.put("value", using);
+      List<UIAElement> all = (List<UIAElement>) getRemoteUIAElement(WebDriverLikeCommand.ELEMENTS_ROOT, payload);
+      List<WebElement> allElements = new ArrayList<WebElement>();
+      for (WebElement element : all) {
+        allElements.add(element);
+        setFoundBy(this, element, by, using);
+      }
+      return allElements;
+    } catch (Exception e) {
+      return null;
+    }
+
+  }
+
+  @Override
+  public <T extends UIAElement> T findElement(Criteria c) throws NoSuchElementException {
+    try {
+      JSONObject payload = new JSONObject();
+      payload.put("depth", -1);
+      payload.put("criteria", c.getJSONRepresentation());
+      return (T) getRemoteObject(WebDriverLikeCommand.ELEMENT_ROOT, payload);
+    } catch (JSONException e) {
+      throw new IOSAutomationException(e);
+    }
+  }
+
+  @Override
+  public List<UIAElement> findElements(Criteria c) {
+    try {
+      JSONObject payload = new JSONObject();
+      payload.put("depth", -1);
+      payload.put("criteria", c.getJSONRepresentation());
+      return (List<UIAElement>) getRemoteObject(WebDriverLikeCommand.ELEMENTS_ROOT, payload);
+    } catch (JSONException e) {
+      throw new IOSAutomationException(e);
+    }
+  }
+
+  public RemoteIOSObject getRemoteObject(WebDriverLikeCommand command, JSONObject payload) {
+    Path p = new Path(command).withSession(getSessionId());
+    WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, payload);
+    Response response = execute(request);
+    Map<String, Object> uiaObject = ((Map<String, Object>) response.getValue());
+    try {
+      return RemoteIOSObject.createObject(this, uiaObject, command.returnType());
+    } catch (Exception e) {
+      throw new WebDriverException(e.getMessage(), e);
+    }
+  }
+
+  public List<UIAElement> getRemoteUIAElement(WebDriverLikeCommand command, JSONObject payload) {
+    Path p = new Path(command).withSession(getSessionId());
+    WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, payload);
+    Response response = execute(request);
+    List<Map<String, Object>> objects = (List<Map<String, Object>>) response.getValue();
+    List<UIAElement> res = new ArrayList<UIAElement>();
+    for (Map<String, Object> ro : objects) {
       try {
-        response = execute(request);
-      } catch (IOSAutomationException e) {
-        throw e;
+        res.add((UIAElement) RemoteIOSObject.createObject(this, ro, command.returnType()));
       } catch (Exception e) {
-        throw new IOSAutomationException(e);
+        // TODO Auto-generated catch block
+        e.printStackTrace();
       }
-      if (response.getValue() == JSONObject.NULL) {
-        return null;
-      } else {
-        Object v = response.getValue();
-        if (v instanceof String) {
-          try {
-            JSONObject o = new JSONObject((String) v);
-            IOSCapabilities res = new IOSCapabilities(o);
-            // cached = res;
-            return res;
-          } catch (JSONException e) {
-            throw new IOSAutomationException(e);
-          }
-        } else {
-          throw new IOSAutomationException("can't guess type, got " + v.getClass());
-        }
-      }
-    } else {
-      return cached;
     }
-
-  }
-
-  @Override
-  public void setTimeout(String type, int timeoutInSeconds) {
-    JSONObject to = new JSONObject();
-    try {
-      to.put("timeout", timeoutInSeconds);
-      to.put("type", type);
-      WebDriverLikeCommand command = WebDriverLikeCommand.SET_TIMEOUT;
-      Path p = new Path(command).withSession(session.getSessionId());
-      WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, to);
-      execute(request);
-    } catch (JSONException e) {
-      e.printStackTrace();
-    }
-  }
-
-  @Override
-  public int getTimeout(String type) {
-
-    try {
-      JSONObject payload = new JSONObject();
-      payload.put("type", type);
-      WebDriverLikeCommand command = WebDriverLikeCommand.GET_TIMEOUT;
-      Path p = new Path(command).withSession(session.getSessionId());
-      WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, payload);
-      WebDriverLikeResponse response = execute(request);
-      return (Integer) response.getValue();
-    } catch (JSONException e) {
-      throw new IOSAutomationException("JSON error", e);
-    }
-
-  }
-
-  @Override
-  public UIAElement findElement(Criteria c) throws NoSuchElementException {
-    try {
-      JSONObject payload = new JSONObject();
-      payload.put("depth", -1);
-      payload.put("criteria", c.getJSONRepresentation());
-      return (UIAElement) getRemoteObject(WebDriverLikeCommand.ELEMENT_ROOT, payload);
-    } catch (JSONException e) {
-      throw new IOSAutomationException(e);
-    }
-  }
-
-  @Override
-  public UIAElementArray<UIAElement> findElements(Criteria c) {
-    try {
-      JSONObject payload = new JSONObject();
-      payload.put("depth", -1);
-      payload.put("criteria", c.getJSONRepresentation());
-      return (UIAElementArray<UIAElement>) getRemoteObject(WebDriverLikeCommand.ELEMENTS_ROOT, payload);
-    } catch (JSONException e) {
-      throw new IOSAutomationException(e);
-    }
-  }
-
-  public RemoteObject getRemoteObject(WebDriverLikeCommand command, JSONObject payload) {
-    try {
-      Path p = new Path(command).withSession(getSession().getSessionId());
-
-      WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, payload);
-      WebDriverLikeResponse response = execute(request);
-      JSONObject uiaObject = ((JSONObject) response.getValue());
-
-      return RemoteObject.createObject(this, uiaObject, command.returnType());
-    } catch (IOSAutomationException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new IOSAutomationException("bug", e);
-    }
-  }
-
-  @Override
-  public void takeScreenshot(String path) {
-    try {
-      // TODO freynaud use getObject ?
-      JSONObject res = getJSONResult(WebDriverLikeCommand.SCREENSHOT);
-      String content = res.getString("64encoded");
-      createFileFrom64EncodedString(new File(path), content);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    return res;
   }
 
   private JSONObject getJSONResult(WebDriverLikeCommand command) {
 
     String genericPath = command.path();
-    String path = genericPath.replace(":sessionId", session.getSessionId());
+    String path = genericPath.replace(":sessionId", getSessionId().toString());
     WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), path, new JSONObject());
-    WebDriverLikeResponse response;
-    try {
-      response = execute(request);
-      return ((JSONObject) response.getValue());
-    } catch (Exception e1) {
-      // TODO Auto-generated catch block
-      e1.printStackTrace();
-      return null;
-    }
+    Response response = execute(request);
+    return ((JSONObject) response.getValue());
+
   }
 
   public static void createFileFrom64EncodedString(File f, String encoded64) throws IOException {
@@ -420,10 +406,10 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
     try {
       JSONObject payload = new JSONObject();
       WebDriverLikeCommand command = WebDriverLikeCommand.WINDOW_HANDLES;
-      Path p = new Path(command).withSession(getSession().getSessionId());
+      Path p = new Path(command).withSession(getSessionId());
 
       WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, payload);
-      WebDriverLikeResponse response = execute(request);
+      Response response = execute(request);
       JSONArray array = ((JSONArray) response.getValue());
 
       Set<String> handles = new HashSet<String>();
@@ -456,4 +442,13 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver {
     return configuration.configure(command);
 
   }
+
+  @Override
+  public <X> X getScreenshotAs(OutputType<X> target) throws WebDriverException {
+    // Get the screenshot as base64.
+    String base64 = execute(DriverCommand.SCREENSHOT).getValue().toString();
+    // ... and convert it.
+    return target.convertFromBase64Png(base64);
+  }
+
 }

@@ -2,8 +2,8 @@ package org.uiautomation.ios.server.command;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.communication.WebDriverLikeResponse;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSDriver;
 
@@ -14,7 +14,7 @@ public class NotImplementedNativeHandler extends BaseNativeCommandHandler {
   }
 
   @Override
-  public WebDriverLikeResponse handle() throws Exception {
+  public Response handle() throws Exception {
     throw new IOSAutomationException("not implemented");
   }
 

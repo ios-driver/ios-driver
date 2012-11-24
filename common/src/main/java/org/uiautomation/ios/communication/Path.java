@@ -17,6 +17,8 @@ import java.security.InvalidParameterException;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.openqa.selenium.remote.SessionId;
+
 public class Path {
 
   // for methods that are called without a reference, use 0.
@@ -40,8 +42,8 @@ public class Path {
     }
   }
 
-  public Path withSession(String sessionId) {
-    validateAndReplace(SESSION_ID, sessionId);
+  public Path withSession(SessionId sessionId) {
+    validateAndReplace(SESSION_ID, sessionId.toString());
     return this;
   }
 
