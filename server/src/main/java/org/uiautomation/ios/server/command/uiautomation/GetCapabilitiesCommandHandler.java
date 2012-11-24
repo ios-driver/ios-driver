@@ -69,7 +69,7 @@ public class GetCapabilitiesCommandHandler extends UIAScriptHandler {
           array.put(l.getName());
         }
         o.put("supportedLocales", array);
-        response.setValue(o.toString());
+        response.setValue(o);
       } catch (JSONException e) {
         response = new FailedWebDriverLikeResponse(session.getSessionId(), e);
       }

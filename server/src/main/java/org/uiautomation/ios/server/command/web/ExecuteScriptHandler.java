@@ -24,7 +24,6 @@ public class ExecuteScriptHandler extends BaseWebCommandHandler {
 
     if (res instanceof RemoteObject) {
       RemoteObject ro = (RemoteObject) res;
-      System.out.println("script returned : " + ro.getId());
       RemoteWebElement rwe = ro.getWebElement();
       JSONObject jo = new JSONObject().put("ELEMENT", rwe.getNodeId().getId());
       return new WebDriverLikeResponse(getRequest().getSession(), 0, jo);
