@@ -16,17 +16,12 @@ package org.uiautomation.ios.client.uiamodels.impl;
 import java.lang.reflect.Constructor;
 import java.util.Map;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.RemoteWebElement;
-import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.UIAModels.UIAElementArray;
-import org.uiautomation.ios.UIAModels.UIARect;
 import org.uiautomation.ios.communication.Path;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 
 /**
  * Proxy to an object cached on the server side.Each object is identified by a
@@ -128,6 +123,9 @@ public abstract class RemoteIOSObject extends RemoteWebElement {
       Class<?> clazz = Class.forName(remoteObjectName);
       Constructor<?> c = clazz.getConstructor(argsClass);
       Object o = c.newInstance(args);
+      RemoteWebElement element = (RemoteWebElement)o;
+      element.setFileDetector(driver.getFileDetector());
+      element.setId(ref);
       return (RemoteIOSObject) o;
     } catch (Exception e) {
       throw new WebDriverException("error casting", e);

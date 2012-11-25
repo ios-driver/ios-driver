@@ -1,7 +1,10 @@
 package org.uiautomation.ios.UIAModels;
 
-public interface UIAKeyboard extends UIAElement{
-	public UIAElementArray<UIAButton> getButtons();
-	public UIAElementArray<UIAKey> getKeys();
-	public void typeString(String s);
+import java.util.List;
+
+import org.openqa.selenium.Keyboard;
+
+public interface UIAKeyboard extends Keyboard{
+	public List<UIAButton> getButtons();
+	public List<UIAKey> getKeys();
 }

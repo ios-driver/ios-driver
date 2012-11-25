@@ -11,15 +11,13 @@ import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.uiautomation.ios.UIAModels.UIADriver;
 import org.uiautomation.ios.UIAModels.UIAElement;
-import org.uiautomation.ios.UIAModels.UIAKeyboard;
-import org.uiautomation.ios.UIAModels.UIALink;
 import org.uiautomation.ios.UIAModels.UIARect;
 import org.uiautomation.ios.UIAModels.UIAScrollView;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
-import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.LocationCriteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAKeyboard;
 import org.uiautomation.ios.mobileSafari.Atoms;
 import org.uiautomation.ios.mobileSafari.DebugProtocol;
 import org.uiautomation.ios.mobileSafari.NodeId;
@@ -595,12 +593,12 @@ public class RemoteWebElement {
       int x = rect.getX()+rect.getWidth()-1;
       int y = rect.getY()+rect.getHeight()/2;
       // TODO freynaud : tap() should take a param like middle, topLeft, bottomRight to save 1 call.
-      session.getNativeDriver().getLocalTarget().tap(x, y);
-      UIAKeyboard keyboard = session.getNativeDriver().getLocalTarget().getFrontMostApp().getKeyboard();
+      session.getNativeDriver().tap(x, y);
+      RemoteUIAKeyboard keyboard = (RemoteUIAKeyboard)session.getNativeDriver().getKeyboard();
       if ("\n".equals(value)){
         keyboard.findElement(new NameCriteria("Return")).tap();
       }else{
-        keyboard.typeString(value);
+        keyboard.sendKeys(value);
       }
      
       

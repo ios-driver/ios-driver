@@ -118,7 +118,7 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
     getDriver().execute(request);
   }
 
-  private WebDriverLikeRequest buildRequest(WebDriverLikeCommand command) {
+  protected WebDriverLikeRequest buildRequest(WebDriverLikeCommand command) {
     return buildRequest(command, null);
   }
 
@@ -233,6 +233,11 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.FLICK_INSIDE_WITH_OPTIONS,
         ImmutableMap.of("touchCount", touchCount, "touchCount", touchCount, "endOffset", endOffset));
     getDriver().execute(request);
+  }
+
+  public static RemoteUIAElement getFrontMostApp(RemoteUIADriver driver) {
+   return  new RemoteUIAElement(driver, "1");
+    
   }
 
 }

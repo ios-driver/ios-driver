@@ -34,6 +34,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.Keyboard;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriverException;
@@ -186,7 +187,7 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, Takes
   public WebDriverLikeRequest buildRequest(WebDriverLikeCommand command) {
     return buildRequest(command, null, null);
   }
-  
+
   public WebDriverLikeRequest buildRequest(WebDriverLikeCommand command, Map<String, ?> params) {
     return buildRequest(command, null, params);
   }
@@ -327,8 +328,8 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, Takes
     if (o == null) {
       return null;
     }
-    if (o instanceof String){
-      return (T)o;
+    if (o instanceof String) {
+      return (T) o;
     }
     if (o instanceof Map) {
       Map<String, Object> map = (Map<String, Object>) o;
@@ -419,11 +420,19 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, Takes
     // ... and convert it.
     return target.convertFromBase64Png(base64);
   }
+  
+  
 
   @Override
-  public UIAKeyboard getNativeKeyboard() {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.KEYBOARD);
+  public Keyboard getKeyboard() {
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.KEYBOARD,RemoteUIAElement.getFrontMostApp(this),null);
     return execute(request);
+  }
+
+  @Override
+  public void tap(int x, int y) {
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TARGET_TAP, ImmutableMap.of("x", x, "y", y));
+    execute(request);
   }
 
 }

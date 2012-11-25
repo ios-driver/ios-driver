@@ -37,7 +37,7 @@ public interface UIADriver extends DriverConfiguration{
 
   public void quit();
   
-  public UIAKeyboard getNativeKeyboard();
+  
 
   //public void setTimeout(String type, int timeoutInSeconds);
 
@@ -47,7 +47,7 @@ public interface UIADriver extends DriverConfiguration{
 
   public List<UIAElement> findElements(Criteria c);
 
-  
+  public void tap(int x,int y);
 
   //public Set<String> getWindowHandles();
 

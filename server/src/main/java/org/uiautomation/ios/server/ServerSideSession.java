@@ -28,7 +28,7 @@ public class ServerSideSession extends Session {
   public final IOSDriver driver;
 
   private WebInspector inspector;
-  private UIADriver nativeDriver;
+  private RemoteUIADriver nativeDriver;
 
   private final Context context;
 
@@ -67,7 +67,7 @@ public class ServerSideSession extends Session {
 
   }
 
-  public UIADriver getNativeDriver() {
+  public RemoteUIADriver getNativeDriver() {
     return nativeDriver;
   }
 

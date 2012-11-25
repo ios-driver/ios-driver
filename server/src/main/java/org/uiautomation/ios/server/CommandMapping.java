@@ -45,6 +45,7 @@ import org.uiautomation.ios.server.command.uiautomation.ServerStatus;
 import org.uiautomation.ios.server.command.uiautomation.SetCurrentContext;
 import org.uiautomation.ios.server.command.uiautomation.SetImplicitWaitTimeout;
 import org.uiautomation.ios.server.command.uiautomation.SetTimeoutCommandHandler;
+import org.uiautomation.ios.server.command.uiautomation.SetValueNativeHandler;
 import org.uiautomation.ios.server.command.uiautomation.StopSession;
 import org.uiautomation.ios.server.command.uiautomation.TakeScreenshot;
 import org.uiautomation.ios.server.command.web.BackHandler;
@@ -178,7 +179,7 @@ public enum CommandMapping {
   RIGHT_BUTTON(".rightButton()"),
   
   // UIATextField
-  SET_VALUE(".setValue(:value)",DefaultUIAScriptHandler.class,SetValueHandler.class),
+  SET_VALUE(SetValueNativeHandler.class,SetValueHandler.class),
   CLEAR(NotImplementedNativeHandler.class,ClearHandler.class),
   
   //UIATableView

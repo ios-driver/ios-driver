@@ -4,13 +4,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.UIAModels.UIAElement;
-import org.uiautomation.ios.UIAModels.UIAKeyboard;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.UIAModels.predicate.ValueCriteria;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAKeyboard;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSDriver;
@@ -95,8 +95,8 @@ public class GetHandler extends BaseWebCommandHandler {
 
       getSession().setMode(WorkingMode.Native);
       getAddressBar().tap();
-      UIAKeyboard keyboard = getSession().getNativeDriver().getKeyboard();
-      keyboard.typeString(url);
+      RemoteUIAKeyboard keyboard = (RemoteUIAKeyboard)getSession().getNativeDriver().getKeyboard();
+      keyboard.sendKeys(url);
       keyboard.findElement(new NameCriteria("Go")).tap();
 
     } finally {

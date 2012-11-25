@@ -1,15 +1,18 @@
 package org.uiautomation.ios.client.uiamodels.impl;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.List;
+
+import org.openqa.selenium.Keyboard;
+import org.openqa.selenium.Keys;
 import org.uiautomation.ios.UIAModels.UIAButton;
-import org.uiautomation.ios.UIAModels.UIAElementArray;
 import org.uiautomation.ios.UIAModels.UIAKey;
 import org.uiautomation.ios.UIAModels.UIAKeyboard;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
+import org.uiautomation.ios.communication.WebDriverLikeRequest;
 
-public class RemoteUIAKeyboard extends RemoteUIAElement implements UIAKeyboard {
+import com.google.common.collect.ImmutableMap;
+
+public class RemoteUIAKeyboard extends RemoteUIAElement implements Keyboard,UIAKeyboard {
 
   public RemoteUIAKeyboard(RemoteUIADriver driver, String reference) {
     super(driver, reference);
@@ -17,25 +20,38 @@ public class RemoteUIAKeyboard extends RemoteUIAElement implements UIAKeyboard {
 
   @SuppressWarnings("unchecked")
   @Override
-  public UIAElementArray<UIAButton> getButtons() {
-    return (UIAElementArray<UIAButton>) getRemoteObject(WebDriverLikeCommand.KEYBOARD_BUTTONS);
+  public List<UIAButton> getButtons() {
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.KEYBOARD_BUTTONS);
+    return getDriver().execute(request);
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public UIAElementArray<UIAKey> getKeys() {
-    return (UIAElementArray<UIAKey>) getRemoteObject(WebDriverLikeCommand.KEYBOARD_KEYS);
+  public List<UIAKey> getKeys() {
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.KEYBOARD_KEYS);
+    return getDriver().execute(request);
   }
 
   @Override
-  public void typeString(String s) {
-    try {
-      JSONObject payload = new JSONObject();
-      payload.put("string", "\""+s+"\"");
-      execute(WebDriverLikeCommand.TYPE_STRING, payload);
-    } catch (JSONException e) {
-      throw new IOSAutomationException(e);
+  public void sendKeys(CharSequence... keysToSend) {
+    StringBuilder builder = new StringBuilder();
+    for (CharSequence seq : keysToSend){
+      builder.append(seq.toString());
     }
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TYPE_STRING,ImmutableMap.of("string", "\""+builder.toString()+"\""));
+    getDriver().execute(request);
+  }
+  
+  @Override
+  public void pressKey(Keys keyToPress) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void releaseKey(Keys keyToRelease) {
+    // TODO Auto-generated method stub
+    
   }
 
 
