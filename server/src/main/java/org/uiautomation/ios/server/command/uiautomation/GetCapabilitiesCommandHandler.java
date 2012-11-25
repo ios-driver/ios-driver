@@ -30,7 +30,13 @@ import org.uiautomation.ios.server.command.UIAScriptHandler;
 public class GetCapabilitiesCommandHandler extends UIAScriptHandler {
 
   // TODO freynaud
-  public static Response cachedResponse = null;
+  private static Response cachedResponse = null;
+  private static boolean hasBeenDecorated = false;
+  
+  public static void reset(){
+    cachedResponse=null;
+    hasBeenDecorated=false;
+  }
 
   private static final String capabilities = "var json = UIAutomation.getCapabilities();"
       + "UIAutomation.createJSONResponse(':sessionId',0,json)";
@@ -58,6 +64,9 @@ public class GetCapabilitiesCommandHandler extends UIAScriptHandler {
 
     @Override
     public void decorate(Response response) {
+      if (hasBeenDecorated){
+        return;
+      }
       ServerSideSession session = getDriver().getSession(response.getSessionId());
       try {
         JSONObject o = new JSONObject((String) response.getValue());
@@ -70,6 +79,7 @@ public class GetCapabilitiesCommandHandler extends UIAScriptHandler {
         o.put("supportedLocales", array);
         o.put("takesScreenshot", true);
         response.setValue(o);
+        hasBeenDecorated = true;
       } catch (JSONException e) {
         throw new WebDriverException(e.getMessage(), e);
       }

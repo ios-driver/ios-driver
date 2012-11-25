@@ -9,7 +9,7 @@ import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.exceptions.InvalidCriteriaException;
 
-public class ServerSideL10N {
+public class ServerSideL10NTest {
 
 
 

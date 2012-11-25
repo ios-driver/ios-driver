@@ -7,9 +7,11 @@ import java.io.InputStream;
 import java.net.URL;
 
 import org.json.JSONObject;
+import org.openqa.selenium.remote.SessionId;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.UIAModels.Session;
+import org.uiautomation.ios.client.uiamodels.impl.AttachRemoteUIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 
@@ -29,7 +31,7 @@ public class IDESessionModelImpl implements IDESessionModel {
     this.session = session;
     this.screenshot = new File(session.getSessionId() + ".png");
     this.remoteEndPoint = remoteURL;
-    driver = new RemoteUIADriver(remoteURL, session);
+    driver = new AttachRemoteUIADriver(remoteURL, new SessionId(session.getSessionId()));
   }
 
   /*

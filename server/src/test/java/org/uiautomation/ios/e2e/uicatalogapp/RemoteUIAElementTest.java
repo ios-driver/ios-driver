@@ -5,10 +5,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONObject;
+import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotVisibleException;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.uiautomation.ios.BaseIOSDriverTest;
+import org.uiautomation.ios.SampleApps;
+import org.uiautomation.ios.UIAModels.UIAButton;
 import org.uiautomation.ios.UIAModels.UIAElement;
-import org.uiautomation.ios.UIAModels.UIAElementArray;
 import org.uiautomation.ios.UIAModels.UIATableCell;
 import org.uiautomation.ios.UIAModels.UIATableView;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
@@ -17,200 +25,110 @@ import org.uiautomation.ios.UIAModels.predicate.EmptyCriteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAWindow;
-import org.uiautomation.ios.exceptions.ElementNotVisibleException;
-import org.uiautomation.ios.exceptions.NoSuchElementException;
-import org.uiautomation.ios.exceptions.StaleReferenceException;
 
-public class RemoteUIAElementTest extends UICatalogTestsBase {
+public class RemoteUIAElementTest extends BaseIOSDriverTest {
 
+  private RemoteUIADriver driver;
+  private UIAElement element;
 
+  @BeforeClass
+  public void startDriver() {
+    driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
+  }
+
+  @AfterClass(alwaysRun=true)
+  public void stopDriver() {
+    if (driver != null) {
+      driver.quit();
+    }
+  }
+
+  private String buttonsName = "Buttons, Various uses of UIButton";
 
   @Test
   public void findElement() {
-    RemoteUIADriver driver = null;
-    try {
-      String name = "Buttons, Various uses of UIButton";
-      driver = getDriver();
-      RemoteUIAWindow win = getMainWindow(driver);
-      Criteria c1 = new TypeCriteria(UIATableCell.class);
-      Criteria c2 = new NameCriteria(name);
-      Criteria c = new AndCriteria(c1, c2);
-      UIAElement element = win.findElement(c);
-      Assert.assertEquals(element.getName(), name);
-    } finally {
-      if (driver != null) {
-        driver.quit();
-      }
-    }
+    Criteria c1 = new TypeCriteria(UIATableCell.class);
+    Criteria c2 = new NameCriteria(buttonsName);
+    Criteria c = new AndCriteria(c1, c2);
+    element = driver.findElement(c);
+    Assert.assertEquals(element.getName(), buttonsName);
   }
 
-
-  @Test
+  @Test(dependsOnMethods = { "findElement" })
   public void logElementTreeNoScreenshot() throws Exception {
-    RemoteUIADriver driver = null;
-    try {
-      String name = "Buttons, Various uses of UIButton";
-      driver = getDriver();
-      RemoteUIAWindow win = getMainWindow(driver);
-      Criteria c1 = new TypeCriteria(UIATableCell.class);
-      Criteria c2 = new NameCriteria(name);
-      Criteria c = new AndCriteria(c1, c2);
-      UIAElement element = win.findElement(c);
-      Assert.assertEquals(element.getName(), name);
-      JSONObject tree = element.logElementTree(null, false);
-      Assert.assertTrue(tree.has("tree"));
-    } finally {
-      if (driver != null) {
-        driver.quit();
-      }
-    }
+    JSONObject tree = element.logElementTree(null, false);
+    Assert.assertTrue(tree.has("tree"));
   }
-
+  
   @Test
-  public void logElementTreeWithScreenshot() throws Exception {
-    RemoteUIADriver driver = null;
-    try {
-      String name = "Buttons, Various uses of UIButton";
-      driver = getDriver();
-      RemoteUIAWindow win = getMainWindow(driver);
-      Criteria c1 = new TypeCriteria(UIATableCell.class);
-      Criteria c2 = new NameCriteria(name);
-      Criteria c = new AndCriteria(c1, c2);
-      UIAElement element = win.findElement(c);
-      Assert.assertEquals(element.getName(), name);
-      File f = new File("logElementTreeWithScreenshotTmp");
-      f.delete();
-      JSONObject tree = element.logElementTree(f, true);
-      Assert.assertTrue(tree.has("tree"));
-      Assert.assertTrue(f.exists());
-      f.delete();
-    } finally {
-      if (driver != null) {
-        driver.quit();
-      }
-    }
+  public void logElementTreeRootNoScreenshot() throws Exception {
+    JSONObject tree = driver.logElementTree(null, false);
+    Assert.assertTrue(tree.has("tree"));
   }
 
-
-  @Test(expectedExceptions = NoSuchElementException.class)
-  public void cannotFindElement() {
-    RemoteUIADriver driver = null;
-    try {
-      String name = "I don't exist.";
-      driver = getDriver();
-      RemoteUIAWindow win = getMainWindow(driver);
-      Criteria c1 = new TypeCriteria(UIATableCell.class);
-      Criteria c2 = new NameCriteria(name);
-      Criteria c = new AndCriteria(c1, c2);
-      UIAElement element = win.findElement(c);
-      Assert.assertEquals(element.getName(), name);
-    } finally {
-      if (driver != null) {
-        driver.quit();
-      }
-    }
+  @Test(dependsOnMethods = { "findElement" })
+  public void logElementTreeWithScreenshot() throws Exception {
+    File f = new File("logElementTreeWithScreenshotTmp");
+    f.delete();
+    JSONObject tree = element.logElementTree(f, true);
+    Assert.assertTrue(tree.has("tree"));
+    Assert.assertTrue(f.exists());
+    f.delete();
+  }
+  @Test
+  public void logElementTreeRootWithScreenshot() throws Exception {
+    File f = new File("logElementTreeWithScreenshotTmp");
+    f.delete();
+    JSONObject tree = driver.logElementTree(f, true);
+    Assert.assertTrue(tree.has("tree"));
+    Assert.assertTrue(f.exists());
+    f.delete();
   }
 
   // sometimes 29, sometimes 31 depending on the timing.and 33 with ios 6...
   @Test(groups = "broken")
   public void findAllElements() throws InterruptedException {
-    RemoteUIADriver driver = null;
-    try {
-      driver = getDriver();
-      RemoteUIAWindow win = getMainWindow(driver);
-      UIAElementArray<UIAElement> elements = win.findElements(new EmptyCriteria());
-      Assert.assertEquals(elements.size(), 33);
-    } finally {
-      if (driver != null) {
-        driver.quit();
-      }
-    }
+    List<UIAElement> elements = driver.findElements(new EmptyCriteria());
+    Assert.assertEquals(elements.size(), 33);
   }
 
-
-
-  @Test
-  public void findElementsWithCriteria() throws InterruptedException {
-    RemoteUIADriver driver = null;
-    try {
-      driver = getDriver();
-      RemoteUIAWindow win = getMainWindow(driver);
-      Criteria c = new TypeCriteria(UIATableCell.class);
-      UIAElementArray<UIAElement> elements = win.findElements(c);
-      Assert.assertEquals(elements.size(), 12);
-      for (UIAElement el : elements) {
-        Assert.assertTrue(el instanceof UIATableCell);
-      }
-    } finally {
-      if (driver != null) {
-        driver.quit();
-      }
-    }
-  }
-
-  @Test(groups = "broken")
+  @Test(groups = "broken",enabled=false)
   public void isVisibleTests() {
-    RemoteUIADriver driver = null;
 
-    try {
-      driver = getDriver();
-      RemoteUIAWindow win = getMainWindow(driver);
+    Criteria c = new TypeCriteria(UIATableView.class);
+    List<UIAElement> elements = driver.findElements(c);
 
-      Criteria c = new TypeCriteria(UIATableView.class);
-      UIAElementArray<UIAElement> elements = win.findElements(c);
+    UIATableView tableView = (UIATableView) elements.get(0);
+    List<WebElement> cells = tableView.findElements(By.tagName("UIATableCell"));
 
-      UIATableView tableView = (UIATableView) elements.get(0);
-      UIAElementArray<UIATableCell> cells = tableView.getCells();
+    // list of visible components.
+    List<String> v = new ArrayList<String>();
+    v.add("Buttons, Various uses of UIButton");
+    v.add("Controls, Various uses of UIControl");
+    v.add("TextFields, Uses of UITextField");
+    v.add("SearchBar, Use of UISearchBar");
+    v.add("TextView, Use of UITextField");
+    v.add("Pickers, Uses of UIDatePicker, UIPickerView");
+    v.add("Images, Use of UIImageView");
+    v.add("Web, Use of UIWebView");
+    v.add("Segment, Various uses of UISegmentedControl");
+    v.add("Toolbar, Uses of UIToolbar");
 
-      // list of visible components.
-      List<String> v = new ArrayList<String>();
-      v.add("Buttons, Various uses of UIButton");
-      v.add("Controls, Various uses of UIControl");
-      v.add("TextFields, Uses of UITextField");
-      v.add("SearchBar, Use of UISearchBar");
-      v.add("TextView, Use of UITextField");
-      v.add("Pickers, Uses of UIDatePicker, UIPickerView");
-      v.add("Images, Use of UIImageView");
-      v.add("Web, Use of UIWebView");
-      v.add("Segment, Various uses of UISegmentedControl");
-      v.add("Toolbar, Uses of UIToolbar");
-
-
-      for (UIAElement el : cells) {
-        boolean visible = false;
-        if (v.contains(el.getName())) {
-          visible = true;
-        }
-        Assert.assertEquals(el.isDisplayed(), visible);
+    for (WebElement el : cells) {
+      boolean visible = false;
+      if (v.contains(el.getAttribute("name"))) {
+        visible = true;
       }
-
-    } finally {
-      if (driver != null) {
-        driver.quit();
-      }
+      Assert.assertEquals(el.isDisplayed(), visible);
     }
   }
 
-  @Test
+  @Test(enabled=false)
   public void canClickVisibleElement() {
-    RemoteUIADriver driver = null;
-
-    try {
-      driver = getDriver();
-      RemoteUIAWindow win = getMainWindow(driver);
-      Criteria invisibleOne =
-          new AndCriteria(new NameCriteria("Buttons, Various uses of UIButton"), new TypeCriteria(
-              UIATableCell.class));
-      UIAElement element = win.findElement(invisibleOne);
-
-      element.tap();
-
-    } finally {
-      if (driver != null) {
-        driver.quit();
-      }
-    }
+    Criteria invisibleOne = new AndCriteria(new NameCriteria("Buttons, Various uses of UIButton"), new TypeCriteria(
+        UIATableCell.class));
+    UIAElement element = driver.findElement(invisibleOne);
+    element.tap();
   }
 
   // need to find a test for that.
@@ -219,49 +137,38 @@ public class RemoteUIAElementTest extends UICatalogTestsBase {
   public void cannotClickInvisibleElement() {
     RemoteUIADriver driver = null;
 
-    try {
-      driver = getDriver();
-      RemoteUIAWindow win = getMainWindow(driver);
+   
 
-      Criteria invisibleOne =
-          new AndCriteria(new NameCriteria("Transitions, Shows UIViewAnimationTransitions"),
-              new TypeCriteria(UIATableCell.class));
-      UIAElement element = win.findElement(invisibleOne);
+      Criteria invisibleOne = new AndCriteria(new NameCriteria("Transitions, Shows UIViewAnimationTransitions"),
+          new TypeCriteria(UIATableCell.class));
+      UIAElement element = driver.findElement(invisibleOne);
 
       element.tap();
 
-    } finally {
-      if (driver != null) {
-        driver.quit();
-      }
-    }
+  
   }
 
-
-  @Test(expectedExceptions = StaleReferenceException.class)
+  // TODO freynaud element.getName() creates some scrolling.
+  @Test(expectedExceptions = StaleElementReferenceException.class)
   public void staleElement() {
-    RemoteUIADriver driver = null;
     try {
       String name = "Buttons, Various uses of UIButton";
-      driver = getDriver();
-      RemoteUIAWindow win = getMainWindow(driver);
       Criteria c1 = new TypeCriteria(UIATableCell.class);
       Criteria c2 = new NameCriteria(name);
       Criteria c = new AndCriteria(c1, c2);
-      UIAElement element = win.findElement(c);
+      UIAElement element = driver.findElement(c);
 
-      element.tap();
       // new screen. The element doesn't exist anymore
-      Assert.assertFalse(element.isValid());
+      element.tap();
+      
+ 
       // cannot use a stale element. Exception thrown.
       element.getName();
+      Assert.fail("cannot access stale elements");
     } finally {
-      if (driver != null) {
-        driver.quit();
-      }
+      UIAButton but = driver.findElement(new AndCriteria(new NameCriteria("Back"),new TypeCriteria(UIAButton.class)));
+      but.tap();
     }
   }
-
-
 
 }

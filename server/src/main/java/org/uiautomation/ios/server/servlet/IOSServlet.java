@@ -94,7 +94,6 @@ public class IOSServlet extends DriverBasedServlet {
     //String s = toString(resp);
     BeanToJsonConverter convertor = new BeanToJsonConverter();
     String s = convertor.convert(resp);
-    System.out.println("sending "+s);
     response.getWriter().print(s);
     response.getWriter().close();
 
@@ -136,10 +135,10 @@ public class IOSServlet extends DriverBasedServlet {
       }
       return response;
     } catch (Exception e) {
-      throw new WebDriverException("bug.");
+      throw new WebDriverException("bug."+e.getMessage(),e);
     } finally {
       String message = (System.currentTimeMillis() + "\t" + (System.currentTimeMillis() - start) + "ms.\t" + command);
-      // System.out.println(message);
+      System.out.println(message);
     }
   }
 

@@ -44,7 +44,6 @@ public class TimeoutTest extends BaseIOSDriverTest {
         Assert.fail("shouldn't find element" + name);
       } catch (NoSuchElementException e) {
         long total = System.currentTimeMillis() - start;
-        System.err.println(total);
         Assert.assertTrue(total < 2000);
       }
       try {

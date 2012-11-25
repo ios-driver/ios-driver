@@ -3,6 +3,8 @@ package org.uiautomation.ios.e2e.intl;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import org.uiautomation.ios.BaseIOSDriverTest;
+import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIATableCell;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
@@ -11,12 +13,13 @@ import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAWindow;
 import org.uiautomation.ios.server.application.Localizable;
 
-public class ComplexCriteriaTest extends IntlMountainTestsBase {
+public class ComplexCriteriaTest extends BaseIOSDriverTest {
 
-
+ 
+  
+ 
 
   @DataProvider(name = "intlMountain", parallel = false)
   public Object[][] createDataPerLocale() {
@@ -33,15 +36,15 @@ public class ComplexCriteriaTest extends IntlMountainTestsBase {
     RemoteUIADriver driver = null;
     try {
 
-      driver = getDriver(l);
-      RemoteUIAWindow win = getMainWindow(driver);
+      driver = new RemoteUIADriver(getRemoteURL(), SampleApps.intlMountainsCap(l));
+     
       Criteria c1 = new TypeCriteria(UIATableCell.class);
-      UIAElement element = win.findElement(c1);
+      UIAElement element = driver.findElement(c1);
       element.tap();
 
       NameCriteria criteria =
           new NameCriteria("sentenceFormat", L10NStrategy.serverL10N, MatchingStrategy.regex);
-      UIAElement text = win.findElement(criteria);
+      UIAElement text = driver.findElement(criteria);
       String actual = text.getName();
       Assert.assertEquals(actual, expectedContent);
     } finally {
@@ -56,15 +59,14 @@ public class ComplexCriteriaTest extends IntlMountainTestsBase {
     RemoteUIADriver driver = null;
     try {
 
-      driver = getDriver(l);
-      RemoteUIAWindow win = getMainWindow(driver);
+      driver =new RemoteUIADriver(getRemoteURL(), SampleApps.intlMountainsCap(l));
       Criteria c1 = new TypeCriteria(UIATableCell.class);
-      UIAElement element = win.findElement(c1);
+      UIAElement element = driver.findElement(c1);
       element.tap();
 
       NameCriteria criteria =
           new NameCriteria("meterFormat", L10NStrategy.serverL10N, MatchingStrategy.contains);
-      UIAElement text = win.findElement(criteria);
+      UIAElement text = driver.findElement(criteria);
       String actual = text.getName();
       Assert.assertEquals(actual, expectedContent);
     } finally {

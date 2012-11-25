@@ -40,6 +40,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.BeanToJsonConverter;
 import org.openqa.selenium.remote.DriverCommand;
 import org.openqa.selenium.remote.ErrorHandler;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -131,7 +132,12 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, Takes
   public RemoteUIADriver(URL url, IOSCapabilities cap) {
     super(url, cap);
     this.remoteURL = url.toExternalForm();
-    this.requestedCapabilities = cap.getRawCapabilities();
+    if (cap == null){
+      this.requestedCapabilities = null;
+    }else {
+      this.requestedCapabilities = cap.getRawCapabilities();
+    }
+    
     try {
       port = url.getPort();
       host = url.getHost();
@@ -143,24 +149,7 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, Takes
     }
   }
 
-  /**
-   * create a RemoteDriver attaching itself to an already created session.
-   * Useful for debugging, not for normal tests.
-   * 
-   * @param remoteURL
-   * @param session
-   */
-  public RemoteUIADriver(URL remoteURL, Session session) {
-    // TODO freynaud
-    this.remoteURL = remoteURL.toExternalForm();
-    URL url = remoteURL;
-    port = url.getPort();
-    host = url.getHost();
-    // TODO freynaud how safe is that ?
-    this.requestedCapabilities = null;
-    configuration = new RemoteDriverConfiguration(this);
-
-  }
+  
 
   /**
    * starts the remote session, and get the sessionId back.
@@ -195,30 +184,7 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, Takes
     return buildRequest(command, null, params);
   }
 
-  private IOSCapabilities loadCapabilities() {
-    WebDriverLikeCommand command = WebDriverLikeCommand.GET_SESSION;
-    Path p = new Path(command).withSession(getSessionId());
-    WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, new JSONObject());
-    Response response = execute(request);
-    response = errorHandler.throwIfResponseFailed(response, -1);
-
-    if (response.getValue() == JSONObject.NULL) {
-      return null;
-    } else {
-      Object v = response.getValue();
-      if (v instanceof String) {
-        try {
-          JSONObject o = new JSONObject((String) v);
-          IOSCapabilities res = new IOSCapabilities(o);
-          return res;
-        } catch (JSONException e) {
-          throw new IOSAutomationException(e);
-        }
-      } else {
-        throw new IOSAutomationException("can't guess type, got " + v.getClass());
-      }
-    }
-  }
+  
 
   /**
    * send the request to the remote server for execution.
@@ -254,9 +220,15 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, Takes
 
   @Override
   public JSONObject logElementTree(File screenshot, boolean translation) throws IOSAutomationException {
-    WebDriverLikeCommand command = WebDriverLikeCommand.TREE_ROOT;
-    Path p = new Path(command).withSession(getSessionId());
-    return RemoteUIAElement.logElementTree(screenshot, translation, p, command, this);
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TREE_ROOT, ImmutableMap.of("attachScreenshot", screenshot != null, "translation", translation));
+    JSONObject log = execute(request);
+    if (screenshot != null) {
+      JSONObject screen = log.optJSONObject("screenshot");
+      String content = screen.optString("64encoded");
+      RemoteUIAElement.createFileFrom64EncodedString(screenshot, content);
+    }
+    log.remove("screenshot");
+    return log;
   }
 
   @Override
@@ -338,7 +310,14 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, Takes
       Map<String, Object> map = (Map<String, Object>) o;
       if (map.containsKey("ELEMENT")) {
         return (T) RemoteIOSObject.createObject(this, map);
-      } else {
+      } else if (map.containsKey("tree")){
+        String serialized = new BeanToJsonConverter().convert(o);
+        try {
+          return (T)new JSONObject(serialized);
+        } catch (JSONException e) {
+          throw new WebDriverException("cannot cast");
+        }
+      }else {
         return (T) map;
       }
     }

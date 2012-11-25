@@ -14,13 +14,15 @@
 package org.uiautomation.ios.client.uiamodels.impl;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONException;
+import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIAPoint;
 import org.uiautomation.ios.UIAModels.UIARect;
@@ -30,7 +32,6 @@ import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.communication.Path;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.exceptions.NoSuchElementException;
 
 import com.google.common.collect.ImmutableMap;
@@ -152,44 +153,33 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
   public JSONObject logElementTree(File screenshot, boolean translation) throws Exception {
     WebDriverLikeCommand command = WebDriverLikeCommand.TREE;
     Path p = new Path(command).withSession(getDriver().getSessionId()).withReference(getReference());
-    return RemoteUIAElement.logElementTree(screenshot, translation, p, command, getDriver());
+    return logElementTree(screenshot, translation, p, command, getDriver());
   }
 
-  static JSONObject logElementTree(File screenshot, boolean translation, Path path, WebDriverLikeCommand command,
+  public JSONObject logElementTree(File screenshot, boolean translation, Path path, WebDriverLikeCommand command,
       RemoteUIADriver driver) {
+
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TREE,
+        ImmutableMap.of("attachScreenshot", screenshot != null, "translation", translation));
+    JSONObject log = driver.execute(request);
+    if (screenshot != null) {
+      JSONObject screen = log.optJSONObject("screenshot");
+      String content = screen.optString("64encoded");
+      createFileFrom64EncodedString(screenshot, content);
+    }
+    log.remove("screenshot");
+    return log;
+
+  }
+
+  public static void createFileFrom64EncodedString(File f, String encoded64) {
     try {
-
-      JSONObject payload = new JSONObject();
-      if (screenshot == null) {
-        payload.put("attachScreenshot", false);
-      } else {
-        payload.put("attachScreenshot", true);
-      }
-      payload.put("translation", translation);
-
-      WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), path, payload);
-      Response response = driver.execute(request);
-      if (response.getValue() == JSONObject.NULL) {
-        return null;
-      } else {
-        Object v = response.getValue();
-        if (v instanceof String) {
-          return new JSONObject((String) v);
-        } else if (v instanceof JSONObject) {
-          JSONObject res = (JSONObject) v;
-          if (screenshot != null) {
-            JSONObject screen = res.getJSONObject("screenshot");
-            String content = screen.getString("64encoded");
-            RemoteUIADriver.createFileFrom64EncodedString(screenshot, content);
-          }
-          res.remove("screenshot");
-          return res;
-        } else {
-          throw new IOSAutomationException("can't guess type, got " + v.getClass());
-        }
-      }
+      byte[] img64 = Base64.decodeBase64(encoded64);
+      FileOutputStream os = new FileOutputStream(f);
+      os.write(img64);
+      os.close();
     } catch (Exception e) {
-      throw new IOSAutomationException(e);
+      throw new WebDriverException("cannot extract screenshot" + e.getMessage());
     }
   }
 
@@ -236,8 +226,8 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
   }
 
   public static RemoteUIAElement getFrontMostApp(RemoteUIADriver driver) {
-   return  new RemoteUIAElement(driver, "1");
-    
+    return new RemoteUIAElement(driver, "1");
+
   }
 
 }

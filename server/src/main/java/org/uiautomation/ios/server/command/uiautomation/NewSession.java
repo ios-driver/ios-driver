@@ -34,7 +34,7 @@ public class NewSession extends BaseNativeCommandHandler {
 
   public Response handle() throws Exception {
     try {
-      GetCapabilitiesCommandHandler.cachedResponse = null;
+      GetCapabilitiesCommandHandler.reset();
       JSONObject payload = getRequest().getPayload();
       IOSCapabilities capabilities = new IOSCapabilities(payload.getJSONObject("desiredCapabilities"));
       session = getDriver().createSession(capabilities);

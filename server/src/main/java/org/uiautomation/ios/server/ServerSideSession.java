@@ -4,12 +4,13 @@ import java.io.File;
 import java.net.URL;
 import java.util.UUID;
 
+import org.openqa.selenium.remote.SessionId;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Session;
-import org.uiautomation.ios.UIAModels.UIADriver;
 import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
 import org.uiautomation.ios.UIAModels.configuration.DriverConfiguration;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
+import org.uiautomation.ios.client.uiamodels.impl.AttachRemoteUIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.exceptions.SessionNotCreatedException;
@@ -107,7 +108,7 @@ public class ServerSideSession extends Session {
     } catch (Exception e) {
       e.printStackTrace();
     }
-    nativeDriver = new RemoteUIADriver(url, new Session(instruments.getSessionId()));
+    nativeDriver = new AttachRemoteUIADriver(url, new SessionId(instruments.getSessionId()));
   }
 
   public WebInspector getWebInspector() {

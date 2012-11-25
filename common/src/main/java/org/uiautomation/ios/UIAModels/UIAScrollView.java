@@ -13,7 +13,7 @@
  */
 package org.uiautomation.ios.UIAModels;
 
-public interface UIAScrollView {
+public interface UIAScrollView extends UIAElement {
 
   /*
   scrollUp
