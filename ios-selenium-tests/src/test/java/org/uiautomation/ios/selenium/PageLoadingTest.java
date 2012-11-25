@@ -1,32 +1,19 @@
 package org.uiautomation.ios.selenium;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
-
 import static org.openqa.selenium.TestWaiter.waitFor;
 import static org.openqa.selenium.WaitingConditions.pageTitleToBe;
 
-
+import java.net.URL;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.HasCapabilities;
-import org.openqa.selenium.NeedsFreshDriver;
-import org.openqa.selenium.NoDriverAfterTest;
 import org.openqa.selenium.Pages;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WaitingConditions;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.environment.GlobalTestEnvironment;
 import org.openqa.selenium.environment.webserver.AppServer;
 import org.openqa.selenium.environment.webserver.WebbitAppServer;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.testing.Ignore;
-import org.openqa.selenium.testing.JavascriptEnabled;
-import org.openqa.selenium.testing.NeedsLocalEnvironment;
-import org.openqa.selenium.testing.TestUtilities;
-import org.openqa.selenium.testing.drivers.SauceDriver;
-import org.openqa.selenium.testing.drivers.WebDriverBuilder;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -56,7 +43,7 @@ public class PageLoadingTest {
     IOSCapabilities safari = IOSCapabilities.ipad("Safari");
     safari.setCapability(IOSCapabilities.TIME_HACK, false);
 
-    driver = new RemoteMobileSafariDriver(url, safari);
+    driver = new RemoteMobileSafariDriver(new URL(url), safari);
     appServer = new WebbitAppServer();
     appServer.start();
     pages = new Pages(appServer);

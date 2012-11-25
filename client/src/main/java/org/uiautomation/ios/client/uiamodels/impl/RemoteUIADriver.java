@@ -132,12 +132,12 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, Takes
   public RemoteUIADriver(URL url, IOSCapabilities cap) {
     super(url, cap);
     this.remoteURL = url.toExternalForm();
-    if (cap == null){
+    if (cap == null) {
       this.requestedCapabilities = null;
-    }else {
+    } else {
       this.requestedCapabilities = cap.getRawCapabilities();
     }
-    
+
     try {
       port = url.getPort();
       host = url.getHost();
@@ -148,8 +148,6 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, Takes
       throw new IOSAutomationException(e);
     }
   }
-
-  
 
   /**
    * starts the remote session, and get the sessionId back.
@@ -183,8 +181,6 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, Takes
   public WebDriverLikeRequest buildRequest(WebDriverLikeCommand command, Map<String, ?> params) {
     return buildRequest(command, null, params);
   }
-
-  
 
   /**
    * send the request to the remote server for execution.
@@ -220,7 +216,8 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, Takes
 
   @Override
   public JSONObject logElementTree(File screenshot, boolean translation) throws IOSAutomationException {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TREE_ROOT, ImmutableMap.of("attachScreenshot", screenshot != null, "translation", translation));
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TREE_ROOT,
+        ImmutableMap.of("attachScreenshot", screenshot != null, "translation", translation));
     JSONObject log = execute(request);
     if (screenshot != null) {
       JSONObject screen = log.optJSONObject("screenshot");
@@ -310,14 +307,14 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, Takes
       Map<String, Object> map = (Map<String, Object>) o;
       if (map.containsKey("ELEMENT")) {
         return (T) RemoteIOSObject.createObject(this, map);
-      } else if (map.containsKey("tree")){
+      } else if (map.containsKey("tree")) {
         String serialized = new BeanToJsonConverter().convert(o);
         try {
-          return (T)new JSONObject(serialized);
+          return (T) new JSONObject(serialized);
         } catch (JSONException e) {
           throw new WebDriverException("cannot cast");
         }
-      }else {
+      } else {
         return (T) map;
       }
     }
@@ -412,13 +409,13 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, Takes
 
   @Override
   public void tap(int x, int y) {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TARGET_TAP, ImmutableMap.of("x", x, "y", y));
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TARGET_TAP,RemoteUIAElement.target(this),ImmutableMap.of("x", x, "y", y));
     execute(request);
   }
 
   @Override
   public void setDeviceOrientation(Orientation o) {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TARGET_TAP, ImmutableMap.of("orientation", o));
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.SET_ORIENTATION, ImmutableMap.of("orientation", o));
     execute(request);
   }
 

@@ -17,6 +17,7 @@ import java.lang.reflect.Constructor;
 import java.util.Map;
 
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebElement;
 import org.uiautomation.ios.UIAModels.UIAElementArray;
 import org.uiautomation.ios.communication.Path;
@@ -92,40 +93,51 @@ public abstract class RemoteIOSObject extends RemoteWebElement {
    *         simple object, an empty list for a UIAElementArray.
    * @throws Exception
    */
-  public static RemoteIOSObject createObject(RemoteUIADriver driver, Map<String, Object> ro) {
-    String ref = (String) ro.get("ELEMENT");
+  public static WebElement createObject(RemoteUIADriver driver, Map<String, Object> ro) {
+    String ref = ro.get("ELEMENT").toString();
+    
     String type = (String) ro.get("type");
+    if (type != null){
+      String remoteObjectName = "org.uiautomation.ios.client.uiamodels.impl.Remote" + type;
 
-    String remoteObjectName = "org.uiautomation.ios.client.uiamodels.impl.Remote" + type;
+      if ("UIAElementNil".equals(type)) {
+        return null;
+      }
 
-    if ("UIAElementNil".equals(type)) {
-      return null;
-    }
+      boolean isArray = false; // uiObject.has("length");
 
-    boolean isArray = false; // uiObject.has("length");
+      Object[] args = null;
+      Class<?>[] argsClass = null;
 
-    Object[] args = null;
-    Class<?>[] argsClass = null;
-
-    if (isArray) {
-      // args = new Object[] {driver, ref, uiObject.getInt("length")};
-      // argsClass = new Class[] {RemoteUIADriver.class, String.class,
-      // Integer.class};
-    } else {
-      args = new Object[] { driver, ref };
-      argsClass = new Class[] { RemoteUIADriver.class, String.class };
-    }
-    try {
-      Class<?> clazz = Class.forName(remoteObjectName);
-      Constructor<?> c = clazz.getConstructor(argsClass);
-      Object o = c.newInstance(args);
-      RemoteWebElement element = (RemoteWebElement)o;
+      if (isArray) {
+        // args = new Object[] {driver, ref, uiObject.getInt("length")};
+        // argsClass = new Class[] {RemoteUIADriver.class, String.class,
+        // Integer.class};
+      } else {
+        args = new Object[] { driver, ref };
+        argsClass = new Class[] { RemoteUIADriver.class, String.class };
+      }
+      try {
+        Class<?> clazz = Class.forName(remoteObjectName);
+        Constructor<?> c = clazz.getConstructor(argsClass);
+        Object o = c.newInstance(args);
+        RemoteWebElement element = (RemoteWebElement)o;
+        element.setFileDetector(driver.getFileDetector());
+        element.setParent(driver);
+        element.setId(ref);
+        return (RemoteIOSObject) o;
+      } catch (Exception e) {
+        throw new WebDriverException("error casting", e);
+      }
+    }else {
+      RemoteWebElement element = new RemoteWebElement();
       element.setFileDetector(driver.getFileDetector());
       element.setId(ref);
-      return (RemoteIOSObject) o;
-    } catch (Exception e) {
-      throw new WebDriverException("error casting", e);
+      element.setParent(driver);
+      return element;
     }
+
+   
 
   }
 

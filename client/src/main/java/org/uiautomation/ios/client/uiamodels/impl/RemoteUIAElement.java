@@ -230,4 +230,8 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
 
   }
 
+  public static RemoteUIAElement target(RemoteUIADriver driver) {
+    return new RemoteUIAElement(driver, "2");
+  }
+
 }

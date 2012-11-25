@@ -10,12 +10,14 @@ import static org.openqa.selenium.testing.Ignore.Driver.IPHONE;
 import static org.openqa.selenium.testing.Ignore.Driver.OPERA;
 import static org.openqa.selenium.testing.Ignore.Driver.OPERA_MOBILE;
 import static org.openqa.selenium.testing.Ignore.Driver.SELENESE;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-
-import org.testng.*;
-import static org.testng.Assert.*;
+import java.net.URL;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -65,7 +67,7 @@ public class FrameSwitchingTest {
     appServer.start();
     pages = new Pages(appServer);
     
-    driver = new RemoteMobileSafariDriver(url, safari);
+    driver = new RemoteMobileSafariDriver(new URL(url), safari);
   }
 
   @AfterClass

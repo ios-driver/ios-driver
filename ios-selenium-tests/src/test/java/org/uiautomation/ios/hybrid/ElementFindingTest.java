@@ -1,5 +1,7 @@
 package org.uiautomation.ios.hybrid;
 
+import java.net.URL;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Pages;
@@ -43,7 +45,7 @@ public class ElementFindingTest {
     IOSCapabilities safari = IOSCapabilities.ipad("Safari");
     safari.setCapability(IOSCapabilities.TIME_HACK, false);
 
-    driver = new RemoteMobileSafariDriver(url);
+    driver = new RemoteMobileSafariDriver(new URL(url),safari);
     AppServer appServer = new WebbitAppServer();
     appServer.start();
     pages = new Pages(appServer);

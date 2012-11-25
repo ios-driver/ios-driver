@@ -56,7 +56,6 @@ public class Helper {
 
   public static Response exctractResponse(HttpResponse resp) {
     String s = extractString(resp);
-    
     Response response = new JsonToBeanConverter().convert(Response.class, s);
     return response;
 

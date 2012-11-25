@@ -2,7 +2,10 @@ package org.uiautomation.ios.selenium;
 
 
 import static org.openqa.selenium.testing.Ignore.Driver.SELENESE;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.fail;
 
+import java.net.URL;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -14,7 +17,6 @@ import org.openqa.selenium.environment.webserver.WebbitAppServer;
 import org.openqa.selenium.testing.Ignore;
 import org.openqa.selenium.testing.JavascriptEnabled;
 import org.testng.Assert;
-import static org.testng.Assert.*;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -44,7 +46,7 @@ public class ChildrenFindingTest {
     IOSCapabilities safari = IOSCapabilities.ipad("Safari");
     safari.setCapability(IOSCapabilities.TIME_HACK, false);
 
-    driver = new RemoteMobileSafariDriver(url, safari);
+    driver = new RemoteMobileSafariDriver(new URL(url), safari);
     appServer = new WebbitAppServer();
     appServer.start();
     pages = new Pages(appServer);

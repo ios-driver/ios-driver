@@ -69,6 +69,16 @@ UIAElement.prototype.type = function() {
 	return this.toString().replace('[object ', '').replace(']', '');
 }
 
+UIAElement.prototype.rect2 = function() {
+	var rect = this.rect();
+	
+	rect.origin.x = Math.floor(rect.origin.x);
+	rect.origin.y = Math.floor(rect.origin.y);
+	rect.size.height =  Math.floor(rect.size.height);
+	rect.size.width = Math.floor(rect.size.width);
+	return rect;
+}
+
 UIAElement.prototype.isInAlert = function() {
 	var parent;
 	if(this.parent) {
@@ -93,7 +103,7 @@ UIAElement.prototype.isScrollable = function() {
 
 	while(parent.type() != "UIAElementNil" && parent.type() != "UIATarget") {
 		if(parent.type() == "UIATableView" || parent.type() == "UIAWebView") {
-			//log(this.type() + "isScollable : " + false);
+			// log(this.type() + "isScollable : " + false);
 			return true;
 		}
 		parent = parent.parent();
@@ -182,11 +192,13 @@ UIAElementNil.prototype.reference = UIAElement.prototype.reference;
 UIAKey.prototype.reference = UIAElement.prototype.reference;
 
 /**
- * scrollToVisible only makes sense if the element if in a webview or a tableView.
- * It was working, and doing nothing for other elements up to ios5.1.
- * Starting from ios6, it now throws :
- * Unexpected error in -[UIAStaticText_0xdc363d0 scrollToVisible], /SourceCache/UIAutomation_Sim/UIAutomation-271/Framework/UIAElement.m line 1545, kAXErrorFailure
- * so need to check first if scrolling will do anything to avoid this exception.
+ * scrollToVisible only makes sense if the element if in a webview or a
+ * tableView. It was working, and doing nothing for other elements up to ios5.1.
+ * Starting from ios6, it now throws : Unexpected error in
+ * -[UIAStaticText_0xdc363d0 scrollToVisible],
+ * /SourceCache/UIAutomation_Sim/UIAutomation-271/Framework/UIAElement.m line
+ * 1545, kAXErrorFailure so need to check first if scrolling will do anything to
+ * avoid this exception.
  */
 UIAElement.prototype.scrollToVisibleSafe = function() {
 	if(this.isScrollable()) {
@@ -214,7 +226,7 @@ UIAElement.prototype.isStale = function() {
 			}
 		}
 	}
-	//log(this.type() + "default false");
+	// log(this.type() + "default false");
 	return false;
 }
 
@@ -235,15 +247,18 @@ UIAElement.prototype.element_or = function(depth, criteria) {
 	for(var i = 0; i < all.length; i++) {
 		var element = all[i];
 		if(element.matches(criteria)) {
-			if(keys.length === 2) {// if location criteria, need to find the smallest element containing the location
+			if(keys.length === 2) {// if location criteria, need to find the
+									// smallest element containing the location
 				var elementArea = element.rect().size.width * element.rect().size.height;
-				// the = is critical. the 'all' collection has the elements listed in order. For the given tree:
+				// the = is critical. the 'all' collection has the elements
+				// listed in order. For the given tree:
 				// parent
-				//	- child1
-				//		- child2
-				//  - child3
+				// - child1
+				// - child2
+				// - child3
 				// all will be parent , child1, child2 , child3.
-				// if child1 and child2 have the same area, the assumption is that child1 is a container, while child2 is the element
+				// if child1 and child2 have the same area, the assumption is
+				// that child1 is a container, while child2 is the element
 				// the user will interact with.
 				// <= instead of < garantees to return child2 and not child1
 				if(elementArea <= resultArea) {
@@ -490,7 +505,7 @@ UIAElement.prototype.matches = function(criteria) {
 }
 /**
  * create something similar to UIAelement array from a list of elements
- *
+ * 
  * @param elements
  *            an array of native UIAElements.
  */

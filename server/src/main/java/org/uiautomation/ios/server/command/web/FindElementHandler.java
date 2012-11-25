@@ -49,7 +49,7 @@ public class FindElementHandler extends BaseWebCommandHandler {
     if (rwe == null) {
       throw new NoSuchElementException("No element found for " + type + "=" + value);
     } else {
-      res.put("ELEMENT", rwe.getNodeId().getId());
+      res.put("ELEMENT", ""+rwe.getNodeId().getId());
       Response resp = new Response();
       resp.setSessionId(getSession().getSessionId());
       resp.setStatus(0);

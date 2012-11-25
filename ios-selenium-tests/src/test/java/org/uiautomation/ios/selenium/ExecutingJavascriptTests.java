@@ -14,6 +14,7 @@ import static org.testng.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,6 +48,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Files;
 
+
+@Test
 public class ExecutingJavascriptTests {
 
   private static String safari = "/Applications/Xcode4.5.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.0.sdk/Applications/MobileSafari.app";
@@ -67,7 +70,7 @@ public class ExecutingJavascriptTests {
     IOSCapabilities safari = IOSCapabilities.ipad("Safari");
     safari.setCapability(IOSCapabilities.TIME_HACK, false);
 
-    driver = new RemoteMobileSafariDriver(url, safari);
+    driver = new RemoteMobileSafariDriver(new URL(url), safari);
     appServer = new WebbitAppServer();
     appServer.start();
     pages = new Pages(appServer);

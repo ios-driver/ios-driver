@@ -4,6 +4,7 @@ import static org.openqa.selenium.TestWaiter.waitFor;
 import static org.openqa.selenium.WaitingConditions.pageTitleToBe;
 
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -46,7 +47,7 @@ public class ElementFindingTest {
     IOSCapabilities safari = IOSCapabilities.ipad("Safari");
     safari.setCapability(IOSCapabilities.TIME_HACK, false);
 
-    driver = new RemoteMobileSafariDriver(url, safari);
+    driver = new RemoteMobileSafariDriver(new URL(url), safari);
     appServer = new WebbitAppServer();
     appServer.start();
     pages = new Pages(appServer);

@@ -126,7 +126,7 @@ public enum CommandMapping {
  
   // UIAElement
   HIT_POINT(NotImplementedNativeHandler.class,NotImplementedWebHandler.class),
-  RECT(".rect()"),
+  RECT(".rect2()"),
   
   PARENT(NotImplementedNativeHandler.class,NotImplementedWebHandler.class),
   

@@ -1,5 +1,6 @@
 package org.uiautomation.ios.server.command.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -48,14 +49,15 @@ public class FindElementsHandler extends BaseWebCommandHandler {
 
     JSONArray array = new JSONArray();
 
+    List<JSONObject> list = new ArrayList<JSONObject>();
     for (RemoteWebElement el : res) {
-      array.put(new JSONObject().put("ELEMENT", el.getNodeId().getId()));
+      list.add(new JSONObject().put("ELEMENT", ""+el.getNodeId().getId()));
     }
 
     Response resp = new Response();
     resp.setSessionId(getSession().getSessionId());
     resp.setStatus(0);
-    resp.setValue(array);
+    resp.setValue(list);
     return resp;
   }
 
