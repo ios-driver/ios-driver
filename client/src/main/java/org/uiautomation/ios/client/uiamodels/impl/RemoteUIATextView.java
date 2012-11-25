@@ -13,11 +13,11 @@
  */
 package org.uiautomation.ios.client.uiamodels.impl;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.uiautomation.ios.UIAModels.UIATextView;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
+import org.uiautomation.ios.communication.WebDriverLikeRequest;
+
+import com.google.common.collect.ImmutableMap;
 
 public class RemoteUIATextView extends RemoteUIAElement implements UIATextView {
 
@@ -26,17 +26,11 @@ public class RemoteUIATextView extends RemoteUIAElement implements UIATextView {
   }
 
   @Override
-  public void setValue(String value) {
-    JSONObject payload = new JSONObject();
-    try {
-      value = value.replaceAll("\\\\", "\\\\\\\\");
-      value = value.replaceAll("\\n", "\\\\n");
-      value = value.replaceAll("\\t", "\\\\t");
-      payload.put("value", "'" + value + "'");
-    } catch (JSONException e) {
-      throw new IOSAutomationException(e);
-    }
-    execute(WebDriverLikeCommand.SET_VALUE, payload);
+  public void setValue(CharSequence... keysToSend) {
+
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.SET_VALUE,
+        ImmutableMap.of("value", keysToSend));
+    getDriver().execute(request);
   }
 
 }

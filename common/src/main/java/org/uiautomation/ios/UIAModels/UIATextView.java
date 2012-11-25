@@ -14,5 +14,5 @@
 package org.uiautomation.ios.UIAModels;
 
 public interface UIATextView extends UIAElement {
-  public void setValue(String value);
+  public void setValue(CharSequence... keysToSend);
 }

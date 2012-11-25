@@ -15,9 +15,9 @@ package org.uiautomation.ios.UIAModels;
 
 public interface UIATableView extends UIAScrollView {
 
-  public UIAElementArray<UIATableGroup> getGroups();
+  /*public UIAElementArray<UIATableGroup> getGroups();
 
   public UIAElementArray<UIATableCell> getCells();
 
-  public UIAElementArray<UIATableCell> getVisibleCells();
+  public UIAElementArray<UIATableCell> getVisibleCells();*/
 }

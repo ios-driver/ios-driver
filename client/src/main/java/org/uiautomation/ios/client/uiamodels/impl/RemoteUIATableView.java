@@ -27,7 +27,9 @@ public class RemoteUIATableView extends RemoteUIAScrollView implements UIATableV
     super(driver, reference);
   }
 
-  public UIAElementArray<UIATableGroup> getGroups() {
+
+
+  /*public UIAElementArray<UIATableGroup> getGroups() {
     return (UIAElementArray<UIATableGroup>) getRemoteObject(WebDriverLikeCommand.TABLE_GROUPS,
         new JSONObject());
   }
@@ -40,6 +42,6 @@ public class RemoteUIATableView extends RemoteUIAScrollView implements UIATableV
   public UIAElementArray<UIATableCell> getVisibleCells() {
     return (UIAElementArray<UIATableCell>) getRemoteObject(
         WebDriverLikeCommand.TABLE_VISIBLE_CELLS, new JSONObject());
-  }
+  }*/
 
 }

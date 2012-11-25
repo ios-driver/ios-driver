@@ -18,10 +18,17 @@ public class SetValueNativeHandler extends UIAScriptHandler{
     super(driver, request);
     try {
       JSONArray array  =request.getPayload().getJSONArray("value");
+      String value = array.getString(0);
+      String corrected = value.replaceAll("\\\\", "\\\\\\\\");
+      corrected = corrected.replaceAll("\\n", "\\\\n");
+      corrected = corrected.replaceAll("\\t", "\\\\t");
+
+
+      
       String js = voidTemplate
           .replace(":sessionId", request.getSession())
           .replace(":reference", request.getVariableValue(":reference"))
-          .replace(":jsMethod", ".setValue('"+array.getString(0)+"')");
+          .replace(":jsMethod", ".setValue('"+corrected+"')");
       System.out.println(js);
       setJS(js);
     } catch (JSONException e) {

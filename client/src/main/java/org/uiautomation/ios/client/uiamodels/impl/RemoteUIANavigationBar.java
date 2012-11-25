@@ -16,19 +16,22 @@ package org.uiautomation.ios.client.uiamodels.impl;
 import org.uiautomation.ios.UIAModels.UIAButton;
 import org.uiautomation.ios.UIAModels.UIANavigationBar;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
+import org.uiautomation.ios.communication.WebDriverLikeRequest;
 
 public class RemoteUIANavigationBar extends RemoteUIAElement implements UIANavigationBar {
 
   public RemoteUIANavigationBar(RemoteUIADriver driver, String reference) {
     super(driver, reference);
-      }
+  }
 
   public UIAButton getLeftButton() {
-    return (UIAButton) getRemoteObject(WebDriverLikeCommand.LEFT_BUTTON);
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.LEFT_BUTTON);
+    return getDriver().execute(request);
   }
 
   public UIAButton getRightButton() {
-    return (UIAButton) getRemoteObject(WebDriverLikeCommand.RIGHT_BUTTON);
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.RIGHT_BUTTON);
+    return getDriver().execute(request);
   }
 
 }

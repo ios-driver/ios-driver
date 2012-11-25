@@ -35,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Keyboard;
+import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriverException;
@@ -45,7 +46,9 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.Response;
 import org.openqa.selenium.remote.internal.WebElementToJsonConverter;
 import org.uiautomation.ios.IOSCapabilities;
+import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.UIAModels.Session;
+import org.uiautomation.ios.UIAModels.UIAAlert;
 import org.uiautomation.ios.UIAModels.UIADriver;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIAKeyboard;
@@ -334,7 +337,7 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, Takes
     if (o instanceof Map) {
       Map<String, Object> map = (Map<String, Object>) o;
       if (map.containsKey("ELEMENT")) {
-        return (T) RemoteIOSObject.createObject(this, map, null);
+        return (T) RemoteIOSObject.createObject(this, map);
       } else {
         return (T) map;
       }
@@ -420,12 +423,11 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, Takes
     // ... and convert it.
     return target.convertFromBase64Png(base64);
   }
-  
-  
 
   @Override
   public Keyboard getKeyboard() {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.KEYBOARD,RemoteUIAElement.getFrontMostApp(this),null);
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.KEYBOARD, RemoteUIAElement.getFrontMostApp(this),
+        null);
     return execute(request);
   }
 
@@ -435,4 +437,19 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, Takes
     execute(request);
   }
 
+  @Override
+  public void setDeviceOrientation(Orientation o) {
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TARGET_TAP, ImmutableMap.of("orientation", o));
+    execute(request);
+  }
+
+  @Override
+  public UIAAlert getAlert() throws NoAlertPresentException {
+    RemoteUIAAlert alert = new RemoteUIAAlert(this, "3");
+    // but need to access it once with a call just to check if an alert actually
+    // exists. If not,
+    // throw a no alert exception
+    alert.getName();
+    return alert;
+  }
 }

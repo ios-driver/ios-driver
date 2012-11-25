@@ -126,15 +126,11 @@ var UIAutomation = {
 				value = value.toArray();
 				for ( var i = 0; i < value.length; i++) {
 					var current = value[i];
-					log("current "+current);
 					var item = {};
 					item.ELEMENT = "" + current.reference();
 					item.type = current.type();
-					log("item "+item);
 					all.push(item);
-					log("all "+all.length);
 				}
-				log(JSON.stringify(all));
 				res = all;
 			} else if (value && value.type) {
 				// res.ref = value.reference();

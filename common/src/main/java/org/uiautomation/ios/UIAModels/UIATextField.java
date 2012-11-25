@@ -15,5 +15,5 @@ package org.uiautomation.ios.UIAModels;
 
 public interface UIATextField extends UIAElement {
 
-  public void setValue(String value);
+  public void setValue(CharSequence... keysToSend);
 }

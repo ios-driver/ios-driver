@@ -92,18 +92,14 @@ public abstract class RemoteIOSObject extends RemoteWebElement {
    *         simple object, an empty list for a UIAElementArray.
    * @throws Exception
    */
-  public static RemoteIOSObject createObject(RemoteUIADriver driver, Map<String, Object> ro, Class<?> expected) {
+  public static RemoteIOSObject createObject(RemoteUIADriver driver, Map<String, Object> ro) {
     String ref = (String) ro.get("ELEMENT");
     String type = (String) ro.get("type");
 
     String remoteObjectName = "org.uiautomation.ios.client.uiamodels.impl.Remote" + type;
 
     if ("UIAElementNil".equals(type)) {
-      if (expected == UIAElementArray.class) {
-        return RemoteUIAElementArray.emptyArray(driver);
-      } else {
-        return null;
-      }
+      return null;
     }
 
     boolean isArray = false; // uiObject.has("length");

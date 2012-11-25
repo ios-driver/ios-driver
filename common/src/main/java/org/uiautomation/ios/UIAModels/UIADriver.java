@@ -17,6 +17,7 @@ import java.io.File;
 import java.util.List;
 
 import org.json.JSONObject;
+import org.openqa.selenium.NoAlertPresentException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.configuration.DriverConfiguration;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
@@ -37,7 +38,9 @@ public interface UIADriver extends DriverConfiguration{
 
   public void quit();
   
-  
+ 
+  public UIAAlert getAlert() throws NoAlertPresentException;
+ 
 
   //public void setTimeout(String type, int timeoutInSeconds);
 
@@ -48,6 +51,8 @@ public interface UIADriver extends DriverConfiguration{
   public List<UIAElement> findElements(Criteria c);
 
   public void tap(int x,int y);
+
+  void setDeviceOrientation(Orientation o);
 
   //public Set<String> getWindowHandles();
 
