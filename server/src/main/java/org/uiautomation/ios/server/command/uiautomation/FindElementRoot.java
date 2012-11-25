@@ -35,13 +35,13 @@ public class FindElementRoot extends UIAScriptHandler {
       try {
         JSONObject json = getCriteria(request.getPayload());
         decorated = AbstractCriteria.parse(json, decorator);
-        request.getPayload().put("criteria", decorated.getJSONRepresentation().toString());
+        request.getPayload().put("criteria", decorated.stringify().toString());
       } catch (Exception e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
       String js = jsTemplate.replace(":sessionId", request.getSession()).replace(":depth", "" + depth)
-          .replace(":reference", reference).replace(":criteria", decorated.getJSONRepresentation().toString());
+          .replace(":reference", reference).replace(":criteria", decorated.stringify().toString());
       setJS(js);
     } catch (Exception e) {
       throw new IOSAutomationException("error parsing the payload", e);
@@ -64,7 +64,7 @@ public class FindElementRoot extends UIAScriptHandler {
         try {
           Package p = UIAElement.class.getPackage();
           Criteria c = new TypeCriteria(Class.forName(p.getName()+"."+value));
-          return c.getJSONRepresentation();
+          return c.stringify();
         } catch (ClassNotFoundException e) {
           // TODO Auto-generated catch block
           e.printStackTrace();

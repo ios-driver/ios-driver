@@ -95,7 +95,7 @@ public class GetHandler extends BaseWebCommandHandler {
 
       getSession().setMode(WorkingMode.Native);
       getAddressBar().tap();
-      UIAKeyboard keyboard = getSession().getNativeDriver().getLocalTarget().getFrontMostApp().getKeyboard();
+      UIAKeyboard keyboard = getSession().getNativeDriver().getKeyboard();
       keyboard.typeString(url);
       keyboard.findElement(new NameCriteria("Go")).tap();
 

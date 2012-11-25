@@ -19,7 +19,7 @@ public class CriteriaSerialization {
   @Test
   public void uiclass() throws Exception {
     TypeCriteria name = new TypeCriteria(UIAElement.class);
-    JSONObject o = name.getJSONRepresentation();
+    JSONObject o = name.stringify();
 
     TypeCriteria c = AbstractCriteria.parse(o);
 
@@ -31,7 +31,7 @@ public class CriteriaSerialization {
   @Test
   public void name() throws Exception {
     NameCriteria name = new NameCriteria("the name");
-    JSONObject o = name.getJSONRepresentation();
+    JSONObject o = name.stringify();
 
     NameCriteria c = AbstractCriteria.parse(o);
 
@@ -43,7 +43,7 @@ public class CriteriaSerialization {
   @Test
   public void value() throws Exception {
     ValueCriteria name = new ValueCriteria("the value");
-    JSONObject o = name.getJSONRepresentation();
+    JSONObject o = name.stringify();
 
     ValueCriteria c = AbstractCriteria.parse(o);
 
@@ -55,7 +55,7 @@ public class CriteriaSerialization {
   @Test
   public void label() throws Exception {
     LabelCriteria name = new LabelCriteria("the label");
-    JSONObject o = name.getJSONRepresentation();
+    JSONObject o = name.stringify();
 
     LabelCriteria c = AbstractCriteria.parse(o);
 
@@ -71,7 +71,7 @@ public class CriteriaSerialization {
     ValueCriteria v = new ValueCriteria("the value");
     AndCriteria and = new AndCriteria(l, v);
 
-    JSONObject o = and.getJSONRepresentation();
+    JSONObject o = and.stringify();
 
     AndCriteria c = AbstractCriteria.parse(o);
 
@@ -84,7 +84,7 @@ public class CriteriaSerialization {
     ValueCriteria v = new ValueCriteria("the value");
     OrCriteria or = new OrCriteria(l, v);
 
-    JSONObject o = or.getJSONRepresentation();
+    JSONObject o = or.stringify();
 
     OrCriteria c = AbstractCriteria.parse(o);
 
@@ -98,7 +98,7 @@ public class CriteriaSerialization {
 
     NotCriteria not = new NotCriteria(l);
 
-    JSONObject o = not.getJSONRepresentation();
+    JSONObject o = not.stringify();
 
     NotCriteria c = AbstractCriteria.parse(o);
 

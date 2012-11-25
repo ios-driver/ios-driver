@@ -15,19 +15,23 @@ package org.uiautomation.ios.communication;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.remote.BeanToJsonConverter;
+import org.openqa.selenium.remote.SessionId;
+import org.uiautomation.ios.UIAModels.UIAElement;
 
 public class WebDriverLikeRequest {
 
-
   private String method;
   private String path;
-  // TODO freynaud extract that to a dedicated object to avoid json objects leaking exception
+  // TODO freynaud extract that to a dedicated object to avoid json objects
+  // leaking exception
   // everywhere.
   private JSONObject payload;
 
@@ -46,7 +50,6 @@ public class WebDriverLikeRequest {
 
     }
     payload = o;
-
   }
 
   public WebDriverLikeRequest(String method, Path path, JSONObject payload) {
@@ -69,6 +72,12 @@ public class WebDriverLikeRequest {
     this.payload = payload;
   }
 
+  public WebDriverLikeRequest(String method, Path path, Map<String, ?> params) {
+    this.method = method;
+    this.path = path.getPath();
+    this.payload = new JSONObject(params);
+  }
+
   public boolean hasPayload() {
     return payload != null && payload.length() != 0;
   }
@@ -85,7 +94,6 @@ public class WebDriverLikeRequest {
     return toJSON(0);
   }
 
-
   public String toJSON(int i) throws JSONException {
     JSONObject o = new JSONObject();
     o.put("method", method);
@@ -94,19 +102,13 @@ public class WebDriverLikeRequest {
     return o.toString(i);
   }
 
-
-
   public String getMethod() {
     return method;
   }
 
-
-
   public String getPath() {
     return path;
   }
-
-
 
   public JSONObject getPayload() {
     return payload;
@@ -122,6 +124,7 @@ public class WebDriverLikeRequest {
     String[] pieces = path.split("/");
     return pieces[i];
   }
+
   public boolean hasVariable(String variable) {
     WebDriverLikeCommand genericCommand = getGenericCommand();
     boolean ok = genericCommand.path().contains(variable);
@@ -129,9 +132,7 @@ public class WebDriverLikeRequest {
   }
 
   public String getSession() {
-      return getVariableValue(":sessionId");  
+    return getVariableValue(":sessionId");
   }
-
-
 
 }

@@ -18,6 +18,7 @@ import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.UIAModels.UIAElementArray;
@@ -28,45 +29,46 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 
 /**
- * Proxy to an object cached on the server side.Each object is identified by a unique reference when
- * accessed the first time, and accessed with this reference later on.
+ * Proxy to an object cached on the server side.Each object is identified by a
+ * unique reference when accessed the first time, and accessed with this
+ * reference later on.
  * 
- * WARNING : Equality as per the JSON Webdriver protocol is broken : the same object can be stored
- * several times in the cache with different references if retrieved several time.
+ * WARNING : Equality as per the JSON Webdriver protocol is broken : the same
+ * object can be stored several times in the cache with different references if
+ * retrieved several time.
  * 
  */
-public abstract class RemoteIOSObject extends RemoteWebElement{
+public abstract class RemoteIOSObject extends RemoteWebElement {
 
   private final RemoteUIADriver driver;
   private final String reference;
-
 
   public RemoteIOSObject(RemoteUIADriver driver, String reference) {
     this.driver = driver;
     this.reference = reference;
     setParent(driver);
   }
-  
-  
-
 
   /**
    * @see #get(WebDriverLikeCommand, JSONObject)
    * @param command
    * @return
    */
-  public RemoteIOSObject getRemoteObject(WebDriverLikeCommand command) {
+  /*public RemoteIOSObject getRemoteObject(WebDriverLikeCommand command) {
     return getRemoteObject(command, new JSONObject());
-  }
+  }*/
 
   /**
-   * retrieves an object in the element tree of the current RemoteObject, using the given command.
+   * retrieves an object in the element tree of the current RemoteObject, using
+   * the given command.
    * 
-   * @param command the command to execute, for instance findElement.
-   * @param payload the optional parameters, criteria for instance.
+   * @param command
+   *          the command to execute, for instance findElement.
+   * @param payload
+   *          the optional parameters, criteria for instance.
    * @return a lazy loaded remote object.
    */
-  public RemoteIOSObject getRemoteObject(WebDriverLikeCommand command, JSONObject payload) {
+  /*public RemoteIOSObject getRemoteObject(WebDriverLikeCommand command, JSONObject payload) {
     try {
       Path p = new Path(command).withSession(driver.getSessionId()).withReference(getReference());
 
@@ -80,24 +82,24 @@ public abstract class RemoteIOSObject extends RemoteWebElement{
     } catch (Exception e) {
       throw new IOSAutomationException("bug", e);
     }
-  }
-
-
+  }*/
 
   /**
-   * Uses reflection to instanciate a remote object implementing the correct interface.
+   * Uses reflection to instanciate a remote object implementing the correct
+   * interface.
    * 
    * @param driver
-   * @param uiObject the json object returned by the server.
-   * @param expected the UIAutomation object type.
-   * @return the object. If the object is UIAElementNil, return null for a simple object, an empty
-   *         list for a UIAElementArray.
+   * @param uiObject
+   *          the json object returned by the server.
+   * @param expected
+   *          the UIAutomation object type.
+   * @return the object. If the object is UIAElementNil, return null for a
+   *         simple object, an empty list for a UIAElementArray.
    * @throws Exception
    */
-  public static RemoteIOSObject createObject(RemoteUIADriver driver, Map<String, Object> ro , Class<?> expected)
-      throws Exception {
-    String ref = (String)ro.get("ELEMENT");
-    String type = (String)ro.get("type");
+  public static RemoteIOSObject createObject(RemoteUIADriver driver, Map<String, Object> ro, Class<?> expected) {
+    String ref = (String) ro.get("ELEMENT");
+    String type = (String) ro.get("type");
 
     String remoteObjectName = "org.uiautomation.ios.client.uiamodels.impl.Remote" + type;
 
@@ -109,23 +111,28 @@ public abstract class RemoteIOSObject extends RemoteWebElement{
       }
     }
 
-    boolean isArray = false; //uiObject.has("length");
+    boolean isArray = false; // uiObject.has("length");
 
     Object[] args = null;
     Class<?>[] argsClass = null;
 
     if (isArray) {
-      //args = new Object[] {driver, ref, uiObject.getInt("length")};
-      //argsClass = new Class[] {RemoteUIADriver.class, String.class, Integer.class};
+      // args = new Object[] {driver, ref, uiObject.getInt("length")};
+      // argsClass = new Class[] {RemoteUIADriver.class, String.class,
+      // Integer.class};
     } else {
-      args = new Object[] {driver, ref};
-      argsClass = new Class[] {RemoteUIADriver.class, String.class};
+      args = new Object[] { driver, ref };
+      argsClass = new Class[] { RemoteUIADriver.class, String.class };
+    }
+    try {
+      Class<?> clazz = Class.forName(remoteObjectName);
+      Constructor<?> c = clazz.getConstructor(argsClass);
+      Object o = c.newInstance(args);
+      return (RemoteIOSObject) o;
+    } catch (Exception e) {
+      throw new WebDriverException("error casting", e);
     }
 
-    Class<?> clazz = Class.forName(remoteObjectName);
-    Constructor<?> c = clazz.getConstructor(argsClass);
-    Object o = c.newInstance(args);
-    return (RemoteIOSObject) o;
   }
 
   /**
@@ -134,7 +141,7 @@ public abstract class RemoteIOSObject extends RemoteWebElement{
    * @param command
    * @return
    */
-  public UIARect getUIARect(WebDriverLikeCommand command) {
+  /*public UIARect getUIARect(WebDriverLikeCommand command) {
     try {
       Path p = new Path(command).withSession(driver.getSessionId()).withReference(getReference());
       WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, null);
@@ -146,7 +153,7 @@ public abstract class RemoteIOSObject extends RemoteWebElement{
       return null;
     }
 
-  }
+  }*/
 
   /**
    * Execute the command.
@@ -154,9 +161,9 @@ public abstract class RemoteIOSObject extends RemoteWebElement{
    * @see #execute(WebDriverLikeCommand, JSONObject)
    * @param command
    */
-  public void execute(WebDriverLikeCommand command) {
+  /*public void execute(WebDriverLikeCommand command) {
     execute(command, new JSONObject());
-  }
+  }*/
 
   /**
    * execute the command with the given parameters.
@@ -164,13 +171,11 @@ public abstract class RemoteIOSObject extends RemoteWebElement{
    * @param command
    * @param payload
    */
-  public void execute(WebDriverLikeCommand command, JSONObject payload) {
+  /*public void execute(WebDriverLikeCommand command, JSONObject payload) {
     Path p = new Path(command).withSession(driver.getSessionId()).withReference(getReference());
     WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, payload);
     execute(request);
-  }
-
-
+  }*/
 
   /**
    * 
@@ -178,7 +183,7 @@ public abstract class RemoteIOSObject extends RemoteWebElement{
    * @return
    */
   @SuppressWarnings("unchecked")
-  protected <T> T getObject(WebDriverLikeCommand command) {
+  /*protected <T> T getObject(WebDriverLikeCommand command) {
     Path p = new Path(command).withSession(driver.getSessionId()).withReference(getReference());
     WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, null);
     Response response = execute(request);
@@ -191,37 +196,15 @@ public abstract class RemoteIOSObject extends RemoteWebElement{
         throw new IOSAutomationException("couldn't cast from " + response.getValue().getClass());
       }
     }
-  }
-  
-  public String getAttribute(String name){
+  }*/
+
+  public String getAttribute(String name) {
     WebDriverLikeCommand command = WebDriverLikeCommand.ATTRIBUTE;
     Path p = new Path(WebDriverLikeCommand.ATTRIBUTE).withSession(driver.getSessionId()).withReference(getReference());
     p.validateAndReplace(":name", name);
-    WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, null);
-    Response response = execute(request);
-    if (response.getValue() == JSONObject.NULL) {
-      return null;
-    } else {
-      try {
-        return (String) response.getValue();
-      } catch (ClassCastException castException) {
-        throw new IOSAutomationException("couldn't cast from " + response.getValue().getClass());
-      }
-    }
-  }
-  
- 
+    WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p);
+    return driver.execute(request);
 
-
-
-  private Response execute(WebDriverLikeRequest request) {
-    try {
-      return driver.execute(request);
-    } catch (IOSAutomationException ex) {
-      throw ex;
-    } catch (Exception e) {
-      throw new IOSAutomationException("bug", e);
-    }
   }
 
   protected RemoteUIADriver getDriver() {
@@ -231,8 +214,6 @@ public abstract class RemoteIOSObject extends RemoteWebElement{
   public String getReference() {
     return reference;
   }
-
-  
 
   @Override
   public String toString() {

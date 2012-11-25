@@ -28,7 +28,7 @@ public interface UIADriver extends DriverConfiguration{
 
  
 
-  public UIATarget getLocalTarget();
+  //public UIATarget getLocalTarget();
 
   public IOSCapabilities getCapabilities() throws Exception;
 
@@ -36,6 +36,8 @@ public interface UIADriver extends DriverConfiguration{
       throws IOSAutomationException;
 
   public void quit();
+  
+  public UIAKeyboard getNativeKeyboard();
 
   //public void setTimeout(String type, int timeoutInSeconds);
 

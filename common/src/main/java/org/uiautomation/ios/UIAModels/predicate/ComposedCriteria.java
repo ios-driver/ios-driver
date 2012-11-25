@@ -19,6 +19,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
 
 public abstract class ComposedCriteria extends DecorableCriteria {
 
@@ -36,13 +37,18 @@ public abstract class ComposedCriteria extends DecorableCriteria {
     this.type = t;
   }
 
-  public JSONObject getJSONRepresentation() throws JSONException {
+  public JSONObject stringify()  {
     JSONObject res = new JSONObject();
     JSONArray or = new JSONArray();
     for (Criteria c : criterias) {
-      or.put(c.getJSONRepresentation());
+      or.put(c.stringify());
     }
-    res.put(type.toString(), or);
+    try {
+      res.put(type.toString(), or);
+    }catch (JSONException e) {
+      throw new WebDriverException(e);
+    }
+   
     return res;
   }
 

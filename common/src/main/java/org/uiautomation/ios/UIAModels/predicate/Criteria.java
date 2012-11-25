@@ -13,7 +13,6 @@
  */
 package org.uiautomation.ios.UIAModels.predicate;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public interface Criteria {
@@ -22,5 +21,5 @@ public interface Criteria {
 
   public void addDecorator(CriteriaDecorator decorator);
 
-  public JSONObject getJSONRepresentation() throws JSONException;
+  public JSONObject stringify();
 }

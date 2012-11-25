@@ -14,12 +14,14 @@
 package org.uiautomation.ios.client.uiamodels.impl;
 
 import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.UIAModels.UIAElement;
-import org.uiautomation.ios.UIAModels.UIAElementArray;
 import org.uiautomation.ios.UIAModels.UIAPoint;
 import org.uiautomation.ios.UIAModels.UIARect;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
@@ -30,6 +32,8 @@ import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.exceptions.NoSuchElementException;
+
+import com.google.common.collect.ImmutableMap;
 
 /**
  * Main object for all the UIAutomation stuff. Implement part of the Apple API.
@@ -61,50 +65,68 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
   }
 
   @Override
-  public <T> T findElement(Class<T> type, Criteria c) throws NoSuchElementException {
+  public <T extends UIAElement> T findElement(Class<T> type, Criteria c) throws NoSuchElementException {
     Criteria newOne = new AndCriteria(new TypeCriteria(type), c);
     return (T) findElement(newOne);
   }
 
   @Override
-  public UIAElement findElement(Criteria c) throws NoSuchElementException {
-    try {
-      JSONObject payload = new JSONObject();
-      payload.put("depth", -1);
-      payload.put("criteria", c.getJSONRepresentation());
-      return (UIAElement) getRemoteObject(WebDriverLikeCommand.ELEMENT, payload);
-    } catch (JSONException e) {
-      throw new IOSAutomationException(e);
-    }
+  public <T extends UIAElement> T findElement(Criteria c) throws NoSuchElementException {
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENT,
+        ImmutableMap.of("depth", -1, "criteria", c.stringify()));
+    return getDriver().execute(request);
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public UIAElementArray<UIAElement> findElements(Criteria c) {
-    try {
-      JSONObject payload = new JSONObject();
-      payload.put("depth", -1);
-      payload.put("criteria", c.getJSONRepresentation());
-      return (UIAElementArray<UIAElement>) getRemoteObject(WebDriverLikeCommand.ELEMENTS, payload);
-    } catch (JSONException e) {
-      throw new IOSAutomationException(e);
+  public List<UIAElement> findElements(Criteria c) {
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENTS,
+        ImmutableMap.of("depth", -1, "criteria", c.stringify()));
+    return getDriver().execute(request);
+  }
+
+  @Override
+  protected WebElement findElement(String by, String using) {
+    if (using == null) {
+      throw new IllegalArgumentException("Cannot find elements when the selector is null.");
     }
+
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENT,
+        ImmutableMap.of("using", by, "value", using));
+    return getDriver().execute(request);
+
+  }
+
+  @Override
+  protected List<WebElement> findElements(String by, String using) {
+    if (using == null) {
+      throw new IllegalArgumentException("Cannot find elements when the selector is null.");
+    }
+
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENTS,
+        ImmutableMap.of("using", by, "value", using));
+    return getDriver().execute(request);
+  }
+
+  protected WebDriverLikeRequest buildRequest(WebDriverLikeCommand command, Map<String, ?> params) {
+    return getDriver().buildRequest(command, this, params);
   }
 
   @Override
   public void tap() {
-    execute(WebDriverLikeCommand.CLICK);
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.CLICK);
+    getDriver().execute(request);
+  }
+
+  private WebDriverLikeRequest buildRequest(WebDriverLikeCommand command) {
+    return buildRequest(command, null);
   }
 
   @Override
   public void touchAndHold(int duration) {
-    try {
-      JSONObject payload = new JSONObject();
-      payload.put("duration", duration);
-      execute(WebDriverLikeCommand.TOUCH_AND_HOLD, payload);
-    } catch (JSONException e) {
-      e.printStackTrace();
-    }
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TOUCH_AND_HOLD,
+        ImmutableMap.of("duration", duration));
+    getDriver().execute(request);
 
   }
 
@@ -174,17 +196,16 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
   // TODO freynaud fix that server side.
   @Override
   public boolean isDisplayed() {
-    Integer i = getObject(WebDriverLikeCommand.DISPLAYED);
-    if (i == 1) {
-      return true;
-    } else {
-      return false;
-    }
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.DISPLAYED);
+    return getDriver().execute(request);
   }
 
   @Override
   public UIARect getRect() {
-    return getUIARect(WebDriverLikeCommand.RECT);
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.RECT);
+    Map<String, Integer> rect = getDriver().execute(request);
+    System.out.println(rect);
+    return null;
   }
 
   @Override
@@ -200,16 +221,9 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
 
   @Override
   public void flickInsideWithOptions(int touchCount, UIAPoint startOffset, UIAPoint endOffset) {
-    try {
-      JSONObject payload = new JSONObject();
-      payload.put("touchCount", touchCount);
-      payload.put("startOffset", startOffset);
-      payload.put("endOffset", endOffset);
-      execute(WebDriverLikeCommand.FLICK_INSIDE_WITH_OPTIONS, payload);
-    } catch (JSONException e) {
-      e.printStackTrace();
-
-    }
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.FLICK_INSIDE_WITH_OPTIONS,
+        ImmutableMap.of("touchCount", touchCount, "touchCount", touchCount, "endOffset", endOffset));
+    getDriver().execute(request);
   }
 
 }

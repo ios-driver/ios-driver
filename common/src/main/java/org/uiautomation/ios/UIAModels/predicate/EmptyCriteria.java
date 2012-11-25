@@ -13,7 +13,6 @@
  */
 package org.uiautomation.ios.UIAModels.predicate;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 
@@ -23,7 +22,7 @@ import org.uiautomation.ios.exceptions.IOSAutomationException;
  */
 public class EmptyCriteria extends DecorableCriteria {
 
-  public JSONObject getJSONRepresentation() throws JSONException {
+  public JSONObject stringify(){
     JSONObject res = new JSONObject();
     return res;
   }

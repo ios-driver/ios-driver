@@ -64,7 +64,7 @@ public class RemoteUIAElementArray<T extends UIAElement> extends RemoteIOSObject
     try {
       JSONObject payload = new JSONObject();
       payload.put("depth", -1);
-      payload.put("criteria", c.getJSONRepresentation());
+      payload.put("criteria", c.stringify());
       return (T) getRemoteObject(WebDriverLikeCommand.ELEMENT, payload);
     } catch (JSONException e) {
       throw new IOSAutomationException(e);
@@ -78,7 +78,7 @@ public class RemoteUIAElementArray<T extends UIAElement> extends RemoteIOSObject
     try {
       JSONObject payload = new JSONObject();
       payload.put("depth", -1);
-      payload.put("criteria", c.getJSONRepresentation());
+      payload.put("criteria", c.stringify());
       return (UIAElementArray<T>) getRemoteObject(WebDriverLikeCommand.ELEMENTS, payload);
     } catch (JSONException e) {
       throw new IOSAutomationException(e);

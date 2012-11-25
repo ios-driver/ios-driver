@@ -15,24 +15,19 @@ package org.uiautomation.ios.UIAModels.predicate;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
 
 public abstract class PropertyEqualCriteria extends DecorableCriteria {
 
   private final String propertyName;
   private String value;
-  
-
 
   private L10NStrategy l10nstrategy;
   private MatchingStrategy matchingStrategy;
 
-
-
   public PropertyEqualCriteria(String propertyName, String value) {
     this(propertyName, value, L10NStrategy.none, MatchingStrategy.exact);
   }
-
-
 
   public PropertyEqualCriteria(String propertyName, String value, L10NStrategy l10nStrategy,
       MatchingStrategy matchingStrategy) {
@@ -42,14 +37,16 @@ public abstract class PropertyEqualCriteria extends DecorableCriteria {
     this.matchingStrategy = matchingStrategy;
   }
 
-
-
-  public JSONObject getJSONRepresentation() throws JSONException {
+  public JSONObject stringify() {
     JSONObject res = new JSONObject();
-    res.put("method", propertyName);
-    res.put("expected", value);
-    res.put("l10n", l10nstrategy);
-    res.put("matching", matchingStrategy);
+    try {
+      res.put("method", propertyName);
+      res.put("expected", value);
+      res.put("l10n", l10nstrategy);
+      res.put("matching", matchingStrategy);
+    } catch (JSONException e) {
+      throw new WebDriverException(e);
+    }
     return res;
   }
 
@@ -57,42 +54,28 @@ public abstract class PropertyEqualCriteria extends DecorableCriteria {
     return l10nstrategy;
   }
 
-
-
   public void setL10nstrategy(L10NStrategy l10nstrategy) {
     this.l10nstrategy = l10nstrategy;
   }
-
-
 
   public MatchingStrategy getMatchingStrategy() {
     return matchingStrategy;
   }
 
-
-
   public void setMatchingStrategy(MatchingStrategy matchingStrategy) {
     this.matchingStrategy = matchingStrategy;
   }
-
-
 
   public String getPropertyName() {
     return propertyName;
   }
 
-
   public String getValue() {
     return value;
   }
 
-  
-
   public void setValue(String value) {
     this.value = value;
   }
-
- 
-
 
 }

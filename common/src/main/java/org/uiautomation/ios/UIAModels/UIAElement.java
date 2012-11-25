@@ -14,6 +14,7 @@
 package org.uiautomation.ios.UIAModels;
 
 import java.io.File;
+import java.util.List;
 
 import org.json.JSONObject;
 import org.openqa.selenium.WebElement;
@@ -27,9 +28,9 @@ public interface UIAElement extends WebElement{
 
   public <T extends UIAElement> T findElement(Criteria c) throws NoSuchElementException;
 
-  public <T> T findElement(Class<T> type, Criteria c) throws NoSuchElementException;
+  public <T extends UIAElement> T findElement(Class<T> type, Criteria c) throws NoSuchElementException;
 
-  public UIAElementArray<UIAElement> findElements(Criteria c);
+  public List<UIAElement> findElements(Criteria c);
 
   public void tap();
 
