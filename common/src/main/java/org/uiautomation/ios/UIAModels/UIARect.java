@@ -23,6 +23,14 @@ public class UIARect {
   private int height;
   private int width;
 
+  public UIARect(int x, int y, int height, int width) {
+    this.x = x;
+    this.y = y;
+    this.height = height;
+    this.width = width;
+
+  }
+
   public UIARect(JSONObject o) throws JSONException {
     JSONObject origin = o.getJSONObject("origin");
     x = origin.getInt("x");
@@ -52,6 +60,5 @@ public class UIARect {
   public int getWidth() {
     return width;
   }
-
 
 }
