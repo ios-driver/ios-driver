@@ -132,6 +132,7 @@ public enum WebDriverLikeCommand {
   FLICK_INSIDE_WITH_OPTIONS("POST" , "/session/:sessionId/uiaElement/:reference/flickInsideWithOption",Void.class),
   SCROLL_TO_VISIBLE("POST" , "/session/:sessionId/uiaElement/:reference/scrollToVisible",Void.class),
   ROTATE_WITH_OPTIONS("POST" , "/session/:sessionId/uiaElement/:reference/rotateWithOptions",Void.class),
+  PINCH_CLOSE("POST","/session/:sessionId/pinchClose",Void.class),
   
   
   // UIAElementArray

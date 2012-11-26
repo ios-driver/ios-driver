@@ -34,6 +34,8 @@ public class Atoms {
   private static String clear;
   private static String isSelected;
   private static String stringify;
+  private static String getLocationInView;
+  private static String getSize;
 
   static {
     try {
@@ -51,11 +53,21 @@ public class Atoms {
       clear = load("atoms/clear.js");
       isSelected = load("atoms/isSelected.js");
       stringify = load("atoms/stringify.js");
+      getLocationInView = load("atoms/getLocationInView.js");
+      getSize = load("atoms/getSize.js");
     } catch (Exception e) {
       throw new RuntimeException("Cannot load atoms");
     }
   }
 
+  public static String getLocationInView() {
+    return getLocationInView;
+  }
+  
+  public static String getSize() {
+    return getSize;
+  }
+  
   public static String getText() {
     return getText;
   }

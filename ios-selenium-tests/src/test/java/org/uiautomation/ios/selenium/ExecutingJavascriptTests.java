@@ -48,45 +48,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Files;
 
-
 @Test
-public class ExecutingJavascriptTests {
-
-  private static String safari = "/Applications/Xcode4.5.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.0.sdk/Applications/MobileSafari.app";
-  private IOSServer server;
-  private static String[] args = { "-port", "4444", "-host", "localhost", "-aut", safari };
-  private static IOSServerConfiguration config = IOSServerConfiguration.create(args);
-  private RemoteMobileSafariDriver driver = null;
-  private String url = "http://" + config.getHost() + ":" + config.getPort() + "/wd/hub";
-  private Pages pages;
-  private AppServer appServer;
-
-  @BeforeClass
-  public void setup() throws Exception {
-
-    server = new IOSServer(config);
-    server.start();
-
-    IOSCapabilities safari = IOSCapabilities.ipad("Safari");
-    safari.setCapability(IOSCapabilities.TIME_HACK, false);
-
-    driver = new RemoteMobileSafariDriver(new URL(url), safari);
-    appServer = new WebbitAppServer();
-    appServer.start();
-    pages = new Pages(appServer);
-  }
-
-  @AfterClass
-  public void tearDown() throws Exception {
-
-    try {
-      driver.quit();
-    } catch (Exception e) {
-      System.err.println("cannot quit properly :" + e.getMessage());
-    }
-    server.stop();
-    appServer.stop();
-  }
+public class ExecutingJavascriptTests extends BaseSeleniumTest {
 
   @JavascriptEnabled
   @Test

@@ -21,7 +21,7 @@ public class FindElementRoot extends UIAScriptHandler {
   public FindElementRoot(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
 
-    String reference = "0";
+    String reference = "1";
     if (request.hasVariable(":reference")) {
       reference = request.getVariableValue(":reference");
     }

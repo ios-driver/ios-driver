@@ -71,10 +71,10 @@ UIAElement.prototype.type = function() {
 
 UIAElement.prototype.rect2 = function() {
 	var rect = this.rect();
-	
+
 	rect.origin.x = Math.floor(rect.origin.x);
 	rect.origin.y = Math.floor(rect.origin.y);
-	rect.size.height =  Math.floor(rect.size.height);
+	rect.size.height = Math.floor(rect.size.height);
 	rect.size.width = Math.floor(rect.size.width);
 	return rect;
 }
@@ -161,7 +161,7 @@ UIAAlert.prototype.defaultButton2 = function() {
 
 UIAAlert.prototype.cancelButton2 = function() {
 	var res = this.cancelButton();
-	
+
 	res.tap2 = function() {
 		if(this.isVisible()) {
 			var rect = this.rect();
@@ -215,6 +215,10 @@ UIAElement.prototype.isStale = function() {
 	} else {
 		try {
 			this.scrollToVisibleSafe();
+			// tmp fix for safari and big web views.
+			if(this.type() === "UIAWebView") {
+				return false;
+			}
 			if(this.isVisible() == 1) {
 				return false;
 			} else {
@@ -248,7 +252,7 @@ UIAElement.prototype.element_or = function(depth, criteria) {
 		var element = all[i];
 		if(element.matches(criteria)) {
 			if(keys.length === 2) {// if location criteria, need to find the
-									// smallest element containing the location
+				// smallest element containing the location
 				var elementArea = element.rect().size.width * element.rect().size.height;
 				// the = is critical. the 'all' collection has the elements
 				// listed in order. For the given tree:
@@ -417,7 +421,7 @@ var getKeys = function(obj) {
 // returns true is the point (x,y) is contained is the element.
 UIAElement.prototype.contains = function(x, y) {
 	var rect = this.rect();
-	
+
 	if(x < Math.floor(rect.origin.x)) {
 		return false;
 	}
@@ -430,7 +434,7 @@ UIAElement.prototype.contains = function(x, y) {
 	if(y > (Math.floor(rect.origin.y) + Math.floor(rect.size.height))) {
 		return false;
 	}
-	log("match "+x+","+y+" is in "+ JSON.stringify(this.rect())+","+this.name());
+	log("match " + x + "," + y + " is in " + JSON.stringify(this.rect()) + "," + this.name());
 	return true;
 }
 
@@ -479,7 +483,7 @@ UIAElement.prototype.matches = function(criteria) {
 
 		var x = criteria['x'];
 		var y = criteria['y'];
-		if (this.contains(x, y)){
+		if(this.contains(x, y)) {
 			return !this.isStale();
 		}
 	} else if(keys.length == 4) {// property match
@@ -505,7 +509,7 @@ UIAElement.prototype.matches = function(criteria) {
 }
 /**
  * create something similar to UIAelement array from a list of elements
- * 
+ *
  * @param elements
  *            an array of native UIAElements.
  */

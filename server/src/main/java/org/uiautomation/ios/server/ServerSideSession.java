@@ -12,6 +12,7 @@ import org.uiautomation.ios.UIAModels.configuration.DriverConfiguration;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.client.uiamodels.impl.AttachRemoteUIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.communication.IOSDevice;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.exceptions.SessionNotCreatedException;
 import org.uiautomation.ios.mobileSafari.WebInspector;
@@ -66,6 +67,11 @@ public class ServerSideSession extends Session {
         forceStop();
       }
     });
+  }
+  
+  
+  public IOSDevice getIOSDevice(){
+    return capabilities.getDevice();
   }
 
   public CommandConfiguration configure(WebDriverLikeCommand command) {

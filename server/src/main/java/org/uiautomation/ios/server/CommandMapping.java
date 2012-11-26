@@ -41,6 +41,7 @@ import org.uiautomation.ios.server.command.uiautomation.GetWindowHandlesCommandH
 import org.uiautomation.ios.server.command.uiautomation.LocalTarget;
 import org.uiautomation.ios.server.command.uiautomation.LogElementTree;
 import org.uiautomation.ios.server.command.uiautomation.NewSession;
+import org.uiautomation.ios.server.command.uiautomation.PinchCloseHandler;
 import org.uiautomation.ios.server.command.uiautomation.ServerStatus;
 import org.uiautomation.ios.server.command.uiautomation.SetCurrentContext;
 import org.uiautomation.ios.server.command.uiautomation.SetImplicitWaitTimeout;
@@ -164,6 +165,7 @@ public enum CommandMapping {
   FLICK_INSIDE_WITH_OPTIONS(""),
   SCROLL_TO_VISIBLE(".scrollToVisible()"),
   ROTATE_WITH_OPTIONS(NotImplementedNativeHandler.class,NotImplementedWebHandler.class),
+  PINCH_CLOSE(PinchCloseHandler.class,NotImplementedWebHandler.class),
   
   // UIAElementArray
   GET(".toArray()[:index]"),

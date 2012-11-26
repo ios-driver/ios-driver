@@ -6,7 +6,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.UIADriver;
@@ -150,11 +150,13 @@ public class WebInspector {
   public int getInnerWidth() throws JSONException, Exception {
     JSONObject cmd = new JSONObject();
     cmd.put("method", "Runtime.evaluate");
-    cmd.put("params", new JSONObject().put("expression", "window.innerWidth;"));
+    cmd.put("params", new JSONObject().put("expression", "document.body.clientWidth;"));
 
     JSONObject response = protocol.sendCommand(cmd);
     return cast(response);
   }
+  
+  
 
   public RemoteWebElement getMainWindow() throws JSONException, Exception {
     /*JSONObject cmd = new JSONObject();
@@ -242,6 +244,30 @@ public class WebInspector {
     checkForJSErrors(response);
     Object o = cast(response);
     return o;
+  }
+  
+  public  Dimension getSize() throws Exception {
+    String f = "(function(element) { var result = " + Atoms.getSize() + "();"
+        + "var res = " + Atoms.stringify() + "(result);"
+        + "return  res;  })";
+    JSONObject cmd = new JSONObject();
+
+    cmd.put("method", "Runtime.callFunctionOn");
+
+
+    cmd.put("params",
+        new JSONObject()
+            .put("objectId", getDocument().getRemoteObject().getId())
+            .put("functionDeclaration", f)
+            .put("returnByValue", false));
+
+    JSONObject response = protocol.sendCommand(cmd);
+    System.out.println(response);
+    String s = cast(response);
+    JSONObject o = new  JSONObject(s);
+    Dimension dim = new Dimension(o.getInt("width"), o.getInt("height"));
+    return dim;
+   
   }
 
   private void checkForJSErrors(JSONObject response) throws Exception {

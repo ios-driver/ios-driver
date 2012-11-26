@@ -409,7 +409,8 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, Takes
 
   @Override
   public void tap(int x, int y) {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TARGET_TAP,RemoteUIAElement.target(this),ImmutableMap.of("x", x, "y", y));
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TARGET_TAP, RemoteUIAElement.target(this),
+        ImmutableMap.of("x", x, "y", y));
     execute(request);
   }
 
@@ -428,4 +429,12 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, Takes
     alert.getName();
     return alert;
   }
+
+  @Override
+  public void pinchClose(int x1, int y1, int x2, int y2, int duration) {
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.PINCH_CLOSE,
+        ImmutableMap.of("x1", x1, "y1", y1, "x2", x2, "y2", y2, "duration", duration));
+    execute(request);
+  }
+
 }

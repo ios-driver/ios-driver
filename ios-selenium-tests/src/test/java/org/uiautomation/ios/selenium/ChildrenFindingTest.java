@@ -1,69 +1,21 @@
 package org.uiautomation.ios.selenium;
 
-
 import static org.openqa.selenium.testing.Ignore.Driver.SELENESE;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
-import java.net.URL;
 import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.Pages;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.environment.webserver.AppServer;
-import org.openqa.selenium.environment.webserver.WebbitAppServer;
 import org.openqa.selenium.testing.Ignore;
 import org.openqa.selenium.testing.JavascriptEnabled;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteMobileSafariDriver;
-import org.uiautomation.ios.server.IOSServer;
-import org.uiautomation.ios.server.IOSServerConfiguration;
 
-public class ChildrenFindingTest {
-  
-  
-  private static String safari = "/Applications/Xcode4.5.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.0.sdk/Applications/MobileSafari.app";
-  private IOSServer server;
-  private static String[] args = { "-port", "4444", "-host", "localhost", "-aut", safari };
-  private static IOSServerConfiguration config = IOSServerConfiguration.create(args);
-  private RemoteMobileSafariDriver driver = null;
-  private String url = "http://" + config.getHost() + ":" + config.getPort() + "/wd/hub";
-  private Pages pages;
-  private AppServer appServer;
+public class ChildrenFindingTest extends BaseSeleniumTest {
 
-  @BeforeClass
-  public void setup() throws Exception {
-
-    server = new IOSServer(config);
-    server.start();
-
-    IOSCapabilities safari = IOSCapabilities.ipad("Safari");
-    safari.setCapability(IOSCapabilities.TIME_HACK, false);
-
-    driver = new RemoteMobileSafariDriver(new URL(url), safari);
-    appServer = new WebbitAppServer();
-    appServer.start();
-    pages = new Pages(appServer);
-  }
-  
-  @AfterClass
-  public void tearDown() throws Exception {
-
-    try {
-      driver.quit();
-    } catch (Exception e) {
-      System.err.println("cannot quit properly :" + e.getMessage());
-    }
-    server.stop();
-    appServer.stop();
-    
-  }
   @Test
   public void testFindElementByXPath() {
     driver.get(pages.nestedPage);
@@ -197,8 +149,7 @@ public class ChildrenFindingTest {
   public void testfindElementsByLinkText() {
     driver.get(pages.nestedPage);
     WebElement element = driver.findElement(By.name("div1"));
-    List<WebElement> children = element.findElements(
-        By.linkText("hello world"));
+    List<WebElement> children = element.findElements(By.linkText("hello world"));
     assertEquals(children.size(), (2));
   }
 
@@ -258,7 +209,7 @@ public class ChildrenFindingTest {
   public void testShouldBeAbleToFindAnElementsByCssSelector() {
     driver.get(pages.nestedPage);
     WebElement parent = driver.findElement(By.name("form2"));
-   
+
     List<WebElement> elements = parent.findElements(By.cssSelector("*[name=\"selectomatic\"]"));
     assertEquals(2, elements.size());
   }

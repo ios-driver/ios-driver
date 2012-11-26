@@ -38,7 +38,7 @@ public interface UIADriver extends DriverConfiguration{
 
   public void quit();
   
- 
+  public void pinchClose(int x1, int y1, int x2, int y2, int duration);
   public UIAAlert getAlert() throws NoAlertPresentException;
  
 

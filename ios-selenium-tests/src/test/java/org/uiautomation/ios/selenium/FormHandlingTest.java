@@ -37,44 +37,7 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteMobileSafariDriver;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
 
-public class FormHandlingTest {
-
-  private static String safari = "/Applications/Xcode4.5.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.0.sdk/Applications/MobileSafari.app";
-  private IOSServer server;
-  private static String[] args = { "-port", "4444", "-host", "localhost", "-aut", safari };
-  private static IOSServerConfiguration config = IOSServerConfiguration.create(args);
-  private RemoteMobileSafariDriver driver = null;
-  private String url = "http://" + config.getHost() + ":" + config.getPort() + "/wd/hub";
-  private Pages pages;
-  private AppServer appServer;
-
-  @BeforeClass
-  public void setup() throws Exception {
-
-    server = new IOSServer(config);
-    server.start();
-
-    IOSCapabilities safari = IOSCapabilities.ipad("Safari");
-    safari.setCapability(IOSCapabilities.TIME_HACK, false);
-
-    appServer = new WebbitAppServer();
-    appServer.start();
-    pages = new Pages(appServer);
-
-    driver = new RemoteMobileSafariDriver(new URL(url), safari);
-  }
-
-  @AfterClass
-  public void tearDown() throws Exception {
-
-    try {
-      driver.quit();
-    } catch (Exception e) {
-      System.err.println("cannot quit properly :" + e.getMessage());
-    }
-    server.stop();
-    appServer.stop();
-  }
+public class FormHandlingTest extends BaseSeleniumTest {
 
   @Test
   public void testShouldClickOnSubmitInputElements() {
@@ -230,7 +193,7 @@ public class FormHandlingTest {
   }
 
   @Ignore(value = { ANDROID, IPHONE, OPERA, SAFARI, SELENESE, OPERA_MOBILE }, reason = "Does not yet support file uploads", issues = { 4220 })
-  @Test (enabled=false)
+  @Test(enabled = false)
   public void testShouldBeAbleToSendKeysToAFileUploadInputElementInAnXhtmlDocument() throws IOException {
     // IE before 9 doesn't handle pages served with an XHTML content type, and
     // just prompts for to
@@ -281,6 +244,7 @@ public class FormHandlingTest {
   // end up where the tap was done.
   public void testSendingKeyboardEventsShouldAppendTextInInputs() {
     driver.get(pages.formPage);
+    System.out.println(pages.formPage);
     WebElement element = driver.findElement(By.id("working"));
     element.sendKeys("some");
     String value = element.getAttribute("value");
