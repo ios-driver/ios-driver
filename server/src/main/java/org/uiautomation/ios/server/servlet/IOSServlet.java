@@ -94,7 +94,15 @@ public class IOSServlet extends DriverBasedServlet {
     //String s = toString(resp);
     BeanToJsonConverter convertor = new BeanToJsonConverter();
     String s = convertor.convert(resp);
-    response.getWriter().print(s);
+    
+    // status is also used for debugging, it's worth formatting it nice.
+    if (req.getGenericCommand() == WebDriverLikeCommand.STATUS){
+      JSONObject o = new JSONObject(s);
+      response.getWriter().print(o.toString(2));
+    }else{
+      response.getWriter().print(s);
+    }
+    
     response.getWriter().close();
 
   }

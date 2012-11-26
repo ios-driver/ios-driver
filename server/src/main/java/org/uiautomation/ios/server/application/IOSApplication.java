@@ -14,11 +14,11 @@
 
 package org.uiautomation.ios.server.application;
 
-
 import static org.uiautomation.ios.IOSCapabilities.DEVICE_FAMILLY;
 import static org.uiautomation.ios.IOSCapabilities.ICON;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,20 +29,25 @@ import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.communication.IOSDevice;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.utils.PlistFileUtils;
 
+import com.dd.plist.BinaryPropertyListParser;
+import com.dd.plist.BinaryPropertyListWriter;
+import com.dd.plist.NSArray;
+import com.dd.plist.NSDictionary;
+import com.dd.plist.NSNumber;
+import com.dd.plist.NSObject;
 
 // TODO freynaud create IOSApp vs Running App that has locale + language
 public class IOSApplication {
-
-
 
   private final JSONObject metadata;
   private final File app;
   private Localizable currentLanguage;
   private final List<LanguageDictionary> dictionaries = new ArrayList<LanguageDictionary>();
-
 
   /**
    * 
@@ -59,11 +64,9 @@ public class IOSApplication {
     try {
       metadata = getFullPlist();
     } catch (Exception e) {
-      throw new IOSAutomationException("cannot load the metadata from the Info.plist file for "
-          + pathToApp);
+      throw new IOSAutomationException("cannot load the metadata from the Info.plist file for " + pathToApp);
     }
   }
-
 
   /**
    * the content of the Info.plist for the app, as a json object.
@@ -73,7 +76,6 @@ public class IOSApplication {
   public JSONObject getMetadata() {
     return metadata;
   }
-
 
   /**
    * get the list of languages the application if localized to.
@@ -91,8 +93,6 @@ public class IOSApplication {
     return new ArrayList<Localizable>(res);
   }
 
-
-
   public LanguageDictionary getDictionary(Localizable language) throws IOSAutomationException {
     for (LanguageDictionary dict : dictionaries) {
       if (dict.getLanguage() == language) {
@@ -101,8 +101,6 @@ public class IOSApplication {
     }
     throw new IOSAutomationException("Cannot find dictionary for " + language);
   }
-
-
 
   /**
    * Load all the dictionaries for the application.
@@ -131,13 +129,10 @@ public class IOSApplication {
         throw new IOSAutomationException("error loading content for l10n", e);
       }
 
-
     }
     dictionaries.addAll(dicts.values());
 
   }
-
-
 
   public String translate(ContentResult res, Localizable language) throws IOSAutomationException {
     LanguageDictionary destinationLanguage = getDictionary(language);
@@ -158,7 +153,6 @@ public class IOSApplication {
           l10n.put("matches", size);
           l10n.put("key", results.get(0).getKey());
         }
-
 
         JSONArray langs = new JSONArray();
         for (Localizable language : getSupportedLanguages()) {
@@ -181,7 +175,8 @@ public class IOSApplication {
     return l10n;
   }
 
-  // TODO freynaud return a single resutl and throw when multiple are found would simplify
+  // TODO freynaud return a single resutl and throw when multiple are found
+  // would simplify
   // everything
   private List<ContentResult> getPotentialMatches(String name) throws IOSAutomationException {
     LanguageDictionary dict = getDictionary(currentLanguage);
@@ -189,21 +184,17 @@ public class IOSApplication {
     return res;
   }
 
-
   public void addDictionary(LanguageDictionary dict) {
     dictionaries.add(dict);
   }
-
 
   public Localizable getCurrentLanguage() {
     return currentLanguage;
   }
 
-
   public File getApplicationPath() {
     return app;
   }
-
 
   /**
    * the list of resources to publish via http.
@@ -216,25 +207,22 @@ public class IOSApplication {
     return resourceByResourceName;
   }
 
-
-
   private JSONObject getFullPlist() throws Exception {
     File plist = new File(app, "Info.plist");
     PlistFileUtils util = new PlistFileUtils(plist);
     return util.toJSON();
   }
 
- 
   public String getMetadata(String key) {
     if (!metadata.has(key)) {
       return "";
-      //throw new IOSAutomationException("no property " + key + " for this app.");
+      // throw new IOSAutomationException("no property " + key +
+      // " for this app.");
     }
     try {
       return metadata.getString(key);
     } catch (JSONException e) {
-      throw new IOSAutomationException("property " + key + " can't be returned. " + e.getMessage(),
-          e);
+      throw new IOSAutomationException("property " + key + " can't be returned. " + e.getMessage(), e);
     }
   }
 
@@ -251,7 +239,6 @@ public class IOSApplication {
     }
   }
 
-
   public void setLanguage(String language) {
     currentLanguage = Localizable.getEnum(language);
   }
@@ -264,16 +251,67 @@ public class IOSApplication {
     return result;
   }
 
-
   @Override
   public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     IOSApplication other = (IOSApplication) obj;
     if (app == null) {
-      if (other.app != null) return false;
-    } else if (!app.equals(other.app)) return false;
+      if (other.app != null)
+        return false;
+    } else if (!app.equals(other.app))
+      return false;
     return true;
+  }
+
+  public static IOSApplication findSafariLocation(File xcodeInstall, String sdkVersion) {
+    File app = new File(xcodeInstall,
+        "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator" + sdkVersion
+            + ".sdk/Applications/MobileSafari.app");
+    if (!app.exists()) {
+      throw new WebDriverException(app + " should be the safari app, but doesn't exist.");
+    }
+    return new IOSApplication(app.getAbsolutePath());
+  }
+
+  public void setDefaultDevice(IOSDevice device) {
+
+    try {
+      File plist = new File(app, "Info.plist");
+      NSDictionary root = (NSDictionary) BinaryPropertyListParser.parse(new FileInputStream(plist));
+
+      NSArray devices = (NSArray) root.objectForKey("UIDeviceFamily");
+      int length = devices.getArray().length;
+      if (length == 1) {
+        return;
+      }
+
+      NSArray rearrangedArray = new NSArray(length);
+      NSNumber last = null;
+      int index = 0;
+      for (int i = 0; i < length; i++) {
+        NSNumber d = (NSNumber) devices.objectAtIndex(i);
+        if (d.intValue() == device.getDeviceFamily()) {
+          last = d;
+        } else {
+          rearrangedArray.setValue(index, d);
+          index++;
+        }
+      }
+      if (last == null) {
+        throw new WebDriverException("Cannot find device " + device + " in the supported device list.");
+      }
+      rearrangedArray.setValue(index, last);
+      root.put("UIDeviceFamily", rearrangedArray);
+      BinaryPropertyListWriter.write(plist, root);
+
+    } catch (Exception e) {
+      throw new WebDriverException("Cannot change the default device for the app." + e.getMessage(), e);
+    }
+
   }
 }

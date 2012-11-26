@@ -1,6 +1,10 @@
 package org.uiautomation.ios.e2e;
 
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.SessionNotCreatedException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
@@ -230,5 +234,33 @@ public class NewSessionTest extends BaseIOSDriverTest {
    * "com.yourcompany.UICatalog"); Assert.assertEquals(app.getBundleVersion(),
    * "2.10"); } finally { if (driver != null) { driver.quit(); } } }
    */
+
+  @Test
+  public void supportApplicationWithMultipleDeviceFamily() {
+    IOSCapabilities cap = IOSCapabilities.iphone("Safari");
+    RemoteWebDriver driver = null;
+    try {
+      driver = new RemoteWebDriver(getRemoteURL(), cap);
+      Capabilities actual = driver.getCapabilities();
+     Assert.assertEquals(actual.getCapability(IOSCapabilities.DEVICE),"iPhone Simulator");
+
+    } finally {
+      if (driver != null) {
+        driver.quit();
+      }
+    }
+    cap = IOSCapabilities.ipad("Safari");
+    driver = null;
+    try {
+      driver = new RemoteWebDriver(getRemoteURL(), cap);
+      Capabilities actual = driver.getCapabilities();
+      Assert.assertEquals(actual.getCapability(IOSCapabilities.DEVICE),"iPad Simulator");
+
+    } finally {
+      if (driver != null) {
+        driver.quit();
+      }
+    }
+  }
 
 }

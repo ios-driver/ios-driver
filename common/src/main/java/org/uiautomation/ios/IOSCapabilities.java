@@ -23,6 +23,7 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.uiautomation.ios.communication.IOSDevice;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
@@ -48,6 +49,7 @@ public class IOSCapabilities extends DesiredCapabilities {
   public static final String IOS_SWITCHES = "ios.switches";
   public static final String LANGUAGE = "language";
   public static final String SUPPORTED_LANGUAGES = "supportedLanguages";
+  public static final String SUPPORTED_DEVICES = "supportedDevices";
   public static final String LOCALE = "locale";
   public static final String AUT = "aut";
   public static final String TIME_HACK = "timeHack";
@@ -162,11 +164,12 @@ public class IOSCapabilities extends DesiredCapabilities {
     return (Map<String, Object>) asMap();
   }
 
-  public IOSDevice getDeviceFromDeviceFamily() {
+  /*public IOSDevice getDeviceFromDeviceFamily() {
     JSONArray o = (JSONArray) asMap().get(DEVICE_FAMILLY);
     if (o.length() != 1) {
-      throw new IOSAutomationException(
-          "Cannot find the capability for the app.Supported only 1, and got " + o);
+      //throw new IOSAutomationException(
+      //    "Cannot find the capability for the app.Supported only 1, and got " + o);
+      return IOSDevice.iPhoneSimulator;
     } else {
       try {
         int deviceId = o.getInt(0);
@@ -176,8 +179,26 @@ public class IOSCapabilities extends DesiredCapabilities {
         throw new IOSAutomationException("wrong format for device family. Got " + o);
       }
     }
+  }*/
+  
+  public void setSupportedDevices(List<IOSDevice> devices){
+    if (devices.isEmpty()){
+      throw new WebDriverException("your app need to support at least 1  device.");
+    }
+    setCapability(SUPPORTED_DEVICES, devices);
   }
-
+  public List<IOSDevice> getSupportedDevicesFromDeviceFamily() {
+    JSONArray o = (JSONArray) asMap().get(DEVICE_FAMILLY);
+    List<IOSDevice> devices = new ArrayList<IOSDevice>();
+    for (int i=0;i<o.length();i++){
+      try {
+        devices.add(IOSDevice.getFromFamilyCode(o.getInt(i)));
+      } catch (JSONException e) {
+       throw new WebDriverException(o.toString()+" but should contain only 1 or 2.");
+      }
+    }
+    return devices;
+  }
   public IOSDevice getDevice() {
     Object o = getCapability(DEVICE);
     return IOSDevice.valueOf(o);
@@ -206,7 +227,6 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   public void setDevice(IOSDevice device) {
     setCapability(DEVICE, device);
-
   }
 
   public void setSDKVersion(String sdkVersion) {
@@ -263,6 +283,10 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   public List<String> getSupportedLanguages() {
     return getList(SUPPORTED_LANGUAGES);
+  }
+  
+  public List<String> getSupportedDevices() {
+    return getList(SUPPORTED_DEVICES);
   }
 
   public void setSupportedLanguages(List<String> supportedLanguages) {

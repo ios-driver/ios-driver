@@ -103,7 +103,7 @@ public class IOSDriver {
       }
     }
 
-    cap.setDevice(cap.getDeviceFromDeviceFamily());
+    cap.setSupportedDevices(cap.getSupportedDevicesFromDeviceFamily());
     return cap;
   }
 
@@ -149,7 +149,7 @@ public class IOSDriver {
     if (desiredCapabilities.getDevice() == null) {
       throw new IOSAutomationException("you need to specify the device.");
     }
-    if (!(applicationCapabilities.getDeviceFromDeviceFamily() == desiredCapabilities.getDevice())) {
+    if (!(applicationCapabilities.getSupportedDevices().contains(desiredCapabilities.getDevice()))) {
       return false;
     }
     // check any extra capability starting with plist_

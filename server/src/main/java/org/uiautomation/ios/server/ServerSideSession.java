@@ -99,7 +99,7 @@ public class ServerSideSession extends Session {
 
   public void start() {
     instruments.startSession(capabilities.getDevice(), capabilities.getSDKVersion(), capabilities.getLocale(),
-        capabilities.getLanguage(), application.getApplicationPath(), getSessionId(), capabilities.isTimeHack(),
+        capabilities.getLanguage(), application, getSessionId(), capabilities.isTimeHack(),
         capabilities.getExtraSwitches());
 
     URL url = null;

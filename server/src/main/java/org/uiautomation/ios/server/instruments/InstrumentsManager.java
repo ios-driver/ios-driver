@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.uiautomation.ios.communication.IOSDevice;
 import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
+import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.simulator.IOSSimulatorManager;
 import org.uiautomation.ios.server.utils.ClassicCommands;
 import org.uiautomation.ios.server.utils.Command;
@@ -31,7 +32,7 @@ public class InstrumentsManager {
 
   private File output;
   private final File template;
-  private File application;
+  private IOSApplication application;
   private IOSDeviceManager simulator;
   private String sessionId;
   private final int port;
@@ -56,7 +57,7 @@ public class InstrumentsManager {
   }
 
   public void startSession(IOSDevice device, String sdkVersion, String locale, String language,
-      File application, String sessionId, boolean timeHack, List<String> envtParams)
+      IOSApplication application, String sessionId, boolean timeHack, List<String> envtParams)
       throws IOSAutomationSetupException {
     IOSSimulatorManager sim = null;
     try {
@@ -64,10 +65,9 @@ public class InstrumentsManager {
       this.extraEnvtParams = envtParams;
 
       output = createTmpOutputFolder();
-      if (!application.exists() || !application.isDirectory()) {
-        throw new IOSAutomationSetupException("Invalid app :" + application);
-      }
+     
       this.application = application;
+      this.application.setDefaultDevice(device);
       
       if (isWarmupRequired(sdkVersion)) {
         warmup();
@@ -78,7 +78,7 @@ public class InstrumentsManager {
 
       sim.forceDefaultSDK(sdkVersion);
 
-      File uiscript = new ScriptHelper().getScript(port, application.getAbsolutePath(), sessionId);
+      File uiscript = new ScriptHelper().getScript(port, application.getApplicationPath().getAbsolutePath(), sessionId);
 
 
       List<String> instruments = createInstrumentCommand(uiscript.getAbsolutePath());
@@ -166,7 +166,7 @@ public class InstrumentsManager {
     command.add("instruments");
     command.add("-t");
     command.add(template.getAbsolutePath());
-    command.add(application.getAbsolutePath());
+    command.add(application.getApplicationPath().getAbsolutePath());
     command.add("-e");
     command.add("UIASCRIPT");
     command.add(script);

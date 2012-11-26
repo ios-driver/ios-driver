@@ -79,7 +79,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
 
     xcodeInstall = ClassicCommands.getXCodeInstall();
     // setDefaultSimulatorPreference("currentSDKRoot", sdk.getAbsolutePath());
-    // setDefaultSimulatorPreference("SimulateDevice", device.getName());
+    //setDefaultSimulatorPreference(device);
 
     this.contentAndSettingsFolder = getContentAndSettingsFolder();
     this.globalPreferencePlist = getGlobalPreferenceFile();

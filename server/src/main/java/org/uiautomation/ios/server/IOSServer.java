@@ -22,6 +22,7 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.grid.RegistrationRequest;
@@ -40,16 +41,14 @@ public class IOSServer {
   public static final boolean debugMode = true;
   private IOSServerConfiguration options;
 
-
   public static void main(String[] args) throws Exception {
 
     IOSServer server = new IOSServer(args);
     server.start();
     IOSServerConfiguration options = server.getOptions();
     if (options.getRegistrationURL() != null) {
-      RegistrationRequest request =
-          new RegistrationRequest(options.getRegistrationURL(), options.getHost(),
-              options.getPort(), options.getSupportedApps());
+      RegistrationRequest request = new RegistrationRequest(options.getRegistrationURL(), options.getHost(),
+          options.getPort(), options.getSupportedApps());
       request.registerToHub();
     }
   }
@@ -78,14 +77,11 @@ public class IOSServer {
     this.port = options.getPort();
     server = new Server(new InetSocketAddress("0.0.0.0", options.getPort()));
 
-
     ServletContextHandler wd = new ServletContextHandler(server, "/wd/hub", true, false);
     wd.addServlet(UIAScriptProxyRegister.class, "/uiascriptproxy/register/*");
     wd.addServlet(UIAScriptServlet.class, "/uiascriptproxy/*");
     wd.addServlet(IOSServlet.class, "/*");
     wd.addServlet(ResourceServlet.class, "/resources/*");
-
-
 
     ServletContextHandler extra = new ServletContextHandler(server, "/", true, false);
     try {
@@ -94,18 +90,26 @@ public class IOSServer {
       Class<Servlet> r = (Class<Servlet>) c;
 
       extra.addServlet(r, "/ide/*");
-      
+
     } catch (Exception e) {
       System.err.println("couldn't find ide servlet");
     }
 
     HandlerList handlers = new HandlerList();
-    handlers.setHandlers(new Handler[] {wd, extra});
+    handlers.setHandlers(new Handler[] { wd, extra });
     server.setHandler(handlers);
 
     IOSDriver driver = new IOSDriver(port);
     for (String app : this.options.getSupportedApps()) {
       driver.addSupportedApplication(new IOSApplication(app));
+    }
+
+    // automatically add safari for SDK 6.0 and above.
+    for (String s : driver.getHostInfo().getInstalledSDKs()) {
+      Float version = Float.parseFloat(s);
+      if (version >= 6L) {
+        driver.addSupportedApplication(IOSApplication.findSafariLocation(driver.getHostInfo().getXCodeInstall(), s));
+      }
     }
 
     wd.setAttribute(DRIVER, driver);
@@ -129,11 +133,8 @@ public class IOSServer {
     }
   }
 
-
   public void stop() throws Exception {
     server.stop();
   }
-
-
 
 }
