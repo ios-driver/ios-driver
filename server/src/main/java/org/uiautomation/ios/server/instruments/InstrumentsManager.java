@@ -129,12 +129,18 @@ public class InstrumentsManager {
 
   private boolean isWarmupRequired(String sdkVersion) {
     List<String> sdks = ClassicCommands.getInstalledSDKs();
-    if (sdkVersion.equals("5.0") || sdkVersion.equals("5.1")) {
-      if (sdks.contains("6.0")) {
+    // TODO freynaud not rely on order.
+    if (sdks.get(sdks.size()-1).equals(sdkVersion)){
+      return false;
+    }
+    return true;
+    
+    /*if (sdkVersion.equals("5.0") || sdkVersion.equals("5.1")|| sdkVersion.equals("6.0")) {
+      if (sdks.contains("6.1")) {
         return true;
       }
     }
-    return false;
+    return false;*/
   }
 
   private IOSDeviceManager prepareSimulator(String sdkVersion, IOSDevice device, String locale,

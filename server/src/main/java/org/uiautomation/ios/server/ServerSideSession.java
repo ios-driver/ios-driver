@@ -46,6 +46,11 @@ public class ServerSideSession extends Session {
       capabilities.setSDKVersion(ClassicCommands.getDefaultSDK());
     } else {
       String version = capabilities.getSDKVersion();
+      Float v = Float.parseFloat(version);
+      if (v < 5) {
+        throw new SessionNotCreatedException(v + " is too old. Only support SDK 5.0 and above.");
+      }
+
       if (!driver.getHostInfo().getInstalledSDKs().contains(version)) {
         throw new SessionNotCreatedException("Cannot start on version " + version + ".Installed : "
             + driver.getHostInfo().getInstalledSDKs());

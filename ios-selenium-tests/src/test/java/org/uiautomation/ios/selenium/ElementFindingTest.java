@@ -27,48 +27,9 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteMobileSafariDriver;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
 
-public class ElementFindingTest {
+public class ElementFindingTest extends BaseSeleniumTest{
 
-  private static String safari = "/Applications/Xcode4.5.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.0.sdk/Applications/MobileSafari.app";
-  private IOSServer server;
-  private static String[] args = { "-port", "4444", "-host", "localhost", "-aut", safari };
-  private static IOSServerConfiguration config = IOSServerConfiguration.create(args);
-  private RemoteMobileSafariDriver driver = null;
-  private String url = "http://" + config.getHost() + ":" + config.getPort() + "/wd/hub";
-  private Pages pages;
-  private AppServer appServer;
-
-  @BeforeClass
-  public void setup() throws Exception {
-
-    server = new IOSServer(config);
-    server.start();
-
-    IOSCapabilities safari = IOSCapabilities.ipad("Safari");
-    safari.setCapability(IOSCapabilities.TIME_HACK, false);
-
-    driver = new RemoteMobileSafariDriver(new URL(url), safari);
-    appServer = new WebbitAppServer();
-    appServer.start();
-    pages = new Pages(appServer);
-  }
-
- @BeforeMethod
- public void before(Method method){
-   System.out.println(method.getName());
- }
-
-  @AfterClass
-  public void tearDown() throws Exception {
-
-    try {
-      driver.quit();
-    } catch (Exception e) {
-      System.err.println("cannot quit properly :" + e.getMessage());
-    }
-    server.stop();
-    appServer.stop();
-  }
+ 
 
   @Test
   public void testShouldNotBeAbleToLocateASingleElementThatDoesNotExist() {

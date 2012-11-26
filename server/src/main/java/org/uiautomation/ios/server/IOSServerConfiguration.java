@@ -43,7 +43,7 @@ public class IOSServerConfiguration {
   private String serverHost;
 
   @Parameter(description = "location of the application under test.Absolute path expected.", names = {
-      "-app", "-aut"}, required = true)
+      "-app", "-aut"}, required = false)
   private List<String> supportedApps = new ArrayList<String>();
 
   public String getRegistrationURL() {

@@ -1,5 +1,7 @@
 package org.uiautomation.ios.e2e;
 
+import java.util.List;
+
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriver;
@@ -121,6 +123,21 @@ public class NewSessionTest extends BaseIOSDriverTest {
       }
     }
   }
+  
+  
+  @Test(expectedExceptions = SessionNotCreatedException.class)
+  public void sdkTooOld() {
+    RemoteUIADriver driver = null;
+    try {
+      IOSCapabilities cap = SampleApps.uiCatalogCap();
+      cap.setSDKVersion("4.3");
+      driver = new RemoteUIADriver(getRemoteURL(), cap);
+    } finally {
+      if (driver != null) {
+        driver.quit();
+      }
+    }
+  }
 
   @Test(expectedExceptions = SessionNotCreatedException.class)
   public void wrongVersion() {
@@ -164,7 +181,32 @@ public class NewSessionTest extends BaseIOSDriverTest {
         driver.quit();
       }
     }
+  }
 
+  @Test
+  public void supportAllInstalledSDKs() {
+    RemoteUIADriver driver = null;
+    List<String> sdks = ClassicCommands.getInstalledSDKs();
+    System.out.println(sdks);
+    for (String sdk : sdks) {
+      Float version = Float.parseFloat(sdk);
+      if (version >= 5L) {
+
+        try {
+          IOSCapabilities cap = IOSCapabilities.iphone("InternationalMountains");
+          cap.setSDKVersion(sdk);
+
+          driver = new RemoteUIADriver(getRemoteURL(), cap);
+          IOSCapabilities actual = driver.getCapabilities();
+
+          Assert.assertEquals(actual.getSDKVersion(), sdk);
+        } finally {
+          if (driver != null) {
+            driver.quit();
+          }
+        }
+      }
+    }
   }
 
   @Test
@@ -242,7 +284,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
     try {
       driver = new RemoteWebDriver(getRemoteURL(), cap);
       Capabilities actual = driver.getCapabilities();
-     Assert.assertEquals(actual.getCapability(IOSCapabilities.DEVICE),"iPhone Simulator");
+      Assert.assertEquals(actual.getCapability(IOSCapabilities.DEVICE), "iPhone Simulator");
 
     } finally {
       if (driver != null) {
@@ -254,7 +296,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
     try {
       driver = new RemoteWebDriver(getRemoteURL(), cap);
       Capabilities actual = driver.getCapabilities();
-      Assert.assertEquals(actual.getCapability(IOSCapabilities.DEVICE),"iPad Simulator");
+      Assert.assertEquals(actual.getCapability(IOSCapabilities.DEVICE), "iPad Simulator");
 
     } finally {
       if (driver != null) {
