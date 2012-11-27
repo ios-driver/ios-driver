@@ -55,7 +55,6 @@ public class ExecuteScriptHandler extends BaseWebCommandHandler {
 
       resp.setValue(rwes);
     } else {
-      System.err.println("don't understand the return of the script." + res);
       resp.setValue(res);
     }
 

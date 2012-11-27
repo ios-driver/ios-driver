@@ -161,11 +161,11 @@ public class RemoteWebElement {
 
       // get the web element
       Point po = findPosition();
-      System.out.println(po);
       int webPageWidth = inspector.getInnerWidth();
+      // TODO freynaud use dim, remove innerw
       Dimension dim = inspector.getSize();
 
-      System.out.println(dim + " -- " + webPageWidth);
+      
 
       WorkingMode origin = session.getMode();
 
@@ -189,18 +189,7 @@ public class RemoteWebElement {
       int top = po.getY();
       int left = po.getX();
 
-      // resize to account for the ios resizing of the page
-      /*
-       * int nativePageWith = 0; try { getSession().setNativeContext();
-       * nativePageWith = inspector.getNativePageWidth();
-       * 
-       * } finally { getSession().setCurrentContext(origin); }
-       */
-
-      // float ratio = ((float) rect.getWidth()) / ((float) (webPageWidth));
-      // float ratio = ((float) helper.getPageWidth(orientation)) / ((float)
-      // (webPageWidth));
-      float ratio = ((float) rect.getWidth()) / ((float) (webPageWidth));
+         float ratio = ((float) rect.getWidth()) / ((float) (webPageWidth));
 
       top = (int) (top * ratio) + 1;
       left = (int) (left * ratio) + 1;
@@ -212,18 +201,9 @@ public class RemoteWebElement {
       // delta = heigth of the address bar + status bar.
       delta = delta < 20 ? 20 : delta;
       int y = delta + top;
-      // int y = helper.getAddressBarHeigth() + top;
-      // System.out.println("looking for the element at : " + x + "," + y);
-      // find the corresponding native element
       try {
         session.setMode(WorkingMode.Native);
-        // Rect: x=6,y=102,h=14w=94
-        // nativeElement = nativeDriver.findElement(new AndCriteria(new
-        // TypeCriteria(UIALink.class),new LocationCriteria(x, y)));
         nativeElement = nativeDriver.findElement(new LocationCriteria(x, y));
-        // System.out.println(nativeElement + "---" + nativeElement.getRect() +
-        // "---"
-        // + nativeElement.isVisible() + " --- " + nativeElement.isValid());
       } finally {
         session.setMode(origin);
       }

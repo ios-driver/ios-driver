@@ -204,7 +204,6 @@ public class WebInspector {
     int nbParam = args.length();
     for (int i = 0; i < nbParam; i++) {
       Object arg = args.get(i);
-      System.out.println("working on" + arg);
       if (arg instanceof JSONObject) {
         JSONObject jsonArg = (JSONObject) arg;
         if (jsonArg.optInt("ELEMENT") > 0) {
