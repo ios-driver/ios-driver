@@ -84,7 +84,7 @@ public class InstrumentsManager {
       List<String> instruments = createInstrumentCommand(uiscript.getAbsolutePath());
       communicationChannel = new CommunicationChannel();
 
-      simulatorProcess = new Command(instruments, true);
+      simulatorProcess = new Command(instruments, false);
       simulatorProcess.setWorkingDirectory(output);
       simulatorProcess.start();
 
