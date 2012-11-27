@@ -1,7 +1,6 @@
 package org.openqa.selenium.testing;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 import org.openqa.selenium.WebDriverException;
 
@@ -17,15 +16,11 @@ public class InProject {
   public static File locate(String path) {
     File dir = new File(".").getAbsoluteFile();
     dir = new File(dir,"src/test/resources/copyFromSeleniumProject");
-    while (dir != null) {
-      File needle = new File(dir, path);
-      if (needle.exists()) {
-        return needle;
-      }
-      dir = dir.getParentFile();
+    File needle = new File(dir,path);
+   
+    if (!needle.exists()){
+      throw new WebDriverException("Cannot load "+needle);
     }
-
-    throw new WebDriverException(new FileNotFoundException(
-        "Could not find " + path + " in the project"));
-  }
+    return needle;
+   }
 }
