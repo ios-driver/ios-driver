@@ -20,6 +20,7 @@ import org.uiautomation.ios.UIAModels.UIAWebView;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
+import org.uiautomation.ios.UIAModels.predicate.L10NStrategy;
 import org.uiautomation.ios.UIAModels.predicate.LabelCriteria;
 import org.uiautomation.ios.UIAModels.predicate.LocationCriteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
@@ -183,7 +184,7 @@ public class RemoteWebElement {
         rect = sv.getRect();
 
         UIAElement addressBar = nativeDriver.findElement(new AndCriteria(new TypeCriteria(UIAElement.class),
-            new NameCriteria("Address"), new LabelCriteria("Address")));
+            new NameCriteria("Address",L10NStrategy.serverL10N), new LabelCriteria("Address",L10NStrategy.serverL10N)));
         offset = addressBar.getRect();
         // rect = sv.getRect();
       } finally {
