@@ -149,7 +149,7 @@ public class RemoteUIAElementTest extends BaseIOSDriverTest {
   }
 
   // TODO freynaud element.getName() creates some scrolling.
-  @Test(enabled=false,expectedExceptions = StaleElementReferenceException.class)
+  @Test(expectedExceptions = StaleElementReferenceException.class)
   public void staleElement() {
     try {
       String name = "Buttons, Various uses of UIButton";
