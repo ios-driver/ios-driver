@@ -1,4 +1,4 @@
-package org.uiautomation.ios.hybrid;
+package org.uiautomation.ios.e2e.hybrid;
 
 import java.net.URL;
 import java.util.Set;
@@ -17,7 +17,6 @@ import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.UIAButton;
 import org.uiautomation.ios.UIAModels.UIAElement;
-import org.uiautomation.ios.UIAModels.UIAKeyboard;
 import org.uiautomation.ios.UIAModels.UIATableCell;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;

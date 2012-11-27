@@ -15,7 +15,6 @@ package org.uiautomation.ios.client.uiamodels.impl;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -187,7 +186,7 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
   @Override
   public boolean isDisplayed() {
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.DISPLAYED);
-    return getDriver().execute(request);
+    return (Boolean)getDriver().execute(request);
   }
 
   @Override
