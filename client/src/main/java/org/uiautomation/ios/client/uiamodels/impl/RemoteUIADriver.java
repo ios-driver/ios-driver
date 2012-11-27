@@ -351,27 +351,11 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, Takes
 
   @Override
   public Set<String> getWindowHandles() {
-
-    try {
-      JSONObject payload = new JSONObject();
-      WebDriverLikeCommand command = WebDriverLikeCommand.WINDOW_HANDLES;
-      Path p = new Path(command).withSession(getSessionId());
-
-      WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p, payload);
-      Response response = execute(request);
-      JSONArray array = ((JSONArray) response.getValue());
-
-      Set<String> handles = new HashSet<String>();
-      for (int i = 0; i < array.length(); i++) {
-        handles.add(array.getString(i));
-      }
-      return handles;
-    } catch (IOSAutomationException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new IOSAutomationException("bug", e);
-    }
-
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.WINDOW_HANDLES);
+    List<String> all =  execute(request);
+    Set<String> res = new HashSet<String>();
+    res.addAll(all);
+    return res;
   }
 
   @Override

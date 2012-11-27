@@ -1,6 +1,8 @@
 package org.uiautomation.ios.server.command.uiautomation;
 
-import org.json.JSONArray;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
@@ -22,15 +24,16 @@ public class GetWindowHandlesCommandHandler extends BaseNativeCommandHandler {
   public Response handle() throws Exception {
 
     ServerSideSession sss = getDriver().getSession(getRequest().getSession());
-    JSONArray json = new JSONArray();
-    json.put(WorkingMode.Native);
+    
+    Set<String> handles = new HashSet<String>();
+    handles.add(WorkingMode.Native.toString());
     if (sss.getNativeDriver().findElements(new TypeCriteria(UIAWebView.class)).size() > 0) {
-      json.put(WorkingMode.Web);
+      handles.add(WorkingMode.Web.toString());
     }
     Response resp = new Response();
     resp.setSessionId(getSession().getSessionId());
     resp.setStatus(0);
-    resp.setValue(json);
+    resp.setValue(handles);
     return resp;
   }
   

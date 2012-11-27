@@ -18,7 +18,7 @@ package org.uiautomation.ios.UIAModels;
  * @see http://developer.apple.com/library/ios/#documentation/ToolsLanguages/Reference/UIAApplicationClassReference/Introduction/Introduction.html 
  *
  */
-public interface UIAApplication {
+public interface UIAApplication extends UIAElement {
 
   /*public UIAElementArray<UIAWindow> getWindows();
   public UIAWindow getMainWindow();

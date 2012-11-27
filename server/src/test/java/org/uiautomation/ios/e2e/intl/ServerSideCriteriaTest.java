@@ -7,9 +7,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
 import org.uiautomation.ios.SampleApps;
+import org.uiautomation.ios.UIAModels.UIAApplication;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIATableCell;
-import org.uiautomation.ios.UIAModels.UIAWindow;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.L10NStrategy;
 import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
@@ -52,10 +52,10 @@ public class ServerSideCriteriaTest extends BaseIOSDriverTest {
   @Test(dependsOnMethods={"findElementDriver"})
   public void findElementElement() {
    
-    UIAWindow win = (UIAWindow)driver.findElement(By.tagName("UIAWindow"));
+    UIAApplication app = (UIAApplication)driver.findElement(By.tagName("UIAApplication"));
 
     NameCriteria criteria = new NameCriteria("sentenceFormat", L10NStrategy.serverL10N, MatchingStrategy.regex);
-    UIAElement text = win.findElement(criteria);
+    UIAElement text = app.findElement(criteria);
     String actual = text.getName();
     Assert.assertEquals(actual, expected);
 

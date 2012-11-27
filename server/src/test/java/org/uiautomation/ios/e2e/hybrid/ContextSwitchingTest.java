@@ -27,11 +27,8 @@ import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
 
 public class ContextSwitchingTest {
-  private static String safari =
-      "/Applications/Xcode4.5.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.0.sdk/Applications/MobileSafari.app";
   private IOSServer server;
-  private static String[] args = {"-port", "4444", "-host", "localhost", "-aut", safari, "-aut",
-      SampleApps.getUICatalogFile()};
+  private static String[] args = { "-port", "4444", "-host", "localhost", "-aut", SampleApps.getUICatalogFile() };
   private static IOSServerConfiguration config = IOSServerConfiguration.create(args);
   private RemoteUIADriver nativeDriver = null;
   private String url = "http://" + config.getHost() + ":" + config.getPort() + "/wd/hub";
@@ -45,54 +42,48 @@ public class ContextSwitchingTest {
   @Test
   public void findThem() throws Exception {
 
-
     IOSCapabilities safari = IOSCapabilities.ipad("Safari");
     safari.setCapability(IOSCapabilities.TIME_HACK, false);
 
-    nativeDriver = new RemoteUIADriver(new URL(url), safari);
-    Set<String> handles = nativeDriver.getWindowHandles();
+    try {
+      nativeDriver = new RemoteUIADriver(new URL(url), safari);
+      Set<String> handles = nativeDriver.getWindowHandles();
 
-    Assert.assertEquals(handles.size(), 2);
+      Assert.assertEquals(handles.size(), 2);
+    } finally {
+      if (nativeDriver != null) {
+        nativeDriver.quit();
+      }
+    }
 
-
-    nativeDriver.quit();
   }
-  
- 
-  
-  @Test
+
+  // @Test
   public void seleniumTests() throws Exception {
 
-
     IOSCapabilities safari = IOSCapabilities.ipad("Safari");
     safari.setCapability(IOSCapabilities.TIME_HACK, false);
 
     nativeDriver = new RemoteUIADriver(new URL(url), safari);
-    
-    Criteria urlAddressBar =
-        new AndCriteria(new TypeCriteria(UIAElement.class), new ValueCriteria(
-            "Go to this address"));
+
+    Criteria urlAddressBar = new AndCriteria(new TypeCriteria(UIAElement.class),
+        new ValueCriteria("Go to this address"));
 
     nativeDriver.findElement(urlAddressBar).tap();
 
-
     Keyboard keyboard = nativeDriver.getKeyboard();
 
-
-    
     // keyboard.typeString("http://pages.ebay.co.uk/sitemap.html");
     // screenshot();
-    ((RemoteUIAKeyboard)keyboard).findElement(new NameCriteria("Go")).tap();
+    ((RemoteUIAKeyboard) keyboard).findElement(new NameCriteria("Go")).tap();
     Set<String> handles = nativeDriver.getWindowHandles();
 
     Assert.assertEquals(handles.size(), 2);
 
-
     nativeDriver.quit();
   }
 
-
-  @Test
+  // @Test
   public void pureNative() throws Exception {
     IOSCapabilities safari = IOSCapabilities.iphone("UICatalog");
     safari.setCapability(IOSCapabilities.TIME_HACK, false);
@@ -105,19 +96,16 @@ public class ContextSwitchingTest {
       Assert.assertEquals(handles.size(), 1);
       System.out.println("h:" + handles);
 
-      UIAElement el =
-          nativeDriver.findElement(new AndCriteria(new TypeCriteria(UIATableCell.class),
-              new NameCriteria("Web", MatchingStrategy.starts)));
+      UIAElement el = nativeDriver.findElement(new AndCriteria(new TypeCriteria(UIATableCell.class), new NameCriteria(
+          "Web", MatchingStrategy.starts)));
       el.tap();
 
       handles = nativeDriver.getWindowHandles();
       System.out.println("h:" + handles);
       Assert.assertEquals(handles.size(), 2);
 
-
-      UIAElement back =
-          nativeDriver.findElement(new AndCriteria(new TypeCriteria(UIAButton.class),
-              new NameCriteria("Back")));
+      UIAElement back = nativeDriver.findElement(new AndCriteria(new TypeCriteria(UIAButton.class), new NameCriteria(
+          "Back")));
       back.tap();
       handles = nativeDriver.getWindowHandles();
       System.out.println("h:" + handles);
@@ -128,7 +116,6 @@ public class ContextSwitchingTest {
     }
   }
 
-
   @Test
   public void html() throws Exception {
     IOSCapabilities safari = IOSCapabilities.iphone("UICatalog");
@@ -136,25 +123,19 @@ public class ContextSwitchingTest {
 
     nativeDriver = new RemoteUIADriver(new URL(url), safari);
     try {
-      UIAElement webCell =
-          nativeDriver.findElement(new AndCriteria(new TypeCriteria(UIATableCell.class),
-              new NameCriteria("Web", MatchingStrategy.starts)));
+      UIAElement webCell = nativeDriver.findElement(new AndCriteria(new TypeCriteria(UIATableCell.class),
+          new NameCriteria("Web", MatchingStrategy.starts)));
       webCell.tap();
-      nativeDriver.switchTo().window("webView_1");
+      nativeDriver.switchTo().window("Web");
 
-      
       WebElement el = nativeDriver.findElement(By.cssSelector("a[href='http://store.apple.com/']"));
-      System.out.println(el.getAttribute("href"));
-      el.click();
+      Assert.assertEquals(el.getAttribute("href"), "http://store.apple.com/");
 
     } finally {
       nativeDriver.quit();
     }
 
-
-
   }
-
 
   @AfterClass
   public void stopServer() throws Exception {
