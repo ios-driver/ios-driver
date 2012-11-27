@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<!--
+Copyright 2011 Software Freedom Conservancy. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<html>
+<head>
+  <title>promise_application_test.html</title>
+  <script src="test_bootstrap.js"></script>
+  <script>
+    goog.require('goog.array');
+    goog.require('goog.functions');
+    goog.require('goog.testing.FunctionMock');
+    goog.require('goog.testing.jsunit');
+    goog.require('webdriver.promise.Application');
+    goog.require('webdriver.stacktrace.Snapshot');
+    goog.require('webdriver.test.AppTester');
+    goog.require('webdriver.test.testutil');
+  </script>
+</head>
+<body>
+<script>
+  // Aliases for readability.
+  var STUB_ERROR = webdriver.test.testutil.STUB_ERROR,
+      throwStubError = webdriver.test.testutil.throwStubError,
+      assertIsStubError = webdriver.test.testutil.assertIsStubError,
+      assertingMessages = webdriver.test.testutil.assertingMessages,
+      callbackHelper = webdriver.test.testutil.callbackHelper,
+      callbackPair = webdriver.test.testutil.callbackPair;
+
+  var appHistory, appTester, clock;
+
+
+  function setUp() {
+    clock = webdriver.test.testutil.createMockClock();
+    appTester = new webdriver.test.AppTester(clock);
+    webdriver.test.testutil.messages = [];
+    appHistory = [];
+  }
+
+
+  function tearDown() {
+    appTester.$tearDown();
+  }
+
+  function schedule(msg, opt_return) {
+    return scheduleAction(msg, function() {
+      return opt_return;
+    });
+  }
+
+  function schedulePush(msg, value, opt_taskPromise) {
+    return scheduleAction(msg, function() {
+      webdriver.test.testutil.messages.push(value);
+      return opt_taskPromise;
+    });
+  }
+
+  function scheduleAction(msg, actionFn) {
+    return appTester.schedule(msg, function() {
+      appHistory.push(msg);
+      return actionFn();
+    });
+  }
+
+  function scheduleWait(msg, condition, timeout, opt_message) {
+    // It's not possible to hook into when the wait itself is scheduled, so
+    // we record each iteration of the wait loop.
+    var count = 0;
+    return appTester.scheduleWait(msg, function() {
+      appHistory.push((count++) + ': ' + msg);
+      return condition();
+    }, timeout, opt_message);
+  }
+
+
+  /** @see {@link webdriver.test.AppTester#$turnEventLoop}. */
+  function turnEventLoop(opt_fn, var_args) {
+    appTester.$turnEventLoop.apply(appTester, arguments);
+  }
+
+
+  /** @see {@link webdriver.test.AppTester#$runApplication}. */
+  function runApplication(opt_callback, opt_errback) {
+    appTester.$runApplication.apply(appTester, arguments);
+  }
+
+
+  /** @see {@link webdriver.test.AppTester#$assertAppHistory}. */
+  function assertAppHistory(var_args) {
+    var expected = goog.array.slice(arguments, 0);
+    assertArrayEquals(expected, appHistory);
+  }
+
+
+  /**
+   * @param {string=} opt_description A description of the task for debugging.
+   * @return {!webdriver.promise.Application.Task} The new task.
+   */
+  function createTask(opt_description) {
+    return new webdriver.promise.Application.Task_(goog.nullFunction,
+        opt_description || '',
+        new webdriver.stacktrace.Snapshot());
+  }
+
+
+  function testAddChild_toEmptyFrame() {
+    var frame = new webdriver.promise.Application.Frame_();
+
+    var task1 = createTask(),
+        task2 = createTask(),
+        task3 = createTask();
+
+    frame.addChild(task1);
+    frame.addChild(task2);
+    frame.addChild(task3);
+
+    assertArrayEquals([task1, task2, task3], frame.children_);
+  }
+
+
+  function testAddChild_withSubframes() {
+    var root = new webdriver.promise.Application.Frame_();
+
+    var task1 = createTask('task1');
+    root.addChild(task1);
+    assertArrayEquals([task1], root.children_);
+
+    var frame1 = new webdriver.promise.Application.Frame_();
+    root.addChild(frame1);
+    assertArrayEquals([task1, frame1], root.children_);
+
+    var task2 = createTask('task2'), task3 = createTask('task3');
+    root.addChild(task2);
+    root.addChild(task3);
+    assertArrayEquals([task1, frame1], root.children_);
+    assertArrayEquals([task2, task3], frame1.children_);
+
+    frame1.lockFrame();
+    var task4 = createTask('task4'), task5 = createTask('task5');
+    root.addChild(task4);
+    root.addChild(task5);
+    assertArrayEquals([task1, frame1, task4, task5], root.children_);
+    assertArrayEquals([task2, task3], frame1.children_);
+
+    var frame2 = new webdriver.promise.Application.Frame_(),
+        frame3 = new webdriver.promise.Application.Frame_(),
+        task6 = createTask('task6'),
+        task7 = createTask('task7'),
+        task8 = createTask('task8');
+
+    root.addChild(frame2);
+    root.addChild(frame3);
+    root.addChild(task6);
+    frame3.lockFrame();
+    root.addChild(task7);
+    frame2.lockFrame();
+    root.addChild(task8);
+
+    assertArrayEquals([task1, frame1, task4, task5, frame2, task8],
+        root.children_);
+    assertArrayEquals([task2, task3], frame1.children_);
+    assertArrayEquals([frame3, task7], frame2.children_);
+    assertArrayEquals([task6], frame3.children_);
+  }
+
+  function testAddChild_insertingFramesIntoAnActiveFrame() {
+    var root = new webdriver.promise.Application.Frame_(),
+        frame2 = new webdriver.promise.Application.Frame_(),
+        frame3 = new webdriver.promise.Application.Frame_(),
+        task1 = createTask('task1');
+
+    root.addChild(task1);
+    root.isActive_ = true;
+    root.addChild(frame2);
+    frame2.lockFrame();
+    root.addChild(frame3);
+    frame3.lockFrame();
+
+    assertArrayEquals([frame2, frame3, task1], root.children_);
+  }
+
+  function testRemoveChild() {
+    var frame1 = new webdriver.promise.Application.Frame_(),
+        frame2 = new webdriver.promise.Application.Frame_();
+
+    frame1.addChild(frame2);
+    assertArrayEquals([frame2], frame1.children_);
+    frame1.removeChild(frame2);
+    assertArrayEquals([], frame1.children_);
+  }
+
+
+  function testResolveFrame() {
+    var frame1 = new webdriver.promise.Application.Frame_(),
+        frame2 = new webdriver.promise.Application.Frame_(),
+        frame3 = new webdriver.promise.Application.Frame_();
+
+    frame2.addChild(frame3);
+    frame1.addChild(frame2);
+    assertArrayEquals([frame3], frame2.children_);
+    assertArrayEquals([frame2], frame1.children_);
+
+    frame1.resolve = callbackHelper();
+    frame2.resolve = callbackHelper();
+    frame3.resolve = callbackHelper();
+
+    var obj = {
+      activeFrame_: frame2,
+      commenceShutdown_: callbackHelper(),
+      trimHistory_: callbackHelper(),
+      history_: []
+    };
+    webdriver.promise.Application.prototype.resolveFrame_.call(obj, frame3);
+    assertEquals(1, obj.trimHistory_.getCallCount());
+    frame3.resolve.assertCalled('frame 3 not resolved');
+    frame2.resolve.assertNotCalled('frame 2 should not be resolved yet');
+    frame1.resolve.assertNotCalled('frame 1 should not be resolved yet');
+    assertNull(frame3.getParent());
+    assertArrayEquals([], frame2.children_);
+    assertArrayEquals([frame2], frame1.children_);
+    assertEquals(frame2, obj.activeFrame_);
+
+    webdriver.promise.Application.prototype.resolveFrame_.call(obj, frame2);
+    assertEquals(2, obj.trimHistory_.getCallCount());
+    frame2.resolve.assertCalled('frame 2 not resolved');
+    frame1.resolve.assertNotCalled('frame 1 should not be resolved yet');
+    assertNull(frame2.getParent());
+    assertArrayEquals([], frame1.children_);
+    assertEquals(frame1, obj.activeFrame_);
+
+    obj.commenceShutdown_.assertNotCalled();
+    webdriver.promise.Application.prototype.resolveFrame_.call(obj, frame1);
+    assertEquals(3, obj.trimHistory_.getCallCount());
+    frame1.resolve.assertCalled('frame 1 not resolved');
+    obj.commenceShutdown_.assertCalled();
+    assertNull(frame1.getParent());
+    assertNull(obj.activeFrame_);
+  }
+
+
+  function testGetNextTask() {
+    var app = webdriver.promise.Application.getInstance();
+    var root = app.activeFrame_ = new webdriver.promise.Application.Frame_();
+
+    var frame1 = new webdriver.promise.Application.Frame_(),
+        frame2 = new webdriver.promise.Application.Frame_(),
+        frame3 = new webdriver.promise.Application.Frame_(),
+        task1 = createTask('task1'),
+        task2 = createTask('task2'),
+        task3 = createTask('task3'),
+        task4 = createTask('task4'),
+        task5 = createTask('task5'),
+        task6 = createTask('task6'),
+        task7 = createTask('task7'),
+        task8 = createTask('task8');
+
+    app.commenceShutdown_ = callbackHelper();
+    root.resolve = callbackHelper();
+    frame1.resolve = callbackHelper();
+    frame2.resolve = callbackHelper();
+    frame3.resolve = callbackHelper();
+
+    root.addChild(task1);
+    root.addChild(frame1);
+    root.addChild(task2);
+    root.addChild(task3);
+    assertArrayEquals([task1, frame1], root.children_);
+    assertArrayEquals([task2, task3], frame1.children_);
+
+    frame1.lockFrame();
+    root.addChild(task4);
+    root.addChild(task5);
+    assertArrayEquals([task1, frame1, task4, task5], root.children_);
+    assertArrayEquals([task2, task3], frame1.children_);
+
+
+    root.addChild(frame2);
+    root.addChild(frame3);
+    root.addChild(task6);
+    frame3.lockFrame();
+    root.addChild(task7);
+    frame2.lockFrame();
+    root.addChild(task8);
+
+    assertArrayEquals([task1, frame1, task4, task5, frame2, task8],
+        root.children_);
+    assertArrayEquals([task2, task3], frame1.children_);
+    assertArrayEquals([frame3, task7], frame2.children_);
+    assertArrayEquals([task6], frame3.children_);
+
+    assertEquals(root, task1.getParent());
+    assertEquals(task1, app.getNextTask_());
+    assertNull(task1.getParent());
+    assertEquals(root, app.activeFrame_);
+    root.resolve.assertNotCalled();
+    frame1.resolve.assertNotCalled();
+    frame2.resolve.assertNotCalled();
+    frame3.resolve.assertNotCalled();
+
+    assertEquals(task2, app.getNextTask_());
+    assertNull(task2.getParent());
+    assertEquals(frame1, app.activeFrame_);
+    root.resolve.assertNotCalled();
+    frame1.resolve.assertNotCalled();
+    frame2.resolve.assertNotCalled();
+    frame3.resolve.assertNotCalled();
+
+    assertEquals(task3, app.getNextTask_());
+    assertNull(task3.getParent());
+    assertEquals(frame1, app.activeFrame_);
+    root.resolve.assertNotCalled();
+    frame1.resolve.assertNotCalled();
+    frame2.resolve.assertNotCalled();
+    frame3.resolve.assertNotCalled();
+
+    assertNull(app.getNextTask_());
+    assertNull(frame1.getParent());
+    assertEquals(root, app.activeFrame_);
+    root.resolve.assertNotCalled();
+    frame1.resolve.assertCalled();
+    frame2.resolve.assertNotCalled();
+    frame3.resolve.assertNotCalled();
+
+    assertEquals(task4, app.getNextTask_());
+    assertNull(task4.getParent());
+    assertEquals(root, app.activeFrame_);
+    root.resolve.assertNotCalled();
+    frame2.resolve.assertNotCalled();
+    frame3.resolve.assertNotCalled();
+
+    assertEquals(task5, app.getNextTask_());
+    assertNull(task5.getParent());
+    assertEquals(root, app.activeFrame_);
+    root.resolve.assertNotCalled();
+    frame2.resolve.assertNotCalled();
+    frame3.resolve.assertNotCalled();
+
+    assertEquals(task6, app.getNextTask_());
+    assertNull(task6.getParent());
+    assertEquals(frame3, app.activeFrame_);
+    root.resolve.assertNotCalled();
+    frame2.resolve.assertNotCalled();
+    frame3.resolve.assertNotCalled();
+
+    assertNull(app.getNextTask_());
+    assertNull(frame3.getParent());
+    assertEquals(frame2, app.activeFrame_);
+    root.resolve.assertNotCalled();
+    frame2.resolve.assertNotCalled();
+    frame3.resolve.assertCalled('frame3 should have been resolved');
+
+    assertEquals(task7, app.getNextTask_());
+    assertNull(task7.getParent());
+    assertEquals(frame2, app.activeFrame_);
+    root.resolve.assertNotCalled();
+    frame2.resolve.assertNotCalled();
+
+    assertNull(app.getNextTask_());
+    assertNull(frame2.getParent());
+    assertEquals(root, app.activeFrame_);
+    root.resolve.assertNotCalled();
+    frame2.resolve.assertCalled('frame2 should have been resolved');
+
+    assertEquals(task8, app.getNextTask_());
+    assertNull(task8.getParent());
+    assertEquals(root, app.activeFrame_);
+    root.resolve.assertNotCalled();
+
+    app.commenceShutdown_.assertNotCalled();
+    assertNull(app.getNextTask_());
+    assertNull(app.activeFrame_);
+    root.resolve.assertCalled('Root should have been resolved');
+    app.commenceShutdown_.assertCalled();
+  }
+
+
+  function testAbortFrame_noActiveFrame() {
+    var app = webdriver.promise.Application.getInstance();
+    var pair = callbackPair(null, assertIsStubError);
+    appTester.$attachAppListener(pair);
+
+    app.abortFrame_(STUB_ERROR);
+    pair.assertErrback();
+    assertNull(app.activeFrame_);
+  }
+
+
+  function testAbortFrame_activeIsOnlyFrame() {
+    var app = webdriver.promise.Application.getInstance();
+    var pair = callbackPair(null, assertIsStubError);
+    appTester.$attachAppListener(pair);
+
+    app.activeFrame_ = new webdriver.promise.Application.Frame_();
+    app.abortFrame_(STUB_ERROR);
+    assertNull(app.activeFrame_);
+    pair.assertNeither();
+
+    clock.tick();
+    pair.assertErrback();
+  }
+
+
+  function testAbortFrame_unhandledAbortionsBubbleUp() {
+    var app = webdriver.promise.Application.getInstance();
+    var pair = callbackPair(null, assertIsStubError);
+    appTester.$attachAppListener(pair);
+
+    var root = app.activeFrame_ = new webdriver.promise.Application.Frame_(),
+        frame1 = new webdriver.promise.Application.Frame_(),
+        frame2 = new webdriver.promise.Application.Frame_(),
+        frame3 = new webdriver.promise.Application.Frame_(),
+        task = createTask();
+
+    var rootHelper = installResolveHelper(root),
+        frame1Helper = installResolveHelper(frame1),
+        frame2Helper = installResolveHelper(frame2),
+        frame3Helper = installResolveHelper(frame3);
+
+    app.abortNow_ = callbackHelper(assertIsStubError);
+
+    root.addChild(frame1);
+    root.addChild(frame2);
+    root.addChild(frame3);
+    root.addChild(task);
+
+    assertArrayEquals([task], frame3.children_);
+    assertArrayEquals([frame3], frame2.children_);
+    assertArrayEquals([frame2], frame1.children_);
+    assertArrayEquals([frame1], root.children_);
+
+    assertEquals(task, app.getNextTask_());
+    assertEquals(frame3, app.activeFrame_);
+    app.abortNow_.assertNotCalled();
+    rootHelper.assertNeither();
+    frame1Helper.assertNeither();
+    frame2Helper.assertNeither();
+    frame3Helper.assertNeither();
+
+    app.abortFrame_(STUB_ERROR);
+    assertEquals(frame2, app.activeFrame_);
+    app.abortNow_.assertNotCalled();
+    rootHelper.assertNeither();
+    frame1Helper.assertNeither();
+    frame2Helper.assertNeither();
+    frame3Helper.assertErrback();
+
+    clock.tick();
+    assertEquals(frame1, app.activeFrame_);
+    app.abortNow_.assertNotCalled();
+    rootHelper.assertNeither();
+    frame1Helper.assertNeither();
+    frame2Helper.assertErrback();
+
+    clock.tick();
+    assertEquals(root, app.activeFrame_);
+    app.abortNow_.assertNotCalled();
+    rootHelper.assertNeither();
+    frame1Helper.assertErrback();
+
+    clock.tick();
+    assertNull(app.activeFrame_);
+    app.abortNow_.assertNotCalled();
+    rootHelper.assertErrback();
+
+    clock.tick();
+    assertNull(app.activeFrame_);
+    app.abortNow_.assertCalled();
+
+    function installResolveHelper(promise) {
+      var reject = promise.reject;
+      var pair = callbackPair(promise.resolve, function(e) {
+        assertIsStubError(e);
+        reject(e);
+      });
+      promise.resolve = pair.callback;
+      promise.reject = pair.errback;
+      return pair;
+    }
+  }
+
+
+  function testRunInNewFrame_nothingScheduledInFunction() {
+    var app = webdriver.promise.Application.getInstance();
+    var root = app.activeFrame_ = new webdriver.promise.Application.Frame_(),
+        task1 = createTask(),
+        task2 = createTask();
+
+    root.addChild(task1);
+    root.addChild(task2);
+    assertArrayEquals([task1, task2], root.children_);
+
+    assertEquals(task1, app.getNextTask_());
+    assertEquals(root, app.activeFrame_);
+    assertArrayEquals([task2], root.children_);
+
+    assertUndefined(app.runInNewFrame_(goog.nullFunction));
+    assertEquals(root, app.activeFrame_);
+    assertArrayEquals([task2], root.children_);
+  }
+
+
+  function testRunInNewFrame_functionThrows() {
+    var app = webdriver.promise.Application.getInstance();
+    var root = app.activeFrame_ = new webdriver.promise.Application.Frame_(),
+        task1 = createTask(),
+        task2 = createTask();
+
+    root.addChild(task1);
+    root.addChild(task2);
+    assertArrayEquals([task1, task2], root.children_);
+
+    assertEquals(task1, app.getNextTask_());
+    assertEquals(root, app.activeFrame_);
+    assertArrayEquals([task2], root.children_);
+
+    var pair = callbackPair(null, assertIsStubError);
+    app.runInNewFrame_(throwStubError).then(pair.callback, pair.errback);
+    pair.assertErrback();
+    assertEquals(root, app.activeFrame_);
+    assertArrayEquals([task2], root.children_);
+  }
+
+
+  function testRunInNewFrame_functionThrowsAfterSchedulingTasks() {
+    var app = webdriver.promise.Application.getInstance();
+    var root = app.activeFrame_ = new webdriver.promise.Application.Frame_(),
+        task1 = createTask('task1'),
+        task2 = createTask('task2');
+
+    root.addChild(task1);
+    root.addChild(task2);
+    assertArrayEquals([task1, task2], root.children_);
+
+    assertEquals(task1, app.getNextTask_());
+    assertEquals(root, app.activeFrame_);
+    assertArrayEquals([task2], root.children_);
+
+    var pair = callbackPair(null, assertIsStubError);
+    app.runInNewFrame_(function() {
+      app.schedule('task3', goog.nullFunction);
+      assertEquals('[[task3], task2]', app.getSchedule());
+      throw STUB_ERROR;
+    }).then(pair.callback, pair.errback);
+    pair.assertErrback();
+    assertEquals(root, app.activeFrame_);
+    assertArrayEquals([task2], root.children_);
+  }
+
+
+  function testRunInNewFrame_whenThereIsNoCurrentActiveFrame_noopFunc() {
+    var app = webdriver.promise.Application.getInstance();
+    assertUndefined(app.runInNewFrame_(goog.nullFunction));
+    assertNull(app.activeFrame_);
+    assertEquals('[]', app.getSchedule());
+  }
+
+
+  function testRunInNewFrame_whenThereIsNoCurrentActiveFrame_funcThrows() {
+    var pair = callbackPair(null, assertIsStubError);
+    var app = webdriver.promise.Application.getInstance();
+    app.runInNewFrame_(throwStubError).then(pair.callback, pair.errback);
+    pair.assertErrback();
+    assertNull(app.activeFrame_);
+    assertEquals('[]', app.getSchedule());
+  }
+
+
+  function
+      testRunInNewFrame_whenThereIsNoCurrentActiveFrame_throwsAfterSchedule() {
+    var pair = callbackPair(null, assertIsStubError);
+    var app = webdriver.promise.Application.getInstance();
+    app.runInNewFrame_(function() {
+      app.schedule('task3', goog.nullFunction);
+      assertEquals('[task3]', app.getSchedule());
+      throwStubError();
+    }).then(pair.callback, pair.errback);
+    pair.assertErrback();
+    assertNull(app.activeFrame_);
+    assertEquals('[]', app.getSchedule());
+  }
+
+
+  function testRunInNewFrame_returnsPrimitiveFunctionResultImmediately() {
+    var app = webdriver.promise.Application.getInstance();
+    assertEquals(23, app.runInNewFrame_(function() {
+      return 23;
+    }));
+  }
+
+
+  function testRunInNewFrame_updatesSchedulingFrameForContextOfFunction() {
+    var app = webdriver.promise.Application.getInstance();
+    var root = app.activeFrame_ = new webdriver.promise.Application.Frame_();
+
+    var error;
+    app.runInNewFrame_(function() {
+      try {
+        assertNotNull(app.activeFrame_);
+        assertNotNull(app.schedulingFrame_);
+        assertNotEquals(root, app.schedulingFrame_);
+        assertArrayEquals([app.schedulingFrame_], root.children_);
+        assertEquals(root, app.schedulingFrame_.getParent());
+      } catch (ex) {
+        error = ex;
+      }
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    assertEquals('Did not restore active frame', root, app.activeFrame_);
+  }
+
+
+  function testRunInNewFrame_doesNotReturnUntilScheduledFrameResolved() {
+    var app = webdriver.promise.Application.getInstance();
+    var root = app.activeFrame_ = new webdriver.promise.Application.Frame_(),
+        task1 = createTask('task1'),
+        task2 = createTask('task2');
+
+    root.addChild(task1);
+    root.addChild(task2);
+    assertArrayEquals([task1, task2], root.children_);
+
+    assertEquals(task1, app.getNextTask_());
+    assertEquals(root, app.activeFrame_);
+    assertArrayEquals([task2], root.children_);
+
+    var pair = callbackPair();
+    app.runInNewFrame_(function() {
+      schedule('task3');
+    }).then(pair.callback, pair.errback);
+
+    pair.assertNeither('active frame not resolved yet');
+    assertEquals(root, app.activeFrame_);
+
+    var task = app.getNextTask_();
+    assertEquals('task3', task.getDescription());
+    assertEquals(root.children_[0], app.activeFrame_);
+    pair.assertNeither('active frame still not resolved yet');
+
+    assertNull(app.getNextTask_());
+    pair.assertCallback();
+    assertEquals(root, app.activeFrame_);
+    assertEquals(task2, app.getNextTask_());
+  }
+
+
+  function testRunInNewFrame_doesNotReturnUntilScheduledFrameResolved_nested() {
+    var app = webdriver.promise.Application.getInstance();
+    var root = app.activeFrame_ = new webdriver.promise.Application.Frame_();
+
+    schedule('task1');
+    schedule('task2');
+    assertEquals('task1', app.getNextTask_().getDescription());
+
+    var pair1 = callbackPair(), pair2 = callbackPair();
+    app.runInNewFrame_(function() {
+      schedule('task3');
+      app.runInNewFrame_(function() {
+        schedule('task4');
+      }).then(pair2.callback, pair2.errback);
+    }).then(pair1.callback, pair1.errback);
+
+    pair1.assertNeither();
+    pair2.assertNeither();
+    assertEquals('task3', app.getNextTask_().getDescription());
+    assertEquals('task4', app.getNextTask_().getDescription());
+    assertNull(app.getNextTask_());
+    pair1.assertNeither();
+    pair2.assertCallback();
+    assertNull(app.getNextTask_());
+    pair1.assertCallback();
+
+    assertEquals(root, app.activeFrame_);
+    assertEquals('task2', app.getNextTask_().getDescription());
+  }
+
+
+  function testScheduling_aSimpleFunction() {
+    schedule('go');
+    runApplication();
+    assertAppHistory('go');
+  }
+
+
+  function testScheduling_aSimpleSequence() {
+    schedule('a');
+    schedule('b');
+    schedule('c');
+    runApplication();
+    assertAppHistory('a', 'b', 'c');
+  }
+
+
+  function testScheduling_invokesCallbacksWhenTaskIsDone() {
+    var callback;
+    var d = new webdriver.promise.Deferred();
+    schedule('a', d.promise).then(callback = callbackHelper(function(value) {
+      assertEquals(123, value);
+    }));
+    callback.assertNotCalled('Callback should not have been called yet');
+
+    turnEventLoop();
+    callback.assertNotCalled('Task has not completed yet!');
+
+    d.resolve(123);
+    callback.assertCalled('Callback should have been called!');
+    runApplication();
+    assertAppHistory('a');
+  }
+
+
+  function testScheduling_blocksUntilPromiseReturnedByTaskIsResolved() {
+    var d = new webdriver.promise.Deferred();
+    schedule('a', d.promise);
+    schedule('b');
+
+    assertAppHistory();
+    turnEventLoop(assertAppHistory, 'a');
+    turnEventLoop(assertAppHistory, 'a');  // Task 'a' is still running.
+    turnEventLoop(assertAppHistory, 'a');  // Task 'a' is still running.
+
+    d.resolve(123);
+    runApplication();
+    assertAppHistory('a', 'b');
+  }
+
+
+  function testScheduling_waitsForReturnedPromisesToResolve() {
+    var d1 = new webdriver.promise.Deferred();
+    var d2 = new webdriver.promise.Deferred();
+
+    var callback;
+    schedule('a', d1.promise).then(callback = callbackHelper(function(value) {
+      assertEquals('fluffy bunny', value);
+    }));
+
+    callback.assertNotCalled('d1 not resolved yet');
+
+    d1.resolve(d2);
+    callback.assertNotCalled('Should not be called yet; blocked on d2');
+
+    d2.resolve('fluffy bunny');
+
+    runApplication();
+    callback.assertCalled('d2 has been resolved');
+    assertAppHistory('a');
+  }
+
+
+  function testScheduling_executesTasksInAFutureTurnAfterTheyAreScheduled() {
+    var count = 0;
+    function incr() { count++; }
+
+    scheduleAction('', incr);
+
+    assertEquals(0, count);
+
+    turnEventLoop();
+    assertEquals(1, count);
+
+    runApplication();
+  }
+
+
+  function testScheduling_executesOneTaskPerTurnOfTheEventLoop() {
+    var count = 0;
+    function incr() { count++; }
+
+    scheduleAction('', incr);
+    scheduleAction('', incr);
+
+    assertEquals(0, count);
+    turnEventLoop();
+    assertEquals(1, count);
+    turnEventLoop();
+    assertEquals(2, count);
+
+    runApplication();
+  }
+
+
+  function testScheduling_firstScheduledTaskIsWithinACallback() {
+    webdriver.promise.resolved().then(function() {
+      schedule('a');
+      schedule('b');
+      schedule('c');
+    });
+    runApplication();
+    assertAppHistory('a', 'b', 'c');
+  }
+
+
+  function testFraming_callbacksRunInANewFrame() {
+    schedule('a').then(function() {
+      schedule('c');
+    });
+    schedule('b');
+
+    runApplication();
+    assertAppHistory('a', 'c', 'b');
+  }
+
+
+  function testFraming_lotsOfNesting() {
+    schedule('a').then(function() {
+      schedule('c').then(function() {
+        schedule('e').then(function() {
+          schedule('g');
+        });
+        schedule('f');
+      });
+      schedule('d');
+    });
+    schedule('b');
+
+    runApplication();
+    assertAppHistory('a', 'c', 'e', 'g', 'f', 'd', 'b');
+  }
+
+
+  function testFraming_eachCallbackWaitsForAllScheduledTasksToComplete() {
+    schedule('a').
+        then(function() {
+          schedule('b');
+          schedule('c');
+        }).
+        then(function() {
+          schedule('d');
+        });
+    schedule('e');
+
+    runApplication();
+    assertAppHistory('a', 'b', 'c', 'd', 'e');
+  }
+
+
+  function testFraming_eachCallbackWaitsForReturnTasksToComplete() {
+    schedule('a').
+        then(function() {
+          schedule('b');
+          return schedule('c');
+        }).
+        then(function() {
+          schedule('d');
+        });
+    schedule('e');
+
+    runApplication();
+    assertAppHistory('a', 'b', 'c', 'd', 'e');
+  }
+
+
+  function testFraming_promiseCallbacks() {
+    webdriver.promise.resolved().then(function() {
+      schedule('b');
+    });
+    schedule('a');
+
+    runApplication();
+    assertAppHistory('b', 'a');
+  }
+
+
+  function testFraming_allCallbacksInAFrameAreScheduledWhenPromiseIsResolved() {
+    var a = schedule('a');
+    a.then(function() { schedule('b'); });
+    schedule('c');
+    a.then(function() { schedule('d'); });
+    schedule('e');
+
+    runApplication();
+    assertAppHistory('a', 'b', 'd', 'c', 'e');
+  }
+
+
+  function testFraming_tasksScheduledInInActiveFrameDoNotGetPrecedence() {
+    var d = new webdriver.promise.Deferred();
+
+    schedule('a');
+    schedule('b');
+    d.then(function() { schedule('c'); });
+
+    d.resolve();
+    runApplication();
+    assertAppHistory('a', 'b', 'c');
+  }
+
+
+  function testFraming_tasksScheduledInAFrameGetPrecedence_1() {
+    var a = schedule('a');
+    schedule('b').then(function() {
+      a.then(function() {
+        schedule('c');
+        schedule('d');
+      });
+      var e = schedule('e');
+      a.then(function() {
+        // When this function runs, |e| will not be resolved yet, so |f| and
+        // |h| will be resolved first.  After |e| is resolved, |g| will be
+        // scheduled in a new frame, resulting in: [j][f, h, i][g], so |g| is
+        // expected to execute first.
+        schedule('f');
+        e.then(function() {
+          schedule('g');
+        });
+        schedule('h');
+      });
+      schedule('i');
+    });
+    schedule('j');
+
+    runApplication();
+    assertAppHistory('a', 'b', 'c', 'd', 'e', 'g', 'f', 'h', 'i', 'j');
+  }
+
+
+  function testErrorHandling_thrownErrorsArePassedToTaskErrback() {
+    var callbacks = callbackPair(null, assertIsStubError);
+    scheduleAction('function that throws', throwStubError).
+        then(callbacks.callback, callbacks.errback);
+    runApplication(callbacks.assertErrback);
+  }
+
+
+  function testErrorHandling_thrownErrorsPropagateThroughPromiseChain() {
+    var callbacks = callbackPair(null, assertIsStubError);
+    scheduleAction('function that throws', throwStubError).
+        then(callbacks.callback).
+        then(null, callbacks.errback);
+    runApplication(callbacks.assertErrback);
+  }
+
+
+  function testErrorHandling_catchesErrorsFromFailedTasksInAFrame() {
+    var errback;
+
+    schedule('a').
+        then(function() {
+          schedule('b');
+          scheduleAction('function that throws', throwStubError);
+        }).
+        then(null, errback = callbackHelper(assertIsStubError));
+
+    runApplication();
+    errback.assertCalled();
+  }
+
+
+  function testErrorHandling_abortsAppIfOnlyTaskThrowsAnError() {
+    scheduleAction('function that throws', throwStubError);
+    runApplication(null, assertIsStubError);
+  }
+
+
+  function testErrorHandling_abortsAppIfOnlyTaskReturnsAnUnhandledRejection() {
+    var rejected = webdriver.promise.rejected(STUB_ERROR);
+    scheduleAction('function that throws', function() { return rejected; });
+    runApplication(null, assertIsStubError);
+  }
+
+
+  function testErrorHandling_abortsIfThereIsAnUnhandledRejection() {
+    webdriver.promise.rejected(STUB_ERROR);
+    schedule('this should not run');
+    runApplication(null, assertIsStubError);
+    assertAppHistory();
+  }
+
+
+  function testErrorHandling_abortsSequenceIfATaskFails() {
+    schedule('a');
+    schedule('b');
+    scheduleAction('c', throwStubError);
+    schedule('d');  // Should never execute.
+
+    runApplication(null, assertIsStubError);
+    assertAppHistory('a', 'b', 'c');
+  }
+
+
+  function testErrorHandling_abortsFromUnhandledFramedTaskFailures_1() {
+    schedule('outer task').then(function() {
+      scheduleAction('inner task', throwStubError);
+    });
+    schedule('this should not run');
+    runApplication(null, assertIsStubError);
+    assertAppHistory('outer task', 'inner task');
+  }
+
+
+  function testErrorHandling_abortsFromUnhandledFramedTaskFailures_2() {
+    schedule('a').then(function() {
+      schedule('b').then(function() {
+        scheduleAction('c', throwStubError);
+        // This should not execute.
+        schedule('d');
+      });
+    });
+
+    runApplication(null, assertIsStubError);
+    assertAppHistory('a', 'b', 'c');
+  }
+
+
+  function testErrorHandling_abortsWhenErrorBubblesUpFromFullyResolvingAnObject() {
+    var obj = {'foo': webdriver.promise.rejected(STUB_ERROR)};
+    scheduleAction('', function() {
+      return webdriver.promise.fullyResolved(obj).
+          then(function() {
+            // Should never get here; STUB_ERROR should abort the app above.
+            return webdriver.promise.rejected('rejected 2');
+          });
+    });
+    runApplication(null, assertIsStubError);
+  }
+
+
+  function testErrorHandling_abortsWhenErrorBubblesUpFromFullyResolvingAnObject_withCallback() {
+    var obj = {'foo': webdriver.promise.rejected(STUB_ERROR)};
+    var callback;
+    scheduleAction('', function() {
+      return webdriver.promise.fullyResolved(obj).
+          then(function() {
+            // Should never get here; STUB_ERROR should abort the app above.
+            return webdriver.promise.rejected('rejected 2');
+          });
+    }).then(callback = callbackHelper());
+
+    callback.assertNotCalled();
+    runApplication(null, assertIsStubError);
+  }
+
+
+  function testErrorHandling_canCatchErrorsFromNestedTasks() {
+    var errback;
+    schedule('a').
+        then(function() {
+          return scheduleAction('b', throwStubError);
+        }).
+        addErrback(errback = callbackHelper(assertIsStubError));
+    runApplication();
+    errback.assertCalled();
+  }
+
+
+  function testErrorHandling_nestedCommandFailuresCanBeCaughtAndSuppressed() {
+    var errback;
+    schedule('a').then(function() {
+      return schedule('b').then(function() {
+        return schedule('c').then(function() {
+          throw STUB_ERROR;
+        });
+      });
+    }).addErrback(errback = callbackHelper(assertIsStubError));
+    schedule('d');
+    runApplication();
+    assertAppHistory('a', 'b', 'c', 'd');
+    errback.assertCalled();
+  }
+
+
+  function testErrorHandling_aTaskWithAnUnhandledPromiseRejection() {
+    schedule('a');
+    scheduleAction('sub-tasks', function() {
+      webdriver.promise.rejected(STUB_ERROR);
+    });
+    schedule('should never run');
+
+    runApplication(null, assertIsStubError);
+    assertAppHistory('a', 'sub-tasks');
+  }
+
+  function testErrorHandling_aTaskThatReutrnsARejectedPromise() {
+    schedule('a');
+    scheduleAction('sub-tasks', function() {
+      return webdriver.promise.rejected(STUB_ERROR);
+    });
+    schedule('should never run');
+
+    runApplication(null, assertIsStubError);
+    assertAppHistory('a', 'sub-tasks')
+  }
+
+
+  function testErrorHandling_discardsSubtasksIfTaskThrows() {
+    var pair = callbackPair(null, assertIsStubError);
+    scheduleAction('a', function() {
+      schedule('b');
+      schedule('c');
+      throwStubError();
+    }).then(pair.callback, pair.errback);
+    schedule('d');
+
+    runApplication();
+    pair.assertErrback();
+    assertAppHistory('a', 'd');
+  }
+
+
+  function testErrorHandling_discardsRemainingSubtasksIfASubtaskFails() {
+    var pair = callbackPair(null, assertIsStubError);
+    scheduleAction('a', function() {
+      schedule('b');
+      scheduleAction('c', throwStubError);
+      schedule('d');
+    }).then(pair.callback, pair.errback);
+    schedule('e');
+
+    runApplication();
+    pair.assertErrback();
+    assertAppHistory('a', 'b', 'c', 'e');
+  }
+
+
+  function testTryFinally_happyPath() {
+    /* Model:
+       try {
+         doFoo();
+         doBar();
+       } finally {
+         doBaz();
+       }
+     */
+    schedulePush('doFoo', 'foo').
+        then(goog.partial(schedulePush, 'doBar', 'bar')).
+        addBoth(goog.partial(schedulePush, 'doBaz', 'baz'));
+    runApplication(assertingMessages('foo', 'bar', 'baz'));
+    assertAppHistory('doFoo', 'doBar', 'doBaz');
+  }
+
+
+  function testTryFinally_firstTryFails() {
+    /* Model:
+       try {
+         doFoo();
+         doBar();
+       } finally {
+         doBaz();
+       }
+     */
+
+    scheduleAction('doFoo and throw', function() {
+      webdriver.test.testutil.messages.push('foo');
+      throw new Error('ouch');
+    }).then(goog.partial(schedulePush, 'doBar', 'bar')).
+       addBoth(goog.partial(schedulePush, 'doBaz', 'baz'));
+    runApplication(assertingMessages('foo', 'baz'));
+  }
+
+
+  function testTryFinally_secondTryFails() {
+    /* Model:
+       try {
+         doFoo();
+         doBar();
+       } finally {
+         doBaz();
+       }
+     */
+
+    schedulePush('doFoo', 'foo').
+        then(function() {
+          return scheduleAction('doBar and throw', function() {
+            webdriver.test.testutil.messages.push('bar');
+            throw STUB_ERROR;
+          });
+        }).
+        addBoth(function(e) {
+          assertIsStubError(e);
+          return schedulePush('doBaz', 'baz');
+        });
+    runApplication(assertingMessages('foo', 'bar', 'baz'));
+  }
+
+
+  function testDelayedNesting_1() {
+    var a = schedule('a');
+    schedule('b').then(function() {
+      a.then(function() { schedule('c'); });
+      schedule('d');
+    });
+    schedule('e');
+
+    runApplication();
+    assertAppHistory('a', 'b', 'c', 'd', 'e');
+  }
+
+
+  function testDelayedNesting_2() {
+    var a = schedule('a');
+    schedule('b').then(function() {
+      a.then(function() { schedule('c'); });
+      schedule('d');
+      a.then(function() { schedule('e'); });
+    });
+    schedule('f');
+
+    runApplication();
+    assertAppHistory('a', 'b', 'c', 'd', 'e', 'f');
+  }
+
+
+  function testDelayedNesting_3() {
+    var a = schedule('a');
+    schedule('b').then(function() {
+      a.then(function() { schedule('c'); });
+      a.then(function() { schedule('d'); });
+    });
+    schedule('e');
+
+    runApplication();
+    assertAppHistory('a', 'b', 'c', 'd', 'e');
+  }
+
+
+  function testDelayedNesting_4() {
+    var a = schedule('a');
+    schedule('b').then(function() {
+      a.then(function() { schedule('c'); }).then(function() {
+        schedule('d');
+      });
+      a.then(function() { schedule('e'); });
+    });
+    schedule('f');
+
+    runApplication();
+    assertAppHistory('a', 'b', 'c', 'd', 'e', 'f');
+  }
+
+
+  function testDelayedNesting_5() {
+    var a = schedule('a');
+    schedule('b').then(function() {
+      var c;
+      a.then(function() { c = schedule('c'); }).then(function() {
+        schedule('d');
+        a.then(function() { schedule('e'); });
+        c.then(function() { schedule('f'); });
+        schedule('g');
+      });
+      a.then(function() { schedule('h'); });
+    });
+    schedule('i');
+
+    runApplication();
+    assertAppHistory('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i');
+  }
+
+
+  function testCancelsTerminationEventIfNewCommandIsScheduled() {
+    schedule('a');
+    turnEventLoop();
+    assertAppHistory('a');
+    appTester.$assertAppIsStillRunning();
+    turnEventLoop();
+    schedule('b');
+
+    runApplication();
+    assertAppHistory('a', 'b');
+  }
+
+  function testWaiting_onAConditionThatIsAlwaysTrue() {
+    scheduleWait('waiting on true', function() { return true;}, 0);
+    runApplication();
+    assertAppHistory('0: waiting on true');
+  }
+
+
+  function testWaiting_aSimpleCountingCondition() {
+    var count = 0;
+    scheduleWait('counting to 3', function() {
+      return ++count == 3;
+    }, 200);
+
+    turnEventLoop();  // Start the application; triggers first condition poll.
+    assertEquals(1, count);
+    clock.tick(100);  // Poll 2 more times.
+    clock.tick(100);
+    assertEquals(3, count);
+
+    runApplication();
+  }
+
+
+  function testWaiting_aConditionThatReturnsAPromise() {
+    var d = new webdriver.promise.Deferred();
+
+    scheduleWait('waiting for promise', function() {
+      return d.promise;
+    }, 0);
+
+    turnEventLoop();
+    appTester.$assertAppIsStillRunning();
+
+    // Should be able to turn the event loop a few times since we're blocked
+    // on our wait condition.
+    turnEventLoop();
+    turnEventLoop();
+
+    d.resolve(123);
+    runApplication();
+  }
+
+
+  function testWaiting_aConditionThatReturnsAPromise_2() {
+    var count = 0;
+    scheduleWait('waiting for promise', function() {
+      return webdriver.promise.resolved(++count == 3);
+    }, 200);
+
+    turnEventLoop();  // Start the application; triggers first condition poll.
+    clock.tick(100);  // Poll 2 more times.
+    clock.tick(100);
+    assertEquals(3, count);
+
+    runApplication();
+  }
+
+
+  function testWaiting_aConditionThatReturnsATaskResult() {
+    var count = 0;
+    scheduleWait('counting to 3', function() {
+      return scheduleAction('increment count', function() {
+        return ++count == 3;
+      });
+    }, 200);
+    schedule('post wait');
+
+    turnEventLoop();
+    assertEquals(0, count);
+    assertAppHistory('0: counting to 3');
+
+    turnEventLoop();  // Runs scheduled task.
+    turnEventLoop();
+    assertAppHistory(
+        '0: counting to 3', 'increment count');
+    assertEquals(1, count);
+
+    clock.tick(100);  // Advance clock for next polling pass.
+    assertEquals(1, count);
+    turnEventLoop();
+    assertEquals(2, count);
+    turnEventLoop();
+    assertAppHistory(
+        '0: counting to 3', 'increment count',
+        '1: counting to 3', 'increment count');
+
+    clock.tick(100);  // Advance clock for next polling pass.
+    assertEquals(2, count);
+    turnEventLoop();
+    assertEquals(3, count);
+    turnEventLoop();
+    assertAppHistory(
+        '0: counting to 3', 'increment count',
+        '1: counting to 3', 'increment count',
+        '2: counting to 3', 'increment count');
+
+    runApplication();
+    assertEquals(3, count);
+    assertAppHistory(
+        '0: counting to 3', 'increment count',
+        '1: counting to 3', 'increment count',
+        '2: counting to 3', 'increment count',
+        'post wait');
+  }
+
+
+  function testWaiting_conditionContainsASubtask() {
+    var count = 0;
+    scheduleWait('counting to 3', function() {
+      schedule('sub task');
+      return ++count == 3;
+    }, 200);
+    schedule('post wait');
+
+    runApplication();
+    assertEquals(3, count);
+    assertAppHistory(
+        '0: counting to 3', 'sub task',
+        '1: counting to 3', 'sub task',
+        '2: counting to 3', 'sub task',
+        'post wait');
+  }
+
+
+  function testWaiting_cancelsWaitIfScheduledTaskFails() {
+    var pair = callbackPair(null, assertIsStubError);
+    scheduleWait('waiting to go boom', function() {
+      scheduleAction('boom', throwStubError);
+      schedule('this should not run');
+      return true;
+    }, 200).then(pair.callback, pair.errback);
+    schedule('post wait');
+
+    runApplication();
+    assertAppHistory(
+        '0: waiting to go boom', 'boom',
+        'post wait');
+  }
+
+
+  function testWaiting_failsIfConditionThrows() {
+    var callbacks = callbackPair(null, assertIsStubError);
+    scheduleWait('goes boom', throwStubError).
+        then(callbacks.callback, callbacks.errback);
+    schedule('post wait');
+    runApplication();
+    assertAppHistory('0: goes boom', 'post wait');
+    callbacks.assertErrback();
+  }
+
+
+  function testWaiting_failsIfConditionReturnsARejectedPromise() {
+    var callbacks = callbackPair(null, assertIsStubError);
+    scheduleWait('goes boom', function() {
+      return webdriver.promise.rejected(STUB_ERROR);
+    }).then(callbacks.callback, callbacks.errback);
+    schedule('post wait');
+    runApplication();
+    assertAppHistory('0: goes boom', 'post wait');
+    callbacks.assertErrback();
+  }
+
+
+  function testWaiting_failsIfConditionHasAFailedSubtask() {
+    var callbacks = callbackPair(null, assertIsStubError);
+    var count = 0;
+    scheduleWait('waiting', function() {
+      scheduleAction('maybe throw', function() {
+        if (++count == 2) {
+          throw STUB_ERROR;
+        }
+      });
+    }, 200).then(callbacks.callback, callbacks.errback);
+    schedule('post wait');
+
+    turnEventLoop();
+    assertEquals(0, count);
+
+    turnEventLoop();  // Runs scheduled task.
+    assertEquals(1, count);
+
+    clock.tick(100);  // Advance clock for next polling pass.
+    assertEquals(1, count);
+
+    runApplication();
+    assertEquals(2, count);
+    assertAppHistory(
+        '0: waiting', 'maybe throw',
+        '1: waiting', 'maybe throw',
+        'post wait');
+  }
+
+
+  function testWaiting_pollingLoopWaitsForAllScheduledTasksInCondition() {
+    var count = 0;
+    scheduleWait('counting to 3', function() {
+      scheduleAction('increment count', function() { ++count; });
+      return count >= 3;
+    }, 300);
+    schedule('post wait');
+
+    turnEventLoop();
+    assertEquals(0, count);
+
+    turnEventLoop();  // Runs scheduled task.
+    turnEventLoop();
+    assertEquals(1, count);
+
+    clock.tick(100);  // Advance clock for next polling pass.
+    assertEquals(1, count);
+    turnEventLoop();
+    assertEquals(2, count);
+
+    clock.tick(100);  // Advance clock for next polling pass.
+    assertEquals(2, count);
+
+    runApplication();
+    assertEquals(4, count);
+    assertAppHistory(
+        '0: counting to 3', 'increment count',
+        '1: counting to 3', 'increment count',
+        '2: counting to 3', 'increment count',
+        '3: counting to 3', 'increment count',
+        'post wait');
+  }
+
+
+  function testWaiting_blocksNextTaskOnWait() {
+    var count = 0;
+    scheduleWait('counting to 3', function() {
+      return ++count == 3;
+    }, 200);
+    schedule('post wait');
+
+    turnEventLoop();  // Start the application; triggers first condition poll.
+    assertAppHistory('0: counting to 3');
+    assertEquals(1, count);
+    clock.tick(100);  // Poll 2 more times.
+    assertAppHistory(
+        '0: counting to 3',
+        '1: counting to 3');
+    clock.tick(100);
+    assertAppHistory(
+        '0: counting to 3',
+        '1: counting to 3',
+        '2: counting to 3');
+    assertEquals(3, count);
+
+    runApplication();
+    assertAppHistory(
+        '0: counting to 3',
+        '1: counting to 3',
+        '2: counting to 3',
+        'post wait');
+  }
+
+
+  function testWaiting_timesOut_zeroTimeout() {
+    scheduleWait('always false', function() { return false; }, 0);
+    runApplication(null, goog.nullFunction);
+  }
+
+  function testWaiting_timesOut_nonZeroTimeout() {
+    var count = 0;
+    scheduleWait('counting to 3', function() {
+      return ++count == 3;
+    }, 100);
+
+    turnEventLoop();  // Start the application; triggers first condition poll.
+    clock.tick(100);  // Poll 2 more times.
+    assertEquals(2, count);
+
+    runApplication(null, function() {
+      assertAppHistory('0: counting to 3', '1: counting to 3');
+      assertEquals(2, count);
+    });
+  }
+
+
+  function testWaiting_shouldFailIfConditionReturnsARejectedPromise() {
+    var count = 0;
+    scheduleWait('counting to 3', function() {
+      return webdriver.promise.rejected(STUB_ERROR);
+    }, 100);
+
+    runApplication(null, assertIsStubError);
+  }
+
+
+  function testWaiting_callbacks() {
+    var pair = callbackPair();
+
+    scheduleWait('waiting on true', function() { return true;}, 0).
+        then(pair.callback, pair.errback);
+    pair.assertNeither('Wait not expected to be done yet');
+    turnEventLoop();
+    pair.assertCallback('Wait callback not called!');
+    runApplication();
+  }
+
+
+  function testWaiting_errbacks() {
+    var callbacks = callbackPair();
+    scheduleWait('always false', function() { return false; }, 0).
+        then(callbacks.callback, callbacks.errback);
+    turnEventLoop();
+    callbacks.assertErrback('Wait should have timed out');
+    runApplication();
+  }
+
+
+  function testWaiting_scheduleWithIntermittentWaits() {
+    schedule('a');
+    scheduleWait('wait 1', function() { return true; }, 0);
+    schedule('b');
+    scheduleWait('wait 2', function() { return true; }, 0);
+    schedule('c');
+    scheduleWait('wait 3', function() { return true; }, 0);
+
+    runApplication();
+    assertAppHistory('a', '0: wait 1', 'b', '0: wait 2', 'c', '0: wait 3');
+  }
+
+
+  function testWaiting_scheduleWithIntermittentAndNestedWaits() {
+    schedule('a');
+    scheduleWait('wait 1', function() { return true; }, 0).
+        then(function() {
+          schedule('d');
+          scheduleWait('wait 2', function() { return true; }, 0);
+          schedule('e');
+        });
+    schedule('b');
+    scheduleWait('wait 3', function() { return true; }, 0);
+    schedule('c');
+    scheduleWait('wait 4', function() { return true; }, 0);
+
+    runApplication();
+    assertAppHistory(
+        'a', '0: wait 1', 'd', '0: wait 2', 'e', 'b', '0: wait 3', 'c',
+        '0: wait 4');
+  }
+
+
+  function testSubtasks() {
+    schedule('a');
+    scheduleAction('sub-tasks', function() {
+      schedule('c');
+      schedule('d');
+    });
+    schedule('b');
+
+    runApplication();
+    assertAppHistory('a', 'sub-tasks', 'c', 'd', 'b');
+  }
+
+
+  function testSubtasks_nesting() {
+    schedule('a');
+    scheduleAction('sub-tasks', function() {
+      schedule('b');
+      scheduleAction('sub-sub-tasks', function() {
+        schedule('c');
+        schedule('d');
+      });
+      schedule('e');
+    });
+    schedule('f');
+
+    runApplication();
+    assertAppHistory(
+        'a', 'sub-tasks', 'b', 'sub-sub-tasks', 'c', 'd', 'e', 'f');
+  }
+
+
+  function testSubtasks_taskReturnsSubTaskResult_1() {
+    schedule('a');
+    scheduleAction('sub-tasks', function() {
+      return schedule('c');
+    });
+    schedule('b');
+
+    runApplication();
+    assertAppHistory('a', 'sub-tasks', 'c', 'b');
+  }
+
+
+  function testSubtasks_taskReturnsSubTaskResult_2() {
+    var callback;
+    schedule('a');
+    schedule('sub-tasks', webdriver.promise.resolved(123)).
+        then(callback = callbackHelper(function(value) {
+          assertEquals(123, value);
+        }));
+    schedule('b');
+
+    runApplication();
+    assertAppHistory('a', 'sub-tasks','b');
+    callback.assertCalled();
+  }
+
+
+  function testSubtasks_subTaskFails_1() {
+    schedule('a');
+    scheduleAction('sub-tasks', function() {
+      scheduleAction('sub-task that fails', throwStubError);
+    });
+    schedule('should never execute');
+
+    runApplication(null, assertIsStubError);
+    assertAppHistory('a', 'sub-tasks', 'sub-task that fails');
+  }
+
+
+  function testSubtasks_subTaskFails_2() {
+    schedule('a');
+    scheduleAction('sub-tasks', function() {
+      return webdriver.promise.rejected(STUB_ERROR);
+    });
+    schedule('should never execute');
+
+    runApplication(null, assertIsStubError);
+    assertAppHistory('a', 'sub-tasks');
+  }
+
+
+  function testSubtasks_subTaskFails_3() {
+    var callbacks = callbackPair(null, assertIsStubError);
+
+    schedule('a');
+    scheduleAction('sub-tasks', function() {
+      return webdriver.promise.rejected(STUB_ERROR);
+    }).then(callbacks.callback, callbacks.errback);
+    schedule('b');
+
+    runApplication();
+    assertAppHistory('a', 'sub-tasks', 'b');
+    callbacks.assertErrback();
+  }
+
+
+  function testEventLoopWaitsOnPendingPromiseRejections_oneRejection() {
+    var pair = callbackPair(null, assertIsStubError);
+    appTester.$attachAppListener(pair);
+
+    var d = new webdriver.promise.Deferred;
+    scheduleAction('one', function() {
+      return d.promise;
+    });
+    scheduleAction('two', goog.nullFunction);
+
+    turn();
+    assertAppHistory('one');
+    turn(-1);
+    d.reject(STUB_ERROR);
+    clock.tick(1);
+    assertAppHistory('one');
+    turn();
+    pair.assertErrback();
+
+    function turn(opt_minusN) {
+      var n = webdriver.promise.Application.EVENT_LOOP_FREQUENCY;
+      if (opt_minusN) n -= Math.abs(opt_minusN);
+      clock.tick(n);
+    }
+  }
+
+
+  function testEventLoopWaitsOnPendingPromiseRejections_multipleRejections() {
+    var onError = new goog.testing.FunctionMock('onError',
+        goog.testing.Mock.LOOSE);
+    onError('once');
+    onError('twice');
+    onError.$replay();
+
+    var pair = callbackPair(null, onError);
+    appTester.$attachAppListener(pair);
+
+    scheduleAction('one', goog.nullFunction);
+    scheduleAction('two', goog.nullFunction);
+
+    turn();
+    assertAppHistory('one');
+    turn(-1);
+    webdriver.promise.rejected('once');
+    webdriver.promise.rejected('twice');
+    clock.tick(1);
+    assertAppHistory('one');
+    turn();
+    onError.$verify();
+    pair.assertErrback('Expected two uncaughtExceptions', 2);
+
+    function turn(opt_minusN) {
+      var n = webdriver.promise.Application.EVENT_LOOP_FREQUENCY;
+      if (opt_minusN) n -= Math.abs(opt_minusN);
+      clock.tick(n);
+    }
+  }
+
+  function testCancelsPromiseReturnedByCallbackIfFrameFails_promiseCallback() {
+    var chainPair = callbackPair(null, assertIsStubError);
+    var deferredPair = callbackPair(null, assertIsStubError);
+
+    var d = new webdriver.promise.Deferred();
+    d.then(deferredPair.callback, deferredPair.errback);
+
+    webdriver.promise.resolved().
+        then(function() {
+          scheduleAction('boom', throwStubError);
+          schedule('this should not run');
+          return d.promise;
+        }).
+        then(chainPair.callback, chainPair.errback);
+
+    runApplication();
+    assertAppHistory('boom');
+    chainPair.assertErrback('chain errback not invoked');
+    deferredPair.assertErrback('deferred errback not invoked');
+  }
+
+  function testCancelsPromiseReturnedByCallbackIfFrameFails_taskCallback() {
+    var chainPair = callbackPair(null, assertIsStubError);
+    var deferredPair = callbackPair(null, assertIsStubError);
+
+    var d = new webdriver.promise.Deferred();
+    d.then(deferredPair.callback, deferredPair.errback);
+
+    schedule('a').
+        then(function() {
+          scheduleAction('boom', throwStubError);
+          schedule('this should not run');
+          return d.promise;
+        }).
+        then(chainPair.callback, chainPair.errback);
+
+    runApplication();
+    assertAppHistory('a', 'boom');
+    chainPair.assertErrback('chain errback not invoked');
+    deferredPair.assertErrback('deferred errback not invoked');
+  }
+
+  function testMaintainsOrderInCallbacksWhenATaskReturnsAPromise() {
+    schedule('start', webdriver.promise.resolved()).
+        then(function() {
+          webdriver.test.testutil.messages.push('a');
+          schedulePush('mid', 'b');
+          webdriver.test.testutil.messages.push('c');
+        }).
+        then(function() {
+          webdriver.test.testutil.messages.push('d');
+        });
+    schedulePush('finish', 'e');
+
+    runApplication();
+    assertAppHistory('start', 'mid', 'finish');
+    webdriver.test.testutil.assertMessages('a', 'c', 'b', 'd', 'e');
+  }
+
+  function assertFrame(description, frame) {
+    var regexp = new RegExp('^' + description + '(\\n    at .*)*$');
+    assertTrue(
+        'Frame did not match expected regex:' +
+            '\n expected: ' + regexp +
+            '\n was: ' + frame,
+       regexp.test(frame));
+  }
+
+  function testHistory_removesLastTaskEachTimeANewTaskIsStarted() {
+    schedule('one').then(function() {
+      var appHistory = appTester.getHistory();
+      assertEquals(1, appHistory.length);
+      assertFrame('one', appHistory[0]);
+    });
+    schedule('two').then(function() {
+      var appHistory = appTester.getHistory();
+      assertEquals(1, appHistory.length);
+      assertFrame('two', appHistory[0]);
+    });
+    schedule('three').then(function() {
+      var appHistory = appTester.getHistory();
+      assertEquals(1, appHistory.length);
+      assertFrame('three', appHistory[0]);
+    });
+    runApplication();
+    assertEquals(0, appTester.getHistory().length);
+  }
+
+  function testHistory_clearsSubtaskHistoryWhenParentTaskCompletes() {
+    scheduleAction('one', function() {
+      schedule('two').then(function() {
+        var appHistory = appTester.getHistory();
+        assertEquals(2, appHistory.length);
+        assertFrame('two', appHistory[0]);
+        assertFrame('one', appHistory[1]);
+      });
+    }).then(function() {
+      var appHistory = appTester.getHistory();
+      assertEquals(1, appHistory.length);
+      assertFrame('one', appHistory[0]);
+    });
+    runApplication();
+    assertAppHistory('one', 'two');
+    assertEquals(0, appTester.getHistory().length);
+  }
+
+  function testHistory_preservesHistoryWhenChildTaskFails() {
+    scheduleAction('one', function() {
+      scheduleAction('two', function() {
+        scheduleAction('three', throwStubError);
+      });
+    }).then(fail, function() {
+      var appHistory = appTester.getHistory();
+      assertEquals(3, appHistory.length);
+      assertFrame('three', appHistory[0]);
+      assertFrame('two', appHistory[1]);
+      assertFrame('one', appHistory[2]);
+    });
+    runApplication();
+    assertAppHistory('one', 'two', 'three');
+    assertEquals(0, appTester.getHistory().length);
+  }
+
+  function testHistory_subtaskFailureIsIgnoredByErrback() {
+    scheduleAction('one', function() {
+
+      scheduleAction('two', function() {
+        scheduleAction('three', throwStubError);
+      }).addErrback(goog.nullFunction);
+
+      schedule('post error').then(function() {
+        var appHistory = appTester.getHistory();
+        assertEquals(2, appHistory.length);
+        assertFrame('post error', appHistory[0]);
+        assertFrame('one', appHistory[1]);
+      });
+    });
+    runApplication();
+    assertAppHistory('one', 'two', 'three', 'post error');
+    assertEquals(0, appTester.getHistory().length);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<!--
+Copyright 2011 WebDriver committers
+Copyright 2011 Google Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<html>
+<head>
+  <title>find_element_test.html</title>
+  <script src="../../test_bootstrap.js"></script>
+  <script type="text/javascript">
+    goog.require('bot.inject.cache');
+    goog.require('bot.locators');
+    goog.require('goog.dom');
+    goog.require('goog.testing.jsunit');
+    goog.require('goog.userAgent');
+    goog.require('webdriver.atoms.inject.locators');
+  </script>
+
+  <script type="text/javascript">
+    var wrappedDocument;
+
+    function setUp() {
+      if (document[bot.inject.cache.CACHE_KEY_]) {
+        document[bot.inject.cache.CACHE_KEY_] = undefined;
+      }
+
+      wrappedDocument = {'ELEMENT':
+          bot.inject.cache.addElement(document.body)};
+    }
+
+    function testInjectFindElementById() {
+      var e = webdriver.atoms.inject.locators.findElement("id", "x", wrappedDocument);
+      assertEquals(document.getElementById("x"),
+                   getElementFromCache(goog.json.parse(e)));
+    }
+
+    function testInjectFindElementByCss() {
+      if (!document['querySelector']) {
+        // CSS locators are not supported.
+        return;
+      }
+
+      var e = webdriver.atoms.inject.locators.findElement("css",
+                                                    "#wrong", wrappedDocument);
+      assertEquals(document.querySelector("#wrong"),
+                   getElementFromCache(goog.json.parse(e)));
+    }
+
+    function testInjectFindElementByClassName() {
+      var e = webdriver.atoms.inject.locators.findElement("className", "dogs",
+                                           wrappedDocument);
+      var expected = bot.locators.findElements({className: 'dogs'})[0];
+
+      assertEquals(expected,
+                   getElementFromCache(goog.json.parse(e)));
+    }
+
+    function testInjectFindElementByName() {
+      var e = webdriver.atoms.inject.locators.findElement("name", "after",
+                                                    wrappedDocument);
+      assertEquals(bot.locators.findElements({name: 'after'})[0],
+                   getElementFromCache(goog.json.parse(e)));
+    }
+
+      function testInjectFindElementByLinkText() {
+      var e = webdriver.atoms.inject.locators.findElement("linkText",
+                                           "this is a link", wrappedDocument);
+      assertEquals(goog.dom.$('link'),
+                   getElementFromCache(goog.json.parse(e)));
+    }
+
+    function testInjectFindElementByPartialLinkText() {
+      var e = webdriver.atoms.inject.locators.findElement("partialLinkText",
+                                           "is", wrappedDocument);
+      assertEquals(document.getElementById("link"),
+                   getElementFromCache(goog.json.parse(e)));
+    }
+
+    function testInjectFindElementByTagName() {
+      var e = webdriver.atoms.inject.locators.findElement("tagName", "form",
+                                                    wrappedDocument);
+      assertEquals(document.getElementsByTagName("form")[0],
+                   getElementFromCache(goog.json.parse(e)));
+    }
+
+    function testInjectFindElementByXpath() {
+      if (goog.userAgent.IE) {
+        return;
+      }
+
+      var e = webdriver.atoms.inject.locators.findElement("xpath",
+          ".//*[@id='after']", wrappedDocument);
+      assertEquals(document.getElementById("after"),
+                   getElementFromCache(goog.json.parse(e)));
+    }
+
+    function testInjectFindElementsByTagName() {
+      var e = webdriver.atoms.inject.locators.findElements("tagName", "div");
+      assertEquals(4, goog.json.parse(e)["value"].length);
+    }
+
+    function testInjectFindElementsByXPath() {
+      if (goog.userAgent.IE) {
+        return;
+      }
+
+      var e = webdriver.atoms.inject.locators.findElements("xpath", ".//a");
+      assertEquals(7, goog.json.parse(e)["value"].length);
+    }
+
+    function getElementFromCache(parsed) {
+      return bot.inject.cache.getElement(parsed["value"].ELEMENT);
+    }
+  </script>
+</head>
+<body>
+  <p id="x" name="para">Para</p>
+
+  <div name="after" id="wrong" class="feline cats">nope</div>
+  <div name="right" id="after" class="dogs">yup</div>
+  <div name="lion" class="cats">simba</div>
+  <div name="tiger" class="cats">shere khan</div>
+
+  <form action="#">
+    <input name="after" /><br />
+    <input name="foo" />
+  </form>
+
+  <!-- This comment should be ignored -->
+
+  <span name="foo">Furrfu</span>
+
+  <ul>
+    <li id="illegal">item
+    <li id="illegal">item
+    <li id="illegal">item
+    <li id="illegal">item
+  </ul>
+
+  <a id="link" href="#">this is a link</a>
+  <a name="fishsticks">this is a link</a>
+  <a href="#">this is a link</a>
+  <a href="#">this is a link</a>
+  <a href="#">this is a link</a>
+
+  <a href="#">unrelated</a>
+  <a href="#" id="empty-link"></a>
+  </body>
+</html>

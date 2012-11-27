@@ -1,0 +1,77 @@
+# Used for http://src.chromium.org/svn/trunk/third_party/webdriver/atoms.h
+
+js_deps(name = "deps",
+  srcs = [ "*.js" ],
+  deps = [ "//javascript/atoms:deps" ])
+
+js_fragment(name = "get_location_in_view",
+  module = "webdriver.chrome",
+  function = "webdriver.chrome.getLocationInView",
+  deps = [ ":deps" ])
+
+js_fragment(name = "get_first_client_rect",
+  module = "webdriver.chrome",
+  function = "webdriver.chrome.getFirstClientRect",
+  deps = [ ":deps" ])
+
+js_fragment(name = "is_element_clickable",
+  module = "webdriver.chrome",
+  function = "webdriver.chrome.isElementClickable",
+  deps = [ ":deps" ])
+
+js_fragment(name = "get_page_zoom",
+  module = "webdriver.chrome",
+  function = "webdriver.chrome.getPageZoom",
+  deps = [ ":deps" ])
+
+js_test(name = "test",
+  srcs = [ "test/*_test.html" ],
+  deps = [
+    ":deps",
+    "//java/client/src/org/openqa/selenium/chrome",
+    "//java/client/test/org/openqa/selenium/javascript",
+  ],
+  browsers = [ "chrome" ])
+
+js_fragment_cpp(name = "atoms",
+  deps = [
+    "//javascript/chrome-driver:get_first_client_rect:chrome",
+    "//javascript/chrome-driver:get_location_in_view:chrome",
+    "//javascript/chrome-driver:get_page_zoom:chrome",
+    "//javascript/chrome-driver:is_element_clickable:chrome",
+    "//javascript/webdriver/atoms:clear:chrome",
+    "//javascript/webdriver/atoms:clear_local_storage:chrome",
+    "//javascript/webdriver/atoms:clear_session_storage:chrome",
+    "//javascript/webdriver/atoms:click:chrome",
+    "//javascript/webdriver/atoms:execute_async_script:chrome",
+    "//javascript/webdriver/atoms:execute_script:chrome",
+    "//javascript/webdriver/atoms:execute_sql:chrome",
+    "//javascript/webdriver/atoms:find_element:chrome",
+    "//javascript/webdriver/atoms:find_elements:chrome",
+    "//javascript/webdriver/atoms:get_appcache_status:chrome",
+    "//javascript/webdriver/atoms:get_attribute:chrome",
+    "//javascript/webdriver/atoms:get_effective_style:chrome",
+    "//javascript/webdriver/atoms:get_in_view_location:chrome",
+    "//javascript/webdriver/atoms:get_local_storage_item:chrome",
+    "//javascript/webdriver/atoms:get_local_storage_key:chrome",
+    "//javascript/webdriver/atoms:get_local_storage_keys:chrome",
+    "//javascript/webdriver/atoms:get_local_storage_size:chrome",
+    "//javascript/webdriver/atoms:get_session_storage_item:chrome",
+    "//javascript/webdriver/atoms:get_session_storage_key:chrome",
+    "//javascript/webdriver/atoms:get_session_storage_keys:chrome",
+    "//javascript/webdriver/atoms:get_session_storage_size:chrome",
+    "//javascript/webdriver/atoms:get_location:chrome",
+    "//javascript/webdriver/atoms:get_size:chrome",
+    "//javascript/webdriver/atoms:get_text:chrome",
+    "//javascript/webdriver/atoms:is_displayed:chrome",
+    "//javascript/webdriver/atoms:is_enabled:chrome",
+    "//javascript/webdriver/atoms:is_online:chrome",
+    "//javascript/webdriver/atoms:is_selected:chrome",
+    "//javascript/webdriver/atoms:remove_local_storage_item:chrome",
+    "//javascript/webdriver/atoms:remove_session_storage_item:chrome",
+    "//javascript/webdriver/atoms:set_local_storage_item:chrome",
+    "//javascript/webdriver/atoms:set_session_storage_item:chrome",
+    "//javascript/webdriver/atoms:submit:chrome",
+  ],
+  extension = "cc",
+  utf8 = "true")

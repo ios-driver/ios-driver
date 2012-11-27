@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>dom_test</title>
+<script src="test_bootstrap.js"></script>
+<script type="text/javascript">
+  goog.require('bot.dom');
+  goog.require('bot.userAgent');
+  goog.require('goog.dom');
+  goog.require('goog.math.Coordinate');
+  goog.require('goog.testing.jsunit');
+  goog.require('goog.userAgent');
+</script>
+<body>
+<script type="text/javascript">
+  function setUp() {
+    window.scrollTo(0, 0);
+  }
+
+  function testGetInViewLocationWithPositiveOffset() {
+    if (bot.userAgent.MOBILE || (goog.userAgent.IE && !bot.userAgent.isProductVersion(7))) {
+      // Scroll offsets are not reliable on mobile viewports.
+      return;
+    }
+    // Scroll with positive offsets.
+    var inViewLocation = bot.dom.getInViewLocation(
+        new goog.math.Coordinate(2000, 1000),
+        window);
+
+    assertTrue(goog.dom.getDocumentScroll().x < 2000 &&
+        goog.dom.getDocumentScroll().x + goog.dom.getViewportSize().width >
+        2000);
+
+    assertEquals(2000, inViewLocation.x + goog.dom.getDocumentScroll().x);
+
+    assertTrue(goog.dom.getDocumentScroll().y < 1000 &&
+        goog.dom.getDocumentScroll().y + goog.dom.getViewportSize().height >
+        1000);
+
+    assertEquals(1000, inViewLocation.y + goog.dom.getDocumentScroll().y);
+  }
+
+  function testGetInViewLocationwithNegativeOffsetX() {
+    if (bot.userAgent.MOBILE || (goog.userAgent.IE && !bot.userAgent.isProductVersion(7))) {
+      // Scroll offsets are not reliable on mobile viewports.
+      return;
+    }
+    // Scroll down so that we can scroll up afterwards.
+    bot.dom.getInViewLocation(new goog.math.Coordinate(2000, 0), window);
+    var oldPageXOffset = goog.dom.getDocumentScroll().x;
+
+    // Scroll to a location with negative offset.
+    var inViewLocation = bot.dom.getInViewLocation(
+        new goog.math.Coordinate(-500, 0),
+        window);
+
+    assertTrue(goog.dom.getDocumentScroll().x <= oldPageXOffset - 500 &&
+        goog.dom.getDocumentScroll().x + goog.dom.getViewportSize().width >
+        oldPageXOffset - 500);
+    assertEquals(oldPageXOffset - 500, inViewLocation.x +
+        goog.dom.getDocumentScroll().x);
+  }
+
+  function testGetInViewLocationwithNegativeOffsetY() {
+    if (bot.userAgent.MOBILE || (goog.userAgent.IE && !bot.userAgent.isProductVersion(7))) {
+      // Scroll offsets are not reliable on mobile viewports.
+      return;
+    }
+    // Scroll down so that we can scroll up afterwards.
+    bot.dom.getInViewLocation(new goog.math.Coordinate(0, 2000), window);
+    var oldPageYOffset = goog.dom.getDocumentScroll().y;
+
+    // Scroll to a location with negative offset.
+    var inViewLocation = bot.dom.getInViewLocation(
+        new goog.math.Coordinate(0, -500),
+        window);
+
+    assertTrue(goog.dom.getDocumentScroll().y <= oldPageYOffset - 500 &&
+        goog.dom.getDocumentScroll().y + goog.dom.getViewportSize().height >
+        oldPageYOffset - 500);
+    assertEquals(oldPageYOffset - 500, inViewLocation.y +
+        goog.dom.getDocumentScroll().y);
+  }
+
+  function testShouldThrowAnErrorIfScrollingTooFar() {
+    if (bot.userAgent.MOBILE) {
+      // Scroll offsets are not reliable on mobile viewports.
+      return;
+    }
+
+    try {
+      bot.dom.getInViewLocation(new goog.math.Coordinate(20000, 0),
+          window);
+      assertFalse('Should fail because the target is not on the page.');
+    }
+    catch (error) {
+      assertEquals(bot.ErrorCode.MOVE_TARGET_OUT_OF_BOUNDS, error.code);
+    }
+
+    try {
+      bot.dom.getInViewLocation(new goog.math.Coordinate(-20000, 0),
+          window);
+      assertFalse('Should fail because the target is not on the page.');
+    }
+    catch (error) {
+      assertEquals(bot.ErrorCode.MOVE_TARGET_OUT_OF_BOUNDS, error.code);
+    }
+
+    try {
+      bot.dom.getInViewLocation(new goog.math.Coordinate(0, 20000),
+          window);
+      assertFalse('Should fail because the target is not on the page.');
+    }
+    catch (error) {
+      assertEquals(bot.ErrorCode.MOVE_TARGET_OUT_OF_BOUNDS, error.code);
+    }
+
+    try {
+      bot.dom.getInViewLocation(new goog.math.Coordinate(0, -20000),
+          window);
+      assertFalse('Should fail because the target is not on the page.');
+    }
+    catch (error) {
+      assertEquals(bot.ErrorCode.MOVE_TARGET_OUT_OF_BOUNDS, error.code);
+    }
+  }
+
+  function testStandardizeStyleAttributeReturnsIdenticalStringWithLowercasedPropertyNames() {
+    toTest = [
+      {input: "Left: 0px; Text-align: center;",
+        expected: "left: 0px; text-align: center;"},
+      {input: "background-image: url('http://www.google.ca/Test.gif');",
+        expected: "background-image: url('http://www.google.ca/Test.gif');"},
+      {input: "-ms-filter: 'progid:DXImageTransform(strength=50)," +
+          " progid:DXImageTransform.(mirror=1)';",
+        expected: "-ms-filter: 'progid:DXImageTransform(strength=50)," +
+            " progid:DXImageTransform.(mirror=1)';"}
+    ];
+    for (var i in toTest) {
+      assertObjectEquals(toTest[i].expected,
+          bot.dom.standardizeStyleAttribute_(toTest[i].input));
+    }
+  }
+
+  function testStandardizeStyleAttributeAppendsAMissingSemicolonToTheEndOfTheString() {
+    assertEquals("background-color:green; width:100px; height:50px;",
+        bot.dom.standardizeStyleAttribute_(
+            "background-color:green; width:100px; height:50px")
+    );
+  }
+
+  function testStandardizeStyleAttributeShouldWorkWithQuotesAndParens() {
+    toTest = [
+      {input: "key:value", expected: "key:value;"},
+      {input: "key:value;", expected: "key:value;"},
+      {input: "key1:value1; key2: value2",
+        expected: "key1:value1; key2: value2;"},
+      {input: "key1:value1; key2: value2(semi;colons;in;here;)",
+        expected: "key1:value1; key2: value2(semi;colons;in;here;);"},
+      {input: "key1:value1; key2: 'string; with; semicolons; and more';",
+        expected: "key1:value1; key2: 'string; with; semicolons; and more';"},
+      {input: "key1:value1; key2: 'string; with; semicolons; and more'",
+        expected: "key1:value1; key2: 'string; with; semicolons; and more';"},
+      {input: "key1:value1;" +
+          " key2: url('something;with;semicolons;?oh=yeah&x=y');" +
+          " key3:'string;with;semicolons;'",
+        expected: "key1:value1;" +
+            " key2: url('something;with;semicolons;?oh=yeah&x=y');" +
+            " key3:'string;with;semicolons;';"},
+      {input: "key1:\"double;quoted;string!\";" +
+          " key2:'single;quoted;string;';" +
+          " key3:it(is;in;parens);",
+        expected: "key1:\"double;quoted;string!\";" +
+            " key2:'single;quoted;string;'; key3:it(is;in;parens);"}
+    ];
+    for (var i in toTest) {
+      assertObjectEquals(toTest[i].expected,
+          bot.dom.standardizeStyleAttribute_(toTest[i].input));
+    }
+  }
+
+</script>
+<div id="green" style="background-color:green; width:100px; height:50px">
+<div id="red" style="background-color:red; width:50px; height:25px; position:
+  relative; top:3000px;
+  left:3000px;">
+Red</div>
+</div>
+</body>
+</html>
