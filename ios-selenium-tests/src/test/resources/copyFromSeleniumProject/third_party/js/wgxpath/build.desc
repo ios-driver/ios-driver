@@ -1,4 +1,0 @@
-js_library(name = "wgxpath",
-  srcs = [
-    "*.js",
-  ])
