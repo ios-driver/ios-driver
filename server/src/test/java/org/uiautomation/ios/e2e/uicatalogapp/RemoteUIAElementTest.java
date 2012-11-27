@@ -89,7 +89,7 @@ public class RemoteUIAElementTest extends BaseIOSDriverTest {
   @Test(groups = "broken")
   public void findAllElements() throws InterruptedException {
     List<UIAElement> elements = driver.findElements(new EmptyCriteria());
-    Assert.assertEquals(elements.size(), 33);
+    Assert.assertEquals(elements.size(), 44);
   }
 
   @Test(groups = "broken",enabled=false)

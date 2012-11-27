@@ -47,11 +47,11 @@ public class SourceTest extends BaseIOSDriverTest {
       Assert.assertEquals(o, Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT);
       tree = log.getJSONObject("tree");
 
-      Assert.assertEquals(tree.getString("type"), "UIAWindow");
+      Assert.assertEquals(tree.getString("type"), "UIAApplication");
       Assert.assertEquals(tree.get("value"), JSONObject.NULL);
-      Assert.assertEquals(tree.get("label"), JSONObject.NULL);
-      Assert.assertEquals(tree.get("name"), JSONObject.NULL);
-      Assert.assertEquals(tree.optJSONArray("children").length(), 3);
+      Assert.assertEquals(tree.get("label"), "Montagnes");
+      Assert.assertEquals(tree.get("name"), "Montagnes");
+      Assert.assertEquals(tree.optJSONArray("children").length(), 2);
     } finally {
       if (driver != null) {
         driver.quit();

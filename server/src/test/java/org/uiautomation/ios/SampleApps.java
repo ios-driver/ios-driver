@@ -63,6 +63,15 @@ public class SampleApps {
     }
     return c;
   }
+  public static IOSCapabilities uiCatalogipadCap() {
+    IOSCapabilities c = IOSCapabilities.ipad("UICatalog");
+    c.setCapability(IOSCapabilities.TIME_HACK, false);
+    if (sdkVersion != null) {
+      System.out.println("SET SDK to " + sdkVersion);
+      c.setSDKVersion(sdkVersion);
+    }
+    return c;
+  }
 
   public static IOSCapabilities intlMountainsCap(Localizable l) {
     IOSCapabilities c = IOSCapabilities.iphone("InternationalMountains", "1.1");

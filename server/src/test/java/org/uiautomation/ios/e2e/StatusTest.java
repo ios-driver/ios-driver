@@ -25,7 +25,7 @@ import org.uiautomation.ios.communication.HttpClientFactory;
 
 public class StatusTest extends BaseIOSDriverTest {
 
-  // TODO freynaud test the 3 apps, and remote hardcoded index
+
   @Test
   public void statusTest() throws  Exception {
 
@@ -42,7 +42,7 @@ public class StatusTest extends BaseIOSDriverTest {
 
     
     JSONArray array = o.getJSONObject("value").getJSONArray("supportedApps");
-    Assert.assertEquals(array.length(), 3);
+    Assert.assertTrue(array.length()> 3); // registered app + safari
 
     JSONObject uicatalog = array.getJSONObject(2);
    
@@ -51,7 +51,7 @@ public class StatusTest extends BaseIOSDriverTest {
     Assert.assertEquals(uicatalog.get(BUNDLE_ID), "com.yourcompany.UICatalog");
     Assert.assertEquals(uicatalog.get(BUNDLE_NAME), "UICatalog");
     Assert.assertEquals(uicatalog.get(BUNDLE_VERSION), "2.10");
-    Assert.assertEquals(uicatalog.get("applicationPath"), SampleApps.getUICatalogFile());
+    Assert.assertEquals(uicatalog.get("applicationPath"), SampleApps.getUICatalogIpad());
 
     JSONArray locales1 = uicatalog.getJSONArray(SUPPORTED_LANGUAGES);
     Assert.assertEquals(locales1.length(), 1);

@@ -20,9 +20,9 @@ package org.uiautomation.ios.UIAModels;
  */
 public interface UIAApplication {
 
-  public UIAElementArray<UIAWindow> getWindows();
+  /*public UIAElementArray<UIAWindow> getWindows();
   public UIAWindow getMainWindow();
-  public UIAKeyboard getKeyboard();
+  public UIAKeyboard getKeyboard();*/
   //actionSheet
   //alert
   //editingMenu
