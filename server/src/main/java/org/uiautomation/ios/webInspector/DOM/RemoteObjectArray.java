@@ -10,7 +10,7 @@ public class RemoteObjectArray implements Iterable<Object> {
   public RemoteObjectArray(RemoteObject remoteArray) {
     this.remoteArray = remoteArray;
     try {
-      this.size = remoteArray.call(".length");
+      this.size = (Integer)remoteArray.call(".length");
     } catch (Exception e) {
       throw new RuntimeException("Error finding array size " + e.getMessage(), e);
     }
