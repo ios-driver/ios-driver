@@ -29,7 +29,6 @@ public class SetValueNativeHandler extends UIAScriptHandler{
           .replace(":sessionId", request.getSession())
           .replace(":reference", request.getVariableValue(":reference"))
           .replace(":jsMethod", ".setValue('"+corrected+"')");
-      System.out.println(js);
       setJS(js);
     } catch (JSONException e) {
       e.printStackTrace();
