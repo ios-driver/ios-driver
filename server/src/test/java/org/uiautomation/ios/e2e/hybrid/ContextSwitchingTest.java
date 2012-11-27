@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keyboard;
-import org.openqa.selenium.Pages;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.environment.webserver.AppServer;
 import org.openqa.selenium.environment.webserver.WebbitAppServer;
@@ -61,12 +60,7 @@ public class ContextSwitchingTest {
     nativeDriver.quit();
   }
   
-  public static void main(String[] args) {
-    AppServer appServer =  new WebbitAppServer();
-    appServer.start();
-    Pages p = new Pages(appServer);
-    System.out.println(p.alertsPage);
-  }
+ 
   
   @Test
   public void seleniumTests() throws Exception {
@@ -88,9 +82,8 @@ public class ContextSwitchingTest {
 
     AppServer appServer =  new WebbitAppServer();
     appServer.start();
-    Pages p = new Pages(appServer);
+   
     
-    keyboard.sendKeys(p.alertsPage);
     // keyboard.typeString("http://pages.ebay.co.uk/sitemap.html");
     // screenshot();
     ((RemoteUIAKeyboard)keyboard).findElement(new NameCriteria("Go")).tap();
