@@ -1,29 +1,17 @@
 package org.uiautomation.ios.mobileSafari;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
 
 import com.dd.plist.BinaryPropertyListParser;
 import com.dd.plist.BinaryPropertyListWriter;
-import com.dd.plist.NSArray;
-import com.dd.plist.NSDictionary;
 import com.dd.plist.NSObject;
-import com.dd.plist.PropertyListParser;
 import com.dd.plist.XMLPropertyListParser;
 
 public class PlistManager {

@@ -10,7 +10,6 @@ import org.dom4j.Document;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.json.JSONObject;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 
 public class DefaultMessageHandler implements MessageHandler {
 

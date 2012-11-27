@@ -1,9 +1,6 @@
 package org.uiautomation.ios.e2e.uicatalogapp;
 
-import org.openqa.selenium.Keyboard;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;

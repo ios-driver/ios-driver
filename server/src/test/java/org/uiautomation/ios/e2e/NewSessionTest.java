@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.SessionNotCreatedException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -14,7 +12,6 @@ import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.communication.IOSDevice;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.utils.ClassicCommands;
 
 public class NewSessionTest extends BaseIOSDriverTest {

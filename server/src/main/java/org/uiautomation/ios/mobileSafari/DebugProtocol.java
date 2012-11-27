@@ -6,18 +6,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.TimeoutException;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.webInspector.DOM.RemoteExceptionException;
-import org.uiautomation.ios.webInspector.DOM.RemoteObject;
-import org.uiautomation.ios.webInspector.DOM.RemoteObjectArray;
 
 public class DebugProtocol {
 

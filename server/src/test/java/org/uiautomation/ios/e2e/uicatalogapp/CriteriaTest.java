@@ -17,7 +17,6 @@ import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.PropertyEqualCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAWindow;
 
 public class CriteriaTest extends BaseIOSDriverTest {
 

@@ -39,7 +39,6 @@ import com.dd.plist.BinaryPropertyListWriter;
 import com.dd.plist.NSArray;
 import com.dd.plist.NSDictionary;
 import com.dd.plist.NSNumber;
-import com.dd.plist.NSObject;
 
 // TODO freynaud create IOSApp vs Running App that has locale + language
 public class IOSApplication {

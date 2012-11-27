@@ -22,7 +22,6 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.grid.RegistrationRequest;

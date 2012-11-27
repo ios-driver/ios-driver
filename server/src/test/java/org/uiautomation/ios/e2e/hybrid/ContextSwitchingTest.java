@@ -6,8 +6,6 @@ import java.util.Set;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keyboard;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.environment.webserver.AppServer;
-import org.openqa.selenium.environment.webserver.WebbitAppServer;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -80,9 +78,7 @@ public class ContextSwitchingTest {
 
     Keyboard keyboard = nativeDriver.getKeyboard();
 
-    AppServer appServer =  new WebbitAppServer();
-    appServer.start();
-   
+
     
     // keyboard.typeString("http://pages.ebay.co.uk/sitemap.html");
     // screenshot();

@@ -2,10 +2,10 @@ package org.uiautomation.ios.server.command.uiautomation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
-import org.openqa.selenium.remote.Response;
 
 public class ConfigurationGetter extends BaseNativeCommandHandler{
 
