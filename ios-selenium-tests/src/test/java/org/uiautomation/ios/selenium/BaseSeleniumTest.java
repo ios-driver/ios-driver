@@ -22,21 +22,19 @@ public class BaseSeleniumTest {
   protected AppServer appServer;
 
   @BeforeClass
-  public void setup() throws Exception {
-
+  public void setup() throws Throwable {
     server = new IOSServer(config);
     server.start();
 
     IOSCapabilities safari = IOSCapabilities.iphone("Safari");
     safari.setCapability(IOSCapabilities.TIME_HACK, false);
-    
+    // safari.setLanguage("fr");
     driver = new RemoteMobileSafariDriver(new URL(url), safari);
     appServer = new WebbitAppServer();
     appServer.start();
+
     pages = new Pages(appServer);
   }
-
- 
 
   @AfterClass
   public void tearDown() throws Exception {

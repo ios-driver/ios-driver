@@ -43,3 +43,4 @@ server-standalone-1.0.0-SNAPSHOT.jar
 ide/src/test/java/org/uiautomation/ios/selenium/PerformanceTest.java
 ios-selenium-tests/src/test/java/org/uiautomation/ios/selenium/PerformanceTest.java
 ios-selenium-tests/src/test/java/org/uiautomation/ios/selenium/playground/PerformanceTest.java
+*.svn*

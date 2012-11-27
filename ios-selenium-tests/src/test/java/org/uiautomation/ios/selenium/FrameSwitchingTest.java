@@ -3,12 +3,6 @@ package org.uiautomation.ios.selenium;
 import static org.openqa.selenium.TestWaiter.waitFor;
 import static org.openqa.selenium.WaitingConditions.elementToExist;
 import static org.openqa.selenium.WaitingConditions.pageTitleToBe;
-import static org.openqa.selenium.testing.Ignore.Driver.ANDROID;
-import static org.openqa.selenium.testing.Ignore.Driver.CHROME;
-import static org.openqa.selenium.testing.Ignore.Driver.IPHONE;
-import static org.openqa.selenium.testing.Ignore.Driver.OPERA;
-import static org.openqa.selenium.testing.Ignore.Driver.OPERA_MOBILE;
-import static org.openqa.selenium.testing.Ignore.Driver.SELENESE;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -16,28 +10,16 @@ import static org.testng.Assert.fail;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.net.URL;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoDriverAfterTest;
 import org.openqa.selenium.NoSuchFrameException;
-import org.openqa.selenium.Pages;
 import org.openqa.selenium.WaitingConditions;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.environment.webserver.AppServer;
-import org.openqa.selenium.environment.webserver.WebbitAppServer;
-import org.openqa.selenium.testing.Ignore;
-import org.openqa.selenium.testing.JavascriptEnabled;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteMobileSafariDriver;
-import org.uiautomation.ios.server.IOSServer;
-import org.uiautomation.ios.server.IOSServerConfiguration;
 
 public class FrameSwitchingTest extends BaseSeleniumTest {
 
@@ -115,14 +97,14 @@ public class FrameSwitchingTest extends BaseSeleniumTest {
   }
 
   @Test
-  @Ignore({ OPERA, OPERA_MOBILE })
+  //@Ignore({ OPERA, OPERA_MOBILE })
   public void testShouldBeAbleToSwitchToFrameWithNameContainingDot() {
     driver.get(pages.framesetPage);
     driver.switchTo().frame("sixth.iframe1");
     assertTrue(driver.findElement(By.tagName("body")).getText().contains("Page number 3"));
   }
 
-  @Ignore(value = { SELENESE }, reason = "switchTo().frame(WebElement) not supported with Selenium")
+  //@Ignore(value = { SELENESE }, reason = "switchTo().frame(WebElement) not supported with Selenium")
   @Test
   public void testShouldBeAbleToSwitchToAFrameUsingAPreviouslyLocatedWebElement() {
     driver.get(pages.framesetPage);
@@ -142,7 +124,7 @@ public class FrameSwitchingTest extends BaseSeleniumTest {
     assertEquals(element.getAttribute("value"), ("name"));
   }
 
-  @Ignore(value = { SELENESE }, reason = "switchTo().frame(WebElement) not supported with Selenium")
+  //@Ignore(value = { SELENESE }, reason = "switchTo().frame(WebElement) not supported with Selenium")
   @Test
   public void testShouldEnsureElementIsAFrameBeforeSwitching() {
     driver.get(pages.framesetPage);
@@ -156,7 +138,7 @@ public class FrameSwitchingTest extends BaseSeleniumTest {
     }
   }
 
-  @Ignore(ANDROID)
+  //@Ignore(ANDROID)
   @Test
   public void testFrameSearchesShouldBeRelativeToTheCurrentlySelectedFrame() {
     driver.get(pages.framesetPage);
@@ -186,7 +168,7 @@ public class FrameSwitchingTest extends BaseSeleniumTest {
     assertEquals(driver.findElement(By.id("pageNumber")).getText(), ("2"));
   }
 
-  @Ignore({ ANDROID, OPERA, OPERA_MOBILE })
+  //@Ignore({ ANDROID, OPERA, OPERA_MOBILE })
   @Test
   public void testShouldSelectChildFramesByChainedCalls() {
     driver.get(pages.framesetPage);
@@ -195,7 +177,7 @@ public class FrameSwitchingTest extends BaseSeleniumTest {
     assertEquals(driver.findElement(By.id("pageNumber")).getText(), ("11"));
   }
 
-  @Ignore(ANDROID)
+  //@Ignore(ANDROID)
   @Test
   public void testShouldThrowFrameNotFoundExceptionLookingUpSubFramesWithSuperFrameNames() {
     driver.get(pages.framesetPage);
@@ -240,7 +222,7 @@ public class FrameSwitchingTest extends BaseSeleniumTest {
   //
   // ----------------------------------------------------------------------------------------------
 
-  @Ignore(ANDROID)
+  //@Ignore(ANDROID)
   @Test
   // TODO freynaud
   public void testShouldContinueToReferToTheSameFrameOnceItHasBeenSelected() {
@@ -258,7 +240,7 @@ public class FrameSwitchingTest extends BaseSeleniumTest {
     waitFor(WaitingConditions.elementTextToEqual(driver, By.xpath("//p"), "Success!"));
   }
 
-  @Ignore(value = { ANDROID, OPERA, OPERA_MOBILE }, reason = "Android does not detect that the select frame has disappeared")
+  //@Ignore(value = { ANDROID, OPERA, OPERA_MOBILE }, reason = "Android does not detect that the select frame has disappeared")
   @Test
   public void testShouldFocusOnTheReplacementWhenAFrameFollowsALinkToA_TopTargettedPage() throws Exception {
     driver.get(pages.framesetPage);
@@ -272,7 +254,7 @@ public class FrameSwitchingTest extends BaseSeleniumTest {
     waitFor(elementToExist(driver, "only-exists-on-xhtmltest"));
   }
 
-  @Ignore(ANDROID)
+  //@Ignore(ANDROID)
   @Test
   public void testShouldAllowAUserToSwitchFromAnIframeBackToTheMainContentOfThePage() {
     driver.get(pages.iframePage);
@@ -286,7 +268,7 @@ public class FrameSwitchingTest extends BaseSeleniumTest {
     }
   }
 
-  @Ignore(ANDROID)
+  //@Ignore(ANDROID)
   @Test
   public void testShouldAllowTheUserToSwitchToAnIFrameAndRemainFocusedOnIt() {
     driver.get(pages.iframePage);
@@ -302,7 +284,7 @@ public class FrameSwitchingTest extends BaseSeleniumTest {
     return waitFor(elementToExist(driver, "greeting")).getText();
   }
 
-  @Ignore({ OPERA, ANDROID, OPERA_MOBILE })
+  //@Ignore({ OPERA, ANDROID, OPERA_MOBILE })
   @Test
   // TODO freynaud
   public void testShouldBeAbleToClickInAFrame() {
@@ -318,7 +300,7 @@ public class FrameSwitchingTest extends BaseSeleniumTest {
     assertEquals(getTextOfGreetingElement(), ("Success!"));
   }
 
-  @Ignore({ OPERA, ANDROID, OPERA_MOBILE })
+  //@Ignore({ OPERA, ANDROID, OPERA_MOBILE })
   @Test
   // TODO freynaud (invocationCount=50)
   public void testShouldBeAbleToClickInASubFrame() {
@@ -337,7 +319,7 @@ public class FrameSwitchingTest extends BaseSeleniumTest {
   }
 
   @NoDriverAfterTest
-  @Ignore({ IPHONE })
+  //@Ignore({ IPHONE })
   @Test
   public void testClosingTheFinalBrowserWindowShouldNotCauseAnExceptionToBeThrown() {
     driver.get(pages.simpleTestPage);
@@ -353,7 +335,7 @@ public class FrameSwitchingTest extends BaseSeleniumTest {
     }
   }
 
-  @Ignore(ANDROID)
+  //@Ignore(ANDROID)
   @Test
   public void testShouldBeAbleToFindElementsInIframesByXPath() {
     driver.get(pages.iframePage);
@@ -365,7 +347,7 @@ public class FrameSwitchingTest extends BaseSeleniumTest {
     assertNotNull(element);
   }
 
-  @Ignore(ANDROID)
+  //@Ignore(ANDROID)
   @Test
   public void testGetCurrentUrl() {
     driver.get(pages.framesetPage);
@@ -384,8 +366,8 @@ public class FrameSwitchingTest extends BaseSeleniumTest {
     assertEquals(driver.getCurrentUrl(), (url));
   }
 
-  @Ignore(value = { ANDROID, OPERA, OPERA_MOBILE })
-  @JavascriptEnabled
+  //@Ignore(value = { ANDROID, OPERA, OPERA_MOBILE })
+  ///@JavascriptEnabled
   @Test
   public void testShouldBeAbleToCarryOnWorkingIfTheFrameIsDeletedFromUnderUs() throws InterruptedException {
     driver.get(pages.deletingFrame);
@@ -413,7 +395,7 @@ public class FrameSwitchingTest extends BaseSeleniumTest {
     }
   }
 
-  @Ignore(value = { CHROME, SELENESE }, reason = "These drivers still return frame title.")
+  //@Ignore(value = { CHROME, SELENESE }, reason = "These drivers still return frame title.")
   @Test
   public void testShouldReturnWindowTitleInAFrameset() {
     driver.get(pages.framesetPage);
@@ -421,7 +403,7 @@ public class FrameSwitchingTest extends BaseSeleniumTest {
     assertEquals("Unique title", driver.getTitle());
   }
 
-  @JavascriptEnabled
+  //@JavascriptEnabled
   @Test
   public void testJavaScriptShouldExecuteInTheContextOfTheCurrentFrame() {
     JavascriptExecutor executor = (JavascriptExecutor) driver;

@@ -2,40 +2,20 @@ package org.uiautomation.ios.selenium;
 
 import static org.openqa.selenium.TestWaiter.waitFor;
 import static org.openqa.selenium.WaitingConditions.pageTitleToBe;
-import static org.openqa.selenium.testing.Ignore.Driver.ANDROID;
-import static org.openqa.selenium.testing.Ignore.Driver.CHROME;
-import static org.openqa.selenium.testing.Ignore.Driver.HTMLUNIT;
-import static org.openqa.selenium.testing.Ignore.Driver.IE;
-import static org.openqa.selenium.testing.Ignore.Driver.IPHONE;
-import static org.openqa.selenium.testing.Ignore.Driver.OPERA;
-import static org.openqa.selenium.testing.Ignore.Driver.OPERA_MOBILE;
-import static org.openqa.selenium.testing.Ignore.Driver.SAFARI;
-import static org.openqa.selenium.testing.Ignore.Driver.SELENESE;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.Pages;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.environment.webserver.AppServer;
-import org.openqa.selenium.environment.webserver.WebbitAppServer;
-import org.openqa.selenium.testing.Ignore;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteMobileSafariDriver;
-import org.uiautomation.ios.server.IOSServer;
-import org.uiautomation.ios.server.IOSServerConfiguration;
 
 public class FormHandlingTest extends BaseSeleniumTest {
 
@@ -58,8 +38,8 @@ public class FormHandlingTest extends BaseSeleniumTest {
     }
   }
 
-  @Ignore(value = ANDROID, reason = "The page is zoomed in because of the previous state"
-      + "which causes the click to fail.")
+  //@Ignore(value = ANDROID, reason = "The page is zoomed in because of the previous state"
+   //   + "which causes the click to fail.")
   @Test
   public void testShouldBeAbleToClickImageButtons() {
     driver.get(pages.formPage);
@@ -98,7 +78,7 @@ public class FormHandlingTest extends BaseSeleniumTest {
   }
 
   @Test
-  @Ignore(OPERA_MOBILE)
+  //@Ignore(OPERA_MOBILE)
   // TODO freynaud find how to disable auto capitalisation.
   public void testShouldBeAbleToEnterTextIntoATextAreaBySettingItsValue() {
     driver.get(pages.javascriptPage);
@@ -108,7 +88,7 @@ public class FormHandlingTest extends BaseSeleniumTest {
     assertEquals(textarea.getAttribute("value"), (cheesy));
   }
 
-  @Ignore(value = { ANDROID, OPERA_MOBILE }, reason = "Android: capitalization bug in ICS keeps caps on after a capital letter is sent")
+  //@Ignore(value = { ANDROID, OPERA_MOBILE }, reason = "Android: capitalization bug in ICS keeps caps on after a capital letter is sent")
   @Test
   public void testSendKeysKeepsCapitalization() {
     driver.get(pages.javascriptPage);
@@ -118,7 +98,7 @@ public class FormHandlingTest extends BaseSeleniumTest {
     assertEquals(textarea.getAttribute("value"), (cheesey));
   }
 
-  @Ignore(value = { SELENESE, IPHONE, ANDROID, OPERA_MOBILE })
+  //@Ignore(value = { SELENESE, IPHONE, ANDROID, OPERA_MOBILE })
   @Test(enabled = false)
   public void testShouldSubmitAFormUsingTheNewlineLiteral() {
     driver.get(pages.formPage);
@@ -129,7 +109,7 @@ public class FormHandlingTest extends BaseSeleniumTest {
     assertTrue(driver.getCurrentUrl().endsWith("?x=name"));
   }
 
-  @Ignore({ SELENESE, IPHONE, ANDROID, OPERA_MOBILE })
+  //@Ignore({ SELENESE, IPHONE, ANDROID, OPERA_MOBILE })
   @Test(enabled = false)
   public void testShouldSubmitAFormUsingTheEnterKey() {
     driver.get(pages.formPage);
@@ -155,7 +135,7 @@ public class FormHandlingTest extends BaseSeleniumTest {
     assertEquals(newFormValue, ("some text"));
   }
 
-  @Ignore(value = { SELENESE, IPHONE, ANDROID, SAFARI, OPERA, OPERA_MOBILE }, reason = "Does not yet support file uploads", issues = { 4220 })
+  //@Ignore(value = { SELENESE, IPHONE, ANDROID, SAFARI, OPERA, OPERA_MOBILE }, reason = "Does not yet support file uploads", issues = { 4220 })
   @Test(enabled = false)
   public void testShouldBeAbleToAlterTheContentsOfAFileUploadInputElement() throws IOException {
     driver.get(pages.formPage);
@@ -192,7 +172,7 @@ public class FormHandlingTest extends BaseSeleniumTest {
     }
   }
 
-  @Ignore(value = { ANDROID, IPHONE, OPERA, SAFARI, SELENESE, OPERA_MOBILE }, reason = "Does not yet support file uploads", issues = { 4220 })
+  //@Ignore(value = { ANDROID, IPHONE, OPERA, SAFARI, SELENESE, OPERA_MOBILE }, reason = "Does not yet support file uploads", issues = { 4220 })
   @Test(enabled = false)
   public void testShouldBeAbleToSendKeysToAFileUploadInputElementInAnXhtmlDocument() throws IOException {
     // IE before 9 doesn't handle pages served with an XHTML content type, and
@@ -215,7 +195,7 @@ public class FormHandlingTest extends BaseSeleniumTest {
     assertTrue(uploadPath.endsWith(file.getName()));
   }
 
-  @Ignore(value = { SELENESE, IPHONE, ANDROID, OPERA, SAFARI }, reason = "Does not yet support file uploads", issues = { 4220 })
+  //@Ignore(value = { SELENESE, IPHONE, ANDROID, OPERA, SAFARI }, reason = "Does not yet support file uploads", issues = { 4220 })
   @Test(enabled = false)
   public void testShouldBeAbleToUploadTheSameFileTwice() throws IOException {
     File file = File.createTempFile("test", "txt");
@@ -238,7 +218,7 @@ public class FormHandlingTest extends BaseSeleniumTest {
     // If we get this far, then we're all good.
   }
 
-  @Ignore(value = { IPHONE, OPERA }, reason = "iPhone: sendKeys implemented incorrectly.")
+  //@Ignore(value = { IPHONE, OPERA }, reason = "iPhone: sendKeys implemented incorrectly.")
   @Test
   // doesn't work if the text is longer than the input size, as the cursor will
   // end up where the tap was done.
@@ -255,7 +235,7 @@ public class FormHandlingTest extends BaseSeleniumTest {
     assertEquals(value, ("some text"));
   }
 
-  @Ignore(value = { ANDROID, IPHONE, OPERA, SELENESE, OPERA_MOBILE }, reason = "iPhone: sendKeys implemented incorrectly. Selenium: just because")
+  //@Ignore(value = { ANDROID, IPHONE, OPERA, SELENESE, OPERA_MOBILE }, reason = "iPhone: sendKeys implemented incorrectly. Selenium: just because")
   @Test
   public void testSendingKeyboardEventsShouldAppendTextInInputsWithExistingValue() {
     driver.get(pages.formPage);
@@ -266,8 +246,8 @@ public class FormHandlingTest extends BaseSeleniumTest {
     assertEquals(value, ("Example text. Some text"));
   }
 
-  @Ignore(value = { SELENESE, IPHONE, ANDROID, OPERA_MOBILE }, reason = "Not implemented going to the end of the line first;\n"
-      + "iPhone: sendKeys not implemented correctly")
+  //@Ignore(value = { SELENESE, IPHONE, ANDROID, OPERA_MOBILE }, reason = "Not implemented going to the end of the line first;\n"
+  //    + "iPhone: sendKeys not implemented correctly")
   @Test
   public void testSendingKeyboardEventsShouldAppendTextinTextAreas() {
     driver.get(pages.formPage);
@@ -316,7 +296,7 @@ public class FormHandlingTest extends BaseSeleniumTest {
 
   @Test(enabled = false)
   // alert not done yet
-  @Ignore(value = { ANDROID, CHROME, HTMLUNIT, IE, IPHONE, OPERA, SAFARI, SELENESE, OPERA_MOBILE }, reason = "Untested on all other browsers, fails on chrome, fails on IE.", issues = { 3508 })
+  //@Ignore(value = { ANDROID, CHROME, HTMLUNIT, IE, IPHONE, OPERA, SAFARI, SELENESE, OPERA_MOBILE }, reason = "Untested on all other browsers, fails on chrome, fails on IE.", issues = { 3508 })
   public void handleFormWithJavascriptAction() {
     String url = appServer.whereIs("form_handling_js_submit.html");
     driver.get(url);

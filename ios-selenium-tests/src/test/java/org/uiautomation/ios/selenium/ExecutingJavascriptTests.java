@@ -1,10 +1,5 @@
 package org.uiautomation.ios.selenium;
 
-import static org.openqa.selenium.testing.Ignore.Driver.ANDROID;
-import static org.openqa.selenium.testing.Ignore.Driver.HTMLUNIT;
-import static org.openqa.selenium.testing.Ignore.Driver.IE;
-import static org.openqa.selenium.testing.Ignore.Driver.OPERA;
-import static org.openqa.selenium.testing.Ignore.Driver.OPERA_MOBILE;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
@@ -12,10 +7,7 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -27,31 +19,17 @@ import java.util.Map;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NeedsFreshDriver;
-import org.openqa.selenium.NoDriverAfterTest;
-import org.openqa.selenium.Pages;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.environment.webserver.AppServer;
-import org.openqa.selenium.environment.webserver.WebbitAppServer;
-import org.openqa.selenium.testing.Ignore;
-import org.openqa.selenium.testing.InProject;
-import org.openqa.selenium.testing.JavascriptEnabled;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteMobileSafariDriver;
-import org.uiautomation.ios.server.IOSServer;
-import org.uiautomation.ios.server.IOSServerConfiguration;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.io.Files;
 
 @Test
 public class ExecutingJavascriptTests extends BaseSeleniumTest {
 
-  @JavascriptEnabled
+  ////@JavascriptEnabled
   @Test
   public void testShouldBeAbleToExecuteSimpleJavascriptAndReturnAString() {
     if (!(driver instanceof JavascriptExecutor)) {
@@ -66,7 +44,7 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     assertEquals("XHTML Test Page", result);
   }
 
-  @JavascriptEnabled
+  //@JavascriptEnabled
   @Test
   public void testShouldBeAbleToExecuteSimpleJavascriptAndReturnALong() {
     if (!(driver instanceof JavascriptExecutor)) {
@@ -81,7 +59,7 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     assertTrue((Long) result > 1);
   }
 
-  @JavascriptEnabled
+  //@JavascriptEnabled
   @Test
   public void testShouldBeAbleToExecuteSimpleJavascriptAndReturnAWebElement() {
     if (!(driver instanceof JavascriptExecutor)) {
@@ -97,7 +75,7 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     assertEquals("a", ((WebElement) result).getTagName().toLowerCase());
   }
 
-  @JavascriptEnabled
+  //@JavascriptEnabled
   @Test
   public void testShouldBeAbleToExecuteSimpleJavascriptAndReturnABoolean() {
     if (!(driver instanceof JavascriptExecutor)) {
@@ -114,7 +92,7 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
   }
 
   @SuppressWarnings("unchecked")
-  @JavascriptEnabled
+  //@JavascriptEnabled
   @Test
   public void testShouldBeAbleToExecuteSimpleJavascriptAndReturnAStringsArray() {
     if (!(driver instanceof JavascriptExecutor)) {
@@ -132,7 +110,7 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
   }
 
   @SuppressWarnings("unchecked")
-  @JavascriptEnabled
+  //@JavascriptEnabled
   @Test
   public void testShouldBeAbleToExecuteSimpleJavascriptAndReturnAnArray() {
     if (!(driver instanceof JavascriptExecutor)) {
@@ -154,7 +132,7 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
   }
 
   @SuppressWarnings("unchecked")
-  @JavascriptEnabled
+  //@JavascriptEnabled
   @Test
   public void testShouldBeAbleToExecuteJavascriptAndReturnABasicObjectLiteral() {
     if (!(driver instanceof JavascriptExecutor)) {
@@ -181,7 +159,7 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
   }
 
   @SuppressWarnings("unchecked")
-  @JavascriptEnabled
+  //@JavascriptEnabled
   @Test
   public void testShouldBeAbleToExecuteSimpleJavascriptAndReturnAnObjectLiteral() {
     if (!(driver instanceof JavascriptExecutor)) {
@@ -218,8 +196,8 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
   }
 
   @SuppressWarnings("unchecked")
-  @JavascriptEnabled
-  @Ignore({ IE, HTMLUNIT, OPERA, OPERA_MOBILE })
+  //@JavascriptEnabled
+  //@Ignore({ IE, HTMLUNIT, OPERA, OPERA_MOBILE })
   @Test
   public void testShouldBeAbleToExecuteSimpleJavascriptAndReturnAComplexObject() {
     if (!(driver instanceof JavascriptExecutor)) {
@@ -254,7 +232,7 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     return true;
   }
 
-  @JavascriptEnabled
+  //@JavascriptEnabled
   @Test
   public void testPassingAndReturningALongShouldReturnAWholeNumber() {
     if (!(driver instanceof JavascriptExecutor)) {
@@ -269,7 +247,7 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     assertEquals(expectedResult.longValue(), result);
   }
 
-  @JavascriptEnabled
+  //@JavascriptEnabled
   @Test
   public void testPassingAndReturningADoubleShouldReturnADecimal() {
     if (!(driver instanceof JavascriptExecutor)) {
@@ -284,7 +262,7 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     assertEquals(expectedResult.doubleValue(), result);
   }
 
-  @JavascriptEnabled
+  //@JavascriptEnabled
   @Test
   public void testShouldThrowAnExceptionWhenTheJavascriptIsBad() {
     if (!(driver instanceof JavascriptExecutor)) {
@@ -302,7 +280,7 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     }
   }
 
-  @JavascriptEnabled
+  //@JavascriptEnabled
   @Test
   public void testShouldBeAbleToCallFunctionsDefinedOnThePage() {
     if (!(driver instanceof JavascriptExecutor)) {
@@ -320,7 +298,7 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     return ((JavascriptExecutor) driver).executeScript(script, args);
   }
 
-  @JavascriptEnabled
+  //@JavascriptEnabled
   @Test
   public void testShouldBeAbleToPassAStringAnAsArgument() {
     if (!(driver instanceof JavascriptExecutor)) {
@@ -333,7 +311,7 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     assertEquals("fish", value);
   }
 
-  @JavascriptEnabled
+  //@JavascriptEnabled
   @Test
   public void testShouldBeAbleToPassABooleanAnAsArgument() {
     if (!(driver instanceof JavascriptExecutor)) {
@@ -346,7 +324,7 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     assertTrue(value);
   }
 
-  @JavascriptEnabled
+  //@JavascriptEnabled
   @Test
   public void testShouldBeAbleToPassANumberAnAsArgument() {
     if (!(driver instanceof JavascriptExecutor)) {
@@ -359,7 +337,7 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     assertTrue(value);
   }
 
-  @JavascriptEnabled
+  //@JavascriptEnabled
   @Test
   public void testShouldBeAbleToPassAWebElementAsArgument() {
     if (!(driver instanceof JavascriptExecutor)) {
@@ -374,7 +352,7 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     assertEquals("plainButton", value);
   }
 
-  @JavascriptEnabled
+  //@JavascriptEnabled
   @Test
   public void testPassingArrayAsOnlyArgumentFlattensArray() {
     if (!(driver instanceof JavascriptExecutor)) {
@@ -387,8 +365,8 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     assertEquals(array[0], value);
   }
 
-  @JavascriptEnabled
-  @Ignore({ OPERA, OPERA_MOBILE })
+  //@JavascriptEnabled
+  //@Ignore({ OPERA, OPERA_MOBILE })
   @Test(enabled = false)
   public void testShouldBeAbleToPassAnArrayAsAdditionalArgument() {
     if (!(driver instanceof JavascriptExecutor)) {
@@ -401,7 +379,7 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     assertEquals(array.length, length);
   }
 
-  @JavascriptEnabled
+  //@JavascriptEnabled
   @Test(enabled = false)
   // TODO
   public void testShouldBeAbleToPassACollectionAsArgument() {
@@ -426,7 +404,7 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     assertEquals(collection.size(), length);
   }
 
-  @JavascriptEnabled
+  //@JavascriptEnabled
   @Test
   public void testShouldThrowAnExceptionIfAnArgumentIsNotValid() {
     if (!(driver instanceof JavascriptExecutor)) {
@@ -442,7 +420,7 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     }
   }
 
-  @JavascriptEnabled
+  //@JavascriptEnabled
   @Test
   public void testShouldBeAbleToPassInMoreThanOneArgument() {
     if (!(driver instanceof JavascriptExecutor)) {
@@ -455,9 +433,9 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     assertEquals("onetwo", result);
   }
 
-  @JavascriptEnabled
+  //@JavascriptEnabled
   @Test
-  @Ignore({ OPERA, OPERA_MOBILE })
+  //@Ignore({ OPERA, OPERA_MOBILE })
   public void testShouldBeAbleToGrabTheBodyOfFrameOnceSwitchedTo() {
     driver.get(pages.richTextPage);
 
@@ -470,7 +448,7 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
   }
 
   @SuppressWarnings("unchecked")
-  @JavascriptEnabled
+  //@JavascriptEnabled
   @Test
   public void testShouldBeAbleToReturnAnArrayOfWebElements() {
     driver.get(pages.formPage);
@@ -481,7 +459,7 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     assertFalse(items.isEmpty());
   }
 
-  @JavascriptEnabled
+  //@JavascriptEnabled
   @Test
   public void testJavascriptStringHandlingShouldWorkAsExpected() {
     driver.get(pages.javascriptPage);
@@ -496,21 +474,21 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     assertEquals(" ", value);
   }
 
-  @JavascriptEnabled
-  @Ignore(OPERA)
+  //@JavascriptEnabled
+  //@Ignore(OPERA)
   @Test(enabled = false)
   public void testShouldBeAbleToExecuteABigChunkOfJavascriptCode() throws IOException {
     driver.get(pages.javascriptPage);
 
-    File jqueryFile = InProject.locate("common/src/web/jquery-1.3.2.js");
-    String jquery = Files.toString(jqueryFile, Charset.forName("US-ASCII"));
-    assertTrue(jquery.length() > 50000, "The javascript code should be at least 50 KB.");
+    //File jqueryFile = InProject.locate("common/src/web/jquery-1.3.2.js");
+    //String jquery = Files.toString(jqueryFile, Charset.forName("US-ASCII"));
+    //assertTrue(jquery.length() > 50000, "The javascript code should be at least 50 KB.");
     // This should not throw an exception ...
-    executeScript(jquery);
+    //executeScript(jquery);
   }
 
-  @SuppressWarnings("unchecked")
-  @JavascriptEnabled
+  //@SuppressWarnings("unchecked")
+  //@JavascriptEnabled
   @Test
   public void testShouldBeAbleToExecuteScriptAndReturnElementsList() {
     driver.get(pages.formPage);
@@ -521,11 +499,11 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     assertFalse(resultsList.isEmpty());
   }
 
-  @JavascriptEnabled
-  @NeedsFreshDriver
-  @NoDriverAfterTest
-  @Ignore(reason = "Failure indicates hang condition, which would break the"
-      + " test suite. Really needs a timeout set.")
+  //@JavascriptEnabled
+  //@NeedsFreshDriver
+  //@NoDriverAfterTest
+  //@Ignore(reason = "Failure indicates hang condition, which would break the"
+  //    + " test suite. Really needs a timeout set.")
   @Test(enabled = false)
   public void testShouldThrowExceptionIfExecutingOnNoPage() {
     try {
@@ -537,8 +515,8 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     fail("Expected exception to be thrown");
   }
 
-  @JavascriptEnabled
-  @Ignore(OPERA)
+  //@JavascriptEnabled
+  //@Ignore(OPERA)
   @Test
   public void testShouldBeAbleToCreateAPersistentValue() {
     driver.get(pages.formPage);
@@ -550,8 +528,8 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     assertEquals("hello world", text);
   }
 
-  @JavascriptEnabled
-  @Ignore(OPERA)
+  //@JavascriptEnabled
+  //@Ignore(OPERA)
   @Test(enabled = false)
   // freynaud TODO
   public void testCanHandleAnArrayOfElementsAsAnObjectArray() {
@@ -565,8 +543,8 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     assertEquals("form", name.toLowerCase());
   }
 
-  @JavascriptEnabled
-  @Ignore(value = { ANDROID, HTMLUNIT, OPERA, OPERA_MOBILE }, reason = "Opera and HtmlUnit obey the method contract. Android not tested")
+  //@JavascriptEnabled
+  //@Ignore(value = { ANDROID, HTMLUNIT, OPERA, OPERA_MOBILE }, reason = "Opera and HtmlUnit obey the method contract. Android not tested")
   @Test(enabled = false)
   // TODO freynaud
   public void testCanPassAMapAsAParameter() {

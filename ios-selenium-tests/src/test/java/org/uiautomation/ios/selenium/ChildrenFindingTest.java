@@ -1,6 +1,5 @@
 package org.uiautomation.ios.selenium;
 
-import static org.openqa.selenium.testing.Ignore.Driver.SELENESE;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
@@ -9,8 +8,6 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.testing.Ignore;
-import org.openqa.selenium.testing.JavascriptEnabled;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -24,7 +21,7 @@ public class ChildrenFindingTest extends BaseSeleniumTest {
     Assert.assertEquals(child.getAttribute("id"), ("2"));
   }
 
-  @Ignore(value = SELENESE, reason = "Apparently Selenium is filtering results")
+  //@Ignore(value = SELENESE, reason = "Apparently Selenium is filtering results")
   @Test
   public void testFindingElementsOnElementByXPathShouldFindTopLevelElements() {
     driver.get(pages.simpleTestPage);
@@ -193,7 +190,7 @@ public class ChildrenFindingTest extends BaseSeleniumTest {
     assertEquals(2, elements.size());
   }
 
-  @JavascriptEnabled
+  //@JavascriptEnabled
   @Test
   public void testShouldBeAbleToFindAnElementByCssSelector() {
     driver.get(pages.nestedPage);
@@ -204,7 +201,7 @@ public class ChildrenFindingTest extends BaseSeleniumTest {
     assertEquals("2", element.getAttribute("id"));
   }
 
-  @JavascriptEnabled
+  //@JavascriptEnabled
   @Test
   public void testShouldBeAbleToFindAnElementsByCssSelector() {
     driver.get(pages.nestedPage);

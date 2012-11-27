@@ -4,24 +4,12 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.openqa.selenium.TestWaiter.waitFor;
 import static org.openqa.selenium.WaitingConditions.pageTitleToBe;
 
-import java.net.URL;
-
 import org.openqa.selenium.By;
-import org.openqa.selenium.Pages;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WaitingConditions;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.environment.GlobalTestEnvironment;
-import org.openqa.selenium.environment.webserver.AppServer;
-import org.openqa.selenium.environment.webserver.WebbitAppServer;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteMobileSafariDriver;
-import org.uiautomation.ios.server.IOSServer;
-import org.uiautomation.ios.server.IOSServerConfiguration;
 
 public class PageLoadingTest extends BaseSeleniumTest {
 
@@ -152,10 +140,10 @@ public class PageLoadingTest extends BaseSeleniumTest {
   @Test(enabled = false)
   public void testShouldBeAbleToAccessPagesWithAnInsecureSslCertificate() {
     // TODO(user): Set the SSL capability to true.
-    String url = GlobalTestEnvironment.get().getAppServer().whereIsSecure("simpleTest.html");
-    driver.get(url);
+    //String url = GlobalTestEnvironment.get().getAppServer().whereIsSecure("simpleTest.html");
+    //driver.get(url);
 
-    Assert.assertEquals(driver.getTitle(), ("Hello WebDriver"));
+    //Assert.assertEquals(driver.getTitle(), ("Hello WebDriver"));
   }
 
   /*

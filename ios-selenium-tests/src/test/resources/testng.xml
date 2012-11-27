@@ -3,7 +3,9 @@
 <suite name="ios-driver" verbose="10" parallel="false">
 	<test name="native regression" preserve-order="true">
 		<packages>
-			<package name="org.uiautomation.ios.selenium.*" />
+			<package name="org.uiautomation.ios.selenium" />
+			
 		</packages>
+		
 	</test>
 </suite>

@@ -62,7 +62,8 @@ public class LanguageDictionary {
     } else {
       this.language = Localizable.it;
       this.legacyFormat = false;
-      System.err.println(language+" not supported");
+      //TODO freynaud add all languages 
+      //System.err.println(language+" not supported");
       //throw new IOSAutomationException(language + " isn't recognized.");
     }
   }
