@@ -303,7 +303,7 @@ public class RemoteWebElement {
             .put("arguments", args).put("returnByValue", true));
 
     JSONObject response = inspector.getProtocol().sendCommand(cmd);
-    return inspector.cast(response);
+    return (Boolean)inspector.cast(response);
   }
 
   public boolean isDisplayed() throws Exception {
@@ -321,7 +321,7 @@ public class RemoteWebElement {
             .put("arguments", args).put("returnByValue", true));
 
     JSONObject response = inspector.getProtocol().sendCommand(cmd);
-    return inspector.cast(response);
+    return (Boolean)inspector.cast(response);
   }
 
   public RemoteWebElement findElementByLinkText(String text, boolean partialMatch) throws Exception {

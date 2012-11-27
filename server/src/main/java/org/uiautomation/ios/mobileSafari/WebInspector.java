@@ -153,7 +153,7 @@ public class WebInspector {
     cmd.put("params", new JSONObject().put("expression", "document.body.clientWidth;"));
 
     JSONObject response = protocol.sendCommand(cmd);
-    return cast(response);
+    return (Integer)cast(response);
   }
   
   
