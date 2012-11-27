@@ -11,7 +11,6 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.StaleElementReferenceException;
-import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.UIAModels.UIAButton;
 import org.uiautomation.ios.UIAModels.UIADriver;
 import org.uiautomation.ios.UIAModels.UIAElement;
@@ -27,15 +26,11 @@ import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.OrCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAKeyboard;
-import org.uiautomation.ios.communication.IOSDevice;
 import org.uiautomation.ios.mobileSafari.Atoms;
 import org.uiautomation.ios.mobileSafari.DebugProtocol;
 import org.uiautomation.ios.mobileSafari.NodeId;
-import org.uiautomation.ios.mobileSafari.SafariHelper;
 import org.uiautomation.ios.mobileSafari.WebInspector;
 import org.uiautomation.ios.server.ServerSideSession;
-
-import com.gargoylesoftware.htmlunit.javascript.host.OfflineResourceList;
 
 public class RemoteWebElement {
 
@@ -525,7 +520,7 @@ public class RemoteWebElement {
             .put("arguments", args).put("returnByValue", false));
 
     JSONObject response = protocol.sendCommand(cmd);
-    boolean equal = inspector.cast(response);
+    boolean equal = (Boolean)inspector.cast(response);
     return equal;
 
   }
