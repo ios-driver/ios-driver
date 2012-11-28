@@ -301,7 +301,7 @@ public class FrameSwitchingTest extends BaseSeleniumTest {
   }
 
   //@Ignore({ OPERA, ANDROID, OPERA_MOBILE })
-  @Test
+  @Test(invocationCount=50)
   // TODO freynaud (invocationCount=50)
   public void testShouldBeAbleToClickInASubFrame() {
     driver.get(pages.framesetPage);

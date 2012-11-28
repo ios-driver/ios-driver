@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.LogManager;
 
 import org.json.JSONException;
 import org.uiautomation.ios.IOSCapabilities;
@@ -42,6 +43,11 @@ public class IOSDriver {
   private final ResourceCache cache = new ResourceCache();
 
   public IOSDriver(int port) {
+    try {
+      LogManager.getLogManager().readConfiguration(IOSDriver.class.getResourceAsStream("/ios-logging.properties"));
+    } catch (Exception e) {
+      System.err.println("Cannot configure logger.");
+    }
     this.hostInfo = new HostInfo(port);
   }
 

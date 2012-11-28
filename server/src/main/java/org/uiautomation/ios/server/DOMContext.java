@@ -1,12 +1,22 @@
 package org.uiautomation.ios.server;
 
+import java.util.List;
+import java.util.logging.Logger;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.TimeoutException;
 import org.uiautomation.ios.mobileSafari.EventListener;
 import org.uiautomation.ios.mobileSafari.NodeId;
+import org.uiautomation.ios.mobileSafari.events.ChildNodeRemoved;
+import org.uiautomation.ios.mobileSafari.events.Event;
+import org.uiautomation.ios.mobileSafari.events.EventHistory;
+import org.uiautomation.ios.mobileSafari.events.inserted.ChildIframeInserted;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 
 public class DOMContext implements EventListener {
+
+  private static final Logger log = Logger.getLogger(DOMContext.class.getName());
 
   private volatile boolean pageLoaded = false;
 
@@ -23,6 +33,8 @@ public class DOMContext implements EventListener {
   private RemoteWebElement mainDocument;
   private RemoteWebElement mainWindow;
 
+  private final EventHistory eventHistory = new EventHistory();
+
   public RemoteWebElement getDocument() {
     int cpt = 0;
     while (!isReady) {
@@ -32,7 +44,7 @@ public class DOMContext implements EventListener {
         throw new TimeoutException("doc not ready.");
       }
       try {
-        //System.err.println("cannot get document. Something is happening.");
+        // System.err.println("cannot get document. Something is happening.");
         Thread.sleep(250);
       } catch (InterruptedException e) {
         e.printStackTrace();
@@ -62,8 +74,8 @@ public class DOMContext implements EventListener {
     this.window = window;
 
     if (iframe != null) {
-     isOnMainFrame=false;
-    }else{
+      isOnMainFrame = false;
+    } else {
       isOnMainFrame = true;
     }
 
@@ -75,23 +87,24 @@ public class DOMContext implements EventListener {
 
     // setting the main document for the first time
     if (iframe == null && document != null) {
-      //System.out.println("BACKUP DOCUMENT "+document.getNodeId().getId());
+      // System.out.println("BACKUP DOCUMENT "+document.getNodeId().getId());
       mainDocument = document;
       mainWindow = window;
     }
 
   }
 
-  public boolean isOnMainFrame(){
+  public boolean isOnMainFrame() {
     return isOnMainFrame;
   }
+
   public RemoteWebElement getCurrentFrame() {
     return iframe;
   }
 
   @Override
   public void onPageLoad() {
-   // System.out.println(System.currentTimeMillis()+" recieved page load event");
+    // System.out.println(System.currentTimeMillis()+" recieved page load event");
     pageLoaded = true;
     reset();
   }
@@ -117,84 +130,56 @@ public class DOMContext implements EventListener {
     this.session = session;
   }
 
-  // TODO freynaud are the messages always in the correct order ?
   @Override
-  public void domHasChanged(JSONObject message) {
+  public synchronized void domHasChanged(Event e) {
     try {
-      String method = message.optString("method");
 
-      if ("DOM.childNodeRemoved".equals(method)) {
-        JSONObject params = message.optJSONObject("params");
-        int nodeId = params.getInt("nodeId");
-        int parentNodeId = params.getInt("parentNodeId");
-        if (iframe != null ? nodeId == iframe.getNodeId().getId() : false) {
-          System.err.println("current frame " + nodeId + " is gone.Parent : " + parentNodeId);
+      if (e instanceof ChildNodeRemoved) {
+        ChildNodeRemoved removed = (ChildNodeRemoved) e;
+        if (iframe != null ? removed.getNode().equals(iframe.getNodeId()) : false) {
           isReady = false;
-          parent = new NodeId(parentNodeId);
-
+          parent = removed.getParent();
+          List<ChildIframeInserted> newOnes = eventHistory.getInsertedFrames(parent);
+          if (newOnes.size() == 0) {
+            return;
+          } else if (newOnes.size() == 1) {
+            Event newFrame = newOnes.get(0);
+            assignNewFrameFromEvent((ChildIframeInserted) newFrame);
+            eventHistory.removeEvent(newFrame);
+          } else {
+            log.warning("there should be only 1 newly created frame with parent =" + parent + ". Found "
+                + newOnes.size());
+          }
         }
         return;
       }
 
-      if ("DOM.childNodeInserted".equals(method)) {
+      if (e instanceof ChildIframeInserted) {
+        ChildIframeInserted newFrame = (ChildIframeInserted) e;
         // are we waiting for something ?
         if (isReady) {
+          eventHistory.add(newFrame);
           return;
         } else {
-          JSONObject params = message.optJSONObject("params");
-
-          int parentNodeId = params.getInt("parentNodeId");
           // is it the new node we're looking for ?
-          if (parent.equals(new NodeId(parentNodeId))) {
-            System.out.println("the new node is there !");
-            JSONObject node = params.getJSONObject("node");
-            int frameId = node.getInt("nodeId");
-            RemoteWebElement frame = new RemoteWebElement(new NodeId(frameId), session);
-            //System.out.println("should be a (i)frame, it's :" + node.getString("nodeName"));
-            JSONObject contentDoc = node.getJSONObject("contentDocument");
-            int contentDocId = contentDoc.getInt("nodeId");
-            RemoteWebElement document = new RemoteWebElement(new NodeId(contentDocId), session);
-            RemoteWebElement window = frame.getContentWindow();
-            setCurrentFrame(frame, document, window);
-            isReady = true;
+          if (parent.equals(newFrame.getParent())) {
+            assignNewFrameFromEvent(newFrame);
           }
         }
       }
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (Exception ex) {
+      ex.printStackTrace();
     }
+  }
 
-    // current frame content has navigated to a new frame.
-    /*
-     * if (mainDocument == null) {
-     * System.err.println("Framenavigated , but no update."); return; } try { //
-     * case 1 (done): //
-     * MESSAGE:{"method":"Page.frameNavigated","params":{"frame"
-     * :{"id":"0.3","parentId"
-     * :"0.1","loaderId":"0.5","name":"iframe1-name","securityOrigin"
-     * :"http://localhost:47287","mimeType":"text/html","url":
-     * "http://localhost:47287/common/resultPage.html?"}}} // TODO case 2 (
-     * should also cover case 1) : //
-     * {"method":"DOM.childNodeRemoved","params":{"nodeId":13,"parentNodeId":8}}
-     * //
-     * {"method":"DOM.childNodeInserted","params":{"node":{"childNodeCount":0,
-     * "localName"
-     * :"frame","nodeId":93,"nodeValue":"","nodeName":"FRAME","attributes"
-     * :["name","third","src","formPage.html"],"nodeType":1,"contentDocument":{
-     * "childNodeCount":1,"localName":"","nodeId":94,"documentURL":
-     * "http://localhost:16167/common/resultPage.html?checky=furrfu&checkedchecky=on&selectomatic=one&multi=eggs&multi=sausages&select-default=One&select_with_spaces=One&snack=cheese+and+peas&hidden=fromage"
-     * ,"nodeValue":"","nodeName":"#document","xmlVersion":"","nodeType":9}},
-     * "parentNodeId":8,"previousNodeId":11}}
-     * 
-     * String name =
-     * message.getJSONObject("params").getJSONObject("frame").getString("name");
-     * List<RemoteWebElement> elements =
-     * mainDocument.findElementsByCSSSelector("iframe"); for (RemoteWebElement
-     * element : elements) { if (name.equals(element.getAttribute("name"))) {
-     * setCurrentFrame(element, element.getContentDocument(),
-     * element.getContentWindow()); return; } } } catch (Exception e) { // TODO
-     * Auto-generated catch block e.printStackTrace(); }
-     */
+  private void assignNewFrameFromEvent(ChildIframeInserted newFrameEvent) throws Exception {
+    RemoteWebElement frame = new RemoteWebElement(newFrameEvent.getNode(), session);
+    // System.out.println("should be a (i)frame, it's :" +
+    // node.getString("nodeName"));
+    RemoteWebElement document = new RemoteWebElement(newFrameEvent.getContentDocument(), session);
+    RemoteWebElement window = frame.getContentWindow();
+    setCurrentFrame(frame, document, window);
+    isReady = true;
   }
 
   @Override

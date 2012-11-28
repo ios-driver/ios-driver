@@ -14,6 +14,7 @@
 package org.uiautomation.ios.server.servlet;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -29,10 +30,12 @@ import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.CommandMapping;
+import org.uiautomation.ios.server.DOMContext;
 import org.uiautomation.ios.server.command.Handler;
 
 public class IOSServlet extends DriverBasedServlet {
 
+  private static final Logger log = Logger.getLogger(IOSServlet.class.getName());
   private static final long serialVersionUID = -1190162363756488569L;
   private final ErrorCodes errorCodes = new ErrorCodes();
 
@@ -91,27 +94,27 @@ public class IOSServlet extends DriverBasedServlet {
       String url = scheme + "://" + serverName + ":" + serverPort + contextPath;
       response.setHeader("location", url + "/session/" + session);
     }
-    //String s = toString(resp);
+    // String s = toString(resp);
     BeanToJsonConverter convertor = new BeanToJsonConverter();
     String s = convertor.convert(resp);
-    
+
     // status is also used for debugging, it's worth formatting it nice.
-    if (req.getGenericCommand() == WebDriverLikeCommand.STATUS){
+    if (req.getGenericCommand() == WebDriverLikeCommand.STATUS) {
       JSONObject o = new JSONObject(s);
       response.getWriter().print(o.toString(2));
-    }else{
+    } else {
       response.getWriter().print(s);
     }
-    
+
     response.getWriter().close();
 
   }
-  
-  private String toString(Response r) throws Exception{
+
+  private String toString(Response r) throws Exception {
     JSONObject o = new JSONObject();
     o.put("sessionId", r.getSessionId());
-    o.put("status",r.getStatus());
-    o.put("value",r.getValue().toString());
+    o.put("status", r.getStatus());
+    o.put("value", r.getValue().toString());
     return o.toString();
   }
 
@@ -143,10 +146,10 @@ public class IOSServlet extends DriverBasedServlet {
       }
       return response;
     } catch (Exception e) {
-      throw new WebDriverException("bug."+e.getMessage(),e);
+      throw new WebDriverException("bug." + e.getMessage(), e);
     } finally {
       String message = (System.currentTimeMillis() + "\t" + (System.currentTimeMillis() - start) + "ms.\t" + command);
-      //System.out.println(message);
+      log.info(message);
     }
   }
 

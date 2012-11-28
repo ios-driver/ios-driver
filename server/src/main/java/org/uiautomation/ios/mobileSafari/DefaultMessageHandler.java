@@ -3,13 +3,20 @@ package org.uiautomation.ios.mobileSafari;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Logger;
 
+import org.apache.bcel.generic.INSTANCEOF;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.dom4j.Document;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.json.JSONObject;
+import org.uiautomation.ios.mobileSafari.events.ChildNodeRemoved;
+import org.uiautomation.ios.mobileSafari.events.Event;
+import org.uiautomation.ios.mobileSafari.events.EventFactory;
+import org.uiautomation.ios.mobileSafari.events.inserted.ChildIframeInserted;
+import org.uiautomation.ios.server.simulator.IOSSimulatorManager;
 
 public class DefaultMessageHandler implements MessageHandler {
 
@@ -17,6 +24,7 @@ public class DefaultMessageHandler implements MessageHandler {
   private final EventListener listener;
   private Thread t;
   private static boolean showIgnoredMessaged = false;
+  private static final Logger log = Logger.getLogger(DefaultMessageHandler.class.getName());
   
   
   public DefaultMessageHandler(EventListener listener) {
@@ -45,14 +53,17 @@ public class DefaultMessageHandler implements MessageHandler {
         responses.add(message);
         return;
       } 
+      // not null, not a command response.
+      // should be an event.
+      Event e = EventFactory.createEvent(message);
       
       if (isPageLoad(message)){
         listener.onPageLoad();
         return;
       } 
       
-      if (isImportantDOMChange(message)){
-        listener.domHasChanged(message);
+      if (isImportantDOMChange(e)){
+        listener.domHasChanged(e);
       } 
       
       if ("Page.frameDetached".equals(message.optString("method"))){
@@ -72,9 +83,9 @@ public class DefaultMessageHandler implements MessageHandler {
 
   }
   
-  private boolean isImportantDOMChange(JSONObject message){
-    String method = message.optString("method");
-    return ("DOM.childNodeRemoved".equals(method) || "DOM.childNodeInserted".equals(method));
+  private boolean isImportantDOMChange(Event e){
+  
+    return (e instanceof ChildIframeInserted || e instanceof ChildNodeRemoved );
   }
 
   private boolean isPageLoad(JSONObject message) {
