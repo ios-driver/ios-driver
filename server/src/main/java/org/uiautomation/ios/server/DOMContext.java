@@ -3,7 +3,6 @@ package org.uiautomation.ios.server;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.TimeoutException;
 import org.uiautomation.ios.mobileSafari.EventListener;
@@ -189,8 +188,7 @@ public class DOMContext implements EventListener {
     // if that's the one we're working on, deselect it.
     if (iframe != null) {
       if (!iframe.exists()) {
-        System.err
-            .println("the current frame is dead. Will need to switch to default content or another frame before being able to do anything.");
+        log.fine("the current frame is dead. Will need to switch to default content or another frame before being able to do anything.");
         isReady = true;
       }
     }
