@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.uiautomation</groupId>
 	<artifactId>ios-driver</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>0.4.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>IOS native app automation</name>
 	<description>bridge over the apple JS UIAutomation framework to make it compatible with a webdriver like architecture.Allows remote parallel excecution using Selenium Grid2</description>
