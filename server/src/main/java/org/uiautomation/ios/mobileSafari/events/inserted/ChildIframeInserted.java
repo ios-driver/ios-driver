@@ -38,10 +38,7 @@ public class ChildIframeInserted extends ChildNodeInserted {
     super(message);
 
     JSONObject params = message.optJSONObject("params").getJSONObject("node");
-    if (!"IFRAME".equals(params.opt("nodeName"))) {
-      throw new WebDriverException("event parsing error");
-    }
-
+    
     JSONObject json = params.getJSONObject("contentDocument");
     contentDocument = new NodeId(json.getInt("nodeId"));
   }

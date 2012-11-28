@@ -139,6 +139,7 @@ public class DOMContext implements EventListener {
         if (iframe != null ? removed.getNode().equals(iframe.getNodeId()) : false) {
           isReady = false;
           parent = removed.getParent();
+          log.fine("current frame "+iframe.getNodeId()+" is gone.Parent = "+parent);
           List<ChildIframeInserted> newOnes = eventHistory.getInsertedFrames(parent);
           if (newOnes.size() == 0) {
             return;
@@ -163,6 +164,7 @@ public class DOMContext implements EventListener {
         } else {
           // is it the new node we're looking for ?
           if (parent.equals(newFrame.getParent())) {
+            log.fine("the new node is here :"+newFrame.getNode());
             assignNewFrameFromEvent(newFrame);
           }
         }

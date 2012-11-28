@@ -20,21 +20,36 @@ public class MessageTypeFinder {
 
   public Class<? extends Event> getAssociatedEvent() {
     String method = message.optString("method");
-    JSONObject params = message.optJSONObject("params");
 
     if (NODE_REMOVED.equals(method)) {
       return ChildNodeRemoved.class;
     }
 
-    if (NODE_INSERTED.equals(method) 
-        && params != null
-        && "IFRAME".equals(params.optJSONObject("node").optString("nodeName"))) {
+    if (isFrameOrIFrame(message)) {
+      log.fine("ChildIframeInserted " + message);
       return ChildIframeInserted.class;
     }
 
-    log.fine("message not handled " + message);
+    log.finer("message not handled " + message);
     return RawEvent.class;
 
   }
 
+  private boolean isFrameOrIFrame(JSONObject message) {
+
+    String method = message.optString("method");
+    JSONObject params = message.optJSONObject("params");
+
+    if (NODE_INSERTED.equals(method) && params != null
+        && "IFRAME".equals(params.optJSONObject("node").optString("nodeName"))) {
+      log.fine("ChildIframeInserted " + message);
+      return true;
+    }
+    if (NODE_INSERTED.equals(method) && params != null
+        && "FRAME".equals(params.optJSONObject("node").optString("nodeName"))) {
+      log.fine("ChildIframeInserted " + message);
+      return true;
+    }
+    return false;
+  }
 }
