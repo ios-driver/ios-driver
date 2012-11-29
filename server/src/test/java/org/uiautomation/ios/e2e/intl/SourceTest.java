@@ -51,7 +51,7 @@ public class SourceTest extends BaseIOSDriverTest {
       Assert.assertEquals(tree.get("value"), JSONObject.NULL);
       Assert.assertEquals(tree.get("label"), "Montagnes");
       Assert.assertEquals(tree.get("name"), "Montagnes");
-      Assert.assertEquals(tree.optJSONArray("children").length(), 3);
+      Assert.assertEquals(tree.optJSONArray("children").length(), 2);
     } finally {
       if (driver != null) {
         driver.quit();
