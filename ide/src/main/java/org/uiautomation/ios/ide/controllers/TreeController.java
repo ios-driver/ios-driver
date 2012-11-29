@@ -1,3 +1,16 @@
+/*
+ * Copyright 2012 ios-driver committers.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package org.uiautomation.ios.ide.controllers;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,7 +66,6 @@ public class TreeController implements IDECommandController {
     metadata.put("value", from.getString("value"));
     metadata.put("l10n", from.getJSONObject("l10n"));
 
-
     node.put("metadata", metadata);
     JSONObject rect = new JSONObject();
     rect.put("x", from.getJSONObject("rect").getJSONObject("origin").getInt("x"));
@@ -61,8 +73,6 @@ public class TreeController implements IDECommandController {
     rect.put("h", from.getJSONObject("rect").getJSONObject("size").getInt("height"));
     rect.put("w", from.getJSONObject("rect").getJSONObject("size").getInt("width"));
     metadata.put("rect", rect);
-
-
 
     JSONArray children = from.optJSONArray("children");
 
@@ -79,11 +89,9 @@ public class TreeController implements IDECommandController {
     return node;
   }
 
-
-
   private String getNodeTitle(JSONObject node) throws JSONException {
     StringBuilder b = new StringBuilder();
-    b.append( "["+node.getString("type") +"]-");
+    b.append("[" + node.getString("type") + "]-");
 
     String name = node.optString("name");
     String value = node.optString("value");

@@ -1,3 +1,16 @@
+/*
+ * Copyright 2012 ios-driver committers.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package org.uiautomation.ios.ide.views;
 
 import java.net.URL;
@@ -27,8 +40,6 @@ public class IDEMainView implements View {
     this.servletPath = servletPath;
   }
 
-
-
   @Override
   public void render(HttpServletResponse response) throws Exception {
     try {
@@ -38,24 +49,17 @@ public class IDEMainView implements View {
 
       b.append(" <link rel='stylesheet' href='" + getResource("ide.css") + "'  type='text/css'/>");
       b.append("<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>");
-      b.append("<script type='text/javascript' src='" + getResource("jquery.jstree.js")
-          + "'></script>");
-
+      b.append("<script type='text/javascript' src='" + getResource("jquery.jstree.js") + "'></script>");
 
       IOSDevice device = model.getCapabilities().getDevice();
-
-
 
       b.append("<script type='text/javascript' src='" + getResource("ide.js") + "'></script>");
       b.append("<script type='text/javascript' src='" + getResource("uiactions.js") + "'></script>");
 
-
       b.append("</head>");
-
 
       b.append("<body>");
       b.append("<html>");
-
 
       b.append("<div id='simulator'>");
 
@@ -72,11 +76,8 @@ public class IDEMainView implements View {
       b.append("</div>");
       b.append("</div>");
 
-
       b.append("<div id ='details' ></div>");
       b.append("<div id ='tree'  ></div>");
-
-
 
       String d = "iphone";
       if (model.getCapabilities().getDevice() == IOSDevice.iPadSimulator) {
@@ -125,8 +126,6 @@ public class IDEMainView implements View {
       b.append("</body>");
       b.append("</html>");
 
-
-
       response.setContentType("text/html");
       response.setCharacterEncoding("UTF-8");
       response.setStatus(200);
@@ -151,13 +150,9 @@ public class IDEMainView implements View {
     return "No capabilities available. Model = null";
   }
 
-
-
   private String getScreen(IOSDevice device) {
     return getResource("session/" + model.getSession().getSessionId() + "/screenshot.png");
   }
-
-
 
   private String getFrame(IOSDevice device) {
     if (device == IOSDevice.iPhoneSimulator) {
@@ -167,14 +162,10 @@ public class IDEMainView implements View {
     }
   }
 
-
-
   private String getResource(String name) {
     String res = servletPath + "/resources/" + name;
     return res;
   }
-
-
 
   private String getListOfLanguagesInHTML() throws Exception {
     JSONObject jsonApp = getAppFromStatus();
@@ -194,19 +185,17 @@ public class IDEMainView implements View {
 
     JSONObject app = getAppFromStatus();
     JSONObject resources = app.optJSONObject("resources");
-    if (resources!=null){
+    if (resources != null) {
       String icon = resources.getString("CFBundleIconFile");
 
       String h = model.getEndPoint().getHost();
       int p = model.getEndPoint().getPort();
       return "http://" + h + ":" + p + icon;
-    }else{
+    } else {
       return "no icon found";
     }
-    
 
   }
-
 
   private JSONObject getStatus() throws Exception {
     HttpClient client = HttpClientFactory.getClient();
@@ -222,15 +211,13 @@ public class IDEMainView implements View {
     return o;
   }
 
-
-
   private JSONObject getAppFromStatus() throws Exception {
     JSONObject status = getStatus();
     JSONArray array = status.getJSONObject("value").getJSONArray("supportedApps");
     for (int i = 0; i < array.length(); i++) {
       JSONObject jsonApp = array.getJSONObject(i);
-      String other = (String)jsonApp.get("CFBundleIdentifier");
-      String me = (String)model.getCapabilities().getRawCapabilities().get("CFBundleIdentifier");
+      String other = (String) jsonApp.get("CFBundleIdentifier");
+      String me = (String) model.getCapabilities().getRawCapabilities().get("CFBundleIdentifier");
       if (other.equals(me)) {
         return jsonApp;
       }
