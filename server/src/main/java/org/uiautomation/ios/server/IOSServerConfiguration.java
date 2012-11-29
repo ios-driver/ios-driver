@@ -31,26 +31,23 @@ import com.beust.jcommander.Parameter;
  */
 public class IOSServerConfiguration {
 
-
   @Parameter(description = "port the server will listen on.", names = "-port")
   private int port = 5555;
 
   @Parameter(description = "if specified, will send a registration request to the given url. Example : http://localhost:4444/grid/register", names = "-hub")
   private String registrationURL = null;
 
-
   @Parameter(description = "host of the node.Needs to be specified, as guessing can be wrong complex ntw configs", names = "-host")
   private String serverHost;
 
-  @Parameter(description = "location of the application under test.Absolute path expected.", names = {
-      "-app", "-aut"}, required = false)
+  @Parameter(description = "location of the application under test.Absolute path expected.", names = { "-app", "-aut" }, required = false)
   private List<String> supportedApps = new ArrayList<String>();
 
   public String getRegistrationURL() {
     return registrationURL;
   }
-  
-  public void addSupportedApp(String appAbsolutPath){
+
+  public void addSupportedApp(String appAbsolutPath) {
     supportedApps.add(appAbsolutPath);
   }
 
@@ -63,8 +60,8 @@ public class IOSServerConfiguration {
   }
 
   /**
-   * Returns a IOSServerConfiguration instance of the server configuration, from the given args
-   * parameters.<br>
+   * Returns a IOSServerConfiguration instance of the server configuration, from
+   * the given args parameters.<br>
    * 
    * @param args
    * @return A configuration instance of the server.

@@ -1,3 +1,16 @@
+/*
+ * Copyright 2012 ios-driver committers.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package org.uiautomation.ios.server;
 
 import java.util.List;
@@ -138,7 +151,7 @@ public class DOMContext implements EventListener {
         if (iframe != null ? removed.getNode().equals(iframe.getNodeId()) : false) {
           isReady = false;
           parent = removed.getParent();
-          log.fine("current frame "+iframe.getNodeId()+" is gone.Parent = "+parent);
+          log.fine("current frame " + iframe.getNodeId() + " is gone.Parent = " + parent);
           List<ChildIframeInserted> newOnes = eventHistory.getInsertedFrames(parent);
           if (newOnes.size() == 0) {
             return;
@@ -163,7 +176,7 @@ public class DOMContext implements EventListener {
         } else {
           // is it the new node we're looking for ?
           if (parent.equals(newFrame.getParent())) {
-            log.fine("the new node is here :"+newFrame.getNode());
+            log.fine("the new node is here :" + newFrame.getNode());
             assignNewFrameFromEvent(newFrame);
           }
         }
