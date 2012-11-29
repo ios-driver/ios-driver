@@ -1,7 +1,7 @@
 0.4.0
 ------
 + license for the tests
-- license for the code
++ license for the code
 - fix stale element
 - remove the sysouts
 - rename ide to inspector, and make it part of the server
