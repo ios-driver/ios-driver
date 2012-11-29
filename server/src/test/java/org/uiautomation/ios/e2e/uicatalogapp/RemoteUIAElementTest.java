@@ -25,6 +25,7 @@ import org.uiautomation.ios.UIAModels.predicate.EmptyCriteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.communication.WebDriverLikeCommand;
 
 public class RemoteUIAElementTest extends BaseIOSDriverTest {
 
@@ -157,11 +158,11 @@ public class RemoteUIAElementTest extends BaseIOSDriverTest {
       Criteria c2 = new NameCriteria(name);
       Criteria c = new AndCriteria(c1, c2);
       UIAElement element = driver.findElement(c);
-
+      // should work.
+      element.getName();
       // new screen. The element doesn't exist anymore
       element.tap();
       
- 
       // cannot use a stale element. Exception thrown.
       element.getName();
       Assert.fail("cannot access stale elements");

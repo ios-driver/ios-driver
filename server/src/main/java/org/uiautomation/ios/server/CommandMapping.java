@@ -35,6 +35,7 @@ import org.uiautomation.ios.server.command.uiautomation.FindElementRoot;
 import org.uiautomation.ios.server.command.uiautomation.FindElementsRoot;
 import org.uiautomation.ios.server.command.uiautomation.GetCapabilitiesCommandHandler;
 import org.uiautomation.ios.server.command.uiautomation.GetCurrentContext;
+import org.uiautomation.ios.server.command.uiautomation.GetElementSizeHandler;
 import org.uiautomation.ios.server.command.uiautomation.GetSessions;
 import org.uiautomation.ios.server.command.uiautomation.GetTimeoutCommandHandler;
 import org.uiautomation.ios.server.command.uiautomation.GetWindowHandlesCommandHandler;
@@ -127,7 +128,7 @@ public enum CommandMapping {
  
   // UIAElement
   HIT_POINT(NotImplementedNativeHandler.class,NotImplementedWebHandler.class),
-  RECT(".rect2()"),
+  RECT(GetElementSizeHandler.class,NotImplementedWebHandler.class),
   
   PARENT(NotImplementedNativeHandler.class,NotImplementedWebHandler.class),
   

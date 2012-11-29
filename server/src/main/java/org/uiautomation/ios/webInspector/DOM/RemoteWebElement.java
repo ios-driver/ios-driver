@@ -39,6 +39,7 @@ import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.OrCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAKeyboard;
+import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.mobileSafari.Atoms;
 import org.uiautomation.ios.mobileSafari.DebugProtocol;
 import org.uiautomation.ios.mobileSafari.NodeId;
@@ -189,11 +190,14 @@ public class RemoteWebElement {
         UIAElement sv = nativeDriver.findElement(new TypeCriteria(UIAWebView.class));
 
         // scrollview container. Doesn't start in 0,0 // x=0,y=96,h=928w=768
+        // TODO freynaud : should save the current value, and reset to that at the end. Not to false. 
+        nativeDriver.configure(WebDriverLikeCommand.RECT).set("checkForStale", false);
         rect = sv.getRect();
 
         UIAElement addressBar = nativeDriver.findElement(new AndCriteria(new TypeCriteria(UIAElement.class),
             new NameCriteria("Address",L10NStrategy.serverL10N), new LabelCriteria("Address",L10NStrategy.serverL10N)));
         offset = addressBar.getRect();
+        nativeDriver.configure(WebDriverLikeCommand.RECT).set("checkForStale", true);
         // rect = sv.getRect();
       } finally {
         session.setMode(origin);

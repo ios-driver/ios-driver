@@ -26,7 +26,7 @@ public class AlertTest extends BaseIOSDriverTest {
 
   @BeforeClass
   public void startDriver() {
-    driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogipadCap());
+    driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
     goToAlertScreen();
   }
 
