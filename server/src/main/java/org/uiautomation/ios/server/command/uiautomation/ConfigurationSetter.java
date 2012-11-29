@@ -26,7 +26,6 @@ public class ConfigurationSetter extends BaseNativeCommandHandler {
       String key = iter.next();
       Object value = payload.opt(key);
       getSession().configure(command).set(key, value);
-      System.out.println(getSession().configure(command).get(key));
     }
 
     Response resp = new Response();

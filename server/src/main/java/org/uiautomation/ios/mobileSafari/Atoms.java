@@ -119,9 +119,7 @@ public class Atoms {
     return content;
   }
 
-  public static void main(String[] args) {
-    System.out.println(getText());
-  }
+  
 
   public static String submit() {
     return submit;

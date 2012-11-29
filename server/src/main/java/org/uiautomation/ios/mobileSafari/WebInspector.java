@@ -261,7 +261,6 @@ public class WebInspector {
             .put("returnByValue", false));
 
     JSONObject response = protocol.sendCommand(cmd);
-    System.out.println(response);
     String s = cast(response);
     JSONObject o = new  JSONObject(s);
     Dimension dim = new Dimension(o.getInt("width"), o.getInt("height"));
@@ -400,7 +399,6 @@ public class WebInspector {
         }
 
       }
-      System.out.println("last type " + body);
       return (T) new RemoteObject(body.getString("objectId"), session);
 
     }
