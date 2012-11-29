@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.uiautomation.ios.communication.IOSDevice;
 import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
@@ -30,25 +31,24 @@ import org.uiautomation.ios.server.utils.hack.TimeSpeeder;
 
 public class InstrumentsManager {
 
+  private static final Logger log = Logger.getLogger(InstrumentsManager.class.getName());
+
   private File output;
   private final File template;
   private IOSApplication application;
   private IOSDeviceManager simulator;
   private String sessionId;
   private final int port;
-  public String getSessionId() {
-    return sessionId;
-  }
 
   private List<String> extraEnvtParams;
   private CommunicationChannel communicationChannel;
   private Command simulatorProcess;
 
-
   /**
    * constructor that will create an instrument process linked to the server.
    * 
-   * @param serverPort the port the server lives on
+   * @param serverPort
+   *          the port the server lives on
    * @throws IOSAutomationSetupException
    */
   public InstrumentsManager(int serverPort) throws IOSAutomationSetupException {
@@ -59,28 +59,28 @@ public class InstrumentsManager {
   public void startSession(IOSDevice device, String sdkVersion, String locale, String language,
       IOSApplication application, String sessionId, boolean timeHack, List<String> envtParams)
       throws IOSAutomationSetupException {
+    log.fine("starting session");
     IOSSimulatorManager sim = null;
     try {
       this.sessionId = sessionId;
       this.extraEnvtParams = envtParams;
 
       output = createTmpOutputFolder();
-     
+
       this.application = application;
       this.application.setDefaultDevice(device);
-      
+
       if (isWarmupRequired(sdkVersion)) {
         warmup();
       }
-
+      log.fine("prepare simulator");
       simulator = prepareSimulator(sdkVersion, device, locale, language);
       sim = (IOSSimulatorManager) simulator;
-
+      log.fine("forcing SDK");
       sim.forceDefaultSDK(sdkVersion);
-
+      log.fine("creating script");
       File uiscript = new ScriptHelper().getScript(port, application.getApplicationPath().getAbsolutePath(), sessionId);
-
-
+      log.fine("starting instruments");
       List<String> instruments = createInstrumentCommand(uiscript.getAbsolutePath());
       communicationChannel = new CommunicationChannel();
 
@@ -88,9 +88,10 @@ public class InstrumentsManager {
       simulatorProcess.setWorkingDirectory(output);
       simulatorProcess.start();
 
-
+      log.fine("waiting for registration request");
       boolean success = communicationChannel.waitForUIScriptToBeStarted();
-      // appears only in ios6. : Automation Instrument ran into an exception while trying to run the
+      // appears only in ios6. : Automation Instrument ran into an exception
+      // while trying to run the
       // script. UIAScriptAgentSignaledException
       if (!success) {
         simulatorProcess.forceStop();
@@ -105,14 +106,14 @@ public class InstrumentsManager {
         TimeSpeeder.getInstance().desactivate();
       }
 
-
     } catch (Exception e) {
-      if (simulatorProcess!=null){
+      if (simulatorProcess != null) {
         simulatorProcess.forceStop();
       }
       killSimulator();
       throw new IOSAutomationSetupException("error starting instrument for session " + sessionId, e);
     } finally {
+      log.fine("start session done");
       if (sim != null) {
         sim.restoreExiledSDKs();
       }
@@ -130,21 +131,20 @@ public class InstrumentsManager {
   private boolean isWarmupRequired(String sdkVersion) {
     List<String> sdks = ClassicCommands.getInstalledSDKs();
     // TODO freynaud not rely on order.
-    if (sdks.get(sdks.size()-1).equals(sdkVersion)){
+    if (sdks.get(sdks.size() - 1).equals(sdkVersion)) {
       return false;
     }
     return true;
-    
-    /*if (sdkVersion.equals("5.0") || sdkVersion.equals("5.1")|| sdkVersion.equals("6.0")) {
-      if (sdks.contains("6.1")) {
-        return true;
-      }
-    }
-    return false;*/
+
+    /*
+     * if (sdkVersion.equals("5.0") || sdkVersion.equals("5.1")||
+     * sdkVersion.equals("6.0")) { if (sdks.contains("6.1")) { return true; } }
+     * return false;
+     */
   }
 
-  private IOSDeviceManager prepareSimulator(String sdkVersion, IOSDevice device, String locale,
-      String language) throws IOSAutomationSetupException {
+  private IOSDeviceManager prepareSimulator(String sdkVersion, IOSDevice device, String locale, String language)
+      throws IOSAutomationSetupException {
     // TODO freynaud handle real device ?
     IOSDeviceManager simulator = new IOSSimulatorManager(sdkVersion, device);
     simulator.resetContentAndSettings();
@@ -183,7 +183,6 @@ public class InstrumentsManager {
 
     return command;
 
-
   }
 
   private File createTmpOutputFolder() throws IOException {
@@ -198,6 +197,9 @@ public class InstrumentsManager {
     simulator.cleanupDevice();
   }
 
+  public String getSessionId() {
+    return sessionId;
+  }
 
   public File getOutput() {
     return output;

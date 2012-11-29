@@ -50,28 +50,6 @@ public class UIAKeyboardTest extends BaseIOSDriverTest {
     return textfield;
   }
 
-  /**
-   * 28 on IOS 5 31 on IOS 6
-   */
-  /*
-   * @Test(groups = "broken") public void canFindKeyboard() { RemoteUIADriver
-   * driver = null; try {
-   * 
-   * driver = getDriver(); RemoteUIATarget target = driver.getLocalTarget();
-   * RemoteUIAApplication app = target.getFrontMostApp(); RemoteUIAWindow win =
-   * app.getMainWindow();
-   * 
-   * UIATextField textfield = getTextField(win); textfield.tap();
-   * 
-   * UIAKeyboard keyboard = app.getKeyboard();
-   * 
-   * UIAElementArray<UIAKey> keys = keyboard.getKeys();
-   * Assert.assertTrue(keys.size() == 28 || keys.size() == 31); // GB, should be
-   * a qwerty Assert.assertEquals(keys.get(0).getName(), "q");
-   * 
-   * } finally { if (driver != null) { driver.quit(); } } }
-   */
-
   @Test(dependsOnMethods = { "throwsIfKeyboardNotPresent" })
   public void typeBasic() {
 

@@ -17,18 +17,12 @@ import org.uiautomation.ios.server.application.Localizable;
 
 public class ComplexCriteriaTest extends BaseIOSDriverTest {
 
- 
-  
- 
-
   @DataProvider(name = "intlMountain", parallel = false)
   public Object[][] createDataPerLocale() {
     return new Object[][] {
-        {Localizable.en,
-            "Mountain 1 was first climbed on 29 May 1953 and has a height of 8,848 meters"},
-        {Localizable.fr,
-            "Bien que 8,848 mètres de haut, Montagne 1 aient été montés la première fois 29 May 1953."},
-        {Localizable.zh, "山 1 是8,848米高。它第一次攀登了在29 May 1953。"}};
+        { Localizable.en, "Mountain 1 was first climbed on 29 May 1953 and has a height of 8,848 meters" },
+        { Localizable.fr, "Bien que 8,848 mètres de haut, Montagne 1 aient été montés la première fois 29 May 1953." },
+        { Localizable.zh, "山 1 是8,848米高。它第一次攀登了在29 May 1953。" } };
   }
 
   @Test(dataProvider = "intlMountain")
@@ -37,15 +31,19 @@ public class ComplexCriteriaTest extends BaseIOSDriverTest {
     try {
 
       driver = new RemoteUIADriver(getRemoteURL(), SampleApps.intlMountainsCap(l));
-     
+
       Criteria c1 = new TypeCriteria(UIATableCell.class);
       UIAElement element = driver.findElement(c1);
       element.tap();
 
-      NameCriteria criteria =
-          new NameCriteria("sentenceFormat", L10NStrategy.serverL10N, MatchingStrategy.regex);
+      NameCriteria criteria = new NameCriteria("sentenceFormat", L10NStrategy.serverL10N, MatchingStrategy.regex);
       UIAElement text = driver.findElement(criteria);
       String actual = text.getName();
+      Assert.assertEquals(actual, expectedContent);
+
+      criteria = new NameCriteria("meterFormat", L10NStrategy.serverL10N, MatchingStrategy.contains);
+      text = driver.findElement(criteria);
+      actual = text.getName();
       Assert.assertEquals(actual, expectedContent);
     } finally {
       if (driver != null) {
@@ -53,28 +51,5 @@ public class ComplexCriteriaTest extends BaseIOSDriverTest {
       }
     }
   }
-
-  @Test(dataProvider = "intlMountain")
-  public void containsServerSide(Localizable l, String expectedContent) {
-    RemoteUIADriver driver = null;
-    try {
-
-      driver =new RemoteUIADriver(getRemoteURL(), SampleApps.intlMountainsCap(l));
-      Criteria c1 = new TypeCriteria(UIATableCell.class);
-      UIAElement element = driver.findElement(c1);
-      element.tap();
-
-      NameCriteria criteria =
-          new NameCriteria("meterFormat", L10NStrategy.serverL10N, MatchingStrategy.contains);
-      UIAElement text = driver.findElement(criteria);
-      String actual = text.getName();
-      Assert.assertEquals(actual, expectedContent);
-    } finally {
-      if (driver != null) {
-        driver.quit();
-      }
-    }
-  }
-
 
 }

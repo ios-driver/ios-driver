@@ -56,7 +56,7 @@ public class SampleApps {
 
   public static IOSCapabilities uiCatalogCap() {
     IOSCapabilities c = IOSCapabilities.iphone("UICatalog", "2.10");
-    c.setCapability(IOSCapabilities.TIME_HACK, false);
+    c.setCapability(IOSCapabilities.TIME_HACK, true);
     if (sdkVersion != null) {
       System.out.println("SET SDK to " + sdkVersion);
       c.setSDKVersion(sdkVersion);
@@ -65,7 +65,7 @@ public class SampleApps {
   }
   public static IOSCapabilities uiCatalogipadCap() {
     IOSCapabilities c = IOSCapabilities.ipad("UICatalog");
-    c.setCapability(IOSCapabilities.TIME_HACK, false);
+    c.setCapability(IOSCapabilities.TIME_HACK, true);
     if (sdkVersion != null) {
       System.out.println("SET SDK to " + sdkVersion);
       c.setSDKVersion(sdkVersion);
@@ -76,7 +76,7 @@ public class SampleApps {
   public static IOSCapabilities intlMountainsCap(Localizable l) {
     IOSCapabilities c = IOSCapabilities.iphone("InternationalMountains", "1.1");
     c.setLanguage(l.getName());
-    c.setCapability(IOSCapabilities.TIME_HACK, false);
+    c.setCapability(IOSCapabilities.TIME_HACK, true);
     if (sdkVersion != null) {
       System.out.println("SET SDK to " + sdkVersion);
       c.setSDKVersion(sdkVersion);
