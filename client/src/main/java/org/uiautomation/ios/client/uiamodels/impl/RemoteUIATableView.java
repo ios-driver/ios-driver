@@ -13,35 +13,13 @@
  */
 package org.uiautomation.ios.client.uiamodels.impl;
 
-import org.json.JSONObject;
-import org.uiautomation.ios.UIAModels.UIAElementArray;
-import org.uiautomation.ios.UIAModels.UIATableCell;
-import org.uiautomation.ios.UIAModels.UIATableGroup;
 import org.uiautomation.ios.UIAModels.UIATableView;
-import org.uiautomation.ios.communication.WebDriverLikeCommand;
 
-// TODO freynaud use findElements
 public class RemoteUIATableView extends RemoteUIAScrollView implements UIATableView {
 
   public RemoteUIATableView(RemoteUIADriver driver, String reference) {
     super(driver, reference);
   }
 
-
-
-  /*public UIAElementArray<UIATableGroup> getGroups() {
-    return (UIAElementArray<UIATableGroup>) getRemoteObject(WebDriverLikeCommand.TABLE_GROUPS,
-        new JSONObject());
-  }
-
-  public UIAElementArray<UIATableCell> getCells() {
-    return (UIAElementArray<UIATableCell>) getRemoteObject(WebDriverLikeCommand.TABLE_CELLS,
-        new JSONObject());
-  }
-
-  public UIAElementArray<UIATableCell> getVisibleCells() {
-    return (UIAElementArray<UIATableCell>) getRemoteObject(
-        WebDriverLikeCommand.TABLE_VISIBLE_CELLS, new JSONObject());
-  }*/
 
 }
