@@ -3,9 +3,9 @@ package org.uiautomation.ios.e2e.hybrid;
 import java.util.Set;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -24,27 +24,10 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 
 public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
 
-  @Test
-  public void finds2WindowsWhenThereIsAWebView() throws Exception {
 
-    IOSCapabilities safari = IOSCapabilities.ipad("Safari");
-    safari.setCapability(IOSCapabilities.TIME_HACK, false);
-    RemoteWebDriver driver = null;
-    try {
-      driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
-      Set<String> handles = driver.getWindowHandles();
-
-      Assert.assertEquals(handles.size(), 2);
-    } finally {
-      if (driver != null) {
-        driver.quit();
-      }
-    }
-
-  }
 
   @Test
-  public void canSwitchToTheWebViewAndFindByCSS() throws Exception {
+  public void canSwitchToWebView() throws Exception {
     IOSCapabilities safari = IOSCapabilities.iphone("UICatalog");
     safari.setCapability(IOSCapabilities.TIME_HACK, false);
 
@@ -54,6 +37,12 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
       Set<String> handles = driver.getWindowHandles();
       Assert.assertEquals(handles.size(), 1);
 
+      try {
+        driver.switchTo().window("Web");
+        Assert.fail("shouldn't work");
+      } catch (NoSuchWindowException e) {
+        // expected
+      }
       UIAElement el = driver.findElement(new AndCriteria(new TypeCriteria(UIATableCell.class), new NameCriteria("Web",
           MatchingStrategy.starts)));
       el.tap();
@@ -73,7 +62,7 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
   }
 
   @Test
-  public void html() throws Exception {
+  public void canSwitchToTheWebViewAndFindByCSS() throws Exception {
     IOSCapabilities safari = IOSCapabilities.iphone("UICatalog");
     safari.setCapability(IOSCapabilities.TIME_HACK, false);
 
