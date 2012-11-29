@@ -184,7 +184,6 @@ public class NewSessionTest extends BaseIOSDriverTest {
   public void supportAllInstalledSDKs() {
     RemoteUIADriver driver = null;
     List<String> sdks = ClassicCommands.getInstalledSDKs();
-    System.out.println(sdks);
     for (String sdk : sdks) {
       Float version = Float.parseFloat(sdk);
       if (version >= 5L) {
