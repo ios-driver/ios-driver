@@ -9,3 +9,4 @@
 - fix the inspector ratio, mouse over is off.
 - remove the dup exception from webdriver
 - throwing helpful messages when the rights in xcode haven't been changed.
+- find a solution for extra languages non iso
