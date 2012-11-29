@@ -224,7 +224,6 @@ public class FormHandlingTest extends BaseSeleniumTest {
   // end up where the tap was done.
   public void testSendingKeyboardEventsShouldAppendTextInInputs() {
     driver.get(pages.formPage);
-    System.out.println(pages.formPage);
     WebElement element = driver.findElement(By.id("working"));
     element.sendKeys("some");
     String value = element.getAttribute("value");

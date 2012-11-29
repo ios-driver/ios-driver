@@ -76,7 +76,7 @@ public class SampleApps {
   public static IOSCapabilities intlMountainsCap(Localizable l) {
     IOSCapabilities c = IOSCapabilities.iphone("InternationalMountains", "1.1");
     c.setLanguage(l.getName());
-    c.setCapability(IOSCapabilities.TIME_HACK, true);
+    c.setCapability(IOSCapabilities.TIME_HACK, false);
     if (sdkVersion != null) {
       System.out.println("SET SDK to " + sdkVersion);
       c.setSDKVersion(sdkVersion);

@@ -68,8 +68,7 @@ public class CriteriaTest extends BaseIOSDriverTest {
     UIAElement element = driver.findElement(c);
 
     UIARect position = element.getRect();
-    System.out.println("position : " + position);
-
+  
     // top left corner
     Criteria test = new LocationCriteria(position.getX(), position.getY());
     UIAElement res = driver.findElement(test);
