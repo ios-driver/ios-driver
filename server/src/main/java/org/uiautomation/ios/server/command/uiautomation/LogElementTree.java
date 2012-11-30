@@ -14,8 +14,9 @@
 package org.uiautomation.ios.server.command.uiautomation;
 
 import java.io.File;
+import java.util.List;
+import java.util.Map;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
@@ -27,12 +28,12 @@ import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 import org.uiautomation.ios.server.utils.FileTo64EncodedStringUtils;
 
+import com.google.common.collect.ImmutableMap;
+
 public class LogElementTree extends UIAScriptHandler {
 
-
   private static final String jsTemplate = "var root = UIAutomation.cache.get(':reference');"
-      + "var result = root.tree(:attachScreenshot);"
-      + "UIAutomation.createJSONResponse(':sessionId',0,result);";
+      + "var result = root.tree(:attachScreenshot);" + "UIAutomation.createJSONResponse(':sessionId',0,result);";
 
   public LogElementTree(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -53,12 +54,9 @@ public class LogElementTree extends UIAScriptHandler {
 
     String js;
     try {
-      js =
-          jsTemplate
-              .replace(":sessionId", request.getSession())
-              .replace(":attachScreenshot",
-                  "" + request.getPayload().getBoolean("attachScreenshot"))
-              .replace(":reference", reference);
+      js = jsTemplate.replace(":sessionId", request.getSession())
+          .replace(":attachScreenshot", "" + request.getPayload().getBoolean("attachScreenshot"))
+          .replace(":reference", reference);
     } catch (JSONException e) {
       throw new IOSAutomationException("wrong params", e);
     }
@@ -66,7 +64,6 @@ public class LogElementTree extends UIAScriptHandler {
     setJS(js);
 
   }
-
 
   class AddTranslationToLog extends PostHandleDecorator {
 
@@ -76,25 +73,23 @@ public class LogElementTree extends UIAScriptHandler {
 
     @Override
     public void decorate(Response response) {
-      JSONObject value = (JSONObject) response.getValue();
+      Map<String, Object> value = (Map<String, Object>) response.getValue();
       try {
-        JSONObject rootNode = value.getJSONObject("tree");
+        Map<String, Object> rootNode = (Map<String, Object>) value.get("tree");
         addTranslation(rootNode, getDriver().getSession(response.getSessionId()).getApplication());
       } catch (Exception e) {
         e.printStackTrace();
       }
 
-
     }
 
-    private void addTranslation(JSONObject node, IOSApplication aut) throws JSONException {
+    private void addTranslation(Map<String, Object> node, IOSApplication aut) throws JSONException {
 
-      node.put("l10n", aut.getTranslations(node.getString("name")));
-      JSONArray children = node.optJSONArray("children");
-
-      if (children != null && children.length() != 0) {
-        for (int i = 0; i < children.length(); i++) {
-          JSONObject child = children.getJSONObject(i);
+      node.put("l10n", aut.getTranslations((String) node.get("name")));
+      List<Map<String, Object>> children = (List<Map<String, Object>>) node.get("children");
+      System.out.println(children);
+      if (children != null && children.size() != 0) {
+        for (Map<String, Object> child : children) {
           addTranslation(child, aut);
         }
       }
@@ -110,41 +105,31 @@ public class LogElementTree extends UIAScriptHandler {
 
     @Override
     public void decorate(Response response) {
-      JSONObject value = (JSONObject) response.getValue();
+      Map<String, Object> value = (Map<String, Object>) response.getValue();
       boolean screenshot;
-      try {
-        screenshot = value.getBoolean("screenshot");
-      } catch (JSONException e1) {
-        screenshot = false;
-      }
+
+      screenshot = (Boolean) value.get("screenshot");
 
       if (screenshot) {
-        String path =
-            getDriver().getSession(response.getSessionId()).getOutputFolder() + "/Run 1/"
-                + TakeScreenshot.SCREEN_NAME + ".png";
+        String path = getDriver().getSession(response.getSessionId()).getOutputFolder() + "/Run 1/"
+            + TakeScreenshot.SCREEN_NAME + ".png";
         File source = new File(path);
         FileTo64EncodedStringUtils encoder = new FileTo64EncodedStringUtils(source);
         try {
           String content64 = encoder.encode();
-          JSONObject ss = new JSONObject();
-          ss.put("64encoded", content64);
-          value.put("screenshot", ss);
+          value.put("screenshot", ImmutableMap.of("64encoded", content64));
         } catch (Exception e) {
-          throw new IOSAutomationException("Error converting " + source.getAbsolutePath()
-              + " to a 64 encoded string " + e.getMessage(), e);
+          throw new IOSAutomationException("Error converting " + source.getAbsolutePath() + " to a 64 encoded string "
+              + e.getMessage(), e);
         } finally {
           source.delete();
         }
       } else {
-        try {
-          value.put("screenshot", JSONObject.NULL);
-        } catch (JSONException e) {
-          e.printStackTrace();
-        }
+        value.put("screenshot", null);
       }
     }
   }
-  
+
   @Override
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
