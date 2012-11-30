@@ -139,6 +139,7 @@ public class IOSApplication {
 
   }
 
+  // TODO freynaud return a Map
   public JSONObject getTranslations(String name) throws JSONException {
 
     JSONObject l10n = new JSONObject();
