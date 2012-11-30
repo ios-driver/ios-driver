@@ -13,17 +13,13 @@
  */
 package org.uiautomation.ios.server.command;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.remote.JsonToBeanConverter;
 import org.openqa.selenium.remote.Response;
 
 public class UIAScriptResponse {
   private final String rawResponse;
-  
+  private final JsonToBeanConverter convertor = new JsonToBeanConverter();
+
   public UIAScriptResponse(String rawResponse) {
     this.rawResponse = rawResponse;
   }
@@ -33,29 +29,7 @@ public class UIAScriptResponse {
   }
 
   public Response getResponse() {
-    Response response = new Response();
-    try {
-      JSONObject res = new JSONObject(rawResponse);
-      response.setSessionId(res.getString("sessionId"));
-      response.setStatus(res.getInt("status"));
-      response.setValue(cast(res.get("value")));
-      return response;
-    } catch (Exception e) {
-      throw new WebDriverException(e.getMessage(), e);
-    }
-  }
-
-  private Object cast(Object object) throws Exception {
-   if (object instanceof JSONArray){
-     JSONArray ar = (JSONArray)object;
-     List<Object> res = new ArrayList<Object>();
-     for (int i=0;i<ar.length();i++){
-       res.add(ar.get(i));
-     }
-     return res;
-   }else {
-     return object;
-   }
+    return convertor.convert(Response.class, rawResponse);
   }
 
   public String getRaw() {
