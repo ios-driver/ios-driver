@@ -14,18 +14,20 @@
 
 package org.uiautomation.ios.server.utils;
 
+import java.util.logging.Logger;
 
 public class DefaultCommandListener implements CommandOutputListener {
 
+  private static final Logger log = Logger.getLogger(DefaultCommandListener.class.getName());
+
   @Override
   public void stdout(String log) {
-    System.out.println(log);
+    this.log.info(log);
   }
 
   @Override
   public void stderr(String log) {
-    System.err.println(log);
+    this.log.warning(log);
   }
-
 
 }

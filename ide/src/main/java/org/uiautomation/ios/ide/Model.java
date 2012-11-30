@@ -16,6 +16,7 @@ package org.uiautomation.ios.ide;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.logging.Logger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,8 +24,11 @@ import org.uiautomation.ios.UIAModels.UIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.instruments.InstrumentsManager;
 
 public class Model {
+
+  private static final Logger log = Logger.getLogger(Model.class.getName());
 
   private RemoteUIADriver driver;
   private IOSApplication app;
@@ -63,7 +67,7 @@ public class Model {
     try {
       File f = new File(cache.optString("path"));
       while (!f.exists()) {
-        System.out.println("cannot find " + f + ".Last screenshot cannot be found.");
+        log.warning("cannot find " + f + ".Last screenshot cannot be found.");
         Thread.sleep(250);
       }
       InputStream is = new FileInputStream(f);

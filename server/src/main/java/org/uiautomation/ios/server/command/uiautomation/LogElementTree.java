@@ -87,7 +87,6 @@ public class LogElementTree extends UIAScriptHandler {
 
       node.put("l10n", aut.getTranslations((String) node.get("name")));
       List<Map<String, Object>> children = (List<Map<String, Object>>) node.get("children");
-      System.out.println(children);
       if (children != null && children.size() != 0) {
         for (Map<String, Object> child : children) {
           addTranslation(child, aut);

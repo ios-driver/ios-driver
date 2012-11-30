@@ -32,7 +32,6 @@ public class ServerSideL10NTest {
     ServerSideL10NFactory factory = create(Localizable.en);
     NameCriteria c = factory.nameCriteria("rootViewNavTitle");
     Assert.assertEquals(c.getValue(), "Mountains");
-    System.out.println(c.stringify().toString());
   }
 
   @Test
@@ -40,7 +39,6 @@ public class ServerSideL10NTest {
     ServerSideL10NFactory factory = create(Localizable.fr);
     NameCriteria c = factory.nameCriteria("rootViewNavTitle");
     Assert.assertEquals(c.getValue(), "Montagnes");
-    System.out.println(c.stringify().toString());
   }
 
   @Test

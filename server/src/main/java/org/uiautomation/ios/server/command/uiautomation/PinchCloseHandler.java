@@ -31,7 +31,6 @@ public class PinchCloseHandler extends UIAScriptHandler{
       super(driver, request);
       
       Object payload = request.getPayload();
-      System.out.println(payload);
       String js =  template
               .replace(":sessionId", request.getSession())
               .replace(":x1", "310")

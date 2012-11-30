@@ -23,11 +23,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import java.util.regex.PatternSyntaxException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
+import org.uiautomation.ios.server.instruments.InstrumentsManager;
 import org.uiautomation.ios.server.utils.PlistFileUtils;
 
 /**
@@ -43,6 +45,8 @@ public class LanguageDictionary {
   private final Localizable language;
   private final boolean legacyFormat;
   private final Map<String, String> content = new HashMap<String, String>();
+  private static final Logger log = Logger.getLogger(LanguageDictionary.class.getName());
+
 
   /**
    * Creates a new dictionary for the language specified. Will guess the format of the underlying
@@ -64,7 +68,7 @@ public class LanguageDictionary {
       this.legacyFormat = false;
       //TODO freynaud add all languages 
       //System.err.println(language+" not supported");
-      //throw new IOSAutomationException(language + " isn't recognized.");
+      log.warning(language + " isn't recognized.");
     }
   }
 
@@ -82,7 +86,7 @@ public class LanguageDictionary {
           List<ContentResult> rec = getPotentialMatches(s);
           if (!rec.isEmpty()) {
             // TODO freynaud an argument can be l10ned too....
-            // System.out.println("recursion is found..." + getPotentialMatches(s));
+           log.warning("recursion is found..." + getPotentialMatches(s));
           }
         }
         res.add(r);

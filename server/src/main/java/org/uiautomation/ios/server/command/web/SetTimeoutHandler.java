@@ -46,7 +46,6 @@ public class SetTimeoutHandler extends BaseWebCommandHandler {
     }else {
       throw new UnsupportedCommandException("timeout "+payload+" NI");
     }
-    System.out.println(payload);
     Response res = new Response();
     res.setSessionId(getSession().getSessionId());
     res.setStatus(0);

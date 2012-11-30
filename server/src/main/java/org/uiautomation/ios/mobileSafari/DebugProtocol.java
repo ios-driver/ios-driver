@@ -20,12 +20,16 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 import org.json.JSONObject;
 import org.uiautomation.ios.server.ServerSideSession;
+import org.uiautomation.ios.server.instruments.InstrumentsManager;
 import org.uiautomation.ios.webInspector.DOM.RemoteExceptionException;
 
 public class DebugProtocol {
+
+  private static final Logger log = Logger.getLogger(DebugProtocol.class.getName());
 
   private Socket socket;
   private ByteArrayOutputStream buf = new ByteArrayOutputStream();
@@ -118,16 +122,12 @@ public class DebugProtocol {
     } else if (response.optBoolean("wasThrown", false)) {
       throw new Exception("remote JS exception " + response.toString(2));
     } else {
-      perf(System.currentTimeMillis()+ "\t\t"+(System.currentTimeMillis() - start) + "ms\t" + command.getString("method") + " " + command);
+      log.fine(System.currentTimeMillis()+ "\t\t"+(System.currentTimeMillis() - start) + "ms\t" + command.getString("method") + " " + command);
       return response.getJSONObject("result");
     }
   }
 
-  private void perf(String msg) {
-    if (displayPerformance) {
-      System.out.println(msg);
-    }
-  }
+  
 
   /**
    * Some commands do not follow the Remote Debugging protocol. For instance the

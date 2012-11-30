@@ -15,6 +15,7 @@ package org.uiautomation.ios.mobileSafari;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,6 +34,8 @@ import org.uiautomation.ios.webInspector.DOM.RemoteObjectArray;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 
 public class WebInspector {
+
+  private static final Logger log = Logger.getLogger(WebInspector.class.getName());
 
   private final ServerSideSession session;
   private final DebugProtocol protocol;
@@ -60,18 +63,8 @@ public class WebInspector {
       try {
         element = retrieveDocument();
         return element;
-//        System.out.println("B1 "+(System.currentTimeMillis()-start)+"ms.");
-//        String state = element.readyState();
-//        System.out.println("B2 "+(System.currentTimeMillis()-start)+"ms.");
-//        if (/*element.getNodeId().exist() &&*/ ("complete".equals(state) || "loading".equals(state))) {
-//          if (!"complete".equals(state)) {
-//            System.err.println("returning a document not yet completed :" + state);
-//          }
-//          break;
-//        }
       } catch (Exception e) {
-        System.err.println("Workaround in DOMContext, the given document is corrupted, nodeId ");
-        // ignore.
+        log.warning("Workaround in DOMContext, the given document is corrupted, nodeId ");
       }
     }
 //    return element;
@@ -89,9 +82,7 @@ public class WebInspector {
 
     "while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {" + "    _x += el.offsetLeft - el.scrollLeft;"
         + "    _y += el.offsetTop - el.scrollTop;" + "    el = el.offsetParent;" + "};" +
-        // "alert('w: '+ this.offsetWidth);"+
         "var res = { top: _y, left: _x , width: this.offsetWidth , height: this.offsetHeight };" +
-        // "alert(res.top +','+res.left);" +
         "return res;" + "})";
 
     JSONObject cmd = new JSONObject();
@@ -191,24 +182,6 @@ public class WebInspector {
   // TODO freynaud fix the element swapping.
   public Object executeScript(String script, JSONArray args) throws Exception {
     
-    //String f = "(function() { var f=" + Atoms.findByXpath() + "('/a',document);})()";
-    //System.out.println(f);
-//    JSONObject cmd = new JSONObject();
-//
-//    cmd.put("method", "Runtime.evaluate");
-//
-//    JSONArray args = new JSONArray();
-//   
-//    cmd.put("params",
-//        new JSONObject()
-//            .put("expression", script)
-//            .put("returnByValue", false));
-//
-//    JSONObject response = protocol.sendCommand(cmd);
-//   
-//    RemoteObject ro = cast(response);
-//
-//    return ro;
     RemoteWebElement document = getDocument();
     RemoteWebElement window = session.getContext().getDOMContext().getWindow();
     JSONObject cmd = new JSONObject();
@@ -302,13 +275,8 @@ public class WebInspector {
     return cast(response);
   }
   
-  public static void main(String[] args) {
-    System.out.println(Atoms.findsByXpath());
-  }
   public RemoteWebElement findElementByXpath(String xpath) throws Exception {
     String f = "var f="+Atoms.findByXpath()+";f('"+xpath+"',document);";
-    //String f = "(function() { var f=" + Atoms.findByXpath() + "('/a',document);})()";
-    //System.out.println(f);
     JSONObject cmd = new JSONObject();
 
     cmd.put("method", "Runtime.evaluate");

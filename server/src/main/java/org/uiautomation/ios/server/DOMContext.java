@@ -99,7 +99,6 @@ public class DOMContext implements EventListener {
 
     // setting the main document for the first time
     if (iframe == null && document != null) {
-      // System.out.println("BACKUP DOCUMENT "+document.getNodeId().getId());
       mainDocument = document;
       mainWindow = window;
     }
@@ -116,7 +115,6 @@ public class DOMContext implements EventListener {
 
   @Override
   public void onPageLoad() {
-    // System.out.println(System.currentTimeMillis()+" recieved page load event");
     pageLoaded = true;
     reset();
   }
@@ -188,8 +186,6 @@ public class DOMContext implements EventListener {
 
   private void assignNewFrameFromEvent(ChildIframeInserted newFrameEvent) throws Exception {
     RemoteWebElement frame = new RemoteWebElement(newFrameEvent.getNode(), session);
-    // System.out.println("should be a (i)frame, it's :" +
-    // node.getString("nodeName"));
     RemoteWebElement document = new RemoteWebElement(newFrameEvent.getContentDocument(), session);
     RemoteWebElement window = frame.getContentWindow();
     setCurrentFrame(frame, document, window);

@@ -27,6 +27,7 @@ public class FindElementTest extends BaseIOSDriverTest {
 
   @BeforeClass
   public void startDriver() {
+    long start = System.currentTimeMillis();
     driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
   }
 

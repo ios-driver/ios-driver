@@ -15,12 +15,15 @@ package org.uiautomation.ios;
 
 import java.io.File;
 import java.net.URL;
+import java.util.logging.Logger;
 
 import org.uiautomation.ios.server.application.Localizable;
+import org.uiautomation.ios.server.instruments.InstrumentsManager;
 
 
 public class SampleApps {
 
+  private static final Logger log = Logger.getLogger(SampleApps.class.getName());
 
   private static final String uiCatalog = "/sampleApps/UICatalog.app";
   private static final String uiCatalogiPad = "/sampleApps/UICatalogiPad.app";
@@ -58,7 +61,7 @@ public class SampleApps {
     IOSCapabilities c = IOSCapabilities.iphone("UICatalog", "2.10");
     c.setCapability(IOSCapabilities.TIME_HACK, false);
     if (sdkVersion != null) {
-      System.out.println("SET SDK to " + sdkVersion);
+      log.info("SET SDK to " + sdkVersion);
       c.setSDKVersion(sdkVersion);
     }
     return c;
@@ -67,7 +70,7 @@ public class SampleApps {
     IOSCapabilities c = IOSCapabilities.ipad("UICatalog");
     c.setCapability(IOSCapabilities.TIME_HACK, false);
     if (sdkVersion != null) {
-      System.out.println("SET SDK to " + sdkVersion);
+      log.info("SET SDK to " + sdkVersion);
       c.setSDKVersion(sdkVersion);
     }
     return c;
@@ -78,7 +81,7 @@ public class SampleApps {
     c.setLanguage(l.getName());
     c.setCapability(IOSCapabilities.TIME_HACK, false);
     if (sdkVersion != null) {
-      System.out.println("SET SDK to " + sdkVersion);
+      log.info("SET SDK to " + sdkVersion);
       c.setSDKVersion(sdkVersion);
     }
     return c;

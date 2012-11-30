@@ -17,11 +17,17 @@ package org.uiautomation.ios.server.utils.hack;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
+import org.apache.commons.logging.Log;
 import org.uiautomation.ios.exceptions.IOSAutomationException;
+import org.uiautomation.ios.server.instruments.InstrumentsManager;
 
 
 public class TimeSpeeder implements HorribleHack {
+  
+  private static final Logger log = Logger.getLogger(TimeSpeeder.class.getName());
+
   private final static TimeSpeeder INSTANCE = new TimeSpeeder();
   private Thread t;
   private volatile boolean active = false;
@@ -78,7 +84,7 @@ public class TimeSpeeder implements HorribleHack {
   }
 
   private void speedTime() throws Exception {
-    System.out.println("Speeding time");
+    log.info("Speeding time");
     long time = System.currentTimeMillis();
     int i = 0;
     int delta = 1000;

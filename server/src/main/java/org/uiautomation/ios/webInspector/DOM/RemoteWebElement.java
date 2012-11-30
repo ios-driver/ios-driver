@@ -453,10 +453,7 @@ public class RemoteWebElement {
         new JSONObject().put("objectId", getRemoteObject().getId())
             .put("functionDeclaration", "(function(arg) { var state = document.readyState; return state;})")
             .put("arguments", args).put("returnByValue", true));
-    System.out.println("ready state ,new JSONObject().put(objectId, getRemoteObject().getId())"
-        + (System.currentTimeMillis() - start) + "ms");
     JSONObject response = protocol.sendCommand(cmd);
-    System.out.println("ready state execution " + (System.currentTimeMillis() - start) + "ms");
     return inspector.cast(response);
   }
 
@@ -590,10 +587,7 @@ public class RemoteWebElement {
     return res;
   }
 
-  public static void main(String[] args) {
-    System.out.println(Atoms.findByXpath());
-  }
-
+  
   public void setValueAtoms(String value) throws Exception {
     String f = "(function(element,value) { var result = " + Atoms.type() + "(element,value);" + "return result;})";
     JSONObject cmd = new JSONObject();
@@ -608,8 +602,7 @@ public class RemoteWebElement {
         new JSONObject().put("objectId", getRemoteObject().getId()).put("functionDeclaration", f)
             .put("arguments", args).put("returnByValue", false));
 
-    JSONObject response = inspector.getProtocol().sendCommand(cmd);
-    System.out.println(response);
+     inspector.getProtocol().sendCommand(cmd);
   }
 
   public void setValueNative(String value) throws Exception {
