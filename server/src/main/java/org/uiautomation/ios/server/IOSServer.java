@@ -22,7 +22,6 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.grid.RegistrationRequest;
 import org.uiautomation.ios.server.servlet.IOSServlet;
@@ -51,7 +50,7 @@ public class IOSServer {
     }
   }
 
-  public IOSServer(IOSServerConfiguration options) throws IOSAutomationSetupException {
+  public IOSServer(IOSServerConfiguration options)  {
     init(options);
 
   }
@@ -70,7 +69,7 @@ public class IOSServer {
     init(options);
   }
 
-  private void init(IOSServerConfiguration options) throws IOSAutomationSetupException {
+  private void init(IOSServerConfiguration options)  {
     this.options = options;
     this.port = options.getPort();
     server = new Server(new InetSocketAddress("0.0.0.0", options.getPort()));

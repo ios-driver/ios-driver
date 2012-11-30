@@ -13,26 +13,18 @@
  */
 package org.uiautomation.ios.UIAModels;
 
-import org.uiautomation.ios.exceptions.NoAlertOpenError;
-
-
+import org.openqa.selenium.NoAlertPresentException;
 
 public interface UIATarget {
 
   // TODO freynaud UIAPoint here.
   public void tap(int x, int y);
 
-
   public UIARect getRect();
-
-
-  
 
   public UIAApplication getFrontMostApp();
 
- 
-
   public void setDeviceOrientation(Orientation o);
 
-  public UIAAlert getAlert() throws NoAlertOpenError;
+  public UIAAlert getAlert() throws NoAlertPresentException;
 }

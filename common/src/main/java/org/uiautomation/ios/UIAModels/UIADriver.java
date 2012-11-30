@@ -18,43 +18,38 @@ import java.util.List;
 
 import org.json.JSONObject;
 import org.openqa.selenium.NoAlertPresentException;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.configuration.DriverConfiguration;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
-import org.uiautomation.ios.exceptions.NoSuchElementException;
 
+public interface UIADriver extends DriverConfiguration {
 
-public interface UIADriver extends DriverConfiguration{
-
- 
-
-  //public UIATarget getLocalTarget();
+  // public UIATarget getLocalTarget();
 
   public IOSCapabilities getCapabilities() throws Exception;
 
-  public JSONObject logElementTree(File screenshot, boolean translation)
-      throws IOSAutomationException;
+  public JSONObject logElementTree(File screenshot, boolean translation) throws WebDriverException;
 
   public void quit();
-  
+
   public void pinchClose(int x1, int y1, int x2, int y2, int duration);
+
   public UIAAlert getAlert() throws NoAlertPresentException;
- 
 
-  //public void setTimeout(String type, int timeoutInSeconds);
+  // public void setTimeout(String type, int timeoutInSeconds);
 
-  //public int getTimeout(String type);
+  // public int getTimeout(String type);
 
   public <T extends UIAElement> T findElement(Criteria c) throws NoSuchElementException;
 
   public List<UIAElement> findElements(Criteria c);
 
-  public void tap(int x,int y);
+  public void tap(int x, int y);
 
   void setDeviceOrientation(Orientation o);
 
-  //public Set<String> getWindowHandles();
-
+  // public Set<String> getWindowHandles();
 
 }

@@ -19,7 +19,7 @@ import java.io.InputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
+import org.openqa.selenium.WebDriverException;
 
 public class ResourceView implements View {
 
@@ -37,11 +37,9 @@ public class ResourceView implements View {
       IOUtils.copy(is, response.getOutputStream());
       IOUtils.closeQuietly(is);
     } catch (IOException e) {
-      throw new IOSAutomationException("Bug.", e);
+      throw new WebDriverException("Bug.", e);
     }
 
   }
-
-
 
 }

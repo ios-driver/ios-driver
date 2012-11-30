@@ -17,9 +17,9 @@ import java.io.File;
 import java.util.List;
 
 import org.json.JSONObject;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
-import org.uiautomation.ios.exceptions.NoSuchElementException;
 
 
 public interface UIAElement extends WebElement{

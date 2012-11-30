@@ -17,12 +17,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.uiautomation.ios.exceptions.IOSAutomationException;
-import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
+import org.openqa.selenium.WebDriverException;
 
 public class ClassicCommands {
 
-  public static List<String> psgrep(String processName) throws IOSAutomationSetupException {
+  public static List<String> psgrep(String processName) {
     List<String> s = new ArrayList<String>();
     s.add("ps");
     s.add("aux");
@@ -34,14 +33,11 @@ public class ClassicCommands {
     return grep.getMatching();
   }
 
-
-  public static boolean isRunning(String processName) throws IOSAutomationSetupException {
+  public static boolean isRunning(String processName) {
     return psgrep(processName).size() > 0;
   }
 
-
-
-  public static void killall(String processName) throws IOSAutomationSetupException {
+  public static void killall(String processName) {
 
     if (isRunning(processName)) {
       List<String> s = new ArrayList<String>();
@@ -52,10 +48,7 @@ public class ClassicCommands {
       com.executeAndWait();
     }
 
-
   }
-
-
 
   public static File getXCodeInstall() {
     List<String> cmd = new ArrayList<String>();
@@ -67,7 +60,7 @@ public class ClassicCommands {
     c.executeAndWait();
 
     if (c.getStdOut().size() != 1) {
-      throw new IOSAutomationException("cannot find XCode location." + c.getStdOut());
+      throw new WebDriverException("cannot find XCode location." + c.getStdOut());
     }
 
     String path = c.getStdOut().get(0);
@@ -78,35 +71,32 @@ public class ClassicCommands {
     return new File(res);
 
   }
-  
-  
-  public static File getAutomationTemplate(){
+
+  public static File getAutomationTemplate() {
     List<String> cmd = new ArrayList<String>();
     cmd.add("instruments");
     cmd.add("-s");
     Command c = new Command(cmd, false);
- 
+
     Grep grep = new Grep("Automation.tracetemplate");
     c.registerListener(grep);
     c.executeAndWait();
-    List<String> res =  grep.getMatching();
-    if (res.size()==0){
-      throw new IOSAutomationException("expected 1 result for automation on instruments -s , got "+res);
+    List<String> res = grep.getMatching();
+    if (res.size() == 0) {
+      throw new WebDriverException("expected 1 result for automation on instruments -s , got " + res);
     }
     String path = res.get(0);
-    path = path.replaceFirst(",","");
-    path = path.replaceAll("\"","");
+    path = path.replaceFirst(",", "");
+    path = path.replaceAll("\"", "");
     path = path.trim();
     File f = new File(path);
-    if (!f.exists()){
-      throw new IOSAutomationException(f +"isn't a valid template.");
+    if (!f.exists()) {
+      throw new WebDriverException(f + "isn't a valid template.");
     }
     return f;
   }
 
-
-
-  public static List<String> getInstalledSDKs() throws IOSAutomationSetupException {
+  public static List<String> getInstalledSDKs() {
     List<String> c = new ArrayList<String>();
     c.add("xcodebuild");
     c.add("-showsdks");
@@ -123,9 +113,7 @@ public class ClassicCommands {
     return sdks.get(sdks.size() - 1);
   }
 
-
 }
-
 
 class ShowSDKsPasrer implements CommandOutputListener {
 
@@ -155,19 +143,17 @@ class ShowSDKsPasrer implements CommandOutputListener {
 
   public List<String> getSDKs() {
     if (!ok) {
-      throw new IOSAutomationException("there was an error.stderr is not empty");
+      throw new WebDriverException("there was an error.stderr is not empty");
     }
     return sdks;
   }
 
 }
 
-
 class Grep implements CommandOutputListener {
 
   private final String pattern;
   private final List<String> matching = new ArrayList<String>();
-
 
   public Grep(String pattern) {
     this.pattern = pattern;

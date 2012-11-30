@@ -5,11 +5,11 @@ import static org.uiautomation.ios.server.application.Localizable.fr;
 
 import java.util.List;
 
+import org.openqa.selenium.WebDriverException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.SampleApps;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 
 public class IOSL10NTest {
 
@@ -21,8 +21,6 @@ public class IOSL10NTest {
     app = new IOSApplication(SampleApps.getIntlMountainsFile());
     app.setLanguage("en");
   }
-
-
 
   @Test
   public void noVariable() {
@@ -41,7 +39,7 @@ public class IOSL10NTest {
   }
 
   @Test
-  public void matchesPatternStart() throws IOSAutomationException {
+  public void matchesPatternStart() {
     // %@ items found in %@
     String content = "42 feet";
     List<ContentResult> results = app.getDictionary(en).getPotentialMatches(content);
@@ -56,14 +54,14 @@ public class IOSL10NTest {
   }
 
   @Test
-  public void notFound() throws IOSAutomationException {
+  public void notFound() {
     String content = "ferrets are great pets";
     List<ContentResult> results = app.getDictionary(en).getPotentialMatches(content);
     Assert.assertEquals(results.size(), 0);
   }
 
-  @Test(expectedExceptions = {IOSAutomationException.class})
-  public void languageNotFound() throws IOSAutomationException {
+  @Test(expectedExceptions = { WebDriverException.class })
+  public void languageNotFound() {
     String content = "42 feet";
     List<ContentResult> results = app.getDictionary(en).getPotentialMatches(content);
     Assert.assertEquals(results.size(), 1);
@@ -72,7 +70,7 @@ public class IOSL10NTest {
   }
 
   @Test
-  public void complex() throws IOSAutomationException {
+  public void complex() {
     // %@ items found in %@
     String content = "Mountain 1 was first climbed on 29 May 1953 and has a height of 8,848 meters";
     List<ContentResult> results = app.getDictionary(en).getPotentialMatches(content);
@@ -82,7 +80,5 @@ public class IOSL10NTest {
     // returns
     // "Bien que Mountain 1 de haut, 29 May 1953 aient été montés la première fois 8,848 meters."
   }
-
-
 
 }

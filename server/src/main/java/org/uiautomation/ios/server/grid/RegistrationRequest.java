@@ -29,8 +29,8 @@ import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 
 public class RegistrationRequest {
 
@@ -75,7 +75,7 @@ public class RegistrationRequest {
         throw new RuntimeException("Error sending the registration request.");
       }
     } catch (Exception e) {
-      throw new IOSAutomationException("Error sending the registration request.", e);
+      throw new WebDriverException("Error sending the registration request.", e);
     }
 
   }

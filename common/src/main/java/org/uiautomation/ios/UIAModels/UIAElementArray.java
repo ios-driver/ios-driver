@@ -13,8 +13,8 @@
  */
 package org.uiautomation.ios.UIAModels;
 
+import org.openqa.selenium.NoSuchElementException;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
-import org.uiautomation.ios.exceptions.NoSuchElementException;
 
 // TODO freynaud keep UIAElementArray at all ?
 public interface UIAElementArray<T extends UIAElement> extends Iterable<T> {

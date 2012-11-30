@@ -15,12 +15,11 @@ package org.uiautomation.ios.ide.controllers;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.ide.views.View;
 
 public interface IDECommandController {
 
   public boolean canHandle(String pathInfo);
 
-  public View handle(HttpServletRequest req) throws IOSAutomationException, Exception;
+  public View handle(HttpServletRequest req) throws  Exception;
 }

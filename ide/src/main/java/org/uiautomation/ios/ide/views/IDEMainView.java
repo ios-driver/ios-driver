@@ -24,10 +24,10 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.communication.Helper;
 import org.uiautomation.ios.communication.HttpClientFactory;
 import org.uiautomation.ios.communication.IOSDevice;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.ide.model.IDESessionModel;
 
 public class IDEMainView implements View {
@@ -132,7 +132,7 @@ public class IDEMainView implements View {
 
       response.getWriter().print(b.toString());
     } catch (Exception e) {
-      throw new IOSAutomationException(e);
+      throw new WebDriverException(e);
     }
 
   }

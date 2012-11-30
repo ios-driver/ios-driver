@@ -3,11 +3,11 @@ package org.uiautomation.ios.server.application;
 import java.io.IOException;
 
 import org.json.JSONException;
+import org.openqa.selenium.WebDriverException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
-import org.uiautomation.ios.exceptions.InvalidCriteriaException;
 
 public class ServerSideL10NTest {
 
@@ -20,7 +20,7 @@ public class ServerSideL10NTest {
     return factory;
   }
 
-  @Test(expectedExceptions = InvalidCriteriaException.class)
+  @Test(expectedExceptions = WebDriverException.class)
   public void throwsProperly() throws JSONException {
     ServerSideL10NFactory factory = create(Localizable.en);
     factory.nameCriteria("I don't exist");

@@ -19,9 +19,9 @@ import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
@@ -58,7 +58,7 @@ public class LogElementTree extends UIAScriptHandler {
           .replace(":attachScreenshot", "" + request.getPayload().getBoolean("attachScreenshot"))
           .replace(":reference", reference);
     } catch (JSONException e) {
-      throw new IOSAutomationException("wrong params", e);
+      throw new WebDriverException("wrong params", e);
     }
 
     setJS(js);
@@ -118,7 +118,7 @@ public class LogElementTree extends UIAScriptHandler {
           String content64 = encoder.encode();
           value.put("screenshot", ImmutableMap.of("64encoded", content64));
         } catch (Exception e) {
-          throw new IOSAutomationException("Error converting " + source.getAbsolutePath() + " to a 64 encoded string "
+          throw new WebDriverException("Error converting " + source.getAbsolutePath() + " to a 64 encoded string "
               + e.getMessage(), e);
         } finally {
           source.delete();

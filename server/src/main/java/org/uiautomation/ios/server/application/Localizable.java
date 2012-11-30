@@ -14,7 +14,8 @@
 
 package org.uiautomation.ios.server.application;
 
-import org.uiautomation.ios.exceptions.IOSAutomationException;
+import org.openqa.selenium.WebDriverException;
+
 
 /**
  * 
@@ -46,23 +47,23 @@ public enum Localizable {
     return legacy;
   }
 
-  public static Localizable createFromLegacyName(String appleMapping) throws IOSAutomationException {
+  public static Localizable createFromLegacyName(String appleMapping) {
     for (Localizable l10n : Localizable.values()) {
       if (l10n.legacy.equals(appleMapping)) {
         return l10n;
       }
     }
-    throw new IOSAutomationException("Cannot find mapping for " + appleMapping);
+    throw new WebDriverException("Cannot find mapping for " + appleMapping);
   }
 
-  public static Localizable createFromNewName(String name) throws IOSAutomationException {
+  public static Localizable createFromNewName(String name) throws WebDriverException {
     for (Localizable l10n : Localizable.values()) {
       if (l10n.newFormat.equals(name) || l10n.toString().equals(name)) {
         return l10n;
       }
     }
 
-    throw new IOSAutomationException("Cannot find mapping for " + name);
+    throw new WebDriverException("Cannot find mapping for " + name);
 
   }
 
@@ -72,7 +73,7 @@ public enum Localizable {
     } else if (Localizable.isNewName(oldOrNewFormat)) {
       return Localizable.createFromNewName(oldOrNewFormat);
     } else {
-      throw new IOSAutomationException(oldOrNewFormat + " isn't recognized.");
+      throw new WebDriverException(oldOrNewFormat + " isn't recognized.");
     }
   }
 

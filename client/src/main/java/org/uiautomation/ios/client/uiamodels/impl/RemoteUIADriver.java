@@ -35,6 +35,7 @@ import org.json.JSONObject;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Keyboard;
 import org.openqa.selenium.NoAlertPresentException;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriverException;
@@ -59,8 +60,6 @@ import org.uiautomation.ios.communication.HttpClientFactory;
 import org.uiautomation.ios.communication.Path;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
-import org.uiautomation.ios.exceptions.NoSuchElementException;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
@@ -135,15 +134,10 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, Takes
       this.requestedCapabilities = cap.getRawCapabilities();
     }
 
-    try {
-      port = url.getPort();
-      host = url.getHost();
-      configuration = new RemoteDriverConfiguration(this);
-    } catch (IOSAutomationException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new IOSAutomationException(e);
-    }
+    port = url.getPort();
+    host = url.getHost();
+    configuration = new RemoteDriverConfiguration(this);
+
   }
 
   /**
@@ -212,7 +206,7 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, Takes
   }
 
   @Override
-  public JSONObject logElementTree(File screenshot, boolean translation) throws IOSAutomationException {
+  public JSONObject logElementTree(File screenshot, boolean translation) throws WebDriverException {
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TREE_ROOT,
         ImmutableMap.of("attachScreenshot", screenshot != null, "translation", translation));
     JSONObject log = execute(request);
@@ -349,7 +343,7 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, Takes
   @Override
   public Set<String> getWindowHandles() {
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.WINDOW_HANDLES);
-    List<String> all =  execute(request);
+    List<String> all = execute(request);
     Set<String> res = new HashSet<String>();
     res.addAll(all);
     return res;

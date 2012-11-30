@@ -20,11 +20,10 @@ import java.util.logging.Logger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.UIAModels.UIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.application.IOSApplication;
-import org.uiautomation.ios.server.instruments.InstrumentsManager;
 
 public class Model {
 
@@ -35,15 +34,13 @@ public class Model {
 
   private JSONObject cache;
 
-
-
   public RemoteUIADriver getDriver() {
     return driver;
   }
 
-  public void setDriver(RemoteUIADriver driver) throws IOSAutomationException {
+  public void setDriver(RemoteUIADriver driver) {
     if (this.driver != null) {
-      throw new IOSAutomationException("driver already instanciated.");
+      throw new WebDriverException("driver already instanciated.");
     }
     this.driver = driver;
   }
@@ -57,13 +54,12 @@ public class Model {
     return res;
   }
 
-
-  public void refresh() throws IOSAutomationException {
+  public void refresh() {
 
     cache = driver.logElementTree(null, false);
   }
 
-  public InputStream getLastScreenshotInputStream() throws IOSAutomationException {
+  public InputStream getLastScreenshotInputStream() {
     try {
       File f = new File(cache.optString("path"));
       while (!f.exists()) {
@@ -73,16 +69,15 @@ public class Model {
       InputStream is = new FileInputStream(f);
       return is;
     } catch (Exception e) {
-      throw new IOSAutomationException(e);
+      throw new WebDriverException(e);
     }
-
 
   }
 
-  public void stop() throws IOSAutomationException {
+  public void stop() {
     UIADriver d = getDriver();
     if (d == null) {
-      throw new IOSAutomationException("driver not active.");
+      throw new WebDriverException("driver not active.");
     } else {
       driver.quit();
       driver = null;
@@ -108,6 +103,5 @@ public class Model {
     this.app = app;
 
   }
-
 
 }

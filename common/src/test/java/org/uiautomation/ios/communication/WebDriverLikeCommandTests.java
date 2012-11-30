@@ -1,9 +1,8 @@
 package org.uiautomation.ios.communication;
 
+import org.openqa.selenium.WebDriverException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.uiautomation.ios.communication.WebDriverLikeCommand;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 
 
 
@@ -35,14 +34,14 @@ public class WebDriverLikeCommandTests {
   
  
   
-  @Test(expectedExceptions=IOSAutomationException.class)
+  @Test(expectedExceptions=WebDriverException.class)
   public void localTargetNeg1(){
     String method = "POST";
     String path = "/session/ab-258/localTarget";
     Assert.assertEquals(WebDriverLikeCommand.getCommand(method, path), WebDriverLikeCommand.LOCAL_TARGET);
   }
   
-  @Test(expectedExceptions=IOSAutomationException.class)
+  @Test(expectedExceptions=WebDriverException.class)
   public void localTargetNeg2(){
     String method = "GET";
     String path = "/session/ab-258/localTarget/ferret";

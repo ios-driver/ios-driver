@@ -13,7 +13,7 @@
  */
 package org.uiautomation.ios.UIAModels.predicate;
 
-import org.uiautomation.ios.exceptions.InvalidCriteriaException;
+import org.openqa.selenium.InvalidSelectorException;
 
 public enum CompositionType {
   AND, OR, NOT;
@@ -28,7 +28,7 @@ public enum CompositionType {
     try {
       return (Class<? extends ComposedCriteria>) Class.forName(clazz);
     } catch (ClassNotFoundException e) {
-      throw new InvalidCriteriaException(clazz + " isn't a valid class.", e);
+      throw new InvalidSelectorException(clazz + " isn't a valid class.", e);
     }
   }
 }

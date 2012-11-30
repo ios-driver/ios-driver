@@ -15,12 +15,13 @@ package org.uiautomation.ios.server.command.uiautomation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.InvalidSelectorException;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.predicate.AbstractCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.ServerSideL10NDecorator;
@@ -57,7 +58,7 @@ public class FindElementsRoot extends UIAScriptHandler {
           .replace(":reference", reference).replace(":criteria", decorated.stringify().toString());
       setJS(js);
     } catch (Exception e) {
-      throw new IOSAutomationException("error parsing the payload", e);
+      throw new WebDriverException("error parsing the payload", e);
     }
   }
 
@@ -87,7 +88,7 @@ public class FindElementsRoot extends UIAScriptHandler {
         throw new RuntimeException("NI :" + payload);
       }
     } else {
-      throw new IOSAutomationException("wrong format for the findElement command " + payload);
+      throw new WebDriverException("wrong format for the findElement command " + payload);
     }
 
   }

@@ -15,6 +15,7 @@ package org.uiautomation.ios.server.command.web;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
@@ -25,7 +26,6 @@ import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.UIAModels.predicate.ValueCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAKeyboard;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 
@@ -122,7 +122,7 @@ public class GetHandler extends BaseWebCommandHandler {
       getSession().getWebInspector().get(url);
 
     } catch (Exception e) {
-      throw new IOSAutomationException("cannot navigate to URL " + url + ", error " + e.getMessage());
+      throw new WebDriverException("cannot navigate to URL " + url + ", error " + e.getMessage());
     }
   }
 

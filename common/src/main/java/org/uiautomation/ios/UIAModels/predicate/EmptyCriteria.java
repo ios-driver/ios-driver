@@ -14,7 +14,7 @@
 package org.uiautomation.ios.UIAModels.predicate;
 
 import org.json.JSONObject;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
+import org.openqa.selenium.WebDriverException;
 
 /**
  * matches all
@@ -29,7 +29,7 @@ public class EmptyCriteria extends DecorableCriteria {
 
   @Override
   public void addDecorator(CriteriaDecorator decorator) {
-    throw new IOSAutomationException("NI");
+    throw new WebDriverException("NI");
 
   }
 

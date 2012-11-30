@@ -28,8 +28,7 @@ import java.util.regex.PatternSyntaxException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
-import org.uiautomation.ios.server.instruments.InstrumentsManager;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.server.utils.PlistFileUtils;
 
 /**
@@ -53,9 +52,9 @@ public class LanguageDictionary {
    * project structure, legacy ( with verbose name) or new.
    * 
    * @param language
-   * @throws IOSAutomationException if the language isn't recognized.
+   * @throws WebDriverException if the language isn't recognized.
    */
-  public LanguageDictionary(String language) throws IOSAutomationException {
+  public LanguageDictionary(String language) throws WebDriverException {
     if (Localizable.isLegacyName(language)) {
       this.language = Localizable.createFromLegacyName(language);
       this.legacyFormat = true;
@@ -72,7 +71,7 @@ public class LanguageDictionary {
     }
   }
 
-  public List<ContentResult> getPotentialMatches(String string) throws IOSAutomationException {
+  public List<ContentResult> getPotentialMatches(String string) throws WebDriverException {
 
     List<ContentResult> res = new ArrayList<ContentResult>();
     for (String key : content.keySet()) {
@@ -146,9 +145,9 @@ public class LanguageDictionary {
    * 
    * @param aut the application under test. /A/B/C/xxx.app
    * @return the list of the folders hosting the l10ned files.
-   * @throws IOSAutomationException
+   * @throws WebDriverException
    */
-  public static List<File> getL10NFiles(File aut) throws IOSAutomationException {
+  public static List<File> getL10NFiles(File aut)  {
     List<File> res = new ArrayList<File>();
     File[] files = aut.listFiles(new FileFilter() {
 

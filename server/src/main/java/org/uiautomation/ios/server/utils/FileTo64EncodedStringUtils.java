@@ -21,7 +21,7 @@ import java.io.IOException;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
+import org.openqa.selenium.WebDriverException;
 
 public class FileTo64EncodedStringUtils {
 
@@ -32,7 +32,7 @@ public class FileTo64EncodedStringUtils {
     try {
       waitForFileToAppearOnDisk();
     } catch (InterruptedException e) {
-      throw new IOSAutomationException(
+      throw new WebDriverException(
           "Interrupted waiting for the screenshot to be written on disk.", e);
     }
   }
@@ -44,7 +44,7 @@ public class FileTo64EncodedStringUtils {
       Thread.sleep(250);
       cpt++;
       if (cpt > 5 * 4) {
-        throw new IOSAutomationException("timeout waiting for screenshot file to be written.");
+        throw new WebDriverException("timeout waiting for screenshot file to be written.");
       }
     }
     return;

@@ -14,16 +14,13 @@
 
 package org.uiautomation.ios.server.instruments;
 
-import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
-
-
 public interface IOSDeviceManager {
 
-  public void setL10N(String locale, String language) throws IOSAutomationSetupException;
+  public void setL10N(String locale, String language);
 
-  public void resetContentAndSettings() throws IOSAutomationSetupException;
+  public void resetContentAndSettings();
 
-  public void cleanupDevice() throws IOSAutomationSetupException;
+  public void cleanupDevice();
 
   public void setKeyboardOptions();
 }

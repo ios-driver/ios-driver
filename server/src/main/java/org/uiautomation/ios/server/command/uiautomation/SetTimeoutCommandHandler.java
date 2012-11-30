@@ -16,9 +16,9 @@ package org.uiautomation.ios.server.command.uiautomation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.PreHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
@@ -69,7 +69,7 @@ public class SetTimeoutCommandHandler extends UIAScriptHandler {
         float correctTimeout = timeout * timeCorrection;
         request.getPayload().put(handler.getVariableToCorrect(), (int) correctTimeout);
       } catch (Exception e) {
-        throw new IOSAutomationException("error correcting the timeout to take the timespeeder into account."
+        throw new WebDriverException("error correcting the timeout to take the timespeeder into account."
             + e.getMessage(), e);
       }
 

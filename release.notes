@@ -12,3 +12,4 @@
 - find a solution for extra languages non iso
 + make the register command send the capabilities
 - kill instruments before starting.
+- ios capability needs device + type + resolution

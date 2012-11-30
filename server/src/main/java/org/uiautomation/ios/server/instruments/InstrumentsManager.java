@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.communication.IOSDevice;
-import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.simulator.IOSSimulatorManager;
 import org.uiautomation.ios.server.utils.ClassicCommands;
@@ -51,14 +51,14 @@ public class InstrumentsManager {
    *          the port the server lives on
    * @throws IOSAutomationSetupException
    */
-  public InstrumentsManager(int serverPort) throws IOSAutomationSetupException {
+  public InstrumentsManager(int serverPort) {
     template = ClassicCommands.getAutomationTemplate();
     this.port = serverPort;
   }
 
   public void startSession(IOSDevice device, String sdkVersion, String locale, String language,
       IOSApplication application, String sessionId, boolean timeHack, List<String> envtParams)
-      throws IOSAutomationSetupException {
+      throws WebDriverException {
     log.fine("starting session");
     IOSSimulatorManager sim = null;
     try {
@@ -96,7 +96,7 @@ public class InstrumentsManager {
       if (!success) {
         simulatorProcess.forceStop();
         killSimulator();
-        throw new IOSAutomationSetupException("Instruments crashed.");
+        throw new WebDriverException("Instruments crashed.");
       }
 
       if (timeHack) {
@@ -111,7 +111,7 @@ public class InstrumentsManager {
         simulatorProcess.forceStop();
       }
       killSimulator();
-      throw new IOSAutomationSetupException("error starting instrument for session " + sessionId, e);
+      throw new WebDriverException("error starting instrument for session " + sessionId, e);
     } finally {
       log.fine("start session done");
       if (sim != null) {
@@ -143,8 +143,7 @@ public class InstrumentsManager {
      */
   }
 
-  private IOSDeviceManager prepareSimulator(String sdkVersion, IOSDevice device, String locale, String language)
-      throws IOSAutomationSetupException {
+  private IOSDeviceManager prepareSimulator(String sdkVersion, IOSDevice device, String locale, String language) {
     // TODO freynaud handle real device ?
     IOSDeviceManager simulator = new IOSSimulatorManager(sdkVersion, device);
     simulator.resetContentAndSettings();
@@ -153,7 +152,7 @@ public class InstrumentsManager {
     return simulator;
   }
 
-  public void stop() throws IOSAutomationSetupException {
+  public void stop() {
     TimeSpeeder.getInstance().stop();
     simulatorProcess.waitFor();
     killSimulator();
@@ -167,7 +166,7 @@ public class InstrumentsManager {
 
   }
 
-  private List<String> createInstrumentCommand(String script) throws IOSAutomationSetupException {
+  private List<String> createInstrumentCommand(String script) {
     List<String> command = new ArrayList<String>();
     command.add("instruments");
     command.add("-t");
@@ -193,7 +192,7 @@ public class InstrumentsManager {
     return output;
   }
 
-  private void killSimulator() throws IOSAutomationSetupException {
+  private void killSimulator() {
     simulator.cleanupDevice();
   }
 

@@ -22,28 +22,25 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
-import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
 import org.uiautomation.ios.server.application.LanguageDictionary;
 
 public class PlistFileUtils {
-  
+
   private final File source;
-  
-  public PlistFileUtils(File source){
+
+  public PlistFileUtils(File source) {
     this.source = source;
   }
 
-  
-  public JSONObject toJSON() throws Exception{
+  public JSONObject toJSON() throws Exception {
     File tmp = File.createTempFile("tmp1234", ".tmp");
     convertL10NFile(tmp);
     JSONObject res = readJSONFile(tmp);
     tmp.delete();
     return res;
   }
-  
-  
-  private void convertL10NFile(File dest) throws IOSAutomationSetupException {
+
+  private void convertL10NFile(File dest) {
     List<String> c = new ArrayList<String>();
     c.add("plutil");
     c.add("-convert");
@@ -54,7 +51,7 @@ public class PlistFileUtils {
     Command com = new Command(c, true);
     com.executeAndWait();
   }
-  
+
   /**
    * load the content of the file to a JSON object
    * 
@@ -67,7 +64,7 @@ public class PlistFileUtils {
     StringWriter writer = new StringWriter();
     IOUtils.copy(is, writer, "UTF-8");
     String content = writer.toString();
-    content = Normalizer.normalize(content, LanguageDictionary.norme );
+    content = Normalizer.normalize(content, LanguageDictionary.norme);
     return new JSONObject(content);
   }
 }

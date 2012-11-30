@@ -31,7 +31,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.communication.IOSDevice;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.utils.PlistFileUtils;
 
 import com.dd.plist.BinaryPropertyListParser;
@@ -52,18 +51,18 @@ public class IOSApplication {
    * 
    * @param currentLanguage
    * @param pathToApp
-   * @throws IOSAutomationException
+   * @throws WebDriverException
    */
-  public IOSApplication(String pathToApp) throws IOSAutomationException {
+  public IOSApplication(String pathToApp)  {
     this.app = new File(pathToApp);
     if (!app.exists()) {
-      throw new IOSAutomationException(pathToApp + "isn't an IOS app.");
+      throw new WebDriverException(pathToApp + "isn't an IOS app.");
     }
     loadAllContent();
     try {
       metadata = getFullPlist();
     } catch (Exception e) {
-      throw new IOSAutomationException("cannot load the metadata from the Info.plist file for " + pathToApp);
+      throw new WebDriverException("cannot load the metadata from the Info.plist file for " + pathToApp);
     }
   }
 
@@ -92,13 +91,13 @@ public class IOSApplication {
     return new ArrayList<Localizable>(res);
   }
 
-  public LanguageDictionary getDictionary(Localizable language) throws IOSAutomationException {
+  public LanguageDictionary getDictionary(Localizable language) throws WebDriverException {
     for (LanguageDictionary dict : dictionaries) {
       if (dict.getLanguage() == language) {
         return dict;
       }
     }
-    throw new IOSAutomationException("Cannot find dictionary for " + language);
+    throw new WebDriverException("Cannot find dictionary for " + language);
   }
 
   /**
@@ -106,9 +105,9 @@ public class IOSApplication {
    * 
    * @throws Exception
    */
-  private void loadAllContent() throws IOSAutomationException {
+  private void loadAllContent() throws WebDriverException {
     if (!dictionaries.isEmpty()) {
-      throw new IOSAutomationException("Content already present.");
+      throw new WebDriverException("Content already present.");
     }
     Map<String, LanguageDictionary> dicts = new HashMap<String, LanguageDictionary>();
 
@@ -125,7 +124,7 @@ public class IOSApplication {
         JSONObject content = res.readContentFromBinaryFile(f);
         res.addJSONContent(content);
       } catch (Exception e) {
-        throw new IOSAutomationException("error loading content for l10n", e);
+        throw new WebDriverException("error loading content for l10n", e);
       }
 
     }
@@ -133,7 +132,7 @@ public class IOSApplication {
 
   }
 
-  public String translate(ContentResult res, Localizable language) throws IOSAutomationException {
+  public String translate(ContentResult res, Localizable language) throws WebDriverException {
     LanguageDictionary destinationLanguage = getDictionary(language);
     return destinationLanguage.translate(res);
 
@@ -178,7 +177,7 @@ public class IOSApplication {
   // TODO freynaud return a single resutl and throw when multiple are found
   // would simplify
   // everything
-  private List<ContentResult> getPotentialMatches(String name) throws IOSAutomationException {
+  private List<ContentResult> getPotentialMatches(String name) throws WebDriverException {
     LanguageDictionary dict = getDictionary(currentLanguage);
     List<ContentResult> res = dict.getPotentialMatches(name);
     return res;
@@ -216,13 +215,13 @@ public class IOSApplication {
   public String getMetadata(String key) {
     if (!metadata.has(key)) {
       return "";
-      // throw new IOSAutomationException("no property " + key +
+      // throw new WebDriverException("no property " + key +
       // " for this app.");
     }
     try {
       return metadata.getString(key);
     } catch (JSONException e) {
-      throw new IOSAutomationException("property " + key + " can't be returned. " + e.getMessage(), e);
+      throw new WebDriverException("property " + key + " can't be returned. " + e.getMessage(), e);
     }
   }
 
@@ -235,7 +234,7 @@ public class IOSApplication {
       }
       return res;
     } catch (JSONException e) {
-      throw new IOSAutomationException("Cannot load device family", e);
+      throw new WebDriverException("Cannot load device family", e);
     }
   }
 

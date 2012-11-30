@@ -17,6 +17,7 @@ import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.UIAModels.UIAApplication;
 import org.uiautomation.ios.UIAModels.UIAButton;
 import org.uiautomation.ios.UIAModels.UIAElement;
@@ -27,7 +28,6 @@ import org.uiautomation.ios.UIAModels.UIARect;
 import org.uiautomation.ios.UIAModels.UIATarget;
 import org.uiautomation.ios.UIAModels.UIAWindow;
 import org.uiautomation.ios.UIAModels.UIHost;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 
 
 // TODO freynaud remove the findElements related ones.
@@ -192,7 +192,7 @@ public enum WebDriverLikeCommand {
         return command;
       }
     }
-    throw new IOSAutomationException("cannot find command for " + method + ", " + path);
+    throw new WebDriverException("cannot find command for " + method + ", " + path);
   }
 
   private boolean isGenericFormOf(String method, String path) {
@@ -228,7 +228,7 @@ public enum WebDriverLikeCommand {
         return i;
       }
     }
-    throw new IOSAutomationException("cannot find the variable " + variable + " in " + path);
+    throw new WebDriverException("cannot find the variable " + variable + " in " + path);
   }
 
   public boolean isSessionLess() {

@@ -1,6 +1,5 @@
 package org.uiautomation.ios.ide.pages.begin;
 
-import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -8,7 +7,6 @@ import org.json.JSONObject;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.UIAModels.Session;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.ide.model.IDESessionModel;
 
 public class MockedModel implements IDESessionModel {
@@ -18,9 +16,7 @@ public class MockedModel implements IDESessionModel {
   private final JSONObject tree;
   private final IOSCapabilities cap;
 
-
-  public MockedModel(Session session, String screenshotResource, JSONObject tree,
-      IOSCapabilities cap) {
+  public MockedModel(Session session, String screenshotResource, JSONObject tree, IOSCapabilities cap) {
     this.session = session;
     this.tree = tree;
     this.screenshotResource = screenshotResource;
@@ -33,7 +29,7 @@ public class MockedModel implements IDESessionModel {
   }
 
   @Override
-  public void refresh() throws IOSAutomationException {
+  public void refresh() {
     // No op
   }
 
@@ -51,10 +47,11 @@ public class MockedModel implements IDESessionModel {
   public JSONObject getTree() {
     return tree;
   }
+
   @Override
   public Orientation getDeviceOrientation() {
-   int i = tree.optInt("deviceOrientation");
-   return Orientation.fromInterfaceOrientation(i);
+    int i = tree.optInt("deviceOrientation");
+    return Orientation.fromInterfaceOrientation(i);
   }
 
   @Override

@@ -15,8 +15,8 @@ package org.uiautomation.ios.ide.controllers;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.UIAModels.Session;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.ide.model.Cache;
 import org.uiautomation.ios.ide.model.IDESessionModel;
 import org.uiautomation.ios.ide.views.IDEMainView;
@@ -37,7 +37,7 @@ public class IDEController implements IDECommandController {
   }
 
   @Override
-  public View handle(HttpServletRequest req) throws IOSAutomationException, Exception {
+  public View handle(HttpServletRequest req) throws  Exception {
     final Session s = new Session(extractSession(req.getPathInfo()));
     IDESessionModel model = cache.getModel(s);
     model.refresh();
@@ -54,7 +54,7 @@ public class IDEController implements IDECommandController {
         return tmp;
       }
     } else {
-      throw new IOSAutomationException("cannot extract session id from " + pathInfo);
+      throw new WebDriverException("cannot extract session id from " + pathInfo);
     }
   }
 }

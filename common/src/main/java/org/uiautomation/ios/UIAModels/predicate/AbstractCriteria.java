@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.uiautomation.ios.exceptions.InvalidCriteriaException;
+import org.openqa.selenium.InvalidSelectorException;
 
 public abstract class AbstractCriteria implements Criteria {
 
@@ -53,7 +53,7 @@ public abstract class AbstractCriteria implements Criteria {
             (Class<? extends PropertyEqualCriteria>) Class.forName(clazz);
         return (T) buildPropertyBaseCriteria(serialized, c, decorator);
       default:
-        throw new InvalidCriteriaException("can't find the type : " + serialized.toString());
+        throw new InvalidSelectorException("can't find the type : " + serialized.toString());
     }
 
   }
@@ -75,7 +75,7 @@ public abstract class AbstractCriteria implements Criteria {
       CompositionType type, CriteriaDecorator decorator) throws Exception {
     JSONArray array = serialized.getJSONArray(type.toString());
     if (type == CompositionType.NOT && array.length() != 1) {
-      throw new InvalidCriteriaException("negative criteria apply to 1 criteria only " + serialized);
+      throw new InvalidSelectorException("negative criteria apply to 1 criteria only " + serialized);
     }
     List<Criteria> criterias = new ArrayList<Criteria>();
 

@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
+import org.openqa.selenium.WebDriverException;
 
 public class Command {
 
@@ -32,8 +32,7 @@ public class Command {
   private volatile Process process;
   private final List<String> out = new CopyOnWriteArrayList<String>();
   private final List<String> err = new CopyOnWriteArrayList<String>();
-  private final List<CommandOutputListener> listeners =
-      new CopyOnWriteArrayList<CommandOutputListener>();
+  private final List<CommandOutputListener> listeners = new CopyOnWriteArrayList<CommandOutputListener>();
   private List<Thread> threads = new ArrayList<Thread>();
 
   private File workingDir = null;
@@ -47,34 +46,34 @@ public class Command {
   }
 
   /**
-   * execute the command, and wait for it to finish. Also wait for stdout and std err listener to
-   * finish processing their streams.
+   * execute the command, and wait for it to finish. Also wait for stdout and
+   * std err listener to finish processing their streams.
    * 
    * @throws IOSAutomationSetupException
    */
-  public void executeAndWait() throws IOSAutomationSetupException {
+  public void executeAndWait() {
     start();
     int exitCode = waitFor();
     if (exitCode != 0) {
-      throw new IOSAutomationSetupException("execution failed. Exit code =" + exitCode
-          + " , command was : " + args);
+      throw new WebDriverException("execution failed. Exit code =" + exitCode + " , command was : " + args);
     }
     for (Thread t : threads) {
       try {
         t.join();
       } catch (InterruptedException e) {
-        throw new IOSAutomationSetupException(e);
+        throw new WebDriverException(e);
       }
     }
 
   }
 
   /**
-   * starts the command. Doesn't wait for it to finish.Doesn't wait for stdout and stderr either.
+   * starts the command. Doesn't wait for it to finish.Doesn't wait for stdout
+   * and stderr either.
    * 
    * @throws IOSAutomationSetupException
    */
-  public void start() throws IOSAutomationSetupException {
+  public void start() {
     ProcessBuilder builder = new ProcessBuilder(args);
     if (workingDir != null) {
       builder.directory(workingDir);
@@ -83,7 +82,7 @@ public class Command {
     try {
       process = builder.start();
     } catch (IOException e) {
-      throw new IOSAutomationSetupException("failed to start process " + args, e);
+      throw new WebDriverException("failed to start process " + args, e);
     }
 
     final InputStream normal = process.getInputStream();
@@ -94,12 +93,11 @@ public class Command {
 
   }
 
-
-  public int waitFor() throws IOSAutomationSetupException {
+  public int waitFor() {
     try {
       return process.waitFor();
     } catch (InterruptedException e) {
-      throw new IOSAutomationSetupException("error waiting for " + args + " to finish.", e);
+      throw new WebDriverException("error waiting for " + args + " to finish.", e);
     }
   }
 
@@ -113,7 +111,8 @@ public class Command {
         BufferedReader reader = null;
         try {
           reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-        } catch (UnsupportedEncodingException ignore) {}
+        } catch (UnsupportedEncodingException ignore) {
+        }
         String line;
         try {
           while ((line = reader.readLine()) != null) {
@@ -127,8 +126,6 @@ public class Command {
     t.start();
     return t;
   }
-
-
 
   private void add(String line, boolean normal) {
     if (normal) {
@@ -186,7 +183,5 @@ public class Command {
   public void setWorkingDirectory(File output) {
     this.workingDir = output;
   }
-
-
 
 }

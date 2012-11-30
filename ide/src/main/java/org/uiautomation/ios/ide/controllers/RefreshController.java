@@ -15,8 +15,8 @@ package org.uiautomation.ios.ide.controllers;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.UIAModels.Session;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.ide.model.Cache;
 import org.uiautomation.ios.ide.views.RedirectView;
 import org.uiautomation.ios.ide.views.View;
@@ -33,15 +33,11 @@ public class RefreshController implements IDECommandController {
     return pathInfo.contains("refresh");
   }
 
-  public View handle(HttpServletRequest req) throws IOSAutomationException {
+  public View handle(HttpServletRequest req) {
     long start = System.currentTimeMillis();
-    try {
-      Session s = new Session(extractSession(req.getPathInfo()));
-      cache.getModel(s).refresh();
-      return new RedirectView("home");
-    } catch (Exception e) {
-      throw new IOSAutomationException(e);
-    }
+    Session s = new Session(extractSession(req.getPathInfo()));
+    cache.getModel(s).refresh();
+    return new RedirectView("home");
   }
 
   private String extractSession(String pathInfo) {
@@ -54,7 +50,7 @@ public class RefreshController implements IDECommandController {
         return tmp;
       }
     } else {
-      throw new IOSAutomationException("cannot extract session id from " + pathInfo);
+      throw new WebDriverException("cannot extract session id from " + pathInfo);
     }
   }
 

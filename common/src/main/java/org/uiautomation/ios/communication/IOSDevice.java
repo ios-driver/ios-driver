@@ -13,15 +13,13 @@
  */
 package org.uiautomation.ios.communication;
 
-import org.uiautomation.ios.exceptions.IOSAutomationException;
+import org.openqa.selenium.WebDriverException;
 
 public enum IOSDevice {
 
-
-
-  iPhoneSimulator("iPhone Simulator", 1), iPadSimulator("iPad Simulator", 2), retina(
-      "iPhone (Retina)", 1);
-
+  iPhoneSimulator("iPhone Simulator", 1),
+  iPadSimulator("iPad Simulator", 2),
+  retina("iPhone (Retina)", 1);
 
   // name from result of :
   // defaults read com.apple.iphonesimulator
@@ -42,12 +40,9 @@ public enum IOSDevice {
     return getName();
   }
 
-
   public int getDeviceFamily() {
     return deviceFamily;
   }
-
-
 
   public static IOSDevice valueOf(Object o) {
     if (o instanceof IOSDevice) {
@@ -59,8 +54,7 @@ public enum IOSDevice {
         }
       }
     }
-    throw new IOSAutomationException("Cannot cast " + (o == null ? "null" : o.getClass())
-        + " to IOSDevice");
+    throw new WebDriverException("Cannot cast " + (o == null ? "null" : o.getClass()) + " to IOSDevice");
 
   }
 
@@ -74,6 +68,6 @@ public enum IOSDevice {
         return d;
       }
     }
-    throw new IOSAutomationException("Cannot find defice for device family : " + deviceId);
+    throw new WebDriverException("Cannot find defice for device family : " + deviceId);
   }
 }

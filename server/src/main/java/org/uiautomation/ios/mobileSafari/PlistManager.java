@@ -20,7 +20,7 @@ import java.io.StringWriter;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
-import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
+import org.openqa.selenium.WebDriverException;
 
 import com.dd.plist.BinaryPropertyListParser;
 import com.dd.plist.BinaryPropertyListWriter;
@@ -43,13 +43,13 @@ public class PlistManager {
 
     InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(templatePath);
     if (is == null) {
-      throw new IOSAutomationSetupException("cannot load : " + templatePath);
+      throw new WebDriverException("cannot load : " + templatePath);
     }
     StringWriter writer = new StringWriter();
     try {
       IOUtils.copy(is, writer, "UTF-8");
     } catch (IOException e) {
-      throw new IOSAutomationSetupException("Cannot load template " + templatePath);
+      throw new WebDriverException("Cannot load template " + templatePath);
     }
     String content = writer.toString();
     return content;

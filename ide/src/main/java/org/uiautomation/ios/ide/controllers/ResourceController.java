@@ -18,8 +18,8 @@ import java.io.InputStream;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.UIAModels.Session;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.ide.IDEServlet;
 import org.uiautomation.ios.ide.model.Cache;
 import org.uiautomation.ios.ide.model.IDESessionModel;
@@ -38,7 +38,7 @@ public class ResourceController implements IDECommandController {
     return pathInfo.contains("resources");
   }
 
-  public View handle(HttpServletRequest req) throws IOSAutomationException {
+  public View handle(HttpServletRequest req)  {
     String path = req.getPathInfo();
     String pattern = "/resources/";
     int end = path.indexOf(pattern) + pattern.length();
@@ -60,7 +60,7 @@ public class ResourceController implements IDECommandController {
     }
     String mime = getMimeType(resource);
     if (is == null) {
-      throw new IOSAutomationException("error getting resource " + req.getPathInfo()
+      throw new WebDriverException("error getting resource " + req.getPathInfo()
           + req.getQueryString());
     }
     return new ResourceView(is, mime);
@@ -79,7 +79,7 @@ public class ResourceController implements IDECommandController {
     } else if (resource.endsWith(".gif")) {
       return "image/gif";
     }
-    throw new IOSAutomationException("mime type NI" + resource);
+    throw new WebDriverException("mime type NI" + resource);
   }
   
   private String extractSession(String pathInfo) {
@@ -92,7 +92,7 @@ public class ResourceController implements IDECommandController {
         return tmp;
       }
     } else {
-      throw new IOSAutomationException("cannot extract session id from " + pathInfo);
+      throw new WebDriverException("cannot extract session id from " + pathInfo);
     }
   }
 

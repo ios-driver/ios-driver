@@ -15,23 +15,19 @@ package org.uiautomation.ios.ide.controllers;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.uiautomation.ios.exceptions.IOSAutomationException;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.ide.views.View;
 
 public class NotImplementedIDEController implements IDECommandController {
-
-
-
 
   public boolean canHandle(String pathInfo) {
     return true;
   }
 
-
-  public View handle(HttpServletRequest req) throws IOSAutomationException {
+  public View handle(HttpServletRequest req) {
     System.err.println("no controller for that " + req.getPathInfo());
     // return new DefaultView(getModel());
-    throw new RuntimeException("no controller for " + req.getPathInfo());
+    throw new WebDriverException("no controller for " + req.getPathInfo());
   }
 
 }

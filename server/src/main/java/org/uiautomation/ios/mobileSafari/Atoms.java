@@ -18,7 +18,7 @@ import java.io.InputStream;
 import java.io.StringWriter;
 
 import org.apache.commons.io.IOUtils;
-import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
+import org.openqa.selenium.WebDriverException;
 
 /**
  * in selenium/javascript/atoms.
@@ -76,11 +76,11 @@ public class Atoms {
   public static String getLocationInView() {
     return getLocationInView;
   }
-  
+
   public static String getSize() {
     return getSize;
   }
-  
+
   public static String getText() {
     return getText;
   }
@@ -124,15 +124,13 @@ public class Atoms {
   private static String load(String resource) throws IOException {
     InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
     if (is == null) {
-      throw new IOSAutomationSetupException("cannot load : " + resource);
+      throw new WebDriverException("cannot load : " + resource);
     }
     StringWriter writer = new StringWriter();
     IOUtils.copy(is, writer, "UTF-8");
     String content = writer.toString();
     return content;
   }
-
-  
 
   public static String submit() {
     return submit;

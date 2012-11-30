@@ -19,9 +19,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.apache.commons.logging.Log;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
-import org.uiautomation.ios.server.instruments.InstrumentsManager;
+import org.openqa.selenium.WebDriverException;
 
 
 public class TimeSpeeder implements HorribleHack {
@@ -102,7 +100,7 @@ public class TimeSpeeder implements HorribleHack {
       Process p = builder.start();
       int exit = p.waitFor();
       if (exit != 0) {
-        throw new IOSAutomationException("couldn't set time" + c);
+        throw new WebDriverException("couldn't set time" + c);
       }
     }
   }

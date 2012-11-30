@@ -18,9 +18,9 @@ import java.io.File;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
@@ -54,11 +54,11 @@ public class TakeScreenshot extends UIAScriptHandler {
       try {
         String content64 = encoder.encode();
         source.delete();
-        //JSONObject value = new JSONObject();
-        //value.put("64encoded", content64);
+        // JSONObject value = new JSONObject();
+        // value.put("64encoded", content64);
         response.setValue(content64);
       } catch (Exception e) {
-        throw new IOSAutomationException("Error converting " + source.getAbsolutePath() + " to a 64 encoded string "
+        throw new WebDriverException("Error converting " + source.getAbsolutePath() + " to a 64 encoded string "
             + e.getMessage(), e);
       } finally {
         source.delete();

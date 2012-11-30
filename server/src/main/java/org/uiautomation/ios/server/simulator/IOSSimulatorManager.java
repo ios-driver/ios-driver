@@ -27,9 +27,8 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.communication.IOSDevice;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
-import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
 import org.uiautomation.ios.server.command.uiautomation.NewSession;
 import org.uiautomation.ios.server.instruments.IOSDeviceManager;
 import org.uiautomation.ios.server.utils.ClassicCommands;
@@ -68,9 +67,9 @@ public class IOSSimulatorManager implements IOSDeviceManager {
    * @param device
    * @throws IOSAutomationSetupException
    */
-  public IOSSimulatorManager(String desiredSDKVersion, IOSDevice device) throws IOSAutomationSetupException {
+  public IOSSimulatorManager(String desiredSDKVersion, IOSDevice device)  {
     if (isSimulatorRunning() && !isWarmupRequired()) {
-      throw new IOSAutomationSetupException("another instance of the simulator is already running.");
+      throw new WebDriverException("another instance of the simulator is already running.");
     }
 
     this.sdks = ClassicCommands.getInstalledSDKs();
@@ -78,7 +77,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
 
     xcodeInstall = ClassicCommands.getXCodeInstall();
     // setDefaultSimulatorPreference("currentSDKRoot", sdk.getAbsolutePath());
-    //setDefaultSimulatorPreference(device);
+    // setDefaultSimulatorPreference(device);
 
     this.contentAndSettingsFolder = getContentAndSettingsFolder();
     this.globalPreferencePlist = getGlobalPreferenceFile();
@@ -105,8 +104,8 @@ public class IOSSimulatorManager implements IOSDeviceManager {
                   + ".sdk");
           boolean ok = f.renameTo(renamed);
           if (!ok) {
-            throw new IOSAutomationException("Starting the non default SDK requires some more setup.Failed to move "
-                + f + " to " + renamed + getErrorMessageMoveSDK());
+            throw new WebDriverException("Starting the non default SDK requires some more setup.Failed to move " + f
+                + " to " + renamed + getErrorMessageMoveSDK());
           }
         }
       }
@@ -133,7 +132,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
       File original = new File(sdk.getParentFile().getParentFile() + "/SDKs/" + s);
       boolean ok = sdk.renameTo(original);
       if (!ok) {
-        throw new IOSAutomationException(
+        throw new WebDriverException(
             "Error restoring the SDK to its original directory. The SDK will be missing in xcode.");
       }
     }
@@ -148,7 +147,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
    * @param value
    * @throws IOSAutomationSetupException
    */
-  private void setDefaultSimulatorPreference(String key, String value) throws IOSAutomationSetupException {
+  private void setDefaultSimulatorPreference(String key, String value) {
     List<String> com = new ArrayList<String>();
     com.add("defaults");
     com.add("write");
@@ -160,14 +159,14 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     updatePreference.executeAndWait();
   }
 
-  private String validateSDK(String sdk) throws IOSAutomationSetupException {
+  private String validateSDK(String sdk) {
     if (!sdks.contains(sdk)) {
-      throw new IOSAutomationSetupException("desired sdk " + sdk + " isn't installed. Installed :" + sdks);
+      throw new WebDriverException("desired sdk " + sdk + " isn't installed. Installed :" + sdks);
     }
     return sdk;
   }
 
-  private boolean isSimulatorRunning() throws IOSAutomationSetupException {
+  private boolean isSimulatorRunning() {
     return ClassicCommands.isRunning(SIMULATOR_PROCESS_NAME);
   }
 
@@ -181,12 +180,12 @@ public class IOSSimulatorManager implements IOSDeviceManager {
    *          fr
    * @throws IOSAutomationSetupException
    */
-  public void setL10N(String locale, String language) throws IOSAutomationSetupException {
+  public void setL10N(String locale, String language) {
     try {
       JSONObject plistJSON = getPreferenceFile(locale, language);
       writeOnDisk(plistJSON, globalPreferencePlist);
     } catch (Exception e) {
-      throw new IOSAutomationSetupException("cannot configure simulator", e);
+      throw new WebDriverException("cannot configure simulator", e);
     }
 
   }
@@ -213,7 +212,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
    * 
    * @throws IOSAutomationSetupException
    */
-  public void cleanupDevice() throws IOSAutomationSetupException {
+  public void cleanupDevice() {
     ClassicCommands.killall(SIMULATOR_PROCESS_NAME);
   }
 
@@ -229,7 +228,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     if (destination.exists()) {
       // to be on the safe side. If the emulator already runs, it won't work
       // anyway.
-      throw new IOSAutomationException(globalPreferencePlist + "already exists.Cannot create it.");
+      throw new WebDriverException(globalPreferencePlist + "already exists.Cannot create it.");
     }
     // make sure the folder is ready for the plist file
     destination.getParentFile().mkdirs();
@@ -247,14 +246,15 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     command.add(from.getAbsolutePath());
 
     ProcessBuilder b = new ProcessBuilder(command);
+    int i = -1;
     try {
       Process p = b.start();
-      int i = p.waitFor();
-      if (i != 0) {
-        throw new IOSAutomationException("convertion to binary pfile failed.exitCode=" + i);
-      }
+      i = p.waitFor();
     } catch (Exception e) {
-      throw new IOSAutomationException("failed to run " + command.toString(), e);
+      throw new WebDriverException("failed to run " + command.toString(), e);
+    }
+    if (i != 0) {
+      throw new WebDriverException("convertion to binary pfile failed.exitCode=" + i);
     }
 
   }
@@ -262,7 +262,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   private void checkPlUtil() {
     File f = new File(PLUTIL);
     if (!f.exists() || !f.canExecute()) {
-      throw new IOSAutomationException("Cannot access " + PLUTIL);
+      throw new WebDriverException("Cannot access " + PLUTIL);
     }
 
   }
@@ -325,8 +325,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   public void setKeyboardOptions() {
     File folder = new File(contentAndSettingsFolder + "/Library/Preferences/");
     File preferenceFile = new File(folder, "com.apple.Preferences.plist");
- 
-  
+
     try {
       JSONObject preferences = new JSONObject();
       preferences.put("KeyboardAutocapitalization", false);
@@ -335,10 +334,8 @@ public class IOSSimulatorManager implements IOSDeviceManager {
       preferences.put("KeyboardCheckSpelling", false);
       writeOnDisk(preferences, preferenceFile);
     } catch (Exception e) {
-      throw new IOSAutomationException("cannot set options in " + preferenceFile.getAbsolutePath());
+      throw new WebDriverException("cannot set options in " + preferenceFile.getAbsolutePath());
     }
   }
-  
- 
 
 }

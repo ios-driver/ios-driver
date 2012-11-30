@@ -21,13 +21,12 @@ import org.json.JSONObject;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.UIAModels.Session;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 
 public interface IDESessionModel {
 
   public IOSCapabilities getCapabilities();
 
-  public void refresh() throws IOSAutomationException;
+  public void refresh() ;
 
   public Session getSession();
 

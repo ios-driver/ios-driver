@@ -26,7 +26,6 @@ import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.client.uiamodels.impl.AttachRemoteUIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 
 public class IDESessionModelImpl implements IDESessionModel {
 
@@ -64,7 +63,7 @@ public class IDESessionModelImpl implements IDESessionModel {
    * @see org.uiautomation.ios.ide.model.IDESessionModel2#refresh()
    */
   @Override
-  public void refresh() throws IOSAutomationException {
+  public void refresh() {
     screenshot.delete();
     elementTree = driver.logElementTree(screenshot, true);
   }

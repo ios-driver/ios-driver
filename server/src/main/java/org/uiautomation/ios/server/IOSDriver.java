@@ -25,9 +25,9 @@ import java.util.Set;
 import java.util.logging.LogManager;
 
 import org.json.JSONException;
+import org.openqa.selenium.SessionNotCreatedException;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
-import org.uiautomation.ios.exceptions.SessionNotCreatedException;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.application.Localizable;
 import org.uiautomation.ios.server.application.ResourceCache;
@@ -35,7 +35,6 @@ import org.uiautomation.ios.server.utils.BuildInfo;
 import org.uiautomation.ios.server.utils.ClassicCommands;
 
 public class IOSDriver {
-
 
   private final List<ServerSideSession> sessions = new ArrayList<ServerSideSession>();
   private final Set<IOSApplication> supportedApplications = new HashSet<IOSApplication>();
@@ -54,7 +53,7 @@ public class IOSDriver {
   public void addSupportedApplication(IOSApplication application) {
     boolean added = supportedApplications.add(application);
     if (!added) {
-      throw new IOSAutomationException("app already present :" + application.getApplicationPath());
+      throw new WebDriverException("app already present :" + application.getApplicationPath());
     }
     cache.cacheResource(application);
   }
@@ -71,21 +70,17 @@ public class IOSDriver {
     return hostInfo.getPort();
   }
 
-  
-  public ServerSideSession createSession(IOSCapabilities cap){
-    ServerSideSession session = new ServerSideSession(this,cap);
+  public ServerSideSession createSession(IOSCapabilities cap) {
+    ServerSideSession session = new ServerSideSession(this, cap);
     sessions.add(session);
     return session;
   }
-  
- 
 
   public void stop(String opaqueKey) {
     ServerSideSession session = getSession(opaqueKey);
     session.stop();
     sessions.remove(session);
   }
-
 
   public IOSCapabilities getCapabilities(IOSApplication application) {
     // some cap are from the host. SDK version is not defined by the app itself.
@@ -105,7 +100,7 @@ public class IOSDriver {
         Object value = application.getMetadata().get(key);
         cap.setCapability(key, value);
       } catch (JSONException e) {
-        throw new IOSAutomationException("cannot get metadata", e);
+        throw new WebDriverException("cannot get metadata", e);
       }
     }
 
@@ -120,40 +115,34 @@ public class IOSDriver {
         return app;
       }
     }
-    throw new SessionNotCreatedException(desiredCapabilities.getRawCapabilities()
-        + "not found on server.");
+    throw new SessionNotCreatedException(desiredCapabilities.getRawCapabilities() + "not found on server.");
   }
 
-
-  public static boolean matches(Map<String, Object> appCapabilities,
-      Map<String, Object> desiredCapabilities) {
+  public static boolean matches(Map<String, Object> appCapabilities, Map<String, Object> desiredCapabilities) {
     IOSCapabilities a = new IOSCapabilities(appCapabilities);
     IOSCapabilities d = new IOSCapabilities(desiredCapabilities);
     return matches(a, d);
 
   }
 
-  private static boolean matches(IOSCapabilities applicationCapabilities,
-      IOSCapabilities desiredCapabilities) {
+  private static boolean matches(IOSCapabilities applicationCapabilities, IOSCapabilities desiredCapabilities) {
 
     if (desiredCapabilities.getBundleName() == null) {
-      throw new IOSAutomationException("you need to specify the bundle to test.");
+      throw new WebDriverException("you need to specify the bundle to test.");
     }
     String desired = desiredCapabilities.getBundleName();
-    String appName =
-        (String) (applicationCapabilities.getBundleName() != null ? applicationCapabilities
-            .getBundleName() : applicationCapabilities.getCapability("CFBundleDisplayName"));
+    String appName = (String) (applicationCapabilities.getBundleName() != null ? applicationCapabilities
+        .getBundleName() : applicationCapabilities.getCapability("CFBundleDisplayName"));
 
     if (!desired.equals(appName)) {
       return false;
     }
     if (desiredCapabilities.getBundleVersion() != null
-        && !desiredCapabilities.getBundleVersion().equals(
-            applicationCapabilities.getBundleVersion())) {
+        && !desiredCapabilities.getBundleVersion().equals(applicationCapabilities.getBundleVersion())) {
       return false;
     }
     if (desiredCapabilities.getDevice() == null) {
-      throw new IOSAutomationException("you need to specify the device.");
+      throw new WebDriverException("you need to specify the device.");
     }
     if (!(applicationCapabilities.getSupportedDevices().contains(desiredCapabilities.getDevice()))) {
       return false;
@@ -170,22 +159,20 @@ public class IOSDriver {
     }
     String l = desiredCapabilities.getLanguage();
     if (l != null && !applicationCapabilities.getSupportedLanguages().contains(l)) {
-      throw new SessionNotCreatedException("Language requested, " + l
-          + " ,isn't supported.Supported are : " + applicationCapabilities.getSupportedLanguages());
+      throw new SessionNotCreatedException("Language requested, " + l + " ,isn't supported.Supported are : "
+          + applicationCapabilities.getSupportedLanguages());
     }
 
     String sdk = desiredCapabilities.getSDKVersion();
     // TODO freynaud validate for multi SDK
     /*
-     * if (sdk != null && !sdk.equals(applicationCapabilities.getSDKVersion())) { throw new
-     * IOSAutomationException("Cannot start sdk " + sdk + ". Run on " +
-     * applicationCapabilities.getSDKVersion()); }
+     * if (sdk != null && !sdk.equals(applicationCapabilities.getSDKVersion()))
+     * { throw new IOSAutomationException("Cannot start sdk " + sdk +
+     * ". Run on " + applicationCapabilities.getSDKVersion()); }
      */
 
     return true;
   }
-
-
 
   public List<ServerSideSession> getSessions() {
     return sessions;
@@ -197,7 +184,7 @@ public class IOSDriver {
         return session;
       }
     }
-    throw new IOSAutomationException("Cannot find session " + opaqueKey + " on the sesver.");
+    throw new WebDriverException("Cannot find session " + opaqueKey + " on the sesver.");
   }
 
   class HostInfo {
@@ -248,8 +235,5 @@ public class IOSDriver {
   public Set<IOSApplication> getSupportedApplications() {
     return supportedApplications;
   }
-  
-  
 
- 
 }

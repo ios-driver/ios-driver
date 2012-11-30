@@ -15,6 +15,7 @@ package org.uiautomation.ios.client.uiamodels.impl;
 
 import java.util.Map;
 
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.CriteriaDecorator;
 import org.uiautomation.ios.UIAModels.predicate.L10NStrategy;
@@ -23,7 +24,6 @@ import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.PropertyEqualCriteria;
 import org.uiautomation.ios.UIAModels.predicate.ValueCriteria;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 
 public class ClientSideCriteriaFactory {
 
@@ -80,12 +80,12 @@ public class ClientSideCriteriaFactory {
 
     private String localizeString(String value) {
       if (clientSideL10n == null) {
-        throw new IOSAutomationException(
+        throw new WebDriverException(
             "you need to provide client side content to use the client side l10n");
       }
       String res = clientSideL10n.get(value);
       if (res == null) {
-        throw new IOSAutomationException("no client side content provided for " + value);
+        throw new WebDriverException("no client side content provided for " + value);
       } else {
         return res;
       }

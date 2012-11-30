@@ -22,12 +22,11 @@ import java.io.StringWriter;
 import java.io.Writer;
 
 import org.apache.commons.io.IOUtils;
-import org.uiautomation.ios.exceptions.IOSAutomationSetupException;
-
+import org.openqa.selenium.WebDriverException;
 
 /**
- * Concatenate all the small JS files into 1 file passed to instruments, and replace variables by
- * their value.
+ * Concatenate all the small JS files into 1 file passed to instruments, and
+ * replace variables by their value.
  * 
  * @author freynaud
  * 
@@ -40,11 +39,10 @@ public class ScriptHelper {
   private final String lib2 = "UIAElement.js";
   private static final String FILE_NAME = "uiamasterscript";
 
-
   private String load(String resource) throws IOException {
     InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
     if (is == null) {
-      throw new IOSAutomationSetupException("cannot load : " + resource);
+      throw new WebDriverException("cannot load : " + resource);
     }
     StringWriter writer = new StringWriter();
     IOUtils.copy(is, writer, "UTF-8");
@@ -68,9 +66,7 @@ public class ScriptHelper {
     return scriptContent.toString();
   }
 
-
-
-  public File createTmpScript(String content) throws IOSAutomationSetupException {
+  public File createTmpScript(String content) {
     try {
       File res = File.createTempFile(FILE_NAME, ".js");
       Writer writer = new FileWriter(res);
@@ -78,18 +74,17 @@ public class ScriptHelper {
       IOUtils.closeQuietly(writer);
       return res;
     } catch (Exception e) {
-      throw new IOSAutomationSetupException("Cannot generate script.");
+      throw new WebDriverException("Cannot generate script.");
     }
-
 
   }
 
-  public File getScript(int port, String aut, String opaqueKey) throws IOSAutomationSetupException {
+  public File getScript(int port, String aut, String opaqueKey) {
     try {
       String content = generateScriptContent(port, aut, opaqueKey);
       return createTmpScript(content);
     } catch (Exception e) {
-      throw new IOSAutomationSetupException("cannot generate the script for instrument.", e);
+      throw new WebDriverException("cannot generate the script for instrument.", e);
     }
   }
 

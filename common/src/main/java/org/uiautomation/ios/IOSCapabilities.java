@@ -14,8 +14,6 @@
 package org.uiautomation.ios;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +24,6 @@ import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.uiautomation.ios.communication.IOSDevice;
-import org.uiautomation.ios.exceptions.IOSAutomationException;
 
 public class IOSCapabilities extends DesiredCapabilities {
 
@@ -273,7 +270,7 @@ public class IOSCapabilities extends DesiredCapabilities {
         try {
           res.add(a.getString(i));
         } catch (JSONException e) {
-          throw new IOSAutomationException(e);
+          throw new WebDriverException(e);
         }
       }
       return res;

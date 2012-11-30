@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.uiautomation.ios.UIAModels.UIAElement;
@@ -31,7 +32,6 @@ import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.communication.Path;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.exceptions.NoSuchElementException;
 
 import com.google.common.collect.ImmutableMap;
 

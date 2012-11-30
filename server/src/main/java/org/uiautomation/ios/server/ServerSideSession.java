@@ -17,6 +17,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.UUID;
 
+import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.remote.SessionId;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Session;
@@ -27,7 +28,6 @@ import org.uiautomation.ios.client.uiamodels.impl.AttachRemoteUIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.communication.IOSDevice;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
-import org.uiautomation.ios.exceptions.SessionNotCreatedException;
 import org.uiautomation.ios.mobileSafari.WebInspector;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
