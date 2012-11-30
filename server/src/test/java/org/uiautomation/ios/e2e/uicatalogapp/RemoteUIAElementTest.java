@@ -53,6 +53,8 @@ public class RemoteUIAElementTest extends BaseIOSDriverTest {
     Criteria c = new AndCriteria(c1, c2);
     element = driver.findElement(c);
     Assert.assertEquals(element.getName(), buttonsName);
+    Assert.assertNull(element.getLabel());
+    Assert.assertNull(element.getValue());
   }
 
   @Test(dependsOnMethods = { "findElement" })
