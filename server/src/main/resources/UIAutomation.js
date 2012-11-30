@@ -197,7 +197,10 @@ var UIAutomation = {
 		}
 	},
 	commandLoop : function() {
-		var response = this.createJSONResponse(this.SESSION, 0, "init");
+		// first command after registration sends the capabilities.
+		var init = {};
+		init.firstResonse =UIAutomation.getCapabilities();
+		var response = this.createJSONResponse(this.SESSION, 0, init);
 		var ok = true;
 		while(ok) {
 			try {

@@ -16,6 +16,7 @@ package org.uiautomation.ios.server.servlet;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.Normalizer;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -23,19 +24,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.server.application.LanguageDictionary;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.command.UIAScriptResponse;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
-
 
 public class UIAScriptServlet extends DriverBasedServlet {
 
   private static final long serialVersionUID = 41227429706998662L;
 
   @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     try {
       sendNextCommand(request, response);
     } catch (Exception e) {
@@ -45,8 +45,7 @@ public class UIAScriptServlet extends DriverBasedServlet {
   }
 
   @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     try {
       getResponse(request, response);
     } catch (Exception e) {
@@ -55,8 +54,7 @@ public class UIAScriptServlet extends DriverBasedServlet {
     }
   }
 
-  private void sendNextCommand(HttpServletRequest request, HttpServletResponse response)
-      throws Exception {
+  private void sendNextCommand(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     UIAScriptRequest nextCommand = communication(request).getNextCommand();
     String script = nextCommand.getScript();
@@ -68,8 +66,7 @@ public class UIAScriptServlet extends DriverBasedServlet {
     response.getWriter().close();
   }
 
-  private void getResponse(HttpServletRequest request, HttpServletResponse response)
-      throws Exception, JSONException {
+  private void getResponse(HttpServletRequest request, HttpServletResponse response) throws Exception, JSONException {
 
     if (request.getInputStream() != null) {
       StringWriter writer = new StringWriter();
@@ -77,8 +74,8 @@ public class UIAScriptServlet extends DriverBasedServlet {
       String json = writer.toString();
       json = Normalizer.normalize(json, LanguageDictionary.norme);
       UIAScriptResponse r = new UIAScriptResponse(json);
-      
-      if (!"init".equals(r.getResponse().getValue())) {
+
+      if (isCapabilitiesResponse(r.getResponse())) {
         communication(request).setNextResponse(r);
       }
       UIAScriptRequest nextCommand = communication(request).getNextCommand();
@@ -90,9 +87,15 @@ public class UIAScriptServlet extends DriverBasedServlet {
       response.getWriter().print(script);
       response.getWriter().close();
     }
+  }
 
-
-
+  private boolean isCapabilitiesResponse(Response r) {
+    Object o = r.getValue();
+    if (o instanceof Map) {
+      Map<String, Object> caps = (Map<String, Object>) o;
+      return caps.containsKey("firstResonse");
+    }
+    return true;
   }
 
   private CommunicationChannel communication(HttpServletRequest request) throws Exception {

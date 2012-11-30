@@ -32,6 +32,9 @@ public class UIAScriptResponse {
     return rawResponse;
   }
 
+  public boolean isFirstResponse(){
+    return false;
+  }
   public Response getResponse() {
     Response response = new Response();
     try {
