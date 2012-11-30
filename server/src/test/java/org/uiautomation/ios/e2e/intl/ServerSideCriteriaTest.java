@@ -9,9 +9,12 @@ import org.uiautomation.ios.BaseIOSDriverTest;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.UIAApplication;
 import org.uiautomation.ios.UIAModels.UIAElement;
+import org.uiautomation.ios.UIAModels.UIATableCell;
+import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.L10NStrategy;
 import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
+import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.server.application.Localizable;
 
@@ -33,9 +36,20 @@ public class ServerSideCriteriaTest extends BaseIOSDriverTest {
 
   private String expected = "Bien que 8,848 mètres de haut, Montagne 1 aient été montés la première fois 29 May 1953.";
 
- 
-
   @Test
+  public void findElementDriver() {
+    Criteria c1 = new TypeCriteria(UIATableCell.class);
+    UIAElement element = driver.findElement(c1);
+    element.tap();
+
+    NameCriteria criteria = new NameCriteria("sentenceFormat", L10NStrategy.serverL10N, MatchingStrategy.regex);
+    UIAElement text = driver.findElement(criteria);
+    String actual = text.getName();
+    Assert.assertEquals(actual, expected);
+
+  }
+
+  @Test(dependsOnMethods={"findElementDriver"})
   public void findElementElement() {
    
     UIAApplication app = (UIAApplication)driver.findElement(By.tagName("UIAApplication"));

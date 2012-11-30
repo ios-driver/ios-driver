@@ -7,9 +7,11 @@
 - rename ide to inspector, and make it part of the server
 - fix the inspector for retina etc
 - fix the inspector ratio, mouse over is off.
-- remove the dup exception from webdriver
++ remove the dup exception from webdriver
 - throwing helpful messages when the rights in xcode haven't been changed.
 - find a solution for extra languages non iso
 + make the register command send the capabilities
 - kill instruments before starting.
 - ios capability needs device + type + resolution
+- xpath for native
+- xpath to css convertor for web
