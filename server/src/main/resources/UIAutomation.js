@@ -97,7 +97,6 @@ var Cache = function() {
 var UIAutomation = {
 	cache : new Cache(),
 	CURL : "/usr/bin/curl",
-	REGISTER : "http://localhost:$PORT/wd/hub/uiascriptproxy/register",
 	COMMAND : "http://localhost:$PORT/wd/hub/uiascriptproxy?sessionId=$SESSION",
 	HOST : UIATarget.localTarget().host(),
 	TIMEOUT_IN_SEC : {
@@ -106,13 +105,6 @@ var UIAutomation = {
 	SESSION : "$SESSION",
 	CAPABILITIES : -1,
 
-	register : function() {
-		log("registering to " + this.REGISTER);
-		var result = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.REGISTER, "-d", "sessionId=" + this.SESSION], 90);
-		if(result.exitCode != 0) {
-			throw new UIAutomationException("error registering. exit code : " + result.exitCode);
-		}
-	},
 	createJSONResponse : function(sessionId, status, value) {
 		var result = {};
 		result.sessionId = sessionId;
@@ -182,7 +174,7 @@ var UIAutomation = {
 		var result = this.CAPABILITIES;
 		var target = UIATarget.localTarget();
 		result.rect = target.rect();
-		return JSON.stringify(result)
+		return result;
 	},
 	setTimeout : function(type, timeoutInSeconds) {
 		this.TIMEOUT_IN_SEC[type] = timeoutInSeconds;
@@ -199,7 +191,7 @@ var UIAutomation = {
 	commandLoop : function() {
 		// first command after registration sends the capabilities.
 		var init = {};
-		init.firstResonse =UIAutomation.getCapabilities();
+		init.firstResponse =UIAutomation.getCapabilities();
 		var response = this.createJSONResponse(this.SESSION, 0, init);
 		var ok = true;
 		while(ok) {

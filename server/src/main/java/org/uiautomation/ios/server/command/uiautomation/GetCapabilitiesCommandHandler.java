@@ -14,11 +14,10 @@
 package org.uiautomation.ios.server.command.uiautomation;
 
 import java.util.List;
+import java.util.Map;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
@@ -32,10 +31,10 @@ public class GetCapabilitiesCommandHandler extends UIAScriptHandler {
   // TODO freynaud
   private static Response cachedResponse = null;
   private static boolean hasBeenDecorated = false;
-  
-  public static void reset(){
-    cachedResponse=null;
-    hasBeenDecorated=false;
+
+  public static void reset() {
+    cachedResponse = null;
+    hasBeenDecorated = false;
   }
 
   private static final String capabilities = "var json = UIAutomation.getCapabilities();"
@@ -55,6 +54,10 @@ public class GetCapabilitiesCommandHandler extends UIAScriptHandler {
     return cachedResponse;
   }
 
+  public static void setCachedResponse(Response r) {
+    cachedResponse = r;
+  }
+
   class AddAllSupportedLocalesDecorator extends PostHandleDecorator {
 
     public AddAllSupportedLocalesDecorator(IOSDriver driver) {
@@ -64,25 +67,17 @@ public class GetCapabilitiesCommandHandler extends UIAScriptHandler {
 
     @Override
     public void decorate(Response response) {
-      if (hasBeenDecorated){
+      if (hasBeenDecorated) {
         return;
       }
       ServerSideSession session = getDriver().getSession(response.getSessionId());
-      try {
-        JSONObject o = new JSONObject((String) response.getValue());
-        JSONArray array = new JSONArray();
-        List<Localizable> ls = session.getApplication().getSupportedLanguages();
+      Map<String, Object> o = (Map<String, Object>) response.getValue();
+      List<Localizable> ls = session.getApplication().getSupportedLanguages();
 
-        for (Localizable l : ls) {
-          array.put(l.getName());
-        }
-        o.put("supportedLocales", array);
-        o.put("takesScreenshot", true);
-        response.setValue(o);
-        hasBeenDecorated = true;
-      } catch (JSONException e) {
-        throw new WebDriverException(e.getMessage(), e);
-      }
+      o.put("supportedLocales", ls);
+      o.put("takesScreenshot", true);
+      response.setValue(o);
+      hasBeenDecorated = true;
 
     }
   }

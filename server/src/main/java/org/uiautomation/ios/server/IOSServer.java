@@ -27,7 +27,6 @@ import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.grid.RegistrationRequest;
 import org.uiautomation.ios.server.servlet.IOSServlet;
 import org.uiautomation.ios.server.servlet.ResourceServlet;
-import org.uiautomation.ios.server.servlet.UIAScriptProxyRegister;
 import org.uiautomation.ios.server.servlet.UIAScriptServlet;
 
 import com.beust.jcommander.JCommander;
@@ -77,7 +76,6 @@ public class IOSServer {
     server = new Server(new InetSocketAddress("0.0.0.0", options.getPort()));
 
     ServletContextHandler wd = new ServletContextHandler(server, "/wd/hub", true, false);
-    wd.addServlet(UIAScriptProxyRegister.class, "/uiascriptproxy/register/*");
     wd.addServlet(UIAScriptServlet.class, "/uiascriptproxy/*");
     wd.addServlet(IOSServlet.class, "/*");
     wd.addServlet(ResourceServlet.class, "/resources/*");

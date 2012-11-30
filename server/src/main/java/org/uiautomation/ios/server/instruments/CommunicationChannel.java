@@ -63,7 +63,8 @@ public class CommunicationChannel {
   }
 
   public UIAScriptRequest getNextCommand() throws InterruptedException {
-    return requestQueue.take();
+    UIAScriptRequest res = requestQueue.take();
+    return res;
   }
 
   public void setNextResponse(UIAScriptResponse r) {

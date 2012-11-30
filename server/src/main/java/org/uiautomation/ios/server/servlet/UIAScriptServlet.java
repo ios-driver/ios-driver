@@ -16,7 +16,7 @@ package org.uiautomation.ios.server.servlet;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.Normalizer;
-import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -28,15 +28,18 @@ import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.server.application.LanguageDictionary;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.command.UIAScriptResponse;
+import org.uiautomation.ios.server.command.uiautomation.GetCapabilitiesCommandHandler;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
 
 public class UIAScriptServlet extends DriverBasedServlet {
 
+  private static final Logger log = Logger.getLogger(UIAScriptServlet.class.getName());
   private static final long serialVersionUID = 41227429706998662L;
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     try {
+      log("sendNextCommand");
       sendNextCommand(request, response);
     } catch (Exception e) {
       // TODO Auto-generated catch block
@@ -75,11 +78,18 @@ public class UIAScriptServlet extends DriverBasedServlet {
       json = Normalizer.normalize(json, LanguageDictionary.norme);
       UIAScriptResponse r = new UIAScriptResponse(json);
 
-      if (isCapabilitiesResponse(r.getResponse())) {
+      if (r.isFirstResponse()) {
+        log.fine("got first response");
+        Response resp = r.getResponse();
+        GetCapabilitiesCommandHandler.setCachedResponse(resp);
+        getDriver().getSession(resp.getSessionId()).communication().registerUIAScript();
+      } else {
         communication(request).setNextResponse(r);
       }
+      log.fine("wait for next command");
       UIAScriptRequest nextCommand = communication(request).getNextCommand();
       String script = nextCommand.getScript();
+      log.fine("got " + script);
 
       response.setContentType("text/html");
       response.setCharacterEncoding("UTF-8");
@@ -87,15 +97,6 @@ public class UIAScriptServlet extends DriverBasedServlet {
       response.getWriter().print(script);
       response.getWriter().close();
     }
-  }
-
-  private boolean isCapabilitiesResponse(Response r) {
-    Object o = r.getValue();
-    if (o instanceof Map) {
-      Map<String, Object> caps = (Map<String, Object>) o;
-      return caps.containsKey("firstResonse");
-    }
-    return true;
   }
 
   private CommunicationChannel communication(HttpServletRequest request) throws Exception {

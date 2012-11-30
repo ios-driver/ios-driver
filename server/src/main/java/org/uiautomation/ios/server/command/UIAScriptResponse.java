@@ -13,26 +13,44 @@
  */
 package org.uiautomation.ios.server.command;
 
+import java.util.Map;
+
 import org.openqa.selenium.remote.JsonToBeanConverter;
 import org.openqa.selenium.remote.Response;
 
 public class UIAScriptResponse {
   private final String rawResponse;
   private final JsonToBeanConverter convertor = new JsonToBeanConverter();
+  private boolean firstResponse = false;
+  private final Response response;
 
   public UIAScriptResponse(String rawResponse) {
     this.rawResponse = rawResponse;
+    response = convertor.convert(Response.class, rawResponse);
+    if (isFirstResponse(response)) {
+      firstResponse = true;
+      Object realResponse = ((Map<String, Object>) response.getValue()).get("firstResponse");
+      response.setValue(realResponse);
+    }
   }
 
   public String toString() {
     return rawResponse;
   }
 
-  public boolean isFirstResponse(){
+  public boolean isFirstResponse() {
+    return firstResponse;
+  }
+
+  private boolean isFirstResponse(Response r) {
+    if (r.getValue() instanceof Map) {
+      return ((Map<String, Object>) r.getValue()).containsKey("firstResponse");
+    }
     return false;
   }
+
   public Response getResponse() {
-    return convertor.convert(Response.class, rawResponse);
+    return response;
   }
 
   public String getRaw() {

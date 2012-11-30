@@ -10,5 +10,5 @@
 - remove the dup exception from webdriver
 - throwing helpful messages when the rights in xcode haven't been changed.
 - find a solution for extra languages non iso
-- 
-make the register command send the capabilities
+- make the register command send the capabilities
+- kill instruments before starting.
