@@ -9,9 +9,13 @@ import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.LanguageDictionary;
 import org.uiautomation.ios.server.application.ServerSideL10NDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
-import org.uiautomation.ios.server.utils.JSONTreeParser;
+import org.uiautomation.ios.server.utils.JSONToXMLConvertor;
+import org.uiautomation.ios.server.utils.XPath2Engine;
+import org.uiautomation.ios.server.utils.XPathWithL10N;
 
 public abstract class BaseFindElementHandler extends UIAScriptHandler {
 
@@ -33,25 +37,34 @@ public abstract class BaseFindElementHandler extends UIAScriptHandler {
     return reference;
   }
 
-  protected JSONTreeParser getParser() {
+  protected XPath2Engine getParser() {
     if (!xpathMode) {
       throw new WebDriverException("Bug. parser only apply to xpath mode.");
     }
     JSONObject logElementTree = getSession().getNativeDriver().logElementTree(null, false);
     JSONObject tree = logElementTree.optJSONObject("tree");
-    return new JSONTreeParser(tree);
+    try {
+      return new XPath2Engine(new JSONToXMLConvertor(tree).asXML());
+    } catch (Exception e) {
+      throw new WebDriverException(e);
+    }
 
   }
-  
-  protected String getXpath(){
-    if (!xpathMode){
+
+  protected String getXpath() {
+    if (!xpathMode) {
       throw new WebDriverException("Bug. parser only apply to xpath mode.");
     }
     String xpath = getRequest().getPayload().optString("value");
-    if (xpath.contains("l10n(")){
-      
+    XPathWithL10N l10ned = new XPathWithL10N(xpath);
+    IOSApplication app = getDriver().getSession(getRequest().getSession()).getApplication();
+    for (String key : l10ned.getKeysToL10N()) {
+      LanguageDictionary dict = app.getDictionary(app.getCurrentLanguage());
+      String value = dict.getContentForKey(key);
+      value = LanguageDictionary.getRegexPattern(value);
+      l10ned.setTranslation(key, value);
     }
-    return xpath;
+    return l10ned.getXPath();
   }
 
   protected Criteria getCriteria() {

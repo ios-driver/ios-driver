@@ -22,9 +22,9 @@ public class ComplexCriteriaTest extends BaseIOSDriverTest {
   @DataProvider(name = "intlMountain", parallel = false)
   public Object[][] createDataPerLocale() {
     return new Object[][] {
-        { Localizable.en, "Mountain 1 was first climbed on 29 May 1953 and has a height of 8,848 meters" },
+        //{ Localizable.en, "Mountain 1 was first climbed on 29 May 1953 and has a height of 8,848 meters" },
         //{ Localizable.fr, "Bien que 8,848 mètres de haut, Montagne 1 aient été montés la première fois 29 May 1953." },
-        //{ Localizable.zh, "山 1 是8,848米高。它第一次攀登了在29 May 1953。" } 
+        { Localizable.zh, "山 1 是8,848米高。它第一次攀登了在29 May 1953。" } 
         };
   }
 
@@ -49,7 +49,12 @@ public class ComplexCriteriaTest extends BaseIOSDriverTest {
       actual = text.getName();
       Assert.assertEquals(actual, expectedContent);
       
-      WebElement el = driver.findElement(By.xpath("//*[contains(@name,l10n('meterFormat'))]"));
+      // and using Xpath
+      WebElement el = driver.findElement(By.xpath("//*[matches(@name,l10n('meterFormat'))]"));
+      
+      Assert.assertEquals(el.getAttribute("name"), expectedContent);
+      
+      el = driver.findElement(By.xpath("//*[matches(@name,l10n('sentenceFormat'))]"));
       Assert.assertEquals(el.getAttribute("name"), expectedContent);
     } finally {
       if (driver != null) {
