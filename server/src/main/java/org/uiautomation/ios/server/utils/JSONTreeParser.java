@@ -23,7 +23,6 @@ public class JSONTreeParser {
 
   public JSONTreeParser(JSONObject tree) {
     xml = buildXMLDoc(tree);
-    System.out.println(xml.asXML());
   }
 
   public List<Map<String, String>> findElementsByXpath(String xpath) {
@@ -35,6 +34,7 @@ public class JSONTreeParser {
   }
   
   public Map<String, String> findElementByXpath(String xpath,String reference) {
+    System.out.println(xml.asXML());
     return findElementByXpath(xpath, getNode(reference));
   }
   

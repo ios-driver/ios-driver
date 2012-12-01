@@ -16,10 +16,17 @@ var Cache = function() {
 	this.lastReference = 3;
 
 	this.store = function(element) {
-		this.lastReference++;
-		element.id = this.lastReference;
-		this.storage[this.lastReference] = element;
-		return element.id;
+		if(element && element.type && element.type() === "UIAApplication") {
+			var id = 1;
+			element.id = id;
+			return id;
+		} else {
+			this.lastReference++;
+			element.id = this.lastReference;
+			this.storage[this.lastReference] = element;
+			return element.id;
+		}
+
 	};
 
 	this.get = function(reference, opt_checkStale) {
@@ -191,7 +198,7 @@ var UIAutomation = {
 	commandLoop : function() {
 		// first command after registration sends the capabilities.
 		var init = {};
-		init.firstResponse =UIAutomation.getCapabilities();
+		init.firstResponse = UIAutomation.getCapabilities();
 		var response = this.createJSONResponse(this.SESSION, 0, init);
 		var ok = true;
 		while(ok) {

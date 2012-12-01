@@ -101,5 +101,14 @@ public abstract class BaseCommandHandler implements Handler {
     JSONObject res = new JSONObject().put("No config for this command", "");
     return res;
   }
+  
+  
+  protected Response createResponse(Object value){
+    Response r = new Response();
+    r.setSessionId(getSession().getSessionId());
+    r.setStatus(0);
+    r.setValue(value);
+    return r;
+  }
 
 }

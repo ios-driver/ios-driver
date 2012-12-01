@@ -1,5 +1,7 @@
 package org.uiautomation.ios.e2e.intl;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -21,8 +23,9 @@ public class ComplexCriteriaTest extends BaseIOSDriverTest {
   public Object[][] createDataPerLocale() {
     return new Object[][] {
         { Localizable.en, "Mountain 1 was first climbed on 29 May 1953 and has a height of 8,848 meters" },
-        { Localizable.fr, "Bien que 8,848 mètres de haut, Montagne 1 aient été montés la première fois 29 May 1953." },
-        { Localizable.zh, "山 1 是8,848米高。它第一次攀登了在29 May 1953。" } };
+        //{ Localizable.fr, "Bien que 8,848 mètres de haut, Montagne 1 aient été montés la première fois 29 May 1953." },
+        //{ Localizable.zh, "山 1 是8,848米高。它第一次攀登了在29 May 1953。" } 
+        };
   }
 
   @Test(dataProvider = "intlMountain")
@@ -45,6 +48,9 @@ public class ComplexCriteriaTest extends BaseIOSDriverTest {
       text = driver.findElement(criteria);
       actual = text.getName();
       Assert.assertEquals(actual, expectedContent);
+      
+      WebElement el = driver.findElement(By.xpath("//*[contains(@name,l10n('meterFormat'))]"));
+      Assert.assertEquals(el.getAttribute("name"), expectedContent);
     } finally {
       if (driver != null) {
         driver.quit();
