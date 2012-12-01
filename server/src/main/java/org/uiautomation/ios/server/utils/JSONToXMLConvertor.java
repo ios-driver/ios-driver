@@ -5,6 +5,7 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.openqa.selenium.internal.seleniumemulation.GetXpathCount;
 import org.w3c.dom.Node;
 
 public class JSONToXMLConvertor {
@@ -21,6 +22,7 @@ public class JSONToXMLConvertor {
 
   private Document buildXMLDoc(JSONObject tree) {
     Document document = DocumentHelper.createDocument();
+    document.setXMLEncoding("UTF-8");
     Element root = document.addElement("root");
     buildXMLNode(tree, root);
     return document;
@@ -31,8 +33,10 @@ public class JSONToXMLConvertor {
     if (from == null) {
       return;
     }
-    Element node = parent.addElement(from.optString("type")).addAttribute("name", from.optString("name"))
-        .addAttribute("label", from.optString("label")).addAttribute("value", from.optString("value"))
+    Element node = parent.addElement(from.optString("type"))
+        .addAttribute("name", from.optString("name"))
+        .addAttribute("label", from.optString("label"))
+        .addAttribute("value", from.optString("value"))
         .addAttribute("ref", from.optString("ref"));
 
     JSONArray array = from.optJSONArray("children");

@@ -38,7 +38,7 @@ public class XpathTreeFinderTest {
     tree = new JSONObject(uiCatalog1).getJSONObject("tree");
     treeIntl = new JSONObject(intlMountainZH);
 
-    // parserIntl = new XPath2Engine(new JSONToXMLConvertor(treeIntl).asXML());
+    parserIntl = new XPath2Engine(new JSONToXMLConvertor(treeIntl).asXML());
     parser = new XPath2Engine(new JSONToXMLConvertor(tree).asXML());
 
   }
@@ -50,7 +50,7 @@ public class XpathTreeFinderTest {
   private final String mainWindowRef = "5";
   private final String otherWindow = "38";
 
-  /*@DataProvider(name = "xpaths")
+  @DataProvider(name = "xpaths")
   private Object[][] xpathAndResult() {
     return new Object[][] {
         { "//UIATableCell/UIAStaticText[@name='SearchBar, Use of UISearchBar']", expected(18, UIAStaticText.class) },
@@ -141,7 +141,7 @@ public class XpathTreeFinderTest {
   @Test(expectedExceptions = NoSuchElementException.class)
   public void elementsDoesntExistIntl() {
     parserIntl.findElementsByXpath("./*[contains(@name,'UISearchBar')", "50000");
-  }*/
+  }
 
   @Test
   public void withL10N() throws Exception {
@@ -170,11 +170,11 @@ public class XpathTreeFinderTest {
     Assert.assertEquals(el, expected(13, UIAStaticText.class));
   }
 
-  /*@Test
+  @Test
   public void contains() throws Exception {
     XPathWithL10N xpath = new XPathWithL10N("//*[contains(@name,'米')]");
     Map<String, String> el = parserIntl.findElementByXpath(xpath.getXPath());
     Assert.assertEquals(el, expected(13, UIAStaticText.class));
-  }*/
+  }
 
 }
