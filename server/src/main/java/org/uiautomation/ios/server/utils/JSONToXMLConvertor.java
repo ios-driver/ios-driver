@@ -5,6 +5,7 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.w3c.dom.Node;
 
 public class JSONToXMLConvertor {
 
@@ -26,7 +27,7 @@ public class JSONToXMLConvertor {
 
   }
 
-  private static void buildXMLNode(JSONObject from, Element parent) {
+  private void buildXMLNode(JSONObject from, Element parent) {
     if (from == null) {
       return;
     }

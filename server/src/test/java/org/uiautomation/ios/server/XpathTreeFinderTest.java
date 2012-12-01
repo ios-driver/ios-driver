@@ -1,5 +1,6 @@
 package org.uiautomation.ios.server;
 
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
@@ -36,10 +37,9 @@ public class XpathTreeFinderTest {
   public void setup() throws Exception {
     tree = new JSONObject(uiCatalog1).getJSONObject("tree");
     treeIntl = new JSONObject(intlMountainZH);
-    
-    parserIntl = new XPath2Engine(new JSONToXMLConvertor(treeIntl).asXML());
+
+    // parserIntl = new XPath2Engine(new JSONToXMLConvertor(treeIntl).asXML());
     parser = new XPath2Engine(new JSONToXMLConvertor(tree).asXML());
-   
 
   }
 
@@ -50,7 +50,7 @@ public class XpathTreeFinderTest {
   private final String mainWindowRef = "5";
   private final String otherWindow = "38";
 
-  @DataProvider(name = "xpaths")
+  /*@DataProvider(name = "xpaths")
   private Object[][] xpathAndResult() {
     return new Object[][] {
         { "//UIATableCell/UIAStaticText[@name='SearchBar, Use of UISearchBar']", expected(18, UIAStaticText.class) },
@@ -134,30 +134,47 @@ public class XpathTreeFinderTest {
 
   @Test
   public void regex() {
-    List<Map<String, String>> elements =parser.findElementsByXpath("//*[matches(@name,'(.*)UISearchBar(.*)')]");
+    List<Map<String, String>> elements = parser.findElementsByXpath("//*[matches(@name,'(.*)UISearchBar(.*)')]");
     Assert.assertEquals(elements.size(), 2);
   }
-  
+
   @Test(expectedExceptions = NoSuchElementException.class)
   public void elementsDoesntExistIntl() {
     parserIntl.findElementsByXpath("./*[contains(@name,'UISearchBar')", "50000");
-  }
+  }*/
 
   @Test
   public void withL10N() throws Exception {
+    XPath2Engine parserIntl = new XPath2Engine(new JSONToXMLConvertor(treeIntl).asXML());
     XPathWithL10N xpath = new XPathWithL10N("//*[matches(@name,l10n('meterFormat'))]");
     xpath.setTranslation("meterFormat", "(.*)米(.*)");
     Map<String, String> el = parserIntl.findElementByXpath(xpath.getXPath());
     Assert.assertEquals(el, expected(13, UIAStaticText.class));
   }
-  
+
   @Test
   public void withL10N2() throws Exception {
-    XPathWithL10N xpath = new XPathWithL10N("//*[contains(@name,l10n('meterFormat'))]");
-    //xpath.setTranslation("meterFormat", "米");
-    //xpath.setTranslation("meterFormat", "29 May 1953");
-    xpath.setTranslation("meterFormat", "8,848");
+    XPath2Engine parserIntl = new XPath2Engine(new JSONToXMLConvertor(treeIntl).asXML());
+    XPathWithL10N xpath = new XPathWithL10N("//*[matches(@name,l10n('meterFormat'))]");
+    xpath.setTranslation("meterFormat", "(.*)米(.*)");
     Map<String, String> el = parserIntl.findElementByXpath(xpath.getXPath());
     Assert.assertEquals(el, expected(13, UIAStaticText.class));
   }
+
+  @Test
+  public void withL10N3() throws Exception {
+    XPath2Engine parserIntl = new XPath2Engine(new JSONToXMLConvertor(treeIntl).asXML());
+    XPathWithL10N xpath = new XPathWithL10N("//*[matches(@name,l10n('meterFormat'))]");
+    xpath.setTranslation("meterFormat", "(.*)米(.*)");
+    Map<String, String> el = parserIntl.findElementByXpath(xpath.getXPath());
+    Assert.assertEquals(el, expected(13, UIAStaticText.class));
+  }
+
+  /*@Test
+  public void contains() throws Exception {
+    XPathWithL10N xpath = new XPathWithL10N("//*[contains(@name,'米')]");
+    Map<String, String> el = parserIntl.findElementByXpath(xpath.getXPath());
+    Assert.assertEquals(el, expected(13, UIAStaticText.class));
+  }*/
+
 }

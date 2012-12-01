@@ -1,6 +1,6 @@
 package org.uiautomation.ios.server.utils;
 
-import java.io.StringReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,12 +16,12 @@ import javax.xml.xpath.XPathFactory;
 import net.sf.saxon.dom.DOMNodeList;
 import net.sf.saxon.lib.NamespaceConstant;
 
+import org.apache.commons.io.IOUtils;
 import org.openqa.selenium.InvalidSelectorException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriverException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.xml.sax.InputSource;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -32,14 +32,15 @@ public class XPath2Engine {
 
   public XPath2Engine(String xml) throws Exception {
     String objectModel = NamespaceConstant.OBJECT_MODEL_SAXON;
+    System.setProperty("file.encoding","UTF-8");
     System.setProperty("javax.xml.xpath.XPathFactory:" + objectModel, "net.sf.saxon.xpath.XPathFactoryImpl");
-
+    System.out.println(Charset.defaultCharset());
     XPathFactory xpathFactory = XPathFactory.newInstance(objectModel);
     xpath2 = xpathFactory.newXPath();
     DocumentBuilderFactory dfactory = DocumentBuilderFactory.newInstance();
 
     DocumentBuilder docBuilder = dfactory.newDocumentBuilder();
-    document = docBuilder.parse(new InputSource(new StringReader(xml)));
+    document = docBuilder.parse(IOUtils.toInputStream(xml,"UTF-8"));
   }
 
   public List<Map<String, String>> findElementsByXpath(String xpath) {
