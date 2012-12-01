@@ -40,30 +40,56 @@ public class FindElementRoot extends UIAScriptHandler {
     }
 
     ServerSideSession session = driver.getSession(request.getSession());
-    ServerSideL10NDecorator decorator = new ServerSideL10NDecorator(session.getApplication());
-    Criteria decorated = null;
-    try {
-      int depth = request.getPayload().optInt("depth",-1);
+    
+    
 
-      try {
-        JSONObject json = getCriteria(request.getPayload());
-        decorated = AbstractCriteria.parse(json, decorator);
-        request.getPayload().put("criteria", decorated.stringify().toString());
-      } catch (Exception e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      String js = jsTemplate.replace(":sessionId", request.getSession()).replace(":depth", "" + depth)
-          .replace(":reference", reference).replace(":criteria", decorated.stringify().toString());
-      setJS(js);
-    } catch (Exception e) {
-      throw new WebDriverException("error parsing the payload", e);
+    JSONObject payload = request.getPayload();
+
+    // xpath query are done in the server, but pulling the complete tree as xml,
+    // and parsing that rather that use instrument for the finding.
+    if (payload.has("using") && "xpath".equals(payload.optString("using"))) {
+      findElementParsingLocalXMLTree(reference);
+    } else {
+      findElementUsingInstruments(reference);
     }
+
+  
+  }
+
+  private void findElementParsingLocalXMLTree(String reference) {
+    JSONObject logElementTree = getSession().getNativeDriver().logElementTree(null, false);
+    System.out.println(logElementTree.toString());
+    
   }
 
   @Override
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
+  }
+  
+  private void findElementUsingInstruments(String reference){
+    Criteria decorated = null;
+    try {
+      int depth = getRequest().getPayload().optInt("depth", -1);
+
+      try {
+        ServerSideL10NDecorator decorator = new ServerSideL10NDecorator(getSession().getApplication());
+        JSONObject json = getCriteria(getRequest().getPayload());
+        decorated = AbstractCriteria.parse(json, decorator);
+        getRequest().getPayload().put("criteria", decorated.stringify().toString());
+      } catch (Exception e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      String js = jsTemplate
+          .replace(":sessionId", getRequest().getSession())
+          .replace(":depth", "" + depth)
+          .replace(":reference", reference)
+          .replace(":criteria", decorated.stringify().toString());
+      setJS(js);
+    } catch (Exception e) {
+      throw new WebDriverException("error parsing the payload", e);
+    }
   }
 
   private JSONObject getCriteria(JSONObject payload) throws JSONException {
@@ -76,7 +102,7 @@ public class FindElementRoot extends UIAScriptHandler {
       if ("tag name".equals(using)) {
         try {
           Package p = UIAElement.class.getPackage();
-          Criteria c = new TypeCriteria(Class.forName(p.getName()+"."+value));
+          Criteria c = new TypeCriteria(Class.forName(p.getName() + "." + value));
           return c.stringify();
         } catch (ClassNotFoundException e) {
           // TODO Auto-generated catch block

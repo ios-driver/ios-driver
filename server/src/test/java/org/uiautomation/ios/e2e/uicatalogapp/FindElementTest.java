@@ -122,5 +122,11 @@ public class FindElementTest extends BaseIOSDriverTest {
     List<WebElement> elements = window.findElements(By.tagName("UIAButton"));
     Assert.assertEquals(elements.size(), 0);
   }
+  
+  @Test
+  public void findElementXpath() throws InterruptedException {
+    WebElement elements = driver.findElement(By.xpath("//UIATableCell"));
+   
+  }
 
 }
