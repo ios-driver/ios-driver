@@ -1,10 +1,14 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
 <suite name="ios-driver" verbose="10" parallel="false">
-	<test name="native regression" preserve-order="true">
+	<test name="unit tests" preserve-order="true">
+		<packages>
+			<package name="org.uiautomation.ios.server.*" />
+		</packages>
+	</test>
+	<test name="end to end" preserve-order="true">
 		<packages>
 			<package name="org.uiautomation.ios.e2e.*" />
-			<package name="org.uiautomation.ios.server.*" />
 		</packages>
 	</test>
 </suite>

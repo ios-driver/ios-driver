@@ -5,8 +5,6 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.openqa.selenium.internal.seleniumemulation.GetXpathCount;
-import org.w3c.dom.Node;
 
 public class JSONToXMLConvertor {
 

@@ -14,7 +14,7 @@ public class ServerSerializeExceptionTest extends BaseIOSDriverTest {
   public void clientGetsServerException()  {
     RemoteUIADriver driver = null;
     try {
-      IOSCapabilities cap = SampleApps.intlMountainsCap(Localizable.fr);
+      IOSCapabilities cap = SampleApps.intlMountainsCap(Localizable.de);
       driver = new RemoteUIADriver(getRemoteURL(), cap);
 
     } finally {

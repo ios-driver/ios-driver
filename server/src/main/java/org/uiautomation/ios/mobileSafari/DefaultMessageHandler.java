@@ -18,7 +18,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Logger;
 
-import org.apache.bcel.generic.INSTANCEOF;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.dom4j.Document;
@@ -29,7 +28,6 @@ import org.uiautomation.ios.mobileSafari.events.ChildNodeRemoved;
 import org.uiautomation.ios.mobileSafari.events.Event;
 import org.uiautomation.ios.mobileSafari.events.EventFactory;
 import org.uiautomation.ios.mobileSafari.events.inserted.ChildIframeInserted;
-import org.uiautomation.ios.server.simulator.IOSSimulatorManager;
 
 public class DefaultMessageHandler implements MessageHandler {
 

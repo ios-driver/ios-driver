@@ -3,11 +3,10 @@ package org.uiautomation.ios.e2e.hybrid;
 import java.util.Set;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
@@ -23,8 +22,6 @@ import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 
 public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
-
-
 
   @Test
   public void canSwitchToWebView() throws Exception {
@@ -74,21 +71,23 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
       UIAElement webCell = driver.findElement(new AndCriteria(new TypeCriteria(UIATableCell.class), new NameCriteria(
           "Web", MatchingStrategy.starts)));
       webCell.tap();
-      
-      
+
       handles = driver.getWindowHandles();
       Assert.assertEquals(handles.size(), 2);
       driver.switchTo().window("Web");
 
       final By by = By.cssSelector("a[href='http://store.apple.com/']");
 
-      new WebDriverWait(driver, 5).until(new ExpectedCondition<WebElement>() {
-        @Override
-        public WebElement apply(WebDriver d) {
-          return d.findElement(by);
+      long end = System.currentTimeMillis() + 5000;
+      WebElement el;
+      while (System.currentTimeMillis() < end) {
+        try {
+          el = driver.findElement(by);
+        } catch (NoSuchElementException e) {
+          // ignore
         }
-      });
-      WebElement el = driver.findElement(by);
+      }
+      el = driver.findElement(by);
       Assert.assertEquals(el.getAttribute("href"), "http://store.apple.com/");
 
     } finally {

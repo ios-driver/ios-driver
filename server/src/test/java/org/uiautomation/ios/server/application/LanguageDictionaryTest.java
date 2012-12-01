@@ -27,8 +27,8 @@ public class LanguageDictionaryTest {
     Assert.assertEquals(dict.getLanguage(), Localizable.fr);
   }
 
-  // TODO freynaud default to locale when no supported.
-  @Test(expectedExceptions = { WebDriverException.class })
+ 
+  @Test(enabled=false,expectedExceptions = { WebDriverException.class })
   public void notARecognizedLanguage() {
     String name = "Klingon";
     LanguageDictionary dict = new LanguageDictionary(name);
