@@ -4,6 +4,7 @@
 	<test name="native regression" preserve-order="true">
 		<packages>
 			<package name="org.uiautomation.ios.e2e.*" />
+			<package name="org.uiautomation.ios.server.*" />
 		</packages>
 	</test>
 </suite>
