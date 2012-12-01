@@ -15,3 +15,5 @@
 - ios capability needs device + type + resolution
 - xpath for native
 - xpath to css convertor for web
+- rename the native handlers.
+- cleanup dependency and check for dups.
