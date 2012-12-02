@@ -22,7 +22,7 @@ import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
 
-public class FindElementsRoot extends BaseFindElementHandler {
+public class FindElementsRoot extends BaseFindElementNHandler {
 
   private static final String jsTemplate = "var root = UIAutomation.cache.get(':reference');"
       + "var result = root.elements2(:depth,:criteria);" 

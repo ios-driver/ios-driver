@@ -21,13 +21,13 @@ import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
 
-public class FindElementRoot extends BaseFindElementHandler {
+public class FindElementNHandler extends BaseFindElementNHandler {
 
   private static final String jsTemplate = "var root = UIAutomation.cache.get(':reference');"
       + "var result = root.element(:depth,:criteria);" 
       + "UIAutomation.createJSONResponse(':sessionId',0,result);";
 
-  public FindElementRoot(IOSDriver driver, WebDriverLikeRequest request) {
+  public FindElementNHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
 
     // xpath query are done in the server, by pulling the complete tree as xml,

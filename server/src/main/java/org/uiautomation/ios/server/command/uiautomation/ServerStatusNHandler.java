@@ -30,9 +30,9 @@ import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
 import org.uiautomation.ios.server.utils.BuildInfo;
 import org.uiautomation.ios.server.utils.ClassicCommands;
 
-public class ServerStatus extends BaseNativeCommandHandler {
+public class ServerStatusNHandler extends BaseNativeCommandHandler {
 
-  public ServerStatus(IOSDriver driver, WebDriverLikeRequest request) {
+  public ServerStatusNHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
 

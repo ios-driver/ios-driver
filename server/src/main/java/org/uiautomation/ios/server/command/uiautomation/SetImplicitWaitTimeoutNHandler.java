@@ -11,25 +11,38 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package org.uiautomation.ios.server.command.uiautomation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
-import org.uiautomation.ios.server.command.UIAScriptHandler;
 
-public class LocalTarget extends UIAScriptHandler {
+public class SetImplicitWaitTimeoutNHandler extends SetTimeoutNHandler {
 
-  private static final String jsTemplate =
-      "var target = UIATarget.localTarget();var k=UIAutomation.cache.store(target);UIAutomation.createJSONResponse(':sessionId',0,target);";
-
-  public LocalTarget(IOSDriver driver, WebDriverLikeRequest request) {
+  public SetImplicitWaitTimeoutNHandler(IOSDriver driver, WebDriverLikeRequest request) throws Exception {
     super(driver, request);
-    String js = jsTemplate.replace(":sessionId", request.getSession());
-    setJS(js);
   }
+
+  protected String getVariableToCorrect(){
+    return "ms";
+  }
+  
+  protected String getScript(IOSDriver driver, WebDriverLikeRequest r) throws Exception {  
+    int timeout = r.getPayload().getInt("ms");
+    int timeoutInSec = timeout/1000;
+    String type = "implicit";
+    String s = setTimeout.replace(":timeout", String.format("%d", timeoutInSec));
+    s = s.replace(":type", type);
+    return s;
+  }
+  
+  @Override
+  public Response handle() throws Exception {
+    return super.handle();
+  }
+
   @Override
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();

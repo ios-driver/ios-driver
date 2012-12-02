@@ -19,7 +19,7 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 
-public class PinchCloseHandler extends UIAScriptHandler{
+public class PinchCloseNHandler extends UIAScriptHandler{
   //UIATarget.localTarget().pinchCloseFromToForDuration({x:"300", y:"400"}, {x:"50", y:"100"}, "1");
   
   
@@ -27,7 +27,7 @@ public class PinchCloseHandler extends UIAScriptHandler{
         "UIATarget.localTarget().pinchCloseFromToForDuration({x:':x1', y:':y1'}, {x:':x2', y:':y2'}, ':duration');" +
         "UIAutomation.createJSONResponse(':sessionId',0,'')";
     
-    public PinchCloseHandler(IOSDriver driver, WebDriverLikeRequest request) {
+    public PinchCloseNHandler(IOSDriver driver, WebDriverLikeRequest request) {
       super(driver, request);
       
       Object payload = request.getPayload();

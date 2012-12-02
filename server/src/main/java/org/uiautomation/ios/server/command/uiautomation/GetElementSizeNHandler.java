@@ -6,13 +6,13 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 
-public class GetElementSizeHandler extends UIAScriptHandler {
+public class GetElementSizeNHandler extends UIAScriptHandler {
 
   private static final String template = "var element = UIAutomation.cache.get(:reference, :opt_checkStale);" +
           "var result = element.rect2();" +
           "UIAutomation.createJSONResponse(':sessionId',0,result)";
   
-  public GetElementSizeHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public GetElementSizeNHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
     
     String js =  template

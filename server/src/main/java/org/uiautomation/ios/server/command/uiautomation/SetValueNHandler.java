@@ -13,32 +13,44 @@
  */
 package org.uiautomation.ios.server.command.uiautomation;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 
-public class AttributeCommand extends UIAScriptHandler {
+public class SetValueNHandler extends UIAScriptHandler{
 
-  private static final String template = 
+  private static final String voidTemplate =
       "var parent = UIAutomation.cache.get(:reference);" +
-      "var myStringResult = parent:attribute ;" +
-      "UIAutomation.createJSONResponse(':sessionId',0,myStringResult)";
+      "parent:jsMethod;" +
+      "UIAutomation.createJSONResponse(':sessionId',0,'')";
   
-  public AttributeCommand(IOSDriver driver, WebDriverLikeRequest request) {
+  public SetValueNHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
-    
-    String attributeMethod = "."+request.getVariableValue(":name")+"()";
-    String js =  template
-            .replace(":sessionId", request.getSession())
-            .replace(":attribute",attributeMethod)
-            .replace(":reference", request.getVariableValue(":reference"));
-    setJS(js);
+    try {
+      JSONArray array  =request.getPayload().getJSONArray("value");
+      String value = array.getString(0);
+      String corrected = value.replaceAll("\\\\", "\\\\\\\\");
+      corrected = corrected.replaceAll("\\n", "\\\\n");
+      corrected = corrected.replaceAll("\\t", "\\\\t");
+
+
+      
+      String js = voidTemplate
+          .replace(":sessionId", request.getSession())
+          .replace(":reference", request.getVariableValue(":reference"))
+          .replace(":jsMethod", ".setValue('"+corrected+"')");
+      setJS(js);
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
   }
-  
+
   @Override
   public JSONObject configurationDescription() throws JSONException {
+    
     return noConfigDefined();
   }
 

@@ -17,12 +17,12 @@ import org.uiautomation.ios.server.utils.JSONToXMLConvertor;
 import org.uiautomation.ios.server.utils.XPath2Engine;
 import org.uiautomation.ios.server.utils.XPathWithL10N;
 
-public abstract class BaseFindElementHandler extends UIAScriptHandler {
+public abstract class BaseFindElementNHandler extends UIAScriptHandler {
 
   private final boolean xpathMode;
   private final String reference;
 
-  public BaseFindElementHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public BaseFindElementNHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
     this.xpathMode = getRequest().getPayload().has("using")
         && "xpath".equals(getRequest().getPayload().optString("using"));

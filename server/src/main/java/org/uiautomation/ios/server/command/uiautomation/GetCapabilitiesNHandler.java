@@ -26,7 +26,7 @@ import org.uiautomation.ios.server.application.Localizable;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 
-public class GetCapabilitiesCommandHandler extends UIAScriptHandler {
+public class GetCapabilitiesNHandler extends UIAScriptHandler {
 
   // TODO freynaud
   private static Response cachedResponse = null;
@@ -40,7 +40,7 @@ public class GetCapabilitiesCommandHandler extends UIAScriptHandler {
   private static final String capabilities = "var json = UIAutomation.getCapabilities();"
       + "UIAutomation.createJSONResponse(':sessionId',0,json)";
 
-  public GetCapabilitiesCommandHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public GetCapabilitiesNHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
     setJS(capabilities.replace(":sessionId", request.getSession()));
     addDecorator(new AddAllSupportedLocalesDecorator(getDriver()));

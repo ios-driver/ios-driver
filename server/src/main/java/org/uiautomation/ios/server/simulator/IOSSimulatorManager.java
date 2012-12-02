@@ -29,7 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.communication.IOSDevice;
-import org.uiautomation.ios.server.command.uiautomation.NewSession;
+import org.uiautomation.ios.server.command.uiautomation.NewSessionNHandler;
 import org.uiautomation.ios.server.instruments.IOSDeviceManager;
 import org.uiautomation.ios.server.utils.ClassicCommands;
 import org.uiautomation.ios.server.utils.Command;
@@ -294,7 +294,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   }
 
   private JSONObject loadGlobalPreferencesTemplate() throws JSONException, IOException {
-    InputStream is = NewSession.class.getResourceAsStream(TEMPLATE);
+    InputStream is = NewSessionNHandler.class.getResourceAsStream(TEMPLATE);
     StringWriter writer = new StringWriter();
     IOUtils.copy(is, writer, "UTF-8");
     String content = writer.toString();

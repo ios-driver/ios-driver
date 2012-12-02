@@ -24,12 +24,12 @@ import org.uiautomation.ios.server.command.PreHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 import org.uiautomation.ios.server.utils.hack.TimeSpeeder;
 
-public class SetTimeoutCommandHandler extends UIAScriptHandler {
+public class SetTimeoutNHandler extends UIAScriptHandler {
 
   protected static final String setTimeout = "UIAutomation.setTimeout(':type',:timeout);"
       + "UIAutomation.createJSONResponse(':sessionId',0,'')";
 
-  public SetTimeoutCommandHandler(IOSDriver driver, WebDriverLikeRequest request) throws Exception {
+  public SetTimeoutNHandler(IOSDriver driver, WebDriverLikeRequest request) throws Exception {
     super(driver, request);
     addDecorator(new CorrectTimeout(driver,this));
   }
@@ -54,9 +54,9 @@ public class SetTimeoutCommandHandler extends UIAScriptHandler {
 
   class CorrectTimeout extends PreHandleDecorator {
 
-    private SetTimeoutCommandHandler handler;
+    private SetTimeoutNHandler handler;
     
-    public CorrectTimeout(IOSDriver driver,SetTimeoutCommandHandler handler) {
+    public CorrectTimeout(IOSDriver driver,SetTimeoutNHandler handler) {
       super(driver);
       this.handler = handler;
     }

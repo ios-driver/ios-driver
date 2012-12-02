@@ -26,13 +26,13 @@ import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 import org.uiautomation.ios.server.utils.FileTo64EncodedStringUtils;
 
-public class TakeScreenshot extends UIAScriptHandler {
+public class TakeScreenshotNHandler extends UIAScriptHandler {
 
   public static final String SCREEN_NAME = "tmpScreenshot";
   private static final String jsTemplate = "UIATarget.localTarget().captureScreenWithName('" + SCREEN_NAME + "');"
       + "UIAutomation.createJSONResponse(':sessionId',0,'ok');";
 
-  public TakeScreenshot(IOSDriver driver, WebDriverLikeRequest request) {
+  public TakeScreenshotNHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
     setJS(jsTemplate.replace(":sessionId", request.getSession()));
     addDecorator(new SendBack64EncodedStringDecorator(driver));

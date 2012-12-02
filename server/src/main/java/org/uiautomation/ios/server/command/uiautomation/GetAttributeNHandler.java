@@ -15,34 +15,28 @@ package org.uiautomation.ios.server.command.uiautomation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.command.UIAScriptHandler;
 
-public class SetImplicitWaitTimeout extends SetTimeoutCommandHandler {
+public class GetAttributeNHandler extends UIAScriptHandler {
 
-  public SetImplicitWaitTimeout(IOSDriver driver, WebDriverLikeRequest request) throws Exception {
+  private static final String template = 
+      "var parent = UIAutomation.cache.get(:reference);" +
+      "var myStringResult = parent:attribute ;" +
+      "UIAutomation.createJSONResponse(':sessionId',0,myStringResult)";
+  
+  public GetAttributeNHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
-  }
-
-  protected String getVariableToCorrect(){
-    return "ms";
-  }
-  
-  protected String getScript(IOSDriver driver, WebDriverLikeRequest r) throws Exception {  
-    int timeout = r.getPayload().getInt("ms");
-    int timeoutInSec = timeout/1000;
-    String type = "implicit";
-    String s = setTimeout.replace(":timeout", String.format("%d", timeoutInSec));
-    s = s.replace(":type", type);
-    return s;
+    
+    String attributeMethod = "."+request.getVariableValue(":name")+"()";
+    String js =  template
+            .replace(":sessionId", request.getSession())
+            .replace(":attribute",attributeMethod)
+            .replace(":reference", request.getVariableValue(":reference"));
+    setJS(js);
   }
   
-  @Override
-  public Response handle() throws Exception {
-    return super.handle();
-  }
-
   @Override
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();

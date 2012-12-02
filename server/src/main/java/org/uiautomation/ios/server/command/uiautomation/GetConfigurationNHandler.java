@@ -15,46 +15,24 @@ package org.uiautomation.ios.server.command.uiautomation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.remote.Response;
-import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
-import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
 
-public class NewSession extends BaseNativeCommandHandler {
+public class GetConfigurationNHandler extends BaseNativeCommandHandler{
 
-  private ServerSideSession session;
-
-  public NewSession(IOSDriver driver, WebDriverLikeRequest request) {
+  public GetConfigurationNHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
-    
   }
 
+  @Override
   public Response handle() throws Exception {
-    try {
-      GetCapabilitiesCommandHandler.reset();
-      JSONObject payload = getRequest().getPayload();
-      IOSCapabilities capabilities = new IOSCapabilities(payload.getJSONObject("desiredCapabilities"));
-      session = getDriver().createSession(capabilities);
-      session.start();
-
-
-      Response resp = new Response();
-      resp.setSessionId(session.getSessionId());
-      resp.setStatus(0);
-      resp.setValue("");
-      return resp;
-    } catch (Exception e) {
-      throw new SessionNotCreatedException(e.getMessage());
-    }
-
+    // TODO Auto-generated method stub
+    return null;
   }
-
   @Override
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
   }
-
 }

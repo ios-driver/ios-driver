@@ -28,7 +28,7 @@ import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.server.application.LanguageDictionary;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.command.UIAScriptResponse;
-import org.uiautomation.ios.server.command.uiautomation.GetCapabilitiesCommandHandler;
+import org.uiautomation.ios.server.command.uiautomation.GetCapabilitiesNHandler;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
 
 public class UIAScriptServlet extends DriverBasedServlet {
@@ -81,7 +81,7 @@ public class UIAScriptServlet extends DriverBasedServlet {
       if (r.isFirstResponse()) {
         log.fine("got first response");
         Response resp = r.getResponse();
-        GetCapabilitiesCommandHandler.setCachedResponse(resp);
+        GetCapabilitiesNHandler.setCachedResponse(resp);
         getDriver().getSession(resp.getSessionId()).communication().registerUIAScript();
       } else {
         communication(request).setNextResponse(r);

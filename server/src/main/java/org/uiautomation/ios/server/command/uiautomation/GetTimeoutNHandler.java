@@ -24,14 +24,14 @@ import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 import org.uiautomation.ios.server.utils.hack.TimeSpeeder;
 
-public class GetTimeoutCommandHandler extends UIAScriptHandler {
+public class GetTimeoutNHandler extends UIAScriptHandler {
 
 
   private static final String getTimeout = 
       "var timeout =UIAutomation.getTimeout(':type');"+
       "UIAutomation.createJSONResponse(':sessionId',0,timeout)";
 
-  public GetTimeoutCommandHandler(IOSDriver driver, WebDriverLikeRequest request)
+  public GetTimeoutNHandler(IOSDriver driver, WebDriverLikeRequest request)
       throws Exception {
     super(driver, request);
     String type = request.getPayload().getString("type");

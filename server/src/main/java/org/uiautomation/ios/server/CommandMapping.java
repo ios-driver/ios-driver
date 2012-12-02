@@ -27,29 +27,28 @@ import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.server.command.Handler;
 import org.uiautomation.ios.server.command.NotImplementedNativeHandler;
 import org.uiautomation.ios.server.command.NotImplementedWebHandler;
-import org.uiautomation.ios.server.command.uiautomation.AttributeCommand;
-import org.uiautomation.ios.server.command.uiautomation.ConfigurationGetter;
-import org.uiautomation.ios.server.command.uiautomation.ConfigurationSetter;
-import org.uiautomation.ios.server.command.uiautomation.DefaultUIAScriptHandler;
-import org.uiautomation.ios.server.command.uiautomation.FindElementRoot;
+import org.uiautomation.ios.server.command.uiautomation.DefaultUIAScriptNHandler;
+import org.uiautomation.ios.server.command.uiautomation.FindElementNHandler;
 import org.uiautomation.ios.server.command.uiautomation.FindElementsRoot;
-import org.uiautomation.ios.server.command.uiautomation.GetCapabilitiesCommandHandler;
-import org.uiautomation.ios.server.command.uiautomation.GetCurrentContext;
-import org.uiautomation.ios.server.command.uiautomation.GetElementSizeHandler;
-import org.uiautomation.ios.server.command.uiautomation.GetSessions;
-import org.uiautomation.ios.server.command.uiautomation.GetTimeoutCommandHandler;
-import org.uiautomation.ios.server.command.uiautomation.GetWindowHandlesCommandHandler;
-import org.uiautomation.ios.server.command.uiautomation.LocalTarget;
-import org.uiautomation.ios.server.command.uiautomation.LogElementTree;
-import org.uiautomation.ios.server.command.uiautomation.NewSession;
-import org.uiautomation.ios.server.command.uiautomation.PinchCloseHandler;
-import org.uiautomation.ios.server.command.uiautomation.ServerStatus;
-import org.uiautomation.ios.server.command.uiautomation.SetCurrentContext;
-import org.uiautomation.ios.server.command.uiautomation.SetImplicitWaitTimeout;
-import org.uiautomation.ios.server.command.uiautomation.SetTimeoutCommandHandler;
-import org.uiautomation.ios.server.command.uiautomation.SetValueNativeHandler;
-import org.uiautomation.ios.server.command.uiautomation.StopSession;
-import org.uiautomation.ios.server.command.uiautomation.TakeScreenshot;
+import org.uiautomation.ios.server.command.uiautomation.GetAttributeNHandler;
+import org.uiautomation.ios.server.command.uiautomation.GetCapabilitiesNHandler;
+import org.uiautomation.ios.server.command.uiautomation.GetConfigurationNHandler;
+import org.uiautomation.ios.server.command.uiautomation.GetCurrentContextNHandler;
+import org.uiautomation.ios.server.command.uiautomation.GetElementSizeNHandler;
+import org.uiautomation.ios.server.command.uiautomation.GetSessionsNHandler;
+import org.uiautomation.ios.server.command.uiautomation.GetTimeoutNHandler;
+import org.uiautomation.ios.server.command.uiautomation.GetWindowHandlesNHandler;
+import org.uiautomation.ios.server.command.uiautomation.LogElementTreeNHandler;
+import org.uiautomation.ios.server.command.uiautomation.NewSessionNHandler;
+import org.uiautomation.ios.server.command.uiautomation.PinchCloseNHandler;
+import org.uiautomation.ios.server.command.uiautomation.ServerStatusNHandler;
+import org.uiautomation.ios.server.command.uiautomation.SetConfigurationNHandler;
+import org.uiautomation.ios.server.command.uiautomation.SetCurrentContextNHandler;
+import org.uiautomation.ios.server.command.uiautomation.SetImplicitWaitTimeoutNHandler;
+import org.uiautomation.ios.server.command.uiautomation.SetTimeoutNHandler;
+import org.uiautomation.ios.server.command.uiautomation.SetValueNHandler;
+import org.uiautomation.ios.server.command.uiautomation.StopSessionNHandler;
+import org.uiautomation.ios.server.command.uiautomation.TakeScreenshotNHandler;
 import org.uiautomation.ios.server.command.web.BackHandler;
 import org.uiautomation.ios.server.command.web.ClearHandler;
 import org.uiautomation.ios.server.command.web.ClickHandler;
@@ -74,21 +73,21 @@ import org.uiautomation.ios.server.command.web.SubmitHandler;
 
 public enum CommandMapping {
 
-  NEW_SESSION(NewSession.class),
-  GET_SESSION(GetCapabilitiesCommandHandler.class),
-  SESSIONS(GetSessions.class),
-  DELETE_SESSION(StopSession.class),
-  SET_TIMEOUT(SetTimeoutCommandHandler.class,SetTimeoutHandler.class),
-  IMPLICIT_WAIT(SetImplicitWaitTimeout.class,NotImplementedWebHandler.class),
-  GET_TIMEOUT(GetTimeoutCommandHandler.class),
+  NEW_SESSION(NewSessionNHandler.class),
+  GET_SESSION(GetCapabilitiesNHandler.class),
+  SESSIONS(GetSessionsNHandler.class),
+  DELETE_SESSION(StopSessionNHandler.class),
+  SET_TIMEOUT(SetTimeoutNHandler.class,SetTimeoutHandler.class),
+  IMPLICIT_WAIT(SetImplicitWaitTimeoutNHandler.class,NotImplementedWebHandler.class),
+  GET_TIMEOUT(GetTimeoutNHandler.class),
   
-  CONFIGURE(ConfigurationSetter.class),
-  GET_CONFIGURATION(ConfigurationGetter.class),
+  CONFIGURE(SetConfigurationNHandler.class),
+  GET_CONFIGURATION(GetConfigurationNHandler.class),
   
-  WINDOW_HANDLES(GetWindowHandlesCommandHandler.class),
-  WINDOW(SetCurrentContext.class,NotImplementedWebHandler.class),
+  WINDOW_HANDLES(GetWindowHandlesNHandler.class),
+  WINDOW(SetCurrentContextNHandler.class,NotImplementedWebHandler.class),
   FRAME(NotImplementedNativeHandler.class,SetFrameHandler.class),
-  GET_WINDOW_HANDLE(GetCurrentContext.class),
+  GET_WINDOW_HANDLE(GetCurrentContextNHandler.class),
   TITLE(null,null,GetTitleHandler.class),
   URL(NotImplementedNativeHandler.class,GetHandler.class),
   CURRENT_URL(NotImplementedNativeHandler.class,GetURL.class),
@@ -96,21 +95,19 @@ public enum CommandMapping {
   FORWARD(NotImplementedNativeHandler.class,ForwardHandler.class),
   REFRESH(NotImplementedNativeHandler.class,RefreshHandler.class),
   SUBMIT(NotImplementedNativeHandler.class,SubmitHandler.class),
-  TAG_NAME(".type()", DefaultUIAScriptHandler.class,GetTagNameHandler.class),
+  TAG_NAME(".type()", DefaultUIAScriptNHandler.class,GetTagNameHandler.class),
 
   EXECUTE_SCRIPT(NotImplementedNativeHandler.class,ExecuteScriptHandler.class),
   EQUAL(NotImplementedNativeHandler.class,IsEqualHandler.class),
   // UIATarget
-  LOCAL_TARGET(LocalTarget.class),
-  //HOST(NotImplementedHandler.class),
-  TREE(LogElementTree.class),
-  TREE_ROOT(LogElementTree.class),
+  TREE(LogElementTreeNHandler.class),
+  TREE_ROOT(LogElementTreeNHandler.class),
   
   TARGET_RECT(".rect()"),
   TARGET_TAP(".tap({x::x,y::y})"),
   SET_ORIENTATION(".setDeviceOrientation(:orientation)"),
   
-  SCREENSHOT(TakeScreenshot.class),
+  SCREENSHOT(TakeScreenshotNHandler.class),
   
   FONT_MOST_APP(".frontMostApp()"),
   SELECTED((String)null,IsSelectedHandler.class),
@@ -128,29 +125,29 @@ public enum CommandMapping {
  
   // UIAElement
   HIT_POINT(NotImplementedNativeHandler.class,NotImplementedWebHandler.class),
-  RECT(GetElementSizeHandler.class,NotImplementedWebHandler.class),
+  RECT(GetElementSizeNHandler.class,NotImplementedWebHandler.class),
   
   PARENT(NotImplementedNativeHandler.class,NotImplementedWebHandler.class),
   
 
-  ELEMENT_ROOT(FindElementRoot.class,FindElementHandler.class),
+  ELEMENT_ROOT(FindElementNHandler.class,FindElementHandler.class),
   ELEMENTS_ROOT(FindElementsRoot.class,FindElementsHandler.class),
   
-  ELEMENT(FindElementRoot.class,FindElementHandler.class),
+  ELEMENT(FindElementNHandler.class,FindElementHandler.class),
   ELEMENTS(FindElementsRoot.class,FindElementsHandler.class),
   
   //ELEMENT(".element(:depth,:criteria)"),
   //ELEMENTS(".elements2(:depth,:criteria)"),
   ANCESTRY(NotImplementedNativeHandler.class,NotImplementedWebHandler.class),
 
-  DISPLAYED(".isVisible()",DefaultUIAScriptHandler.class,IsDisplayedHanlder.class),
+  DISPLAYED(".isVisible()",DefaultUIAScriptNHandler.class,IsDisplayedHanlder.class),
   IS_STALE(".isStale()"),
   
   
   //LABEL(".label()"),
   //NAME(".name()"),
   //VALUE(".value()"),
-  ATTRIBUTE(AttributeCommand.class,GetAttributeHandler.class),
+  ATTRIBUTE(GetAttributeNHandler.class,GetAttributeHandler.class),
   TEXT(null,null,GetTextHandler.class),
   //WITH_NAME(".withName(:name)"),
   //WITH_PREDICATE(".withPredicate(PredicateString predicateString)"),
@@ -166,7 +163,7 @@ public enum CommandMapping {
   FLICK_INSIDE_WITH_OPTIONS(""),
   SCROLL_TO_VISIBLE(".scrollToVisible()"),
   ROTATE_WITH_OPTIONS(NotImplementedNativeHandler.class,NotImplementedWebHandler.class),
-  PINCH_CLOSE(PinchCloseHandler.class,NotImplementedWebHandler.class),
+  PINCH_CLOSE(PinchCloseNHandler.class,NotImplementedWebHandler.class),
   
   // UIAElementArray
   GET(".toArray()[:index]"),
@@ -182,7 +179,7 @@ public enum CommandMapping {
   RIGHT_BUTTON(".rightButton()"),
   
   // UIATextField
-  SET_VALUE(SetValueNativeHandler.class,SetValueHandler.class),
+  SET_VALUE(SetValueNHandler.class,SetValueHandler.class),
   CLEAR(NotImplementedNativeHandler.class,ClearHandler.class),
   
   //UIATableView
@@ -193,7 +190,7 @@ public enum CommandMapping {
   ALERT_CANCEL_BUTTON(".cancelButton2()"),
   ALERT_DEFAULT_BUTTON(".defaultButton2()"),
   
-  STATUS(ServerStatus.class);
+  STATUS(ServerStatusNHandler.class);
 
 
   private WebDriverLikeCommand command;
@@ -203,7 +200,7 @@ public enum CommandMapping {
 
   private CommandMapping(String jsMethod, Class<? extends BaseWebCommandHandler> webHandlerClass) {
     this.command = WebDriverLikeCommand.valueOf(this.name());
-    this.nativeHandlerClass = DefaultUIAScriptHandler.class;
+    this.nativeHandlerClass = DefaultUIAScriptNHandler.class;
     this.nativeJSMethod = jsMethod;
     this.webHandlerClass = webHandlerClass;
   }
@@ -211,7 +208,7 @@ public enum CommandMapping {
   
   private CommandMapping(String jsMethod) {
     this.command = WebDriverLikeCommand.valueOf(this.name());
-    this.nativeHandlerClass = DefaultUIAScriptHandler.class;
+    this.nativeHandlerClass = DefaultUIAScriptNHandler.class;
     this.nativeJSMethod = jsMethod;
     this.webHandlerClass = null;
   }

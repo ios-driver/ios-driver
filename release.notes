@@ -13,7 +13,9 @@
 + make the register command send the capabilities
 - kill instruments before starting.
 - ios capability needs device + type + resolution
-- xpath for native
++ xpath for native
 - xpath to css convertor for web
 - rename the native handlers.
-- cleanup dependency and check for dups.
++ cleanup dependency and check for dups.
+- reorganize classes in server.
+- split handlers into native, web, and misc

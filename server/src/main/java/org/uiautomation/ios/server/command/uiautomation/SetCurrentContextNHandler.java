@@ -27,9 +27,9 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
 
-public class SetCurrentContext extends BaseNativeCommandHandler {
+public class SetCurrentContextNHandler extends BaseNativeCommandHandler {
 
-  public SetCurrentContext(IOSDriver driver, WebDriverLikeRequest request) {
+  public SetCurrentContextNHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
 

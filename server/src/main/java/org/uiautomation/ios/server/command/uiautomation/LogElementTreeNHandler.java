@@ -30,12 +30,12 @@ import org.uiautomation.ios.server.utils.FileTo64EncodedStringUtils;
 
 import com.google.common.collect.ImmutableMap;
 
-public class LogElementTree extends UIAScriptHandler {
+public class LogElementTreeNHandler extends UIAScriptHandler {
 
   private static final String jsTemplate = "var root = UIAutomation.cache.get(':reference');"
       + "var result = root.tree(:attachScreenshot);" + "UIAutomation.createJSONResponse(':sessionId',0,result);";
 
-  public LogElementTree(IOSDriver driver, WebDriverLikeRequest request) {
+  public LogElementTreeNHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
 
     String reference = "1";
@@ -111,7 +111,7 @@ public class LogElementTree extends UIAScriptHandler {
 
       if (screenshot) {
         String path = getDriver().getSession(response.getSessionId()).getOutputFolder() + "/Run 1/"
-            + TakeScreenshot.SCREEN_NAME + ".png";
+            + TakeScreenshotNHandler.SCREEN_NAME + ".png";
         File source = new File(path);
         FileTo64EncodedStringUtils encoder = new FileTo64EncodedStringUtils(source);
         try {

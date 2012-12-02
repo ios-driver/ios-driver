@@ -36,7 +36,7 @@ import org.uiautomation.ios.server.command.UIAScriptHandler;
  * execute the command on instruments, and returns the result cast based on the expected result.
  * 
  */
-public class DefaultUIAScriptHandler extends UIAScriptHandler {
+public class DefaultUIAScriptNHandler extends UIAScriptHandler {
 
   // TODO freynaud extract?
   private static final String stringTemplate = 
@@ -55,7 +55,7 @@ public class DefaultUIAScriptHandler extends UIAScriptHandler {
       "parent:jsMethod;UIAutomation.createJSONResponse(':sessionId',0,'')";
 
 
-  public DefaultUIAScriptHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public DefaultUIAScriptNHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
     setJS(computeJS());
   }
