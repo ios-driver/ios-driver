@@ -5,8 +5,8 @@
 	<artifactId>ios-driver</artifactId>
 	<version>0.4.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>IOS native app automation</name>
-	<description>bridge over the apple JS UIAutomation framework to make it compatible with a webdriver like architecture.Allows remote parallel excecution using Selenium Grid2</description>
+	<name>IOS automation</name>
+	<description>bridge over the apple JS UIAutomation and the webkit remote debug protocol frameworks to make them compatible with a webdriver like architecture.Allows remote parallel excecution using Selenium Grid2</description>
 	<modules>
 		<module>common</module>
 		<module>client</module>
