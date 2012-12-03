@@ -21,7 +21,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.communication.IOSDevice;
+import org.uiautomation.ios.communication.device.Device;
+import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.simulator.IOSSimulatorManager;
 import org.uiautomation.ios.server.utils.ClassicCommands;
@@ -56,7 +57,7 @@ public class InstrumentsManager {
     this.port = serverPort;
   }
 
-  public void startSession(IOSDevice device, String sdkVersion, String locale, String language,
+  public void startSession(Device device,DeviceVariation variation, String sdkVersion, String locale, String language,
       IOSApplication application, String sessionId, boolean timeHack, List<String> envtParams)
       throws WebDriverException {
     log.fine("starting session");
@@ -74,7 +75,7 @@ public class InstrumentsManager {
         warmup();
       }
       log.fine("prepare simulator");
-      simulator = prepareSimulator(sdkVersion, device, locale, language);
+      simulator = prepareSimulator(sdkVersion, device,variation, locale, language);
       sim = (IOSSimulatorManager) simulator;
       log.fine("forcing SDK");
       sim.forceDefaultSDK(sdkVersion);
@@ -84,7 +85,7 @@ public class InstrumentsManager {
       List<String> instruments = createInstrumentCommand(uiscript.getAbsolutePath());
       communicationChannel = new CommunicationChannel();
 
-      simulatorProcess = new Command(instruments, false);
+      simulatorProcess = new Command(instruments, true);
       simulatorProcess.setWorkingDirectory(output);
       simulatorProcess.start();
 
@@ -143,12 +144,13 @@ public class InstrumentsManager {
      */
   }
 
-  private IOSDeviceManager prepareSimulator(String sdkVersion, IOSDevice device, String locale, String language) {
+  private IOSDeviceManager prepareSimulator(String sdkVersion, Device device,DeviceVariation variation, String locale, String language) {
     // TODO freynaud handle real device ?
     IOSDeviceManager simulator = new IOSSimulatorManager(sdkVersion, device);
     simulator.resetContentAndSettings();
     simulator.setL10N(locale, language);
     simulator.setKeyboardOptions();
+    simulator.setVariation(device, variation);
     return simulator;
   }
 

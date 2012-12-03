@@ -6,11 +6,11 @@ import org.testng.annotations.Test;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.predicate.AbstractCriteria;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
-import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.UIAModels.predicate.LabelCriteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.NotCriteria;
 import org.uiautomation.ios.UIAModels.predicate.OrCriteria;
+import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.UIAModels.predicate.ValueCriteria;
 
 public class CriteriaSerialization {

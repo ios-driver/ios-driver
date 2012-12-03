@@ -18,7 +18,6 @@ import java.net.URL;
 import java.util.logging.Logger;
 
 import org.uiautomation.ios.server.application.Localizable;
-import org.uiautomation.ios.server.instruments.InstrumentsManager;
 
 
 public class SampleApps {

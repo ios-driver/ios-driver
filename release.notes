@@ -12,10 +12,10 @@
 - find a solution for extra languages non iso
 + make the register command send the capabilities
 - kill instruments before starting.
-- ios capability needs device + type + resolution
++ ios capability needs device + type + resolution
 + xpath for native
 - xpath to css convertor for web
-- rename the native handlers.
++ rename the native handlers.
 + cleanup dependency and check for dups.
 - reorganize classes in server.
 - split handlers into native, web, and misc

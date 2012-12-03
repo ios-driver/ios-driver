@@ -14,6 +14,9 @@
 
 package org.uiautomation.ios.server.instruments;
 
+import org.uiautomation.ios.communication.device.Device;
+import org.uiautomation.ios.communication.device.DeviceVariation;
+
 public interface IOSDeviceManager {
 
   public void setL10N(String locale, String language);
@@ -23,4 +26,6 @@ public interface IOSDeviceManager {
   public void cleanupDevice();
 
   public void setKeyboardOptions();
+
+  void setVariation(Device device, DeviceVariation variation);
 }

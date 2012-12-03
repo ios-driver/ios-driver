@@ -19,6 +19,7 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
+import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.ServerSideSession;
@@ -76,6 +77,10 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
 
       o.put("supportedLocales", ls);
       o.put("takesScreenshot", true);
+      o.put(IOSCapabilities.SIMULATOR,true);
+      o.put(IOSCapabilities.DEVICE,session.getCapabilities().getDevice());
+      o.put(IOSCapabilities.VARIATION , session.getCapabilities().getDeviceVariation());
+      // TODO freynaud fill in device here ?
       response.setValue(o);
       hasBeenDecorated = true;
 

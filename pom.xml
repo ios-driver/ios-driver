@@ -11,7 +11,6 @@
 		<module>common</module>
 		<module>client</module>
 		<module>server</module>
-		<module>ide</module>
 		<module>ios-selenium-tests</module>
 	</modules>
 

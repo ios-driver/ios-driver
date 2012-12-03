@@ -45,6 +45,7 @@ import org.uiautomation.ios.server.command.uiautomation.ServerStatusNHandler;
 import org.uiautomation.ios.server.command.uiautomation.SetConfigurationNHandler;
 import org.uiautomation.ios.server.command.uiautomation.SetCurrentContextNHandler;
 import org.uiautomation.ios.server.command.uiautomation.SetImplicitWaitTimeoutNHandler;
+import org.uiautomation.ios.server.command.uiautomation.SetOrientationNHandler;
 import org.uiautomation.ios.server.command.uiautomation.SetTimeoutNHandler;
 import org.uiautomation.ios.server.command.uiautomation.SetValueNHandler;
 import org.uiautomation.ios.server.command.uiautomation.StopSessionNHandler;
@@ -105,7 +106,7 @@ public enum CommandMapping {
   
   TARGET_RECT(".rect()"),
   TARGET_TAP(".tap({x::x,y::y})"),
-  SET_ORIENTATION(".setDeviceOrientation(:orientation)"),
+  SET_ORIENTATION(SetOrientationNHandler.class),
   
   SCREENSHOT(TakeScreenshotNHandler.class),
   

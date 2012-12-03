@@ -22,9 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openqa.selenium.remote.BeanToJsonConverter;
-import org.openqa.selenium.remote.SessionId;
-import org.uiautomation.ios.UIAModels.UIAElement;
 
 public class WebDriverLikeRequest {
 

@@ -13,26 +13,16 @@
  */
 package org.uiautomation.ios.server.simulator;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.IOUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.communication.IOSDevice;
-import org.uiautomation.ios.server.command.uiautomation.NewSessionNHandler;
+import org.uiautomation.ios.communication.device.Device;
+import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.instruments.IOSDeviceManager;
 import org.uiautomation.ios.server.utils.ClassicCommands;
-import org.uiautomation.ios.server.utils.Command;
+import org.uiautomation.ios.server.utils.SimulatorSettings;
 
 // java version ( simplified )
 // of http://code.google.com/p/ios-sim-locale/source/browse/trunk/ios-sim-locale.m
@@ -46,17 +36,13 @@ import org.uiautomation.ios.server.utils.Command;
  */
 public class IOSSimulatorManager implements IOSDeviceManager {
 
-  private final List<String> sdks;
-  private static final String TEMPLATE = "/globalPlist.json";
-  private static final String PLUTIL = "/usr/bin/plutil";
-  private static File xcodeInstall;
   private static final Logger log = Logger.getLogger(IOSSimulatorManager.class.getName());
-
-  private final String desiredSDKVersion;
-  private File contentAndSettingsFolder;
-  // simulator plist, to choose language and locale
-  private File globalPreferencePlist;
   public static final String SIMULATOR_PROCESS_NAME = "iPhone Simulator";
+
+  private final List<String> sdks;
+  private final File xcodeInstall;
+  private final String desiredSDKVersion;
+  private final SimulatorSettings simulatorSettings;
 
   /**
    * manages a single instance of the instruments process. Only 1 process can
@@ -67,7 +53,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
    * @param device
    * @throws IOSAutomationSetupException
    */
-  public IOSSimulatorManager(String desiredSDKVersion, IOSDevice device)  {
+  public IOSSimulatorManager(String desiredSDKVersion, Device device) {
     if (isSimulatorRunning() && !isWarmupRequired()) {
       throw new WebDriverException("another instance of the simulator is already running.");
     }
@@ -76,11 +62,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     this.desiredSDKVersion = validateSDK(desiredSDKVersion);
 
     xcodeInstall = ClassicCommands.getXCodeInstall();
-    // setDefaultSimulatorPreference("currentSDKRoot", sdk.getAbsolutePath());
-    // setDefaultSimulatorPreference(device);
-
-    this.contentAndSettingsFolder = getContentAndSettingsFolder();
-    this.globalPreferencePlist = getGlobalPreferenceFile();
+    simulatorSettings = new SimulatorSettings(desiredSDKVersion);
   }
 
   private boolean isWarmupRequired() {
@@ -139,26 +121,6 @@ public class IOSSimulatorManager implements IOSDeviceManager {
 
   }
 
-  /**
-   * update the preference of the simulator. Similar to using the IOS Simulator
-   * menu > Hardware > [Device | Version ]
-   * 
-   * @param key
-   * @param value
-   * @throws IOSAutomationSetupException
-   */
-  private void setDefaultSimulatorPreference(String key, String value) {
-    List<String> com = new ArrayList<String>();
-    com.add("defaults");
-    com.add("write");
-    com.add("com.apple.iphonesimulator");
-    com.add(key);
-    com.add(value);
-
-    Command updatePreference = new Command(com, true);
-    updatePreference.executeAndWait();
-  }
-
   private String validateSDK(String sdk) {
     if (!sdks.contains(sdk)) {
       throw new WebDriverException("desired sdk " + sdk + " isn't installed. Installed :" + sdks);
@@ -171,43 +133,6 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   }
 
   /**
-   * set the emulator to the given locale.Required a clean context (can only be
-   * done after "reset content and settings" )
-   * 
-   * @param locale
-   *          fr_FR
-   * @param language
-   *          fr
-   * @throws IOSAutomationSetupException
-   */
-  public void setL10N(String locale, String language) {
-    try {
-      JSONObject plistJSON = getPreferenceFile(locale, language);
-      writeOnDisk(plistJSON, globalPreferencePlist);
-    } catch (Exception e) {
-      throw new WebDriverException("cannot configure simulator", e);
-    }
-
-  }
-
-  /**
-   * Does what IOS Simulator - Reset content and settings menu does, by deleting
-   * the files on disk. The simulator shouldn't be running when that is done.
-   */
-  public void resetContentAndSettings() {
-    if (hasContentAndSettingsFolder()) {
-      boolean ok = deleteRecursive(getContentAndSettingsFolder());
-      if (!ok) {
-        System.err.println("cannot delete content and settings folder " + contentAndSettingsFolder);
-      }
-    }
-    boolean ok = contentAndSettingsFolder.mkdir();
-    if (!ok) {
-      System.err.println("couldn't re-create" + contentAndSettingsFolder);
-    }
-  }
-
-  /**
    * stopping the simulator at the end of the test.
    * 
    * @throws IOSAutomationSetupException
@@ -216,126 +141,25 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     ClassicCommands.killall(SIMULATOR_PROCESS_NAME);
   }
 
-  private File createTmpFile(JSONObject content) throws IOException, JSONException {
-    File res = File.createTempFile("global", ".json");
-    BufferedWriter out = new BufferedWriter(new FileWriter(res));
-    out.write(content.toString(2));
-    out.close();
-    return res;
-  }
-
-  private void writeOnDisk(JSONObject plistJSON, File destination) throws IOException, JSONException {
-    if (destination.exists()) {
-      // to be on the safe side. If the emulator already runs, it won't work
-      // anyway.
-      throw new WebDriverException(globalPreferencePlist + "already exists.Cannot create it.");
-    }
-    // make sure the folder is ready for the plist file
-    destination.getParentFile().mkdirs();
-
-    checkPlUtil();
-
-    File from = createTmpFile(plistJSON);
-
-    List<String> command = new ArrayList<String>();
-    command.add(PLUTIL);
-    command.add("-convert");
-    command.add("binary1");
-    command.add("-o");
-    command.add(destination.getAbsolutePath());
-    command.add(from.getAbsolutePath());
-
-    ProcessBuilder b = new ProcessBuilder(command);
-    int i = -1;
-    try {
-      Process p = b.start();
-      i = p.waitFor();
-    } catch (Exception e) {
-      throw new WebDriverException("failed to run " + command.toString(), e);
-    }
-    if (i != 0) {
-      throw new WebDriverException("convertion to binary pfile failed.exitCode=" + i);
-    }
-
-  }
-
-  private void checkPlUtil() {
-    File f = new File(PLUTIL);
-    if (!f.exists() || !f.canExecute()) {
-      throw new WebDriverException("Cannot access " + PLUTIL);
-    }
-
-  }
-
-  private File getContentAndSettingsFolder() {
-    String home = System.getProperty("user.home");
-    String s = String.format("%s/Library/Application Support/iPhone Simulator/%s", home, desiredSDKVersion);
-    File f = new File(s);
-    if (!f.exists()) {
-      f.mkdirs();
-    }
-    return f;
-  }
-
-  private File getGlobalPreferenceFile() {
-    File folder = new File(contentAndSettingsFolder + "/Library/Preferences/");
-    File global = new File(folder, ".GlobalPreferences.plist");
-    return global;
-  }
-
-  private JSONObject getPreferenceFile(String locale, String language) throws JSONException, IOException {
-    JSONObject res = loadGlobalPreferencesTemplate();
-    JSONArray languages = new JSONArray();
-    languages.put(language);
-    res.put("AppleLanguages", languages);
-    res.put("AppleLocale", locale);
-    return res;
-
-  }
-
-  private JSONObject loadGlobalPreferencesTemplate() throws JSONException, IOException {
-    InputStream is = NewSessionNHandler.class.getResourceAsStream(TEMPLATE);
-    StringWriter writer = new StringWriter();
-    IOUtils.copy(is, writer, "UTF-8");
-    String content = writer.toString();
-    JSONObject config = new JSONObject(content);
-    return config;
-  }
-
-  private boolean deleteRecursive(File folder) {
-    if (folder.isDirectory()) {
-      String[] children = folder.list();
-      for (int i = 0; i < children.length; i++) {
-        File delMe = new File(folder, children[i]);
-        boolean success = deleteRecursive(delMe);
-        if (!success) {
-          System.err.println("cannot delete " + delMe);
-        }
-      }
-    }
-    return folder.delete();
-  }
-
-  private boolean hasContentAndSettingsFolder() {
-    File f = getContentAndSettingsFolder();
-    return f.exists();
+  @Override
+  public void setKeyboardOptions() {
+    simulatorSettings.setKeyboardOptions();
   }
 
   @Override
-  public void setKeyboardOptions() {
-    File folder = new File(contentAndSettingsFolder + "/Library/Preferences/");
-    File preferenceFile = new File(folder, "com.apple.Preferences.plist");
+  public void setL10N(String locale, String language) {
+    simulatorSettings.setL10N(locale, language);
+  }
+  
+  @Override
+  public void setVariation(Device device,DeviceVariation variation) {
+    simulatorSettings.setVariation(device, variation);
+  }
 
-    try {
-      JSONObject preferences = new JSONObject();
-      preferences.put("KeyboardAutocapitalization", false);
-      preferences.put("KeyboardAutocorrection", false);
-      preferences.put("KeyboardCapsLock", false);
-      preferences.put("KeyboardCheckSpelling", false);
-      writeOnDisk(preferences, preferenceFile);
-    } catch (Exception e) {
-      throw new WebDriverException("cannot set options in " + preferenceFile.getAbsolutePath());
-    }
+  @Override
+  public void resetContentAndSettings() {
+    simulatorSettings.resetContentAndSettings();
+
   }
 
 }

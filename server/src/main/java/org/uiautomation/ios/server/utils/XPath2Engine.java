@@ -1,10 +1,8 @@
 package org.uiautomation.ios.server.utils;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,12 +15,8 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import net.sf.saxon.Configuration;
 import net.sf.saxon.dom.DOMNodeList;
 import net.sf.saxon.lib.NamespaceConstant;
-import net.sf.saxon.serialize.charcode.CharacterSetFactory;
-import net.sf.saxon.serialize.charcode.UTF8CharacterSet;
-import net.sf.saxon.xpath.XPathEvaluator;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;

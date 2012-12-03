@@ -30,7 +30,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.communication.IOSDevice;
+import org.uiautomation.ios.communication.device.Device;
 import org.uiautomation.ios.server.utils.PlistFileUtils;
 
 import com.dd.plist.BinaryPropertyListParser;
@@ -277,7 +277,7 @@ public class IOSApplication {
     return new IOSApplication(app.getAbsolutePath());
   }
 
-  public void setDefaultDevice(IOSDevice device) {
+  public void setDefaultDevice(Device device) {
 
     try {
       File plist = new File(app, "Info.plist");

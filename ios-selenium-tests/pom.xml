@@ -13,7 +13,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.uiautomation</groupId>
-			<artifactId>ios-ide</artifactId>
+			<artifactId>ios-server</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>

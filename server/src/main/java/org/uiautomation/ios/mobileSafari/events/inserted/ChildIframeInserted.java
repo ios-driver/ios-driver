@@ -15,7 +15,6 @@ package org.uiautomation.ios.mobileSafari.events.inserted;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.mobileSafari.NodeId;
 
 public class ChildIframeInserted extends ChildNodeInserted {

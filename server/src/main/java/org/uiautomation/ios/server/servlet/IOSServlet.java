@@ -30,7 +30,6 @@ import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.CommandMapping;
-import org.uiautomation.ios.server.DOMContext;
 import org.uiautomation.ios.server.command.Handler;
 
 public class IOSServlet extends DriverBasedServlet {

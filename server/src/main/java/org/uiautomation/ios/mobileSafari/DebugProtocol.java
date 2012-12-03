@@ -24,7 +24,6 @@ import java.util.logging.Logger;
 
 import org.json.JSONObject;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.server.instruments.InstrumentsManager;
 import org.uiautomation.ios.webInspector.DOM.RemoteExceptionException;
 
 public class DebugProtocol {

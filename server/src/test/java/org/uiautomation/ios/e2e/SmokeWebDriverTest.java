@@ -54,7 +54,7 @@ public class SmokeWebDriverTest extends BaseIOSDriverTest {
     }
     Capabilities actual = driver.getCapabilities();
 
-    Assert.assertEquals(actual.getCapability(IOSCapabilities.DEVICE), "iPhone Simulator");
+    Assert.assertEquals(actual.getCapability(IOSCapabilities.DEVICE), "iphone");
     Assert.assertEquals(actual.getCapability(IOSCapabilities.UI_NAME), "iPhone Simulator");
     Assert.assertEquals(actual.getCapability(IOSCapabilities.UI_SYSTEM_NAME), "iPhone OS");
     Assert.assertEquals(actual.getCapability(IOSCapabilities.UI_SDK_VERSION), sdk);

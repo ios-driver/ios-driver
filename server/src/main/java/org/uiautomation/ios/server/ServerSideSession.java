@@ -26,8 +26,8 @@ import org.uiautomation.ios.UIAModels.configuration.DriverConfiguration;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.client.uiamodels.impl.AttachRemoteUIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
-import org.uiautomation.ios.communication.IOSDevice;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
+import org.uiautomation.ios.communication.device.Device;
 import org.uiautomation.ios.mobileSafari.WebInspector;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
@@ -49,6 +49,10 @@ public class ServerSideSession extends Session {
 
   private final DriverConfiguration configuration;
 
+  
+  public IOSCapabilities getCapabilities(){
+    return capabilities;
+  }
   ServerSideSession(IOSDriver driver, IOSCapabilities capabilities) {
     super(UUID.randomUUID().toString());
     this.driver = driver;
@@ -82,7 +86,7 @@ public class ServerSideSession extends Session {
     });
   }
 
-  public IOSDevice getIOSDevice() {
+  public Device getDevice() {
     return capabilities.getDevice();
   }
 
@@ -121,7 +125,7 @@ public class ServerSideSession extends Session {
   }
 
   public void start() {
-    instruments.startSession(capabilities.getDevice(), capabilities.getSDKVersion(), capabilities.getLocale(),
+    instruments.startSession(capabilities.getDevice(),capabilities.getDeviceVariation(), capabilities.getSDKVersion(), capabilities.getLocale(),
         capabilities.getLanguage(), application, getSessionId(), capabilities.isTimeHack(),
         capabilities.getExtraSwitches());
 

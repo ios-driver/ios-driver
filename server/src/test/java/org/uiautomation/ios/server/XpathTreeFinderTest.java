@@ -1,10 +1,8 @@
 package org.uiautomation.ios.server;
 
-import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.InvalidSelectorException;
 import org.openqa.selenium.NoSuchElementException;

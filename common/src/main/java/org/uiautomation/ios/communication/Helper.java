@@ -18,7 +18,6 @@ import java.io.StringWriter;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.JsonToBeanConverter;
