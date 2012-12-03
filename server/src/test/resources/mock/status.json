@@ -1,0 +1,424 @@
+{
+  "class": "org.openqa.selenium.remote.Response",
+  "hCode": 1201252431,
+  "sessionId": null,
+  "status": 0,
+  "value": {
+    "build": {
+      "revision": "unknown",
+      "time": "unknown",
+      "version": "unknown"
+    },
+    "ios": {"simulatorVersion": "6.1"},
+    "java": {"version": "1.6.0_35"},
+    "os": {
+      "arch": "x86_64",
+      "name": "Mac OS X",
+      "version": "10.7.4"
+    },
+    "supportedApps": [
+      {
+        "CFBundleDevelopmentRegion": "en",
+        "CFBundleExecutable": "InternationalMountains",
+        "CFBundleIconFile": "Icon.png",
+        "CFBundleIdentifier": "com.yourcompany.InternationalMountains",
+        "CFBundleInfoDictionaryVersion": "6.0",
+        "CFBundleName": "InternationalMountains",
+        "CFBundlePackageType": "APPL",
+        "CFBundleSignature": "????",
+        "CFBundleSupportedPlatforms": ["iPhoneSimulator"],
+        "CFBundleVersion": "1.1",
+        "DTPlatformName": "iphonesimulator",
+        "DTSDKName": "iphonesimulator5.1",
+        "LSRequiresIPhoneOS": true,
+        "NSMainNibFile": "MainWindow",
+        "UIDeviceFamily": [1],
+        "applicationPath": "/Users/freynaud/Documents/workspace/ios-driver/server/target/test-classes/sampleApps/InternationalMountains.app",
+        "resources": {"CFBundleIconFile": "/wd/hub/resources/hash=-674408620"},
+        "sdkVersion": "6.1",
+        "simulator": true,
+        "supportedDevices": ["iphone"],
+        "supportedLanguages": [
+          "zh-Hant",
+          "fr",
+          "en"
+        ],
+        "timeHack": false,
+        "variation": "Regular"
+      },
+      {
+        "CFBundleDevelopmentRegion": "English",
+        "CFBundleDisplayName": "Safari",
+        "CFBundleExecutable": "MobileSafari",
+        "CFBundleIcons": {"CFBundlePrimaryIcon": {
+          "CFBundleIconFiles": [
+            "icon~iphone.png",
+            "icon~ipad.png",
+            "icon@2x~iphone.png",
+            "icon@2x~ipad.png",
+            "icon-table.png",
+            "icon-table@2x.png",
+            "icon-spotlight~ipad.png",
+            "icon-spotlight@2x~ipad.png"
+          ],
+          "UIPrenderedIcon": true
+        }},
+        "CFBundleIdentifier": "com.apple.mobilesafari",
+        "CFBundleInfoDictionaryVersion": "6.0",
+        "CFBundlePackageType": "APPL",
+        "CFBundleShortVersionString": "6.0",
+        "CFBundleSignature": "????",
+        "CFBundleSupportedPlatforms": ["iPhoneSimulator"],
+        "CFBundleURLTypes~ipad": [
+          {
+            "CFBundleURLIsPrivate": true,
+            "CFBundleURLName": "Web App URL",
+            "CFBundleURLSchemes": ["webclip"]
+          },
+          {
+            "CFBundleURLName": "Web site URL",
+            "CFBundleURLSchemes": [
+              "http",
+              "https"
+            ]
+          },
+          {
+            "CFBundleURLName": "FTP URL",
+            "CFBundleURLSchemes": ["ftp"]
+          },
+          {
+            "CFBundleURLName": "Web Search URL",
+            "CFBundleURLSchemes": ["x-web-search"]
+          }
+        ],
+        "CFBundleURLTypes~iphone": [
+          {
+            "CFBundleURLIsPrivate": true,
+            "CFBundleURLName": "Web App URL",
+            "CFBundleURLSchemes": ["webclip"]
+          },
+          {
+            "CFBundleURLName": "Web site URL",
+            "CFBundleURLSchemes": [
+              "http",
+              "https"
+            ]
+          },
+          {
+            "CFBundleURLName": "Radar URL",
+            "CFBundleURLSchemes": [
+              "rdar",
+              "radar"
+            ]
+          },
+          {
+            "CFBundleURLName": "FTP URL",
+            "CFBundleURLSchemes": ["ftp"]
+          },
+          {
+            "CFBundleURLName": "Web Search URL",
+            "CFBundleURLSchemes": ["x-web-search"]
+          }
+        ],
+        "CFBundleURLTypes~ipod": [
+          {
+            "CFBundleURLIsPrivate": true,
+            "CFBundleURLName": "Web App URL",
+            "CFBundleURLSchemes": ["webclip"]
+          },
+          {
+            "CFBundleURLName": "Web site URL",
+            "CFBundleURLSchemes": [
+              "http",
+              "https"
+            ]
+          },
+          {
+            "CFBundleURLName": "Radar URL",
+            "CFBundleURLSchemes": [
+              "rdar",
+              "radar"
+            ]
+          },
+          {
+            "CFBundleURLName": "FTP URL",
+            "CFBundleURLSchemes": ["ftp"]
+          },
+          {
+            "CFBundleURLName": "Web Search URL",
+            "CFBundleURLSchemes": ["x-web-search"]
+          }
+        ],
+        "CFBundleVersion": "8536.25",
+        "DTPlatformName": "iphonesimulator",
+        "DTSDKName": "iphonesimulator6.0",
+        "LSRequiresIPhoneOS": true,
+        "SBMatchingApplicationGenres": [
+          "Productivity",
+          "Utilities"
+        ],
+        "SBUsesNetwork": 3,
+        "SafariProductVersion": "6.0",
+        "UIApplicationDisableLegacyAutorotationKey": true,
+        "UIBackgroundModes": [
+          "audio",
+          "continuousFallback"
+        ],
+        "UIDeviceFamily": [
+          1,
+          2
+        ],
+        "UIHasPrefs": true,
+        "UISupportedInterfaceOrientations": [
+          "UIInterfaceOrientationPortrait",
+          "UIInterfaceOrientationLandscapeLeft",
+          "UIInterfaceOrientationLandscapeRight"
+        ],
+        "UISupportedInterfaceOrientations~ipad": [
+          "UIInterfaceOrientationPortrait",
+          "UIInterfaceOrientationLandscapeLeft",
+          "UIInterfaceOrientationLandscapeRight",
+          "UIInterfaceOrientationPortraitUpsideDown"
+        ],
+        "applicationPath": "/Applications/Xcode46-DP2.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.0.sdk/Applications/MobileSafari.app",
+        "resources": {"CFBundleIconFile": "/wd/hub/resources/hash=0"},
+        "sdkVersion": "6.1",
+        "simulator": true,
+        "supportedDevices": [
+          "iphone",
+          "ipad"
+        ],
+        "supportedLanguages": [
+          "es",
+          "it",
+          "de",
+          "fr",
+          "en"
+        ],
+        "timeHack": false,
+        "variation": "Regular"
+      },
+      {
+        "CFBundleDevelopmentRegion": "en",
+        "CFBundleDisplayName": "UICatalog",
+        "CFBundleExecutable": "UICatalog",
+        "CFBundleIconFile": "Icon.png",
+        "CFBundleIconFiles": [
+          "Icon.png",
+          "Icon@2x.png",
+          "Icon-72.png",
+          "Icon-Small.png",
+          "Icon-Small-50.png",
+          "Icon-Small@2x.png"
+        ],
+        "CFBundleIdentifier": "com.yourcompany.UICatalog",
+        "CFBundleInfoDictionaryVersion": "6.0",
+        "CFBundleName": "UICatalog",
+        "CFBundlePackageType": "APPL",
+        "CFBundleSignature": "????",
+        "CFBundleSupportedPlatforms": ["iPhoneSimulator"],
+        "CFBundleVersion": "2.10",
+        "DTPlatformName": "iphonesimulator",
+        "DTSDKName": "iphonesimulator5.1",
+        "LSRequiresIPhoneOS": true,
+        "NSMainNibFile": "MainWindow",
+        "NSMainNibFile~ipad": "MainWindow-iPad",
+        "UIDeviceFamily": [2],
+        "applicationPath": "/Users/freynaud/Documents/workspace/ios-driver/server/target/test-classes/sampleApps/UICatalogiPad.app",
+        "resources": {"CFBundleIconFile": "/wd/hub/resources/hash=-674408620"},
+        "sdkVersion": "6.1",
+        "simulator": true,
+        "supportedDevices": ["ipad"],
+        "supportedLanguages": ["en"],
+        "timeHack": false,
+        "variation": "Regular"
+      },
+      {
+        "CFBundleDevelopmentRegion": "en",
+        "CFBundleDisplayName": "UICatalog",
+        "CFBundleExecutable": "UICatalog",
+        "CFBundleIconFile": "Icon.png",
+        "CFBundleIconFiles": [
+          "Icon.png",
+          "Icon@2x.png",
+          "Icon-72.png",
+          "Icon-Small.png",
+          "Icon-Small-50.png",
+          "Icon-Small@2x.png"
+        ],
+        "CFBundleIdentifier": "com.yourcompany.UICatalog",
+        "CFBundleInfoDictionaryVersion": "6.0",
+        "CFBundleName": "UICatalog",
+        "CFBundlePackageType": "APPL",
+        "CFBundleSignature": "????",
+        "CFBundleSupportedPlatforms": ["iPhoneSimulator"],
+        "CFBundleVersion": "2.10",
+        "DTPlatformName": "iphonesimulator",
+        "DTSDKName": "iphonesimulator5.1",
+        "LSRequiresIPhoneOS": true,
+        "NSMainNibFile": "MainWindow",
+        "UIDeviceFamily": [1],
+        "applicationPath": "/Users/freynaud/Documents/workspace/ios-driver/server/target/test-classes/sampleApps/UICatalog.app",
+        "resources": {"CFBundleIconFile": "/wd/hub/resources/hash=-674408620"},
+        "sdkVersion": "6.1",
+        "simulator": true,
+        "supportedDevices": ["iphone"],
+        "supportedLanguages": ["en"],
+        "timeHack": false,
+        "variation": "Regular"
+      },
+      {
+        "CFBundleDevelopmentRegion": "English",
+        "CFBundleDisplayName": "Safari",
+        "CFBundleExecutable": "MobileSafari",
+        "CFBundleIcons": {"CFBundlePrimaryIcon": {
+          "CFBundleIconFiles": [
+            "icon~iphone.png",
+            "icon~ipad.png",
+            "icon@2x~iphone.png",
+            "icon@2x~ipad.png",
+            "icon-table.png",
+            "icon-table@2x.png",
+            "icon-spotlight~ipad.png",
+            "icon-spotlight@2x~ipad.png"
+          ],
+          "UIPrenderedIcon": true
+        }},
+        "CFBundleIdentifier": "com.apple.mobilesafari",
+        "CFBundleInfoDictionaryVersion": "6.0",
+        "CFBundlePackageType": "APPL",
+        "CFBundleShortVersionString": "6.0",
+        "CFBundleSignature": "????",
+        "CFBundleSupportedPlatforms": ["iPhoneSimulator"],
+        "CFBundleURLTypes~ipad": [
+          {
+            "CFBundleURLIsPrivate": true,
+            "CFBundleURLName": "Web App URL",
+            "CFBundleURLSchemes": ["webclip"]
+          },
+          {
+            "CFBundleURLName": "Web site URL",
+            "CFBundleURLSchemes": [
+              "http",
+              "https"
+            ]
+          },
+          {
+            "CFBundleURLName": "FTP URL",
+            "CFBundleURLSchemes": ["ftp"]
+          },
+          {
+            "CFBundleURLName": "Web Search URL",
+            "CFBundleURLSchemes": ["x-web-search"]
+          }
+        ],
+        "CFBundleURLTypes~iphone": [
+          {
+            "CFBundleURLIsPrivate": true,
+            "CFBundleURLName": "Web App URL",
+            "CFBundleURLSchemes": ["webclip"]
+          },
+          {
+            "CFBundleURLName": "Web site URL",
+            "CFBundleURLSchemes": [
+              "http",
+              "https"
+            ]
+          },
+          {
+            "CFBundleURLName": "Radar URL",
+            "CFBundleURLSchemes": [
+              "rdar",
+              "radar"
+            ]
+          },
+          {
+            "CFBundleURLName": "FTP URL",
+            "CFBundleURLSchemes": ["ftp"]
+          },
+          {
+            "CFBundleURLName": "Web Search URL",
+            "CFBundleURLSchemes": ["x-web-search"]
+          }
+        ],
+        "CFBundleURLTypes~ipod": [
+          {
+            "CFBundleURLIsPrivate": true,
+            "CFBundleURLName": "Web App URL",
+            "CFBundleURLSchemes": ["webclip"]
+          },
+          {
+            "CFBundleURLName": "Web site URL",
+            "CFBundleURLSchemes": [
+              "http",
+              "https"
+            ]
+          },
+          {
+            "CFBundleURLName": "Radar URL",
+            "CFBundleURLSchemes": [
+              "rdar",
+              "radar"
+            ]
+          },
+          {
+            "CFBundleURLName": "FTP URL",
+            "CFBundleURLSchemes": ["ftp"]
+          },
+          {
+            "CFBundleURLName": "Web Search URL",
+            "CFBundleURLSchemes": ["x-web-search"]
+          }
+        ],
+        "CFBundleVersion": "8536.25",
+        "DTPlatformName": "iphonesimulator",
+        "DTSDKName": "iphonesimulator6.1",
+        "LSRequiresIPhoneOS": true,
+        "SBMatchingApplicationGenres": [
+          "Productivity",
+          "Utilities"
+        ],
+        "SBUsesNetwork": 3,
+        "SafariProductVersion": "6.0",
+        "UIApplicationDisableLegacyAutorotationKey": true,
+        "UIBackgroundModes": [
+          "audio",
+          "continuousFallback"
+        ],
+        "UIDeviceFamily": [
+          1,
+          2
+        ],
+        "UIHasPrefs": true,
+        "UISupportedInterfaceOrientations": [
+          "UIInterfaceOrientationPortrait",
+          "UIInterfaceOrientationLandscapeLeft",
+          "UIInterfaceOrientationLandscapeRight"
+        ],
+        "UISupportedInterfaceOrientations~ipad": [
+          "UIInterfaceOrientationPortrait",
+          "UIInterfaceOrientationLandscapeLeft",
+          "UIInterfaceOrientationLandscapeRight",
+          "UIInterfaceOrientationPortraitUpsideDown"
+        ],
+        "applicationPath": "/Applications/Xcode46-DP2.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk/Applications/MobileSafari.app",
+        "resources": {"CFBundleIconFile": "/wd/hub/resources/hash=0"},
+        "sdkVersion": "6.1",
+        "simulator": true,
+        "supportedDevices": [
+          "iphone",
+          "ipad"
+        ],
+        "supportedLanguages": [
+          "es",
+          "it",
+          "de",
+          "fr",
+          "en"
+        ],
+        "timeHack": false,
+        "variation": "Regular"
+      }
+    ]
+  }
+}

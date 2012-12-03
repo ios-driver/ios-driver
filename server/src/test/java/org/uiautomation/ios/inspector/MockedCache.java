@@ -38,7 +38,7 @@ public class MockedCache implements Cache {
     String name = device + "_" + variation + "_" + o;
 
     String capability = "mock/" + device + "_" + variation + ".json";
-    String screenshot = "mock/" + name + ".png";
+    String screenshot = "mock/" + name + ".jpg";
     String logElementTree = "mock/" + name + ".json";
     String status = "mock/status.json";
 
@@ -47,11 +47,10 @@ public class MockedCache implements Cache {
     IOUtils.copy(in, cap, "UTF-8");
 
     in = Thread.currentThread().getContextClassLoader().getResourceAsStream(logElementTree);
-    if (in == null){
-      System.err.println(logElementTree+" doesn't exist.");
+    if (in == null) {
       return;
     }
-    
+
     StringWriter tree = new StringWriter();
     IOUtils.copy(in, tree, "UTF-8");
 
@@ -60,7 +59,6 @@ public class MockedCache implements Cache {
     IOUtils.copy(in, s, "UTF-8");
 
     Session session = new Session(name);
-    System.out.println("session:" + name);
     JSONObject t = new JSONObject(tree.toString());
     IOSCapabilities c = new IOSCapabilities(new JSONObject(cap.toString()));
 
