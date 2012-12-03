@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.uiautomation.ios.ide.model;
+package org.uiautomation.ios.inspector.model;
 
 import java.net.URL;
 import java.util.Map;

@@ -11,23 +11,35 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.uiautomation.ios.ide.controllers;
+package org.uiautomation.ios.inspector.views;
 
-import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.InputStream;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.IOUtils;
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.ide.views.View;
 
-public class NotImplementedIDEController implements IDECommandController {
+public class ResourceView implements View {
 
-  public boolean canHandle(String pathInfo) {
-    return true;
+  private final InputStream is;
+  private final String mime;
+
+  public ResourceView(InputStream is, String mime) {
+    this.is = is;
+    this.mime = mime;
   }
 
-  public View handle(HttpServletRequest req) {
-    System.err.println("no controller for that " + req.getPathInfo());
-    // return new DefaultView(getModel());
-    throw new WebDriverException("no controller for " + req.getPathInfo());
+  public void render(HttpServletResponse response) {
+    try {
+      response.setContentType(mime);
+      IOUtils.copy(is, response.getOutputStream());
+      IOUtils.closeQuietly(is);
+    } catch (IOException e) {
+      throw new WebDriverException("Bug.", e);
+    }
+
   }
 
 }

@@ -1,4 +1,4 @@
-package org.uiautomation.ios.ide.pages.begin;
+package org.uiautomation.ios.inspector;
 
 import java.net.URL;
 
@@ -6,7 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.BeforeClass;
 import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.ide.IDEServer;
+import org.uiautomation.ios.inspector.IDEServer;
 import org.uiautomation.ios.server.IOSServer;
 
 public class SmokeTests {

@@ -11,35 +11,22 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.uiautomation.ios.ide.views;
-
-import java.io.IOException;
-import java.io.InputStream;
+package org.uiautomation.ios.inspector.views;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.IOUtils;
-import org.openqa.selenium.WebDriverException;
+public class RedirectView implements View {
 
-public class ResourceView implements View {
+  private final String to;
 
-  private final InputStream is;
-  private final String mime;
-
-  public ResourceView(InputStream is, String mime) {
-    this.is = is;
-    this.mime = mime;
+  public RedirectView(String to) {
+    this.to = to;
   }
 
-  public void render(HttpServletResponse response) {
-    try {
-      response.setContentType(mime);
-      IOUtils.copy(is, response.getOutputStream());
-      IOUtils.closeQuietly(is);
-    } catch (IOException e) {
-      throw new WebDriverException("Bug.", e);
-    }
-
+  public void render(HttpServletResponse response) throws Exception {
+    response.sendRedirect(to);
   }
+
+
 
 }

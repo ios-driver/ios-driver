@@ -22,6 +22,7 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.uiautomation.ios.inspector.IDEServlet;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.grid.RegistrationRequest;
 import org.uiautomation.ios.server.servlet.IOSServlet;
@@ -50,7 +51,7 @@ public class IOSServer {
     }
   }
 
-  public IOSServer(IOSServerConfiguration options)  {
+  public IOSServer(IOSServerConfiguration options) {
     init(options);
 
   }
@@ -69,7 +70,7 @@ public class IOSServer {
     init(options);
   }
 
-  private void init(IOSServerConfiguration options)  {
+  private void init(IOSServerConfiguration options) {
     this.options = options;
     this.port = options.getPort();
     server = new Server(new InetSocketAddress("0.0.0.0", options.getPort()));
@@ -80,16 +81,7 @@ public class IOSServer {
     wd.addServlet(ResourceServlet.class, "/resources/*");
 
     ServletContextHandler extra = new ServletContextHandler(server, "/", true, false);
-    try {
-      String ide = "org.uiautomation.ios.ide.IDEServlet";
-      Class<?> c = Class.forName(ide);
-      Class<Servlet> r = (Class<Servlet>) c;
-
-      extra.addServlet(r, "/ide/*");
-
-    } catch (Exception e) {
-      System.err.println("couldn't find ide servlet");
-    }
+    extra.addServlet(IDEServlet.class, "/ide/*");
 
     HandlerList handlers = new HandlerList();
     handlers.setHandlers(new Handler[] { wd, extra });

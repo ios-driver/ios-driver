@@ -55,7 +55,7 @@ public class ElementFindingMultiDeviceTest {
   public Object[][] createData1() {
     return new Object[][] {
 
-    //{ Device.iphone, DeviceVariation.Regular, Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT },
+    { Device.iphone, DeviceVariation.Regular, Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT },
     { Device.iphone, DeviceVariation.Regular, Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPELEFT },
     { Device.iphone, DeviceVariation.Regular, Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT },
     { Device.iphone, DeviceVariation.Retina35, Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT },

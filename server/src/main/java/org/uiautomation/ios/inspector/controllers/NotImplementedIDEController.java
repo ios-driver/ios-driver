@@ -11,22 +11,23 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.uiautomation.ios.ide.views;
+package org.uiautomation.ios.inspector.controllers;
 
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
-public class RedirectView implements View {
+import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.inspector.views.View;
 
-  private final String to;
+public class NotImplementedIDEController implements IDECommandController {
 
-  public RedirectView(String to) {
-    this.to = to;
+  public boolean canHandle(String pathInfo) {
+    return true;
   }
 
-  public void render(HttpServletResponse response) throws Exception {
-    response.sendRedirect(to);
+  public View handle(HttpServletRequest req) {
+    System.err.println("no controller for that " + req.getPathInfo());
+    // return new DefaultView(getModel());
+    throw new WebDriverException("no controller for " + req.getPathInfo());
   }
-
-
 
 }

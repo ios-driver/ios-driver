@@ -11,25 +11,18 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.uiautomation.ios.ide.views;
+package org.uiautomation.ios.inspector.views;
 
-import java.net.URL;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.communication.Helper;
-import org.uiautomation.ios.communication.HttpClientFactory;
 import org.uiautomation.ios.communication.device.Device;
 import org.uiautomation.ios.communication.device.DeviceVariation;
-import org.uiautomation.ios.ide.model.IDESessionModel;
+import org.uiautomation.ios.inspector.model.IDESessionModel;
 
 public class IDEMainView implements View {
 

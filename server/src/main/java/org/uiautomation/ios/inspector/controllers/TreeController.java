@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.uiautomation.ios.ide.controllers;
+package org.uiautomation.ios.inspector.controllers;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,10 +20,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.UIAModels.Session;
-import org.uiautomation.ios.ide.model.Cache;
-import org.uiautomation.ios.ide.model.IDESessionModel;
-import org.uiautomation.ios.ide.views.JSONView;
-import org.uiautomation.ios.ide.views.View;
+import org.uiautomation.ios.inspector.model.Cache;
+import org.uiautomation.ios.inspector.model.IDESessionModel;
+import org.uiautomation.ios.inspector.views.JSONView;
+import org.uiautomation.ios.inspector.views.View;
 
 public class TreeController implements IDECommandController {
 

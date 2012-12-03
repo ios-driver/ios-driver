@@ -11,13 +11,13 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.uiautomation.ios.ide;
+package org.uiautomation.ios.inspector;
 
 import java.net.InetSocketAddress;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.uiautomation.ios.ide.model.Cache;
+import org.uiautomation.ios.inspector.model.Cache;
 
 public class IDEServer {
 

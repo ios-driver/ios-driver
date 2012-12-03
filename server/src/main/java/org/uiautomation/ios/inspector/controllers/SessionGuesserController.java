@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.uiautomation.ios.ide.controllers;
+package org.uiautomation.ios.inspector.controllers;
 
 import java.net.URL;
 
@@ -26,9 +26,9 @@ import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.communication.Helper;
 import org.uiautomation.ios.communication.HttpClientFactory;
-import org.uiautomation.ios.ide.model.Cache;
-import org.uiautomation.ios.ide.views.RedirectView;
-import org.uiautomation.ios.ide.views.View;
+import org.uiautomation.ios.inspector.model.Cache;
+import org.uiautomation.ios.inspector.views.RedirectView;
+import org.uiautomation.ios.inspector.views.View;
 
 public class SessionGuesserController implements IDECommandController {
 

@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.uiautomation.ios.ide;
+package org.uiautomation.ios.inspector;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -25,19 +25,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.uiautomation.ios.ide.controllers.IDECommandController;
-import org.uiautomation.ios.ide.controllers.IDEController;
-import org.uiautomation.ios.ide.controllers.NotImplementedIDEController;
-import org.uiautomation.ios.ide.controllers.RefreshController;
-import org.uiautomation.ios.ide.controllers.ResourceController;
-import org.uiautomation.ios.ide.controllers.SessionGuesserController;
-import org.uiautomation.ios.ide.controllers.TreeController;
-import org.uiautomation.ios.ide.model.Cache;
-import org.uiautomation.ios.ide.model.CacheDefaultImpl;
-import org.uiautomation.ios.ide.views.View;
+import org.uiautomation.ios.inspector.controllers.IDECommandController;
+import org.uiautomation.ios.inspector.controllers.IDEController;
+import org.uiautomation.ios.inspector.controllers.NotImplementedIDEController;
+import org.uiautomation.ios.inspector.controllers.RefreshController;
+import org.uiautomation.ios.inspector.controllers.ResourceController;
+import org.uiautomation.ios.inspector.controllers.SessionGuesserController;
+import org.uiautomation.ios.inspector.controllers.TreeController;
+import org.uiautomation.ios.inspector.model.Cache;
+import org.uiautomation.ios.inspector.model.CacheDefaultImpl;
+import org.uiautomation.ios.inspector.views.View;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.IOSServer;
-import org.uiautomation.ios.server.instruments.InstrumentsManager;
 
 
 public class IDEServlet extends HttpServlet {

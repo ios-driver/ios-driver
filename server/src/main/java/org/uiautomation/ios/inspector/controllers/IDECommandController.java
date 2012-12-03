@@ -11,11 +11,15 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.uiautomation.ios.ide.views;
+package org.uiautomation.ios.inspector.controllers;
 
+import javax.servlet.http.HttpServletRequest;
 
-import javax.servlet.http.HttpServletResponse;
+import org.uiautomation.ios.inspector.views.View;
 
-public interface View {
-  public void render(HttpServletResponse response) throws Exception;
+public interface IDECommandController {
+
+  public boolean canHandle(String pathInfo);
+
+  public View handle(HttpServletRequest req) throws  Exception;
 }

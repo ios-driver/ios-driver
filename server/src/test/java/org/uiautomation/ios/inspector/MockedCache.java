@@ -1,27 +1,20 @@
-package org.uiautomation.ios.ide.pages.begin;
+package org.uiautomation.ios.inspector;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.imageio.stream.FileImageInputStream;
-
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
-import org.openqa.selenium.remote.BeanToJsonConverter;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.communication.device.Device;
 import org.uiautomation.ios.communication.device.DeviceVariation;
-import org.uiautomation.ios.ide.model.Cache;
-import org.uiautomation.ios.ide.model.IDESessionModel;
-import org.uiautomation.ios.server.application.Localizable;
+import org.uiautomation.ios.inspector.model.Cache;
+import org.uiautomation.ios.inspector.model.IDESessionModel;
 
 public class MockedCache implements Cache {
 

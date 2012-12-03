@@ -1,4 +1,4 @@
-package org.uiautomation.ios.ide.pages.begin;
+package org.uiautomation.ios.inspector;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.UIAModels.Session;
-import org.uiautomation.ios.ide.model.IDESessionModel;
+import org.uiautomation.ios.inspector.model.IDESessionModel;
 
 public class MockedModel implements IDESessionModel {
 
