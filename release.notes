@@ -4,7 +4,7 @@
 + license for the code
 + fix stale element
 + remove the sysouts
-- rename ide to inspector, and make it part of the server
++ rename ide to inspector, and make it part of the server
 - fix the inspector for retina etc
 - fix the inspector ratio, mouse over is off.
 + remove the dup exception from webdriver
