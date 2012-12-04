@@ -51,13 +51,14 @@ h4{
 	z-index: 4;
 }
 #tree {
-	height: 92%;
+	height: 100%;
 	float:right;
 	width: 23%;
 	overflow:auto;
-	margin-top:45px;
+	margin-top:0px;
 
 }
+
 #details {
 	float:right;
 	width: 18%;
@@ -68,17 +69,22 @@ h4{
 	background: #FAFAFA;
 	color: #444444;
 
-	height: 92%;
+	height: 100%;
 	overflow:auto;
-	margin-top:45px;
+	margin-top:0px;
 
 }
 
 #topmenu{
 	position:absolute;
 	background: #455372;
-	width:100%;
+	width:15%;
 	height:45px;
+	float:right;
+	border-top-right-radius:14px;
+	border-bottom-right-radius:14px;
+	-moz-border-top-right-radius:14px;
+	-moz-border-bottom-right-radius:14px;
 	}
 	
 #picture{
@@ -137,8 +143,7 @@ h4{
 }
 
 
-.overlay, .overlayLanguages{
-    background:transparent url(images/overlay.png) repeat top left;
+.overlay{
     position:fixed;
     top:0px;
     bottom:0px;
@@ -148,15 +153,14 @@ h4{
     
 }
 
-.box, .boxlanguages{
+.box{
     position:fixed;
-    top:-500px;
-    left:30%;
-    right:30%;
+    left:-2000px;
+    width: 50%;
     background-color:#fff;
     color:#7F7F7F;
     padding:20px;
-	max-height: 400px;
+	min-height: 30%;
     border:2px solid #455372;
     border-radius:8px;
 	-moz-border-radius:8px; /* Firefox 3.6 and earlier */
@@ -167,16 +171,18 @@ h4{
 
 
 
-.boxlanguages ul{
+.box ul{
 	list-style: none;
 }
 
-.boxlanguages ul li{
+.box ul li{
 	margin-bottom: 0.3em;
 	text-transform:uppercase;
+	display:inline;
+	margin-right:3em;
 }
 
-a.boxclose, a.boxcloselanguages{
+a.boxclose{
     float:right;
     width:26px;
     height:26px;
