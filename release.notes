@@ -5,8 +5,7 @@
 + fix stale element
 + remove the sysouts
 + rename ide to inspector, and make it part of the server
-- fix the inspector for retina etc
-- fix the inspector ratio, mouse over is off.
++ fix the inspector for retina etc
 + remove the dup exception from webdriver
 - throwing helpful messages when the rights in xcode haven't been changed.
 + find a solution for extra languages non iso
@@ -26,3 +25,4 @@
 - reorganize classes in server.
 - split handlers into native, web, and misc
 - xpath to css convertor for web
+- fix the inspector ratio, mouse over is off.
