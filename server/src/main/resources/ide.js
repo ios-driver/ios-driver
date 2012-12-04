@@ -264,6 +264,13 @@ configure = function(d, v, o) {
 		if(variation == 'Retina4'){
 			to_top = to_top +1;
 			to_left = to_left+9;
+			screen_h = screen_h+88;
+		    screen_w = screen_w;
+		 }
+		if(orientation == 'UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT'){
+			$('#frame').css('top', '-90px');
+		}else if(orientation =='UIA_DEVICE_ORIENTATION_LANDSCAPELEFT'){
+			$('#frame').css('left', '-18px');
 		}
 	} else {
 		console.log("error, wrong device :" + device);
