@@ -1,4 +1,4 @@
-0.4.0
+0.4.0 ( current ) 
 ------
 + license for the tests
 + license for the code
@@ -11,13 +11,18 @@
 - throwing helpful messages when the rights in xcode haven't been changed.
 + find a solution for extra languages non iso
 + make the register command send the capabilities
-- kill instruments before starting.
 + ios capability needs device + type + resolution
 + xpath for native
-- xpath to css convertor for web
 + rename the native handlers.
 + cleanup dependency and check for dups.
+- sendKeys for web on ipad
+
+
+0.5.0 (next )
+------
+- improve UIAKeyboard, add hide()
+- doc
+- kill instruments before starting.
 - reorganize classes in server.
 - split handlers into native, web, and misc
-- improve UIAKeyboard, add hide()
-- sendKeys for web on ipad
+- xpath to css convertor for web
