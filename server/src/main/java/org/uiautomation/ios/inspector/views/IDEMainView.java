@@ -83,7 +83,7 @@ public class IDEMainView implements View {
       if (model.getCapabilities().getDevice() == Device.ipad) {
         d = "ipad";
       }
-      b.append("<script >configure('" + d + "','" + model.getDeviceOrientation() + "');</script>");
+      b.append("<script >configure('" + d + "','"+ variation + "','" + model.getDeviceOrientation() + "');</script>");
       b.append("<script >resize();</script>");
 
       b.append("<div id ='topmenu'>");
@@ -92,8 +92,6 @@ public class IDEMainView implements View {
       b.append("</div>");
       b.append("<ul>");
       b.append("<li id=\"capabilities\"><a href=\"#\">See Capabilities</a></li>");
-      b.append("<li id=\"languages\"><a href=\"#\">Suported Languages</a></li>");
-      b.append("<li><a href=\"#\">Debug Options</a></li>");
       b.append("</ul>");
       b.append("</div>");
 
@@ -101,28 +99,19 @@ public class IDEMainView implements View {
        * OVERLAY Capabilities
        */
       b.append("<div class=\"overlay\" id=\"overlay\" style=\"display:none;\"></div>");
-
       b.append("<div class=\"box\" id=\"box\">");
       b.append("<a class=\"boxclose\" id=\"boxclose\"></a>");
       b.append("<h4>Capabilities</h4>");
       b.append("<p>");
       b.append(displayCapabilities());
       b.append("</p>");
-      b.append("</div>");
-      /* END OVERLAY CAPABILITIES */
-
-      /* OVERLAY LANGUAGES */
-      b.append("<div class=\"overlaylanguages\" id=\"overlayLanguages\" style=\"display:none;\"></div>");
-
-      b.append("<div class=\"boxlanguages\" id=\"boxlanguages\">");
-      b.append("<a class=\"boxcloselanguages\" id=\"boxcloselanguages\"></a>");
       b.append("<h4>Supported Languages</h4>");
       b.append("<p>");
       b.append(getListOfLanguagesInHTML());
       b.append("</p>");
       b.append("</div>");
+      /* END OVERLAY CAPABILITIES */
 
-      /* END OVERLAY FOR LANGUAGES */
       b.append("</body>");
       b.append("</html>");
 
