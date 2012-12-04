@@ -40,6 +40,7 @@ h4{
 }
 #frame {
 	position: absolute;
+	/*top: -90px;*/
 	top: 0px;
 	left: 0px;
 }
@@ -161,9 +162,11 @@ h4{
     border-radius:8px;
 	-moz-border-radius:8px; /* Firefox 3.6 and earlier */
     z-index:101;
-
+	overflow:auto;
 
 }
+
+
 
 .boxlanguages ul{
 	list-style: none;

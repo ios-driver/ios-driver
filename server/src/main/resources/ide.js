@@ -228,9 +228,11 @@ findFrameSizeInPixels = function() {
 };
 var device;
 var orientation;
-configure = function(d, o) {
+var variation;
+configure = function(d, v, o) {
 	device = d;
 	orientation = o;
+	variation = v;
 	var FRAME_IPAD_H = 1108;
 	var FRAME_IPAD_W = 852;
 	var SCREEN_IPAD_H = 1024;
@@ -259,6 +261,10 @@ configure = function(d, o) {
 		screen_w = SCREEN_IPHONE_W;
 		to_top = SCREEN_TO_TOP_IPHONE;
 		to_left = SCREEN_TO_LEFT_IPHONE;
+		if(variation == 'Retina4'){
+			to_top = to_top +1;
+			to_left = to_left+9;
+		}
 	} else {
 		console.log("error, wrong device :" + device);
 	}

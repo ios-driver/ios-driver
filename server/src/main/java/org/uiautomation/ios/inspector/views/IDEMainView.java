@@ -83,7 +83,7 @@ public class IDEMainView implements View {
       if (model.getCapabilities().getDevice() == Device.ipad) {
         d = "ipad";
       }
-      b.append("<script >configure('" + d + "','" + model.getDeviceOrientation() + "');</script>");
+      b.append("<script >configure('" + d + "','"+ variation + "','" + model.getDeviceOrientation() + "');</script>");
       b.append("<script >resize();</script>");
 
       b.append("<div id ='topmenu'>");
