@@ -24,7 +24,7 @@ $(document).ready(function() {
 	});
 
 	tree.bind("hover_node.jstree", function(e, data) {
-		if(!lock) {
+		if (!lock) {
 			setSelected(data);
 		}
 
@@ -47,7 +47,7 @@ $(document).ready(function() {
 		var value;
 		var l10n;
 
-		if(node.metadata) {// from tree parsing, json node
+		if (node.metadata) {// from tree parsing, json node
 			rect = node.metadata.rect;
 			type = node.metadata.type;
 			ref = node.metadata.reference;
@@ -84,7 +84,7 @@ $(document).ready(function() {
 		$('#highlight').css('width', w + 'px');
 
 		var color;
-		if(translationFound) {
+		if (translationFound) {
 			color = "blue";
 		} else {
 			color = "yellow";
@@ -95,17 +95,17 @@ $(document).ready(function() {
 	showDetails = function(type, ref, na, label, value, rect, l10n) {
 		var prettyL10N = "";
 
-		if(l10n) {
+		if (l10n) {
 			prettyL10N = "<h3>L10N</h3>";
 			var matches = l10n.matches;
 			prettyL10N += "<p><b>Matches</b>: " + matches + "</p>";
 
-			if(matches > 0) {
+			if (matches > 0) {
 				prettyL10N += "<p><b>Key</b>: " + l10n.key + "</p>";
 				var langs = l10n.langs;
-				for(var name in langs) {
+				for (var name in langs) {
 					var result = langs[name];
-					for(var a in result) {
+					for (var a in result) {
 						prettyL10N += "<p><b>" + a + "</b> : " + result[a] + "</p>";
 					}
 
@@ -122,7 +122,7 @@ $(document).ready(function() {
 	var root;
 	$("#mouseOver").mousemove(function(e) {
 
-		if(!lock) {
+		if (!lock) {
 			var x = e.pageX / scale - realOffsetX;
 			var y = e.pageY / scale - (realOffsetY + 45);
 			// x = x / scale;
@@ -130,7 +130,7 @@ $(document).ready(function() {
 			console.log(x + "," + y);
 			var finder = new CandidateFinder(x, y, root);
 			var node = finder.getNode();
-			if(node) {
+			if (node) {
 				setSelected(node);
 			} else {
 				console.log('couldn t find element at ' + x + ' , ' + y + root);
@@ -140,7 +140,7 @@ $(document).ready(function() {
 	});
 
 	$(document).keydown(function(e) {
-		if(e.ctrlKey) {
+		if (e.ctrlKey) {
 			toggleLock();
 		}
 	});
@@ -164,8 +164,8 @@ $(document).ready(function() {
 			var currentH = node.metadata.rect.h;
 			var currentW = node.metadata.rect.w;
 
-			if((currentX <= this.x) && (this.x <= (currentX + currentW))) {
-				if((currentY <= this.y) && (this.y <= (currentY + currentH))) {
+			if ((currentX <= this.x) && (this.x <= (currentX + currentW))) {
+				if ((currentY <= this.y) && (this.y <= (currentY + currentH))) {
 					return true;
 				}
 			}
@@ -173,10 +173,10 @@ $(document).ready(function() {
 
 		};
 		this._assignIfBetterCandidate = function(newNode) {
-			if(this._hasCorrectPosition(newNode)) {
+			if (this._hasCorrectPosition(newNode)) {
 				var surface = (newNode.metadata.rect.h * newNode.metadata.rect.w);
-				if(this.candidate) {
-					if(surface < this.matchScore) {
+				if (this.candidate) {
+					if (surface < this.matchScore) {
 						this.matchScore = surface;
 						this.candidate = newNode;
 					}
@@ -194,8 +194,8 @@ $(document).ready(function() {
 
 		this._getCandidate = function(from) {
 			this._assignIfBetterCandidate(from);
-			if(from.children) {
-				for(var i = 0; i < from.children.length; i++) {
+			if (from.children) {
+				for (var i = 0; i < from.children.length; i++) {
 					var child = from.children[i];
 					this._getCandidate(child);
 				}
@@ -247,31 +247,32 @@ configure = function(d, v, o) {
 	var SCREEN_TO_TOP_IPHONE = 118;
 	var SCREEN_TO_LEFT_IPHONE = 24;
 
-	if(device === 'ipad') {
+	if (device === 'ipad') {
 		frame_h = FRAME_IPAD_H;
 		frame_w = FRAME_IPAD_W;
 		screen_h = SCREEN_IPAD_H;
 		screen_w = SCREEN_IPAD_W;
 		to_top = SCREEN_TO_TOP_IPAD;
 		to_left = SCREEN_TO_LEFT_IPAD;
-	} else if(device === 'iphone') {
+	} else if (device === 'iphone') {
 		frame_h = FRAME_IPHONE_H;
 		frame_w = FRAME_IPHONE_W;
 		screen_h = SCREEN_IPHONE_H;
 		screen_w = SCREEN_IPHONE_W;
 		to_top = SCREEN_TO_TOP_IPHONE;
 		to_left = SCREEN_TO_LEFT_IPHONE;
-		if(variation == 'Retina4'){
-			to_top = to_top +1;
-			to_left = to_left+9;
-			screen_h = screen_h+88;
-		    screen_w = screen_w;
-		 }
-		if(orientation == 'UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT'){
-			$('#frame').css('top', '-90px');
-		}else if(orientation =='UIA_DEVICE_ORIENTATION_LANDSCAPELEFT'){
-			$('#frame').css('left', '-18px');
+		if (variation == 'Retina4') {
+			to_top = to_top + 1;
+			to_left = to_left + 9;
+			screen_h = screen_h + 88;
+			screen_w = screen_w;
+			if (orientation == 'UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT') {
+				$('#frame').css('top', '-90px');
+			} else if (orientation == 'UIA_DEVICE_ORIENTATION_LANDSCAPELEFT') {
+				$('#frame').css('left', '-18px');
+			}
 		}
+
 	} else {
 		console.log("error, wrong device :" + device);
 	}
@@ -280,12 +281,12 @@ configure = function(d, v, o) {
 resize = function() {
 
 	var neededSpace = frame_w;
-	if(orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT' || orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPELEFT') {
+	if (orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT' || orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPELEFT') {
 		neededSpace = frame_h;
 	}
 	var leftInPixel = findFrameSizeInPixels();
 	scale = leftInPixel / neededSpace;
-	if(scale > 1) {
+	if (scale > 1) {
 		scale = 1;
 	}
 
@@ -300,7 +301,7 @@ resize = function() {
 	realOffsetX = margin + to_left;
 	realOffsetY = margin + to_top;
 
-	if(orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT') {
+	if (orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT') {
 		angle = 90;
 		$('#rotationCenter').css('left', (frame_h + margin) + 'px');
 		$('#rotationCenter').css('top', margin + 'px');
@@ -312,7 +313,7 @@ resize = function() {
 		realOffsetY = margin + to_left;
 		width = frame_h;
 
-	} else if(orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPELEFT') {
+	} else if (orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPELEFT') {
 		angle = -90;
 		$('#rotationCenter').css('left', margin + 'px');
 		$('#rotationCenter').css('top', (frame_w + margin) + 'px');
@@ -322,12 +323,12 @@ resize = function() {
 		realOffsetY = margin + to_left;
 		width = frame_h;
 
-	} else if(orientation === 'UIA_DEVICE_ORIENTATION_PORTRAIT') {
+	} else if (orientation === 'UIA_DEVICE_ORIENTATION_PORTRAIT') {
 		angle = 0;
 		$('#rotationCenter').css('left', margin + 'px');
 		$('#rotationCenter').css('top', margin + 'px');
 
-	} else if(orientation === 'UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN') {
+	} else if (orientation === 'UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN') {
 		angle = 180;
 		$('#rotationCenter').css('left', frame_w + margin + 'px');
 		$('#rotationCenter').css('top', frame_h + margin + 'px');
