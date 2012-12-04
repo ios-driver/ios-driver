@@ -8,21 +8,14 @@ public class LocalizableTest {
 
   @Test
   public void mappingOK() {
-    Localizable fr = Localizable.fr;
-    Localizable fr2 = Localizable.createFromLegacyName("French");
+    AppleLocale fr = new AppleLocale("fr");
+    AppleLocale fr2 = new AppleLocale("French");
     Assert.assertEquals(fr2, fr);
-  }
-
-  @Test
-  public void findExisting() {
-    Assert.assertTrue(Localizable.isLegacyName("French"));
-    Assert.assertFalse(Localizable.isLegacyName("Klingon"));
-
   }
 
   @Test(expectedExceptions = { WebDriverException.class })
   public void doesntExistThrowsException() {
-    Localizable kg = Localizable.createFromLegacyName("Klingon");
+    AppleLocale kg = new AppleLocale("Klingon");
     Assert.assertNotNull(kg);
   }
 

@@ -17,7 +17,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.logging.Logger;
 
-import org.uiautomation.ios.server.application.Localizable;
+import org.uiautomation.ios.server.application.AppleLocale;
 
 
 public class SampleApps {
@@ -75,9 +75,9 @@ public class SampleApps {
     return c;
   }
 
-  public static IOSCapabilities intlMountainsCap(Localizable l) {
+  public static IOSCapabilities intlMountainsCap(String lang) {
     IOSCapabilities c = IOSCapabilities.iphone("InternationalMountains", "1.1");
-    c.setLanguage(l.getName());
+    c.setLanguage(lang);
     c.setCapability(IOSCapabilities.TIME_HACK, false);
     if (sdkVersion != null) {
       log.info("SET SDK to " + sdkVersion);

@@ -6,7 +6,6 @@ import org.uiautomation.ios.BaseIOSDriverTest;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
-import org.uiautomation.ios.server.application.Localizable;
 
 public class ServerSerializeExceptionTest extends BaseIOSDriverTest {
 
@@ -14,7 +13,7 @@ public class ServerSerializeExceptionTest extends BaseIOSDriverTest {
   public void clientGetsServerException()  {
     RemoteUIADriver driver = null;
     try {
-      IOSCapabilities cap = SampleApps.intlMountainsCap(Localizable.de);
+      IOSCapabilities cap = SampleApps.intlMountainsCap("de");
       driver = new RemoteUIADriver(getRemoteURL(), cap);
 
     } finally {

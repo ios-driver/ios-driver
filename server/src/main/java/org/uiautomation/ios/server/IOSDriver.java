@@ -29,7 +29,7 @@ import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.server.application.IOSApplication;
-import org.uiautomation.ios.server.application.Localizable;
+import org.uiautomation.ios.server.application.AppleLocale;
 import org.uiautomation.ios.server.application.ResourceCache;
 import org.uiautomation.ios.server.utils.BuildInfo;
 import org.uiautomation.ios.server.utils.ClassicCommands;
@@ -86,11 +86,7 @@ public class IOSDriver {
     // some cap are from the host. SDK version is not defined by the app itself.
     IOSCapabilities cap = new IOSCapabilities();
     cap.setSDKVersion(hostInfo.getSDK());
-    List<String> languageCodes = new ArrayList<String>();
-    for (Localizable l : application.getSupportedLanguages()) {
-      languageCodes.add(l.getName());
-    }
-    cap.setSupportedLanguages(languageCodes);
+    cap.setSupportedLanguages(application.getSupportedLanguagesCodes());
     cap.setCapability("applicationPath", application.getApplicationPath().getAbsoluteFile());
 
     for (Iterator iterator = application.getMetadata().keys(); iterator.hasNext();) {

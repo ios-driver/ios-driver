@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -44,7 +45,7 @@ public class IOSApplication {
 
   private final JSONObject metadata;
   private final File app;
-  private Localizable currentLanguage;
+  private AppleLocale currentLanguage;
   private final List<LanguageDictionary> dictionaries = new ArrayList<LanguageDictionary>();
 
   /**
@@ -53,7 +54,7 @@ public class IOSApplication {
    * @param pathToApp
    * @throws WebDriverException
    */
-  public IOSApplication(String pathToApp)  {
+  public IOSApplication(String pathToApp) {
     this.app = new File(pathToApp);
     if (!app.exists()) {
       throw new WebDriverException(pathToApp + "isn't an IOS app.");
@@ -75,29 +76,61 @@ public class IOSApplication {
     return metadata;
   }
 
+  public List<String> getSupportedLanguagesCodes() {
+    List<AppleLocale> list = getSupportedLanguages();
+    List<String> res = new ArrayList<String>();
+    for (AppleLocale app : list) {
+      res.add(app.getLocale().toString());
+    }
+    return res;
+  }
+
   /**
    * get the list of languages the application if localized to.
    * 
    * @return
    * @throws Exception
    */
-  public List<Localizable> getSupportedLanguages() {
-    Set<Localizable> res = new HashSet<Localizable>();
-    List<File> l10ns = LanguageDictionary.getL10NFiles(app);
-    for (File f : l10ns) {
-      String name = LanguageDictionary.extractLanguageName(f);
-      res.add(new LanguageDictionary(name).getLanguage());
+  private List<AppleLocale> getSupportedLanguages() {
+    if (dictionaries.isEmpty()) {
+      loadAllContent();
     }
-    return new ArrayList<Localizable>(res);
+    /*
+     * Set<Localizable> res = new HashSet<Localizable>(); List<File> l10ns =
+     * LanguageDictionary.getL10NFiles(app); for (File f : l10ns) { String name
+     * = LanguageDictionary.extractLanguageName(f); res.add(new
+     * LanguageDictionary(name).getLanguage()); } return new
+     * ArrayList<Localizable>(res);
+     */
+    List<AppleLocale> res = new ArrayList<AppleLocale>();
+    for (LanguageDictionary dict : dictionaries) {
+      res.add(dict.getLanguage());
+    }
+    return res;
   }
 
-  public LanguageDictionary getDictionary(Localizable language) throws WebDriverException {
+  public  AppleLocale getAppleLocaleFromLanguageCode(String languageCode) {
+    for (AppleLocale loc : getSupportedLanguages()) {
+      if (languageCode.equals(loc.getLocale().getLanguage())) {
+        return loc;
+      }
+    }
+    throw new WebDriverException("Cannot find AppleLocale for " + languageCode);
+  }
+
+  public LanguageDictionary getDictionary(String languageCode) throws WebDriverException {
+    return getDictionary(getAppleLocaleFromLanguageCode(languageCode));
+
+  }
+
+  public LanguageDictionary getDictionary(AppleLocale language) throws WebDriverException {
     for (LanguageDictionary dict : dictionaries) {
       if (dict.getLanguage() == language) {
         return dict;
       }
     }
     throw new WebDriverException("Cannot find dictionary for " + language);
+
   }
 
   /**
@@ -132,7 +165,7 @@ public class IOSApplication {
 
   }
 
-  public String translate(ContentResult res, Localizable language) throws WebDriverException {
+  public String translate(ContentResult res, AppleLocale language) throws WebDriverException {
     LanguageDictionary destinationLanguage = getDictionary(language);
     return destinationLanguage.translate(res);
 
@@ -154,7 +187,7 @@ public class IOSApplication {
         }
 
         JSONArray langs = new JSONArray();
-        for (Localizable language : getSupportedLanguages()) {
+        for (AppleLocale language : getSupportedLanguages()) {
           JSONArray possibleMatches = new JSONArray();
 
           for (ContentResult res : results) {
@@ -187,7 +220,7 @@ public class IOSApplication {
     dictionaries.add(dict);
   }
 
-  public Localizable getCurrentLanguage() {
+  public AppleLocale getCurrentLanguage() {
     return currentLanguage;
   }
 
@@ -238,8 +271,14 @@ public class IOSApplication {
     }
   }
 
-  public void setLanguage(String language) {
-    currentLanguage = Localizable.getEnum(language);
+  public void setLanguage(String lang) {
+    for (AppleLocale loc : getSupportedLanguages()) {
+      if (loc.getLocale().toString().equals(lang)) {
+        currentLanguage = loc;
+        return;
+      }
+    }
+    throw new WebDriverException("Cannot find " + lang + " in the supported languages for the app.");
   }
 
   @Override

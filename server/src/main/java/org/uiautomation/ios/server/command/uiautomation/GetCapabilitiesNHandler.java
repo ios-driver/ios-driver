@@ -23,7 +23,7 @@ import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.server.application.Localizable;
+import org.uiautomation.ios.server.application.AppleLocale;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 
@@ -73,7 +73,7 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
       }
       ServerSideSession session = getDriver().getSession(response.getSessionId());
       Map<String, Object> o = (Map<String, Object>) response.getValue();
-      List<Localizable> ls = session.getApplication().getSupportedLanguages();
+      List<String> ls = session.getApplication().getSupportedLanguagesCodes();
 
       o.put("supportedLocales", ls);
       o.put("takesScreenshot", true);

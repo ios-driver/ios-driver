@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.communication.device.Device;
 import org.uiautomation.ios.communication.device.DeviceVariation;
+import org.uiautomation.ios.server.application.AppleLocale;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.simulator.IOSSimulatorManager;
 import org.uiautomation.ios.server.utils.ClassicCommands;

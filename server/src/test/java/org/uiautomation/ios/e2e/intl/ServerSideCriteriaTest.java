@@ -16,7 +16,6 @@ import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
-import org.uiautomation.ios.server.application.Localizable;
 
 public class ServerSideCriteriaTest extends BaseIOSDriverTest {
 
@@ -24,7 +23,7 @@ public class ServerSideCriteriaTest extends BaseIOSDriverTest {
 
   @BeforeClass
   public void startDriver() {
-    driver = new RemoteUIADriver(getRemoteURL(), SampleApps.intlMountainsCap(Localizable.fr));
+    driver = new RemoteUIADriver(getRemoteURL(), SampleApps.intlMountainsCap("fr"));
   }
 
   @AfterClass

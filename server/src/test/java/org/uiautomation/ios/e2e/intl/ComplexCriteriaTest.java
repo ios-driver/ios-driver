@@ -15,25 +15,25 @@ import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
-import org.uiautomation.ios.server.application.Localizable;
+import org.uiautomation.ios.server.application.AppleLocale;
 
 public class ComplexCriteriaTest extends BaseIOSDriverTest {
 
   @DataProvider(name = "intlMountain", parallel = false)
   public Object[][] createDataPerLocale() {
     return new Object[][] {
-        { Localizable.en, "Mountain 1 was first climbed on 29 May 1953 and has a height of 8,848 meters" },
-        { Localizable.fr, "Bien que 8,848 mètres de haut, Montagne 1 aient été montés la première fois 29 May 1953." },
-        { Localizable.zh, "山 1 是8,848米高。它第一次攀登了在29 May 1953。" } 
+        //{ "en", "Mountain 1 was first climbed on 29 May 1953 and has a height of 8,848 meters" },
+        //{ "fr", "Bien que 8,848 mètres de haut, Montagne 1 aient été montés la première fois 29 May 1953." },
+          { "zh", "山 1 是8,848米高。它第一次攀登了在29 May 1953。" } 
         };
   }
 
   @Test(dataProvider = "intlMountain")
-  public void selectAndValidateServerSideL10NedContent(Localizable l, String expectedContent) {
+  public void selectAndValidateServerSideL10NedContent(String lang, String expectedContent) {
     RemoteUIADriver driver = null;
     try {
 
-      driver = new RemoteUIADriver(getRemoteURL(), SampleApps.intlMountainsCap(l));
+      driver = new RemoteUIADriver(getRemoteURL(), SampleApps.intlMountainsCap(lang));
 
       Criteria c1 = new TypeCriteria(UIATableCell.class);
       UIAElement element = driver.findElement(c1);

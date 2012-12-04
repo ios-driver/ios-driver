@@ -15,6 +15,7 @@ package org.uiautomation.ios.server;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Locale;
 import java.util.UUID;
 
 import org.openqa.selenium.SessionNotCreatedException;
@@ -125,8 +126,9 @@ public class ServerSideSession extends Session {
   }
 
   public void start() {
+    String appleLanguage = application.getAppleLocaleFromLanguageCode(capabilities.getLanguage()).getAppleLanguagesForPreferencePlist();
     instruments.startSession(capabilities.getDevice(),capabilities.getDeviceVariation(), capabilities.getSDKVersion(), capabilities.getLocale(),
-        capabilities.getLanguage(), application, getSessionId(), capabilities.isTimeHack(),
+        appleLanguage, application, getSessionId(), capabilities.isTimeHack(),
         capabilities.getExtraSwitches());
 
     URL url = null;

@@ -19,3 +19,5 @@
 + cleanup dependency and check for dups.
 - reorganize classes in server.
 - split handlers into native, web, and misc
+- improve UIAKeyboard, add hide()
+- sendKeys for web on ipad

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
 import java.util.regex.PatternSyntaxException;
@@ -33,42 +34,29 @@ import org.uiautomation.ios.server.utils.PlistFileUtils;
 
 /**
  * 
- * Represents the apple localisation of an IOS native app for a given language. In Xcode, it will be
- * Localizable.string ( theLanguage ) file.
+ * Represents the apple localisation of an IOS native app for a given language.
+ * In Xcode, it will be Localizable.string ( theLanguage ) file.
  */
 public class LanguageDictionary {
 
   // TODO freynaud
   // public final Form normalizer = Form.NFD;
   public static final Form norme = Form.NFKC;
-  private final Localizable language;
-  private final boolean legacyFormat;
+  private final AppleLocale language;
+  // private final boolean legacyFormat;
   private final Map<String, String> content = new HashMap<String, String>();
   private static final Logger log = Logger.getLogger(LanguageDictionary.class.getName());
 
-
   /**
-   * Creates a new dictionary for the language specified. Will guess the format of the underlying
-   * project structure, legacy ( with verbose name) or new.
+   * Creates a new dictionary for the language specified. Will guess the format
+   * of the underlying project structure, legacy ( with verbose name) or new.
    * 
    * @param language
-   * @throws WebDriverException if the language isn't recognized.
+   * @throws WebDriverException
+   *           if the language isn't recognized.
    */
-  public LanguageDictionary(String language) throws WebDriverException {
-    if (Localizable.isLegacyName(language)) {
-      this.language = Localizable.createFromLegacyName(language);
-      this.legacyFormat = true;
-    } else if (Localizable.isNewName(language)) {
-
-      this.language = Localizable.createFromNewName(language);
-      this.legacyFormat = false;
-    } else {
-      this.language = Localizable.it;
-      this.legacyFormat = false;
-      //TODO freynaud add all languages 
-      //System.err.println(language+" not supported");
-      log.warning(language + " isn't recognized.");
-    }
+  public LanguageDictionary(String lrojName) throws WebDriverException {
+    language = new AppleLocale(lrojName);
   }
 
   public List<ContentResult> getPotentialMatches(String string) throws WebDriverException {
@@ -85,7 +73,7 @@ public class LanguageDictionary {
           List<ContentResult> rec = getPotentialMatches(s);
           if (!rec.isEmpty()) {
             // TODO freynaud an argument can be l10ned too....
-           log.warning("recursion is found..." + getPotentialMatches(s));
+            log.warning("recursion is found..." + getPotentialMatches(s));
           }
         }
         res.add(r);
@@ -119,7 +107,6 @@ public class LanguageDictionary {
     String normalizedContent = Normalizer.normalize(content, norme);
     String normalizedOriginalText = Normalizer.normalize(originalText, norme);
 
-
     String pattern = getRegexPattern(normalizedOriginalText);
     try {
       boolean regex = normalizedContent.matches(pattern);
@@ -139,17 +126,15 @@ public class LanguageDictionary {
     res = res.replaceAll("%d", "(.*){1}");
     return res;
   }
-  
- 
-
 
   /**
    * 
-   * @param aut the application under test. /A/B/C/xxx.app
+   * @param aut
+   *          the application under test. /A/B/C/xxx.app
    * @return the list of the folders hosting the l10ned files.
    * @throws WebDriverException
    */
-  public static List<File> getL10NFiles(File aut)  {
+  public static List<File> getL10NFiles(File aut) {
     List<File> res = new ArrayList<File>();
     File[] files = aut.listFiles(new FileFilter() {
 
@@ -170,7 +155,8 @@ public class LanguageDictionary {
   }
 
   /**
-   * Take a json file ( plist exported as json format ) localizable.strings and loads its content.
+   * Take a json file ( plist exported as json format ) localizable.strings and
+   * loads its content.
    * 
    * @param content
    * @throws JSONException
@@ -181,8 +167,9 @@ public class LanguageDictionary {
 
   /**
    * 
-   * @param json the json object containing all the key : value pairs for the translation of the
-   *        app.
+   * @param json
+   *          the json object containing all the key : value pairs for the
+   *          translation of the app.
    * @return a key : value map.
    * @throws JSONException
    */
@@ -199,7 +186,8 @@ public class LanguageDictionary {
 
   /**
    * 
-   * @param f the Localizable.strings file to use for the content.
+   * @param f
+   *          the Localizable.strings file to use for the content.
    * @return
    * @throws Exception
    */
@@ -211,7 +199,6 @@ public class LanguageDictionary {
     res.addJSONContent(content);
     return res;
   }
-
 
   public static String extractLanguageName(File f) {
     String parent = f.getParentFile().getName();
@@ -231,7 +218,6 @@ public class LanguageDictionary {
     return util.toJSON();
   }
 
-
   /**
    * format used to store the l10n files. See
    * http://stackoverflow.com/questions/7051120/why-doesnt-my
@@ -239,21 +225,18 @@ public class LanguageDictionary {
    * 
    * @return
    */
-  public boolean isLegacyFormat() {
-    return legacyFormat;
-  }
-
-
+  /*
+   * public boolean isLegacyFormat() { return legacyFormat; }
+   */
 
   /**
    * the language this dictionary is for.
    * 
    * @return
    */
-  public Localizable getLanguage() {
+  public AppleLocale getLanguage() {
     return language;
   }
-
 
   @Override
   public int hashCode() {
@@ -263,18 +246,22 @@ public class LanguageDictionary {
     return result;
   }
 
-
   @Override
   public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
     LanguageDictionary other = (LanguageDictionary) obj;
-    if (language != other.language) return false;
+    if (language == null) {
+      if (other.language != null)
+        return false;
+    } else if (!language.equals(other.language))
+      return false;
     return true;
   }
-
-
 
   public String translate(ContentResult res) {
     String languageTemplate = content.get(res.getKey());
@@ -298,7 +285,5 @@ public class LanguageDictionary {
     String value = content.get(key);
     return value;
   }
-
-
 
 }

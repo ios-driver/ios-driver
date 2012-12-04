@@ -1,5 +1,7 @@
 package org.uiautomation.ios.e2e.intl;
 
+import java.util.Locale;
+
 import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -14,7 +16,7 @@ import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
-import org.uiautomation.ios.server.application.Localizable;
+import org.uiautomation.ios.server.application.AppleLocale;
 
 public class SourceTest extends BaseIOSDriverTest {
   private String expected = "Bien que 8,848 mètres de haut, Montagne 1 aient été montés la première fois 29 May 1953.";
@@ -24,7 +26,7 @@ public class SourceTest extends BaseIOSDriverTest {
     RemoteUIADriver driver = null;
     try {
 
-      driver = new RemoteUIADriver(getRemoteURL(), SampleApps.intlMountainsCap(Localizable.fr));
+      driver = new RemoteUIADriver(getRemoteURL(), SampleApps.intlMountainsCap(Locale.FRENCH.toString()));
       Criteria c1 = new TypeCriteria(UIATableCell.class);
       UIAElement element = driver.findElement(c1);
       element.tap();

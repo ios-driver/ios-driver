@@ -15,16 +15,14 @@ public class LanguageDictionaryTest {
   public void canGuessLegacyNaming() {
     String name = "French";
     LanguageDictionary dict = new LanguageDictionary(name);
-    Assert.assertTrue(dict.isLegacyFormat());
-    Assert.assertEquals(dict.getLanguage(), Localizable.fr);
+    Assert.assertEquals(dict.getLanguage().getLocale().toString(), "fr");
   }
 
   @Test
   public void canGuessCurrentNaming() {
     String name = "fr";
     LanguageDictionary dict = new LanguageDictionary(name);
-    Assert.assertFalse(dict.isLegacyFormat());
-    Assert.assertEquals(dict.getLanguage(), Localizable.fr);
+    Assert.assertEquals(dict.getLanguage().getLocale().toString(), "fr");
   }
 
  
