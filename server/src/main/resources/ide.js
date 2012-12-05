@@ -228,7 +228,7 @@ $(document).ready(function() {
 			}
 		};
 	}
-
+injectHTML();
 });
 var realOffsetX = 0;
 var realOffsetY = 0;
@@ -256,7 +256,7 @@ findFrameSizeInPixels = function() {
 injectHTML = function() {
 	alert('Hello');
 	var div = document.getElementById("webinspector");
-	div.innerText = "<html><body>Hello <b>Roberto</b></body></html>";
+	div.innerHTML = getHTMLSource;
 }
 var device;
 var orientation;

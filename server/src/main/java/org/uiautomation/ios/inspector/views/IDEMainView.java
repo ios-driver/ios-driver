@@ -94,7 +94,6 @@ public class IDEMainView implements View {
       }
       b.append("<script >configure('" + d + "','"+ variation + "','" + model.getDeviceOrientation() + "');</script>");
       b.append("<script >resize();</script>");
-      b.append("<script >injectHTML();</script>");
       b.append("<div id ='topmenu'>");
       b.append("<div id=\"picture\"/>");
       b.append("<img src=\"" + getIcon() + "\"/>");
