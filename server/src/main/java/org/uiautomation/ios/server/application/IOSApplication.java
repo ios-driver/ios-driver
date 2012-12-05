@@ -109,7 +109,7 @@ public class IOSApplication {
     return res;
   }
 
-  public  AppleLocale getAppleLocaleFromLanguageCode(String languageCode) {
+  public AppleLocale getAppleLocaleFromLanguageCode(String languageCode) {
     for (AppleLocale loc : getSupportedLanguages()) {
       if (languageCode.equals(loc.getLocale().getLanguage())) {
         return loc;
@@ -346,7 +346,6 @@ public class IOSApplication {
       rearrangedArray.setValue(index, last);
       root.put("UIDeviceFamily", rearrangedArray);
       BinaryPropertyListWriter.write(plist, root);
-
     } catch (Exception e) {
       throw new WebDriverException("Cannot change the default device for the app." + e.getMessage(), e);
     }

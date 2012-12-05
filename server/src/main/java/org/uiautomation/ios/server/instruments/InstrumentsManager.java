@@ -113,7 +113,7 @@ public class InstrumentsManager {
         simulatorProcess.forceStop();
       }
       killSimulator();
-      throw new WebDriverException("error starting instrument for session " + sessionId, e);
+      throw new WebDriverException("error starting instrument for session " + sessionId + ", "+e.getMessage(), e);
     } finally {
       log.fine("start session done");
       if (sim != null) {
@@ -196,7 +196,9 @@ public class InstrumentsManager {
   }
 
   private void killSimulator() {
-    simulator.cleanupDevice();
+    if (simulator!=null){
+      simulator.cleanupDevice();
+    }
   }
 
   public String getSessionId() {
