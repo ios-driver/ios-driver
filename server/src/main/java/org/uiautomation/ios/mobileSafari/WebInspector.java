@@ -432,4 +432,12 @@ public class WebInspector {
     cast(response);
   }
 
+  public String getHTMLSource() throws Exception {
+    JSONObject cmd = new JSONObject();
+    cmd.put("method", "Runtime.evaluate");
+    cmd.put("params", new JSONObject().put("expression", "document.documentElement.outerHTML;").put("returnByValue", true));
+    JSONObject response = protocol.sendCommand(cmd);
+    return cast(response);
+  }
+
 }

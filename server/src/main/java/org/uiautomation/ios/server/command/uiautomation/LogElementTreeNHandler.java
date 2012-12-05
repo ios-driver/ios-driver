@@ -22,7 +22,9 @@ import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
+import org.uiautomation.ios.mobileSafari.WebInspector;
 import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
@@ -44,6 +46,7 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
     }
 
     addDecorator(new AttachScreenshotToLog(driver));
+    addDecorator(new GetHTMLForWebView(driver));
     try {
       if (request.getPayload().getBoolean("translation")) {
         addDecorator(new AddTranslationToLog(driver));
@@ -126,6 +129,65 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
       } else {
         value.put("screenshot", null);
       }
+    }
+  }
+
+  class GetHTMLForWebView extends PostHandleDecorator {
+
+    public GetHTMLForWebView(IOSDriver driver) {
+      super(driver);
+    }
+
+    @Override
+    public void decorate(Response response) {
+      Map<String, Object> value = (Map<String, Object>) response.getValue();
+      Map<String, Object> tree = (Map<String, Object>) value.get("tree");
+
+      Map<String, Object> webView = (Map<String, Object>) getWebView(tree);
+      if (webView != null) {
+        ServerSideSession session = getDriver().getSession(getRequest().getSession());
+        WebInspector inspector = session.getWebInspector();
+        try {
+          String rawHTML = inspector.getHTMLSource();
+          webView.put("source", rawHTML);
+        } catch (Exception e) {
+         
+          e.printStackTrace();
+        }
+       
+      }
+
+    }
+
+    private Map<String, Object> getWebView(Map<String, Object> tree) {
+      for (String key : tree.keySet()) {
+        System.out.println("key=" + key);
+        Object value = tree.get(key);
+      }
+      return parseNode(tree);
+    }
+
+    private Map<String, Object> parseNode(Map<String, Object> node) {
+      String type = (String) node.get("type");
+      if ("UIAWebView".equals(type)) {
+        return node;
+      } else {
+        if (node.containsKey("children")) {
+          List<Map<String, Object>> children = (List<Map<String, Object>>) node.get("children");
+          for (Map<String, Object> child : children) {
+            Map<String, Object> res = parseNode(child);
+            if (res != null) {
+              return res;
+            }
+          }
+        }
+      }
+      return null;
+    }
+
+    private boolean containsAWebView(Response response) {
+
+      return true;
     }
   }
 

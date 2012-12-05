@@ -34,12 +34,38 @@ $(document)
 					var root;
 					tree.bind("loaded.jstree", function(event, data) {
 						root = tree.jstree('get_json')[0];
+						var webView = extractWebView(root);
+						if (webView != null) {
+							setHTMLSource(webView.metadata.source);
+						}else{
+							setHTMLSource(null);
+						}
 						tree.jstree("open_all");
 					});
 					tree.bind("refresh.jstree", function(event, data) {
 						root = tree.jstree('get_json')[0];
 						tree.jstree("open_all");
 					});
+					extractWebView = function(node) {
+						var type = node.metadata.type;
+						if ("UIAWebView" === type) {
+							return node;
+						} else {
+							var children = node.children;
+							if (children) {
+								for ( var i = 0; i < children.length; i++) {
+									var child = children[i];
+									var res = extractWebView(child);
+									if (res) {
+										return res;
+									}
+								}
+							}
+
+						}
+						return null;
+					}
+
 					setSelected = function(node) {
 						var rect;
 						var type;
@@ -305,6 +331,17 @@ configure = function(d, v, o) {
 	}
 
 };
+
+/**
+ * returns the html source of the webview, if any.
+ */
+getHTMLSource = function(){
+	return source;
+}
+var source = null;
+setHTMLSource = function( newSource){
+	source=newSource;
+}
 resize = function() {
 
 	var neededSpace = frame_w;
