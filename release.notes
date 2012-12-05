@@ -26,3 +26,4 @@
 - split handlers into native, web, and misc
 - xpath to css convertor for web
 - fix the inspector ratio, mouse over is off.
+- see what happens for native events on hybrid apps.

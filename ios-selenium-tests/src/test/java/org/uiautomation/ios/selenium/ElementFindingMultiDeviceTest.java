@@ -56,19 +56,23 @@ public class ElementFindingMultiDeviceTest {
     return new Object[][] {
 
     { Device.iphone, DeviceVariation.Regular, Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT },
-    { Device.iphone, DeviceVariation.Regular, Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPELEFT },
-    { Device.iphone, DeviceVariation.Regular, Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT },
-    { Device.iphone, DeviceVariation.Retina35, Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT },
-    { Device.iphone, DeviceVariation.Retina35, Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPELEFT },
-    { Device.iphone, DeviceVariation.Retina35, Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT },
-    { Device.iphone, DeviceVariation.Retina4, Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT },
-    { Device.iphone, DeviceVariation.Retina4, Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPELEFT },
-    { Device.iphone, DeviceVariation.Retina4, Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT },
-    
-    // { Device.iphone, DeviceVariation.Retina35 },
-    // { Device.iphone, DeviceVariation.Retina4 },
-    // { Device.ipad, DeviceVariation.Regular },
-    // { Device.ipad, DeviceVariation.Retina },
+        { Device.iphone, DeviceVariation.Regular, Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPELEFT },
+        { Device.iphone, DeviceVariation.Regular, Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT },
+        { Device.iphone, DeviceVariation.Retina35, Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT },
+        { Device.iphone, DeviceVariation.Retina35, Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPELEFT },
+        { Device.iphone, DeviceVariation.Retina35, Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT },
+        { Device.iphone, DeviceVariation.Retina4, Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT },
+        { Device.iphone, DeviceVariation.Retina4, Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPELEFT },
+        { Device.iphone, DeviceVariation.Retina4, Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT },
+
+        { Device.ipad, DeviceVariation.Regular, Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT },
+        { Device.ipad, DeviceVariation.Regular, Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPELEFT },
+        { Device.ipad, DeviceVariation.Regular, Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT },
+        { Device.ipad, DeviceVariation.Regular, Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN },
+        { Device.ipad, DeviceVariation.Retina, Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT },
+        { Device.ipad, DeviceVariation.Retina, Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPELEFT },
+        { Device.ipad, DeviceVariation.Retina, Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT },
+        { Device.ipad, DeviceVariation.Retina, Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN },
 
     };
   }
@@ -92,10 +96,9 @@ public class ElementFindingMultiDeviceTest {
 
       driver.setDeviceOrientation(o);
       driver.get(pages.formPage);
-     
+
       WebElement element = driver.findElement(By.id("working"));
-      //WebElement element = driver.findElement(By.id("inputWithText"));
-      
+
       element.sendKeys("some");
       String value = element.getAttribute("value");
       assertEquals(value, ("some"));
