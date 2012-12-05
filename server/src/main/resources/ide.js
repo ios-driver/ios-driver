@@ -256,7 +256,7 @@ findFrameSizeInPixels = function() {
 injectHTML = function() {
 	alert('Hello');
 	var div = document.getElementById("webinspector");
-	div.innerHTML = getHTMLSource;
+	div.innerHTML = getHTMLSource();
 }
 var device;
 var orientation;
