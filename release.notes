@@ -14,7 +14,7 @@
 + xpath for native
 + rename the native handlers.
 + cleanup dependency and check for dups.
-- sendKeys for web on ipad
++ sendKeys for web on ipad
 - inspector to better support hybrid apps.
 
 
