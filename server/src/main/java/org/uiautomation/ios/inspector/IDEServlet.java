@@ -32,6 +32,7 @@ import org.uiautomation.ios.inspector.controllers.RefreshController;
 import org.uiautomation.ios.inspector.controllers.ResourceController;
 import org.uiautomation.ios.inspector.controllers.SessionGuesserController;
 import org.uiautomation.ios.inspector.controllers.TreeController;
+import org.uiautomation.ios.inspector.controllers.WebViewContentController;
 import org.uiautomation.ios.inspector.model.Cache;
 import org.uiautomation.ios.inspector.model.CacheDefaultImpl;
 import org.uiautomation.ios.inspector.views.View;
@@ -79,6 +80,7 @@ public class IDEServlet extends HttpServlet {
     controllers.add(new ResourceController(cache));
     controllers.add(new RefreshController(cache));
     controllers.add(new TreeController(cache));
+    controllers.add(new WebViewContentController(cache));
 
 
   }

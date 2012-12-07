@@ -188,19 +188,20 @@ h4 {
 	background-color: #fff;
 	color: #7F7F7F;
 	padding: 20px;
-	min-height: 100%;
+	height: 90%;
 	border-right: 15px solid #455372;
 	border: 8px solid #455372;
 	border-radius: 8px;
 	-moz-border-radius: 8px; /* Firefox 3.6 and earlier */
 	z-index: 101;
-	overflow: auto;
+
 }
 
-.boxhtml iframe{
-	width:100%;
-	min-height: 100%;
-} 
+#webinspector{
+width:100%;
+height: 90%;
+overflow:auto;
+}
 
 .box ul {
 	list-style: none;

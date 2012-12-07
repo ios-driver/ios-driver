@@ -129,7 +129,7 @@ public class IDEMainView implements View {
       b.append("<div class=\"boxhtml\" id=\"boxhtml\">");
       b.append("<a class=\"boxclosehtml\" id=\"boxclosehtml\"><p class=\"arrow-right-html\"></p></a>");
       b.append("<h4>Web Inspector</h4>");
-      b.append("<div id=\"webinspector\"></div> ");
+      b.append("<iframe id=\"webinspector\" src=\"http://localhost:4444/ide/latestWebView/"+model.getSession()+"\"></iframe> ");
       b.append("</div>");
       /* END OVERLAY HTML */
 
