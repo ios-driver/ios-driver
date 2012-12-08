@@ -30,3 +30,5 @@
 - execute scripts for native
 - see what happens for native events on hybrid apps.
 - remove or document non webdriver commands.
+- batch commands for web to native calls
+- handle alerts for web
