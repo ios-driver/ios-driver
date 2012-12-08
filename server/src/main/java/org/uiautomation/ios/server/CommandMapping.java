@@ -28,6 +28,7 @@ import org.uiautomation.ios.server.command.Handler;
 import org.uiautomation.ios.server.command.NotImplementedNativeHandler;
 import org.uiautomation.ios.server.command.NotImplementedWebHandler;
 import org.uiautomation.ios.server.command.uiautomation.DefaultUIAScriptNHandler;
+import org.uiautomation.ios.server.command.uiautomation.ExecuteScriptNHandler;
 import org.uiautomation.ios.server.command.uiautomation.FindElementNHandler;
 import org.uiautomation.ios.server.command.uiautomation.FindElementsRoot;
 import org.uiautomation.ios.server.command.uiautomation.GetAttributeNHandler;
@@ -98,7 +99,7 @@ public enum CommandMapping {
   SUBMIT(NotImplementedNativeHandler.class,SubmitHandler.class),
   TAG_NAME(".type()", DefaultUIAScriptNHandler.class,GetTagNameHandler.class),
 
-  EXECUTE_SCRIPT(NotImplementedNativeHandler.class,ExecuteScriptHandler.class),
+  EXECUTE_SCRIPT(ExecuteScriptNHandler.class,ExecuteScriptHandler.class),
   EQUAL(NotImplementedNativeHandler.class,IsEqualHandler.class),
   // UIATarget
   TREE(LogElementTreeNHandler.class),

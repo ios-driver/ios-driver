@@ -130,7 +130,6 @@ var UIAutomation = {
 				}
 				res = all;
 			} else if(value && value.type) {
-				// res.ref = value.reference();
 				res.ELEMENT = "" + value.reference();
 				res.type = value.type();
 			} else {
