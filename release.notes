@@ -15,6 +15,7 @@
 + rename the native handlers.
 + cleanup dependency and check for dups.
 + sendKeys for web on ipad
+- inspector to better support hybrid apps.
 
 
 0.5.0 (next )
@@ -41,8 +42,11 @@ TODOs:
 - split handlers into native, web, and misc
 - xpath to css convertor for web
 - fix the inspector ratio, mouse over is off.
+- execute scripts for native
 - see what happens for native events on hybrid apps.
 - remove or document non webdriver commands.
 - add selenium tests for the inspector ( update mocks ? )
 - delete window / frame 
 - confusion between locale and languages
+- batch commands for web to native calls
+- handle alerts for web

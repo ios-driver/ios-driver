@@ -76,7 +76,16 @@ public class IDEMainView implements View {
       b.append("</div>");
       b.append("</div>");
 
+      b.append("<div id ='detailsparent' >");
+      b.append("<div id ='htmlmenu'>");
+      b.append("<ul>");
+      b.append("<li id=\"htmlshow\"><a href=\"#\">See HTML</a></li>");
+      b.append("</ul>");
+      b.append("</div>");
       b.append("<div id ='details' ></div>");
+      b.append("</div>");
+      
+      
       b.append("<div id ='tree'  ></div>");
 
       String d = "iphone";
@@ -85,7 +94,6 @@ public class IDEMainView implements View {
       }
       b.append("<script >configure('" + d + "','"+ variation + "','" + model.getDeviceOrientation() + "');</script>");
       b.append("<script >resize();</script>");
-
       b.append("<div id ='topmenu'>");
       b.append("<div id=\"picture\"/>");
       b.append("<img src=\"" + getIcon() + "\"/>");
@@ -94,13 +102,15 @@ public class IDEMainView implements View {
       b.append("<li id=\"capabilities\"><a href=\"#\">See Capabilities</a></li>");
       b.append("</ul>");
       b.append("</div>");
+      
+      
 
       /*
        * OVERLAY Capabilities
        */
       b.append("<div class=\"overlay\" id=\"overlay\" style=\"display:none;\"></div>");
       b.append("<div class=\"box\" id=\"box\">");
-      b.append("<a class=\"boxclose\" id=\"boxclose\"></a>");
+      b.append("<a class=\"boxclose\" id=\"boxclose\"><p class=\"arrow-left\"></p></a>");
       b.append("<h4>Capabilities</h4>");
       b.append("<p>");
       b.append(displayCapabilities());
@@ -111,6 +121,17 @@ public class IDEMainView implements View {
       b.append("</p>");
       b.append("</div>");
       /* END OVERLAY CAPABILITIES */
+      
+      /*
+       * OVERLAY HTML
+       */
+      b.append("<div class=\"overlayhtml\" id=\"overlayhtml\" style=\"display:none;\"></div>");
+      b.append("<div class=\"boxhtml\" id=\"boxhtml\">");
+      b.append("<a class=\"boxclosehtml\" id=\"boxclosehtml\"><p class=\"arrow-right-html\"></p></a>");
+      b.append("<h4>Web Inspector</h4>");
+      b.append("<iframe id=\"webinspector\" src=\"http://localhost:4444/ide/latestWebView/"+model.getSession()+"\"></iframe> ");
+      b.append("</div>");
+      /* END OVERLAY HTML */
 
       b.append("</body>");
       b.append("</html>");
@@ -209,4 +230,5 @@ public class IDEMainView implements View {
     }
     return null;
   }
+  
 }
