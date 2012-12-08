@@ -75,14 +75,9 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
     
   }
 
-  //@JavascriptEnabled
-  /*@Test
+ @Test
   public void testShouldBeAbleToExecuteSimpleJavascriptAndReturnABoolean() {
-    if (!(driver instanceof JavascriptExecutor)) {
-      return;
-    }
-
-    driver.get(pages.xhtmlTestPage);
+   
 
     Object result = executeScript("return true;");
 
@@ -91,33 +86,22 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
     assertTrue((Boolean) result);
   }
 
-  @SuppressWarnings("unchecked")
-  //@JavascriptEnabled
+  
   @Test
   public void testShouldBeAbleToExecuteSimpleJavascriptAndReturnAStringsArray() {
-    if (!(driver instanceof JavascriptExecutor)) {
-      return;
-    }
-
-    driver.get(pages.javascriptPage);
+  
     List<Object> expectedResult = new ArrayList<Object>();
     expectedResult.add("zero");
     expectedResult.add("one");
     expectedResult.add("two");
     Object result = ((JavascriptExecutor) driver).executeScript("return ['zero', 'one', 'two'];");
 
-    ExecutingJavascriptTests.compareLists(expectedResult, (List<Object>) result);
+    compareLists(expectedResult, (List<Object>) result);
   }
 
-  @SuppressWarnings("unchecked")
-  //@JavascriptEnabled
+  
   @Test
   public void testShouldBeAbleToExecuteSimpleJavascriptAndReturnAnArray() {
-    if (!(driver instanceof JavascriptExecutor)) {
-      return;
-    }
-
-    driver.get(pages.javascriptPage);
     List<Object> expectedResult = new ArrayList<Object>();
     expectedResult.add("zero");
     List<Object> subList = new ArrayList<Object>();
@@ -131,15 +115,10 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
     assertTrue(compareLists(expectedResult, list));
   }
 
-  @SuppressWarnings("unchecked")
-  //@JavascriptEnabled
+ 
   @Test
   public void testShouldBeAbleToExecuteJavascriptAndReturnABasicObjectLiteral() {
-    if (!(driver instanceof JavascriptExecutor)) {
-      return;
-    }
-
-    driver.get(pages.javascriptPage);
+    
 
     Object result = executeScript("return {abc: '123', tired: false};");
     assertTrue(result instanceof Map, "result was: " + result + " (" + result.getClass() + ")");
@@ -149,24 +128,16 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
     expected.put("abc", "123");
     expected.put("tired", false);
 
-    // Cannot do an exact match; Firefox 4 inserts a few extra keys in our
-    // object; this is OK, as
-    // long as the expected keys are there.
     assertTrue(map.size() >= expected.size(), "Expected:<" + expected + ">, but was:<" + map + ">");
     for (Map.Entry<String, Object> entry : expected.entrySet()) {
       assertEquals(entry.getValue(), map.get(entry.getKey()), "Difference at key:<" + entry.getKey() + ">");
     }
   }
 
-  @SuppressWarnings("unchecked")
-  //@JavascriptEnabled
+  
   @Test
   public void testShouldBeAbleToExecuteSimpleJavascriptAndReturnAnObjectLiteral() {
-    if (!(driver instanceof JavascriptExecutor)) {
-      return;
-    }
-
-    driver.get(pages.javascriptPage);
+   
 
     Map<String, Object> expectedResult = new HashMap<String, Object>() {
       {
@@ -195,23 +166,17 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
     assertEquals("Doe", person.get("last"));
   }
 
-  @SuppressWarnings("unchecked")
-  //@JavascriptEnabled
-  //@Ignore({ IE, HTMLUNIT, OPERA, OPERA_MOBILE })
+
   @Test
   public void testShouldBeAbleToExecuteSimpleJavascriptAndReturnAComplexObject() {
-    if (!(driver instanceof JavascriptExecutor)) {
-      return;
-    }
-
-    driver.get(pages.javascriptPage);
-
-    Object result = executeScript("return window.location;");
+   
+    Object result = executeScript("return UIATarget.localTarget().frontMostApp().windows()[0].rect()");
 
     assertTrue(result instanceof Map, "result was: " + result + " (" + result.getClass() + ")");
     Map<String, Object> map = (Map<String, Object>) result;
-    assertEquals("http:", map.get("protocol"));
-    assertEquals(pages.javascriptPage, map.get("href"));
+    Map<String, Long> origin =(Map<String, Long>) map.get("origin");
+    Assert.assertEquals(origin.get("x"), (Long)0L);
+    Assert.assertEquals(origin.get("y"), (Long)0L);
   }
 
   private static boolean compareLists(List<?> first, List<?> second) {
@@ -232,14 +197,10 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
     return true;
   }
 
-  //@JavascriptEnabled
+  
   @Test
   public void testPassingAndReturningALongShouldReturnAWholeNumber() {
-    if (!(driver instanceof JavascriptExecutor)) {
-      return;
-    }
-
-    driver.get(pages.javascriptPage);
+   
     Long expectedResult = 1L;
     Object result = executeScript("return arguments[0];", expectedResult);
     assertTrue((result instanceof Integer || result instanceof Long),
@@ -247,7 +208,7 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
     assertEquals(expectedResult.longValue(), result);
   }
 
-  //@JavascriptEnabled
+  /*
   @Test
   public void testPassingAndReturningADoubleShouldReturnADecimal() {
     if (!(driver instanceof JavascriptExecutor)) {
