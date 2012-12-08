@@ -40,11 +40,13 @@ import org.uiautomation.ios.UIAModels.predicate.OrCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAKeyboard;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
+import org.uiautomation.ios.communication.device.Device;
 import org.uiautomation.ios.mobileSafari.Atoms;
 import org.uiautomation.ios.mobileSafari.DebugProtocol;
 import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.mobileSafari.WebInspector;
 import org.uiautomation.ios.server.ServerSideSession;
+import org.uiautomation.ios.server.command.uiautomation.GetSessionsNHandler;
 
 public class RemoteWebElement {
 
@@ -217,6 +219,10 @@ public class RemoteWebElement {
       int delta = offset.getY() + 39;
       // delta = heigth of the address bar + status bar.
       delta = delta < 20 ? 20 : delta;
+      boolean ipad = session.getCapabilities().getDevice() == Device.ipad;
+      if (ipad ){
+        delta = 96;
+      }
       int y = delta + top;
       try {
         session.setMode(WorkingMode.Native);
