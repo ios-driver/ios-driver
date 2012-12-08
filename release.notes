@@ -19,6 +19,21 @@
 
 0.5.0 (next )
 ------
+
+
+
+
+
+
+
+
+
+
+
+
+
+TODOs:
+-------
 - improve UIAKeyboard, add hide()
 - doc
 - kill instruments before starting.
@@ -28,3 +43,6 @@
 - fix the inspector ratio, mouse over is off.
 - see what happens for native events on hybrid apps.
 - remove or document non webdriver commands.
+- add selenium tests for the inspector ( update mocks ? )
+- delete window / frame 
+- confusion between locale and languages

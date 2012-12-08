@@ -148,12 +148,12 @@ public class IDEMainView implements View {
     
     if (device == Device.iphone ) {
       if (variation == DeviceVariation.Retina4){
-        return getResource("frameIphone5.png");
+        return getResource("frame_iphone5.png");
       }else{
-        return getResource("frameIPhone.png");
+        return getResource("frame_iphone.png");
       }
     } else {
-      return getResource("frameipad.png");
+      return getResource("frame_ipad.png");
     }
   }
 
