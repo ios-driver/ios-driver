@@ -15,7 +15,6 @@ package org.uiautomation.ios.inspector.controllers;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.inspector.views.View;
 
 public class NotImplementedIDEController implements IDECommandController {
@@ -25,9 +24,7 @@ public class NotImplementedIDEController implements IDECommandController {
   }
 
   public View handle(HttpServletRequest req) {
-    System.err.println("no controller for that " + req.getPathInfo());
-    // return new DefaultView(getModel());
-    throw new WebDriverException("no controller for " + req.getPathInfo());
+    throw new RuntimeException("no controller matching " + req.getPathInfo());
   }
 
 }

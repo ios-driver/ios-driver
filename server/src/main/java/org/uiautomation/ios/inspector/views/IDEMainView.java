@@ -96,7 +96,12 @@ public class IDEMainView implements View {
       b.append("<script >resize();</script>");
       b.append("<div id ='topmenu'>");
       b.append("<div id=\"picture\"/>");
-      b.append("<img src=\"" + getIcon() + "\"/>");
+      String icon = getIcon();
+      if (icon!=null){
+        b.append("<img src=\"" + getIcon() + "\"/>");
+      }
+          
+     
       b.append("</div>");
       b.append("<ul>");
       b.append("<li id=\"capabilities\"><a href=\"#\">See Capabilities</a></li>");
@@ -129,7 +134,7 @@ public class IDEMainView implements View {
       b.append("<div class=\"boxhtml\" id=\"boxhtml\">");
       b.append("<a class=\"boxclosehtml\" id=\"boxclosehtml\"><p class=\"arrow-right-html\"></p></a>");
       b.append("<h4>Web Inspector</h4>");
-      b.append("<iframe id=\"webinspector\" src=\"http://localhost:4444/ide/latestWebView/"+model.getSession()+"\"></iframe> ");
+      b.append("<iframe id=\"webinspector\" src=\"ide/session/"+model.getSession()+"/latestWebView\"></iframe> ");
       b.append("</div>");
       /* END OVERLAY HTML */
 
@@ -199,7 +204,7 @@ public class IDEMainView implements View {
 
   private String getIcon() throws Exception {
 
-    /*JSONObject app = getAppFromStatus();
+    JSONObject app = getAppFromStatus();
     JSONObject resources = app.optJSONObject("resources");
     if (resources != null) {
       String icon = resources.getString("CFBundleIconFile");
@@ -207,9 +212,8 @@ public class IDEMainView implements View {
       String h = model.getEndPoint().getHost();
       int p = model.getEndPoint().getPort();
       return "http://" + h + ":" + p + icon;
-    } else {*/
-      return getResource("notfound");
-    //}
+    }
+    return null;
 
   }
 

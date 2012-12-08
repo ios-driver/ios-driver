@@ -153,13 +153,13 @@ $(document).ready(function() {
 			var y = e.pageY / scale - (realOffsetY + 45);
 			// x = x / scale;
 			// y = y / scale;
-			console.log(x + "," + y);
+			//console.log(x + "," + y);
 			var finder = new CandidateFinder(x, y, root);
 			var node = finder.getNode();
 			if (node) {
 				setSelected(node);
 			} else {
-				console.log('couldn t find element at ' + x + ' , ' + y + root);
+				//console.log('couldn t find element at ' + x + ' , ' + y + root);
 			}
 		}
 
@@ -298,7 +298,7 @@ configure = function(d, v, o) {
 		to_top = SCREEN_TO_TOP_IPHONE;
 		to_left = SCREEN_TO_LEFT_IPHONE;
 	} else {
-		console.log("error, wrong device :" + device);
+		// console.log("error, wrong device :" + device);
 	}
 
 };

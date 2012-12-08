@@ -37,7 +37,7 @@ public interface IDESessionModel {
   public Orientation getDeviceOrientation();
 
   public URL getEndPoint();
-  
+
   public JSONObject getStatus();
 
 }

@@ -93,8 +93,7 @@ public class IDEServlet extends HttpServlet {
       View view = controller.handle(req);
       view.render(response);
     } catch (Exception e) {
-      // TODO freynaud
-      throw new RuntimeException(e);
+      log.warning(e.getMessage());
     }
   }
 

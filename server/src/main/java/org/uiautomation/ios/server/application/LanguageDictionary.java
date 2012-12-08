@@ -275,8 +275,8 @@ public class LanguageDictionary {
       String r = String.format(format, res.getArgs().toArray());
       return r;
     } catch (Exception e) {
-      System.err.println("err on " + languageTemplate);
-      return "parse error";
+      log.warning("Error working on  "+languageTemplate);
+      return "ERR:languageTemplate";
     }
 
   }

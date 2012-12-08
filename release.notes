@@ -50,3 +50,6 @@ TODOs:
 - confusion between locale and languages
 - batch commands for web to native calls
 - handle alerts for web
+- real device for web.
+- encapsulate result of logEleemntTree.
+- inspector should save the tmp screenshot in tmp dir

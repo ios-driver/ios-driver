@@ -151,19 +151,15 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
           String rawHTML = inspector.getHTMLSource();
           webView.put("source", rawHTML);
         } catch (Exception e) {
-         
+
           e.printStackTrace();
         }
-       
+
       }
 
     }
 
     private Map<String, Object> getWebView(Map<String, Object> tree) {
-      for (String key : tree.keySet()) {
-        System.out.println("key=" + key);
-        Object value = tree.get(key);
-      }
       return parseNode(tree);
     }
 
