@@ -21,7 +21,7 @@
 0.5.0 (current)
 ------
 - xpath to css convertor for web
-- execute scripts for native
++ execute scripts for native
 - batch commands for web to native calls
 - remove or document non webdriver commands.
 - delete window / frame 
