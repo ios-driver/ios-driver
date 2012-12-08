@@ -5,6 +5,9 @@ import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
@@ -41,7 +44,7 @@ public class ExecuteScriptNHandler extends UIAScriptHandler {
       for (int i = 0; i < array.length(); i++) {
         Object value = array.opt(i);
         builder.append(convert(value));
-        if (i < array.length()-1) {
+        if (i < array.length() - 1) {
           builder.append(",");
         }
 
@@ -54,15 +57,44 @@ public class ExecuteScriptNHandler extends UIAScriptHandler {
     if (value instanceof Integer) {
       return value.toString();
     }
-    log.warning("Not implemented, JS argument is a " + value.getClass());
-    return "TODO";
-  }
+    if (value instanceof Double) {
+      return value.toString();
+    }
+    if (value instanceof Double) {
+      return value.toString();
+    }
+    if (value instanceof String) {
+      return "'" + value.toString() + "'";
+    }
+    if (value instanceof Boolean) {
+      return value.toString();
+    }
+    if (value instanceof JSONObject) {
+      JSONObject v = (JSONObject) value;
+      if (v.has("ELEMENT")) {
+        Integer i = v.optInt("ELEMENT");
+        return "UIAutomation.cache.get(" + i + ",false)";
+      } else {
+        return v.toString();
+      }
+    }
+    if (value instanceof JSONArray) {
+      StringBuilder builder = new StringBuilder();
+      builder.append("[");
+      JSONArray a = (JSONArray) value;
+      for (int i = 0; i < a.length(); i++) {
+        Object element = a.opt(i);
+        builder.append(convert(element));
+        if (i < a.length() - 1) {
+          builder.append(",");
+        }
+      }
+      builder.append("]");
+      return builder.toString();
+    }
 
-  @Override
-  public Response handle() throws Exception {
-    Response r = super.handle();
-    System.out.println(r);
-    return r;
+    log.warning("Not implemented, JS argument is a " + value.getClass());
+    throw new WebDriverException("Not implemented, JS argument is a " + value.getClass());
   }
 
   @Override

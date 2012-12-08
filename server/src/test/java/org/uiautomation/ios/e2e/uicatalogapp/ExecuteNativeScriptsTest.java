@@ -28,7 +28,6 @@ import org.uiautomation.ios.BaseIOSDriverTest;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
@@ -55,7 +54,7 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
     Object result = executeScript("return  UIATarget.localTarget().frontMostApp().bundleID();");
 
     assertTrue(result instanceof String);
-    assertEquals(result,"com.yourcompany.UICatalog");
+    assertEquals(result, "com.yourcompany.UICatalog");
   }
 
   @Test
@@ -68,16 +67,15 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
 
   @Test
   public void testShouldBeAbleToExecuteSimpleJavascriptAndReturnAWebElement() {
-      Object result = executeScript("return UIATarget.localTarget().frontMostApp()");
+    Object result = executeScript("return UIATarget.localTarget().frontMostApp()");
 
     assertNotNull(result);
     assertTrue(result instanceof WebElement);
-    
+
   }
 
- @Test
+  @Test
   public void testShouldBeAbleToExecuteSimpleJavascriptAndReturnABoolean() {
-   
 
     Object result = executeScript("return true;");
 
@@ -86,10 +84,9 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
     assertTrue((Boolean) result);
   }
 
-  
   @Test
   public void testShouldBeAbleToExecuteSimpleJavascriptAndReturnAStringsArray() {
-  
+
     List<Object> expectedResult = new ArrayList<Object>();
     expectedResult.add("zero");
     expectedResult.add("one");
@@ -99,7 +96,6 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
     compareLists(expectedResult, (List<Object>) result);
   }
 
-  
   @Test
   public void testShouldBeAbleToExecuteSimpleJavascriptAndReturnAnArray() {
     List<Object> expectedResult = new ArrayList<Object>();
@@ -115,10 +111,8 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
     assertTrue(compareLists(expectedResult, list));
   }
 
- 
   @Test
   public void testShouldBeAbleToExecuteJavascriptAndReturnABasicObjectLiteral() {
-    
 
     Object result = executeScript("return {abc: '123', tired: false};");
     assertTrue(result instanceof Map, "result was: " + result + " (" + result.getClass() + ")");
@@ -134,10 +128,8 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
     }
   }
 
-  
   @Test
   public void testShouldBeAbleToExecuteSimpleJavascriptAndReturnAnObjectLiteral() {
-   
 
     Map<String, Object> expectedResult = new HashMap<String, Object>() {
       {
@@ -166,17 +158,16 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
     assertEquals("Doe", person.get("last"));
   }
 
-
   @Test
   public void testShouldBeAbleToExecuteSimpleJavascriptAndReturnAComplexObject() {
-   
+
     Object result = executeScript("return UIATarget.localTarget().frontMostApp().windows()[0].rect()");
 
     assertTrue(result instanceof Map, "result was: " + result + " (" + result.getClass() + ")");
     Map<String, Object> map = (Map<String, Object>) result;
-    Map<String, Long> origin =(Map<String, Long>) map.get("origin");
-    Assert.assertEquals(origin.get("x"), (Long)0L);
-    Assert.assertEquals(origin.get("y"), (Long)0L);
+    Map<String, Long> origin = (Map<String, Long>) map.get("origin");
+    Assert.assertEquals(origin.get("x"), (Long) 0L);
+    Assert.assertEquals(origin.get("y"), (Long) 0L);
   }
 
   private static boolean compareLists(List<?> first, List<?> second) {
@@ -197,10 +188,9 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
     return true;
   }
 
-  
   @Test
   public void testPassingAndReturningALongShouldReturnAWholeNumber() {
-   
+
     Long expectedResult = 1L;
     Object result = executeScript("return arguments[0];", expectedResult);
     assertTrue((result instanceof Integer || result instanceof Long),
@@ -208,14 +198,8 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
     assertEquals(expectedResult.longValue(), result);
   }
 
-  /*
   @Test
   public void testPassingAndReturningADoubleShouldReturnADecimal() {
-    if (!(driver instanceof JavascriptExecutor)) {
-      return;
-    }
-
-    driver.get(pages.javascriptPage);
     Double expectedResult = 1.2;
     Object result = executeScript("return arguments[0];", expectedResult);
     assertTrue(result instanceof Float || result instanceof Double,
@@ -223,14 +207,8 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
     assertEquals(expectedResult.doubleValue(), result);
   }
 
-  //@JavascriptEnabled
   @Test
   public void testShouldThrowAnExceptionWhenTheJavascriptIsBad() {
-    if (!(driver instanceof JavascriptExecutor)) {
-      return;
-    }
-
-    driver.get(pages.xhtmlTestPage);
 
     try {
       executeScript("return squiggle();");
@@ -241,114 +219,53 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
     }
   }
 
-  //@JavascriptEnabled
   @Test
   public void testShouldBeAbleToCallFunctionsDefinedOnThePage() {
-    if (!(driver instanceof JavascriptExecutor)) {
-      return;
-    }
-
-    driver.get(pages.javascriptPage);
-    executeScript("displayMessage('I like cheese');");
-    String text = driver.findElement(By.id("result")).getText();
-
-    assertEquals("I like cheese", text.trim());
+    Object res = executeScript("var app =  UIATarget.localTarget().frontMostApp();var reference = UIAutomation.cache.store(app); return reference;");
+    assertEquals(res, 1L);
   }
 
-  private Object executeScript(String script, Object... args) {
-    return ((JavascriptExecutor) driver).executeScript(script, args);
-  }
-
-  //@JavascriptEnabled
   @Test
   public void testShouldBeAbleToPassAStringAnAsArgument() {
-    if (!(driver instanceof JavascriptExecutor)) {
-      return;
-    }
-
-    driver.get(pages.javascriptPage);
     String value = (String) executeScript("return arguments[0] == 'fish' ? 'fish' : 'not fish';", "fish");
-
     assertEquals("fish", value);
   }
 
-  //@JavascriptEnabled
   @Test
   public void testShouldBeAbleToPassABooleanAnAsArgument() {
-    if (!(driver instanceof JavascriptExecutor)) {
-      return;
-    }
-
-    driver.get(pages.javascriptPage);
     boolean value = (Boolean) executeScript("return arguments[0] == true;", true);
-
     assertTrue(value);
   }
 
-  //@JavascriptEnabled
   @Test
   public void testShouldBeAbleToPassANumberAnAsArgument() {
-    if (!(driver instanceof JavascriptExecutor)) {
-      return;
-    }
-
-    driver.get(pages.javascriptPage);
     boolean value = (Boolean) executeScript("return arguments[0] == 1 ? true : false;", 1);
-
     assertTrue(value);
   }
 
-  //@JavascriptEnabled
   @Test
   public void testShouldBeAbleToPassAWebElementAsArgument() {
-    if (!(driver instanceof JavascriptExecutor)) {
-      return;
-    }
-
-    driver.get(pages.javascriptPage);
-    WebElement button = driver.findElement(By.id("plainButton"));
-    String value = (String) executeScript(
-        "arguments[0]['flibble'] = arguments[0].getAttribute('id'); return arguments[0]['flibble'];", button);
-
-    assertEquals("plainButton", value);
+    WebElement cell = driver.findElement(By.xpath("//UIATableCell[@name='" + buttonsName + "']"));
+    String res = (String) executeScript("return arguments[0].type();", cell);
+    assertEquals(res, "UIATableCell");
   }
 
-  //@JavascriptEnabled
   @Test
   public void testPassingArrayAsOnlyArgumentFlattensArray() {
-    if (!(driver instanceof JavascriptExecutor)) {
-      return;
-    }
-
-    driver.get(pages.javascriptPage);
     Object[] array = new Object[] { "zero", 1, true, 3.14159, false };
     String value = (String) executeScript("return arguments[0]", array);
     assertEquals(array[0], value);
   }
 
-  //@JavascriptEnabled
-  //@Ignore({ OPERA, OPERA_MOBILE })
-  @Test(enabled = false)
+  @Test
   public void testShouldBeAbleToPassAnArrayAsAdditionalArgument() {
-    if (!(driver instanceof JavascriptExecutor)) {
-      return;
-    }
-
-    driver.get(pages.javascriptPage);
     Object[] array = new Object[] { "zero", 1, true, 3.14159, false };
     long length = (Long) executeScript("return arguments[1].length", "string", array);
     assertEquals(array.length, length);
   }
 
-  //@JavascriptEnabled
-  @Test(enabled = false)
-  // TODO
+  @Test
   public void testShouldBeAbleToPassACollectionAsArgument() {
-    if (!(driver instanceof JavascriptExecutor)) {
-      return;
-    }
-
-    driver.get(pages.javascriptPage);
     Collection<Object> collection = new ArrayList<Object>();
     collection.add("Cheddar");
     collection.add("Brie");
@@ -365,14 +282,8 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
     assertEquals(collection.size(), length);
   }
 
-  //@JavascriptEnabled
   @Test
   public void testShouldThrowAnExceptionIfAnArgumentIsNotValid() {
-    if (!(driver instanceof JavascriptExecutor)) {
-      return;
-    }
-
-    driver.get(pages.javascriptPage);
     try {
       executeScript("return arguments[0];", driver);
       fail("Exception should have been thrown");
@@ -381,49 +292,20 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
     }
   }
 
-  //@JavascriptEnabled
   @Test
   public void testShouldBeAbleToPassInMoreThanOneArgument() {
-    if (!(driver instanceof JavascriptExecutor)) {
-      return;
-    }
-
-    driver.get(pages.javascriptPage);
     String result = (String) executeScript("return arguments[0] + arguments[1];", "one", "two");
-
     assertEquals("onetwo", result);
   }
 
-  //@JavascriptEnabled
-  @Test
-  //@Ignore({ OPERA, OPERA_MOBILE })
-  public void testShouldBeAbleToGrabTheBodyOfFrameOnceSwitchedTo() {
-    driver.get(pages.richTextPage);
-
-    driver.switchTo().frame("editFrame");
-    WebElement body = (WebElement) ((JavascriptExecutor) driver).executeScript("return document.body");
-    String text = body.getText();
-    driver.switchTo().defaultContent();
-
-    assertEquals("", text);
-  }
-
-  @SuppressWarnings("unchecked")
-  //@JavascriptEnabled
   @Test
   public void testShouldBeAbleToReturnAnArrayOfWebElements() {
-    driver.get(pages.formPage);
-
-    List<WebElement> items = (List<WebElement>) ((JavascriptExecutor) driver)
-        .executeScript("return document.getElementsByName('snack');");
-
-    assertFalse(items.isEmpty());
+    List<WebElement> items = (List<WebElement>) executeScript("return UIATarget.localTarget().frontMostApp().windows()");
+    assertEquals(items.size(), 2);
   }
 
-  //@JavascriptEnabled
   @Test
   public void testJavascriptStringHandlingShouldWorkAsExpected() {
-    driver.get(pages.javascriptPage);
 
     String value = (String) executeScript("return '';");
     assertEquals("", value);
@@ -435,36 +317,17 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
     assertEquals(" ", value);
   }
 
-  //@JavascriptEnabled
-  //@Ignore(OPERA)
   @Test(enabled = false)
   public void testShouldBeAbleToExecuteABigChunkOfJavascriptCode() throws IOException {
-    driver.get(pages.javascriptPage);
 
-    //File jqueryFile = InProject.locate("common/src/web/jquery-1.3.2.js");
-    //String jquery = Files.toString(jqueryFile, Charset.forName("US-ASCII"));
-    //assertTrue(jquery.length() > 50000, "The javascript code should be at least 50 KB.");
+    // File jqueryFile = InProject.locate("common/src/web/jquery-1.3.2.js");
+    // String jquery = Files.toString(jqueryFile, Charset.forName("US-ASCII"));
+    // assertTrue(jquery.length() > 50000,
+    // "The javascript code should be at least 50 KB.");
     // This should not throw an exception ...
-    //executeScript(jquery);
+    // executeScript(jquery);
   }
 
-  //@SuppressWarnings("unchecked")
-  //@JavascriptEnabled
-  @Test
-  public void testShouldBeAbleToExecuteScriptAndReturnElementsList() {
-    driver.get(pages.formPage);
-    String scriptToExec = "return document.getElementsByName('snack');";
-
-    List<WebElement> resultsList = (List<WebElement>) ((JavascriptExecutor) driver).executeScript(scriptToExec);
-
-    assertFalse(resultsList.isEmpty());
-  }
-
-  //@JavascriptEnabled
-  //@NeedsFreshDriver
-  //@NoDriverAfterTest
-  //@Ignore(reason = "Failure indicates hang condition, which would break the"
-  //    + " test suite. Really needs a timeout set.")
   @Test(enabled = false)
   public void testShouldThrowExceptionIfExecutingOnNoPage() {
     try {
@@ -476,40 +339,28 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
     fail("Expected exception to be thrown");
   }
 
-  //@JavascriptEnabled
-  //@Ignore(OPERA)
   @Test
   public void testShouldBeAbleToCreateAPersistentValue() {
-    driver.get(pages.formPage);
-
-    executeScript(" document.alerts = []");
-    executeScript(" document.alerts.push('hello world');");
-    String text = (String) executeScript("return document.alerts.shift()");
+    executeScript("UIAutomation.newAttribute = new Array()");
+    executeScript("UIAutomation.newAttribute.push('hello world')");
+    String text = (String) executeScript("return UIAutomation.newAttribute[0];");
 
     assertEquals("hello world", text);
   }
 
-  //@JavascriptEnabled
-  //@Ignore(OPERA)
-  @Test(enabled = false)
-  // freynaud TODO
+  @Test
   public void testCanHandleAnArrayOfElementsAsAnObjectArray() {
-    driver.get(pages.formPage);
 
-    List<WebElement> forms = driver.findElements(By.tagName("form"));
+    List<WebElement> forms = driver.findElements(By.xpath("//UIATableCell"));
     Object[] args = new Object[] { forms };
 
-    String name = (String) ((JavascriptExecutor) driver).executeScript("return arguments[0][0].tagName", args);
+    String name = (String) ((JavascriptExecutor) driver).executeScript("return arguments[0][0].type()", args);
 
-    assertEquals("form", name.toLowerCase());
+    assertEquals(name, "UIATableCell");
   }
 
-  //@JavascriptEnabled
-  //@Ignore(value = { ANDROID, HTMLUNIT, OPERA, OPERA_MOBILE }, reason = "Opera and HtmlUnit obey the method contract. Android not tested")
-  @Test(enabled = false)
-  // TODO freynaud
+  @Test
   public void testCanPassAMapAsAParameter() {
-    driver.get(pages.simpleTestPage);
 
     List<Integer> nums = ImmutableList.of(1, 2);
     Map<String, Object> args = ImmutableMap.of("bar", "test", "foo", nums);
@@ -517,7 +368,7 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
     Object res = ((JavascriptExecutor) driver).executeScript("return arguments[0]['foo'][1]", args);
 
     assertEquals(2, ((Number) res).intValue());
-  }*/
+  }
 
   private Object executeScript(String script, Object... args) {
     return ((JavascriptExecutor) driver).executeScript(script, args);

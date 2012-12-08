@@ -212,8 +212,8 @@ var UIAutomation = {
 					try {
 						response = eval(request);
 					} catch (err) {
-						log("err1 : " + JSON.stringify(err));
-						response = this.createJSONResponse(this.SESSION, err.status, err);
+						//log("err1 : " + JSON.stringify(err));
+						response = this.createJSONResponse(this.SESSION, 17, err.message);
 					}
 				}
 			} catch (err) {
