@@ -2,18 +2,6 @@
  * @module ios-driver
  */
 
-function UIAutomationException(message, status) {
-    this.message = message;
-    this.status = status || 13;
-
-    this.toString = function () {
-        return this.message;
-    }
-}
-
-function log(msg) {
-    UIALogger.logMessage("log:" + msg);
-}
 /**
  * en , fr ...
  * @return {string}   the 2 letters code for the current language of the device.
