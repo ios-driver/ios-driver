@@ -38,6 +38,8 @@ public class ScriptHelper {
   private final String lib2 = "instruments-js/UIAElement.js";
   private final String lib3 = "instruments-js/UIAApplication.js";
   private final String lib4 = "instruments-js/UIATarget.js";
+  private final String lib5 = "instruments-js/UIAAlert.js";
+  private final String lib6 = "instruments-js/Cache.js";
   private static final String FILE_NAME = "uiamasterscript";
 
   private String load(String resource) throws IOException {
@@ -60,18 +62,22 @@ public class ScriptHelper {
     c = c.replace("$SESSION", String.format("%s", opaqueKey));
 
     scriptContent.append(load(json));
-    scriptContent.append(c);
+
     scriptContent.append(load(lib4));
     scriptContent.append(load(lib3));
     scriptContent.append(load(lib2));
 
+    scriptContent.append(load(lib5));
+    scriptContent.append(load(lib6));
+    scriptContent.append(c);
     scriptContent.append(load(main));
     return scriptContent.toString();
   }
 
   public File createTmpScript(String content) {
     try {
-      File res = File.createTempFile(FILE_NAME, ".js");
+      //File res = File.createTempFile(FILE_NAME, ".js");
+      File res = new File("/Users/freynaud/master.js");
       Writer writer = new FileWriter(res);
       IOUtils.copy(IOUtils.toInputStream(content), writer, "UTF-8");
       IOUtils.closeQuietly(writer);

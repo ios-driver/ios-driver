@@ -11,8 +11,7 @@ public class InProject {
    *
    * @param path path to file to locate from root of project
    * @return file being sought, if it exists
-   * @throws org.openqa.selenium.WebDriverException
-   *          wrapped FileNotFoundException if file could not be found
+   * @throws WebDriverException wrapped FileNotFoundException if file could not be found
    */
   public static File locate(String path) {
     // TODO freynaud find why intelliJ is different from eclipse + maven.
