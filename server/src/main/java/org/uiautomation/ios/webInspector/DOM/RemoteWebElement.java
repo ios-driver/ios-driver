@@ -15,15 +15,19 @@ package org.uiautomation.ios.webInspector.DOM;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.uiautomation.ios.UIAModels.UIAButton;
 import org.uiautomation.ios.UIAModels.UIADriver;
 import org.uiautomation.ios.UIAModels.UIAElement;
@@ -46,9 +50,12 @@ import org.uiautomation.ios.mobileSafari.DebugProtocol;
 import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.mobileSafari.WebInspector;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.server.command.uiautomation.GetSessionsNHandler;
+import org.uiautomation.ios.server.application.AppleLocale;
+import org.uiautomation.ios.server.application.ContentResult;
 
 public class RemoteWebElement {
+
+  private static final Logger log = Logger.getLogger(RemoteWebElement.class.getName());
 
   private final UIADriver nativeDriver;
   protected final WebInspector inspector;
@@ -98,11 +105,11 @@ public class RemoteWebElement {
   }
 
   private void clickNative() throws Exception {
-    UIAElement el = getNativeElement();
+    WebElement el = getNativeElement();
     WorkingMode origin = session.getMode();
     try {
       session.setMode(WorkingMode.Native);
-      el.tap();
+      el.click();
     } finally {
       session.setMode(origin);
     }
@@ -170,7 +177,67 @@ public class RemoteWebElement {
     }
   }
 
+  private String getNativeElementClickOnItAndTypeUsingKeyboardScript(String value) throws Exception {
+    // web stuff.
+    Point po = findPosition();
+    Dimension dim = inspector.getSize();
+    int webPageWidth = inspector.getInnerWidth();
+    if (dim.getWidth() != webPageWidth) {
+      log.warning("BUG : dim.getWidth()!=webPageWidth");
+    }
+    
+    Criteria c = new TypeCriteria(UIAWebView.class);
+    String json = c.stringify().toString();
+    StringBuilder script = new StringBuilder();
+    script.append("var root = UIAutomation.cache.get('1');");
+    script.append("var webview = root.element(-1,"+json+");");
+    script.append("var webviewSize = webview.rect2();");
+    script.append("var ratio = webviewSize.size.width / "+dim.getWidth()+";");
+    int top = po.getY();
+    int left = po.getX();
+    script.append("var top = ("+top+"*ratio )+1;");
+    script.append("var left = ("+left+"*ratio)+1;");
+    
+    script.append("var x = left;");
+    boolean ipad = session.getCapabilities().getDevice() == Device.ipad;
+    if (ipad) {
+      // for ipad, the adress bar h is fixed @ 96px.
+      script.append("var y = top+96;");
+    }else{
+      AppleLocale current = session.getApplication().getCurrentLanguage();
+      List<ContentResult> results = session.getApplication().getDictionary(current).getPotentialMatches("Address");
+      if (results.size()!=1){
+        log.warning("translation returned "+results.size());
+      }
+      ContentResult result = results.get(0);
+      String addressL10ned = result.getL10nFormatted();
+      Criteria c2 = new AndCriteria(new TypeCriteria(UIAElement.class), new NameCriteria(addressL10ned), new LabelCriteria(addressL10ned));
+      script.append("var addressBar = root.element(-1,"+c2.stringify().toString()+");");
+      script.append("var addressBarSize = addressBar.rect2();");
+      script.append("var delta = addressBarSize.origin.y +39;");
+      script.append("if (delta<20){delta=20;};");
+      script.append("var y = top+delta;");
+    }
+    
+    script.append("var nativeElement = root.element(-1,{'x':x,'y':y});");
+    // scroll into view.
+    script.append("nativeElement.isStale();");
+    script.append("nativeElement.tap2();");
+    script.append("var keyboard = UIAutomation.cache.get('1').keyboard2();");
+    script.append("keyboard.typeString('"+value+"');");
+    Criteria iPhone = new NameCriteria("Done");
+    Criteria iPad = new NameCriteria("Hide keyboard");
+
+    Criteria c3 =  new OrCriteria(iPad, iPhone);
+    
+    script.append("root.element(-1,"+c3.stringify().toString()+").tap2();");
+
+    return script.toString();
+    
+  }
   
+
+ 
   private UIAElement getNativeElement() throws Exception {
     // highlight();
     if (nativeElement == null) {
@@ -181,8 +248,6 @@ public class RemoteWebElement {
       // TODO freynaud use dim, remove innerw
       Dimension dim = inspector.getSize();
 
-      
-
       WorkingMode origin = session.getMode();
 
       UIARect rect = null;
@@ -192,12 +257,14 @@ public class RemoteWebElement {
         UIAElement sv = nativeDriver.findElement(new TypeCriteria(UIAWebView.class));
 
         // scrollview container. Doesn't start in 0,0 // x=0,y=96,h=928w=768
-        // TODO freynaud : should save the current value, and reset to that at the end. Not to false. 
+        // TODO freynaud : should save the current value, and reset to that at
+        // the end. Not to false.
         nativeDriver.configure(WebDriverLikeCommand.RECT).set("checkForStale", false);
         rect = sv.getRect();
 
-        UIAElement addressBar = nativeDriver.findElement(new AndCriteria(new TypeCriteria(UIAElement.class),
-            new NameCriteria("Address",L10NStrategy.serverL10N), new LabelCriteria("Address",L10NStrategy.serverL10N)));
+        UIAElement addressBar = nativeDriver
+            .findElement(new AndCriteria(new TypeCriteria(UIAElement.class), new NameCriteria("Address",
+                L10NStrategy.serverL10N), new LabelCriteria("Address", L10NStrategy.serverL10N)));
         offset = addressBar.getRect();
         nativeDriver.configure(WebDriverLikeCommand.RECT).set("checkForStale", true);
         // rect = sv.getRect();
@@ -208,7 +275,7 @@ public class RemoteWebElement {
       int top = po.getY();
       int left = po.getX();
 
-         float ratio = ((float) rect.getWidth()) / ((float) (webPageWidth));
+      float ratio = ((float) rect.getWidth()) / ((float) (webPageWidth));
 
       top = (int) (top * ratio) + 1;
       left = (int) (left * ratio) + 1;
@@ -220,7 +287,7 @@ public class RemoteWebElement {
       // delta = heigth of the address bar + status bar.
       delta = delta < 20 ? 20 : delta;
       boolean ipad = session.getCapabilities().getDevice() == Device.ipad;
-      if (ipad ){
+      if (ipad) {
         delta = 96;
       }
       int y = delta + top;
@@ -301,7 +368,7 @@ public class RemoteWebElement {
             .put("arguments", args).put("returnByValue", true));
 
     JSONObject response = inspector.getProtocol().sendCommand(cmd);
-    return (Boolean)inspector.cast(response);
+    return (Boolean) inspector.cast(response);
   }
 
   public boolean isDisplayed() throws Exception {
@@ -319,7 +386,7 @@ public class RemoteWebElement {
             .put("arguments", args).put("returnByValue", true));
 
     JSONObject response = inspector.getProtocol().sendCommand(cmd);
-    return (Boolean)inspector.cast(response);
+    return (Boolean) inspector.cast(response);
   }
 
   public RemoteWebElement findElementByLinkText(String text, boolean partialMatch) throws Exception {
@@ -520,7 +587,7 @@ public class RemoteWebElement {
             .put("arguments", args).put("returnByValue", false));
 
     JSONObject response = protocol.sendCommand(cmd);
-    boolean equal = (Boolean)inspector.cast(response);
+    boolean equal = (Boolean) inspector.cast(response);
     return equal;
 
   }
@@ -593,7 +660,6 @@ public class RemoteWebElement {
     return res;
   }
 
-  
   public void setValueAtoms(String value) throws Exception {
     String f = "(function(element,value) { var result = " + Atoms.type() + "(element,value);" + "return result;})";
     JSONObject cmd = new JSONObject();
@@ -608,20 +674,15 @@ public class RemoteWebElement {
         new JSONObject().put("objectId", getRemoteObject().getId()).put("functionDeclaration", f)
             .put("arguments", args).put("returnByValue", false));
 
-     inspector.getProtocol().sendCommand(cmd);
+    inspector.getProtocol().sendCommand(cmd);
   }
 
   public void setValueNative(String value) throws Exception {
-    UIAElement el = getNativeElement();
+    /*WebElement el = getNativeElement();
     WorkingMode origin = session.getMode();
     try {
       session.setMode(WorkingMode.Native);
-      UIARect rect = el.getRect();
-      int x = rect.getX() + rect.getWidth() - 1;
-      int y = rect.getY() + rect.getHeight() / 2;
-      // TODO freynaud : tap() should take a param like middle, topLeft,
-      // bottomRight to save 1 call.
-      session.getNativeDriver().tap(x, y);
+      el.click();
       RemoteUIAKeyboard keyboard = (RemoteUIAKeyboard) session.getNativeDriver().getKeyboard();
       if ("\n".equals(value)) {
         keyboard.findElement(new NameCriteria("Return")).tap();
@@ -637,8 +698,11 @@ public class RemoteWebElement {
       // session.getNativeDriver().pinchClose(300, 400, 50, 100, 1);
     } finally {
       session.setMode(origin);
-    }
-
+    }*/
+    WorkingMode origin = session.getMode();
+    session.setMode(WorkingMode.Native);
+    ((JavascriptExecutor) nativeDriver).executeScript(getNativeElementClickOnItAndTypeUsingKeyboardScript(value));
+    session.setMode(origin);
   }
 
   public void clear() throws Exception {
