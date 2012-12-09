@@ -36,7 +36,7 @@ public class RemoteUIAElementTest extends BaseIOSDriverTest {
     driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
   }
 
-  @AfterClass(alwaysRun=true)
+  @AfterClass
   public void stopDriver() {
     if (driver != null) {
       driver.quit();

@@ -1,4 +1,4 @@
-package org.uiautomation.ios.e2e;
+package org.uiautomation.ios.e2e.config;
 
 import java.io.File;
 import java.net.MalformedURLException;
