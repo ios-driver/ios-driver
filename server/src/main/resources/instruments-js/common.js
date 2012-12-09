@@ -4,8 +4,9 @@
 
 /**
  * Create an ios exception following the webdriver JSON protocol
- * @param message
- * @param status
+ * @param {string} message
+ * @param {number} status
+ * @see http://code.google.com/p/selenium/wiki/JsonWireProtocol#Response_Status_Codes
  * @constructor
  */
 function UIAutomationException(message, status) {
