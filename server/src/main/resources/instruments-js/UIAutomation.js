@@ -130,6 +130,22 @@ var UIAutomation = {
                     all.push(item);
                 }
                 res = all;
+            } else if (value instanceof Array) {
+                var all = new Array();
+                for (var i = 0; i < value.length; i++) {
+                    var current = value[i];
+                    var item = {};
+
+                    if (current.type) {
+                        item.ELEMENT = "" + current.reference();
+                        item.type = current.type();
+                    } else {
+                        item = current;
+                    }
+
+                    all.push(item);
+                }
+                res = all;
             } else if (value && value.type) {
                 res.ELEMENT = "" + value.reference();
                 res.type = value.type();
