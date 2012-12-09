@@ -18,7 +18,15 @@ UIAApplication.prototype.keyboard2 = function() {
 	var keyboard = this.keyboard();
 	log("keyboard : " + keyboard)
 	if(keyboard.toString() == "[object UIAElementNil]") {
-		throw new UIAutomationException("cannot find keyboard", 7);
+		UIATarget.localTarget().delay(2);
+		keyboard = this.keyboard();
+		log("keyboard after 2 : " + keyboard);
+		if(keyboard.toString() == "[object UIAElementNil]") {
+			throw new UIAutomationException("cannot find keyboard", 7);
+		}else {
+			return keyboard;
+		}
+		
 	} else {
 		return keyboard;
 	}
@@ -509,7 +517,7 @@ UIAElement.prototype.matches = function(criteria) {
 }
 /**
  * create something similar to UIAelement array from a list of elements
- *
+ * 
  * @param elements
  *            an array of native UIAElements.
  */

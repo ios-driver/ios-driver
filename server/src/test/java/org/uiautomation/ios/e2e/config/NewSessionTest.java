@@ -1,4 +1,4 @@
-package org.uiautomation.ios.e2e;
+package org.uiautomation.ios.e2e.config;
 
 import static org.uiautomation.ios.IOSCapabilities.BUNDLE_NAME;
 import static org.uiautomation.ios.IOSCapabilities.DEVICE;
@@ -273,7 +273,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
 
     { Device.iphone, DeviceVariation.Regular, 320, 480 },
     { Device.iphone, DeviceVariation.Retina35, 640, 960 },
-    { Device.iphone, DeviceVariation.Retina4, 640, 1136 },
+    { Device.iphone, DeviceVariation.Retina4, 640, 1136 }, 
     { Device.ipad, DeviceVariation.Regular, 768, 1024 },
     { Device.ipad, DeviceVariation.Retina, 1536, 2048 },
 
@@ -299,40 +299,24 @@ public class NewSessionTest extends BaseIOSDriverTest {
       Capabilities actual = driver.getCapabilities();
 
       driver.switchTo().window("Web");
-      driver.get("http://www.ebay.co.uk/");
+      driver.get(getRemoteURL() + "/status");
 
-      File tmp = new File("/Users/freynaud/Documents/tmp");
-      String c = new BeanToJsonConverter().convert(actual).toString();
-      FileOutputStream ou = new FileOutputStream(new File(tmp, device + "_" + variation + ".json"));
-      IOUtils.write(c, ou, "UTF-8");
-      IOUtils.closeQuietly(ou);
       for (Orientation o : Orientation.values()) {
         if (o == Orientation.UIA_DEVICE_ORIENTATION_FACEUP || o == Orientation.UIA_DEVICE_ORIENTATION_FACEDOWN
             || (o == Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN && device == Device.iphone)) {
           continue;
         }
-        String name = device + "_" + variation + "_" + o;
         driver.setDeviceOrientation(o);
-        JSONObject logElement = driver.logElementTree(new File(tmp, name + ".png"), true);
-
-
-        FileOutputStream out = new FileOutputStream(new File(tmp, name + ".json"));
-        String s = logElement.toString();
-        IOUtils.write(s,out, "UTF-8");
-        IOUtils.closeQuietly(out);
       }
-     
-      Assert.assertEquals(actual.getCapability(DEVICE),device.toString());
 
-      // File f = ((TakesScreenshot) new
-      // Augmenter().augment(driver)).getScreenshotAs(OutputType.FILE);
-      /*
-       * File f = driver.getScreenshotAs(OutputType.FILE);
-       * 
-       * BufferedImage bimg = ImageIO.read(f);
-       * Assert.assertEquals(bimg.getWidth(), expectedW);
-       * Assert.assertEquals(bimg.getHeight(), expectedH);
-       */
+      Assert.assertEquals(actual.getCapability(DEVICE), device.toString());
+
+      File f = driver.getScreenshotAs(OutputType.FILE);
+
+      BufferedImage bimg = ImageIO.read(f);
+      Assert.assertEquals(bimg.getWidth(), expectedW);
+      Assert.assertEquals(bimg.getHeight(), expectedH);
+
     } finally {
       if (driver != null) {
         driver.quit();

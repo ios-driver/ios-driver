@@ -1,4 +1,4 @@
-package org.uiautomation.ios.e2e;
+package org.uiautomation.ios.e2e.config;
 
 import static org.uiautomation.ios.IOSCapabilities.BUNDLE_DISPLAY_NAME;
 import static org.uiautomation.ios.IOSCapabilities.BUNDLE_ID;
