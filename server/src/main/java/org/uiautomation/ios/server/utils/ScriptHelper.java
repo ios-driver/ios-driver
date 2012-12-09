@@ -34,6 +34,7 @@ public class ScriptHelper {
 
   private final String main = "instruments-js/main.js";
   private final String json = "instruments-js/json2.js";
+  private final String common = "instruments-js/common.js";
   private final String lib1 = "instruments-js/UIAutomation.js";
   private final String lib2 = "instruments-js/UIAElement.js";
   private final String lib3 = "instruments-js/UIAApplication.js";
@@ -62,7 +63,7 @@ public class ScriptHelper {
     c = c.replace("$SESSION", String.format("%s", opaqueKey));
 
     scriptContent.append(load(json));
-
+    scriptContent.append(load(common));
     scriptContent.append(load(lib4));
     scriptContent.append(load(lib3));
     scriptContent.append(load(lib2));
@@ -76,8 +77,8 @@ public class ScriptHelper {
 
   public File createTmpScript(String content) {
     try {
-      //File res = File.createTempFile(FILE_NAME, ".js");
-      File res = new File("/Users/freynaud/master.js");
+      File res = File.createTempFile(FILE_NAME, ".js");
+      //File res = new File("/Users/freynaud/master.js");
       Writer writer = new FileWriter(res);
       IOUtils.copy(IOUtils.toInputStream(content), writer, "UTF-8");
       IOUtils.closeQuietly(writer);
