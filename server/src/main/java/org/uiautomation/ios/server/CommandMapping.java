@@ -187,8 +187,8 @@ public enum CommandMapping {
   TABLE_CELLS(".cells()"),
   TABLE_VISIBLE_CELLS(".visibleCells()"),
 
-  ALERT_CANCEL_BUTTON(".cancelButton2()"),
-  ALERT_DEFAULT_BUTTON(".defaultButton2()"),
+  ALERT_CANCEL_BUTTON(".cancelButton()"),
+  ALERT_DEFAULT_BUTTON(".defaultButton()"),
 
   STATUS(ServerStatusNHandler.class);
 
