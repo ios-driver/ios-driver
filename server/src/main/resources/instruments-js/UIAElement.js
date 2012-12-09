@@ -104,8 +104,9 @@ UIAElementNil.prototype.type = function () {
 // TODO freynaud check why this is necessary. key extends elements.
 UIAKey.prototype.type = UIAElement.prototype.type;
 
+UIAElement.prototype.tap_original = UIAElement.prototype.tap;
+
 UIAElement.prototype.tap = function () {
-    log('using enhanced tap.');
     if (this.isVisible()) {
         var rect = this.rect();
         var x = rect.origin.x + (rect.size.width / 2);
