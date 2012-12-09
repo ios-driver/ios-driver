@@ -1,1 +1,0 @@
-/Users/freynaud/Documents/workspace/ui-automation-driver/server/src/main/resources/UICatalogApp2/Applications/UICatalog.app
