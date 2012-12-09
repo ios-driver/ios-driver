@@ -2,9 +2,6 @@
  * @module ios-driver
  */
 
-
-"use strict";
-
 /**
  * en , fr ...
  * @return {string}   the 2 letters code for the current language of the device.
