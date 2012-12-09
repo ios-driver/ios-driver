@@ -45,3 +45,6 @@ TODOs:
 - real device for web.
 - encapsulate result of logEleemntTree.
 - inspector should save the tmp screenshot in tmp dir
+- nativeDriver.executeScript should return UIAElement cast to what they are rather than WebElements.
+- use implicit wait to wait for the native keyboard 
+- remove all calls to plutil

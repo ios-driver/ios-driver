@@ -57,13 +57,12 @@ public class ElementFindingMultiDeviceTest {
   public Object[][] createData1() {
     return new Object[][] {
 
-    { Device.iphone, DeviceVariation.Regular },
+    { Device.iphone, DeviceVariation.Regular }, 
     { Device.iphone, DeviceVariation.Retina35 },
     { Device.iphone, DeviceVariation.Retina4 },
 
     { Device.ipad, DeviceVariation.Regular },
     { Device.ipad, DeviceVariation.Retina },
-
     };
   }
 
@@ -109,7 +108,7 @@ public class ElementFindingMultiDeviceTest {
 
   private List<Orientation> getOrientationForDevice(Device device) {
     List<Orientation> res = new ArrayList<Orientation>();
-    res.add(Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT);  
+    res.add(Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT);
     res.add(Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPELEFT);
     res.add(Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT);
     if (device == Device.ipad) {

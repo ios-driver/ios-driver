@@ -1,6 +1,6 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="ios-driver" verbose="10" parallel="false">
+<suite name="ios-driver"  parallel="false">
 	<test name="native regression" preserve-order="true">
 		<packages>
 			<package name="org.uiautomation.ios.selenium" />
