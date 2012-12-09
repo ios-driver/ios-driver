@@ -10,6 +10,17 @@ var Cache = function () {
     this.storage = {};
     this.lastReference = 3;
 
+    /**
+     * Stores a UIElement in the cache. Some special elements have hardcoded values.
+     *
+     * The mainWindow = 0
+     * UIAApplication  frontMostApp() = 1
+     * UIATarget = 2
+     * If there is an alert, its id = 3. id=3 is reserved for alerts.
+     *
+     * @param element the element to cache.
+     * @return {number} the id of the element in the cache.
+     */
     this.store = function (element) {
         if (element && element.type && element.type() === "UIAApplication") {
             var id = 1;
@@ -24,6 +35,14 @@ var Cache = function () {
 
     };
 
+    /**
+     * return the UIAElement with the given reference.
+     *
+     * @param {number} reference The reference of the element. ( the id from webdriver )
+     * @param opt_checkStale optional. Defaults to true. If true, checks if an element is stale, and
+     * if not, scrolls it into view before returning it.
+     * @return {UIAElement}
+     */
     this.get = function (reference, opt_checkStale) {
         var checkStale = true;
         if (opt_checkStale === false) {
@@ -73,19 +92,35 @@ var Cache = function () {
 
     };
 
+    /**
+     * Return the currently opened alert, and throws if no alert present.
+     * @throws  UIAutomationException if there is no alert opened.
+     * @return {UIAAlert} the currently opened alert.
+     */
     this.getAlert = function () {
         return this.storage[3];
     };
+
+    /**
+     * set the current alert.
+     * @param {UIAAlert} the alert to set.
+     */
     this.setAlert = function (alert) {
         this.storage[3] = alert;
         log("found alert");
     };
 
+    /**
+     * remove the current alert.
+     */
     this.clearAlert = function () {
         log("removed alert");
         this.storage[3] = null;
     }
 
+    /**
+     * empty the cache.
+     */
     this.clear = function () {
         this.storage = {};
         this.storage[0] = UIATarget.localTarget().frontMostApp().mainWindow();
