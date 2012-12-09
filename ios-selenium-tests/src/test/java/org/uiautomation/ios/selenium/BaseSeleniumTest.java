@@ -1,7 +1,5 @@
 package org.uiautomation.ios.selenium;
 
-import java.net.URL;
-
 import org.openqa.selenium.Pages;
 import org.openqa.selenium.environment.webserver.AppServer;
 import org.openqa.selenium.environment.webserver.WebbitAppServer;
@@ -12,9 +10,12 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteMobileSafariDriver;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
 
+import java.net.URL;
+
 public class BaseSeleniumTest {
+
   private IOSServer server;
-  private static String[] args = { "-port", "4444", "-host", "localhost" };
+  private static String[] args = {"-port", "4444", "-host", "localhost"};
   private static IOSServerConfiguration config = IOSServerConfiguration.create(args);
   protected RemoteMobileSafariDriver driver = null;
   private String url = "http://" + config.getHost() + ":" + config.getPort() + "/wd/hub";

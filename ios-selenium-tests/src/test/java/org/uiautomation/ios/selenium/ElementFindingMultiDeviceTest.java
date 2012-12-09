@@ -1,15 +1,5 @@
 package org.uiautomation.ios.selenium;
 
-import static org.testng.Assert.assertEquals;
-import static org.uiautomation.ios.IOSCapabilities.BUNDLE_NAME;
-import static org.uiautomation.ios.IOSCapabilities.DEVICE;
-import static org.uiautomation.ios.IOSCapabilities.LANGUAGE;
-import static org.uiautomation.ios.IOSCapabilities.LOCALE;
-
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.Pages;
 import org.openqa.selenium.WebElement;
@@ -28,10 +18,20 @@ import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.testng.Assert.assertEquals;
+import static org.uiautomation.ios.IOSCapabilities.BUNDLE_NAME;
+import static org.uiautomation.ios.IOSCapabilities.DEVICE;
+import static org.uiautomation.ios.IOSCapabilities.LANGUAGE;
+import static org.uiautomation.ios.IOSCapabilities.LOCALE;
+
 public class ElementFindingMultiDeviceTest {
 
   private IOSServer server;
-  private static String[] args = { "-port", "4444", "-host", "localhost" };
+  private static String[] args = {"-port", "4444", "-host", "localhost"};
   private static IOSServerConfiguration config = IOSServerConfiguration.create(args);
   protected RemoteMobileSafariDriver driver = null;
   private String url = "http://" + config.getHost() + ":" + config.getPort() + "/wd/hub";
@@ -55,19 +55,20 @@ public class ElementFindingMultiDeviceTest {
 
   @DataProvider(name = "capabilities")
   public Object[][] createData1() {
-    return new Object[][] {
+    return new Object[][]{
 
-    { Device.iphone, DeviceVariation.Regular }, 
-    { Device.iphone, DeviceVariation.Retina35 },
-    { Device.iphone, DeviceVariation.Retina4 },
+        {Device.iphone, DeviceVariation.Regular},
+        //{Device.iphone, DeviceVariation.Retina35},
+        //{Device.iphone, DeviceVariation.Retina4},
 
-    { Device.ipad, DeviceVariation.Regular },
-    { Device.ipad, DeviceVariation.Retina },
+        //{Device.ipad, DeviceVariation.Regular},
+        //{Device.ipad, DeviceVariation.Retina},
     };
   }
 
   @Test(dataProvider = "capabilities")
-  public void testSendingKeyboardEventsShouldAppendTextInInputsMultipleDeviceFamilyAndOrientation(Device device,
+  public void testSendingKeyboardEventsShouldAppendTextInInputsMultipleDeviceFamilyAndOrientation(
+      Device device,
       DeviceVariation variation) throws Exception {
 
     IOSCapabilities cap = new IOSCapabilities();

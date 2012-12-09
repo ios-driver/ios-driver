@@ -1,11 +1,5 @@
 package org.uiautomation.ios.selenium;
 
-import static org.openqa.selenium.TestWaiter.waitFor;
-import static org.openqa.selenium.WaitingConditions.pageTitleToBe;
-
-import java.util.List;
-import java.util.concurrent.Callable;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.IllegalLocatorException;
 import org.openqa.selenium.JavascriptExecutor;
@@ -15,9 +9,14 @@ import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class ElementFindingTest extends BaseSeleniumTest{
+import java.util.List;
+import java.util.concurrent.Callable;
 
- 
+import static org.openqa.selenium.TestWaiter.waitFor;
+import static org.openqa.selenium.WaitingConditions.pageTitleToBe;
+
+public class ElementFindingTest extends BaseSeleniumTest {
+
 
   @Test
   public void testShouldNotBeAbleToLocateASingleElementThatDoesNotExist() {
@@ -39,7 +38,7 @@ public class ElementFindingTest extends BaseSeleniumTest{
     driver.get(pages.simpleTestPage);
     Assert.assertEquals(driver.getTitle(), "Hello WebDriver");
   }
-  
+
   @Test
   public void testShouldBeAbleToClickOnLinkIdentifiedByText() {
     driver.get(pages.xhtmlTestPage);
@@ -54,7 +53,9 @@ public class ElementFindingTest extends BaseSeleniumTest{
   public void testDriverShouldBeAbleToFindElementsAfterLoadingMoreThanOnePageAtATime() {
     driver.get(pages.formPage);
     driver.get(pages.xhtmlTestPage);
-    WebElement el = driver.findElement(By.cssSelector("div[class='content']>a[href='resultPage.html']"));
+    WebElement
+        el =
+        driver.findElement(By.cssSelector("div[class='content']>a[href='resultPage.html']"));
     el.click();
 
     waitFor(pageTitleToBe(driver, "We Arrive Here"));
@@ -65,7 +66,9 @@ public class ElementFindingTest extends BaseSeleniumTest{
   @Test
   public void testDriverShouldBeAbleToFindElementsWithImagesOnTop() {
     driver.get(pages.xhtmlTestPage);
-    WebElement el = driver.findElement(By.cssSelector("div[class='content']>a[href='resultPage.html']"));
+    WebElement
+        el =
+        driver.findElement(By.cssSelector("div[class='content']>a[href='resultPage.html']"));
     el.click();
 
     waitFor(pageTitleToBe(driver, "We Arrive Here"));
@@ -423,7 +426,7 @@ public class ElementFindingTest extends BaseSeleniumTest{
     driver.get("about:blank");
 
     try { // Search for anything. This used to cause an IllegalStateException n
-          // IE.
+      // IE.
       driver.findElement(By.tagName("a"));
       Assert.fail("Should not have been able to find a link");
 

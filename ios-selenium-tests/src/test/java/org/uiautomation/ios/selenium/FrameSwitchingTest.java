@@ -1,16 +1,5 @@
 package org.uiautomation.ios.selenium;
 
-import static org.openqa.selenium.TestWaiter.waitFor;
-import static org.openqa.selenium.WaitingConditions.elementToExist;
-import static org.openqa.selenium.WaitingConditions.pageTitleToBe;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoDriverAfterTest;
@@ -20,6 +9,17 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
+import static org.openqa.selenium.TestWaiter.waitFor;
+import static org.openqa.selenium.WaitingConditions.elementToExist;
+import static org.openqa.selenium.WaitingConditions.pageTitleToBe;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 public class FrameSwitchingTest extends BaseSeleniumTest {
 
@@ -35,7 +35,7 @@ public class FrameSwitchingTest extends BaseSeleniumTest {
   public void testShouldAlwaysFocusOnTheTopMostFrameAfterANavigationEvent() {
     driver.get(pages.framesetPage);
     driver.findElement(By.tagName("frameset")); // Test passes if this does not
-                                                // throw.
+    // throw.
   }
 
   @Test
@@ -242,7 +242,8 @@ public class FrameSwitchingTest extends BaseSeleniumTest {
 
   //@Ignore(value = { ANDROID, OPERA, OPERA_MOBILE }, reason = "Android does not detect that the select frame has disappeared")
   @Test
-  public void testShouldFocusOnTheReplacementWhenAFrameFollowsALinkToA_TopTargettedPage() throws Exception {
+  public void testShouldFocusOnTheReplacementWhenAFrameFollowsALinkToA_TopTargettedPage()
+      throws Exception {
     driver.get(pages.framesetPage);
 
     driver.switchTo().frame(0);
@@ -367,7 +368,8 @@ public class FrameSwitchingTest extends BaseSeleniumTest {
   //@Ignore(value = { ANDROID, OPERA, OPERA_MOBILE })
   ///@JavascriptEnabled
   @Test
-  public void testShouldBeAbleToCarryOnWorkingIfTheFrameIsDeletedFromUnderUs() throws InterruptedException {
+  public void testShouldBeAbleToCarryOnWorkingIfTheFrameIsDeletedFromUnderUs()
+      throws InterruptedException {
     driver.get(pages.deletingFrame);
 
     driver.switchTo().frame("iframe1");

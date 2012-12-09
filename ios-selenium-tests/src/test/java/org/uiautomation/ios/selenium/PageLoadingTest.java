@@ -1,15 +1,15 @@
 package org.uiautomation.ios.selenium;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.openqa.selenium.TestWaiter.waitFor;
-import static org.openqa.selenium.WaitingConditions.pageTitleToBe;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WaitingConditions;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.openqa.selenium.TestWaiter.waitFor;
+import static org.openqa.selenium.WaitingConditions.pageTitleToBe;
 
 public class PageLoadingTest extends BaseSeleniumTest {
 
@@ -179,16 +179,12 @@ public class PageLoadingTest extends BaseSeleniumTest {
   }
 
   /**
-   * @throws Exception
-   *           If the test fails.
-   * @see <a href="http://code.google.com/p/selenium/issues/detail?id=208">
-   *      Issue 208</a>
-   * 
-   *      This test often causes the subsequent test to fail, in Firefox, on
-   *      Linux, so we need a new driver after it.
-   * @see <a
-   *      href="http://code.google.com/p/selenium/issues/detail?id=2282">Issue
-   *      2282</a>
+   * @throws Exception If the test fails.
+   * @see <a href="http://code.google.com/p/selenium/issues/detail?id=208"> Issue 208</a>
+   *
+   *      This test often causes the subsequent test to fail, in Firefox, on Linux, so we need a new
+   *      driver after it.
+   * @see <a href="http://code.google.com/p/selenium/issues/detail?id=2282">Issue 2282</a>
    */
   /*
    * @Ignore(value = {IE, SELENESE, IPHONE, OPERA, ANDROID, SAFARI,
@@ -200,7 +196,8 @@ public class PageLoadingTest extends BaseSeleniumTest {
    * @JavascriptEnabled
    */
   @Test
-  public void testShouldNotHangIfDocumentOpenCallIsNeverFollowedByDocumentCloseCall() throws Exception {
+  public void testShouldNotHangIfDocumentOpenCallIsNeverFollowedByDocumentCloseCall()
+      throws Exception {
     driver.get(pages.documentWrite);
 
     // If this command succeeds, then all is well.

@@ -1,11 +1,13 @@
 package org.uiautomation.ios.selenium;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
+import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,14 +18,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
-import org.testng.annotations.Test;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 @Test
 public class ExecutingJavascriptTests extends BaseSeleniumTest {
@@ -153,7 +153,8 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     // long as the expected keys are there.
     assertTrue(map.size() >= expected.size(), "Expected:<" + expected + ">, but was:<" + map + ">");
     for (Map.Entry<String, Object> entry : expected.entrySet()) {
-      assertEquals(entry.getValue(), map.get(entry.getKey()), "Difference at key:<" + entry.getKey() + ">");
+      assertEquals(entry.getValue(), map.get(entry.getKey()),
+                   "Difference at key:<" + entry.getKey() + ">");
     }
   }
 
@@ -180,7 +181,10 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
       }
     };
 
-    Object result = executeScript("return {foo:'bar', baz: ['a', 'b', 'c'], person: {first: 'John',last: 'Doe'}};");
+    Object
+        result =
+        executeScript(
+            "return {foo:'bar', baz: ['a', 'b', 'c'], person: {first: 'John',last: 'Doe'}};");
     assertTrue(result instanceof Map, "result was: " + result + " (" + result.getClass() + ")");
 
     Map<String, Object> map = (Map<String, Object>) result;
@@ -242,7 +246,7 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     Long expectedResult = 1L;
     Object result = executeScript("return arguments[0];", expectedResult);
     assertTrue((result instanceof Integer || result instanceof Long),
-        "Expected result to be an Integer or Long but was a " + result.getClass());
+               "Expected result to be an Integer or Long but was a " + result.getClass());
     assertEquals(expectedResult.longValue(), result);
   }
 
@@ -257,7 +261,7 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     Double expectedResult = 1.2;
     Object result = executeScript("return arguments[0];", expectedResult);
     assertTrue(result instanceof Float || result instanceof Double,
-        "Expected result to be a Double or Float but was a " + result.getClass());
+               "Expected result to be a Double or Float but was a " + result.getClass());
     assertEquals(expectedResult.doubleValue(), result);
   }
 
@@ -305,7 +309,9 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     }
 
     driver.get(pages.javascriptPage);
-    String value = (String) executeScript("return arguments[0] == 'fish' ? 'fish' : 'not fish';", "fish");
+    String
+        value =
+        (String) executeScript("return arguments[0] == 'fish' ? 'fish' : 'not fish';", "fish");
 
     assertEquals("fish", value);
   }
@@ -346,7 +352,8 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     driver.get(pages.javascriptPage);
     WebElement button = driver.findElement(By.id("plainButton"));
     String value = (String) executeScript(
-        "arguments[0]['flibble'] = arguments[0].getAttribute('id'); return arguments[0]['flibble'];", button);
+        "arguments[0]['flibble'] = arguments[0].getAttribute('id'); return arguments[0]['flibble'];",
+        button);
 
     assertEquals("plainButton", value);
   }
@@ -359,7 +366,7 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     }
 
     driver.get(pages.javascriptPage);
-    Object[] array = new Object[] { "zero", 1, true, 3.14159, false };
+    Object[] array = new Object[]{"zero", 1, true, 3.14159, false};
     String value = (String) executeScript("return arguments[0]", array);
     assertEquals(array[0], value);
   }
@@ -373,7 +380,7 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     }
 
     driver.get(pages.javascriptPage);
-    Object[] array = new Object[] { "zero", 1, true, 3.14159, false };
+    Object[] array = new Object[]{"zero", 1, true, 3.14159, false};
     long length = (Long) executeScript("return arguments[1].length", "string", array);
     assertEquals(array.length, length);
   }
@@ -439,7 +446,9 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     driver.get(pages.richTextPage);
 
     driver.switchTo().frame("editFrame");
-    WebElement body = (WebElement) ((JavascriptExecutor) driver).executeScript("return document.body");
+    WebElement
+        body =
+        (WebElement) ((JavascriptExecutor) driver).executeScript("return document.body");
     String text = body.getText();
     driver.switchTo().defaultContent();
 
@@ -493,7 +502,9 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     driver.get(pages.formPage);
     String scriptToExec = "return document.getElementsByName('snack');";
 
-    List<WebElement> resultsList = (List<WebElement>) ((JavascriptExecutor) driver).executeScript(scriptToExec);
+    List<WebElement>
+        resultsList =
+        (List<WebElement>) ((JavascriptExecutor) driver).executeScript(scriptToExec);
 
     assertFalse(resultsList.isEmpty());
   }
@@ -535,9 +546,12 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     driver.get(pages.formPage);
 
     List<WebElement> forms = driver.findElements(By.tagName("form"));
-    Object[] args = new Object[] { forms };
+    Object[] args = new Object[]{forms};
 
-    String name = (String) ((JavascriptExecutor) driver).executeScript("return arguments[0][0].tagName", args);
+    String
+        name =
+        (String) ((JavascriptExecutor) driver)
+            .executeScript("return arguments[0][0].tagName", args);
 
     assertEquals("form", name.toLowerCase());
   }
