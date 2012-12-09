@@ -2,51 +2,10 @@
  * @module ios-driver
  */
 
-
-
-
-UIAElementArray.prototype.type = function () {
-    return "UIAElementArray";
-}
-
-UIAElementArray.prototype.isStale = function () {
-    return false;
-}
-
-UIAElementArray.prototype.reference = function () {
-    if (!this.id) {
-        UIAutomation.cache.store(this);
-    }
-    return this.id;
-}
-
-UIAElementArray.prototype.elements2 = function (depth, criteria) {
-    var all = this.toArray();
-    var res = new Array();
-    for (var i = 0; i < all.length; i++) {
-        var element = all[i];
-        if (element.matches(criteria)) {
-            res.push(element);
-        }
-    }
-    return new MyUIAElementArray(res);
-}
-// TODO freynaud convert to the new OR strategy.
-UIAElementArray.prototype.element = function (depth, criteria) {
-    var all = this.toArray();
-    for (var i = 0; i < all.length; i++) {
-        var element = all[i];
-        if (element.matches(criteria)) {
-            return element;
-        }
-    }
-    throw new UIAutomationException("cannot find element for criteria :" + JSON.stringify(criteria),
-                                    7);
-}
 /**
  * returns the class for the element, as per http://developer.apple.com/library/ios/#documentation/DeveloperTools/Reference/UIAutomationRef
  * for instance : UIAElement , UIAKeyboard etc.
- * @return {String} the class implementing this element.
+ * @return {string} element.
  */
 UIAElement.prototype.type = function () {
     return this.toString().replace('[object ', '').replace(']', '');
@@ -98,12 +57,6 @@ UIAElement.prototype.isScrollable = function () {
     return false;
 }
 
-UIAElementNil.prototype.type = function () {
-    return "UIAElementNil";
-}
-// TODO freynaud check why this is necessary. key extends elements.
-UIAKey.prototype.type = UIAElement.prototype.type;
-
 UIAElement.prototype.tap_original = UIAElement.prototype.tap;
 
 UIAElement.prototype.tap = function () {
@@ -126,58 +79,12 @@ UIAElement.prototype.tap = function () {
     }
 }
 
-UIAAlert.prototype.defaultButton2 = function () {
-    var res = this.defaultButton();
-    res.tap2 = function () {
-        if (this.isVisible()) {
-            var rect = this.rect();
-            var x = rect.origin.x + (rect.size.width / 2);
-            var y = rect.origin.y + (rect.size.height / 2);
-            var point = {
-                'x': Math.floor(x),
-                'y': Math.floor(y)
-            };
-            UIATarget.localTarget().tap(point);
-            UIAutomation.cache.clearAlert();
-        } else {
-            var ex = new UIAutomationException("element is not visible", 11);
-            throw ex;
-        }
-    }
-    return res;
-}
-
-UIAAlert.prototype.cancelButton2 = function () {
-    var res = this.cancelButton();
-
-    res.tap2 = function () {
-        if (this.isVisible()) {
-            var rect = this.rect();
-            var x = rect.origin.x + (rect.size.width / 2);
-            var y = rect.origin.y + (rect.size.height / 2);
-            var point = {
-                'x': Math.floor(x),
-                'y': Math.floor(y)
-            };
-            UIATarget.localTarget().tap(point);
-            UIAutomation.cache.clearAlert();
-        } else {
-            var ex = new UIAutomationException("element is not visible", 11);
-            throw ex;
-        }
-    }
-    return res;
-}
-
 UIAElement.prototype.reference = function () {
     if (!this.id) {
         UIAutomation.cache.store(this);
     }
     return this.id;
 }
-UIAElementNil.prototype.reference = UIAElement.prototype.reference;
-
-UIAKey.prototype.reference = UIAElement.prototype.reference;
 
 /**
  * scrollToVisible only makes sense if the element if in a webview or a
@@ -221,12 +128,6 @@ UIAElement.prototype.isStale = function () {
     // log(this.type() + "default false");
     return false;
 }
-
-UIAKey.prototype.scrollToVisible = function () {
-};
-
-UIAKeyboard.prototype.scrollToVisible = function () {
-};
 
 UIAElement.prototype.element_or = function (depth, criteria) {
     var all = this.getChildren(depth);
@@ -327,9 +228,9 @@ UIAElement.prototype.elements2 = function (depth, criteria) {
                 res.push(element);
             }
         }
-        return new MyUIAElementArray(res);
+        return res;
     } else {
-        return new MyUIAElementArray(all);
+        return all;
     }
 }
 
@@ -502,75 +403,18 @@ UIAElement.prototype.matches = function (criteria) {
         throw new UIAutomationException("not a valid criteria, -> " + JSON.stringify(criteria), 32);
     }
 }
-/**
- * create something similar to UIAelement array from a list of elements
- *
- * @param elements
- *            an array of native UIAElements.
- */
-function MyUIAElementArray(elements) {
-    this.elements = elements;
-    this.length = elements.length;
 
-    this.toArray = function () {
-        return this.elements;
-    }
-
-    this.type = function () {
-        return "UIAElementArray";
-    }
-    this.toString = function () {
-        return "[object MyUIAElementArray]";
-    }
-
-    this.firstWithName = function (name) {
-        for (var i = 0; i < this.elements.length; i++) {
-            var current = elements[i];
-            log("element with name : " + current.name());
-            if (current.name() === name) {
-                return current;
-            }
-        }
-        throw new UIAutomationException("cannot find an element with name=" + name);
-    }
-
-    this.buttons = function () {
-        return this._getElementsOfType("UIAButton");
-    }
-    this.links = function () {
-        return this._getElementsOfType("UIALink");
-    }
-
-    this.images = function () {
-        return this._getElementsOfType("UIAImage");
-
-    }
-
-    this._getElementsOfType = function (type) {
-        if (type) {
-            var res = new Array();
-            for (var i = 0; i < this.all.length; i++) {
-                var current = this.all[i];
-                if (current.type() === type) {
-                    res.push(current);
-                }
-            }
-            return res;
-        } else {
-            throw new UIAutomationException("param type missing");
-        }
-
-    }
-
-    this.reference = function () {
-        if (!this.id) {
-            UIAutomation.cache.store(this);
-        }
-        return this.id;
-    }
-
-    this.isStale = UIAElementArray.prototype.isStale;
-    this.element = UIAElementArray.prototype.element;
-    this.elements2 = UIAElementArray.prototype.elements2;
-
+UIAElementNil.prototype.type = function () {
+    return "UIAElementNil";
 }
+// TODO freynaud check why this is necessary. key extends elements.
+UIAKey.prototype.type = UIAElement.prototype.type;
+UIAElementNil.prototype.reference = UIAElement.prototype.reference;
+
+UIAKey.prototype.reference = UIAElement.prototype.reference;
+
+UIAKey.prototype.scrollToVisible = function () {
+};
+
+UIAKeyboard.prototype.scrollToVisible = function () {
+};

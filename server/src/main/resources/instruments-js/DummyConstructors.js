@@ -23,3 +23,9 @@ function UIAElement() {
 function UIAApplication() {
 }
 
+/**
+ * Not in use. Only here to have the doc generated.
+ * @constructor
+ */
+function UIAAlert() {
+}
