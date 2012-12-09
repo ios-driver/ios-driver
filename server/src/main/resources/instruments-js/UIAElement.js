@@ -11,12 +11,13 @@ UIAElement.prototype.type = function () {
     return this.toString().replace('[object ', '').replace(']', '');
 }
 
+UIAElement.prototype.rect_original = UIAElement.prototype.rect;
 /**
  * Similar to rect(), but all dimensions rounded to integers.
  * @return {UIARect} return the position and dimension of the current element.
  */
-UIAElement.prototype.rect2 = function () {
-    var rect = this.rect();
+UIAElement.prototype.rect = function () {
+    var rect = this.rect_original();
 
     rect.origin.x = Math.floor(rect.origin.x);
     rect.origin.y = Math.floor(rect.origin.y);
