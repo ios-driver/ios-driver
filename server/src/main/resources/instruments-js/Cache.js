@@ -18,7 +18,7 @@ var Cache = function () {
      * UIATarget = 2
      * If there is an alert, its id = 3. id=3 is reserved for alerts.
      *
-     * @param element the element to cache.
+     * @param {UIAElement} element the element to cache.
      * @return {number} the id of the element in the cache.
      */
     this.store = function (element) {
@@ -39,7 +39,7 @@ var Cache = function () {
      * return the UIAElement with the given reference.
      *
      * @param {number} reference The reference of the element. ( the id from webdriver )
-     * @param opt_checkStale optional. Defaults to true. If true, checks if an element is stale, and
+     * @param {boolean} opt_checkStale optional. Defaults to true. If true, checks if an element is stale, and
      * if not, scrolls it into view before returning it.
      * @return {UIAElement}
      */
@@ -103,7 +103,7 @@ var Cache = function () {
 
     /**
      * set the current alert.
-     * @param {UIAAlert} the alert to set.
+     * @param {UIAAlert} alert the alert to set.
      */
     this.setAlert = function (alert) {
         this.storage[3] = alert;
