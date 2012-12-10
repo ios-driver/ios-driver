@@ -22,7 +22,6 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebElement;
 import org.uiautomation.ios.UIAModels.UIADriver;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIARect;
@@ -104,14 +103,10 @@ public class RemoteWebElement {
   }
 
   private void clickNative() throws Exception {
-    WebElement el = getNativeElement();
     WorkingMode origin = session.getMode();
-    try {
-      session.setMode(WorkingMode.Native);
-      el.click();
-    } finally {
-      session.setMode(origin);
-    }
+    session.setMode(WorkingMode.Native);
+    ((JavascriptExecutor) nativeDriver).executeScript(getNativeElementClickOnIt());
+    session.setMode(origin);
   }
 
   public NodeId getNodeId() {
@@ -175,6 +170,63 @@ public class RemoteWebElement {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
+  }
+
+  private String getNativeElementClickOnIt()
+      throws Exception {
+    // web stuff.
+    Point po = findPosition();
+    Dimension dim = inspector.getSize();
+    int webPageWidth = inspector.getInnerWidth();
+    if (dim.getWidth() != webPageWidth) {
+      log.warning("BUG : dim.getWidth()!=webPageWidth");
+    }
+
+    Criteria c = new TypeCriteria(UIAWebView.class);
+    String json = c.stringify().toString();
+    StringBuilder script = new StringBuilder();
+    script.append("var root = UIAutomation.cache.get('1');");
+    script.append("var webview = root.element(-1," + json + ");");
+    script.append("var webviewSize = webview.rect();");
+    script.append("var ratio = webviewSize.size.width / " + dim.getWidth() + ";");
+    int top = po.getY();
+    int left = po.getX();
+    script.append("var top = (" + top + "*ratio )+1;");
+    script.append("var left = (" + left + "*ratio)+1;");
+
+    script.append("var x = left;");
+    boolean ipad = session.getCapabilities().getDevice() == Device.ipad;
+    if (ipad) {
+      // for ipad, the adress bar h is fixed @ 96px.
+      script.append("var y = top+96;");
+    } else {
+      AppleLocale current = session.getApplication().getCurrentLanguage();
+      List<ContentResult>
+          results =
+          session.getApplication().getDictionary(current).getPotentialMatches("Address");
+      if (results.size() != 1) {
+        log.warning("translation returned " + results.size());
+      }
+      ContentResult result = results.get(0);
+      String addressL10ned = result.getL10nFormatted();
+      Criteria
+          c2 =
+          new AndCriteria(new TypeCriteria(UIAElement.class), new NameCriteria(addressL10ned),
+                          new LabelCriteria(addressL10ned));
+      script.append("var addressBar = root.element(-1," + c2.stringify().toString() + ");");
+      script.append("var addressBarSize = addressBar.rect();");
+      script.append("var delta = addressBarSize.origin.y +39;");
+      script.append("if (delta<20){delta=20;};");
+      script.append("var y = top+delta;");
+    }
+
+    script.append("var nativeElement = root.element(-1,{'x':x,'y':y});");
+    // scroll into view.
+    script.append("nativeElement.isStale();");
+    script.append("nativeElement.tap();");
+
+    return script.toString();
+
   }
 
   private String getNativeElementClickOnItAndTypeUsingKeyboardScript(String value)

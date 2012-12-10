@@ -13,21 +13,23 @@
  */
 package org.uiautomation.ios.mobileSafari;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.TimeoutException;
-import java.util.logging.Logger;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.dom4j.Document;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.mobileSafari.events.ChildNodeRemoved;
 import org.uiautomation.ios.mobileSafari.events.Event;
 import org.uiautomation.ios.mobileSafari.events.EventFactory;
 import org.uiautomation.ios.mobileSafari.events.inserted.ChildIframeInserted;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeoutException;
+import java.util.logging.Logger;
 
 public class DefaultMessageHandler implements MessageHandler {
 
@@ -36,10 +38,15 @@ public class DefaultMessageHandler implements MessageHandler {
   private Thread t;
   private static boolean showIgnoredMessaged = false;
   private static final Logger log = Logger.getLogger(DefaultMessageHandler.class.getName());
-  
-  
-  public DefaultMessageHandler(EventListener listener) {
+  private List<ResponseFinder> extraFinders = new ArrayList<ResponseFinder>();
+
+
+  public DefaultMessageHandler(EventListener listener, ResponseFinder... finders) {
     this.listener = listener;
+    for (ResponseFinder finder : finders) {
+      this.extraFinders.add(finder);
+    }
+
   }
 
   @Override
@@ -63,40 +70,38 @@ public class DefaultMessageHandler implements MessageHandler {
       if (message.optInt("id", -1) != -1) {
         responses.add(message);
         return;
-      } 
+      }
       // not null, not a command response.
       // should be an event.
       Event e = EventFactory.createEvent(message);
-      
-      if (isPageLoad(message)){
+
+      if (isPageLoad(message)) {
         listener.onPageLoad();
         return;
-      } 
-      
-      if (isImportantDOMChange(e)){
+      }
+
+      if (isImportantDOMChange(e)) {
         listener.domHasChanged(e);
-      } 
-      
-      if ("Page.frameDetached".equals(message.optString("method"))){
+      }
+
+      if ("Page.frameDetached".equals(message.optString("method"))) {
         listener.frameDied(message);
         return;
-      }
-      
-      else {
-        if (showIgnoredMessaged){
-          System.err.println(System.currentTimeMillis()+"\t"+message.toString());
+      } else {
+        if (showIgnoredMessaged) {
+          System.err.println(System.currentTimeMillis() + "\t" + message.toString());
         }
-        
+
       }
     } catch (Exception e) {
       e.printStackTrace();
     }
 
   }
-  
-  private boolean isImportantDOMChange(Event e){
-  
-    return (e instanceof ChildIframeInserted || e instanceof ChildNodeRemoved );
+
+  private boolean isImportantDOMChange(Event e) {
+
+    return (e instanceof ChildIframeInserted || e instanceof ChildNodeRemoved);
   }
 
   private boolean isPageLoad(JSONObject message) {
@@ -126,30 +131,93 @@ public class DefaultMessageHandler implements MessageHandler {
 
   @Override
   public JSONObject getResponse(int id) throws TimeoutException {
-    long timeout = 5 * 1000;
-    // TODO handle stop() in there
-    long end = System.currentTimeMillis() + timeout;
-    while (true) {
+    // there can be 2 things happening here.
+    // 1) the response is received.
+    // 2) the response is never received because there is an alert.
 
-      if (System.currentTimeMillis() > end) {
-        throw new TimeoutException("timeout waiting for a response for request id : " + id);
-      }
-      try {
-        Thread.sleep(10);
-        for (JSONObject o : responses) {
-          if (o.optInt("id") == id) {
-            // responses.remove(o);
-            return o;
-          }
-        }
-      } catch (InterruptedException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+    // ResponseFinder.
+    // startSearch
+    // interruptSearch
+    // waitForResult
+    long timeout = 5 * 1000 * 60;
+    final ResponseFinder defaultFinder = new DefaultResponseFinder(timeout);
 
-      }
+    List<ResponseFinder> finders = new ArrayList<ResponseFinder>();
+    finders.add(defaultFinder);
+    finders.addAll(extraFinders);
+
+    ResponseFinderList all = new ResponseFinderList(finders);
+    return all.findResponse(id);
+  }
+
+
+  class DefaultResponseFinder implements ResponseFinder {
+
+    private long start;
+    private long end;
+    private final long timeout;
+
+    private volatile boolean ok = true;
+    private WebDriverException exception;
+    private JSONObject response;
+
+    private DefaultResponseFinder(long timeout) {
+      this.timeout = timeout;
 
     }
+
+    private void reset() {
+      start = System.currentTimeMillis();
+      this.end = start + timeout;
+      ok = true;
+      exception = null;
+      response = null;
+    }
+
+    @Override
+    public void startSearch(int id) {
+      reset();
+      while (ok) {
+        synchronized (this) {
+          if (System.currentTimeMillis() > end) {
+            exception =
+                new WebDriverException("timeout waiting for a response for request id : " + id);
+            return;
+          }
+          try {
+            Thread.sleep(10);
+            for (JSONObject o : responses) {
+              if (o.optInt("id") == id) {
+                responses.remove(o);
+                response = o;
+                return;
+              }
+            }
+          } catch (InterruptedException e) {
+            // ignore.
+          }
+        }
+
+      }
+    }
+
+    @Override
+    public synchronized void interruptSearch() {
+      ok = false;
+    }
+
+    @Override
+    public JSONObject getResponse() {
+      if (response != null) {
+        return response;
+      }
+      if (exception != null) {
+        throw exception;
+      }
+      return null;
+    }
   }
+
 
   @Override
   public void stop() {

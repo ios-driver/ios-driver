@@ -13,6 +13,9 @@
  */
 package org.uiautomation.ios.mobileSafari;
 
+import org.json.JSONObject;
+import org.uiautomation.ios.webInspector.DOM.RemoteExceptionException;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,10 +24,6 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.logging.Logger;
-
-import org.json.JSONObject;
-import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.webInspector.DOM.RemoteExceptionException;
 
 public class DebugProtocol {
 
@@ -47,16 +46,13 @@ public class DebugProtocol {
 
   /**
    * connect to the webview
-   * 
-   * @param handler
-   *          for server initiated notifications
-   * @throws UnknownHostException
-   * @throws IOException
-   * @throws InterruptedException
+   *
+   * @param handler for server initiated notifications
    */
-  public DebugProtocol(EventListener listener, String bundleId, ServerSideSession session) throws Exception,
-      InterruptedException {
-    this.handler = new DefaultMessageHandler(listener);
+  public DebugProtocol(EventListener listener, String bundleId, ResponseFinder... finders)
+      throws Exception,
+             InterruptedException {
+    this.handler = new DefaultMessageHandler(listener, finders);
     this.bundleId = bundleId;
 
     init();
@@ -91,12 +87,8 @@ public class DebugProtocol {
 
   /**
    * sends the json formated command.
-   * 
-   * @param command
-   *          . For command format, read
-   *          https://www.webkit.org/blog/?p=1875&preview=true.
-   * @return
-   * @throws Exception
+   *
+   * @param command . For command format, read https://www.webkit.org/blog/?p=1875&preview=true.
    */
   public JSONObject sendCommand(JSONObject command) throws Exception {
     commandId++;
@@ -121,21 +113,17 @@ public class DebugProtocol {
     } else if (response.optBoolean("wasThrown", false)) {
       throw new Exception("remote JS exception " + response.toString(2));
     } else {
-      log.fine(System.currentTimeMillis()+ "\t\t"+(System.currentTimeMillis() - start) + "ms\t" + command.getString("method") + " " + command);
+      log.fine(System.currentTimeMillis() + "\t\t" + (System.currentTimeMillis() - start) + "ms\t"
+               + command.getString("method") + " " + command);
       return response.getJSONObject("result");
     }
   }
 
-  
 
   /**
-   * Some commands do not follow the Remote Debugging protocol. For instance the
-   * ones that initialize the connection between the webview and the remote
-   * debugger do not have json content, they're just an exchange of keys.
-   * 
-   * @param command
-   * @throws IOException
-   * @throws InterruptedException
+   * Some commands do not follow the Remote Debugging protocol. For instance the ones that
+   * initialize the connection between the webview and the remote debugger do not have json content,
+   * they're just an exchange of keys.
    */
   private void sendCommand(String command) throws Exception {
     String xml = plist.loadFromTemplate(command);
@@ -146,9 +134,6 @@ public class DebugProtocol {
 
   /**
    * sends the message to the AUT.
-   * 
-   * @param bytes
-   * @throws IOException
    */
   private void sendBinaryMessage(byte[] bytes) throws IOException {
     OutputStream os = socket.getOutputStream();
@@ -163,10 +148,6 @@ public class DebugProtocol {
 
   /**
    * reads the messages from the AUT.
-   * 
-   * @param inputBytes
-   * @throws IOException
-   * @throws InterruptedException
    */
   private void pushInput(byte[] inputBytes) throws Exception {
     buf.write(inputBytes);
@@ -192,9 +173,6 @@ public class DebugProtocol {
 
   /**
    * listen for a complete message.
-   * 
-   * @throws IOException
-   * @throws InterruptedException
    */
   private void listenOnce() throws Exception {
     InputStream is = socket.getInputStream();

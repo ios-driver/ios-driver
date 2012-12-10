@@ -87,7 +87,7 @@ public enum CommandMapping {
   GET_CONFIGURATION(GetConfigurationNHandler.class),
 
   WINDOW_HANDLES(GetWindowHandlesNHandler.class),
-  WINDOW(SetCurrentContextNHandler.class, NotImplementedWebHandler.class),
+  WINDOW(SetCurrentContextNHandler.class),
   FRAME(NotImplementedNativeHandler.class, SetFrameHandler.class),
   GET_WINDOW_HANDLE(GetCurrentContextNHandler.class),
   TITLE(null, null, GetTitleHandler.class),
