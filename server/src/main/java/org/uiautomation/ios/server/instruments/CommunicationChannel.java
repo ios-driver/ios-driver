@@ -13,6 +13,9 @@
  */
 package org.uiautomation.ios.server.instruments;
 
+import org.uiautomation.ios.server.command.UIAScriptRequest;
+import org.uiautomation.ios.server.command.UIAScriptResponse;
+
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -20,10 +23,8 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.uiautomation.ios.server.command.UIAScriptRequest;
-import org.uiautomation.ios.server.command.UIAScriptResponse;
-
 public class CommunicationChannel {
+
   private final BlockingQueue<UIAScriptRequest> requestQueue =
       new ArrayBlockingQueue<UIAScriptRequest>(1);
   private final BlockingQueue<UIAScriptResponse> responseQueue =
@@ -56,7 +57,7 @@ public class CommunicationChannel {
   }
 
   public void sendNextCommand(UIAScriptRequest r) {
-    if (responseQueue.size()!=0){
+    if (responseQueue.size() != 0) {
       System.err.println("adding command but reponse not read.");
     }
     requestQueue.add(r);
