@@ -48,3 +48,4 @@ TODOs:
 - nativeDriver.executeScript should return UIAElement cast to what they are rather than WebElements.
 - use implicit wait to wait for the native keyboard 
 - remove all calls to plutil
+- instruments crash from user define script. stackoverflow for method def for instance.
