@@ -48,22 +48,26 @@ public class AlertTest extends BaseIOSDriverTest {
 
   @Test(expectedExceptions = UnhandledAlertException.class)
   public void cannotInteractWithAppWhenAlertOpen() throws Exception {
-    Criteria c = new AndCriteria(new TypeCriteria(UIAStaticText.class), new NameCriteria("Show Simple"));
+    Criteria
+        c =
+        new AndCriteria(new TypeCriteria(UIAStaticText.class), new NameCriteria("Show Simple"));
     UIAElement el = driver.findElements(c).get(1);
     // opens an alert.
     el.tap();
     try {
       el.tap();
-      Assert.fail("shouldn't click behing alerts.");
+      Assert.fail("shouldn't click behind alerts.");
     } finally {
       driver.getAlert().getCancelButton().tap();
     }
   }
 
-  @Test(expectedExceptions=NoAlertPresentException.class)
+  @Test(expectedExceptions = NoAlertPresentException.class)
   public void checkUIAlertView() throws Exception {
 
-    Criteria c = new AndCriteria(new TypeCriteria(UIAStaticText.class), new NameCriteria("Show Simple"));
+    Criteria
+        c =
+        new AndCriteria(new TypeCriteria(UIAStaticText.class), new NameCriteria("Show Simple"));
     UIAElement el = driver.findElements(c).get(1);
     // opens an alert.
     el.tap();
