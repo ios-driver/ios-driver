@@ -26,6 +26,10 @@ UIAElement.prototype.rect = function () {
     return rect;
 }
 
+/**
+ * checks is the element is part of an alert.
+ * @return {boolean} true is the element is a descendant of an alert.
+ */
 UIAElement.prototype.isInAlert = function () {
     var parent;
     if (this.parent) {
@@ -42,6 +46,12 @@ UIAElement.prototype.isInAlert = function () {
     return false;
 }
 
+/**
+ * with IOS6, scrollToVisible crashes for elements that are not in a tableView or a webView.
+ * As scrollToVisible is used internally by ios-driver to find if an element is stale, it is necessary
+ * to workaround this bug.
+ * @return {boolean} true if it is safe to call scrollToVisible on the element.
+ */
 UIAElement.prototype.isScrollable = function () {
     var parent;
     if (this.parent) {
@@ -60,6 +70,9 @@ UIAElement.prototype.isScrollable = function () {
 
 UIAElement.prototype.tap_original = UIAElement.prototype.tap;
 
+/**
+ * tap / click on an element.
+ */
 UIAElement.prototype.tap = function () {
     if (this.isVisible()) {
         var rect = this.rect();
