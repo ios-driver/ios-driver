@@ -52,7 +52,7 @@ UIAElement.prototype.isInAlert = function () {
  * to workaround this bug.
  * @return {boolean} true if it is safe to call scrollToVisible on the element.
  */
-UIAElement.prototype.isScrollable = function () {
+UIAElement.prototype._isScrollable = function () {
     var parent;
     if (this.parent) {
         parent = this.parent();
@@ -71,13 +71,25 @@ UIAElement.prototype.isScrollable = function () {
 UIAElement.prototype.tap_original = UIAElement.prototype.tap;
 
 /**
- * tap / click on an element.
+ * Tap an an element. By default tap the center of the element, unless opt_XFactor and opt_YFactor are
+ * specified.
+ * @param {number} opt_XFactor where in the element. 0 is left border, 1 right border
+ * @param {number} opt_YFactor where in the element. 0 is top border, 1 is bottom one.
  */
-UIAElement.prototype.tap = function () {
+UIAElement.prototype.tap = function (opt_XFactor, opt_YFactor) {
+    var xFactor = 0.5;
+    var yFactor = 0.5;
+
+    if (opt_XFactor) {
+        xFactor = opt_XFactor;
+    }
+    if (opt_YFactor) {
+        yFactor = opt_YFactor;
+    }
     if (this.isVisible()) {
         var rect = this.rect();
-        var x = rect.origin.x + (rect.size.width / 2);
-        var y = rect.origin.y + (rect.size.height / 2);
+        var x = rect.origin.x + (rect.size.width * xFactor);
+        var y = rect.origin.y + (rect.size.height * yFactor);
         var point = {
             'x': Math.floor(x),
             'y': Math.floor(y)
@@ -93,6 +105,11 @@ UIAElement.prototype.tap = function () {
     }
 }
 
+/**
+ * ios-driver made id. Used to store and retrieve elements from the cache, and represent the element
+ * when passed around the network.
+ * @return {number} the unique reference of that element. Used by the cache as id.
+ */
 UIAElement.prototype.reference = function () {
     if (!this.id) {
         UIAutomation.cache.store(this);
@@ -100,6 +117,7 @@ UIAElement.prototype.reference = function () {
     return this.id;
 }
 
+UIAElement.prototype.scrollToVisible_original = UIAElement.prototype.scrollToVisible;
 /**
  * scrollToVisible only makes sense if the element if in a webview or a
  * tableView. It was working, and doing nothing for other elements up to ios5.1.
@@ -109,7 +127,7 @@ UIAElement.prototype.reference = function () {
  * 1545, kAXErrorFailure so need to check first if scrolling will do anything to
  * avoid this exception.
  */
-UIAElement.prototype.scrollToVisibleSafe = function () {
+UIAElement.prototype.scrollToVisible = function () {
     if (this.isScrollable()) {
         this.scrollToVisible();
     }
@@ -123,7 +141,7 @@ UIAElement.prototype.isStale = function () {
         return true;
     } else {
         try {
-            this.scrollToVisibleSafe();
+            this.scrollToVisible();
             // tmp fix for safari and big web views.
             if (this.type() === "UIAWebView") {
                 return false;
@@ -248,6 +266,11 @@ UIAElement.prototype.elements2 = function (depth, criteria) {
     }
 }
 
+/**
+ * Return the ios-driver object associated with the element. Contains all the info used to debug, and
+ * accessible by calling the logElementTree command.
+ * @return {Object} an ios-driver node representing the UIAElement.
+ */
 UIAElement.prototype.asNode = function () {
     try {
         return {
@@ -263,6 +286,11 @@ UIAElement.prototype.asNode = function () {
     }
 }
 
+/**
+ * returns a dump of the application object tree, optionally taking a screenshot.
+ * @param {boolean} attachScreenshot  if true, a screenshot will be taken.
+ * @return {object}
+ */
 UIAElement.prototype.tree = function (attachScreenshot) {
     var buildNode = function (element) {
         var res = element.asNode();
@@ -295,7 +323,9 @@ UIAElement.prototype.tree = function (attachScreenshot) {
 }
 /**
  * return an array with all the children of the element. Goes depth deep in the
- * tree. depth = -1 or undefined gets all elements.
+ * tree. depth = -1 or undefined gets all elements
+ * @param {nulber} depth -1 to return everything.
+ * @return {Array} of all the children of that element, and their own children.
  */
 UIAElement.prototype.getChildren = function (depth) {
     var res = new Array();
@@ -325,7 +355,12 @@ var getKeys = function (obj) {
     }
     return keys;
 }
-// returns true is the point (x,y) is contained is the element.
+/**
+ * returns true if the element contains the x,y point specified.
+ * @param {number} x
+ * @param {number} y
+ * @return {boolean} true if (x,y) is in the element.
+ */
 UIAElement.prototype.contains = function (x, y) {
     var rect = this.rect();
 
@@ -345,6 +380,11 @@ UIAElement.prototype.contains = function (x, y) {
     return true;
 }
 
+/**
+ * returns true if the element matches the given criteria.
+ * @param {criteria} criteria the criteria object.
+ * @return {boolean} true is the element matches the given criteria.
+ */
 UIAElement.prototype.matches = function (criteria) {
     if (!criteria) {
         return true;
@@ -421,8 +461,11 @@ UIAElement.prototype.matches = function (criteria) {
 UIAElementNil.prototype.type = function () {
     return "UIAElementNil";
 }
+
 // TODO freynaud check why this is necessary. key extends elements.
 UIAKey.prototype.type = UIAElement.prototype.type;
+UIAElementArray.prototype.type = UIAElement.prototype.type;
+
 UIAElementNil.prototype.reference = UIAElement.prototype.reference;
 
 UIAKey.prototype.reference = UIAElement.prototype.reference;
