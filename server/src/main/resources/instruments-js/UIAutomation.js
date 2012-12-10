@@ -4,7 +4,11 @@
 
 /**
  * @constructor
- * @type {{cache: Cache, CURL: string, COMMAND: string, HOST: String, TIMEOUT_IN_SEC: {implicit: number}, SESSION: string, CAPABILITIES: number, createJSONResponse: Function, postResponseAndGetNextCommand: Function, loadCapabilities: Function, getCapabilities: Function, setTimeout: Function, getTimeout: Function, setAlertHandler: Function, commandLoop: Function}}
+ * @type {{cache: Cache, CURL: string, COMMAND: string, HOST: String, TIMEOUT_IN_SEC:
+ * {implicit: number}, SESSION: string, CAPABILITIES: number, createJSONResponse: Function,
+ * postResponseAndGetNextCommand: Function, loadCapabilities: Function, getCapabilities:
+ * Function, setTimeout: Function, getTimeout: Function, setAlertHandler:
+ * Function, commandLoop: Function}}
  */
 var UIAutomation = {
     cache: new Cache(),
