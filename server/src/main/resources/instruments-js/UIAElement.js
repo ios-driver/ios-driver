@@ -52,7 +52,7 @@ UIAElement.prototype.isInAlert = function () {
  * to workaround this bug.
  * @return {boolean} true if it is safe to call scrollToVisible on the element.
  */
-UIAElement.prototype._isScrollable = function () {
+UIAElement.prototype.isScrollable = function () {
     var parent;
     if (this.parent) {
         parent = this.parent();
@@ -129,7 +129,7 @@ UIAElement.prototype.scrollToVisible_original = UIAElement.prototype.scrollToVis
  */
 UIAElement.prototype.scrollToVisible = function () {
     if (this.isScrollable()) {
-        this.scrollToVisible();
+        this.scrollToVisible_original();
     }
 }
 /**
@@ -157,7 +157,6 @@ UIAElement.prototype.isStale = function () {
             }
         }
     }
-    // log(this.type() + "default false");
     return false;
 }
 
