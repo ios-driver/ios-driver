@@ -77,8 +77,8 @@ public class ScriptHelper {
 
   public File createTmpScript(String content) {
     try {
-      File res = File.createTempFile(FILE_NAME, ".js");
-      //File res = new File("/Users/freynaud/master.js");
+      //File res = File.createTempFile(FILE_NAME, ".js");
+      File res = new File("/Users/freynaud/master.js");
       Writer writer = new FileWriter(res);
       IOUtils.copy(IOUtils.toInputStream(content), writer, "UTF-8");
       IOUtils.closeQuietly(writer);

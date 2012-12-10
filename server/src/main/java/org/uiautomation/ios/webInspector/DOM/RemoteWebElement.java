@@ -228,7 +228,8 @@ public class RemoteWebElement {
     script.append("var nativeElement = root.element(-1,{'x':x,'y':y});");
     // scroll into view.
     script.append("nativeElement.isStale();");
-    script.append("nativeElement.tap();");
+    // tap at the end of the element to try to append the text at the end.
+    script.append("nativeElement.tap(0.99,0.5);");
     script.append("var keyboard = UIAutomation.cache.get('1').keyboard();");
     script.append("keyboard.typeString('" + value + "');");
     Criteria iPhone = new NameCriteria("Done");
