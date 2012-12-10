@@ -192,7 +192,7 @@ public class RemoteWebElement {
     StringBuilder script = new StringBuilder();
     script.append("var root = UIAutomation.cache.get('1');");
     script.append("var webview = root.element(-1," + json + ");");
-    script.append("var webviewSize = webview.rect2();");
+    script.append("var webviewSize = webview.rect();");
     script.append("var ratio = webviewSize.size.width / " + dim.getWidth() + ";");
     int top = po.getY();
     int left = po.getX();
@@ -219,7 +219,7 @@ public class RemoteWebElement {
           new AndCriteria(new TypeCriteria(UIAElement.class), new NameCriteria(addressL10ned),
                           new LabelCriteria(addressL10ned));
       script.append("var addressBar = root.element(-1," + c2.stringify().toString() + ");");
-      script.append("var addressBarSize = addressBar.rect2();");
+      script.append("var addressBarSize = addressBar.rect();");
       script.append("var delta = addressBarSize.origin.y +39;");
       script.append("if (delta<20){delta=20;};");
       script.append("var y = top+delta;");
