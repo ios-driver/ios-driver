@@ -12,6 +12,7 @@ public class AlertsTest extends BaseSeleniumTest {
   @BeforeClass
   public void setUp() throws Exception {
     driver.get(pages.alertsPage);
+    System.out.println(pages.alertsPage);
   }
 
   @Test

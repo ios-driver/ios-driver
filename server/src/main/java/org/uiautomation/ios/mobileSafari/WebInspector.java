@@ -106,14 +106,6 @@ public class WebInspector {
     return cast(response);
   }
 
-  public void scale(float s) {
-    viewport = document.querySelector("meta[name=viewport]");
-    viewport.setAttribute('content',
-                          'width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;');
-
-
-  }
-
 
   public WebInspector(UIADriver nativeDriver, String bundleId, ServerSideSession session)
       throws Exception {

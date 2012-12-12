@@ -172,10 +172,9 @@ public class RemoteWebElement {
     }
   }
 
-  private String getNativeElementClickOnIt()
-      throws Exception {
+  private String getNativeElementClickOnIt() throws Exception {
     // web stuff.
-    inspector.scale(1.0F);
+
     Point po = findPosition();
     Dimension dim = inspector.getSize();
     int webPageWidth = inspector.getInnerWidth();
@@ -220,11 +219,11 @@ public class RemoteWebElement {
       script.append("if (delta<20){delta=20;};");
       script.append("var y = top+delta;");
     }
-
-    script.append("var nativeElement = root.element(-1,{'x':x,'y':y});");
+    script.append("UIATarget.localTarget().tap({'x':x,'y':y})");
+    //script.append("var nativeElement = root.element(-1,{'x':x,'y':y});");
     // scroll into view.
-    script.append("nativeElement.isStale();");
-    script.append("nativeElement.tap();");
+    //script.append("nativeElement.isStale();");
+    //script.append("nativeElement.tap();");
 
     return script.toString();
 
@@ -296,7 +295,6 @@ public class RemoteWebElement {
 
   }
 
-
   private UIAElement getNativeElement() throws Exception {
     // highlight();
     if (nativeElement == null) {
@@ -364,6 +362,64 @@ public class RemoteWebElement {
   }
 
   public Point findPosition() throws Exception {
+
+    StringBuilder b = new StringBuilder();
+    b.append("(function(){");
+    b.append("var element = this;\n");
+    b.append("var rect = element.getClientRects()[0];\n");
+    b.append("var res = {'x': rect.left, 'y': rect.top};\n");
+
+    b.append(" var doc = element.ownerDocument;\n");
+    b.append(" var win = doc.defaultView;\n");
+    b.append(" var topWin = win.top;\n");
+
+    b.append(" var parentFrame = function (doc) {\n");
+    b.append("    var win = doc.defaultView;\n");
+    b.append("    var parentWin = win.parent;\n");
+    b.append("    var parentDoc = parentWin.document;\n");
+    b.append("    var frames = parentDoc.querySelectorAll('iframe');\n");
+    b.append("    for (var i = 0; i < frames.length; i++) {\n");
+    b.append("        if (frames[i].contentDocument === doc) {\n");
+    b.append("            var r = frames[i];\n");
+    b.append("            return r;\n");
+    b.append("        }\n");
+    b.append("    }\n");
+    b.append("    return null;\n");
+    b.append("}\n");
+
+    b.append(" while (win !== topWin) {\n");
+    b.append("    rect = parentFrame(doc).getClientRects()[0];\n");
+    b.append("    var xoff = rect.left;\n");
+    b.append("    var yoff = rect.top;\n");
+    b.append("    if (xoff > 0) {\n");
+    b.append("        res.x += xoff;\n");
+    b.append("    }\n");
+    b.append("    if (yoff > 0) {\n");
+    b.append("        res.y += yoff;\n");
+    b.append("    }\n");
+    b.append("     win = win.parent;\n");
+    b.append("    doc = win.document;\n");
+    b.append("}\n");
+    b.append("return " + Atoms.stringify() + "(res);\n");
+    b.append("})");
+
+    JSONObject cmd = new JSONObject();
+
+    cmd.put("method", "Runtime.callFunctionOn");
+
+    cmd.put(
+        "params",
+        new JSONObject().put("objectId", getRemoteObject().getId())
+            .put("functionDeclaration", b.toString())
+            .put("returnByValue", false));
+
+    JSONObject response = inspector.getProtocol().sendCommand(cmd);
+    String s = inspector.cast(response);
+    JSONObject o = new JSONObject(s);
+    return new Point(o.getInt("x"), o.getInt("y"));
+  }
+
+  public Point findPositionOld() throws Exception {
     String
         f =
         "(function(a) { " + "var el = this;" + " var rect = el.getClientRects()[0];" + " var res = "
@@ -768,31 +824,26 @@ public class RemoteWebElement {
   }
 
   public void setValueNative(String value) throws Exception {
-    /*WebElement el = getNativeElement();
-    WorkingMode origin = session.getMode();
-    try {
-      session.setMode(WorkingMode.Native);
-      el.click();
-      RemoteUIAKeyboard keyboard = (RemoteUIAKeyboard) session.getNativeDriver().getKeyboard();
-      if ("\n".equals(value)) {
-        keyboard.findElement(new NameCriteria("Return")).tap();
-      } else {
-        keyboard.sendKeys(value);
-      }
-
-      Criteria iphone = new NameCriteria("Done");
-      Criteria ipad = new NameCriteria("Hide keyboard");
-
-      UIAButton but = session.getNativeDriver().findElement(new OrCriteria(ipad, iphone));
-      but.tap();
-      // session.getNativeDriver().pinchClose(300, 400, 50, 100, 1);
-    } finally {
-      session.setMode(origin);
-    }*/
+    /*
+     * WebElement el = getNativeElement(); WorkingMode origin =
+     * session.getMode(); try { session.setMode(WorkingMode.Native); el.click();
+     * RemoteUIAKeyboard keyboard = (RemoteUIAKeyboard)
+     * session.getNativeDriver().getKeyboard(); if ("\n".equals(value)) {
+     * keyboard.findElement(new NameCriteria("Return")).tap(); } else {
+     * keyboard.sendKeys(value); }
+     * 
+     * Criteria iphone = new NameCriteria("Done"); Criteria ipad = new
+     * NameCriteria("Hide keyboard");
+     * 
+     * UIAButton but = session.getNativeDriver().findElement(new
+     * OrCriteria(ipad, iphone)); but.tap(); //
+     * session.getNativeDriver().pinchClose(300, 400, 50, 100, 1); } finally {
+     * session.setMode(origin); }
+     */
     WorkingMode origin = session.getMode();
     session.setMode(WorkingMode.Native);
-    ((JavascriptExecutor) nativeDriver).executeScript(
-        getNativeElementClickOnItAndTypeUsingKeyboardScript(value));
+    ((JavascriptExecutor) nativeDriver)
+        .executeScript(getNativeElementClickOnItAndTypeUsingKeyboardScript(value));
     session.setMode(origin);
   }
 
