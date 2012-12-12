@@ -28,7 +28,8 @@ public class NotImplementedWebHandler extends BaseWebCommandHandler {
 
   @Override
   public Response handle() throws Exception {
-    throw new WebDriverException("not implemented");
+    throw new WebDriverException(
+        "not implemented" + getRequest().getMethod() + " " + getRequest().getPath());
   }
 
   @Override

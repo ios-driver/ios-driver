@@ -24,7 +24,7 @@ import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 
 public class ClickHandler extends BaseWebCommandHandler {
 
-  private static final boolean nativeEvents = false;
+  private static final boolean nativeEvents = true;
 
   public ClickHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -53,8 +53,8 @@ public class ClickHandler extends BaseWebCommandHandler {
     desc.put(
         "nativeEvents",
         "{boolean}, default to "
-            + nativeEvents
-            + ".true = UIAutomation native events will be used to enter the URL (slow) , Web =  WebKit remote debugging will be used.Faster.");
+        + nativeEvents
+        + ".true = UIAutomation native events will be used to enter the URL (slow) , Web =  WebKit remote debugging will be used.Faster.");
     return desc;
   }
 
