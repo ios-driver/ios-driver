@@ -174,7 +174,7 @@ public class RemoteWebElement {
 
   private String getNativeElementClickOnIt() throws Exception {
     // web stuff.
-
+    scrollIntoViewIfNeeded();
     Point po = findPosition();
     Dimension dim = inspector.getSize();
     int webPageWidth = inspector.getInnerWidth();
@@ -220,10 +220,10 @@ public class RemoteWebElement {
       script.append("var y = top+delta;");
     }
     script.append("UIATarget.localTarget().tap({'x':x,'y':y})");
-    //script.append("var nativeElement = root.element(-1,{'x':x,'y':y});");
+    // script.append("var nativeElement = root.element(-1,{'x':x,'y':y});");
     // scroll into view.
-    //script.append("nativeElement.isStale();");
-    //script.append("nativeElement.tap();");
+    // script.append("nativeElement.isStale();");
+    // script.append("nativeElement.tap();");
 
     return script.toString();
 
@@ -377,7 +377,7 @@ public class RemoteWebElement {
     b.append("    var win = doc.defaultView;\n");
     b.append("    var parentWin = win.parent;\n");
     b.append("    var parentDoc = parentWin.document;\n");
-    b.append("    var frames = parentDoc.querySelectorAll('iframe');\n");
+    b.append("    var frames = parentDoc.querySelectorAll('iframe,frame');\n");
     b.append("    for (var i = 0; i < frames.length; i++) {\n");
     b.append("        if (frames[i].contentDocument === doc) {\n");
     b.append("            var r = frames[i];\n");
@@ -845,6 +845,25 @@ public class RemoteWebElement {
     ((JavascriptExecutor) nativeDriver)
         .executeScript(getNativeElementClickOnItAndTypeUsingKeyboardScript(value));
     session.setMode(origin);
+  }
+
+  public void scrollIntoViewIfNeeded() throws Exception {
+    String f = "(function(element) { element.scrollIntoViewIfNeeded()})";
+    JSONObject cmd = new JSONObject();
+
+    cmd.put("method", "Runtime.callFunctionOn");
+
+    JSONArray args = new JSONArray();
+    args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
+
+    cmd.put("params",
+            new JSONObject().put("objectId", getRemoteObject().getId())
+                .put("functionDeclaration", f)
+                .put("arguments", args).put("returnByValue", true));
+
+    JSONObject response = inspector.getProtocol().sendCommand(cmd);
+    inspector.cast(response);
+
   }
 
   public void clear() throws Exception {
