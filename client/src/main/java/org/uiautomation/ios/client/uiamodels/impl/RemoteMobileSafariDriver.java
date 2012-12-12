@@ -13,11 +13,15 @@
  */
 package org.uiautomation.ios.client.uiamodels.impl;
 
-import java.net.URL;
-
 import org.uiautomation.ios.IOSCapabilities;
 
+import java.net.URL;
+
 public class RemoteMobileSafariDriver extends RemoteUIADriver {
+
+  protected RemoteMobileSafariDriver() {
+    super();
+  }
 
   public RemoteMobileSafariDriver(URL remoteURL, IOSCapabilities requestedCapabilities) {
     super(remoteURL, requestedCapabilities);

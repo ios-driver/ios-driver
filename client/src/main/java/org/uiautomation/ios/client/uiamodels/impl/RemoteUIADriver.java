@@ -67,14 +67,18 @@ import java.util.Set;
 
 public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, TakesScreenshot {
 
-  private final String remoteURL;
-  private final Map<String, Object> requestedCapabilities;
+  private String remoteURL;
+  private Map<String, Object> requestedCapabilities;
   // private Session session;
   private String host;
   private int port;
-  private final DriverConfiguration configuration;
+  private DriverConfiguration configuration;
   private ErrorHandler errorHandler = new ErrorHandler();
 
+
+  protected RemoteUIADriver() {
+    super();
+  }
   /**
    * create the remote driver, starting the remote session with the requested
    * capabilities.

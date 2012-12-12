@@ -106,6 +106,15 @@ public class WebInspector {
     return cast(response);
   }
 
+  public void scale(float s) {
+    viewport = document.querySelector("meta[name=viewport]");
+    viewport.setAttribute('content',
+                          'width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;');
+
+
+  }
+
+
   public WebInspector(UIADriver nativeDriver, String bundleId, ServerSideSession session)
       throws Exception {
     this.nativeDriver = nativeDriver;
@@ -114,6 +123,7 @@ public class WebInspector {
     protocol = new DebugProtocol(context, bundleId/*, new AlertDetector()*/);
     enablePageEvent();
   }
+
 
   class AlertDetector implements ResponseFinder {
 
@@ -130,6 +140,7 @@ public class WebInspector {
 
     @Override
     public void startSearch(int id) {
+      log.fine("starting to look for an alert.");
       reset();
       try {
         Thread.sleep(timeBeforeLookingForAlert);
@@ -299,7 +310,7 @@ public class WebInspector {
   }
 
   public Dimension getSize() throws Exception {
-    String f = "(function(element) { var result = " + Atoms.getSize() + "();"
+    String f = "(function(element) { var result = " + Atoms.getSize() + "(window.top);"
                + "var res = " + Atoms.stringify() + "(result);"
                + "return  res;  })";
     JSONObject cmd = new JSONObject();

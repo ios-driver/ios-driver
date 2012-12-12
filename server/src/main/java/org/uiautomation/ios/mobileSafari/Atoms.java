@@ -13,22 +13,22 @@
  */
 package org.uiautomation.ios.mobileSafari;
 
+import org.apache.commons.io.IOUtils;
+import org.openqa.selenium.WebDriverException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 
-import org.apache.commons.io.IOUtils;
-import org.openqa.selenium.WebDriverException;
-
 /**
  * in selenium/javascript/atoms.
- * 
+ *
  * Edit build.desc find the function in dom.js , for instance isShown edit
  * selenium/javascript/atoms/build.desc add
- * 
+ *
  * js_fragment(name="isVisible", module="bot.dom", function="bot.dom.isShown",
  * deps=["//javascript/atoms:all_js"])
- * 
+ *
  * selenium ./go //javascript/atoms:isVisible
  */
 public class Atoms {
@@ -49,9 +49,11 @@ public class Atoms {
   private static String stringify;
   private static String getLocationInView;
   private static String getSize;
+  private static String getPageOffset;
 
   static {
     try {
+      getPageOffset = load("atoms/getPageOffset.js");
       getText = load("atoms/getVisibleText.js");
       isDisplayed = load("atoms/isVisible.js");
       click = load("atoms/click.js");
@@ -71,6 +73,10 @@ public class Atoms {
     } catch (Exception e) {
       throw new RuntimeException("Cannot load atoms");
     }
+  }
+
+  public static String getPageOffset() {
+    return getPageOffset;
   }
 
   public static String getLocationInView() {

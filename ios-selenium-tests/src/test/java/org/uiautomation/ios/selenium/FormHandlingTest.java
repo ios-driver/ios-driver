@@ -247,6 +247,28 @@ public class FormHandlingTest extends BaseSeleniumTest {
     assertEquals(value, ("some text"));
   }
 
+  @Test
+  // doesn't work if the text is longer than the input size, as the cursor will
+  // end up where the tap was done.
+  public void testShouldScrollWhenZoomed() throws InterruptedException {
+    /*driver.get("https://scgi.ebay.co.uk/ws/eBayISAPI.dll?RegisterEnterInfo");
+
+
+    WebElement element = driver.findElement(By.id("firstname"));
+    element.click();
+
+    element = driver.findElement(By.id("rpass"));
+    element.click();   */
+    driver.get(pages.formPage);
+
+    WebElement element = driver.findElement(By.id("email"));
+    element.click();
+    element = driver.findElement(By.id("vsearchGadget"));
+    element.click();
+
+
+  }
+
   // @Ignore(value = { ANDROID, IPHONE, OPERA, SELENESE, OPERA_MOBILE }, reason
   // = "iPhone: sendKeys implemented incorrectly. Selenium: just because")
   @Test

@@ -139,7 +139,7 @@ public class DefaultMessageHandler implements MessageHandler {
     // startSearch
     // interruptSearch
     // waitForResult
-    long timeout = 5 * 1000 * 60;
+    long timeout = 5 * 1000;
     final ResponseFinder defaultFinder = new DefaultResponseFinder(timeout);
 
     List<ResponseFinder> finders = new ArrayList<ResponseFinder>();

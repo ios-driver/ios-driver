@@ -300,6 +300,7 @@ public class FrameSwitchingTest extends BaseSeleniumTest {
     assertEquals(getTextOfGreetingElement(), ("Success!"));
   }
 
+
   //@Ignore({ OPERA, ANDROID, OPERA_MOBILE })
   @Test
   public void testShouldBeAbleToClickInASubFrame() {

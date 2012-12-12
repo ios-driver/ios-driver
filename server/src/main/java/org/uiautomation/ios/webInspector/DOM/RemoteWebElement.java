@@ -175,6 +175,7 @@ public class RemoteWebElement {
   private String getNativeElementClickOnIt()
       throws Exception {
     // web stuff.
+    inspector.scale(1.0F);
     Point po = findPosition();
     Dimension dim = inspector.getSize();
     int webPageWidth = inspector.getInnerWidth();
