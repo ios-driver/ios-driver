@@ -18,7 +18,7 @@ import org.json.JSONObject;
 
 public interface ResponseFinder {
 
-  public void startSearch(int responseId);
+  public void startSearch(int responseId) throws InterruptedException;
 
   public void interruptSearch();
 

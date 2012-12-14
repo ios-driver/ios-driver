@@ -7,22 +7,27 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+/**
+ * no really done right now. it will be possible, but there will be some timing issues.
+ */
 public class AlertsTest extends BaseSeleniumTest {
 
   @BeforeClass
   public void setUp() throws Exception {
     driver.get(pages.alertsPage);
-    System.out.println(pages.alertsPage);
   }
 
   @Test
-  public void testShouldBeAbleToOverrideTheWindowAlertMethod() {
+  public void testShouldBeAbleToOverrideTheWindowAlertMethod() throws InterruptedException {
     ((JavascriptExecutor) driver).executeScript(
         "window.alert = function(msg) { document.getElementById('text').innerHTML = msg; }");
     driver.findElement(By.id("alert")).click();
+    // TODO freynaud find out why reloading the page right after the click makes the alert appear.
+    Thread.sleep(1000);
+    driver.get(pages.alertsPage);
   }
 
-  @Test
+  /*@Test(expectedExceptions = UnhandledAlertException.class)
   public void testShouldAllowUsersToAcceptAnAlertManually() throws InterruptedException {
     driver.findElement(By.id("alert")).click();
     Thread.sleep(500);
@@ -31,10 +36,10 @@ public class AlertsTest extends BaseSeleniumTest {
     alert.accept();
 
     // If we can perform any action, we're good to go
-    Assert.assertEquals("Testing Alerts", driver.getTitle()); */
+    Assert.assertEquals("Testing Alerts", driver.getTitle());
   }
 
-  /*@Test
+  @Test
   public void testShouldAllowUsersToAcceptAnAlertWithNoTextManually() {
     driver.findElement(By.id("empty-alert")).click();
 
@@ -160,7 +165,7 @@ public class AlertsTest extends BaseSeleniumTest {
       alert.getText();
     } catch (NoAlertPresentException expected) {
     }
-  }   */
+  }
 
 
   @Test

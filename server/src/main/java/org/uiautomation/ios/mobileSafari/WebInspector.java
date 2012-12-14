@@ -17,13 +17,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.Dimension;
-import org.openqa.selenium.NoAlertPresentException;
-import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.UIADriver;
 import org.uiautomation.ios.UIAModels.UIARect;
-import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.server.DOMContext;
@@ -112,72 +109,11 @@ public class WebInspector {
     this.nativeDriver = nativeDriver;
     this.session = session;
     DOMContext context = session.getContext().getDOMContext();
-    protocol = new DebugProtocol(context, bundleId/*, new AlertDetector()*/);
+    protocol =
+        new DebugProtocol(context, bundleId, new AlertDetector((RemoteUIADriver) nativeDriver));
     enablePageEvent();
   }
 
-
-  class AlertDetector implements ResponseFinder {
-
-    private volatile WebDriverException ex;
-    private volatile boolean finished = false;
-    private volatile boolean stopRequested = false;
-    private final long timeBeforeLookingForAlert = 500;
-
-    private void reset() {
-      finished = false;
-      stopRequested = false;
-      ex = null;
-    }
-
-    @Override
-    public void startSearch(int id) {
-      log.fine("starting to look for an alert.");
-      reset();
-      try {
-        Thread.sleep(timeBeforeLookingForAlert);
-        if (!stopRequested) {
-          log.fine("starting to look for an alert.");
-          ((RemoteUIADriver) nativeDriver).switchTo().window(WorkingMode.Native.toString());
-          nativeDriver.getAlert();
-          ((RemoteUIADriver) nativeDriver).switchTo().window(WorkingMode.Web.toString());
-          log.fine("found an alert.");
-          ex = new UnhandledAlertException("alert present.");
-        }
-      } catch (NoAlertPresentException ex) {
-        log.fine("there was no alert.");
-      } catch (InterruptedException e) {
-
-      } finally {
-        finished = true;
-      }
-
-    }
-
-    @Override
-    public void interruptSearch() {
-      stopRequested = true;
-      while (!finished) {
-        try {
-          Thread.sleep(20);
-        } catch (InterruptedException e) {
-          // ignore.
-        }
-
-      }
-    }
-
-    @Override
-    public JSONObject getResponse() {
-      if (!finished) {
-        throw new RuntimeException("Bug");
-      }
-      if (ex != null) {
-        throw ex;
-      }
-      return null;
-    }
-  }
 
   public DebugProtocol getProtocol() {
     return protocol;

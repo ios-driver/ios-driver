@@ -139,6 +139,8 @@ public class DefaultMessageHandler implements MessageHandler {
     // startSearch
     // interruptSearch
     // waitForResult
+
+    long start = System.currentTimeMillis();
     long timeout = 5 * 1000;
     final ResponseFinder defaultFinder = new DefaultResponseFinder(timeout);
 
@@ -147,7 +149,10 @@ public class DefaultMessageHandler implements MessageHandler {
     finders.addAll(extraFinders);
 
     ResponseFinderList all = new ResponseFinderList(finders);
-    return all.findResponse(id);
+    JSONObject res = all.findResponse(id);
+    log.fine(
+        "response " + id + " , " + (System.currentTimeMillis() - start) + "ms. " + res.toString());
+    return res;
   }
 
 
@@ -177,6 +182,8 @@ public class DefaultMessageHandler implements MessageHandler {
     @Override
     public void startSearch(int id) {
       reset();
+      long start = System.currentTimeMillis();
+      log.fine("begin search");
       while (ok) {
         synchronized (this) {
           if (System.currentTimeMillis() > end) {
@@ -190,6 +197,7 @@ public class DefaultMessageHandler implements MessageHandler {
               if (o.optInt("id") == id) {
                 responses.remove(o);
                 response = o;
+                log.fine("found a response " + (System.currentTimeMillis() - start) + "ms.");
                 return;
               }
             }

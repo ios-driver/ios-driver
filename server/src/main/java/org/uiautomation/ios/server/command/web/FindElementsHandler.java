@@ -13,9 +13,6 @@
  */
 package org.uiautomation.ios.server.command.web;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,6 +23,9 @@ import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FindElementsHandler extends BaseWebCommandHandler {
 
   public FindElementsHandler(IOSDriver driver, WebDriverLikeRequest request) {
@@ -35,7 +35,6 @@ public class FindElementsHandler extends BaseWebCommandHandler {
   @Override
   public Response handle() throws Exception {
     JSONObject payload = getRequest().getPayload();
-
     String type = payload.getString("using");
     String value = payload.getString("value");
 
@@ -53,9 +52,9 @@ public class FindElementsHandler extends BaseWebCommandHandler {
       res = element.findElementsByLinkText(value, false);
     } else if ("partial link text".equals(type)) {
       res = element.findElementsByLinkText(value, true);
-    } else if ("xpath".equals(type)){
+    } else if ("xpath".equals(type)) {
       res = element.findElementsByXpath(value);
-    }else {
+    } else {
       String cssSelector = ToCSSSelectorConvertor.convertToCSSSelector(type, value);
       res = element.findElementsByCSSSelector(cssSelector);
     }
@@ -64,7 +63,7 @@ public class FindElementsHandler extends BaseWebCommandHandler {
 
     List<JSONObject> list = new ArrayList<JSONObject>();
     for (RemoteWebElement el : res) {
-      list.add(new JSONObject().put("ELEMENT", ""+el.getNodeId().getId()));
+      list.add(new JSONObject().put("ELEMENT", "" + el.getNodeId().getId()));
     }
 
     Response resp = new Response();
