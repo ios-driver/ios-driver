@@ -441,25 +441,6 @@ public class RemoteWebElement {
     String s = inspector.cast(response);
     JSONObject o = new JSONObject(s);
     return new Point(o.getInt("left"), o.getInt("top"));
-    /*
-     * String f = "(function(element) { var result = " +
-     * Atoms.getLocationInView() + "(element);" + "var res = " +
-     * Atoms.stringify() + "(result);" + "return  res;  })"; JSONObject cmd =
-     * new JSONObject();
-     * 
-     * cmd.put("method", "Runtime.callFunctionOn");
-     * 
-     * JSONArray args = new JSONArray(); args.put(new
-     * JSONObject().put("objectId", getRemoteObject().getId()));
-     * 
-     * cmd.put("params", new JSONObject() .put("objectId",
-     * getRemoteObject().getId()) .put("functionDeclaration", f)
-     * .put("arguments", args) .put("returnByValue", false));
-     * 
-     * JSONObject response = inspector.getProtocol().sendCommand(cmd); String
-     * res = inspector.cast(response); JSONObject o = new JSONObject(res);
-     * return new Point(o.getInt("x"), o.getInt("y"));
-     */
   }
 
   public String getAttribute(String attributeName) throws Exception {
