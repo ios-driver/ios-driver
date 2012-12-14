@@ -80,13 +80,13 @@ public class FormHandlingTest extends BaseSeleniumTest {
 
   @Test
   // @Ignore(OPERA_MOBILE)
-  // TODO freynaud find how to disable auto capitalisation.
   public void testShouldBeAbleToEnterTextIntoATextAreaBySettingItsValue() {
     driver.get(pages.javascriptPage);
     WebElement textarea = driver.findElement(By.id("keyUpArea"));
     String cheesy = "brie and cheddar";
     textarea.sendKeys(cheesy);
-    assertEquals(textarea.getAttribute("value"), (cheesy));
+    assertEquals(textarea.getAttribute("value"), cheesy);
+    assertEquals(driver.findElement(By.id("result")).getText(), cheesy);
   }
 
   // @Ignore(value = { ANDROID, OPERA_MOBILE }, reason =

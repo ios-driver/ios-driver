@@ -13,15 +13,15 @@
  */
 package org.uiautomation.ios.webInspector.DOM;
 
-import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.uiautomation.ios.mobileSafari.Atoms;
 import org.uiautomation.ios.mobileSafari.DebugProtocol;
+import org.uiautomation.ios.mobileSafari.IosAtoms;
 import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.server.ServerSideSession;
+
+import java.util.List;
 
 public class RemoteObject {
 
@@ -65,7 +65,7 @@ public class RemoteObject {
                 "functionDeclaration",
                 "(function(arg) { " +
                 "var array = this;" +
-                "for (var name in this[0]){alert(name+':'+this[0][name])}"+
+                "for (var name in this[0]){alert(name+':'+this[0][name])}" +
                 //"var length=array.length;" +
                 //"var res = '';" +
                 //"for(var i = 0;i<length;i++)" +
@@ -97,7 +97,8 @@ public class RemoteObject {
     cmd.put(
         "params",
         new JSONObject().put("objectId", this.getId())
-            .put("functionDeclaration", "(function(arg) { var res = this" + function + "; return res;})")
+            .put("functionDeclaration",
+                 "(function(arg) { var res = this" + function + "; return res;})")
             .put("arguments", args).put("returnByValue", false));
 
     JSONObject response = protocol.sendCommand(cmd);
@@ -114,7 +115,8 @@ public class RemoteObject {
     cmd.put(
         "params",
         new JSONObject().put("objectId", this.getId())
-            .put("functionDeclaration", "(function() { var res = " + Atoms.stringify() + "(this); return res;})")
+            .put("functionDeclaration",
+                 "(function() { var res = " + IosAtoms.STRINGIFY + "(this); return res;})")
             .put("arguments", args).put("returnByValue", true));
 
     JSONObject response = protocol.sendCommand(cmd);
@@ -131,7 +133,8 @@ public class RemoteObject {
     cmd.put(
         "params",
         new JSONObject().put("objectId", this.getId())
-            .put("functionDeclaration", "(function(arg) { var res = this.value; return res;})").put("arguments", args)
+            .put("functionDeclaration", "(function(arg) { var res = this.value; return res;})")
+            .put("arguments", args)
             .put("returnByValue", true));
 
     JSONObject response = protocol.sendCommand(cmd);

@@ -302,9 +302,11 @@ public class WebInspector {
   }
 
   public Dimension getSize() throws Exception {
-    String f = "(function(element) { var result = " + Atoms.getSize() + "(window.top);"
-               + "var res = " + Atoms.stringify() + "(result);"
-               + "return  res;  })";
+    String
+        f =
+        "(function(element) { var result = " + IosAtoms.GET_INTERACTABLE_SIZE + "(window.top);"
+        + "var res = " + IosAtoms.STRINGIFY + "(result);"
+        + "return  res;  })";
     JSONObject cmd = new JSONObject();
 
     cmd.put("method", "Runtime.callFunctionOn");
@@ -346,7 +348,7 @@ public class WebInspector {
   }
 
   public RemoteWebElement findElementByXpath(String xpath) throws Exception {
-    String f = "var f=" + Atoms.findByXpath() + ";f('" + xpath + "',document);";
+    String f = "var f=" + IosAtoms.XPATH + ";f('" + xpath + "',document);";
     JSONObject cmd = new JSONObject();
 
     cmd.put("method", "Runtime.evaluate");
@@ -473,7 +475,7 @@ public class WebInspector {
 
   public void back() throws Exception {
     RemoteWebElement document = getDocument();
-    String f = "(function(arg) { var f=" + Atoms.back() + "(arg);})";
+    String f = "(function(arg) { var f=" + IosAtoms.BACK + "(arg);})";
     JSONObject cmd = new JSONObject();
 
     cmd.put("method", "Runtime.callFunctionOn");
@@ -495,7 +497,7 @@ public class WebInspector {
 
   public void forward() throws Exception {
     RemoteWebElement document = getDocument();
-    String f = "(function(arg) { var f=" + Atoms.forward() + "(arg);})";
+    String f = "(function(arg) { var f=" + IosAtoms.FORWARD + "(arg);})";
     JSONObject cmd = new JSONObject();
 
     cmd.put("method", "Runtime.callFunctionOn");

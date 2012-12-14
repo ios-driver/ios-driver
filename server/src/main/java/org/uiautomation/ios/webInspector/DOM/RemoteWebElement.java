@@ -37,8 +37,8 @@ import org.uiautomation.ios.UIAModels.predicate.OrCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.device.Device;
-import org.uiautomation.ios.mobileSafari.Atoms;
 import org.uiautomation.ios.mobileSafari.DebugProtocol;
+import org.uiautomation.ios.mobileSafari.IosAtoms;
 import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.mobileSafari.WebInspector;
 import org.uiautomation.ios.server.ServerSideSession;
@@ -85,7 +85,7 @@ public class RemoteWebElement {
 
   // TODO freyanud no return here.
   private void clickAtom() throws Exception {
-    String f = "(function(arg) { " + "var text = " + Atoms.click() + "(arg);" + "return text;})";
+    String f = "(function(arg) { " + "var text = " + IosAtoms.CLICK + "(arg);" + "return text;})";
     JSONObject cmd = new JSONObject();
 
     cmd.put("method", "Runtime.callFunctionOn");
@@ -143,7 +143,10 @@ public class RemoteWebElement {
   }
 
   public String getText() throws Exception {
-    String f = "(function(arg) { " + "var text = " + Atoms.getText() + "(arg);" + "return text;})";
+    String
+        f =
+        "(function(arg) { " + "var text = " + IosAtoms.GET_VISIBLE_TEXT + "(arg);"
+        + "return text;})";
     JSONObject cmd = new JSONObject();
 
     cmd.put("method", "Runtime.callFunctionOn");
@@ -400,7 +403,7 @@ public class RemoteWebElement {
     b.append("     win = win.parent;\n");
     b.append("    doc = win.document;\n");
     b.append("}\n");
-    b.append("return " + Atoms.stringify() + "(res);\n");
+    b.append("return " + IosAtoms.STRINGIFY + "(res);\n");
     b.append("})");
 
     JSONObject cmd = new JSONObject();
@@ -423,7 +426,7 @@ public class RemoteWebElement {
     String
         f =
         "(function(a) { " + "var el = this;" + " var rect = el.getClientRects()[0];" + " var res = "
-        + Atoms.stringify() + "({'top': rect.top,'left': rect.left });" + "return res;" + "})";
+        + IosAtoms.STRINGIFY + "({'top': rect.top,'left': rect.left });" + "return res;" + "})";
 
     JSONObject cmd = new JSONObject();
 
@@ -473,10 +476,11 @@ public class RemoteWebElement {
   }
 
   public boolean isSelected() throws Exception {
-    String func = Atoms.isSelected();
+
     String
         f =
-        "(function(arg) { " + "var isDisplayed = " + func + "(arg);" + "return isDisplayed;})";
+        "(function(arg) { " + "var isDisplayed = " + IosAtoms.IS_SELECTED + "(arg);"
+        + "return isDisplayed;})";
     JSONObject cmd = new JSONObject();
 
     cmd.put("method", "Runtime.callFunctionOn");
@@ -494,10 +498,10 @@ public class RemoteWebElement {
   }
 
   public boolean isDisplayed() throws Exception {
-    String func = Atoms.isDisplayed();
     String
         f =
-        "(function(arg) { " + "var isDisplayed = " + func + "(arg);" + "return isDisplayed;})";
+        "(function(arg) { " + "var isDisplayed = " + IosAtoms.IS_SHOWN + "(arg);"
+        + "return isDisplayed;})";
     JSONObject cmd = new JSONObject();
 
     cmd.put("method", "Runtime.callFunctionOn");
@@ -730,7 +734,7 @@ public class RemoteWebElement {
   }
 
   public void submit() throws Exception {
-    String f = "(function(arg) { " + "var text = " + Atoms.submit() + "(arg);" + "return text;})";
+    String f = "(function(arg) { " + "var text = " + IosAtoms.SUBMIT + "(arg);" + "return text;})";
     JSONObject cmd = new JSONObject();
 
     cmd.put("method", "Runtime.callFunctionOn");
@@ -749,7 +753,7 @@ public class RemoteWebElement {
   }
 
   public RemoteWebElement findElementByXpath(String xpath) throws Exception {
-    String f = "(function(xpath,element) { var result = " + Atoms.findByXpath() + "(xpath,element);"
+    String f = "(function(xpath,element) { var result = " + IosAtoms.XPATH + "(xpath,element);"
                + "return result;})";
     JSONObject cmd = new JSONObject();
 
@@ -776,7 +780,7 @@ public class RemoteWebElement {
   public List<RemoteWebElement> findElementsByXpath(String xpath) throws Exception {
     String
         f =
-        "(function(xpath,element) { var results = " + Atoms.findsByXpath() + "(xpath,element);"
+        "(function(xpath,element) { var results = " + IosAtoms.XPATHS + "(xpath,element);"
         + "return results;})";
     JSONObject cmd = new JSONObject();
 
@@ -805,7 +809,7 @@ public class RemoteWebElement {
   public void setValueAtoms(String value) throws Exception {
     String
         f =
-        "(function(element,value) { var result = " + Atoms.type() + "(element,value);"
+        "(function(element,value) { var result = " + IosAtoms.TYPE + "(element,value);"
         + "return result;})";
     JSONObject cmd = new JSONObject();
 
@@ -869,7 +873,7 @@ public class RemoteWebElement {
   public void clear() throws Exception {
     String
         f =
-        "(function(element) { " + "var text = " + Atoms.clear() + "(element);" + "return text;})";
+        "(function(element) { " + "var text = " + IosAtoms.CLEAR + "(element);" + "return text;})";
     JSONObject cmd = new JSONObject();
 
     cmd.put("method", "Runtime.callFunctionOn");

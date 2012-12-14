@@ -25,8 +25,8 @@ import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 
 public class SetValueHandler extends BaseWebCommandHandler {
 
-  private static final boolean nativeEvents = true;
-  
+  private static final boolean nativeEvents = false;
+
   public SetValueHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
@@ -48,16 +48,15 @@ public class SetValueHandler extends BaseWebCommandHandler {
     } else {
       throw new RuntimeException("NI");
     }
-    
+
     boolean useNativeEvents = getConfiguration("nativeEvents", nativeEvents);
 
-    if (useNativeEvents){
+    if (useNativeEvents) {
       element.setValueNative(value);
-    }else{
+    } else {
       element.setValueAtoms(value);
     }
-    
-    
+
     Response res = new Response();
     res.setSessionId(getSession().getSessionId());
     res.setStatus(0);
@@ -71,8 +70,8 @@ public class SetValueHandler extends BaseWebCommandHandler {
     desc.put(
         "nativeEvents",
         "{boolean}, default to "
-            + nativeEvents
-            + ".true = UIAutomation native events will be used to enter the URL (slow) , Web =  WebKit remote debugging will be used.Faster but doesn't fire events.");
+        + nativeEvents
+        + ".true = UIAutomation native events will be used to enter the URL (slow) , Web =  WebKit remote debugging will be used.Faster but doesn't fire events.");
     return desc;
   }
 
