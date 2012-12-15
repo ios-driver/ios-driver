@@ -15,22 +15,25 @@ package org.uiautomation.ios.UIAModels;
 
 
 public enum Orientation {
-  UIA_DEVICE_ORIENTATION_PORTRAIT(1,0),
-  UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN(2,180),
-  UIA_DEVICE_ORIENTATION_LANDSCAPELEFT(3,-90),
-  UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT(4,90),
-  UIA_DEVICE_ORIENTATION_FACEUP(-1,-1),
-  UIA_DEVICE_ORIENTATION_FACEDOWN(-1,-1);
+  PORTRAIT("UIA_DEVICE_ORIENTATION_PORTRAIT", 1, 0),
+  UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN("UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN", 2, 180),
+  LANDSCAPE("UIA_DEVICE_ORIENTATION_LANDSCAPELEFT", 3, -90),
+  UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT("UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT", 4, 90),
+  UIA_DEVICE_ORIENTATION_FACEUP("UIA_DEVICE_ORIENTATION_FACEUP", -1, -1),
+  UIA_DEVICE_ORIENTATION_FACEDOWN("UIA_DEVICE_ORIENTATION_FACEDOWN", -1, -1);
 
+
+  private final String value;
   private final int interfaceOrientation;
   private final int rotationInDegree;
 
-  private Orientation(int interfaceOrientation,int rotationInDegree) {
+  private Orientation(String value, int interfaceOrientation, int rotationInDegree) {
     this.interfaceOrientation = interfaceOrientation;
-    this.rotationInDegree= rotationInDegree;
+    this.rotationInDegree = rotationInDegree;
+    this.value = value;
   }
-  
-  public int getRotationInDegree(){
+
+  public int getRotationInDegree() {
     return rotationInDegree;
   }
 
@@ -41,5 +44,10 @@ public enum Orientation {
       }
     }
     throw new IllegalArgumentException("interfaceOrientation not recognized.");
+  }
+
+
+  public String instrumentsValue() {
+    return value;
   }
 }

@@ -85,7 +85,7 @@ public class ElementFindingMultiDeviceTest {
       driver.switchTo().window("Web");
 
       for (Orientation o : getOrientationForDevice(device)) {
-        driver.setDeviceOrientation(o);
+        driver.rotate(o);
         driver.get(pages.formPage);
 
         WebElement element = driver.findElement(By.id("working"));
@@ -109,8 +109,8 @@ public class ElementFindingMultiDeviceTest {
 
   private List<Orientation> getOrientationForDevice(Device device) {
     List<Orientation> res = new ArrayList<Orientation>();
-    res.add(Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT);
-    res.add(Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPELEFT);
+    res.add(Orientation.PORTRAIT);
+    res.add(Orientation.LANDSCAPE);
     res.add(Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT);
     if (device == Device.ipad) {
       res.add(Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN);

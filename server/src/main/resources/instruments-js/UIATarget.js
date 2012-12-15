@@ -22,3 +22,28 @@ UIATarget.prototype.locale = function () {
     // en_GB
     return app.preferencesValueForKey("AppleLocale");
 }
+
+UIATarget.prototype.setDeviceOrientation_original = UIATarget.prototype.setDeviceOrientation;
+
+UIATarget.prototype.setDeviceOrientation = function (orientation) {
+    this.setDeviceOrientation_original(orientation);
+    var timeNeededForTheRotationAnimationToComplete = 0.6; // seconds.
+    this.delay(timeNeededForTheRotationAnimationToComplete);
+    var newOrientation = UIATarget.localTarget().frontMostApp().interfaceOrientation();
+    if (newOrientation !== orientation) {
+        throw new UIAutomationException("The orientation specified is not supported by the application."
+                                            + newOrientation + " !== " + orientation);
+    }
+}
+
+UIATarget.prototype.getDeviceOrientation = function () {
+    var orientation = UIATarget.localTarget().frontMostApp().interfaceOrientation();
+    var map = {};
+    map[1] = "PORTRAIT";
+    map[2] = "UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN";
+    map[3] = "LANDSCAPE";
+    map[4] = "UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT";
+    //UIA_DEVICE_ORIENTATION_FACEUP
+    //UIA_DEVICE_ORIENTATION_FACEDOWN
+    return map[orientation];
+}

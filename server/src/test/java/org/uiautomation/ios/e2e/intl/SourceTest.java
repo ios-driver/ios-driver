@@ -1,7 +1,5 @@
 package org.uiautomation.ios.e2e.intl;
 
-import java.util.Locale;
-
 import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -16,26 +14,35 @@ import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
-import org.uiautomation.ios.server.application.AppleLocale;
+
+import java.util.Locale;
 
 public class SourceTest extends BaseIOSDriverTest {
-  private String expected = "Bien que 8,848 mètres de haut, Montagne 1 aient été montés la première fois 29 May 1953.";
+
+  private
+  String
+      expected =
+      "Bien que 8,848 mètres de haut, Montagne 1 aient été montés la première fois 29 May 1953.";
 
   @Test
   public void logElement() throws Exception {
     RemoteUIADriver driver = null;
     try {
 
-      driver = new RemoteUIADriver(getRemoteURL(), SampleApps.intlMountainsCap(Locale.FRENCH.toString()));
+      driver =
+          new RemoteUIADriver(getRemoteURL(),
+                              SampleApps.intlMountainsCap(Locale.FRENCH.toString()));
       Criteria c1 = new TypeCriteria(UIATableCell.class);
       UIAElement element = driver.findElement(c1);
       element.tap();
 
-      NameCriteria criteria = new NameCriteria("sentenceFormat", L10NStrategy.serverL10N, MatchingStrategy.regex);
+      NameCriteria
+          criteria =
+          new NameCriteria("sentenceFormat", L10NStrategy.serverL10N, MatchingStrategy.regex);
       UIAElement el = driver.findElement(criteria);
       JSONObject log = el.logElementTree(null, true);
       Orientation o = Orientation.fromInterfaceOrientation(log.getInt("deviceOrientation"));
-      Assert.assertEquals(o, Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT);
+      Assert.assertEquals(o, Orientation.PORTRAIT);
       JSONObject tree = log.getJSONObject("tree");
 
       Assert.assertEquals(tree.getString("type"), "UIAStaticText");
@@ -46,7 +53,7 @@ public class SourceTest extends BaseIOSDriverTest {
 
       log = driver.logElementTree(null, true);
       o = Orientation.fromInterfaceOrientation(log.getInt("deviceOrientation"));
-      Assert.assertEquals(o, Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT);
+      Assert.assertEquals(o, Orientation.PORTRAIT);
       tree = log.getJSONObject("tree");
 
       Assert.assertEquals(tree.getString("type"), "UIAApplication");

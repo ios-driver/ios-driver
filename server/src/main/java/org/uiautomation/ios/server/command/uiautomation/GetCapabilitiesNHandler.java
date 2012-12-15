@@ -13,9 +13,6 @@
  */
 package org.uiautomation.ios.server.command.uiautomation;
 
-import java.util.List;
-import java.util.Map;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
@@ -23,9 +20,11 @@ import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.server.application.AppleLocale;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+
+import java.util.List;
+import java.util.Map;
 
 public class GetCapabilitiesNHandler extends UIAScriptHandler {
 
@@ -39,7 +38,7 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
   }
 
   private static final String capabilities = "var json = UIAutomation.getCapabilities();"
-      + "UIAutomation.createJSONResponse(':sessionId',0,json)";
+                                             + "UIAutomation.createJSONResponse(':sessionId',0,json)";
 
   public GetCapabilitiesNHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -77,9 +76,10 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
 
       o.put("supportedLocales", ls);
       o.put("takesScreenshot", true);
-      o.put(IOSCapabilities.SIMULATOR,true);
-      o.put(IOSCapabilities.DEVICE,session.getCapabilities().getDevice());
-      o.put(IOSCapabilities.VARIATION , session.getCapabilities().getDeviceVariation());
+      o.put("rotatable", true);
+      o.put(IOSCapabilities.SIMULATOR, true);
+      o.put(IOSCapabilities.DEVICE, session.getCapabilities().getDevice());
+      o.put(IOSCapabilities.VARIATION, session.getCapabilities().getDeviceVariation());
       // TODO freynaud fill in device here ?
       response.setValue(o);
       hasBeenDecorated = true;

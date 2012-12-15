@@ -30,6 +30,8 @@ import org.openqa.selenium.Keyboard;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.Rotatable;
+import org.openqa.selenium.ScreenOrientation;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
@@ -65,7 +67,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, TakesScreenshot {
+public class RemoteUIADriver extends RemoteWebDriver
+    implements UIADriver, TakesScreenshot, Rotatable {
 
   private String remoteURL;
   private Map<String, Object> requestedCapabilities;
@@ -394,13 +397,6 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, Takes
     execute(request);
   }
 
-  @Override
-  public void setDeviceOrientation(Orientation o) {
-    WebDriverLikeRequest
-        request =
-        buildRequest(WebDriverLikeCommand.SET_ORIENTATION, ImmutableMap.of("orientation", o));
-    execute(request);
-  }
 
   @Override
   public UIAAlert getAlert() throws NoAlertPresentException {
@@ -421,4 +417,37 @@ public class RemoteUIADriver extends RemoteWebDriver implements UIADriver, Takes
     execute(request);
   }
 
+  @Override
+  public void rotate(ScreenOrientation orientation) {
+    WebDriverLikeRequest
+        request =
+        buildRequest(WebDriverLikeCommand.SET_ORIENTATION,
+                     ImmutableMap.of("orientation", orientation));
+    execute(request);
+  }
+
+  public void rotate(Orientation orientation) {
+    WebDriverLikeRequest
+        request =
+        buildRequest(WebDriverLikeCommand.SET_ORIENTATION,
+                     ImmutableMap.of("orientation", orientation));
+    execute(request);
+  }
+
+  @Override
+  public ScreenOrientation getOrientation() {
+    WebDriverLikeRequest
+        request =
+        buildRequest(WebDriverLikeCommand.GET_ORIENTATION);
+    String res = execute(request);
+    return ScreenOrientation.valueOf(res);
+  }
+
+  public Orientation getNativeOrientation() {
+    WebDriverLikeRequest
+        request =
+        buildRequest(WebDriverLikeCommand.GET_ORIENTATION);
+    String res = execute(request);
+    return Orientation.valueOf(res);
+  }
 }

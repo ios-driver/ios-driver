@@ -1,26 +1,8 @@
 package org.uiautomation.ios.e2e.config;
 
-import static org.uiautomation.ios.IOSCapabilities.BUNDLE_NAME;
-import static org.uiautomation.ios.IOSCapabilities.DEVICE;
-import static org.uiautomation.ios.IOSCapabilities.LANGUAGE;
-import static org.uiautomation.ios.IOSCapabilities.LOCALE;
-
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.util.List;
-
-import javax.imageio.ImageIO;
-
-import org.apache.commons.io.IOUtils;
-import org.json.JSONObject;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.SessionNotCreatedException;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.remote.Augmenter;
-import org.openqa.selenium.remote.BeanToJsonConverter;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -32,6 +14,17 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.communication.device.Device;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.utils.ClassicCommands;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.List;
+
+import javax.imageio.ImageIO;
+
+import static org.uiautomation.ios.IOSCapabilities.BUNDLE_NAME;
+import static org.uiautomation.ios.IOSCapabilities.DEVICE;
+import static org.uiautomation.ios.IOSCapabilities.LANGUAGE;
+import static org.uiautomation.ios.IOSCapabilities.LOCALE;
 
 public class NewSessionTest extends BaseIOSDriverTest {
 
@@ -158,7 +151,8 @@ public class NewSessionTest extends BaseIOSDriverTest {
   public void wrongVersion() {
     RemoteUIADriver driver = null;
     try {
-      driver = new RemoteUIADriver(getRemoteURL(), IOSCapabilities.iphone("UICatalog", "not a number."));
+      driver =
+          new RemoteUIADriver(getRemoteURL(), IOSCapabilities.iphone("UICatalog", "not a number."));
     } finally {
       if (driver != null) {
         driver.quit();
@@ -269,20 +263,21 @@ public class NewSessionTest extends BaseIOSDriverTest {
 
   @DataProvider(name = "capabilities")
   public Object[][] createData1() {
-    return new Object[][] {
+    return new Object[][]{
 
-    { Device.iphone, DeviceVariation.Regular, 320, 480 },
-    { Device.iphone, DeviceVariation.Retina35, 640, 960 },
-    { Device.iphone, DeviceVariation.Retina4, 640, 1136 }, 
-    { Device.ipad, DeviceVariation.Regular, 768, 1024 },
-    { Device.ipad, DeviceVariation.Retina, 1536, 2048 },
+        {Device.iphone, DeviceVariation.Regular, 320, 480},
+        {Device.iphone, DeviceVariation.Retina35, 640, 960},
+        {Device.iphone, DeviceVariation.Retina4, 640, 1136},
+        {Device.ipad, DeviceVariation.Regular, 768, 1024},
+        {Device.ipad, DeviceVariation.Retina, 1536, 2048},
 
     };
   }
 
   @Test(dataProvider = "capabilities")
-  public void supportApplicationWithMultipleDeviceFamily(Device device, DeviceVariation variation, int expectedW,
-      int expectedH) throws Exception {
+  public void supportApplicationWithMultipleDeviceFamily(Device device, DeviceVariation variation,
+                                                         int expectedW,
+                                                         int expectedH) throws Exception {
     IOSCapabilities cap = new IOSCapabilities();
 
     cap.setCapability(DEVICE, device);
@@ -302,11 +297,13 @@ public class NewSessionTest extends BaseIOSDriverTest {
       driver.get(getRemoteURL() + "/status");
 
       for (Orientation o : Orientation.values()) {
-        if (o == Orientation.UIA_DEVICE_ORIENTATION_FACEUP || o == Orientation.UIA_DEVICE_ORIENTATION_FACEDOWN
-            || (o == Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN && device == Device.iphone)) {
+        if (o == Orientation.UIA_DEVICE_ORIENTATION_FACEUP
+            || o == Orientation.UIA_DEVICE_ORIENTATION_FACEDOWN
+            || (o == Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN
+                && device == Device.iphone)) {
           continue;
         }
-        driver.setDeviceOrientation(o);
+        driver.rotate(o);
       }
 
       Assert.assertEquals(actual.getCapability(DEVICE), device.toString());

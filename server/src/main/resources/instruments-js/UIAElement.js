@@ -316,7 +316,7 @@ UIAElement.prototype.tree = function (attachScreenshot) {
     result.tree = res;
     // TODO freynaud why is that broken ?
     // result.deviceOrientation = UIATarget.localTarget().deviceOrientation();
-    result.deviceOrientation = UIATarget.localTarget().frontMostApp().interfaceOrientation()
+    result.deviceOrientation = UIATarget.localTarget().frontMostApp().interfaceOrientation();
 
     return result;
 }

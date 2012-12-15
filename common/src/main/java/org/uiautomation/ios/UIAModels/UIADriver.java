@@ -13,9 +13,6 @@
  */
 package org.uiautomation.ios.UIAModels;
 
-import java.io.File;
-import java.util.List;
-
 import org.json.JSONObject;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
@@ -23,6 +20,9 @@ import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.configuration.DriverConfiguration;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
+
+import java.io.File;
+import java.util.List;
 
 public interface UIADriver extends DriverConfiguration {
 
@@ -47,8 +47,6 @@ public interface UIADriver extends DriverConfiguration {
   public List<UIAElement> findElements(Criteria c);
 
   public void tap(int x, int y);
-
-  void setDeviceOrientation(Orientation o);
 
   // public Set<String> getWindowHandles();
 
