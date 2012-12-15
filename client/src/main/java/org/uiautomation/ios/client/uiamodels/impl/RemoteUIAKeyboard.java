@@ -13,17 +13,16 @@
  */
 package org.uiautomation.ios.client.uiamodels.impl;
 
-import java.util.List;
+import com.google.common.collect.ImmutableMap;
 
 import org.openqa.selenium.Keyboard;
 import org.openqa.selenium.Keys;
-import org.uiautomation.ios.UIAModels.UIAButton;
-import org.uiautomation.ios.UIAModels.UIAKey;
 import org.uiautomation.ios.UIAModels.UIAKeyboard;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 
-import com.google.common.collect.ImmutableMap;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RemoteUIAKeyboard extends RemoteUIAElement implements Keyboard, UIAKeyboard {
 
@@ -31,19 +30,6 @@ public class RemoteUIAKeyboard extends RemoteUIAElement implements Keyboard, UIA
     super(driver, reference);
   }
 
-  @SuppressWarnings("unchecked")
-  @Override
-  public List<UIAButton> getButtons() {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.KEYBOARD_BUTTONS);
-    return getDriver().execute(request);
-  }
-
-  @SuppressWarnings("unchecked")
-  @Override
-  public List<UIAKey> getKeys() {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.KEYBOARD_KEYS);
-    return getDriver().execute(request);
-  }
 
   @Override
   public void sendKeys(CharSequence... keysToSend) {
@@ -51,8 +37,11 @@ public class RemoteUIAKeyboard extends RemoteUIAElement implements Keyboard, UIA
     for (CharSequence seq : keysToSend) {
       builder.append(seq.toString());
     }
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TYPE_STRING,
-        ImmutableMap.of("string", "\"" + builder.toString() + "\""));
+    List<String> all = new ArrayList<String>();
+    all.add(builder.toString());
+
+    WebDriverLikeRequest request = getDriver().buildRequest(WebDriverLikeCommand.SEND_KEYS, null,
+                                                            ImmutableMap.of("value", all));
     getDriver().execute(request);
   }
 

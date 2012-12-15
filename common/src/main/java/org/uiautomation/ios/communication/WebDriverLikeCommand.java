@@ -17,16 +17,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.UIAModels.Orientation;
-import org.uiautomation.ios.UIAModels.UIAApplication;
 import org.uiautomation.ios.UIAModels.UIAButton;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIAElementArray;
 import org.uiautomation.ios.UIAModels.UIAKeyboard;
-import org.uiautomation.ios.UIAModels.UIAPoint;
 import org.uiautomation.ios.UIAModels.UIARect;
-import org.uiautomation.ios.UIAModels.UIATarget;
-import org.uiautomation.ios.UIAModels.UIAWindow;
-import org.uiautomation.ios.UIAModels.UIHost;
 
 import java.util.Set;
 
@@ -80,7 +75,7 @@ public enum WebDriverLikeCommand {
   SUBMIT("POST", "/session/:sessionId/element/:reference/submit", Void.class),
   TEXT("GET", "/session/:sessionId/element/:reference/text", String.class),
   SET_VALUE("POST", "/session/:sessionId/element/:reference/value", Void.class),
-  // POST /session/:sessionId/keys
+  SEND_KEYS("POST", "/session/:sessionId/keys", Void.class),
   TAG_NAME("GET", "/session/:sessionId/element/:reference/name", String.class),
   CLEAR("POST", "/session/:sessionId/element/:reference/clear", Void.class),
   SELECTED("GET", "/session/:sessionId/element/:reference/selected", Boolean.class),
@@ -136,13 +131,22 @@ public enum WebDriverLikeCommand {
   CONFIGURE("POST", "/session/:sessionId/configure/command/:command", Void.class),
   GET_CONFIGURATION("GET", "/session/:sessionId/configure/command/:command", Object.class),
   GET_TIMEOUT("GET", "/session/:sessionId/timeouts", Integer.class),
+  TREE("GET", "/session/:sessionId/element/:reference/source", String.class),
+  RECT("GET", "/session/:sessionId/element/:reference/rect", UIARect.class),
+  KEYBOARD("GET", "/session/:sessionId/uiaApplication/:reference/keyboard", UIAKeyboard.class),
 
+  // TODO freynaud : move and tap.
+  TARGET_TAP("GET", "/session/:sessionId/tap/:reference", Void.class),
+  TARGET_RECT("GET", "/session/:sessionId/uiaTarget/:reference/rect", UIARect.class),
+
+  ALERT_CANCEL_BUTTON("GET", "/session/:sessionId/element/:reference/cancel", UIAButton.class),
+  ALERT_DEFAULT_BUTTON("GET", "/session/:sessionId/element/:reference/default", UIAButton.class)
 
   // UIATarget
-  LOCAL_TARGET("GET", "/session/:sessionId/localTarget", UIATarget.class),
-  TREE("GET", "/session/:sessionId/element/:reference/source", String.class),
+  /*LOCAL_TARGET("GET", "/session/:sessionId/localTarget", UIATarget.class),
+
   HOST("GET", "/session/:sessionId/uiaTarget/:reference/host", UIHost.class),
-  TARGET_RECT("GET", "/session/:sessionId/uiaTarget/:reference/rect", UIARect.class),
+
   TARGET_TAP("GET", "/session/:sessionId/tap/:reference", Void.class),
 
 
@@ -158,7 +162,7 @@ public enum WebDriverLikeCommand {
 
   // UIAElement
   HIT_POINT("GET", "/session/:sessionId/uiaElement/:reference/hitPoint", UIAPoint.class),
-  RECT("GET", "/session/:sessionId/uiaElement/:reference/rect", UIARect.class),
+
 
   PARENT("GET", "/session/:sessionId/uiaElement/:reference/parent", UIAElement.class),
 
@@ -240,9 +244,7 @@ public enum WebDriverLikeCommand {
                       UIAElementArray.class),
 
 
-  ALERT_CANCEL_BUTTON("GET", "/session/:sessionId/uiaElement/:reference/cancel", UIAButton.class),
-  ALERT_DEFAULT_BUTTON("GET", "/session/:sessionId/uiaElement/:reference/default",
-                       UIAButton.class),;
+  ,*/;
 
 
   private final String method;

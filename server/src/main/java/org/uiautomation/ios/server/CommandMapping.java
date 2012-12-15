@@ -24,6 +24,7 @@ import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.server.command.Handler;
 import org.uiautomation.ios.server.command.NotImplementedNativeHandler;
 import org.uiautomation.ios.server.command.NotImplementedWebHandler;
+import org.uiautomation.ios.server.command.uiautomation.ClearNHandler;
 import org.uiautomation.ios.server.command.uiautomation.DefaultUIAScriptNHandler;
 import org.uiautomation.ios.server.command.uiautomation.ExecuteScriptNHandler;
 import org.uiautomation.ios.server.command.uiautomation.FindElementNHandler;
@@ -39,7 +40,7 @@ import org.uiautomation.ios.server.command.uiautomation.GetTimeoutNHandler;
 import org.uiautomation.ios.server.command.uiautomation.GetWindowHandlesNHandler;
 import org.uiautomation.ios.server.command.uiautomation.LogElementTreeNHandler;
 import org.uiautomation.ios.server.command.uiautomation.NewSessionNHandler;
-import org.uiautomation.ios.server.command.uiautomation.PinchCloseNHandler;
+import org.uiautomation.ios.server.command.uiautomation.SendKeysNHandler;
 import org.uiautomation.ios.server.command.uiautomation.ServerStatusNHandler;
 import org.uiautomation.ios.server.command.uiautomation.SetConfigurationNHandler;
 import org.uiautomation.ios.server.command.uiautomation.SetCurrentContextNHandler;
@@ -76,6 +77,7 @@ import java.util.Iterator;
 
 public enum CommandMapping {
 
+  STATUS(ServerStatusNHandler.class),
   NEW_SESSION(NewSessionNHandler.class),
   GET_SESSION(GetCapabilitiesNHandler.class),
   SESSIONS(GetSessionsNHandler.class),
@@ -99,7 +101,7 @@ public enum CommandMapping {
   REFRESH(NotImplementedNativeHandler.class, RefreshHandler.class),
   SUBMIT(NotImplementedNativeHandler.class, SubmitHandler.class),
   TAG_NAME(".type()", DefaultUIAScriptNHandler.class, GetTagNameHandler.class),
-
+  SEND_KEYS(SendKeysNHandler.class),
   EXECUTE_SCRIPT(ExecuteScriptNHandler.class, ExecuteScriptHandler.class),
   EQUAL(NotImplementedNativeHandler.class, IsEqualHandler.class),
   // UIATarget
@@ -113,25 +115,24 @@ public enum CommandMapping {
 
   SCREENSHOT(TakeScreenshotNHandler.class),
 
-  FONT_MOST_APP(".frontMostApp()"),
+  //FONT_MOST_APP(".frontMostApp()"),
   SELECTED((String) null, IsSelectedHandler.class),
 
   // UIAApplication
-  MAIN_WINDOW(".mainWindow()"),
-  WINDOWS(".windows()"),
+  //MAIN_WINDOW(".mainWindow()"),
+  //WINDOWS(".windows()"),
   KEYBOARD(".keyboard()"),
-  KEYBOARD_KEYS(".keys()"),
-  KEYBOARD_BUTTONS(".buttons()"),
-  TYPE_STRING(".typeString(:string)"),
+  //KEYBOARD_KEYS(".keys()"),
+  //KEYBOARD_BUTTONS(".buttons()"),
+  //TYPE_STRING(".typeString(:string)"),
   // UIAHost
   //PERFORM_TASK_WITH_PATH_ARGUMENTS_TIMEOUT(null),
 
   // UIAElement
-  HIT_POINT(NotImplementedNativeHandler.class, NotImplementedWebHandler.class),
+  //HIT_POINT(NotImplementedNativeHandler.class, NotImplementedWebHandler.class),
   RECT(GetElementSizeNHandler.class, NotImplementedWebHandler.class),
 
-  PARENT(NotImplementedNativeHandler.class, NotImplementedWebHandler.class),
-
+  //PARENT(NotImplementedNativeHandler.class, NotImplementedWebHandler.class),
 
   ELEMENT_ROOT(FindElementNHandler.class, FindElementHandler.class),
   ELEMENTS_ROOT(FindElementsRoot.class, FindElementsHandler.class),
@@ -141,11 +142,10 @@ public enum CommandMapping {
 
   //ELEMENT(".element(:depth,:criteria)"),
   //ELEMENTS(".elements2(:depth,:criteria)"),
-  ANCESTRY(NotImplementedNativeHandler.class, NotImplementedWebHandler.class),
+  //ANCESTRY(NotImplementedNativeHandler.class, NotImplementedWebHandler.class),
 
   DISPLAYED(".isVisible()", DefaultUIAScriptNHandler.class, IsDisplayedHanlder.class),
-  IS_STALE(".isStale()"),
-
+  //IS_STALE(".isStale()"),
 
   //LABEL(".label()"),
   //NAME(".name()"),
@@ -157,42 +157,40 @@ public enum CommandMapping {
   //WITH_VALUE_FOR_KEY(".withValueForKey(Object value,String key)"),
 
   CLICK(".tap()", ClickHandler.class),
-  TOUCH_AND_HOLD(".touchAndHold(:duration)"),
-  DOUBLE_TAP(".doubleTap()"),
-  TWO_FINGER_TAP(".twoFingerTap()"),
-  TAP_WITH_OPTIONS(""),
-  DRAG_INSIDE_WITH_OPTIONS(""),
-  FLICK_INSIDE_WITH_OPTIONS(""),
-  SCROLL_TO_VISIBLE(".scrollToVisible()"),
-  ROTATE_WITH_OPTIONS(NotImplementedNativeHandler.class, NotImplementedWebHandler.class),
-  PINCH_CLOSE(PinchCloseNHandler.class, NotImplementedWebHandler.class),
+  //TOUCH_AND_HOLD(".touchAndHold(:duration)"),
+  //DOUBLE_TAP(".doubleTap()"),
+  //TWO_FINGER_TAP(".twoFingerTap()"),
+  //TAP_WITH_OPTIONS(""),
+  //DRAG_INSIDE_WITH_OPTIONS(""),
+  //FLICK_INSIDE_WITH_OPTIONS(""),
+  //SCROLL_TO_VISIBLE(".scrollToVisible()"),
+  //ROTATE_WITH_OPTIONS(NotImplementedNativeHandler.class, NotImplementedWebHandler.class),
+  //PINCH_CLOSE(PinchCloseNHandler.class, NotImplementedWebHandler.class),
 
   // UIAElementArray
-  GET(".toArray()[:index]"),
-  FIRST_WITH_NAME(".firstWithName(:name)"),
-  FIRST_WITH_PREDICATE(".firstWithPredicate()"),
+  //GET(".toArray()[:index]"),
+  //FIRST_WITH_NAME(".firstWithName(:name)"),
+  //FIRST_WITH_PREDICATE(".firstWithPredicate()"),
   //FIRST_WITH_VALUE_FOR_KEY(NotImplementedHandler.class),
   //ARRAY_WITH_NAME(".withName(:name)"),
   //ARRAY_WITH_PREDICATE(NotImplementedHandler.class),
   //ARRAY_WITH_VALUE_FOR_KEY(NotImplementedHandler.class),
 
   //UIANavigationBar
-  LEFT_BUTTON(".leftButton()"),
-  RIGHT_BUTTON(".rightButton()"),
+  //LEFT_BUTTON(".leftButton()"),
+  //RIGHT_BUTTON(".rightButton()"),
 
   // UIATextField
   SET_VALUE(SetValueNHandler.class, SetValueHandler.class),
-  CLEAR(NotImplementedNativeHandler.class, ClearHandler.class),
+  CLEAR(ClearNHandler.class, ClearHandler.class),
 
   //UIATableView
-  TABLE_GROUPS(".groups()"),
-  TABLE_CELLS(".cells()"),
-  TABLE_VISIBLE_CELLS(".visibleCells()"),
+  //TABLE_GROUPS(".groups()"),
+  //TABLE_CELLS(".cells()"),
+  //TABLE_VISIBLE_CELLS(".visibleCells()"),
 
   ALERT_CANCEL_BUTTON(".cancelButton()"),
-  ALERT_DEFAULT_BUTTON(".defaultButton()"),
-
-  STATUS(ServerStatusNHandler.class);
+  ALERT_DEFAULT_BUTTON(".defaultButton()"),;
 
 
   private WebDriverLikeCommand command;

@@ -1,5 +1,7 @@
 package org.uiautomation.ios.e2e.uicatalogapp;
 
+import org.openqa.selenium.Keyboard;
+import org.openqa.selenium.WebDriverException;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -15,15 +17,19 @@ import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 
-public class UIATextViewTest extends BaseIOSDriverTest {
+
+public class UIAKeyboard2Test extends BaseIOSDriverTest {
 
   private RemoteUIADriver driver;
   private UIATextView textview;
+  private Keyboard keyboard;
 
   @BeforeClass
   public void startDriver() {
     driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
     textview = getTextView();
+    textview.tap();
+    keyboard = driver.getKeyboard();
   }
 
   @AfterClass
@@ -47,31 +53,47 @@ public class UIATextViewTest extends BaseIOSDriverTest {
 
   @Test
   public void capital() {
-    String v = "ABC";
-    textview.setValue(v);
+    String v = "aBC";
+    textview.clear();
+    keyboard.sendKeys(v);
+    Assert.assertEquals(textview.getValue(), v);
+  }
+
+  @Test(enabled = false)
+  public void characterRequiresALongTapOnKey() {
+    String v = "François";
+    textview.clear();
+    keyboard.sendKeys(v);
     Assert.assertEquals(textview.getValue(), v);
   }
 
   @Test
-  public void newLinesAndTabs() {
-    String v = "ABC\nLine 2\t col3\nthanks,\nFrançois";
-    textview.setValue(v);
+  public void newLines() {
+    String v = "ABC\nLine 2\nthanks,\nFrancois";
+    textview.clear();
+    keyboard.sendKeys(v);
     Assert.assertEquals(textview.getValue(), v);
+  }
+
+  @Test(expectedExceptions = WebDriverException.class)
+  public void tabs() {
+    String v = "AB\tCD";
+    keyboard.sendKeys(v);
   }
 
   @Test
   public void slash() {
     String v = "A\\B ";
-    textview.setValue(v);
+    textview.clear();
+    keyboard.sendKeys(v);
     Assert.assertEquals(textview.getValue(), v);
   }
 
-  @Test
+  @Test(enabled = false)
   public void shalom() {
     String v = "שָׁלוֹם";
-    textview.setValue(v);
+    textview.clear();
+    keyboard.sendKeys(v);
     Assert.assertEquals(textview.getValue(), v);
   }
-
-
 }

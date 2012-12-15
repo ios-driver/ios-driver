@@ -13,10 +13,7 @@
  */
 package org.uiautomation.ios.client.uiamodels.impl;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.ImmutableMap;
 
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
@@ -33,15 +30,17 @@ import org.uiautomation.ios.communication.Path;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 
-import com.google.common.collect.ImmutableMap;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Main object for all the UIAutomation stuff. Implement part of the Apple API.
- * Some methods are not implemented as the findElement(s) are covering multiple
- * cases.
- * 
- * {@link <a href="http://developer.apple.com/library/ios/#documentation/ToolsLanguages/Reference/UIAElementClassReference/UIAElement/UIAElement.html"> Apple doc</a>
- * for UIAElement }
+ * Main object for all the UIAutomation stuff. Implement part of the Apple API. Some methods are not
+ * implemented as the findElement(s) are covering multiple cases.
+ *
+ * {@link <a href="http://developer.apple.com/library/ios/#documentation/ToolsLanguages/Reference/UIAElementClassReference/UIAElement/UIAElement.html">
+ * Apple doc</a> for UIAElement }
  */
 public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
 
@@ -65,7 +64,8 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
   }
 
   @Override
-  public <T extends UIAElement> T findElement(Class<T> type, Criteria c) throws NoSuchElementException {
+  public <T extends UIAElement> T findElement(Class<T> type, Criteria c)
+      throws NoSuchElementException {
     Criteria newOne = new AndCriteria(new TypeCriteria(type), c);
     return (T) findElement(newOne);
   }
@@ -73,7 +73,8 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
   @Override
   public <T extends UIAElement> T findElement(Criteria c) throws NoSuchElementException {
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENT,
-        ImmutableMap.of("depth", -1, "criteria", c.stringify()));
+                                                ImmutableMap
+                                                    .of("depth", -1, "criteria", c.stringify()));
     return getDriver().execute(request);
   }
 
@@ -81,7 +82,8 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
   @SuppressWarnings("unchecked")
   public List<UIAElement> findElements(Criteria c) {
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENTS,
-        ImmutableMap.of("depth", -1, "criteria", c.stringify()));
+                                                ImmutableMap
+                                                    .of("depth", -1, "criteria", c.stringify()));
     return getDriver().execute(request);
   }
 
@@ -92,7 +94,7 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
     }
 
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENT,
-        ImmutableMap.of("using", by, "value", using));
+                                                ImmutableMap.of("using", by, "value", using));
     return getDriver().execute(request);
 
   }
@@ -104,7 +106,7 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
     }
 
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENTS,
-        ImmutableMap.of("using", by, "value", using));
+                                                ImmutableMap.of("using", by, "value", using));
     return getDriver().execute(request);
   }
 
@@ -124,9 +126,9 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
 
   @Override
   public void touchAndHold(int duration) {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TOUCH_AND_HOLD,
+    /*WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TOUCH_AND_HOLD,
         ImmutableMap.of("duration", duration));
-    getDriver().execute(request);
+    getDriver().execute(request);*/
 
   }
 
@@ -151,15 +153,20 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
   @Override
   public JSONObject logElementTree(File screenshot, boolean translation) throws Exception {
     WebDriverLikeCommand command = WebDriverLikeCommand.TREE;
-    Path p = new Path(command).withSession(getDriver().getSessionId()).withReference(getReference());
+    Path
+        p =
+        new Path(command).withSession(getDriver().getSessionId()).withReference(getReference());
     return logElementTree(screenshot, translation, p, command, getDriver());
   }
 
-  public JSONObject logElementTree(File screenshot, boolean translation, Path path, WebDriverLikeCommand command,
-      RemoteUIADriver driver) {
+  public JSONObject logElementTree(File screenshot, boolean translation, Path path,
+                                   WebDriverLikeCommand command,
+                                   RemoteUIADriver driver) {
 
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TREE,
-        ImmutableMap.of("attachScreenshot", screenshot != null, "translation", translation));
+                                                ImmutableMap
+                                                    .of("attachScreenshot", screenshot != null,
+                                                        "translation", translation));
     JSONObject log = driver.execute(request);
     if (screenshot != null) {
       JSONObject screen = log.optJSONObject("screenshot");
@@ -186,7 +193,7 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
   @Override
   public boolean isDisplayed() {
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.DISPLAYED);
-    return (Boolean)getDriver().execute(request);
+    return (Boolean) getDriver().execute(request);
   }
 
   @Override
@@ -219,9 +226,9 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
 
   @Override
   public void flickInsideWithOptions(int touchCount, UIAPoint startOffset, UIAPoint endOffset) {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.FLICK_INSIDE_WITH_OPTIONS,
+    /*WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.FLICK_INSIDE_WITH_OPTIONS,
         ImmutableMap.of("touchCount", touchCount, "touchCount", touchCount, "endOffset", endOffset));
-    getDriver().execute(request);
+    getDriver().execute(request);    */
   }
 
   public static RemoteUIAElement getFrontMostApp(RemoteUIADriver driver) {

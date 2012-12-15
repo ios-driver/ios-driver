@@ -67,6 +67,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+
+// TakesScreenshot, Rotatable, BrowserConnection, HasTouchScreen, WebStorage, LocationContext, ApplicationCache
 public class RemoteUIADriver extends RemoteWebDriver
     implements UIADriver, TakesScreenshot, Rotatable {
 
@@ -142,17 +144,7 @@ public class RemoteUIADriver extends RemoteWebDriver
 
   }
 
-  /**
-   * starts the remote session, and get the sessionId back.
-   */
-  /*
-   * private SessionId start() throws Exception { JSONObject payload = new
-   * JSONObject(); payload.put("desiredCapabilities", requestedCapabilities);
-   * WebDriverLikeRequest request = new WebDriverLikeRequest("POST", "/session",
-   * payload); WebDriverLikeResponse response = execute(request); String
-   * sessionId = response.getSessionId(); SessionId session = new
-   * SessionId(sessionId); return session; }
-   */
+
   public WebDriverLikeRequest buildRequest(WebDriverLikeCommand command, RemoteUIAElement element,
                                            Map<String, ?> params) {
     String method = command.method();
@@ -410,11 +402,11 @@ public class RemoteUIADriver extends RemoteWebDriver
 
   @Override
   public void pinchClose(int x1, int y1, int x2, int y2, int duration) {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.PINCH_CLOSE,
+    /*WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.PINCH_CLOSE,
                                                 ImmutableMap
                                                     .of("x1", x1, "y1", y1, "x2", x2, "y2", y2,
                                                         "duration", duration));
-    execute(request);
+    execute(request); */
   }
 
   @Override
