@@ -26,7 +26,7 @@
 - remove or document non webdriver commands.
 - delete window
 - handle alerts for web
-
+- cleanup and document setValue vs sendKeys
 
 
 
@@ -34,6 +34,7 @@
 
 TODOs:
 -------
+- file upload
 - BrowserConnection
 - HasTouchScreen
 - WebStorage
