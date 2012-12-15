@@ -33,47 +33,118 @@ import java.util.Set;
 
 // TODO freynaud remove the findElements related ones.
 public enum WebDriverLikeCommand {
+  STATUS("GET", "/status", JSONObject.class),
   NEW_SESSION("POST", "/session", String.class),
+  SESSIONS("GET", "/sessions", JSONArray.class),
   GET_SESSION("GET", "/session/:sessionId", JSONObject.class),
   DELETE_SESSION("DELETE", "/session/:sessionId", null),
-  SESSIONS("GET", "/sessions", JSONArray.class),
+  SET_TIMEOUT("POST", "/session/:sessionId/timeouts", Void.class),
+  //POST /session/:sessionId/timeouts/async_script
+  IMPLICIT_WAIT("POST", "/session/:sessionId/timeouts/implicit_wait", Void.class),
+  GET_WINDOW_HANDLE("GET", "/session/:sessionId/window_handle", String.class),
+  WINDOW_HANDLES("GET", "/session/:sessionId/window_handles", Set.class),
+  CURRENT_URL("GET", "/session/:sessionId/url", String.class),
+  URL("POST", "/session/:sessionId/url", Void.class),
+  FORWARD("POST", "/session/:sessionId/forward", Void.class),
+  BACK("POST", "/session/:sessionId/back", Void.class),
+  REFRESH("POST", "/session/:sessionId/refresh", Void.class),
+  EXECUTE_SCRIPT("POST", "/session/:sessionId/execute", Object.class),
+  // POST /session/:sessionId/execute_async
+  SCREENSHOT("GET", "/session/:sessionId/screenshot", Void.class),
+  //GET /session/:sessionId/ime/available_engines
+  //GET /session/:sessionId/ime/active_engine
+  //GET /session/:sessionId/ime/activated
+  //POST /session/:sessionId/ime/deactivate
+  //POST /session/:sessionId/ime/activate
+  FRAME("POST", "/session/:sessionId/frame", Void.class),
+  WINDOW("POST", "/session/:sessionId/window", Void.class),
+  // DELETE  /session/:sessionId/window
+  // POST /session/:sessionId/window/:windowHandle/size
+  // GET /session/:sessionId/window/:windowHandle/size
+  // POST /session/:sessionId/window/:windowHandle/position
+  // GET /session/:sessionId/window/:windowHandle/position
+  // POST /session/:sessionId/window/:windowHandle/maximize
+  //GET /session/:sessionId/cookie
+  //POST /session/:sessionId/cookie
+  //DELETE /session/:sessionId/cookie
+  // DELETE /session/:sessionId/cookie/:name
+  TREE_ROOT("GET", "/session/:sessionId/source", JSONObject.class),
+  TITLE("GET", "/session/:sessionId/title", String.class),
+  ELEMENT_ROOT("POST", "/session/:sessionId/element", UIAElement.class),
+  ELEMENTS_ROOT("POST", "/session/:sessionId/elements", UIAElementArray.class),
+  // POST /session/:sessionId/element/active
+  // GET /session/:sessionId/element/:id
+  ELEMENT("POST", "/session/:sessionId/element/:reference/element", UIAElement.class),
+  ELEMENTS("POST", "/session/:sessionId/element/:reference/elements", UIAElementArray.class),
+  CLICK("POST", "/session/:sessionId/element/:reference/click", Void.class),
+  SUBMIT("POST", "/session/:sessionId/element/:reference/submit", Void.class),
+  TEXT("GET", "/session/:sessionId/element/:reference/text", String.class),
+  SET_VALUE("POST", "/session/:sessionId/element/:reference/value", Void.class),
+  // POST /session/:sessionId/keys
+  TAG_NAME("GET", "/session/:sessionId/element/:reference/name", String.class),
+  CLEAR("POST", "/session/:sessionId/element/:reference/clear", Void.class),
+  SELECTED("GET", "/session/:sessionId/element/:reference/selected", Boolean.class),
+  // GET /session/:sessionId/element/:id/enabled
+  ATTRIBUTE("GET", "/session/:sessionId/element/:reference/attribute/:name", String.class),
+  EQUAL("GET", "/session/:sessionId/element/:reference/equals/:other", Boolean.class),
+  DISPLAYED("GET", "/session/:sessionId/element/:reference/displayed", Boolean.class),
+  // GET /session/:sessionId/element/:id/location
+  // GET /session/:sessionId/element/:id/location_in_view
+  // GET /session/:sessionId/element/:id/size
+  // GET /session/:sessionId/element/:id/css/:propertyName
+  SET_ORIENTATION("POST", "/session/:sessionId/orientation", Void.class),
+  GET_ORIENTATION("GET", "/session/:sessionId/orientation", Orientation.class),
+  // GET /session/:sessionId/alert_text
+  // POST /session/:sessionId/alert_text
+  // POST /session/:sessionId/accept_alert
+  // POST /session/:sessionId/dismiss_alert
+  // POST /session/:sessionId/moveto
+  // POST /session/:sessionId/click
+  // POST /session/:sessionId/buttondown
+  // POST /session/:sessionId/buttonup
+  // POST /session/:sessionId/doubleclick
+  // POST /session/:sessionId/touch/click
+  // POST /session/:sessionId/touch/down
+  // POST /session/:sessionId/touch/up
+  // POST session/:sessionId/touch/move
+  // POST session/:sessionId/touch/scroll
+  // POST session/:sessionId/touch/scroll ( different params )
+  // POST session/:sessionId/touch/doubleclick
+  // POST session/:sessionId/touch/longclick
+  // POST session/:sessionId/touch/flick
+  // POST session/:sessionId/touch/flick ( different params )
+  // GET /session/:sessionId/location
+  // POST /session/:sessionId/location
+  // GET /session/:sessionId/local_storage
+  // POST /session/:sessionId/local_storage
+  // DELETE /session/:sessionId/local_storage
+  // GET /session/:sessionId/local_storage/key/:key
+  // DELETE /session/:sessionId/local_storage/key/:key
+  // GET /session/:sessionId/local_storage/size
+  // GET /session/:sessionId/session_storage
+  // POST /session/:sessionId/session_storage
+  // DELETE /session/:sessionId/session_storage
+  // GET /session/:sessionId/session_storage/key/:key
+  // DELETE /session/:sessionId/session_storage/key/:key
+  // GET /session/:sessionId/session_storage/size
+  // POST /session/:sessionId/log
+  // GET /session/:sessionId/log
 
+  /*
+  * Additional command, not part of the JSON Wire Protocol.
+   */
   CONFIGURE("POST", "/session/:sessionId/configure/command/:command", Void.class),
   GET_CONFIGURATION("GET", "/session/:sessionId/configure/command/:command", Object.class),
-  SET_TIMEOUT("POST", "/session/:sessionId/timeouts", Void.class),
   GET_TIMEOUT("GET", "/session/:sessionId/timeouts", Integer.class),
-  IMPLICIT_WAIT("POST", "/session/:sessionId/timeouts/implicit_wait", Void.class),
 
-  WINDOW_HANDLES("GET", "/session/:sessionId/window_handles", Set.class),
-  WINDOW("POST", "/session/:sessionId/window", String.class),
-  FRAME("POST", "/session/:sessionId/frame", Void.class),
-  GET_WINDOW_HANDLE("GET", "/session/:sessionId/window_handle", String.class),
-  TITLE("GET", "/session/:sessionId/title", String.class),
-  URL("POST", "/session/:sessionId/url", Void.class),
-  CURRENT_URL("GET", "/session/:sessionId/url", String.class),
-  BACK("POST", "/session/:sessionId/back", Void.class),
-  FORWARD("POST", "/session/:sessionId/forward", Void.class),
-  REFRESH("POST", "/session/:sessionId/refresh", Void.class),
-  SUBMIT("POST", "/session/:sessionId/element/:reference/submit", Void.class),
-  TAG_NAME("GET", "/session/:sessionId/element/:reference/name", String.class),
-
-
-  EXECUTE_SCRIPT("POST", "/session/:sessionId/execute", Object.class),
-  EQUAL("GET", "/session/:sessionId/element/:reference/equals/:other", Boolean.class),
 
   // UIATarget
   LOCAL_TARGET("GET", "/session/:sessionId/localTarget", UIATarget.class),
   TREE("GET", "/session/:sessionId/element/:reference/source", String.class),
-  TREE_ROOT("GET", "/session/:sessionId/source", JSONObject.class),
   HOST("GET", "/session/:sessionId/uiaTarget/:reference/host", UIHost.class),
   TARGET_RECT("GET", "/session/:sessionId/uiaTarget/:reference/rect", UIARect.class),
   TARGET_TAP("GET", "/session/:sessionId/tap/:reference", Void.class),
-  SET_ORIENTATION("POST", "/session/:sessionId/orientation", Void.class),
-  GET_ORIENTATION("GET", "/session/:sessionId/orientation", Orientation.class),
 
-  SELECTED("GET", "/session/:sessionId/element/:reference/selected", Boolean.class),
-
-  SCREENSHOT("GET", "/session/:sessionId/screenshot", Void.class),
 
   // UIAHost
   PERFORM_TASK_WITH_PATH_ARGUMENTS_TIMEOUT("POST", "/session/:sessionId/host/:reference", null),
@@ -90,12 +161,6 @@ public enum WebDriverLikeCommand {
   RECT("GET", "/session/:sessionId/uiaElement/:reference/rect", UIARect.class),
 
   PARENT("GET", "/session/:sessionId/uiaElement/:reference/parent", UIAElement.class),
-
-  ELEMENT_ROOT("POST", "/session/:sessionId/element", UIAElement.class),
-  ELEMENTS_ROOT("POST", "/session/:sessionId/elements", UIAElementArray.class),
-
-  ELEMENT("POST", "/session/:sessionId/element/:reference/element", UIAElement.class),
-  ELEMENTS("POST", "/session/:sessionId/element/:reference/elements", UIAElementArray.class),
 
   ANCESTRY("GET", "/session/:sessionId/uiaElement/:reference/ancestry", UIAElement.class),
   ACTIVITY_INDICATORS("GET", "/session/:sessionId/uiaElement/:reference/activityIndicator",
@@ -115,15 +180,12 @@ public enum WebDriverLikeCommand {
   KEYBOARD_KEYS("GET", "/session/:sessionId/uiaKeyboard/:reference/keys", UIAElementArray.class),
   TYPE_STRING("POST", "/session/:sessionId/uiaKeyboard/:reference", Void.class),
 
-  DISPLAYED("GET", "/session/:sessionId/element/:reference/displayed", Boolean.class),
+
   IS_STALE("GET", "/session/:sessionId/uiaElement/:reference/isStale", Boolean.class),
 
   //LABEL("GET" , "/session/:sessionId/uiaElement/:reference/label",String.class),
   //NAME("GET" , "/session/:sessionId/uiaElement/:reference/name",String.class),
   //VALUE("GET" , "/session/:sessionId/uiaElement/:reference/value",String.class),
-
-  ATTRIBUTE("GET", "/session/:sessionId/element/:reference/attribute/:name", String.class),
-  TEXT("GET", "/session/:sessionId/element/:reference/text", String.class),
 
   WITH_NAME("GET", "/session/:sessionId/uiaElement/:reference/withName", UIAElement.class),
   WITH_PREDICATE("GET", "/session/:sessionId/uiaElement/:reference/withPredicate",
@@ -131,7 +193,7 @@ public enum WebDriverLikeCommand {
   WITH_VALUE_FOR_KEY("GET", "/session/:sessionId/uiaElement/:reference/withValueForKey",
                      UIAElement.class),
 
-  CLICK("POST", "/session/:sessionId/element/:reference/click", Void.class),
+
   TOUCH_AND_HOLD("POST", "/session/:sessionId/uiaElement/:reference/touchAndHold", Void.class),
   DOUBLE_TAP("POST", "/session/:sessionId/uiaElement/:reference/doubleTap", Void.class),
   TWO_FINGER_TAP("POST", "/session/:sessionId/uiaElement/:reference/twoFingerTap", Void.class),
@@ -170,8 +232,6 @@ public enum WebDriverLikeCommand {
   RIGHT_BUTTON("GET", "/session/:sessionId/uiaElement/:reference/rightButton", UIAButton.class),
 
   // UIATextField and UIATextView
-  SET_VALUE("POST", "/session/:sessionId/element/:reference/value", Void.class),
-  CLEAR("POST", "/session/:sessionId/element/:reference/clear", Void.class),
 
   //UIATableView
   TABLE_GROUPS("GET", "/session/:sessionId/uiaElement/:reference/getGroups", UIAElementArray.class),
@@ -179,7 +239,7 @@ public enum WebDriverLikeCommand {
   TABLE_VISIBLE_CELLS("GET", "/session/:sessionId/uiaElement/:reference/getVisibleCells",
                       UIAElementArray.class),
 
-  STATUS("GET", "/status", JSONObject.class),
+
   ALERT_CANCEL_BUTTON("GET", "/session/:sessionId/uiaElement/:reference/cancel", UIAButton.class),
   ALERT_DEFAULT_BUTTON("GET", "/session/:sessionId/uiaElement/:reference/default",
                        UIAButton.class),;
