@@ -35,6 +35,8 @@ import org.openqa.selenium.ScreenOrientation;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.html5.Location;
+import org.openqa.selenium.html5.LocationContext;
 import org.openqa.selenium.remote.BeanToJsonConverter;
 import org.openqa.selenium.remote.DriverCommand;
 import org.openqa.selenium.remote.ErrorHandler;
@@ -70,7 +72,7 @@ import java.util.Set;
 
 // TakesScreenshot, Rotatable, BrowserConnection, HasTouchScreen, WebStorage, LocationContext, ApplicationCache
 public class RemoteUIADriver extends RemoteWebDriver
-    implements UIADriver, TakesScreenshot, Rotatable {
+    implements UIADriver, TakesScreenshot, Rotatable, LocationContext {
 
   private String remoteURL;
   private Map<String, Object> requestedCapabilities;
@@ -441,5 +443,15 @@ public class RemoteUIADriver extends RemoteWebDriver
         buildRequest(WebDriverLikeCommand.GET_ORIENTATION);
     String res = execute(request);
     return Orientation.valueOf(res);
+  }
+
+  @Override
+  public Location location() {
+    return null;  //To change body of implemented methods use File | Settings | File Templates.
+  }
+
+  @Override
+  public void setLocation(Location location) {
+    //To change body of implemented methods use File | Settings | File Templates.
   }
 }

@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.Device;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.application.AppleLocale;
@@ -48,18 +49,18 @@ public class InstrumentsManager {
 
   /**
    * constructor that will create an instrument process linked to the server.
-   * 
-   * @param serverPort
-   *          the port the server lives on
-   * @throws IOSAutomationSetupException
+   *
+   * @param serverPort the port the server lives on
    */
   public InstrumentsManager(int serverPort) {
     template = ClassicCommands.getAutomationTemplate();
     this.port = serverPort;
   }
 
-  public void startSession(Device device,DeviceVariation variation, String sdkVersion, String locale, String language,
-      IOSApplication application, String sessionId, boolean timeHack, List<String> envtParams)
+  public void startSession(Device device, DeviceVariation variation, String sdkVersion,
+                           String locale, String language,
+                           IOSApplication application, String sessionId, boolean timeHack,
+                           List<String> envtParams)
       throws WebDriverException {
     log.fine("starting session");
     IOSSimulatorManager sim = null;
@@ -76,12 +77,17 @@ public class InstrumentsManager {
         warmup();
       }
       log.fine("prepare simulator");
-      simulator = prepareSimulator(sdkVersion, device,variation, locale, language);
+      simulator =
+          prepareSimulator(sdkVersion, device, variation, locale, language,
+                           application.getMetadata(IOSCapabilities.BUNDLE_ID));
       sim = (IOSSimulatorManager) simulator;
       log.fine("forcing SDK");
       sim.forceDefaultSDK(sdkVersion);
       log.fine("creating script");
-      File uiscript = new ScriptHelper().getScript(port, application.getApplicationPath().getAbsolutePath(), sessionId);
+      File
+          uiscript =
+          new ScriptHelper()
+              .getScript(port, application.getApplicationPath().getAbsolutePath(), sessionId);
       log.fine("starting instruments");
       List<String> instruments = createInstrumentCommand(uiscript.getAbsolutePath());
       communicationChannel = new CommunicationChannel();
@@ -113,7 +119,8 @@ public class InstrumentsManager {
         simulatorProcess.forceStop();
       }
       killSimulator();
-      throw new WebDriverException("error starting instrument for session " + sessionId + ", "+e.getMessage(), e);
+      throw new WebDriverException(
+          "error starting instrument for session " + sessionId + ", " + e.getMessage(), e);
     } finally {
       log.fine("start session done");
       if (sim != null) {
@@ -145,13 +152,16 @@ public class InstrumentsManager {
      */
   }
 
-  private IOSDeviceManager prepareSimulator(String sdkVersion, Device device,DeviceVariation variation, String locale, String language) {
+  private IOSDeviceManager prepareSimulator(String sdkVersion, Device device,
+                                            DeviceVariation variation, String locale,
+                                            String language, String bundleId) {
     // TODO freynaud handle real device ?
     IOSDeviceManager simulator = new IOSSimulatorManager(sdkVersion, device);
     simulator.resetContentAndSettings();
     simulator.setL10N(locale, language);
     simulator.setKeyboardOptions();
     simulator.setVariation(device, variation);
+    simulator.setLocationPreference(true, bundleId);
     return simulator;
   }
 
@@ -196,7 +206,7 @@ public class InstrumentsManager {
   }
 
   private void killSimulator() {
-    if (simulator!=null){
+    if (simulator != null) {
       simulator.cleanupDevice();
     }
   }

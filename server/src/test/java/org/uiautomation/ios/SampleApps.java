@@ -27,6 +27,7 @@ public class SampleApps {
   private static final String uiCatalog = "/sampleApps/UICatalog.app";
   private static final String uiCatalogiPad = "/sampleApps/UICatalogiPad.app";
   private static final String intlMountains = "/sampleApps/InternationalMountains.app";
+  private static final String geocoder = "/sampleApps/Geocoder.app";
 
   private static final String sdkVersion = System.getProperty("SDK", null);
 
@@ -44,6 +45,10 @@ public class SampleApps {
     return res;
   }
 
+  public static String getGeocoderFile() {
+    return getFromClassPath(geocoder).getAbsolutePath();
+  }
+
   public static String getUICatalogFile() {
     return getFromClassPath(uiCatalog).getAbsolutePath();
   }
@@ -56,6 +61,18 @@ public class SampleApps {
     return getFromClassPath(uiCatalogiPad).getAbsolutePath();
   }
 
+  public static IOSCapabilities geoCoderCap() {
+    IOSCapabilities c = IOSCapabilities.iphone("Geocoder");
+    c.setCapability(IOSCapabilities.LOCALE, "en");
+
+    c.setCapability(IOSCapabilities.TIME_HACK, false);
+    if (sdkVersion != null) {
+      log.info("SET SDK to " + sdkVersion);
+      c.setSDKVersion(sdkVersion);
+    }
+    return c;
+  }
+
   public static IOSCapabilities uiCatalogCap() {
     IOSCapabilities c = IOSCapabilities.iphone("UICatalog", "2.10");
     c.setCapability(IOSCapabilities.TIME_HACK, false);
@@ -65,6 +82,7 @@ public class SampleApps {
     }
     return c;
   }
+
   public static IOSCapabilities uiCatalogipadCap() {
     IOSCapabilities c = IOSCapabilities.ipad("UICatalog");
     c.setCapability(IOSCapabilities.TIME_HACK, false);

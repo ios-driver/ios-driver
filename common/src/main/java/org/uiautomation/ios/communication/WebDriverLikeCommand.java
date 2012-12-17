@@ -16,6 +16,7 @@ package org.uiautomation.ios.communication;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.html5.Location;
 import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.UIAModels.UIAButton;
 import org.uiautomation.ios.UIAModels.UIAElement;
@@ -59,6 +60,7 @@ public enum WebDriverLikeCommand {
   // POST /session/:sessionId/window/:windowHandle/position
   // GET /session/:sessionId/window/:windowHandle/position
   // POST /session/:sessionId/window/:windowHandle/maximize
+
   //GET /session/:sessionId/cookie
   //POST /session/:sessionId/cookie
   //DELETE /session/:sessionId/cookie
@@ -93,6 +95,7 @@ public enum WebDriverLikeCommand {
   // POST /session/:sessionId/alert_text
   // POST /session/:sessionId/accept_alert
   // POST /session/:sessionId/dismiss_alert
+
   // POST /session/:sessionId/moveto
   // POST /session/:sessionId/click
   // POST /session/:sessionId/buttondown
@@ -108,20 +111,24 @@ public enum WebDriverLikeCommand {
   // POST session/:sessionId/touch/longclick
   // POST session/:sessionId/touch/flick
   // POST session/:sessionId/touch/flick ( different params )
-  // GET /session/:sessionId/location
-  // POST /session/:sessionId/location
+
+  GET_LOCATION("GET", "/session/:sessionId/location", Void.class),
+  SET_LOCATION("POST", "/session/:sessionId/location", Location.class),
+
   // GET /session/:sessionId/local_storage
   // POST /session/:sessionId/local_storage
   // DELETE /session/:sessionId/local_storage
   // GET /session/:sessionId/local_storage/key/:key
   // DELETE /session/:sessionId/local_storage/key/:key
   // GET /session/:sessionId/local_storage/size
+
   // GET /session/:sessionId/session_storage
   // POST /session/:sessionId/session_storage
   // DELETE /session/:sessionId/session_storage
   // GET /session/:sessionId/session_storage/key/:key
   // DELETE /session/:sessionId/session_storage/key/:key
   // GET /session/:sessionId/session_storage/size
+
   // POST /session/:sessionId/log
   // GET /session/:sessionId/log
 

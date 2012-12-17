@@ -45,10 +45,27 @@ public class SimulatorSettings {
     this.globalPreferencePlist = getGlobalPreferenceFile();
   }
 
+
+  public void setLocationPreference(boolean authorized, String bundleId) {
+    File f = new File(contentAndSettingsFolder + "/Library/Caches/locationd/", "clients.plist");
+
+    try {
+      JSONObject clients = new JSONObject();
+      JSONObject options = new JSONObject();
+      options.put("Whitelisted", false);
+      options.put("BundleId", bundleId);
+      options.put("Authorized", authorized);
+      clients.put(bundleId, options);
+      writeOnDisk(clients, f);
+    } catch (Exception e) {
+      throw new WebDriverException("cannot set location in " + f.getAbsolutePath());
+    }
+  }
+
   /**
-   * the default keyboard options aren't good for automation. For instance it
-   * automatically capitalize the first letter of sentences etc. Getting rid of
-   * all that to have the keyboard execute requests without changing them.
+   * the default keyboard options aren't good for automation. For instance it automatically
+   * capitalize the first letter of sentences etc. Getting rid of all that to have the keyboard
+   * execute requests without changing them.
    */
   public void setKeyboardOptions() {
     File folder = new File(contentAndSettingsFolder + "/Library/Preferences/");
@@ -67,14 +84,11 @@ public class SimulatorSettings {
   }
 
   /**
-   * set the emulator to the given locale.Required a clean context (can only be
-   * done after "reset content and settings" )
-   * 
-   * @param locale
-   *          fr_FR
-   * @param language
-   *          fr
-   * @throws IOSAutomationSetupException
+   * set the emulator to the given locale.Required a clean context (can only be done after "reset
+   * content and settings" )
+   *
+   * @param locale   fr_FR
+   * @param language fr
    */
   public void setL10N(String locale, String language) {
     try {
@@ -86,11 +100,8 @@ public class SimulatorSettings {
   }
 
   /**
-   * update the preference to have the simulator start in the correct more ( ie
-   * retina vs normal, iphone screen size ).
-   * 
-   * @param device
-   * @param variation
+   * update the preference to have the simulator start in the correct more ( ie retina vs normal,
+   * iphone screen size ).
    */
   public void setVariation(Device device, DeviceVariation variation) {
     String value = getSimulateDeviceValue(device, variation);
@@ -98,12 +109,8 @@ public class SimulatorSettings {
   }
 
   /**
-   * update the preference of the simulator. Similar to using the IOS Simulator
-   * menu > Hardware > [Device | Version ]
-   * 
-   * @param key
-   * @param value
-   * @throws IOSAutomationSetupException
+   * update the preference of the simulator. Similar to using the IOS Simulator menu > Hardware >
+   * [Device | Version ]
    */
   private void setDefaultSimulatorPreference(String key, String value) {
     List<String> com = new ArrayList<String>();
@@ -118,8 +125,8 @@ public class SimulatorSettings {
   }
 
   /**
-   * Does what IOS Simulator - Reset content and settings menu does, by deleting
-   * the files on disk. The simulator shouldn't be running when that is done.
+   * Does what IOS Simulator - Reset content and settings menu does, by deleting the files on
+   * disk. The simulator shouldn't be running when that is done.
    */
   public void resetContentAndSettings() {
     if (hasContentAndSettingsFolder()) {
@@ -136,7 +143,9 @@ public class SimulatorSettings {
 
   private File getContentAndSettingsFolder() {
     String home = System.getProperty("user.home");
-    String s = String.format("%s/Library/Application Support/iPhone Simulator/%s", home, sdkVersion);
+    String
+        s =
+        String.format("%s/Library/Application Support/iPhone Simulator/%s", home, sdkVersion);
     File f = new File(s);
     if (!f.exists()) {
       f.mkdirs();
@@ -165,23 +174,24 @@ public class SimulatorSettings {
 
   private String getSimulateDeviceValue(Device device, DeviceVariation variation) {
     switch (device) {
-    case iphone:
-      return getIphoneString(variation);
-    case ipad:
-      return getIpadString(variation);
-    default:
-      throw new WebDriverException(device + " - " + variation + " doesn't map to a supported apple device.");
+      case iphone:
+        return getIphoneString(variation);
+      case ipad:
+        return getIpadString(variation);
+      default:
+        throw new WebDriverException(
+            device + " - " + variation + " doesn't map to a supported apple device.");
     }
   }
 
   private String getIpadString(DeviceVariation variation) {
     switch (variation) {
-    case Regular:
-      return "iPad";
-    case Retina:
-      return "\"iPad (Retina)\"";
-    default:
-      throw new WebDriverException(variation + " isn't supported for ipad.");
+      case Regular:
+        return "iPad";
+      case Retina:
+        return "\"iPad (Retina)\"";
+      default:
+        throw new WebDriverException(variation + " isn't supported for ipad.");
     }
   }
 
@@ -194,7 +204,8 @@ public class SimulatorSettings {
     return config;
   }
 
-  private JSONObject getPreferenceFile(String locale, String language) throws JSONException, IOException {
+  private JSONObject getPreferenceFile(String locale, String language)
+      throws JSONException, IOException {
     JSONObject res = loadGlobalPreferencesTemplate();
     JSONArray languages = new JSONArray();
     languages.put(language);
@@ -206,14 +217,14 @@ public class SimulatorSettings {
 
   private String getIphoneString(DeviceVariation variation) {
     switch (variation) {
-    case Regular:
-      return "iPhone";
-    case Retina35:
-      return "\"iPhone (Retina 3.5-inch)\"";
-    case Retina4:
-      return "\"iPhone (Retina 4-inch)\"";
-    default:
-      throw new WebDriverException(variation + " isn't supported for ipad.");
+      case Regular:
+        return "iPhone";
+      case Retina35:
+        return "\"iPhone (Retina 3.5-inch)\"";
+      case Retina4:
+        return "\"iPhone (Retina 4-inch)\"";
+      default:
+        throw new WebDriverException(variation + " isn't supported for ipad.");
     }
   }
 
@@ -224,7 +235,8 @@ public class SimulatorSettings {
   }
 
   // TODO use plist utils.
-  private void writeOnDisk(JSONObject plistJSON, File destination) throws IOException, JSONException {
+  private void writeOnDisk(JSONObject plistJSON, File destination)
+      throws IOException, JSONException {
     if (destination.exists()) {
       // to be on the safe side. If the emulator already runs, it won't work
       // anyway.

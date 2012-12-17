@@ -26,13 +26,11 @@ import org.uiautomation.ios.server.utils.SimulatorSettings;
 
 // java version ( simplified )
 // of http://code.google.com/p/ios-sim-locale/source/browse/trunk/ios-sim-locale.m
+
 /**
- * setting the plist file to the correct local. Tested on mac 10.7. May work on
- * other version. The assumption made is that the plist file read by the ios
- * simulator is of binary1 format. See the mac command line plutils for the
- * formats.
- * 
- * 
+ * setting the plist file to the correct local. Tested on mac 10.7. May work on other version. The
+ * assumption made is that the plist file read by the ios simulator is of binary1 format. See the
+ * mac command line plutils for the formats.
  */
 public class IOSSimulatorManager implements IOSDeviceManager {
 
@@ -45,13 +43,10 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   private final SimulatorSettings simulatorSettings;
 
   /**
-   * manages a single instance of the instruments process. Only 1 process can
-   * run at a given time.
-   * 
-   * @param desiredSDKVersion
-   *          the SDK version. For instance 5.0 or 4.3
-   * @param device
-   * @throws IOSAutomationSetupException
+   * manages a single instance of the instruments process. Only 1 process can run at a given
+   * time.
+   *
+   * @param desiredSDKVersion the SDK version. For instance 5.0 or 4.3
    */
   public IOSSimulatorManager(String desiredSDKVersion, Device device) {
     if (isSimulatorRunning() && !isWarmupRequired()) {
@@ -77,16 +72,19 @@ public class IOSSimulatorManager implements IOSDeviceManager {
       Float version = Float.parseFloat(v);
       if (version > desiredVersion) {
         File f = new File(xcodeInstall,
-            "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator" + v + ".sdk");
+                          "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator"
+                          + v + ".sdk");
         if (!f.exists()) {
           System.err.println("doesn't exist " + f);
         } else {
           File renamed = new File(xcodeInstall,
-              "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs/iPhoneSimulator" + v
-                  + ".sdk");
+                                  "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs/iPhoneSimulator"
+                                  + v
+                                  + ".sdk");
           boolean ok = f.renameTo(renamed);
           if (!ok) {
-            throw new WebDriverException("Starting the non default SDK requires some more setup.Failed to move " + f
+            throw new WebDriverException(
+                "Starting the non default SDK requires some more setup.Failed to move " + f
                 + " to " + renamed + getErrorMessageMoveSDK());
           }
         }
@@ -95,8 +93,14 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   }
 
   private String getErrorMessageMoveSDK() {
-    File sdk = new File(xcodeInstall, "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs");
-    File exiled = new File(xcodeInstall, "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs");
+    File
+        sdk =
+        new File(xcodeInstall,
+                 "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs");
+    File
+        exiled =
+        new File(xcodeInstall,
+                 "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs");
     String msg = "Cannot move folders from " + sdk + " to " + exiled;
     msg += " Make sure the rights are correct (chmod -R +rw ... )";
     return msg;
@@ -104,7 +108,10 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   }
 
   public void restoreExiledSDKs() {
-    File exiled = new File(xcodeInstall, "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs/");
+    File
+        exiled =
+        new File(xcodeInstall,
+                 "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs/");
     if (!exiled.exists()) {
       log.warning(exiled.getAbsolutePath() + " doesn't exist." + getErrorMessageMoveSDK());
       return;
@@ -134,8 +141,6 @@ public class IOSSimulatorManager implements IOSDeviceManager {
 
   /**
    * stopping the simulator at the end of the test.
-   * 
-   * @throws IOSAutomationSetupException
    */
   public void cleanupDevice() {
     ClassicCommands.killall(SIMULATOR_PROCESS_NAME);
@@ -147,12 +152,17 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   }
 
   @Override
+  public void setLocationPreference(boolean authorized, String bundleId) {
+    simulatorSettings.setLocationPreference(authorized, bundleId);
+  }
+
+  @Override
   public void setL10N(String locale, String language) {
     simulatorSettings.setL10N(locale, language);
   }
-  
+
   @Override
-  public void setVariation(Device device,DeviceVariation variation) {
+  public void setVariation(Device device, DeviceVariation variation) {
     simulatorSettings.setVariation(device, variation);
   }
 

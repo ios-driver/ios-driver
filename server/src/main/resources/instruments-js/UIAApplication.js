@@ -14,8 +14,8 @@ UIAApplication.prototype.keyboard_original = UIAApplication.prototype.keyboard;
  */
 UIAApplication.prototype.keyboard = function () {
     var keyboard = this.keyboard_original();
-    log("keyboard : " + keyboard)
-    if (keyboard.toString() == "[object UIAElementNil]") {
+    log("keyboard : " + keyboard);
+    if (keyboard.toString() === "[object UIAElementNil]") {
         UIATarget.localTarget().delay(2);
         keyboard = this.keyboard_original();
         log("keyboard after 2 : " + keyboard);

@@ -77,6 +77,7 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
       o.put("supportedLocales", ls);
       o.put("takesScreenshot", true);
       o.put("rotatable", true);
+      o.put("locationContextEnabled", true);
       o.put(IOSCapabilities.SIMULATOR, true);
       o.put(IOSCapabilities.DEVICE, session.getCapabilities().getDevice());
       o.put(IOSCapabilities.VARIATION, session.getCapabilities().getDeviceVariation());

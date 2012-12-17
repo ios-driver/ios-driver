@@ -81,6 +81,7 @@ public class IOSServlet extends DriverBasedServlet {
     response.setStatus(200);
 
     Response resp = getResponse(req);
+    log.fine("got " + resp.toString());
 
     // TODO implement the json protocol properly.
     if (req.getGenericCommand() == WebDriverLikeCommand.NEW_SESSION && resp.getStatus() == 0) {
@@ -126,6 +127,7 @@ public class IOSServlet extends DriverBasedServlet {
     WebDriverLikeCommand wdlc = null;
     try {
       wdlc = request.getGenericCommand();
+      log.fine("command :  " + wdlc);
       Handler h = CommandMapping.get(wdlc).createHandler(getDriver(), request);
       command = wdlc.method() + "\t " + wdlc.path();
       return h.handleAndRunDecorators();
