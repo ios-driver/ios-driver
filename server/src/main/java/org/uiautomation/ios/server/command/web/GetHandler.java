@@ -32,8 +32,8 @@ import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 public class GetHandler extends BaseWebCommandHandler {
 
   // TODO freynaud cached by session.
-  private static UIAElement addressBar;
-  private static final boolean nativeEvents = false;
+  private UIAElement addressBar;
+  private static final boolean nativeEvents = true;
 
   public GetHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -45,8 +45,8 @@ public class GetHandler extends BaseWebCommandHandler {
     desc.put(
         "nativeEvents",
         "{boolean}, default to "
-            + nativeEvents
-            + ".true = UIAutomation native events will be used to enter the URL (slow) , Web =  WebKit remote debugging will be used.Faster.");
+        + nativeEvents
+        + ".true = UIAutomation native events will be used to enter the URL (slow) , Web =  WebKit remote debugging will be used.Faster.");
     return desc;
   }
 
@@ -93,11 +93,10 @@ public class GetHandler extends BaseWebCommandHandler {
   }
 
   private UIAElement getAddressBar() {
-    if (addressBar == null) {
-      Criteria urlAddressBar = new AndCriteria(new TypeCriteria(UIAElement.class), new ValueCriteria(
-          "Go to this address"));
-      addressBar = getSession().getNativeDriver().findElement(urlAddressBar);
-    }
+
+    Criteria urlAddressBar = new AndCriteria(new TypeCriteria(UIAElement.class), new ValueCriteria(
+        "Go to this address"));
+    addressBar = getSession().getNativeDriver().findElement(urlAddressBar);
     return addressBar;
   }
 
@@ -108,7 +107,7 @@ public class GetHandler extends BaseWebCommandHandler {
 
       getSession().setMode(WorkingMode.Native);
       getAddressBar().tap();
-      RemoteUIAKeyboard keyboard = (RemoteUIAKeyboard)getSession().getNativeDriver().getKeyboard();
+      RemoteUIAKeyboard keyboard = (RemoteUIAKeyboard) getSession().getNativeDriver().getKeyboard();
       keyboard.sendKeys(url);
       keyboard.findElement(new NameCriteria("Go")).tap();
 
