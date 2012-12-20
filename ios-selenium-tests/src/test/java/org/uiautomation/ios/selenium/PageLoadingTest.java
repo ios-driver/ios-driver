@@ -1,11 +1,14 @@
 package org.uiautomation.ios.selenium;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WaitingConditions;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.List;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.openqa.selenium.TestWaiter.waitFor;
@@ -31,7 +34,9 @@ public class PageLoadingTest extends BaseSeleniumTest {
   public void testShouldFollowMetaRedirects() throws Exception {
     driver.get(pages.metaRedirectPage);
     Assert.assertEquals(driver.getTitle(), "We Arrive Here");
+
   }
+
 
   @Test
   public void testShouldBeAbleToGetAFragmentOnTheCurrentPage() {
@@ -195,7 +200,7 @@ public class PageLoadingTest extends BaseSeleniumTest {
    * 
    * @JavascriptEnabled
    */
-  @Test
+  @Test(enabled = false)
   public void testShouldNotHangIfDocumentOpenCallIsNeverFollowedByDocumentCloseCall()
       throws Exception {
     driver.get(pages.documentWrite);
