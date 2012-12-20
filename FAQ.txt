@@ -1,21 +1,31 @@
 Troubleshooting configuration issues:
 
 1) MobileSafari.app/Info.plist (Permission denied)
-error starting instrument for session XXX, Cannot change the default device for the app./Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.0.sdk/Applications/MobileSafari.app/Info.plist (Permission denied)
+error starting instrument for session XXX, Cannot change the default device for the app.
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/
+iPhoneSimulator6.0.sdk/Applications/MobileSafari.app/Info.plist (Permission denied)
 
-Safari's Info.plist file contains the device family safari can be launched on.  It looks like : "UIDeviceFamily":[1,2]
+Safari's Info.plist file contains the device family safari can be launched on.
+It looks like : "UIDeviceFamily":[1,2]
 1 is for iphone. 2 is for ipad.
-Instruments doesn't allow to choose the platform, and always starts the default ( first one in the list ).
+Instruments doesn't allow to choose the platform, and always starts the default ( first one in the
+list ).
 
-ios-driver changes the the order of the list to  "UIDeviceFamily":[2,1] when safari on ipad is requested. To be able to do that, it needs write access to the Info.plist file.
+ios-driver changes the the order of the list to  "UIDeviceFamily":[2,1] when safari on ipad is
+requested. To be able to do that, it needs write access to the Info.plist file.
 
 
-2) WARNING IOSSimulatorManager.restoreExiledSDKs /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs doesn't exist.
-By default, instruments starts the simulator with the latest installed SDK. ( last one in the 'iOS Simulator SDKs:' list when doing $xcodebuild -showsdks )
+2) WARNING IOSSimulatorManager.restoreExiledSDKs /Applications/Xcode.app/Contents/Developer/
+Platforms/iPhoneSimulator.platform/Developer/exiledSDKs doesn't exist.
+By default, instruments starts the simulator with the latest installed SDK. ( last one in the 'iOS
+Simulator SDKs:' list when doing $xcodebuild -showsdks )
 
-If you want ios-driver to start with something else than the default, the current solution involves moving sdk folders around in /Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer.
-ios-driver will move the sdks from  /Developer/SDKs/ to /Developer/exiledSDKs , start the simulator, and put them back.
-For that to work, you need to create a "exiledSDKs" folder in Developer next to the "SDKs" one containing all your SDKs, and give write access to both.
+If you want ios-driver to start with something else than the default, the current solution involves
+ moving sdk folders around in /Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer.
+ios-driver will move the sdks from  /Developer/SDKs/ to /Developer/exiledSDKs , start the simulator,
+ and put them back.
+For that to work, you need to create a "exiledSDKs" folder in Developer next to the "SDKs" one
+containing all your SDKs, and give write access to both.
 
 A normal install looks like :
 /SDKs/
