@@ -16,6 +16,7 @@ package org.uiautomation.ios.server;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.TimeoutException;
 import org.uiautomation.ios.mobileSafari.EventListener;
@@ -80,7 +81,8 @@ public class DOMContext implements EventListener {
   // to be kept.
   // calling getDocument again to have the document after siwtching to an iframe
   // breaks the nodeId reference.
-  public void setCurrentFrame(RemoteWebElement iframe, RemoteWebElement document, RemoteWebElement window) {
+  public void setCurrentFrame(RemoteWebElement iframe, RemoteWebElement document,
+                              RemoteWebElement window) {
     this.iframe = iframe;
     this.document = document;
     this.window = window;
@@ -132,8 +134,32 @@ public class DOMContext implements EventListener {
         // ignore
       }
     }
+
     pageLoaded = false;
+    waitForDocumentReady(deadLine);
+
     return;
+  }
+
+  private boolean isReady() {
+    try {
+      String state = (String) session.getWebInspector().executeScript(
+          "var state = document.readyState; return state",
+          new JSONArray());
+      boolean ready = "complete".equals(state);
+      return ready; ///*"interactive".equals(state) || */"complete".equals(state);
+    } catch (Exception e) {
+      // TODO detect frame gone and call  getSession().getContext().getDOMContext().reset();
+      return false;
+    }
+  }
+
+  private void waitForDocumentReady(long deadLine) {
+    while (!isReady()) {
+      if (System.currentTimeMillis() > deadLine) {
+        throw new TimeoutException("failed to load the page");
+      }
+    }
   }
 
   public DOMContext(ServerSideSession session) {
@@ -158,7 +184,8 @@ public class DOMContext implements EventListener {
             assignNewFrameFromEvent((ChildIframeInserted) newFrame);
             eventHistory.removeEvent(newFrame);
           } else {
-            log.warning("there should be only 1 newly created frame with parent =" + parent + ". Found "
+            log.warning(
+                "there should be only 1 newly created frame with parent =" + parent + ". Found "
                 + newOnes.size());
           }
         }
@@ -197,7 +224,8 @@ public class DOMContext implements EventListener {
     // if that's the one we're working on, deselect it.
     if (iframe != null) {
       if (!iframe.exists()) {
-        log.fine("the current frame is dead. Will need to switch to default content or another frame before being able to do anything.");
+        log.fine(
+            "the current frame is dead. Will need to switch to default content or another frame before being able to do anything.");
         isReady = true;
       }
     }

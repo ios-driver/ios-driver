@@ -92,7 +92,7 @@ public class FormHandlingTest extends BaseSeleniumTest {
   // @Ignore(value = { ANDROID, OPERA_MOBILE }, reason =
   // "Android: capitalization bug in ICS keeps caps on after a capital letter is sent")
   @Test
-  public void testSendKeysKeepsCapitalization() {
+  public void testSendKeysKeepsCapitalization() throws InterruptedException {
     driver.get(pages.javascriptPage);
     WebElement textarea = driver.findElement(By.id("keyUpArea"));
     String cheesey = "BrIe And CheDdar";
