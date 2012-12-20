@@ -8,6 +8,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
+import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
@@ -23,6 +24,7 @@ public class LocationContextTest extends BaseIOSDriverTest {
 
   @BeforeClass
   public void startDriver() {
+
     driver = new RemoteWebDriver(getRemoteURL(), SampleApps.geoCoderCap());
   }
 
@@ -33,6 +35,11 @@ public class LocationContextTest extends BaseIOSDriverTest {
     }
   }
 
+
+  public static void main(String[] args) {
+    System.out.println(IOSCapabilities.iphone("Safari").getRawCapabilities());
+  }
+
   @Test
   public void testShouldSetAndGetLocation() {
     //driver.get(pages.html5Page);
@@ -41,8 +48,6 @@ public class LocationContextTest extends BaseIOSDriverTest {
     Location loc = new Location(40.714353, -74.005973, 0.056747);
 
     d.setLocation(loc);
-
-    System.out.println("test");
 
     //driver.manage().timeouts().implicitlyWait(2000, MILLISECONDS);
 
