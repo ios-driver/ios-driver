@@ -31,13 +31,13 @@ public class BackHandler extends BaseWebCommandHandler {
   @Override
   public Response handle() throws Exception {
     boolean useNativeEvents = getConfiguration("nativeEvents", nativeEvents);
-    getSession().getContext().getDOMContext().reset();
+
     if (useNativeEvents) {
       // backNative();
     } else {
       backWeb();
     }
-
+    getSession().getContext().getDOMContext().reset();
     getSession().getWebInspector().waitForPageToLoad();
     Response resp = new Response();
     resp.setSessionId(getSession().getSessionId());
@@ -56,8 +56,8 @@ public class BackHandler extends BaseWebCommandHandler {
     desc.put(
         "nativeEvents",
         "{boolean}, default to "
-            + nativeEvents
-            + ".true = UIAutomation native events will be used to enter click the back arrow (slow) , Web =  WebKit remote debugging will be used.Faster.");
+        + nativeEvents
+        + ".true = UIAutomation native events will be used to enter click the back arrow (slow) , Web =  WebKit remote debugging will be used.Faster.");
     return desc;
   }
 
