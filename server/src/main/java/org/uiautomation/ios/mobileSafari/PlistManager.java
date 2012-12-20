@@ -41,7 +41,9 @@ public class PlistManager {
       return cacheTemplate;
     }
 
-    InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(templatePath);
+    InputStream
+        is =
+        Thread.currentThread().getContextClassLoader().getResourceAsStream(templatePath);
     if (is == null) {
       throw new WebDriverException("cannot load : " + templatePath);
     }
@@ -55,8 +57,7 @@ public class PlistManager {
     return content;
   }
 
-  
-  
+
   public String JSONCommand(JSONObject command) throws IOException {
     String json = command.toString();
     String s = Base64.encodeBase64String(json.getBytes());
@@ -72,7 +73,11 @@ public class PlistManager {
   }
 
   public String plistBinaryToXml(byte[] binary) throws Exception {
-    NSObject object = BinaryPropertyListParser.parse(binary);
-    return object.toXMLPropertyList();
+    try {
+      NSObject object = BinaryPropertyListParser.parse(binary);
+      return object.toXMLPropertyList();
+    } catch (Exception e) {
+      return null;
+    }
   }
 }

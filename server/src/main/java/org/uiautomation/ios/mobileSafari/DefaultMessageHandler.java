@@ -71,10 +71,10 @@ public class DefaultMessageHandler implements MessageHandler {
         responses.add(message);
         return;
       }
+
       // not null, not a command response.
       // should be an event.
       Event e = EventFactory.createEvent(message);
-
       if (isPageLoad(message)) {
         listener.onPageLoad();
         return;
@@ -106,7 +106,7 @@ public class DefaultMessageHandler implements MessageHandler {
 
   private boolean isPageLoad(JSONObject message) {
     String method = message.optString("method");
-    return "Page.loadEventFired".equals(method);
+    return "Page.loadEventFired".equals(method); //  || "Profiler.resetProfiles".equals(method);
     // return "Profiler.resetProfiles".equals(method) ||
     // "DOM.documentUpdated".equals(method);
   }
