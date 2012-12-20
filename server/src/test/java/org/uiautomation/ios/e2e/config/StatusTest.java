@@ -27,26 +27,23 @@ public class StatusTest extends BaseIOSDriverTest {
 
 
   @Test
-  public void statusTest() throws  Exception {
+  public void statusTest() throws Exception {
 
     HttpClient client = HttpClientFactory.getClient();
     String url = getRemoteURL() + "/status";
     URL u = new URL(url);
     BasicHttpEntityEnclosingRequest r = new BasicHttpEntityEnclosingRequest("GET", url);
 
-
     HttpHost h = new HttpHost(u.getHost(), u.getPort());
     HttpResponse response = client.execute(h, r);
 
     JSONObject o = Helper.extractObject(response);
 
-    
     JSONArray array = o.getJSONObject("value").getJSONArray("supportedApps");
-    Assert.assertTrue(array.length()> 3); // registered app + safari
+    Assert.assertTrue(array.length() > 3); // registered app + safari
 
-    JSONObject uicatalog = array.getJSONObject(2);
-   
-    
+    JSONObject uicatalog = array.getJSONObject(3);
+
     Assert.assertEquals(uicatalog.get(BUNDLE_DISPLAY_NAME), "UICatalog");
     Assert.assertEquals(uicatalog.get(BUNDLE_ID), "com.yourcompany.UICatalog");
     Assert.assertEquals(uicatalog.get(BUNDLE_NAME), "UICatalog");
@@ -57,8 +54,8 @@ public class StatusTest extends BaseIOSDriverTest {
     Assert.assertEquals(locales1.length(), 1);
     Assert.assertEquals(locales1.get(0), "en");
 
-    JSONObject intMount = array.getJSONObject(0);
-   
+    JSONObject intMount = array.getJSONObject(1);
+
     Assert.assertEquals(intMount.get(BUNDLE_ID), "com.yourcompany.InternationalMountains");
     Assert.assertEquals(intMount.get(BUNDLE_NAME), "InternationalMountains");
     Assert.assertEquals(intMount.get(BUNDLE_VERSION), "1.1");
@@ -76,8 +73,7 @@ public class StatusTest extends BaseIOSDriverTest {
     Assert.assertTrue(all.contains("fr"));
 
 
-
   }
-  
+
 
 }
