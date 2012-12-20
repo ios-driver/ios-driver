@@ -12,7 +12,7 @@ import org.testng.annotations.Test;
  */
 public class AlertsTest extends BaseSeleniumTest {
 
-  @BeforeClass
+  /*@BeforeClass
   public void setUp() throws Exception {
     driver.get(pages.alertsPage);
   }
@@ -25,7 +25,7 @@ public class AlertsTest extends BaseSeleniumTest {
     // TODO freynaud find out why reloading the page right after the click makes the alert appear.
     Thread.sleep(1000);
     driver.get(pages.alertsPage);
-  }
+  }  */
 
   /*@Test(expectedExceptions = UnhandledAlertException.class)
   public void testShouldAllowUsersToAcceptAnAlertManually() throws InterruptedException {
@@ -196,7 +196,7 @@ public class AlertsTest extends BaseSeleniumTest {
   }  */
 
 
-  @Test
+  /*@Test
   public void testShouldThrowAnExceptionIfAnAlertHasNotBeenDealtWithAndDismissTheAlert() {
     clickOnElementById("alert");
 
@@ -209,7 +209,7 @@ public class AlertsTest extends BaseSeleniumTest {
 
     // But the next call should be good.
     //Assert.assertEquals("Testing Alerts", driver.getTitle());
-  }
+  } */
 
 
   /*@Test
