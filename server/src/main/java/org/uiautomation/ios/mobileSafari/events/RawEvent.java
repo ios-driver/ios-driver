@@ -29,4 +29,9 @@ public class RawEvent implements Event {
   public long getAge() {
     return System.currentTimeMillis() - timestamp;
   }
+
+  @Override
+  public String toString() {
+    return raw.optString("method");
+  }
 }
