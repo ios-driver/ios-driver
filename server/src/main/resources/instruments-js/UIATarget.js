@@ -27,7 +27,7 @@ UIATarget.prototype.setDeviceOrientation_original = UIATarget.prototype.setDevic
 
 UIATarget.prototype.setDeviceOrientation = function (orientation) {
     this.setDeviceOrientation_original(orientation);
-    var timeNeededForTheRotationAnimationToComplete = 0.6; // seconds.
+    var timeNeededForTheRotationAnimationToComplete = 0.8; // seconds.
     this.delay(timeNeededForTheRotationAnimationToComplete);
     var newOrientation = UIATarget.localTarget().frontMostApp().interfaceOrientation();
     if (newOrientation !== orientation) {
