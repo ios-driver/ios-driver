@@ -23,9 +23,12 @@ import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 
+import java.util.logging.Logger;
+
 public class SetValueHandler extends BaseWebCommandHandler {
 
-  private static final boolean nativeEvents = false;
+  private static final Logger log = Logger.getLogger(SetValueHandler.class.getName());
+  private static final boolean nativeEvents = true;
 
   public SetValueHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -37,16 +40,11 @@ public class SetValueHandler extends BaseWebCommandHandler {
     RemoteWebElement element = new RemoteWebElement(new NodeId(id), getSession());
 
     JSONArray array = getRequest().getPayload().getJSONArray("value");
+    log.fine("payload : " + getRequest().getPayload().toString(2));
     String value = "";
-    if (array.length() == 1) {
-      Object o = array.get(0);
-      if (o instanceof String) {
-        value = (String) o;
-      } else {
-        throw new RuntimeException("NI");
-      }
-    } else {
-      throw new RuntimeException("NI");
+
+    for (int i = 0; i < array.length(); i++) {
+      value += array.get(i);
     }
 
     boolean useNativeEvents = getConfiguration("nativeEvents", nativeEvents);
