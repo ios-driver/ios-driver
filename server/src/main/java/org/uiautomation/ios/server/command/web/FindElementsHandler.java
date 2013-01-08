@@ -16,11 +16,13 @@ package org.uiautomation.ios.server.command.web;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
+import org.uiautomation.ios.webInspector.DOM.RemoteExceptionException;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 
 import java.util.ArrayList;
@@ -34,6 +36,41 @@ public class FindElementsHandler extends BaseWebCommandHandler {
 
   @Override
   public Response handle() throws Exception {
+    waitForPageToLoad();
+
+    int implicitWait = (Integer) getConf("implicit_wait", 0);
+    long deadline = System.currentTimeMillis() + implicitWait;
+    List<RemoteWebElement> elements = null;
+    do {
+      try {
+        elements = findElements();
+        if (elements.size() != 0) {
+          break;
+        }
+      } catch (NoSuchElementException e) {
+        //ignore.
+      } catch (RemoteExceptionException e2) {
+        // ignore.
+        // if the page is reloading, the previous nodeId won't be there anymore, resulting in a
+        // RemoteExceptionException: Could not find node with given id.Keep looking.
+      }
+    } while (System.currentTimeMillis() < deadline);
+
+    JSONArray array = new JSONArray();
+
+    List<JSONObject> list = new ArrayList<JSONObject>();
+    for (RemoteWebElement el : elements) {
+      list.add(new JSONObject().put("ELEMENT", "" + el.getNodeId().getId()));
+    }
+
+    Response resp = new Response();
+    resp.setSessionId(getSession().getSessionId());
+    resp.setStatus(0);
+    resp.setValue(list);
+    return resp;
+  }
+
+  private List<RemoteWebElement> findElements() throws Exception {
     JSONObject payload = getRequest().getPayload();
     String type = payload.getString("using");
     String value = payload.getString("value");
@@ -58,19 +95,7 @@ public class FindElementsHandler extends BaseWebCommandHandler {
       String cssSelector = ToCSSSelectorConvertor.convertToCSSSelector(type, value);
       res = element.findElementsByCSSSelector(cssSelector);
     }
-
-    JSONArray array = new JSONArray();
-
-    List<JSONObject> list = new ArrayList<JSONObject>();
-    for (RemoteWebElement el : res) {
-      list.add(new JSONObject().put("ELEMENT", "" + el.getNodeId().getId()));
-    }
-
-    Response resp = new Response();
-    resp.setSessionId(getSession().getSessionId());
-    resp.setStatus(0);
-    resp.setValue(list);
-    return resp;
+    return res;
   }
 
   @Override

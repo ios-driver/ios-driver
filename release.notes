@@ -28,7 +28,8 @@
 - handle alerts for web
 - cleanup and document setValue vs sendKeys
 - send info to jason to start / compile etc + feature list.
-
+- implicit wait for web ( would help with pageLoad issues )
+- avoid switching between native and web for internal command.
 
 
 

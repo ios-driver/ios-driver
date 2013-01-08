@@ -141,6 +141,10 @@ public class DOMContext implements EventListener {
     return;
   }
 
+  public boolean isLoading() {
+    return !isReady();
+  }
+
   private boolean isReady() {
     try {
       String state = (String) session.getWebInspector().executeScript(

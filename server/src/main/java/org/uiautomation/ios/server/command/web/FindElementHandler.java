@@ -21,6 +21,7 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
+import org.uiautomation.ios.webInspector.DOM.RemoteExceptionException;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 
 public class FindElementHandler extends BaseWebCommandHandler {
@@ -31,6 +32,41 @@ public class FindElementHandler extends BaseWebCommandHandler {
 
   @Override
   public Response handle() throws Exception {
+    waitForPageToLoad();
+
+    int implicitWait = (Integer) getConf("implicit_wait", 0);
+    long deadline = System.currentTimeMillis() + implicitWait;
+    RemoteWebElement rwe = null;
+    do {
+      try {
+        rwe = findElement();
+        break;
+      } catch (NoSuchElementException e) {
+        //ignore.
+      } catch (RemoteExceptionException e2) {
+        // ignore.
+        // if the page is reloading, the previous nodeId won't be there anymore, resulting in a
+        // RemoteExceptionException: Could not find node with given id.Keep looking.
+      }
+    } while (System.currentTimeMillis() < deadline);
+
+    if (rwe == null) {
+      throw new NoSuchElementException(
+          "No element found for " + getRequest().getPayload() + " after waiting for " + implicitWait
+          + " ms.");
+    } else {
+      JSONObject res = new JSONObject();
+      res.put("ELEMENT", "" + rwe.getNodeId().getId());
+      Response resp = new Response();
+      resp.setSessionId(getSession().getSessionId());
+      resp.setStatus(0);
+      resp.setValue(res);
+      return resp;
+    }
+  }
+
+
+  private RemoteWebElement findElement() throws Exception {
     JSONObject payload = getRequest().getPayload();
     String type = payload.getString("using");
     String value = payload.getString("value");
@@ -56,18 +92,7 @@ public class FindElementHandler extends BaseWebCommandHandler {
       String cssSelector = ToCSSSelectorConvertor.convertToCSSSelector(type, value);
       rwe = element.findElementByCSSSelector(cssSelector);
     }
-
-    JSONObject res = new JSONObject();
-    if (rwe == null) {
-      throw new NoSuchElementException("No element found for " + type + "=" + value);
-    } else {
-      res.put("ELEMENT", "" + rwe.getNodeId().getId());
-      Response resp = new Response();
-      resp.setSessionId(getSession().getSessionId());
-      resp.setStatus(0);
-      resp.setValue(res);
-      return resp;
-    }
+    return rwe;
   }
 
   @Override

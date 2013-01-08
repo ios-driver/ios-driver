@@ -107,6 +107,12 @@ public class RemoteWebElement {
     session.setMode(WorkingMode.Native);
     ((JavascriptExecutor) nativeDriver).executeScript(getNativeElementClickOnIt());
     session.setMode(origin);
+    long start = System.currentTimeMillis();
+
+    /*while (true) {
+      long end = System.currentTimeMillis();
+      System.out.println((end-start)+"ms,is loading? :" + session.getContext().getDOMContext().isLoading());
+    } */
   }
 
   public NodeId getNodeId() {
@@ -179,6 +185,8 @@ public class RemoteWebElement {
     // web stuff.
     scrollIntoViewIfNeeded();
     Point po = findPosition();
+    System.out.println("click native on po :" + po.toString());
+
     Dimension dim = inspector.getSize();
     int webPageWidth = inspector.getInnerWidth();
     if (dim.getWidth() != webPageWidth) {

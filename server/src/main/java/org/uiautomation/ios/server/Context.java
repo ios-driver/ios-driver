@@ -18,9 +18,9 @@ import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 
 /**
  * state of the current application under test
- * 
  */
 public class Context {
+
   private WorkingMode mode = WorkingMode.Native;
   private final DOMContext context;
 
@@ -37,7 +37,7 @@ public class Context {
   }
 
   public void switchToFrame(String id) {
-    
+
   }
 
   public DOMContext getDOMContext() {

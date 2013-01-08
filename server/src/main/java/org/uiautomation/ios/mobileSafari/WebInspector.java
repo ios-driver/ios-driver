@@ -110,7 +110,7 @@ public class WebInspector {
     this.session = session;
     DOMContext context = session.getContext().getDOMContext();
     protocol =
-        new DebugProtocol(context, bundleId, new AlertDetector((RemoteUIADriver) nativeDriver));
+        new DebugProtocol(context, bundleId/*, new AlertDetector((RemoteUIADriver) nativeDriver)*/);
     enablePageEvent();
   }
 

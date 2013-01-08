@@ -44,6 +44,7 @@ import org.uiautomation.ios.server.command.web.IsEqualHandler;
 import org.uiautomation.ios.server.command.web.IsSelectedHandler;
 import org.uiautomation.ios.server.command.web.RefreshHandler;
 import org.uiautomation.ios.server.command.web.SetFrameHandler;
+import org.uiautomation.ios.server.command.web.SetImplicitWaitTimeoutHandler;
 import org.uiautomation.ios.server.command.web.SetTimeoutHandler;
 import org.uiautomation.ios.server.command.web.SetValueHandler;
 import org.uiautomation.ios.server.command.web.SubmitHandler;
@@ -59,7 +60,7 @@ public enum CommandMapping {
   SESSIONS(GetSessionsNHandler.class),
   DELETE_SESSION(StopSessionNHandler.class),
   SET_TIMEOUT(SetTimeoutNHandler.class, SetTimeoutHandler.class),
-  IMPLICIT_WAIT(SetImplicitWaitTimeoutNHandler.class, NotImplementedWebHandler.class),
+  IMPLICIT_WAIT(SetImplicitWaitTimeoutNHandler.class, SetImplicitWaitTimeoutHandler.class),
   GET_TIMEOUT(GetTimeoutNHandler.class),
 
   CONFIGURE(SetConfigurationNHandler.class),

@@ -23,12 +23,26 @@ public abstract class BaseWebCommandHandler extends BaseCommandHandler {
     super(driver, request);
   }
 
- 
+
   protected <T> T getConfiguration(String key) {
     return getConfiguration(key, (T) null);
   }
 
-  
+  protected void waitForPageToLoad() throws InterruptedException {
+    boolean loadHappened = false;
+    while (getSession().getContext().getDOMContext().isLoading()) {
+      loadHappened = true;
+      Thread.sleep(500);
+    }
+
+    // if safari, wait for things to stop moving ( for instance for the JS to execute and the URL
+    // bar to finish its animation.
+    if (loadHappened) {
+      Thread.sleep(1000);
+    }
+
+  }
+
   protected <T> T getConfiguration(String key, T defaultValue) {
     T webSpecific = getConf(WorkingMode.Web + "." + key);
     if (webSpecific != null) {

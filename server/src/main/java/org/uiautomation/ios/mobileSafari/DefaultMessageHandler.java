@@ -46,7 +46,6 @@ public class DefaultMessageHandler implements MessageHandler {
     for (ResponseFinder finder : finders) {
       this.extraFinders.add(finder);
     }
-
   }
 
   @Override
