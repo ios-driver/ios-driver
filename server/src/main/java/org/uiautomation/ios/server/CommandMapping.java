@@ -15,7 +15,6 @@
 package org.uiautomation.ios.server;
 
 import org.json.JSONObject;
-import org.openqa.selenium.html5.Location;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
@@ -25,7 +24,33 @@ import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.server.command.Handler;
 import org.uiautomation.ios.server.command.NotImplementedNativeHandler;
 import org.uiautomation.ios.server.command.NotImplementedWebHandler;
-import org.uiautomation.ios.server.command.uiautomation.*;
+import org.uiautomation.ios.server.command.uiautomation.ClearNHandler;
+import org.uiautomation.ios.server.command.uiautomation.DefaultUIAScriptNHandler;
+import org.uiautomation.ios.server.command.uiautomation.ExecuteScriptNHandler;
+import org.uiautomation.ios.server.command.uiautomation.FindElementNHandler;
+import org.uiautomation.ios.server.command.uiautomation.FindElementsRoot;
+import org.uiautomation.ios.server.command.uiautomation.GetAttributeNHandler;
+import org.uiautomation.ios.server.command.uiautomation.GetCapabilitiesNHandler;
+import org.uiautomation.ios.server.command.uiautomation.GetConfigurationNHandler;
+import org.uiautomation.ios.server.command.uiautomation.GetCurrentContextNHandler;
+import org.uiautomation.ios.server.command.uiautomation.GetElementSizeNHandler;
+import org.uiautomation.ios.server.command.uiautomation.GetOrientationNHandler;
+import org.uiautomation.ios.server.command.uiautomation.GetSessionsNHandler;
+import org.uiautomation.ios.server.command.uiautomation.GetTimeoutNHandler;
+import org.uiautomation.ios.server.command.uiautomation.GetWindowHandlesNHandler;
+import org.uiautomation.ios.server.command.uiautomation.LogElementTreeNHandler;
+import org.uiautomation.ios.server.command.uiautomation.NewSessionNHandler;
+import org.uiautomation.ios.server.command.uiautomation.SendKeysNHandler;
+import org.uiautomation.ios.server.command.uiautomation.ServerStatusNHandler;
+import org.uiautomation.ios.server.command.uiautomation.SetConfigurationNHandler;
+import org.uiautomation.ios.server.command.uiautomation.SetCurrentContextNHandler;
+import org.uiautomation.ios.server.command.uiautomation.SetImplicitWaitTimeoutNHandler;
+import org.uiautomation.ios.server.command.uiautomation.SetLocationNHandler;
+import org.uiautomation.ios.server.command.uiautomation.SetOrientationNHandler;
+import org.uiautomation.ios.server.command.uiautomation.SetTimeoutNHandler;
+import org.uiautomation.ios.server.command.uiautomation.SetValueNHandler;
+import org.uiautomation.ios.server.command.uiautomation.StopSessionNHandler;
+import org.uiautomation.ios.server.command.uiautomation.TakeScreenshotNHandler;
 import org.uiautomation.ios.server.command.web.BackHandler;
 import org.uiautomation.ios.server.command.web.ClearHandler;
 import org.uiautomation.ios.server.command.web.ClickHandler;
@@ -247,14 +272,7 @@ public enum CommandMapping {
 
 
   public Handler createHandler(IOSDriver driver, WebDriverLikeRequest request) throws Exception {
-    boolean isNative = true;
-    WebDriverLikeCommand command = request.getGenericCommand();
-
-    if (!command.isSessionLess()) {
-      ServerSideSession sss = driver.getSession(request.getSession());
-      isNative = sss.getMode() == WorkingMode.Native;
-    }
-
+    boolean isNative = isNative(driver, request);
     Class<?> clazz;
 
     if (isNative) {
@@ -274,6 +292,23 @@ public enum CommandMapping {
     Handler handler = (Handler) c.newInstance(args);
     return handler;
 
+  }
+
+  private boolean isNative(IOSDriver driver, WebDriverLikeRequest request) {
+    // if there a force flag in the request.
+    if (request.getPayload().has("native")) {
+      return request.getPayload().optBoolean("native");
+    }
+
+    // else, get it from the current mode.Ò
+    boolean isNative = true;
+    WebDriverLikeCommand command = request.getGenericCommand();
+
+    if (!command.isSessionLess()) {
+      ServerSideSession sss = driver.getSession(request.getSession());
+      isNative = sss.getMode() == WorkingMode.Native;
+    }
+    return isNative;
   }
 
 }
