@@ -13,9 +13,6 @@
  */
 package org.uiautomation.ios.server;
 
-import java.util.List;
-import java.util.logging.Logger;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.TimeoutException;
@@ -27,6 +24,11 @@ import org.uiautomation.ios.mobileSafari.events.EventHistory;
 import org.uiautomation.ios.mobileSafari.events.inserted.ChildIframeInserted;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 
+import java.util.List;
+import java.util.logging.Logger;
+
+
+// TODO freynaud revisit pageLoad, reset, setFrame and newContext and expose only 1 thing.
 public class DOMContext implements EventListener {
 
   private static final Logger log = Logger.getLogger(DOMContext.class.getName());
@@ -70,11 +72,40 @@ public class DOMContext implements EventListener {
     return window;
   }
 
-  public void reset() {
+  public void newContext() {
     window = null;
     document = null;
     iframe = null;
     mainDocument = null;
+  }
+
+  public String toString() {
+    StringBuilder b = new StringBuilder();
+    b.append("window " + window);
+    b.append("document " + document);
+    b.append("iframe " + iframe);
+    b.append("mainDocument " + mainDocument);
+    return b.toString();
+  }
+
+  // TODO freynaud reset() != pageLoad
+  public void reset() {
+    RemoteWebElement newDocument = null;
+    RemoteWebElement newWindow = null;
+
+    // check is what changed was the context for the current frame.
+    if (iframe != null) {
+      try {
+        newDocument = iframe.getContentDocument();
+        newWindow = iframe.getContentWindow();
+        setCurrentFrame(iframe, newDocument, newWindow);
+        return;
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+    // couldn't update the current frame. Reseting everything.
+    newContext();
   }
 
   // TODO freynaud. Cleanup. A reference to the main document of the page needs
@@ -117,6 +148,7 @@ public class DOMContext implements EventListener {
 
   @Override
   public void onPageLoad() {
+    System.err.println("new page loaded");
     pageLoaded = true;
     reset();
   }
@@ -145,17 +177,31 @@ public class DOMContext implements EventListener {
     return !isReady();
   }
 
-  private boolean isReady() {
+  public String getDocumentReadyState() {
+    String state = null;
     try {
-      String state = (String) session.getWebInspector().executeScript(
+      state = (String) session.getWebInspector().executeScript(
           "var state = document.readyState; return state",
           new JSONArray());
-      boolean ready = "complete".equals(state);
-      return ready; ///*"interactive".equals(state) || */"complete".equals(state);
     } catch (Exception e) {
-      // TODO detect frame gone and call  getSession().getContext().getDOMContext().reset();
-      return false;
+      // Arguments should belong to the same JavaScript world as the target object.
+      System.err.println("error, resetting because " + e.getMessage());
+      reset();
+      return "unknown";
     }
+    return state; ///*"interactive".equals(state)
+    /*String state = null;
+    try {
+      state = (String)session.getWebInspector().evaluate("document.readyState;");
+    } catch (Exception e) {
+      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+    }
+    System.out.println("state:"+state);
+    return state; */
+  }
+
+  private boolean isReady() {
+    return "complete".equals(getDocumentReadyState());
   }
 
   private void waitForDocumentReady(long deadLine) {

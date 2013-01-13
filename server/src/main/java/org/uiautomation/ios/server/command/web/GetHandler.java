@@ -18,7 +18,6 @@ import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.UIAModels.UIAElement;
-import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
@@ -72,7 +71,7 @@ public class GetHandler extends BaseWebCommandHandler {
     }
 
     if (newPageWillBeLoaded) {
-      getSession().getContext().getDOMContext().reset();
+      getSession().getContext().getDOMContext().newContext();
     }
 
     boolean useNativeEvents = getConfiguration("nativeEvents", nativeEvents);
@@ -101,19 +100,10 @@ public class GetHandler extends BaseWebCommandHandler {
   }
 
   private void typeURLNative(String url) {
-
-    WorkingMode base = getSession().getMode();
-    try {
-
-      getSession().setMode(WorkingMode.Native);
-      getAddressBar().tap();
-      RemoteUIAKeyboard keyboard = (RemoteUIAKeyboard) getSession().getNativeDriver().getKeyboard();
-      keyboard.sendKeys(url);
-      keyboard.findElement(new NameCriteria("Go")).tap();
-
-    } finally {
-      getSession().setMode(base);
-    }
+    getAddressBar().tap();
+    RemoteUIAKeyboard keyboard = (RemoteUIAKeyboard) getSession().getNativeDriver().getKeyboard();
+    keyboard.sendKeys(url);
+    keyboard.findElement(new NameCriteria("Go")).tap();
   }
 
   private void fakeTypeURL(String url) {

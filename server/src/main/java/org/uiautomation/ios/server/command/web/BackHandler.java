@@ -37,7 +37,7 @@ public class BackHandler extends BaseWebCommandHandler {
     } else {
       backWeb();
     }
-    getSession().getContext().getDOMContext().reset();
+    getSession().getContext().getDOMContext().newContext();
     getSession().getWebInspector().waitForPageToLoad();
     Response resp = new Response();
     resp.setSessionId(getSession().getSessionId());

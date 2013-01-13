@@ -32,7 +32,7 @@ public class ForwardHandler extends BaseWebCommandHandler {
   @Override
   public Response handle() throws Exception {
     boolean useNativeEvents = getConfiguration("nativeEvents", nativeEvents);
-    getSession().getContext().getDOMContext().reset();
+    getSession().getContext().getDOMContext().newContext();
     if (useNativeEvents) {
       // forwardNative();
     } else {
@@ -54,8 +54,8 @@ public class ForwardHandler extends BaseWebCommandHandler {
     desc.put(
         "nativeEvents",
         "{boolean}, default to "
-            + nativeEvents
-            + ".true = UIAutomation native events will be used to enter click the forward arrow (slow) , Web =  WebKit remote debugging will be used.Faster.");
+        + nativeEvents
+        + ".true = UIAutomation native events will be used to enter click the forward arrow (slow) , Web =  WebKit remote debugging will be used.Faster.");
     return desc;
   }
 

@@ -28,9 +28,9 @@
 - handle alerts for web
 - cleanup and document setValue vs sendKeys
 - send info to jason to start / compile etc + feature list.
-- implicit wait for web ( would help with pageLoad issues )
-- avoid switching between native and web for internal command.
-
++ implicit wait for web ( would help with pageLoad issues )
++ avoid switching between native and web for internal command.
+- make an executable
 
 
 TODOs:
@@ -51,9 +51,11 @@ TODOs:
 - add selenium tests for the inspector ( update mocks ? )
 - confusion between locale and languages
 - real device for web.
+- setup and teardown for device.
 - encapsulate result of logEleemntTree.
 - inspector should save the tmp screenshot in tmp dir
 - nativeDriver.executeScript should return UIAElement cast to what they are rather than WebElements.
 - use implicit wait to wait for the native keyboard 
 - remove all calls to plutil
 - instruments crash from user define script. stackoverflow for method def for instance.
+- investigate why safari is slow to start
