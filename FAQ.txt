@@ -45,3 +45,7 @@ To start 5.1, ios-driver will do the following setup :
 start the simulator, it will start on 5.1
 
 and put the files back.
+
+
+create icon :
+http://iconverticons.com/online/
