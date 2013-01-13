@@ -285,9 +285,6 @@ public class RemoteUIADriver extends RemoteWebDriver
     if (o == null) {
       return null;
     }
-    if (o instanceof String) {
-      return (T) o;
-    }
     if (o instanceof Map) {
       Map<String, Object> map = (Map<String, Object>) o;
       if (map.containsKey("ELEMENT")) {
@@ -311,8 +308,7 @@ public class RemoteUIADriver extends RemoteWebDriver
       }
       return (T) res;
     }
-
-    return null;
+    return (T) o;
   }
 
   /*
@@ -351,12 +347,13 @@ public class RemoteUIADriver extends RemoteWebDriver
     Iterable<Object>
         convertedArgs =
         Iterables.transform(Lists.newArrayList(args), new WebElementToJsonConverter());
-
     Map<String, ?>
         params =
         ImmutableMap.of("script", script, "args", Lists.newArrayList(convertedArgs));
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.EXECUTE_SCRIPT, params);
 
-    return execute(DriverCommand.EXECUTE_SCRIPT, params).getValue();
+    return execute(request);
+    //return execute(DriverCommand.EXECUTE_SCRIPT, params).getValue();
   }
 
   @Override

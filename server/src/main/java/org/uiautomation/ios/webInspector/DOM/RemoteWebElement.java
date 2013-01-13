@@ -103,13 +103,13 @@ public class RemoteWebElement {
   }
 
   private void clickNative() throws Exception {
-    WorkingMode origin = session.getMode();
-    session.setMode(WorkingMode.Native);
-    ((JavascriptExecutor) nativeDriver).executeScript(getNativeElementClickOnIt());
-    session.setMode(origin);
-    long start = System.currentTimeMillis();
 
-    /*while (true) {
+    ((JavascriptExecutor) nativeDriver).executeScript(getNativeElementClickOnIt());
+
+
+
+    /* long start = System.currentTimeMillis();
+    while (true) {
       long end = System.currentTimeMillis();
       System.out.println((end-start)+"ms,is loading? :" + session.getContext().getDOMContext().isLoading());
     } */
@@ -185,7 +185,6 @@ public class RemoteWebElement {
     // web stuff.
     scrollIntoViewIfNeeded();
     Point po = findPosition();
-    System.out.println("click native on po :" + po.toString());
 
     Dimension dim = inspector.getSize();
     int webPageWidth = inspector.getInnerWidth();
@@ -320,27 +319,24 @@ public class RemoteWebElement {
 
       UIARect rect = null;
       UIARect offset = null;
-      try {
-        session.setMode(WorkingMode.Native);
-        UIAElement sv = nativeDriver.findElement(new TypeCriteria(UIAWebView.class));
 
-        // scrollview container. Doesn't start in 0,0 // x=0,y=96,h=928w=768
-        // TODO freynaud : should save the current value, and reset to that at
-        // the end. Not to false.
-        nativeDriver.configure(WebDriverLikeCommand.RECT).set("checkForStale", false);
-        rect = sv.getRect();
+      session.setMode(WorkingMode.Native);
+      UIAElement sv = nativeDriver.findElement(new TypeCriteria(UIAWebView.class));
 
-        UIAElement addressBar = nativeDriver
-            .findElement(
-                new AndCriteria(new TypeCriteria(UIAElement.class), new NameCriteria("Address",
-                                                                                     L10NStrategy.serverL10N),
-                                new LabelCriteria("Address", L10NStrategy.serverL10N)));
-        offset = addressBar.getRect();
-        nativeDriver.configure(WebDriverLikeCommand.RECT).set("checkForStale", true);
-        // rect = sv.getRect();
-      } finally {
-        session.setMode(origin);
-      }
+      // scrollview container. Doesn't start in 0,0 // x=0,y=96,h=928w=768
+      // TODO freynaud : should save the current value, and reset to that at
+      // the end. Not to false.
+      nativeDriver.configure(WebDriverLikeCommand.RECT).set("checkForStale", false);
+      rect = sv.getRect();
+
+      UIAElement addressBar = nativeDriver
+          .findElement(
+              new AndCriteria(new TypeCriteria(UIAElement.class), new NameCriteria("Address",
+                                                                                   L10NStrategy.serverL10N),
+                              new LabelCriteria("Address", L10NStrategy.serverL10N)));
+      offset = addressBar.getRect();
+      nativeDriver.configure(WebDriverLikeCommand.RECT).set("checkForStale", true);
+      // rect = sv.getRect();
 
       int top = po.getY();
       int left = po.getX();
@@ -361,12 +357,9 @@ public class RemoteWebElement {
         delta = 96;
       }
       int y = delta + top;
-      try {
-        session.setMode(WorkingMode.Native);
-        nativeElement = nativeDriver.findElement(new LocationCriteria(x, y));
-      } finally {
-        session.setMode(origin);
-      }
+
+      nativeElement = nativeDriver.findElement(new LocationCriteria(x, y));
+
 
     }
     return nativeElement;
@@ -833,11 +826,9 @@ public class RemoteWebElement {
      * session.getNativeDriver().pinchClose(300, 400, 50, 100, 1); } finally {
      * session.setMode(origin); }
      */
-    WorkingMode origin = session.getMode();
-    session.setMode(WorkingMode.Native);
+
     ((JavascriptExecutor) nativeDriver)
         .executeScript(getNativeElementClickOnItAndTypeUsingKeyboardScript(value));
-    session.setMode(origin);
   }
 
   public void scrollIntoViewIfNeeded() throws Exception {

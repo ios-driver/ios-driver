@@ -13,15 +13,19 @@
  */
 package org.uiautomation.ios.client.uiamodels.impl;
 
-import java.net.URL;
-import java.util.Map;
+import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.ImmutableMap;
 
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.HttpCommandExecutor;
 import org.openqa.selenium.remote.SessionId;
 import org.uiautomation.ios.IOSCapabilities;
+import org.uiautomation.ios.communication.Path;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
+
+import java.net.URL;
+import java.util.Map;
 
 public class AttachRemoteUIADriver extends RemoteUIADriver {
 
@@ -54,5 +58,6 @@ public class AttachRemoteUIADriver extends RemoteUIADriver {
     Map<String, Object> c = execute(request);
     return new IOSCapabilities(c);
   }
+
 
 }

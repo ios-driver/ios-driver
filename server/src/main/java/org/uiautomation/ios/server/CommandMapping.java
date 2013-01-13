@@ -300,7 +300,7 @@ public enum CommandMapping {
       return request.getPayload().optBoolean("native");
     }
 
-    // else, get it from the current mode.Ò
+    // else, get it from the current mode.
     boolean isNative = true;
     WebDriverLikeCommand command = request.getGenericCommand();
 

@@ -27,6 +27,7 @@ import org.uiautomation.ios.UIAModels.configuration.DriverConfiguration;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.client.uiamodels.impl.AttachRemoteUIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.ServerSideNativeDriver;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.device.Device;
 import org.uiautomation.ios.mobileSafari.WebInspector;
@@ -50,10 +51,11 @@ public class ServerSideSession extends Session {
 
   private final DriverConfiguration configuration;
 
-  
-  public IOSCapabilities getCapabilities(){
+
+  public IOSCapabilities getCapabilities() {
     return capabilities;
   }
+
   ServerSideSession(IOSDriver driver, IOSCapabilities capabilities) {
     super(UUID.randomUUID().toString());
     this.driver = driver;
@@ -72,7 +74,7 @@ public class ServerSideSession extends Session {
 
       if (!driver.getHostInfo().getInstalledSDKs().contains(version)) {
         throw new SessionNotCreatedException("Cannot start on version " + version + ".Installed : "
-            + driver.getHostInfo().getInstalledSDKs());
+                                             + driver.getHostInfo().getInstalledSDKs());
       }
     }
     instruments = new InstrumentsManager(driver.getPort());
@@ -126,10 +128,14 @@ public class ServerSideSession extends Session {
   }
 
   public void start() {
-    String appleLanguage = application.getAppleLocaleFromLanguageCode(capabilities.getLanguage()).getAppleLanguagesForPreferencePlist();
-    instruments.startSession(capabilities.getDevice(),capabilities.getDeviceVariation(), capabilities.getSDKVersion(), capabilities.getLocale(),
-        appleLanguage, application, getSessionId(), capabilities.isTimeHack(),
-        capabilities.getExtraSwitches());
+    String
+        appleLanguage =
+        application.getAppleLocaleFromLanguageCode(capabilities.getLanguage())
+            .getAppleLanguagesForPreferencePlist();
+    instruments.startSession(capabilities.getDevice(), capabilities.getDeviceVariation(),
+                             capabilities.getSDKVersion(), capabilities.getLocale(),
+                             appleLanguage, application, getSessionId(), capabilities.isTimeHack(),
+                             capabilities.getExtraSwitches());
 
     URL url = null;
     try {
@@ -137,7 +143,7 @@ public class ServerSideSession extends Session {
     } catch (Exception e) {
       e.printStackTrace();
     }
-    nativeDriver = new AttachRemoteUIADriver(url, new SessionId(instruments.getSessionId()));
+    nativeDriver = new ServerSideNativeDriver(url, new SessionId(instruments.getSessionId()));
   }
 
   public WebInspector getWebInspector() {
