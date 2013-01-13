@@ -44,7 +44,7 @@ public class WebInspector {
 
   private int width = -1;
 
-  private static final Long defaultPageLoadTimeoutInMs = 30000L;
+  public static final Long defaultPageLoadTimeoutInMs = 30000L;
 
   public RemoteWebElement getDocument() throws Exception {
     DOMContext context = session.getContext().getDOMContext();
@@ -110,7 +110,7 @@ public class WebInspector {
     this.session = session;
     DOMContext context = session.getContext().getDOMContext();
     protocol =
-        new DebugProtocol(context, bundleId/*, new AlertDetector((RemoteUIADriver) nativeDriver)*/);
+        new DebugProtocol(context, bundleId, new AlertDetector((RemoteUIADriver) nativeDriver));
     enablePageEvent();
   }
 
