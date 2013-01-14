@@ -42,8 +42,10 @@ public class ServerSideNativeDriver extends AttachRemoteUIADriver {
    * forces the requests to be executed native by adding the native flag in the param list.
    */
   @Override
-  public WebDriverLikeRequest buildRequest(WebDriverLikeCommand command, RemoteUIAElement element,
-                                           Map<String, ?> params) {
+  public WebDriverLikeRequest buildRequest(WebDriverLikeCommand command,
+                                           RemoteUIAElement element,
+                                           Map<String, ?> params,
+                                           Map<String, String> extraParamInPath) {
     String method = command.method();
     Path p = new Path(command).withSession(getSessionId());
     if (element != null) {
@@ -53,7 +55,11 @@ public class ServerSideNativeDriver extends AttachRemoteUIADriver {
     ImmutableMap.Builder<String, Object> builder = new ImmutableMap.Builder<String, Object>();
     builder.put("native", true);
     if (params != null) {
-      builder.putAll(params).build();
+      builder.putAll(params);
+    }
+
+    for (String key : extraParamInPath.keySet()) {
+      p.validateAndReplace(":" + key, extraParamInPath.get(key));
     }
     WebDriverLikeRequest request = new WebDriverLikeRequest(method, p, builder.build());
     return request;
