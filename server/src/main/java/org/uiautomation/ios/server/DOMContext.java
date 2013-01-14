@@ -16,12 +16,14 @@ package org.uiautomation.ios.server;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.mobileSafari.EventListener;
 import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.mobileSafari.events.ChildNodeRemoved;
 import org.uiautomation.ios.mobileSafari.events.Event;
 import org.uiautomation.ios.mobileSafari.events.EventHistory;
 import org.uiautomation.ios.mobileSafari.events.inserted.ChildIframeInserted;
+import org.uiautomation.ios.webInspector.DOM.RemoteExceptionException;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 
 import java.util.List;
@@ -183,9 +185,9 @@ public class DOMContext implements EventListener {
       state = (String) session.getWebInspector().executeScript(
           "var state = document.readyState; return state",
           new JSONArray());
-    } catch (Exception e) {
+    } catch (RemoteExceptionException e) {
       // Arguments should belong to the same JavaScript world as the target object.
-      System.err.println("error, resetting because " + e.getMessage());
+      System.err.println("error, reseting because " + e.getMessage());
       reset();
       return "unknown";
     }

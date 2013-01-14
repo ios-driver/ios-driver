@@ -16,6 +16,7 @@ package org.uiautomation.ios.webInspector.DOM;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.mobileSafari.DebugProtocol;
 import org.uiautomation.ios.mobileSafari.IosAtoms;
 import org.uiautomation.ios.mobileSafari.NodeId;
@@ -106,21 +107,26 @@ public class RemoteObject {
 
   }
 
-  public String stringify() throws Exception {
-    JSONObject cmd = new JSONObject();
-    cmd.put("method", "Runtime.callFunctionOn");
+  public String stringify() {
+    try {
+      JSONObject cmd = new JSONObject();
+      cmd.put("method", "Runtime.callFunctionOn");
 
-    JSONArray args = new JSONArray();
+      JSONArray args = new JSONArray();
 
-    cmd.put(
-        "params",
-        new JSONObject().put("objectId", this.getId())
-            .put("functionDeclaration",
-                 "(function() { var res = " + IosAtoms.STRINGIFY + "(this); return res;})")
-            .put("arguments", args).put("returnByValue", true));
+      cmd.put(
+          "params",
+          new JSONObject().put("objectId", this.getId())
+              .put("functionDeclaration",
+                   "(function() { var res = " + IosAtoms.STRINGIFY + "(this); return res;})")
+              .put("arguments", args).put("returnByValue", true));
 
-    JSONObject response = protocol.sendCommand(cmd);
-    return session.getWebInspector().cast(response);
+      JSONObject response = protocol.sendCommand(cmd);
+      return session.getWebInspector().cast(response);
+    } catch (JSONException e) {
+      throw new WebDriverException(e);
+    }
+
   }
 
   public String getTextAreaValue() throws Exception {

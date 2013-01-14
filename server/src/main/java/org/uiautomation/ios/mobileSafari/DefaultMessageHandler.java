@@ -19,6 +19,7 @@ import org.dom4j.Document;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.json.JSONObject;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.mobileSafari.events.ChildNodeRemoved;
 import org.uiautomation.ios.mobileSafari.events.Event;
@@ -28,8 +29,8 @@ import org.uiautomation.ios.mobileSafari.events.inserted.ChildIframeInserted;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.TimeoutException;
 import java.util.logging.Logger;
+
 
 public class DefaultMessageHandler implements MessageHandler {
 

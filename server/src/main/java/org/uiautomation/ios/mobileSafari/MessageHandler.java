@@ -13,13 +13,15 @@
  */
 package org.uiautomation.ios.mobileSafari;
 
-import java.util.concurrent.TimeoutException;
 
 import org.json.JSONObject;
+import org.openqa.selenium.TimeoutException;
 
 public interface MessageHandler {
 
   public void handle(String msg);
+
   public JSONObject getResponse(int id) throws TimeoutException;
+
   public void stop();
 }

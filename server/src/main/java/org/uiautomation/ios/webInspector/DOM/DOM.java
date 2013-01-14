@@ -15,6 +15,7 @@ package org.uiautomation.ios.webInspector.DOM;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.mobileSafari.NodeId;
 
 public class DOM {
@@ -25,11 +26,15 @@ public class DOM {
     return cmd;
   }
 
-  public static JSONObject resolveNode(NodeId id) throws JSONException {
+  public static JSONObject resolveNode(NodeId id) {
     JSONObject cmd = new JSONObject();
-    cmd.put("method", "DOM.resolveNode");
-    cmd.put("params", new JSONObject().put("nodeId", id.getId()));
-    return cmd;
+    try {
+      cmd.put("method", "DOM.resolveNode");
+      cmd.put("params", new JSONObject().put("nodeId", id.getId()));
+      return cmd;
+    } catch (JSONException e) {
+      throw new WebDriverException(e);
+    }
   }
 
   public static JSONObject requestNode(String objectId) throws JSONException {
@@ -68,7 +73,8 @@ public class DOM {
     cmd.put(
         "params",
         new JSONObject().put("nodeId", id.getId()).put("highlightConfig",
-            new JSONObject().put("showInfo", true).put("contentColor", color)
+                                                       new JSONObject().put("showInfo", true)
+                                                           .put("contentColor", color)
 
         ));
     return cmd;

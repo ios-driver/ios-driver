@@ -13,19 +13,19 @@
  */
 package org.uiautomation.ios.mobileSafari;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
+import com.dd.plist.BinaryPropertyListParser;
+import com.dd.plist.BinaryPropertyListWriter;
+import com.dd.plist.NSObject;
+import com.dd.plist.XMLPropertyListParser;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 
-import com.dd.plist.BinaryPropertyListParser;
-import com.dd.plist.BinaryPropertyListWriter;
-import com.dd.plist.NSObject;
-import com.dd.plist.XMLPropertyListParser;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 
 public class PlistManager {
 
@@ -58,7 +58,7 @@ public class PlistManager {
   }
 
 
-  public String JSONCommand(JSONObject command) throws IOException {
+  public String JSONCommand(JSONObject command) {
     String json = command.toString();
     String s = Base64.encodeBase64String(json.getBytes());
     String template = loadFromTemplate(SEND_JSON_COMMAND);
@@ -66,9 +66,15 @@ public class PlistManager {
     return res;
   }
 
-  public byte[] plistXmlToBinary(String msg) throws Exception {
-    NSObject object = XMLPropertyListParser.parse(msg.getBytes());
-    return BinaryPropertyListWriter.writeToArray(object);
+  public byte[] plistXmlToBinary(String msg) {
+    NSObject object = null;
+    try {
+      object = XMLPropertyListParser.parse(msg.getBytes());
+      return BinaryPropertyListWriter.writeToArray(object);
+    } catch (Exception e) {
+      throw new WebDriverException(e);
+    }
+
 
   }
 

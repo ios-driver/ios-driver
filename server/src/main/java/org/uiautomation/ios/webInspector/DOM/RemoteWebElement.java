@@ -61,7 +61,7 @@ public class RemoteWebElement {
   private final NodeId nodeId;
   private RemoteObject remoteObject;
 
-  public RemoteWebElement(NodeId id, ServerSideSession session) throws JSONException {
+  public RemoteWebElement(NodeId id, ServerSideSession session) {
     this.session = session;
     this.inspector = session.getWebInspector();
     this.nativeDriver = session.getNativeDriver();
@@ -131,7 +131,7 @@ public class RemoteWebElement {
     throw new RuntimeException("case not implemented");
   }
 
-  public RemoteObject getRemoteObject() throws JSONException, Exception {
+  public RemoteObject getRemoteObject() {
     JSONObject response = null;
     if (remoteObject == null) {
       long start = System.currentTimeMillis();

@@ -13,7 +13,9 @@
  */
 package org.uiautomation.ios.mobileSafari;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.webInspector.DOM.RemoteExceptionException;
 
 import java.io.ByteArrayOutputStream;
@@ -89,33 +91,38 @@ public class DebugProtocol {
    *
    * @param command . For command format, read https://www.webkit.org/blog/?p=1875&preview=true.
    */
-  public JSONObject sendCommand(JSONObject command) throws Exception {
-    commandId++;
-    command.put("id", commandId);
+  public JSONObject sendCommand(JSONObject command) {
+    try {
+      commandId++;
+      command.put("id", commandId);
 
-    long start = System.currentTimeMillis();
+      long start = System.currentTimeMillis();
 
-    String xml = plist.JSONCommand(command);
-    // perf("got xml \t" + (System.currentTimeMillis() - start) + "ms.");
-    xml = xml.replace("$bundleId", this.bundleId);
+      String xml = plist.JSONCommand(command);
+      // perf("got xml \t" + (System.currentTimeMillis() - start) + "ms.");
+      xml = xml.replace("$bundleId", this.bundleId);
 
-    byte[] bytes = plist.plistXmlToBinary(xml);
-    // perf("prepared request \t" + (System.currentTimeMillis() - start) +
-    // "ms.");
-    sendBinaryMessage(bytes);
-    // perf("sent request \t\t" + (System.currentTimeMillis() - start) + "ms.");
-    JSONObject response = handler.getResponse(command.getInt("id"));
-    // perf("got response\t\t" + (System.currentTimeMillis() - start) + "ms.");
-    JSONObject error = response.optJSONObject("error");
-    if (error != null) {
-      throw new RemoteExceptionException(error, command);
-    } else if (response.optBoolean("wasThrown", false)) {
-      throw new Exception("remote JS exception " + response.toString(2));
-    } else {
-      log.fine(System.currentTimeMillis() + "\t\t" + (System.currentTimeMillis() - start) + "ms\t"
-               + command.getString("method") + " " + command);
-      return response.getJSONObject("result");
+      byte[] bytes = plist.plistXmlToBinary(xml);
+      // perf("prepared request \t" + (System.currentTimeMillis() - start) +
+      // "ms.");
+      sendBinaryMessage(bytes);
+      // perf("sent request \t\t" + (System.currentTimeMillis() - start) + "ms.");
+      JSONObject response = handler.getResponse(command.getInt("id"));
+      // perf("got response\t\t" + (System.currentTimeMillis() - start) + "ms.");
+      JSONObject error = response.optJSONObject("error");
+      if (error != null) {
+        throw new RemoteExceptionException(error, command);
+      } else if (response.optBoolean("wasThrown", false)) {
+        throw new WebDriverException("remote JS exception " + response.toString(2));
+      } else {
+        log.fine(System.currentTimeMillis() + "\t\t" + (System.currentTimeMillis() - start) + "ms\t"
+                 + command.getString("method") + " " + command);
+        return response.getJSONObject("result");
+      }
+    } catch (JSONException e) {
+      throw new WebDriverException(e);
     }
+
   }
 
 
@@ -134,15 +141,18 @@ public class DebugProtocol {
   /**
    * sends the message to the AUT.
    */
-  private void sendBinaryMessage(byte[] bytes) throws IOException {
-    OutputStream os = socket.getOutputStream();
-    os.write((byte) ((bytes.length >> 24) & 0xFF));
-    os.write((byte) ((bytes.length >> 16) & 0xFF));
-    os.write((byte) ((bytes.length >> 8) & 0xFF));
-    os.write((byte) (bytes.length & 0xFF));
-    // System.err.println("about to send " + bytes.length + " bytes.");
-    os.write(bytes);
-    // System.err.println("Sending " + bytes.length + " bytes.");
+  private void sendBinaryMessage(byte[] bytes) {
+
+    try {
+      OutputStream os = socket.getOutputStream();
+      os.write((byte) ((bytes.length >> 24) & 0xFF));
+      os.write((byte) ((bytes.length >> 16) & 0xFF));
+      os.write((byte) ((bytes.length >> 8) & 0xFF));
+      os.write((byte) (bytes.length & 0xFF));
+      os.write(bytes);
+    } catch (IOException e) {
+      throw new WebDriverException(e);
+    }
   }
 
   /**
