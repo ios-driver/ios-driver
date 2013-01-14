@@ -91,9 +91,8 @@ public enum WebDriverLikeCommand {
   // GET /session/:sessionId/element/:id/css/:propertyName
   SET_ORIENTATION("POST", "/session/:sessionId/orientation", Void.class),
   GET_ORIENTATION("GET", "/session/:sessionId/orientation", Orientation.class),
-  // GET /session/:sessionId/alert_text
-  // POST /session/:sessionId/alert_text
-  // POST /session/:sessionId/accept_alert
+  GET_ALERT_TEXT("GET", "/session/:sessionId/alert_text", JSONObject.class),
+  ACCEPT_ALERT("POST", "/session/:sessionId/accept_alert", Void.class),
   // POST /session/:sessionId/dismiss_alert
 
   // POST /session/:sessionId/moveto
