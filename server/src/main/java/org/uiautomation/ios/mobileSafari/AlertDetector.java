@@ -13,11 +13,13 @@
  */
 package org.uiautomation.ios.mobileSafari;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAAlert;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 
 import java.util.logging.Logger;
@@ -57,16 +59,20 @@ public class AlertDetector implements ResponseFinder {
       if (!stopRequested) {
         log.fine("starting to look for an alert.");
         driver.switchTo().window(WorkingMode.Native.toString());
-        driver.getAlert();
+        RemoteUIAAlert alert = driver.getAlert();
         driver.switchTo().window(WorkingMode.Web.toString());
-        log.fine("found an alert.");
-        ex = new UnhandledAlertException("alert present.");
+        String alertDetails = "no details";
+        alertDetails = alert.logElementTree(null, false).toString(2);
+        log.fine("found an alert." + alertDetails);
+        ex = new UnhandledAlertException("alert present :" + alertDetails);
       } else {
         throw new InterruptedException(
             "search interrupted. Another finder got a response already.");
       }
     } catch (NoAlertPresentException ex) {
       log.fine("there was no alert.");
+    } catch (Exception e) {
+      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
     } finally {
       setFinished(true);
     }
