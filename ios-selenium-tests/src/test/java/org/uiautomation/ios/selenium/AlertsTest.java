@@ -1,5 +1,6 @@
 package org.uiautomation.ios.selenium;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.UnhandledAlertException;
@@ -7,12 +8,16 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import static org.openqa.selenium.TestWaiter.waitFor;
+import static org.openqa.selenium.WaitingConditions.alertToBePresent;
+import static org.testng.Assert.assertEquals;
+
 /**
  * no really done right now. it will be possible, but there will be some timing issues.
  */
 public class AlertsTest extends BaseSeleniumTest {
 
-  /*@BeforeClass
+  @BeforeClass
   public void setUp() throws Exception {
     driver.get(pages.alertsPage);
   }
@@ -25,18 +30,17 @@ public class AlertsTest extends BaseSeleniumTest {
     // TODO freynaud find out why reloading the page right after the click makes the alert appear.
     Thread.sleep(1000);
     driver.get(pages.alertsPage);
-  }  */
+  }
 
-  /*@Test(expectedExceptions = UnhandledAlertException.class)
+  @Test//(expectedExceptions = UnhandledAlertException.class)
   public void testShouldAllowUsersToAcceptAnAlertManually() throws InterruptedException {
     driver.findElement(By.id("alert")).click();
     Thread.sleep(500);
-    driver.findElement(By.id("alert"));
-    /*Alert alert = waitFor(alertToBePresent(driver));
+    Alert alert = waitFor(alertToBePresent(driver));
     alert.accept();
 
     // If we can perform any action, we're good to go
-    Assert.assertEquals("Testing Alerts", driver.getTitle());
+    assertEquals("Testing Alerts", driver.getTitle());
   }
 
   @Test
@@ -79,7 +83,7 @@ public class AlertsTest extends BaseSeleniumTest {
   }
 
 
-  @Test
+  /*@Test
   public void testShouldAllowAUserToAcceptAPrompt() {
     driver.findElement(By.id("prompt")).click();
 

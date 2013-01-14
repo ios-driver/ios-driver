@@ -24,11 +24,13 @@ import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.server.command.Handler;
 import org.uiautomation.ios.server.command.NotImplementedNativeHandler;
 import org.uiautomation.ios.server.command.NotImplementedWebHandler;
+import org.uiautomation.ios.server.command.uiautomation.AcceptAlertHandler;
 import org.uiautomation.ios.server.command.uiautomation.ClearNHandler;
 import org.uiautomation.ios.server.command.uiautomation.DefaultUIAScriptNHandler;
 import org.uiautomation.ios.server.command.uiautomation.ExecuteScriptNHandler;
 import org.uiautomation.ios.server.command.uiautomation.FindElementNHandler;
 import org.uiautomation.ios.server.command.uiautomation.FindElementsRoot;
+import org.uiautomation.ios.server.command.uiautomation.GetAlertTextNHandler;
 import org.uiautomation.ios.server.command.uiautomation.GetAttributeNHandler;
 import org.uiautomation.ios.server.command.uiautomation.GetCapabilitiesNHandler;
 import org.uiautomation.ios.server.command.uiautomation.GetConfigurationNHandler;
@@ -194,7 +196,8 @@ public enum CommandMapping {
   //TABLE_GROUPS(".groups()"),
   //TABLE_CELLS(".cells()"),
   //TABLE_VISIBLE_CELLS(".visibleCells()"),
-
+  GET_ALERT_TEXT(GetAlertTextNHandler.class),
+  ACCEPT_ALERT(NotImplementedNativeHandler.class, AcceptAlertHandler.class),
   ALERT_CANCEL_BUTTON(".cancelButton()"),
   ALERT_DEFAULT_BUTTON(".defaultButton()"),;
 
@@ -290,6 +293,7 @@ public enum CommandMapping {
 
     Constructor<?> c = clazz.getConstructor(argsClass);
     Handler handler = (Handler) c.newInstance(args);
+    System.out.println("will use " + handler.getClass().getCanonicalName());
     return handler;
 
   }
