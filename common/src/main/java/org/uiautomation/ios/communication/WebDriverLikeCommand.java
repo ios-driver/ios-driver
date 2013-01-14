@@ -93,7 +93,7 @@ public enum WebDriverLikeCommand {
   GET_ORIENTATION("GET", "/session/:sessionId/orientation", Orientation.class),
   GET_ALERT_TEXT("GET", "/session/:sessionId/alert_text", JSONObject.class),
   ACCEPT_ALERT("POST", "/session/:sessionId/accept_alert", Void.class),
-  // POST /session/:sessionId/dismiss_alert
+  DISMISS_ALERT("POST", "/session/:sessionId/dismiss_alert", Void.class),
 
   // POST /session/:sessionId/moveto
   // POST /session/:sessionId/click

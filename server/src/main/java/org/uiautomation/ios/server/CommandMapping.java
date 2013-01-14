@@ -27,6 +27,7 @@ import org.uiautomation.ios.server.command.NotImplementedWebHandler;
 import org.uiautomation.ios.server.command.uiautomation.AcceptAlertHandler;
 import org.uiautomation.ios.server.command.uiautomation.ClearNHandler;
 import org.uiautomation.ios.server.command.uiautomation.DefaultUIAScriptNHandler;
+import org.uiautomation.ios.server.command.uiautomation.DismissAlertHandler;
 import org.uiautomation.ios.server.command.uiautomation.ExecuteScriptNHandler;
 import org.uiautomation.ios.server.command.uiautomation.FindElementNHandler;
 import org.uiautomation.ios.server.command.uiautomation.FindElementsRoot;
@@ -198,6 +199,7 @@ public enum CommandMapping {
   //TABLE_VISIBLE_CELLS(".visibleCells()"),
   GET_ALERT_TEXT(GetAlertTextNHandler.class),
   ACCEPT_ALERT(NotImplementedNativeHandler.class, AcceptAlertHandler.class),
+  DISMISS_ALERT(NotImplementedNativeHandler.class, DismissAlertHandler.class),
   ALERT_CANCEL_BUTTON(".cancelButton()"),
   ALERT_DEFAULT_BUTTON(".defaultButton()"),;
 
