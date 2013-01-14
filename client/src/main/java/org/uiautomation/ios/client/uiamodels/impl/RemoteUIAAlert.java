@@ -13,12 +13,20 @@
  */
 package org.uiautomation.ios.client.uiamodels.impl;
 
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.security.Credentials;
 import org.uiautomation.ios.UIAModels.UIAAlert;
 import org.uiautomation.ios.UIAModels.UIAButton;
+import org.uiautomation.ios.UIAModels.UIAElement;
+import org.uiautomation.ios.UIAModels.UIAStaticText;
+import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 
-public class RemoteUIAAlert extends RemoteUIAElement implements UIAAlert {
+import java.util.List;
+
+public class RemoteUIAAlert extends RemoteUIAElement implements UIAAlert, Alert {
 
   public RemoteUIAAlert(RemoteUIADriver driver, String reference) {
     super(driver, reference);
@@ -35,7 +43,45 @@ public class RemoteUIAAlert extends RemoteUIAElement implements UIAAlert {
   @Override
   public UIAButton getDefaultButton() {
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ALERT_DEFAULT_BUTTON);
-    return getDriver().execute(request);
+    UIAButton butt = getDriver().execute(request);
+    return butt;
   }
+
+  @Override
+  public void dismiss() {
+    //To change body of implemented methods use File | Settings | File Templates.
+  }
+
+  @Override
+  public void accept() {
+    //To change body of implemented methods use File | Settings | File Templates.
+  }
+
+  @Override
+  public void sendKeys(String keysToSend) {
+    //To change body of implemented methods use File | Settings | File Templates.
+  }
+
+  @Override
+  public void authenticateUsing(Credentials credentials) {
+    //To change body of implemented methods use File | Settings | File Templates.
+  }
+
+  @Override
+  public String getText() {
+    List<UIAElement> texts = this.findElements(new TypeCriteria(UIAStaticText.class));
+    // first one is the title, 2nd is what we want.
+    if (texts.size() >= 2) {
+      return texts.get(1).getValue();
+    } else {
+      // can't find the text, dump the alert object tree.
+      try {
+        return logElementTree(null, false).toString(2);
+      } catch (Exception e) {
+        throw new WebDriverException(e);
+      }
+    }
+  }
+
 
 }
