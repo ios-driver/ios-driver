@@ -24,14 +24,11 @@ import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 
 /**
- * Proxy to an object cached on the server side.Each object is identified by a
- * unique reference when accessed the first time, and accessed with this
- * reference later on.
- * 
- * WARNING : Equality as per the JSON Webdriver protocol is broken : the same
- * object can be stored several times in the cache with different references if
- * retrieved several time.
- * 
+ * Proxy to an object cached on the server side.Each object is identified by a unique reference when
+ * accessed the first time, and accessed with this reference later on.
+ *
+ * WARNING : Equality as per the JSON Webdriver protocol is broken : the same object can be stored
+ * several times in the cache with different references if retrieved several time.
  */
 public abstract class RemoteIOSObject extends RemoteWebElement {
 
@@ -56,7 +53,7 @@ public abstract class RemoteIOSObject extends RemoteWebElement {
   /**
    * retrieves an object in the element tree of the current RemoteObject, using
    * the given command.
-   * 
+   *
    * @param command
    *          the command to execute, for instance findElement.
    * @param payload
@@ -80,23 +77,18 @@ public abstract class RemoteIOSObject extends RemoteWebElement {
   }*/
 
   /**
-   * Uses reflection to instanciate a remote object implementing the correct
-   * interface.
-   * 
-   * @param driver
-   * @param uiObject
-   *          the json object returned by the server.
-   * @param expected
-   *          the UIAutomation object type.
-   * @return the object. If the object is UIAElementNil, return null for a
-   *         simple object, an empty list for a UIAElementArray.
-   * @throws Exception
+   * Uses reflection to instanciate a remote object implementing the correct interface.
+   *
+   * @param uiObject the json object returned by the server.
+   * @param expected the UIAutomation object type.
+   * @return the object. If the object is UIAElementNil, return null for a simple object, an empty
+   *         list for a UIAElementArray.
    */
   public static WebElement createObject(RemoteUIADriver driver, Map<String, Object> ro) {
     String ref = ro.get("ELEMENT").toString();
-    
+
     String type = (String) ro.get("type");
-    if (type != null){
+    if (type != null) {
       String remoteObjectName = "org.uiautomation.ios.client.uiamodels.impl.Remote" + type;
 
       if ("UIAElementNil".equals(type)) {
@@ -113,14 +105,14 @@ public abstract class RemoteIOSObject extends RemoteWebElement {
         // argsClass = new Class[] {RemoteUIADriver.class, String.class,
         // Integer.class};
       } else {
-        args = new Object[] { driver, ref };
-        argsClass = new Class[] { RemoteUIADriver.class, String.class };
+        args = new Object[]{driver, ref};
+        argsClass = new Class[]{RemoteUIADriver.class, String.class};
       }
       try {
         Class<?> clazz = Class.forName(remoteObjectName);
         Constructor<?> c = clazz.getConstructor(argsClass);
         Object o = c.newInstance(args);
-        RemoteWebElement element = (RemoteWebElement)o;
+        RemoteWebElement element = (RemoteWebElement) o;
         element.setFileDetector(driver.getFileDetector());
         element.setParent(driver);
         element.setId(ref);
@@ -128,7 +120,7 @@ public abstract class RemoteIOSObject extends RemoteWebElement {
       } catch (Exception e) {
         throw new WebDriverException("error casting", e);
       }
-    }else {
+    } else {
       RemoteWebElement element = new RemoteWebElement();
       element.setFileDetector(driver.getFileDetector());
       element.setId(ref);
@@ -136,13 +128,12 @@ public abstract class RemoteIOSObject extends RemoteWebElement {
       return element;
     }
 
-   
 
   }
 
   /**
    * return the dimension of an element.
-   * 
+   *
    * @param command
    * @return
    */
@@ -162,7 +153,7 @@ public abstract class RemoteIOSObject extends RemoteWebElement {
 
   /**
    * Execute the command.
-   * 
+   *
    * @see #execute(WebDriverLikeCommand, JSONObject)
    * @param command
    */
@@ -172,7 +163,7 @@ public abstract class RemoteIOSObject extends RemoteWebElement {
 
   /**
    * execute the command with the given parameters.
-   * 
+   *
    * @param command
    * @param payload
    */
@@ -183,7 +174,7 @@ public abstract class RemoteIOSObject extends RemoteWebElement {
   }*/
 
   /**
-   * 
+   *
    * @param command
    * @return
    */
@@ -202,15 +193,6 @@ public abstract class RemoteIOSObject extends RemoteWebElement {
       }
     }
   }*/
-
-  public String getAttribute(String name) {
-    WebDriverLikeCommand command = WebDriverLikeCommand.ATTRIBUTE;
-    Path p = new Path(WebDriverLikeCommand.ATTRIBUTE).withSession(driver.getSessionId()).withReference(getReference());
-    p.validateAndReplace(":name", name);
-    WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p);
-    return driver.execute(request);
-
-  }
 
   protected RemoteUIADriver getDriver() {
     return driver;

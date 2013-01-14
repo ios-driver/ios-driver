@@ -197,6 +197,21 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
   }
 
   @Override
+  public String getAttribute(String name) {
+    /*WebDriverLikeCommand command = WebDriverLikeCommand.ATTRIBUTE;
+    Path p = new Path(WebDriverLikeCommand.ATTRIBUTE).withSession(driver.getSessionId()).withReference(getReference());
+    p.validateAndReplace(":name", name);
+    //WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(), p);
+    return driver.execute(request); */
+    WebDriverLikeRequest
+        request =
+        getDriver().buildRequest(WebDriverLikeCommand.ATTRIBUTE, this, null,
+                                 ImmutableMap.of("name", name));
+    return getDriver().execute(request);
+
+  }
+
+  @Override
   public UIARect getRect() {
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.RECT);
     Map<String, Object> rect = getDriver().execute(request);

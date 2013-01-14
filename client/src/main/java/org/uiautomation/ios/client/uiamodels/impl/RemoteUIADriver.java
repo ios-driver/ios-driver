@@ -64,6 +64,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -146,16 +147,24 @@ public class RemoteUIADriver extends RemoteWebDriver
 
   }
 
-
   public WebDriverLikeRequest buildRequest(WebDriverLikeCommand command, RemoteUIAElement element,
-                                           Map<String, ?> params) {
+                                           Map<String, ?> params,
+                                           Map<String, String> extraParamInPath) {
     String method = command.method();
     Path p = new Path(command).withSession(getSessionId());
     if (element != null) {
       p.withReference(element.getReference());
     }
+    for (String key : extraParamInPath.keySet()) {
+      p.validateAndReplace(":" + key, extraParamInPath.get(key));
+    }
     WebDriverLikeRequest request = new WebDriverLikeRequest(method, p, params);
     return request;
+  }
+
+  public WebDriverLikeRequest buildRequest(WebDriverLikeCommand command, RemoteUIAElement element,
+                                           Map<String, ?> params) {
+    return buildRequest(command, element, params, new HashMap<String, String>());
   }
 
   public WebDriverLikeRequest buildRequest(WebDriverLikeCommand command) {
@@ -390,7 +399,7 @@ public class RemoteUIADriver extends RemoteWebDriver
 
 
   @Override
-  public UIAAlert getAlert() throws NoAlertPresentException {
+  public RemoteUIAAlert getAlert() throws NoAlertPresentException {
     RemoteUIAAlert alert = new RemoteUIAAlert(this, "3");
     // but need to access it once with a call just to check if an alert actually
     // exists. If not,
