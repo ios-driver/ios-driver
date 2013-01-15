@@ -16,17 +16,24 @@ package org.uiautomation.ios.server.command.uiautomation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.ElementNotVisibleException;
+import org.openqa.selenium.Keyboard;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.remote.Response;
+import org.uiautomation.ios.UIAModels.UIATextField;
+import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAAlert;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 
-public class DismissAlertHandler extends BaseWebCommandHandler {
 
-  public DismissAlertHandler(IOSDriver driver,
+public class SetAlertTextHandler extends BaseWebCommandHandler {
+
+  public SetAlertTextHandler(IOSDriver driver,
                              WebDriverLikeRequest request) {
     super(driver, request);
+
   }
 
   @Override
@@ -37,7 +44,19 @@ public class DismissAlertHandler extends BaseWebCommandHandler {
   @Override
   public Response handle() throws Exception {
     RemoteUIAAlert alert = new RemoteUIAAlert(getSession().getNativeDriver(), "3");
-    alert.dismiss();
+    String value = getRequest().getPayload().getString("text");
+
+    // check the alert is actually a prompt.
+    try {
+      UIATextField prompt = alert.findElement(new TypeCriteria(UIATextField.class));
+      Keyboard keyboard = getSession().getNativeDriver().getKeyboard();
+      keyboard.sendKeys(value);
+    } catch (NoSuchElementException e) {
+      throw new ElementNotVisibleException("the alert doesn't accept inputs.");
+    }
+
+    // prompt.setValue(value);
+
     return createResponse("");
   }
 }

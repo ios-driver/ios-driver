@@ -49,12 +49,16 @@ public class RemoteUIAAlert extends RemoteUIAElement implements UIAAlert, Alert 
 
   @Override
   public void dismiss() {
-    //To change body of implemented methods use File | Settings | File Templates.
+    UIAButton butt = getCancelButton();
+    if (butt == null) {
+      butt = getDefaultButton();
+    }
+    butt.tap();
   }
 
   @Override
   public void accept() {
-    //To change body of implemented methods use File | Settings | File Templates.
+    getDefaultButton().tap();
   }
 
   @Override

@@ -59,3 +59,6 @@ TODOs:
 - remove all calls to plutil
 - instruments crash from user define script. stackoverflow for method def for instance.
 - investigate why safari is slow to start
+- make keyboard a static id, like alert ?
+- remove the context switching for the alert detector
+- handle multi web windows

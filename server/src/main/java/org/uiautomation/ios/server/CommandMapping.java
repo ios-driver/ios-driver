@@ -45,6 +45,7 @@ import org.uiautomation.ios.server.command.uiautomation.LogElementTreeNHandler;
 import org.uiautomation.ios.server.command.uiautomation.NewSessionNHandler;
 import org.uiautomation.ios.server.command.uiautomation.SendKeysNHandler;
 import org.uiautomation.ios.server.command.uiautomation.ServerStatusNHandler;
+import org.uiautomation.ios.server.command.uiautomation.SetAlertTextHandler;
 import org.uiautomation.ios.server.command.uiautomation.SetConfigurationNHandler;
 import org.uiautomation.ios.server.command.uiautomation.SetCurrentContextNHandler;
 import org.uiautomation.ios.server.command.uiautomation.SetImplicitWaitTimeoutNHandler;
@@ -200,6 +201,7 @@ public enum CommandMapping {
   GET_ALERT_TEXT(GetAlertTextNHandler.class),
   ACCEPT_ALERT(NotImplementedNativeHandler.class, AcceptAlertHandler.class),
   DISMISS_ALERT(NotImplementedNativeHandler.class, DismissAlertHandler.class),
+  SET_ALERT_TEXT(NotImplementedNativeHandler.class, SetAlertTextHandler.class),
   ALERT_CANCEL_BUTTON(".cancelButton()"),
   ALERT_DEFAULT_BUTTON(".defaultButton()"),;
 
@@ -295,7 +297,6 @@ public enum CommandMapping {
 
     Constructor<?> c = clazz.getConstructor(argsClass);
     Handler handler = (Handler) c.newInstance(args);
-    System.out.println("will use " + handler.getClass().getCanonicalName());
     return handler;
 
   }

@@ -2,15 +2,27 @@ package org.uiautomation.ios.selenium;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoAlertPresentException;
+import org.openqa.selenium.NoSuchWindowException;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.UnhandledAlertException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteMobileSafariDriver;
+
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import static org.openqa.selenium.TestWaiter.waitFor;
 import static org.openqa.selenium.WaitingConditions.alertToBePresent;
+import static org.openqa.selenium.WaitingConditions.elementTextToEqual;
+import static org.openqa.selenium.WaitingConditions.windowHandleCountToBe;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.fail;
 
 /**
  * no really done right now. it will be possible, but there will be some timing issues.
@@ -83,7 +95,7 @@ public class AlertsTest extends BaseSeleniumTest {
   }
 
 
-  /*@Test
+  @Test
   public void testShouldAllowAUserToAcceptAPrompt() {
     driver.findElement(By.id("prompt")).click();
 
@@ -178,15 +190,15 @@ public class AlertsTest extends BaseSeleniumTest {
 
     driver.findElement(By.id("alertInFrame")).click();
 
-    //Alert alert = waitFor(alertToBePresent(driver));
-    //alert.accept();
+    Alert alert = waitFor(alertToBePresent(driver));
+    alert.accept();
 
     // If we can perform any action, we're good to go
-    //assertEquals("Testing Alerts", driver.getTitle());
+    assertEquals("Testing Alerts", driver.getTitle());
   }
 
 
-  /*@Test
+  @Test
   public void testShouldAllowUsersToAcceptAnAlertInANestedFrame() {
     driver.switchTo().frame("iframeWithIframe").switchTo().frame("iframeWithAlert");
 
@@ -197,10 +209,10 @@ public class AlertsTest extends BaseSeleniumTest {
 
     // If we can perform any action, we're good to go
     assertEquals("Testing Alerts", driver.getTitle());
-  }  */
+  }
 
 
-  /*@Test
+  @Test
   public void testShouldThrowAnExceptionIfAnAlertHasNotBeenDealtWithAndDismissTheAlert() {
     clickOnElementById("alert");
 
@@ -212,11 +224,11 @@ public class AlertsTest extends BaseSeleniumTest {
     }
 
     // But the next call should be good.
-    //Assert.assertEquals("Testing Alerts", driver.getTitle());
-  } */
+    Assert.assertEquals("Testing Alerts", driver.getTitle());
+  }
 
 
-  /*@Test
+  @Test
   public void testSwitchingToMissingAlertThrows() throws Exception {
     try {
       driver.switchTo().alert();
@@ -227,7 +239,7 @@ public class AlertsTest extends BaseSeleniumTest {
   }
 
 
-  @Test
+  @Test(enabled = false, description = "bug, missing feature")
   public void testSwitchingToMissingAlertInAClosedWindowThrows() throws Exception {
     String mainWindow = driver.getWindowHandle();
     try {
@@ -301,8 +313,7 @@ public class AlertsTest extends BaseSeleniumTest {
   }
 
 
-  @Test
-
+  @Test(enabled = false)
   public void testShouldHandleAlertOnPageLoadUsingGet() {
     driver.get(appServer.whereIs("pageWithOnLoad.html"));
 
@@ -314,7 +325,7 @@ public class AlertsTest extends BaseSeleniumTest {
     waitFor(elementTextToEqual(driver, By.tagName("p"), "Page with onload event handler"));
   }
 
-  @Test
+  @Test(enabled = false)
   public void testShouldNotHandleAlertInAnotherWindow() {
     String mainWindow = driver.getWindowHandle();
     String onloadWindow = null;
@@ -342,7 +353,7 @@ public class AlertsTest extends BaseSeleniumTest {
     }
   }
 
-  @Test
+  @Test(enabled = false)
   public void testShouldHandleAlertOnPageUnload() {
     driver.findElement(By.id("open-page-with-onunload-alert")).click();
     driver.navigate().back();
@@ -378,8 +389,8 @@ public class AlertsTest extends BaseSeleniumTest {
       } finally {
         driver.switchTo().window(mainWindow);
         waitFor(elementTextToEqual(driver, By.id("open-window-with-onclose-alert"), "open new window"));
-      }  */
-  /*}
+      }    */
+  }
 
   @Test
   public void testIncludesAlertInUnhandledAlertException() {
@@ -402,7 +413,7 @@ public class AlertsTest extends BaseSeleniumTest {
     waitFor(alertToBePresent(driver));
 
     driver.quit();
-  }   */
+  }
 
 
   private void clickOnElementById(String id) {

@@ -33,6 +33,7 @@ public class AlertDetector implements ResponseFinder {
   private volatile boolean stopRequested = false;
   private final long timeBeforeLookingForAlert = 750;
   private final RemoteUIADriver driver;
+  private volatile RemoteUIAAlert alert;
 
   public AlertDetector(RemoteUIADriver driver) {
     this.driver = driver;
@@ -42,6 +43,7 @@ public class AlertDetector implements ResponseFinder {
     finished = false;
     stopRequested = false;
     ex = null;
+    alert = null;
   }
 
   @Override
@@ -59,12 +61,12 @@ public class AlertDetector implements ResponseFinder {
       if (!stopRequested) {
         log.fine("starting to look for an alert.");
         driver.switchTo().window(WorkingMode.Native.toString());
-        RemoteUIAAlert alert = driver.getAlert();
+        alert = driver.getAlert();
         driver.switchTo().window(WorkingMode.Web.toString());
         String alertDetails = "no details";
         alertDetails = alert.logElementTree(null, false).toString(2);
         log.fine("found an alert." + alertDetails);
-        ex = new UnhandledAlertException("alert present :" + alertDetails);
+        ex = new UnhandledAlertException("alert present", alertDetails);
       } else {
         throw new InterruptedException(
             "search interrupted. Another finder got a response already.");
@@ -108,6 +110,7 @@ public class AlertDetector implements ResponseFinder {
       throw new RuntimeException("Bug");
     }
     if (ex != null) {
+      alert.dismiss();
       throw ex;
     }
     return null;
