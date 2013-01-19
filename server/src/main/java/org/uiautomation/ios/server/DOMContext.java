@@ -14,6 +14,7 @@
 package org.uiautomation.ios.server;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriverException;
@@ -23,6 +24,7 @@ import org.uiautomation.ios.mobileSafari.events.ChildNodeRemoved;
 import org.uiautomation.ios.mobileSafari.events.Event;
 import org.uiautomation.ios.mobileSafari.events.EventHistory;
 import org.uiautomation.ios.mobileSafari.events.inserted.ChildIframeInserted;
+import org.uiautomation.ios.webInspector.DOM.DOM;
 import org.uiautomation.ios.webInspector.DOM.RemoteExceptionException;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 
@@ -153,6 +155,14 @@ public class DOMContext implements EventListener {
     System.err.println("new page loaded");
     pageLoaded = true;
     reset();
+    try {
+      Thread.sleep(5000);
+      System.out.println(
+          "on page load:" + session.getWebInspector().getProtocol().sendCommand(DOM.getDocument())
+              .optJSONObject("root").optString("documentURL"));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   public void waitForPageToLoad(long timeout) {

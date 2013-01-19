@@ -13,11 +13,6 @@
  */
 package org.uiautomation.ios.server;
 
-import java.io.File;
-import java.net.URL;
-import java.util.Locale;
-import java.util.UUID;
-
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.remote.SessionId;
 import org.uiautomation.ios.IOSCapabilities;
@@ -25,9 +20,8 @@ import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
 import org.uiautomation.ios.UIAModels.configuration.DriverConfiguration;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
-import org.uiautomation.ios.client.uiamodels.impl.AttachRemoteUIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
-import org.uiautomation.ios.client.uiamodels.impl.ServerSideNativeDriver;
+import org.uiautomation.ios.client.uiamodels.impl.*;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.device.Device;
 import org.uiautomation.ios.mobileSafari.WebInspector;
@@ -36,6 +30,10 @@ import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
 import org.uiautomation.ios.server.instruments.InstrumentsManager;
 import org.uiautomation.ios.server.utils.ClassicCommands;
+
+import java.io.File;
+import java.net.URL;
+import java.util.UUID;
 
 public class ServerSideSession extends Session {
 

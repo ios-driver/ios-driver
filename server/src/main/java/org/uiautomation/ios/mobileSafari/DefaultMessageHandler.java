@@ -29,6 +29,7 @@ import org.uiautomation.ios.mobileSafari.message.ApplicationDataMessage;
 import org.uiautomation.ios.mobileSafari.message.IOSMessage;
 import org.uiautomation.ios.mobileSafari.message.MessageFactory;
 import org.uiautomation.ios.mobileSafari.message.WebkitDebugMessage;
+import org.uiautomation.ios.webInspector.DOM.DOM;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,7 @@ public class DefaultMessageHandler implements MessageHandler {
   private final List<JSONObject> responses = new CopyOnWriteArrayList<JSONObject>();
   private final EventListener listener;
   private Thread t;
-  private static boolean showIgnoredMessaged = false;
+  private static boolean showIgnoredMessaged = true;
   private static final Logger log = Logger.getLogger(DefaultMessageHandler.class.getName());
   private List<ResponseFinder> extraFinders = new ArrayList<ResponseFinder>();
   private final MessageFactory factory = new MessageFactory();
@@ -98,6 +99,7 @@ public class DefaultMessageHandler implements MessageHandler {
       }
     } else {
       System.out.println(message);
+      listener.onPageLoad();
 
     }
 

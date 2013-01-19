@@ -112,6 +112,7 @@ public class WebInspector {
     protocol =
         new DebugProtocol(context, bundleId, new AlertDetector((RemoteUIADriver) nativeDriver));
     enablePageEvent();
+
   }
 
 

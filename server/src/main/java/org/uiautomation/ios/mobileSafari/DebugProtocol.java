@@ -32,7 +32,7 @@ public class DebugProtocol {
 
   private static final Logger log = Logger.getLogger(DebugProtocol.class.getName());
 
-  private Socket socket;
+  private static Socket socket;
   private ByteArrayOutputStream buf = new ByteArrayOutputStream();
   private final PlistManager plist = new PlistManager();
   private final MessageHandler handler;
@@ -49,8 +49,6 @@ public class DebugProtocol {
 
   /**
    * connect to the webview
-   *
-   * @param handler for server initiated notifications
    */
   public DebugProtocol(EventListener listener, String bundleId, ResponseFinder... finders)
       throws Exception,
@@ -69,6 +67,8 @@ public class DebugProtocol {
             Thread.sleep(50);
             listenOnce();
           }
+        } catch (IOException socketClosed) {
+          //ignore.
         } catch (Exception e) {
           e.printStackTrace();
         }
@@ -76,9 +76,26 @@ public class DebugProtocol {
     });
 
     listen.start();
+
+    Thread monitor = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        while (true) {
+          try {
+            Thread.sleep(5000);
+            System.out.println("Monitor : " + sendCommand(DOM.getDocument()).optJSONObject("root")
+                .optString("documentURL"));
+          } catch (Exception e) {
+            System.out.println("Monitor issue " + e.getMessage());
+          }
+        }
+      }
+    });
+    monitor.start();
   }
 
   public void init() throws Exception {
+    System.out.println("\nINIT\n");
     if (socket != null && (socket.isConnected() || !socket.isClosed())) {
       socket.close();
     }
@@ -223,10 +240,15 @@ public class DebugProtocol {
   }
 
   public static void main(String[] args) throws Exception {
-    DebugProtocol protocol = new DebugProtocol(new EventListener() {
+    test();
+
+  }
+
+  public static void test() throws Exception {
+    final DebugProtocol protocol = new DebugProtocol(new EventListener() {
       @Override
       public void onPageLoad() {
-        //To change body of implemented methods use File | Settings | File Templates.
+
       }
 
       @Override
@@ -238,8 +260,19 @@ public class DebugProtocol {
       public void frameDied(JSONObject message) {
         //To change body of implemented methods use File | Settings | File Templates.
       }
-    }, "com.apple.mobilesafari");
+      //}, "com.apple.mobilesafari");
+    }, "com.yourcompany.UICatalog");
 
-    System.out.println(protocol.sendCommand(DOM.getDocument()).toString(2));
+    while (true) {
+      Thread.sleep(5000);
+      try {
+        System.out.println(
+            "Monitor : " + protocol.sendCommand(DOM.getDocument()).optJSONObject("root")
+                .optString("documentURL"));
+      } catch (Exception e) {
+        System.err.println(e.getMessage());
+      }
+
+    }
   }
 }

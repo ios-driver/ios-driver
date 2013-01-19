@@ -239,13 +239,16 @@ public class AlertsTest extends BaseSeleniumTest {
   }
 
 
-  @Test(enabled = false, description = "bug, missing feature")
+  @Test//(enabled = false, description = "bug, missing feature")
   public void testSwitchingToMissingAlertInAClosedWindowThrows() throws Exception {
     String mainWindow = driver.getWindowHandle();
     try {
       driver.findElement(By.id("open-new-window")).click();
       waitFor(windowHandleCountToBe(driver, 2));
-      driver.switchTo().window("newwindow").close();
+      Thread.sleep(10000);
+
+      driver.getCurrentUrl();
+      //driver.switchTo().window("newwindow").close();
 
       try {
         alertToBePresent(driver).call();

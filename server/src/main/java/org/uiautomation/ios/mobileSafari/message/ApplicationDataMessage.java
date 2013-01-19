@@ -36,6 +36,11 @@ public class ApplicationDataMessage extends BaseIOSWebKitMessage {
   public JSONObject getMessage() {
     return message;
   }
+
+  @Override
+  public String toString() {
+    return message.toString();
+  }
 }
 
 

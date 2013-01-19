@@ -24,14 +24,12 @@ import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.server.command.Handler;
 import org.uiautomation.ios.server.command.NotImplementedNativeHandler;
 import org.uiautomation.ios.server.command.NotImplementedWebHandler;
-import org.uiautomation.ios.server.command.uiautomation.AcceptAlertHandler;
+import org.uiautomation.ios.server.command.uiautomation.*;
 import org.uiautomation.ios.server.command.uiautomation.ClearNHandler;
 import org.uiautomation.ios.server.command.uiautomation.DefaultUIAScriptNHandler;
-import org.uiautomation.ios.server.command.uiautomation.DismissAlertHandler;
 import org.uiautomation.ios.server.command.uiautomation.ExecuteScriptNHandler;
 import org.uiautomation.ios.server.command.uiautomation.FindElementNHandler;
 import org.uiautomation.ios.server.command.uiautomation.FindElementsRoot;
-import org.uiautomation.ios.server.command.uiautomation.GetAlertTextNHandler;
 import org.uiautomation.ios.server.command.uiautomation.GetAttributeNHandler;
 import org.uiautomation.ios.server.command.uiautomation.GetCapabilitiesNHandler;
 import org.uiautomation.ios.server.command.uiautomation.GetConfigurationNHandler;
@@ -45,7 +43,6 @@ import org.uiautomation.ios.server.command.uiautomation.LogElementTreeNHandler;
 import org.uiautomation.ios.server.command.uiautomation.NewSessionNHandler;
 import org.uiautomation.ios.server.command.uiautomation.SendKeysNHandler;
 import org.uiautomation.ios.server.command.uiautomation.ServerStatusNHandler;
-import org.uiautomation.ios.server.command.uiautomation.SetAlertTextHandler;
 import org.uiautomation.ios.server.command.uiautomation.SetConfigurationNHandler;
 import org.uiautomation.ios.server.command.uiautomation.SetCurrentContextNHandler;
 import org.uiautomation.ios.server.command.uiautomation.SetImplicitWaitTimeoutNHandler;
@@ -296,6 +293,7 @@ public enum CommandMapping {
     Class<?>[] argsClass = new Class[]{IOSDriver.class, WebDriverLikeRequest.class};
 
     Constructor<?> c = clazz.getConstructor(argsClass);
+    System.out.println("handler : " + clazz);
     Handler handler = (Handler) c.newInstance(args);
     return handler;
 
