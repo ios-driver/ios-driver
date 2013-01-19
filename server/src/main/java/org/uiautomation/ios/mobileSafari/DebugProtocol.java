@@ -16,6 +16,8 @@ package org.uiautomation.ios.mobileSafari;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.mobileSafari.events.Event;
+import org.uiautomation.ios.webInspector.DOM.DOM;
 import org.uiautomation.ios.webInspector.DOM.RemoteExceptionException;
 
 import java.io.ByteArrayOutputStream;
@@ -83,6 +85,10 @@ public class DebugProtocol {
     socket = new Socket(LOCALHOST_IPV6, port);
     sendCommand(PlistManager.SET_CONNECTION_KEY);
     sendCommand(PlistManager.CONNECT_TO_APP);
+    sendCommand(PlistManager.SET_SENDER_KEY);
+  }
+
+  public void switchTo() throws Exception {
     sendCommand(PlistManager.SET_SENDER_KEY);
   }
 
@@ -216,4 +222,24 @@ public class DebugProtocol {
 
   }
 
+  public static void main(String[] args) throws Exception {
+    DebugProtocol protocol = new DebugProtocol(new EventListener() {
+      @Override
+      public void onPageLoad() {
+        //To change body of implemented methods use File | Settings | File Templates.
+      }
+
+      @Override
+      public void domHasChanged(Event event) {
+        //To change body of implemented methods use File | Settings | File Templates.
+      }
+
+      @Override
+      public void frameDied(JSONObject message) {
+        //To change body of implemented methods use File | Settings | File Templates.
+      }
+    }, "com.apple.mobilesafari");
+
+    System.out.println(protocol.sendCommand(DOM.getDocument()).toString(2));
+  }
 }

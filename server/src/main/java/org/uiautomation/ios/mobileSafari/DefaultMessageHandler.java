@@ -25,6 +25,10 @@ import org.uiautomation.ios.mobileSafari.events.ChildNodeRemoved;
 import org.uiautomation.ios.mobileSafari.events.Event;
 import org.uiautomation.ios.mobileSafari.events.EventFactory;
 import org.uiautomation.ios.mobileSafari.events.inserted.ChildIframeInserted;
+import org.uiautomation.ios.mobileSafari.message.ApplicationDataMessage;
+import org.uiautomation.ios.mobileSafari.message.IOSMessage;
+import org.uiautomation.ios.mobileSafari.message.MessageFactory;
+import org.uiautomation.ios.mobileSafari.message.WebkitDebugMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +44,7 @@ public class DefaultMessageHandler implements MessageHandler {
   private static boolean showIgnoredMessaged = false;
   private static final Logger log = Logger.getLogger(DefaultMessageHandler.class.getName());
   private List<ResponseFinder> extraFinders = new ArrayList<ResponseFinder>();
+  private final MessageFactory factory = new MessageFactory();
 
 
   public DefaultMessageHandler(EventListener listener, ResponseFinder... finders) {
@@ -62,40 +67,40 @@ public class DefaultMessageHandler implements MessageHandler {
   }
 
   private void process(String rawMessage) {
-    try {
-      JSONObject message = extractResponse(rawMessage);
-      if (message == null) {
+    IOSMessage message = factory.create(rawMessage);
+    if (message instanceof ApplicationDataMessage) {
+      JSONObject content = ((ApplicationDataMessage) message).getMessage();
+      if ((content.optInt("id", -1) != -1)) {
+        responses.add(content);
         return;
-      }
-      if (message.optInt("id", -1) != -1) {
-        responses.add(message);
-        return;
-      }
-
-      // not null, not a command response.
-      // should be an event.
-      Event e = EventFactory.createEvent(message);
-      if (isPageLoad(message)) {
-        listener.onPageLoad();
-        return;
-      }
-
-      if (isImportantDOMChange(e)) {
-        listener.domHasChanged(e);
-      }
-
-      if ("Page.frameDetached".equals(message.optString("method"))) {
-        listener.frameDied(message);
-        return;
+        //not a command response.
+        // should be an event.
       } else {
-        if (showIgnoredMessaged) {
-          System.err.println(System.currentTimeMillis() + "\t" + message.toString());
+        Event e = EventFactory.createEvent(content);
+        if (isPageLoad(content)) {
+          listener.onPageLoad();
+          return;
         }
 
+        if (isImportantDOMChange(e)) {
+          listener.domHasChanged(e);
+        }
+
+        if ("Page.frameDetached".equals(content.optString("method"))) {
+          listener.frameDied(content);
+          return;
+        } else {
+          if (showIgnoredMessaged) {
+            System.err.println(System.currentTimeMillis() + "\t" + message.toString());
+          }
+
+        }
       }
-    } catch (Exception e) {
-      e.printStackTrace();
+    } else {
+      System.out.println(message);
+
     }
+
 
   }
 
@@ -110,6 +115,7 @@ public class DefaultMessageHandler implements MessageHandler {
     // return "Profiler.resetProfiles".equals(method) ||
     // "DOM.documentUpdated".equals(method);
   }
+
 
   private JSONObject extractResponse(String message) throws Exception {
     message = message.replace(
@@ -128,6 +134,7 @@ public class DefaultMessageHandler implements MessageHandler {
       return null;
     }
   }
+
 
   @Override
   public JSONObject getResponse(int id) throws TimeoutException {
