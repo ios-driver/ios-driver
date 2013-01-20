@@ -79,7 +79,6 @@ public class FindElementHandler extends BaseWebCommandHandler {
     } else {
       element = getSession().getWebInspector().getDocument();
     }
-
     RemoteWebElement rwe;
 
     if ("link text".equals(type)) {

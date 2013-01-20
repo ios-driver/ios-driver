@@ -137,13 +137,14 @@ public class RemoteWebElement {
       long start = System.currentTimeMillis();
       try {
         response = inspector.getProtocol().sendCommand(DOM.resolveNode(nodeId));
+        RemoteObject o = inspector.cast(response);
+        remoteObject = o;
+        return remoteObject;
       } catch (RemoteExceptionException e) {
-        if ("No node with given id found".equals(e.getMessage())) {
-          throw new StaleElementReferenceException(getNodeId() + " is stale.");
-        }
+        // Node with given id does not belong to the document
+        // No node with given id found
+        throw new StaleElementReferenceException(getNodeId() + " is stale.");
       }
-      RemoteObject o = inspector.cast(response);
-      remoteObject = o;
     }
     return remoteObject;
   }

@@ -26,6 +26,7 @@ import org.uiautomation.ios.mobileSafari.events.Event;
 import org.uiautomation.ios.mobileSafari.events.EventFactory;
 import org.uiautomation.ios.mobileSafari.events.inserted.ChildIframeInserted;
 import org.uiautomation.ios.mobileSafari.message.ApplicationDataMessage;
+import org.uiautomation.ios.mobileSafari.message.ApplicationSentListingMessage;
 import org.uiautomation.ios.mobileSafari.message.IOSMessage;
 import org.uiautomation.ios.mobileSafari.message.MessageFactory;
 import org.uiautomation.ios.mobileSafari.message.WebkitDebugMessage;
@@ -97,10 +98,11 @@ public class DefaultMessageHandler implements MessageHandler {
 
         }
       }
+    } else if (message instanceof ApplicationSentListingMessage) {
+      ApplicationSentListingMessage listingMessage = (ApplicationSentListingMessage) message;
+      listener.setWindowHandles(listingMessage.getPages());
     } else {
       System.out.println(message);
-      listener.onPageLoad();
-
     }
 
 

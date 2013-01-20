@@ -18,8 +18,11 @@ import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
+import org.uiautomation.ios.mobileSafari.message.WebkitPage;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
+
+import java.util.List;
 
 public class GetCurrentContextNHandler extends BaseNativeCommandHandler {
 
@@ -31,10 +34,14 @@ public class GetCurrentContextNHandler extends BaseNativeCommandHandler {
   @Override
   public Response handle() throws Exception {
     WorkingMode mode = getSession().getMode();
+    String value = mode.toString();
+    if (mode == WorkingMode.Web) {
+      value = WorkingMode.Web + "_" + getSession().getContext().getDOMContext().getWindowHandle();
+    }
     Response resp = new Response();
     resp.setSessionId(getSession().getSessionId());
     resp.setStatus(0);
-    resp.setValue(mode);
+    resp.setValue(value);
     return resp;
   }
 

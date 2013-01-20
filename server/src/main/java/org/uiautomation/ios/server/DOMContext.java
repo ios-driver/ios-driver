@@ -24,6 +24,7 @@ import org.uiautomation.ios.mobileSafari.events.ChildNodeRemoved;
 import org.uiautomation.ios.mobileSafari.events.Event;
 import org.uiautomation.ios.mobileSafari.events.EventHistory;
 import org.uiautomation.ios.mobileSafari.events.inserted.ChildIframeInserted;
+import org.uiautomation.ios.mobileSafari.message.WebkitPage;
 import org.uiautomation.ios.webInspector.DOM.DOM;
 import org.uiautomation.ios.webInspector.DOM.RemoteExceptionException;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
@@ -53,6 +54,8 @@ public class DOMContext implements EventListener {
   private RemoteWebElement mainWindow;
 
   private final EventHistory eventHistory = new EventHistory();
+  private List<WebkitPage> windowHandles;
+  private String windowHandle;
 
   public RemoteWebElement getDocument() {
     int cpt = 0;
@@ -152,17 +155,8 @@ public class DOMContext implements EventListener {
 
   @Override
   public void onPageLoad() {
-    System.err.println("new page loaded");
     pageLoaded = true;
     reset();
-    try {
-      Thread.sleep(5000);
-      System.out.println(
-          "on page load:" + session.getWebInspector().getProtocol().sendCommand(DOM.getDocument())
-              .optJSONObject("root").optString("documentURL"));
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
   }
 
   public void waitForPageToLoad(long timeout) {
@@ -170,6 +164,7 @@ public class DOMContext implements EventListener {
     long deadLine = start + timeout;
     while (!pageLoaded) {
       if (System.currentTimeMillis() > deadLine) {
+        // TODO freynaud check for alert while page loads.
         throw new TimeoutException("failed to load the page after " + timeout + " ms.");
       }
       try {
@@ -181,7 +176,6 @@ public class DOMContext implements EventListener {
 
     pageLoaded = false;
     waitForDocumentReady(deadLine);
-
     return;
   }
 
@@ -294,4 +288,33 @@ public class DOMContext implements EventListener {
 
   }
 
+  @Override
+  public void setWindowHandles(List<WebkitPage> handles) {
+    this.windowHandles = handles;
+
+    for (WebkitPage page : handles) {
+      if (page.getConnection() != null) {
+        windowHandle = "" + page.getPageId();
+        return;
+      }
+    }
+    windowHandle = null;
+  }
+
+  public List<WebkitPage> getWindowHandles() {
+    return windowHandles;
+  }
+
+  public String getWindowHandle() {
+    if (windowHandle == null) {
+      throw new WebDriverException("don't know the current window.");
+    }
+    return windowHandle;
+  }
+
+  public void setWindow(String pageId) throws Exception {
+    newContext();
+    session.getWebInspector().getProtocol().switchTo(pageId);
+    session.getWebInspector().enablePageEvent();
+  }
 }

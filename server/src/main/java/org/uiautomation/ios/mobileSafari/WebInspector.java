@@ -180,6 +180,7 @@ public class WebInspector {
 
     try {
       RemoteWebElement document = getDocument();
+      System.out.println("document :" + document.getNodeId());
       RemoteWebElement window = session.getContext().getDOMContext().getWindow();
       JSONObject cmd = new JSONObject();
 
@@ -329,9 +330,7 @@ public class WebInspector {
   }
 
   public <T> T cast(JSONObject response) {
-    JSONObject
-        body =
-        null;
+    JSONObject body = null;
     try {
       body = response.has("result") ? response.getJSONObject("result")
                                     : response.getJSONObject("object");

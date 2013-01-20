@@ -15,9 +15,17 @@ package org.uiautomation.ios.mobileSafari;
 
 import org.json.JSONObject;
 import org.uiautomation.ios.mobileSafari.events.Event;
+import org.uiautomation.ios.mobileSafari.message.WebkitPage;
+
+import java.util.List;
 
 public interface EventListener {
+
   public void onPageLoad();
+
   public void domHasChanged(Event event);
+
   public void frameDied(JSONObject message);
+
+  public void setWindowHandles(List<WebkitPage> handles);
 }

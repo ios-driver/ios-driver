@@ -328,12 +328,14 @@ public class AlertsTest extends BaseSeleniumTest {
     waitFor(elementTextToEqual(driver, By.tagName("p"), "Page with onload event handler"));
   }
 
-  @Test(enabled = false)
+  @Test//(enabled = false)
   public void testShouldNotHandleAlertInAnotherWindow() {
     String mainWindow = driver.getWindowHandle();
+    System.out.println("handle " + mainWindow);
     String onloadWindow = null;
     try {
       driver.findElement(By.id("open-window-with-onload-alert")).click();
+
       Set<String> allWindows = driver.getWindowHandles();
       allWindows.remove(mainWindow);
       assertEquals(1, allWindows.size());
@@ -341,13 +343,21 @@ public class AlertsTest extends BaseSeleniumTest {
 
       try {
         waitFor(alertToBePresent(driver), 5, TimeUnit.SECONDS);
-        fail("Expected exception");
+        //fail("Expected exception");
       } catch (NoAlertPresentException expected) {
         // Expected
       }
 
     } finally {
       driver.switchTo().window(onloadWindow);
+      driver.get("http://ebay.com");
+      driver.switchTo().window("Web_1");
+      try {
+        driver.get("http://google.com");
+
+      } catch (Exception e) {
+        System.out.println(e.getMessage());
+      }
       waitFor(alertToBePresent(driver)).dismiss();
       driver.close();
       driver.switchTo().window(mainWindow);

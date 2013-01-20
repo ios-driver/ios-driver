@@ -85,18 +85,20 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
 
       final By by = By.cssSelector("a[href='http://store.apple.com/']");
 
-      long end = System.currentTimeMillis() + 5000;
+      long end = System.currentTimeMillis() + 10000;
       WebElement el;
       while (System.currentTimeMillis() < end) {
         try {
           el = driver.findElement(by);
+          break;
         } catch (NoSuchElementException e) {
           // ignore
+          System.out.println("Cannot find element yet.");
         }
       }
       el = driver.findElement(by);
       Assert.assertEquals(el.getAttribute("href"), "http://store.apple.com/");
-
+      System.out.println("HREF=" + el.getAttribute("href"));
     } finally {
       driver.quit();
     }
@@ -138,6 +140,7 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
       while (System.currentTimeMillis() < end) {
         try {
           el = driver.findElement(by);
+          break;
         } catch (NoSuchElementException e) {
           // ignore
         }

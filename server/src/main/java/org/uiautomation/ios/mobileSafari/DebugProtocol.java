@@ -17,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.mobileSafari.events.Event;
+import org.uiautomation.ios.mobileSafari.message.WebkitPage;
 import org.uiautomation.ios.webInspector.DOM.DOM;
 import org.uiautomation.ios.webInspector.DOM.RemoteExceptionException;
 
@@ -26,6 +27,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class DebugProtocol {
@@ -46,6 +48,7 @@ public class DebugProtocol {
   private Thread listen;
   private volatile boolean keepGoing = true;
   private final String bundleId;
+  private String currentPageKey = "1";
 
   /**
    * connect to the webview
@@ -91,7 +94,7 @@ public class DebugProtocol {
         }
       }
     });
-    monitor.start();
+    //monitor.start();
   }
 
   public void init() throws Exception {
@@ -105,7 +108,8 @@ public class DebugProtocol {
     sendCommand(PlistManager.SET_SENDER_KEY);
   }
 
-  public void switchTo() throws Exception {
+  public void switchTo(String pageId) throws Exception {
+    this.currentPageKey = pageId;
     sendCommand(PlistManager.SET_SENDER_KEY);
   }
 
@@ -115,6 +119,7 @@ public class DebugProtocol {
    * @param command . For command format, read https://www.webkit.org/blog/?p=1875&preview=true.
    */
   public JSONObject sendCommand(JSONObject command) {
+    //System.out.println("sending command "+command);
     try {
       commandId++;
       command.put("id", commandId);
@@ -124,6 +129,7 @@ public class DebugProtocol {
       String xml = plist.JSONCommand(command);
       // perf("got xml \t" + (System.currentTimeMillis() - start) + "ms.");
       xml = xml.replace("$bundleId", this.bundleId);
+      xml = xml.replace("$WIRPageIdentifierKey", currentPageKey);
 
       byte[] bytes = plist.plistXmlToBinary(xml);
       // perf("prepared request \t" + (System.currentTimeMillis() - start) +
@@ -140,7 +146,11 @@ public class DebugProtocol {
       } else {
         log.fine(System.currentTimeMillis() + "\t\t" + (System.currentTimeMillis() - start) + "ms\t"
                  + command.getString("method") + " " + command);
-        return response.getJSONObject("result");
+        JSONObject res = response.getJSONObject("result");
+        if (res == null) {
+          System.err.println("GOT a null result from " + response.toString(2));
+        }
+        return res;
       }
     } catch (JSONException e) {
       throw new WebDriverException(e);
@@ -157,6 +167,7 @@ public class DebugProtocol {
   private void sendCommand(String command) throws Exception {
     String xml = plist.loadFromTemplate(command);
     xml = xml.replace("$bundleId", bundleId);
+    xml = xml.replace("$WIRPageIdentifierKey", currentPageKey);
     byte[] bytes = plist.plistXmlToBinary(xml);
     sendBinaryMessage(bytes);
   }
@@ -258,6 +269,11 @@ public class DebugProtocol {
 
       @Override
       public void frameDied(JSONObject message) {
+        //To change body of implemented methods use File | Settings | File Templates.
+      }
+
+      @Override
+      public void setWindowHandles(List<WebkitPage> handles) {
         //To change body of implemented methods use File | Settings | File Templates.
       }
       //}, "com.apple.mobilesafari");

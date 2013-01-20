@@ -3,6 +3,10 @@ package org.uiautomation.ios.mobileSafari.message;
 import com.dd.plist.NSDictionary;
 import com.dd.plist.NSObject;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
+
 
 public class WebkitPage {
 
@@ -37,4 +41,17 @@ public class WebkitPage {
     return WIRConnectionIdentifierKey;
   }
 
+  public JSONObject asJSON() {
+    JSONObject json = null;
+    try {
+      json = new JSONObject()
+          .put("title", WIRTitleKey)
+          .put("url", WIRURLKey)
+          .put("id", WIRPageIdentifierKey)
+          .put("connection", WIRConnectionIdentifierKey);
+    } catch (JSONException e) {
+      throw new WebDriverException(e);
+    }
+    return json;
+  }
 }

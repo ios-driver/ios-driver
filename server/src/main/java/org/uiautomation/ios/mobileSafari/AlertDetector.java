@@ -60,9 +60,9 @@ public class AlertDetector implements ResponseFinder {
 
       if (!stopRequested) {
         log.fine("starting to look for an alert.");
-        driver.switchTo().window(WorkingMode.Native.toString());
+        //driver.switchTo().window(WorkingMode.Native.toString());
         alert = driver.getAlert();
-        driver.switchTo().window(WorkingMode.Web.toString());
+        //driver.switchTo().window(WorkingMode.Web.toString());
         String alertDetails = "no details";
         alertDetails = alert.logElementTree(null, false).toString(2);
         log.fine("found an alert." + alertDetails);
