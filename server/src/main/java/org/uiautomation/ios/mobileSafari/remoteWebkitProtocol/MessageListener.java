@@ -12,30 +12,11 @@
  *  the License.
  */
 
-package org.uiautomation.ios.mobileSafari.message;
+package org.uiautomation.ios.mobileSafari.remoteWebkitProtocol;
 
-import com.dd.plist.NSDictionary;
+import org.uiautomation.ios.mobileSafari.message.IOSMessage;
 
-public class ReportSetupMessage extends BaseIOSWebKitMessage {
+public interface MessageListener {
 
-  // TODO freynaud list here when USB is supported.
-  private final WebkitDevice device;
-
-  public ReportSetupMessage(String rawMessage) throws Exception {
-    super(rawMessage);
-    device = new WebkitDevice(arguments);
-
-  }
-
-  public WebkitDevice getDevice() {
-    return device;
-  }
-
-  protected String toString(NSDictionary args) {
-    return device.toString();
-  }
-
+  public void onMessage(IOSMessage message);
 }
-
-
-

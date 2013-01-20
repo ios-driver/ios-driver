@@ -12,30 +12,25 @@
  *  the License.
  */
 
-package org.uiautomation.ios.mobileSafari.message;
+package org.uiautomation.ios.context;
 
-import com.dd.plist.NSDictionary;
 
-public class ReportSetupMessage extends BaseIOSWebKitMessage {
+import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
+import org.uiautomation.ios.server.application.IOSApplication;
 
-  // TODO freynaud list here when USB is supported.
-  private final WebkitDevice device;
 
-  public ReportSetupMessage(String rawMessage) throws Exception {
-    super(rawMessage);
-    device = new WebkitDevice(arguments);
+public class ApplicationContext {
 
+  private WorkingMode mode = WorkingMode.Native;
+  //private final WebViewContext viewContext;
+  private final String bundleId;
+  private IOSApplication application;
+
+
+  public ApplicationContext(String bundleId) {
+    this.bundleId = bundleId;
+    //this.viewContext = new WebViewContext(bundleId);
   }
 
-  public WebkitDevice getDevice() {
-    return device;
-  }
-
-  protected String toString(NSDictionary args) {
-    return device.toString();
-  }
 
 }
-
-
-

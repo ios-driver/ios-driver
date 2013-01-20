@@ -8,11 +8,11 @@
             <key>WIRApplicationIdentifierKey</key>
             <string>$bundleId</string>
             <key>WIRConnectionIdentifierKey</key>
-            <string>41DC39AA-55A7-4C85-9566-B58E6627DD62</string>
+            <string>$WIRConnectionIdentifierKey</string>
             <key>WIRPageIdentifierKey</key>
             <integer>$WIRPageIdentifierKey</integer>
             <key>WIRSenderKey</key>
-            <string>E0F4C128-F4FF-4D45-A538-BA382CD66017</string>
+            <string>$WIRSenderKey</string>
         </dict>
         <key>__selector</key>
         <string>_rpc_forwardSocketSetup:</string>

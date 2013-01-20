@@ -14,10 +14,36 @@
 
 package org.uiautomation.ios.mobileSafari.message;
 
+import com.dd.plist.NSDictionary;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class ReportConnectedApplicationsMessage extends BaseIOSWebKitMessage {
+
+
+  private final List<WebkitApplication> apps = new ArrayList<WebkitApplication>();
 
   public ReportConnectedApplicationsMessage(String rawMessage) throws Exception {
     super(rawMessage);
+    NSDictionary list = (NSDictionary) arguments.objectForKey("WIRApplicationDictionaryKey");
+    String[] keys = list.allKeys();
+
+    for (String key : keys) {
+      NSDictionary app = (NSDictionary) list.objectForKey(key);
+      WebkitApplication application = new WebkitApplication(key, app);
+      apps.add(application);
+    }
+  }
+
+  public List<WebkitApplication> getApplications() {
+    return apps;
+  }
+
+
+  @Override
+  protected String toString(NSDictionary args) {
+    return apps.toString();
   }
 }
  /*

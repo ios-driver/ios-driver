@@ -8,11 +8,11 @@
             <key>WIRApplicationIdentifierKey</key>
             <string>$bundleId</string>
             <key>WIRConnectionIdentifierKey</key>
-            <string>41DC39AA-55A7-4C85-9566-B58E6627DD62</string>
+            <string>$WIRConnectionIdentifierKey</string>
             <key>WIRPageIdentifierKey</key>
             <integer>$WIRPageIdentifierKey</integer>
             <key>WIRSenderKey</key>
-            <string>E0F4C128-F4FF-4D45-A538-BA382CD66017</string>
+            <string>$WIRSenderKey</string>
             <key>WIRSocketDataKey</key>
             <!--<data>eyJtZXRob2QiOiJSdW50aW1lLmV2YWx1YXRlIiwicGFyYW1zIjp7ImV4cHJlc3Npb24iOiJhbGVydCgndHQxMjMnKSIsIm9iamVjdEdyb3VwIjoiY29uc29sZSIsImluY2x1ZGVDb21tYW5kTGluZUFQSSI6dHJ1ZSwiZG9Ob3RQYXVzZU9uRXhjZXB0aW9uc0FuZE11dGVDb25zb2xlIjp0cnVlLCJyZXR1cm5CeVZhbHVlIjpmYWxzZX0sImlkIjo1N30=</data>-->
             <data>$json_encoded</data>

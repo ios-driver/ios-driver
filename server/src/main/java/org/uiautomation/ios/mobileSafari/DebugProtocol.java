@@ -13,10 +13,14 @@
  */
 package org.uiautomation.ios.mobileSafari;
 
+import com.google.common.collect.ImmutableMap;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.mobileSafari.events.Event;
+import org.uiautomation.ios.mobileSafari.message.WebkitApplication;
+import org.uiautomation.ios.mobileSafari.message.WebkitDevice;
 import org.uiautomation.ios.mobileSafari.message.WebkitPage;
 import org.uiautomation.ios.webInspector.DOM.DOM;
 import org.uiautomation.ios.webInspector.DOM.RemoteExceptionException;
@@ -28,6 +32,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class DebugProtocol {
@@ -80,7 +85,7 @@ public class DebugProtocol {
 
     listen.start();
 
-    Thread monitor = new Thread(new Runnable() {
+    /*Thread monitor = new Thread(new Runnable() {
       @Override
       public void run() {
         while (true) {
@@ -94,7 +99,7 @@ public class DebugProtocol {
         }
       }
     });
-    //monitor.start();
+    //monitor.start();  */
   }
 
   public void init() throws Exception {
@@ -103,14 +108,49 @@ public class DebugProtocol {
       socket.close();
     }
     socket = new Socket(LOCALHOST_IPV6, port);
-    sendCommand(PlistManager.SET_CONNECTION_KEY);
-    sendCommand(PlistManager.CONNECT_TO_APP);
-    sendCommand(PlistManager.SET_SENDER_KEY);
+    //sendCommand(PlistManager.SET_CONNECTION_KEY);
+    //sendCommand(PlistManager.CONNECT_TO_APP);
+    //sendCommand(PlistManager.SET_SENDER_KEY);
   }
 
-  public void switchTo(String pageId) throws Exception {
-    this.currentPageKey = pageId;
-    sendCommand(PlistManager.SET_SENDER_KEY);
+
+  public void sendSetConnectionKey(String connectionIdentifier) throws Exception {
+    Map<String, String> var = ImmutableMap.of("$WIRConnectionIdentifierKey", connectionIdentifier);
+    sendCommand(PlistManager.SET_CONNECTION_KEY, var);
+  }
+
+  public void sendConnectToApplication(String connectionIdentifier, String bundleId)
+      throws Exception {
+    Map<String, String> var = ImmutableMap.of
+        (
+            "$WIRConnectionIdentifierKey", connectionIdentifier,
+            "$bundleId", bundleId
+        );
+    sendCommand(PlistManager.CONNECT_TO_APP, var);
+  }
+
+  public void sendSenderKey(String connectionIdentifier, String bundleId, String senderKey,
+                            String pageId)
+      throws Exception {
+    Map<String, String> var = ImmutableMap.of
+        (
+            "$WIRConnectionIdentifierKey", connectionIdentifier,
+            "$bundleId", bundleId,
+            "$WIRSenderKey", senderKey,
+            "$WIRPageIdentifierKey", pageId
+        );
+    sendCommand(PlistManager.SET_SENDER_KEY, var);
+  }
+
+
+  private String updateTemplate(String xml) {
+    xml = xml.replace("$bundleId", this.bundleId);
+    xml = xml.replace("$WIRPageIdentifierKey", currentPageKey);
+    return xml;
+  }
+
+  public JSONObject sendCommand(JSONObject command) {
+    return sendCommand(command, "", "", "", "");
   }
 
   /**
@@ -118,7 +158,8 @@ public class DebugProtocol {
    *
    * @param command . For command format, read https://www.webkit.org/blog/?p=1875&preview=true.
    */
-  public JSONObject sendCommand(JSONObject command) {
+  public JSONObject sendCommand(JSONObject command, String connectionIdentifier, String bundleId,
+                                String senderKey, String pageId) {
     //System.out.println("sending command "+command);
     try {
       commandId++;
@@ -128,8 +169,17 @@ public class DebugProtocol {
 
       String xml = plist.JSONCommand(command);
       // perf("got xml \t" + (System.currentTimeMillis() - start) + "ms.");
-      xml = xml.replace("$bundleId", this.bundleId);
-      xml = xml.replace("$WIRPageIdentifierKey", currentPageKey);
+      Map<String, String> var = ImmutableMap.of
+          (
+              "$WIRConnectionIdentifierKey", connectionIdentifier,
+              "$bundleId", bundleId,
+              "$WIRSenderKey", senderKey,
+              "$WIRPageIdentifierKey", pageId
+          );
+      for (String key : var.keySet()) {
+        xml = xml.replace(key, var.get(key));
+      }
+      //System.out.println("sending "+xml);
 
       byte[] bytes = plist.plistXmlToBinary(xml);
       // perf("prepared request \t" + (System.currentTimeMillis() - start) +
@@ -158,16 +208,21 @@ public class DebugProtocol {
 
   }
 
+  private void sendCommand(String command) throws Exception {
+    sendCommand(command, ImmutableMap.of("", ""));
+  }
 
   /**
    * Some commands do not follow the Remote Debugging protocol. For instance the ones that
    * initialize the connection between the webview and the remote debugger do not have json content,
    * they're just an exchange of keys.
    */
-  private void sendCommand(String command) throws Exception {
+  private void sendCommand(String command, Map<String, String> variables) throws Exception {
     String xml = plist.loadFromTemplate(command);
-    xml = xml.replace("$bundleId", bundleId);
-    xml = xml.replace("$WIRPageIdentifierKey", currentPageKey);
+    for (String key : variables.keySet()) {
+      xml = xml.replace(key, variables.get(key));
+    }
+
     byte[] bytes = plist.plistXmlToBinary(xml);
     sendBinaryMessage(bytes);
   }
@@ -279,7 +334,7 @@ public class DebugProtocol {
       //}, "com.apple.mobilesafari");
     }, "com.yourcompany.UICatalog");
 
-    while (true) {
+    /*while (true) {
       Thread.sleep(5000);
       try {
         System.out.println(
@@ -289,6 +344,12 @@ public class DebugProtocol {
         System.err.println(e.getMessage());
       }
 
-    }
+    } */
   }
+
+  public void switchTo(String pageId) {
+    this.currentPageKey = pageId;
+
+  }
+
 }

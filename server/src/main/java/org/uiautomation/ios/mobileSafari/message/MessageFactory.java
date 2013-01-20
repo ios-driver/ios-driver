@@ -49,18 +49,6 @@ public class MessageFactory {
     } catch (Exception e1) {
       e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
     }
-
-    /*try {
-      Document d = getDocument(rawMessage);
-      Node n = getWebKitDebugMessage(d);
-      if (n != null) {
-        return new WebkitDebugMessage(n);
-      } else {
-        return new SetupMessage(d,rawMessage);
-      }
-    } catch (Exception e) {
-      throw new WebDriverException("Protocol reading error.", e);
-    } */
     return null;
   }
 

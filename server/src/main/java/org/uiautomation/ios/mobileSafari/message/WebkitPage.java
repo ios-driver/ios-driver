@@ -41,6 +41,29 @@ public class WebkitPage {
     return WIRConnectionIdentifierKey;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    WebkitPage that = (WebkitPage) o;
+
+    if (WIRPageIdentifierKey != that.WIRPageIdentifierKey) {
+      return false;
+    }
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    return WIRPageIdentifierKey;
+  }
+
   public JSONObject asJSON() {
     JSONObject json = null;
     try {

@@ -43,7 +43,8 @@ public class IOSDriver {
 
   public IOSDriver(int port) {
     try {
-      LogManager.getLogManager().readConfiguration(IOSDriver.class.getResourceAsStream("/ios-logging.properties"));
+      LogManager.getLogManager()
+          .readConfiguration(IOSDriver.class.getResourceAsStream("/ios-logging.properties"));
     } catch (Exception e) {
       System.err.println("Cannot configure logger.");
     }
@@ -89,7 +90,7 @@ public class IOSDriver {
     cap.setSupportedLanguages(application.getSupportedLanguagesCodes());
     cap.setCapability("applicationPath", application.getApplicationPath().getAbsoluteFile());
 
-    for (Iterator iterator = application.getMetadata().keys(); iterator.hasNext();) {
+    for (Iterator iterator = application.getMetadata().keys(); iterator.hasNext(); ) {
       String key = (String) iterator.next();
 
       try {
@@ -111,36 +112,43 @@ public class IOSDriver {
         return app;
       }
     }
-    throw new SessionNotCreatedException(desiredCapabilities.getRawCapabilities() + "not found on server.");
+    throw new SessionNotCreatedException(
+        desiredCapabilities.getRawCapabilities() + "not found on server.");
   }
 
-  public static boolean matches(Map<String, Object> appCapabilities, Map<String, Object> desiredCapabilities) {
+  public static boolean matches(Map<String, Object> appCapabilities,
+                                Map<String, Object> desiredCapabilities) {
     IOSCapabilities a = new IOSCapabilities(appCapabilities);
     IOSCapabilities d = new IOSCapabilities(desiredCapabilities);
     return matches(a, d);
 
   }
 
-  private static boolean matches(IOSCapabilities applicationCapabilities, IOSCapabilities desiredCapabilities) {
+  private static boolean matches(IOSCapabilities applicationCapabilities,
+                                 IOSCapabilities desiredCapabilities) {
 
     if (desiredCapabilities.getBundleName() == null) {
       throw new WebDriverException("you need to specify the bundle to test.");
     }
     String desired = desiredCapabilities.getBundleName();
-    String appName = (String) (applicationCapabilities.getBundleName() != null ? applicationCapabilities
-        .getBundleName() : applicationCapabilities.getCapability("CFBundleDisplayName"));
+    String
+        appName =
+        (String) (applicationCapabilities.getBundleName() != null ? applicationCapabilities
+            .getBundleName() : applicationCapabilities.getCapability("CFBundleDisplayName"));
 
     if (!desired.equals(appName)) {
       return false;
     }
     if (desiredCapabilities.getBundleVersion() != null
-        && !desiredCapabilities.getBundleVersion().equals(applicationCapabilities.getBundleVersion())) {
+        && !desiredCapabilities.getBundleVersion()
+        .equals(applicationCapabilities.getBundleVersion())) {
       return false;
     }
     if (desiredCapabilities.getDevice() == null) {
       throw new WebDriverException("you need to specify the device.");
     }
-    if (!(applicationCapabilities.getSupportedDevices().contains(desiredCapabilities.getDevice()))) {
+    if (!(applicationCapabilities.getSupportedDevices()
+              .contains(desiredCapabilities.getDevice()))) {
       return false;
     }
     // check any extra capability starting with plist_
@@ -155,7 +163,8 @@ public class IOSDriver {
     }
     String l = desiredCapabilities.getLanguage();
     if (l != null && !applicationCapabilities.getSupportedLanguages().contains(l)) {
-      throw new SessionNotCreatedException("Language requested, " + l + " ,isn't supported.Supported are : "
+      throw new SessionNotCreatedException(
+          "Language requested, " + l + " ,isn't supported.Supported are : "
           + applicationCapabilities.getSupportedLanguages());
     }
 
@@ -183,50 +192,6 @@ public class IOSDriver {
     throw new WebDriverException("Cannot find session " + opaqueKey + " on the sesver.");
   }
 
-  class HostInfo {
-    private final String osName;
-    private final String osArch;
-    private final String osVersion;
-
-    private final String javaVersion;
-
-    private final String simulatorVersion;
-    private final List<String> installedSimulators;
-    private final File xCodeInstall;
-
-    private final BuildInfo info = new BuildInfo();
-    private final int port;
-
-    public HostInfo(int port) {
-      osName = System.getProperty("os.name");
-      osArch = System.getProperty("os.arch");
-      osVersion = System.getProperty("os.version");
-
-      javaVersion = System.getProperty("java.version");
-
-      String sdk = ClassicCommands.getDefaultSDK();
-      simulatorVersion = sdk;
-      installedSimulators = ClassicCommands.getInstalledSDKs();
-      this.port = port;
-      xCodeInstall = ClassicCommands.getXCodeInstall();
-    }
-
-    public String getSDK() {
-      return simulatorVersion;
-    }
-
-    public File getXCodeInstall() {
-      return xCodeInstall;
-    }
-
-    public List<String> getInstalledSDKs() {
-      return installedSimulators;
-    }
-
-    public int getPort() {
-      return port;
-    }
-  }
 
   public Set<IOSApplication> getSupportedApplications() {
     return supportedApplications;

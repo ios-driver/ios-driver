@@ -93,7 +93,6 @@ public class ServerSideSession extends Session {
 
   public CommandConfiguration configure(WebDriverLikeCommand command) {
     return configuration.configure(command);
-
   }
 
   public RemoteUIADriver getNativeDriver() {

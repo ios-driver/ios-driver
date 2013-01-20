@@ -19,10 +19,12 @@ import com.dd.plist.NSDictionary;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class ApplicationSentListingMessage extends BaseIOSWebKitMessage {
 
   private final List<WebkitPage> pages = new ArrayList<WebkitPage>();
+  private static final Logger log = Logger.getLogger(ApplicationSentListingMessage.class.getName());
 
   public ApplicationSentListingMessage(String rawMessage) throws Exception {
     super(rawMessage);
@@ -34,6 +36,7 @@ public class ApplicationSentListingMessage extends BaseIOSWebKitMessage {
       NSDictionary page = (NSDictionary) list.objectForKey(key);
       pages.add(new WebkitPage(page));
     }
+    log.fine("got :" + toString());
   }
 
   public List<WebkitPage> getPages() {

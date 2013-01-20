@@ -30,6 +30,7 @@ import org.uiautomation.ios.mobileSafari.message.ApplicationSentListingMessage;
 import org.uiautomation.ios.mobileSafari.message.IOSMessage;
 import org.uiautomation.ios.mobileSafari.message.MessageFactory;
 import org.uiautomation.ios.mobileSafari.message.WebkitDebugMessage;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.MessageListener;
 import org.uiautomation.ios.webInspector.DOM.DOM;
 
 import java.util.ArrayList;
@@ -70,6 +71,11 @@ public class DefaultMessageHandler implements MessageHandler {
 
   private void process(String rawMessage) {
     IOSMessage message = factory.create(rawMessage);
+
+    if (listener instanceof MessageListener) {
+      ((MessageListener) listener).onMessage(message);
+    }
+
     if (message instanceof ApplicationDataMessage) {
       JSONObject content = ((ApplicationDataMessage) message).getMessage();
       if ((content.optInt("id", -1) != -1)) {
@@ -102,7 +108,7 @@ public class DefaultMessageHandler implements MessageHandler {
       ApplicationSentListingMessage listingMessage = (ApplicationSentListingMessage) message;
       listener.setWindowHandles(listingMessage.getPages());
     } else {
-      System.out.println(message);
+      //System.out.println(message);
     }
 
 
