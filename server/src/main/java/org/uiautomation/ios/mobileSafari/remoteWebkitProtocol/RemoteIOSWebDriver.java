@@ -14,9 +14,9 @@
 
 package org.uiautomation.ios.mobileSafari.remoteWebkitProtocol;
 
-import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.uiautomation.ios.context.WebInspector;
@@ -25,8 +25,9 @@ import org.uiautomation.ios.mobileSafari.message.WebkitApplication;
 import org.uiautomation.ios.mobileSafari.message.WebkitDevice;
 import org.uiautomation.ios.mobileSafari.message.WebkitPage;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.webInspector.DOM.Page;
+import org.uiautomation.ios.server.command.web.ToCSSSelectorConvertor;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
+import org.uiautomation.ios.webInspector.DOM.RemoteWebNativeBackedElement;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,21 +35,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class RemoteIOSWebDriver implements WebDriver, JavascriptExecutor {
+public class RemoteIOSWebDriver implements JavascriptExecutor {
 
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws Exception {
     RemoteIOSWebDriver driver = new RemoteIOSWebDriver(null);
     driver.connect(uiCatalog);
     driver.switchTo(driver.getPages().get(0));
 
+    //driver.get("http://ebay.co.uk");
     System.out.println("URL : " + driver.getCurrentUrl());
-    driver.get("http://ebay.co.uk");
-    System.out.println("URL : " + driver.getCurrentUrl());
-    driver.get("http://apple.com/uk");
-    System.out.println("URL : " + driver.getCurrentUrl());
-    driver.get("http://perdu.com");
-
+    RemoteWebElement el = driver.findElementByCss("#v4-1");
+    System.out.println(el.getText());
 
   }
 
@@ -74,12 +72,19 @@ public class RemoteIOSWebDriver implements WebDriver, JavascriptExecutor {
   }
 
   public RemoteWebElement createElement(String reference) {
-    String pageId = reference.split("_")[0];
+    int pageId = Integer.parseInt(reference.split("_")[0]);
     int nodeId = Integer.parseInt(reference.split("_")[1]);
-    WebInspector inspector = inspectors.get(pageId);
-    RemoteWebElement element = new RemoteWebElement(new NodeId(nodeId), inspector);
 
-    return element;
+    if (currentInspector.getPageIdentifier() != pageId) {
+      throw new StaleElementReferenceException("Node " + nodeId
+                                               + "is stale.It might still exist, but the "
+                                               + "window with focus has changed.");
+    }
+    if (session != null) {
+      return new RemoteWebNativeBackedElement(new NodeId(nodeId), currentInspector, session);
+    } else {
+      return new RemoteWebElement(new NodeId(nodeId), currentInspector);
+    }
   }
 
   public WebInspector connect(String bundleId, String deviceId) {
@@ -108,12 +113,12 @@ public class RemoteIOSWebDriver implements WebDriver, JavascriptExecutor {
     return currentInspector.getDocument();
   }
 
-  @Override
+
   public void get(String url) {
     currentInspector.get(url);
   }
 
-  @Override
+
   public String getCurrentUrl() {
     try {
       return currentInspector
@@ -124,69 +129,61 @@ public class RemoteIOSWebDriver implements WebDriver, JavascriptExecutor {
     }
   }
 
-  @Override
+
   public String getTitle() {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
-  @Override
+
   public List<WebElement> findElements(By by) {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
-  @Override
-  public WebElement findElement(By by) {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+
+  public RemoteWebElement findElementByCss(String cssSelector) throws Exception {
+    RemoteWebElement document = getDocument();
+    return document.findElementByCSSSelector(cssSelector);
   }
 
-  @Override
   public String getPageSource() {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
-  @Override
   public void close() {
     //To change body of implemented methods use File | Settings | File Templates.
   }
 
-  @Override
   public void quit() {
     //To change body of implemented methods use File | Settings | File Templates.
   }
 
-  @Override
   public Set<String> getWindowHandles() {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
-  @Override
   public String getWindowHandle() {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
-  @Override
-  public TargetLocator switchTo() {
+  public WebDriver.TargetLocator switchTo() {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
-  @Override
-  public Navigation navigate() {
+  public WebDriver.Navigation navigate() {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
-  @Override
-  public Options manage() {
+  public WebDriver.Options manage() {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
-  @Override
   public Object executeScript(String script, Object... args) {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
-  @Override
   public Object executeAsyncScript(String script, Object... args) {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
+
   }
 
 
