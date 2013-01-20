@@ -14,15 +14,9 @@
 
 package org.uiautomation.ios.context;
 
-import org.json.JSONObject;
-import org.uiautomation.ios.mobileSafari.DebugProtocol;
+import org.uiautomation.ios.mobileSafari.SimulatorProtocolImpl;
 import org.uiautomation.ios.mobileSafari.EventListener;
 import org.uiautomation.ios.mobileSafari.ResponseFinder;
-import org.uiautomation.ios.mobileSafari.events.Event;
-import org.uiautomation.ios.mobileSafari.message.WebkitPage;
-import org.uiautomation.ios.webInspector.DOM.DOM;
-
-import java.util.List;
 
 /**
  * Context for the webview accessed with the remote webkit protocol. If the application was launched
@@ -33,55 +27,14 @@ import java.util.List;
 public class WebViewContext {
 
   private final WebInspectorSet windowSet = new WebInspectorSet();
-  private final DebugProtocol protocol;
+  private final SimulatorProtocolImpl protocol;
   private final String bundleId;
 
   public WebViewContext(String bundleId, EventListener listener, ResponseFinder... finders)
       throws Exception {
     this.bundleId = bundleId;
-    protocol = new DebugProtocol(listener, bundleId, finders);
-  }
-
-
-  public static void main(String[] args) throws Exception {
-    String bundleId = "com.apple.mobilesafari";
-    WebViewContext wv = new WebViewContext(bundleId, new MyEventListener());
-
-    /*while (true) {
-      Thread.sleep(5000);
-      try {
-        System.out.println(
-            "Monitor : " + protocol.sendCommand(DOM.getDocument()).optJSONObject("root")
-                .optString("documentURL"));
-      } catch (Exception e) {
-        System.err.println(e.getMessage());
-      }
-
-    }*/
-
-  }
-
-}
-
-class MyEventListener implements EventListener {
-
-  @Override
-  public void onPageLoad() {
-    //To change body of implemented methods use File | Settings | File Templates.
-  }
-
-  @Override
-  public void domHasChanged(Event event) {
-    //To change body of implemented methods use File | Settings | File Templates.
-  }
-
-  @Override
-  public void frameDied(JSONObject message) {
-    //To change body of implemented methods use File | Settings | File Templates.
-  }
-
-  @Override
-  public void setWindowHandles(List<WebkitPage> handles) {
-    //To change body of implemented methods use File | Settings | File Templates.
+    protocol = new SimulatorProtocolImpl(listener, bundleId, finders);
   }
 }
+
+

@@ -17,7 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.mobileSafari.DebugProtocol;
+import org.uiautomation.ios.mobileSafari.SimulatorProtocolImpl;
 import org.uiautomation.ios.mobileSafari.IosAtoms;
 import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.server.ServerSideSession;
@@ -28,7 +28,7 @@ public class RemoteObject {
 
   private final String objectId;
   private final ServerSideSession session;
-  private final DebugProtocol protocol;
+  private final SimulatorProtocolImpl protocol;
 
   public RemoteObject(String objectId, ServerSideSession session) throws JSONException {
     this.session = session;
@@ -36,7 +36,7 @@ public class RemoteObject {
     this.objectId = objectId;
   }
 
-  public DebugProtocol getProtocol() {
+  public SimulatorProtocolImpl getProtocol() {
     return protocol;
   }
 

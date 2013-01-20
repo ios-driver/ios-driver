@@ -29,6 +29,9 @@ public class MessageFactory {
     types.put("_rpc_reportConnectedApplicationList:", ReportConnectedApplicationsMessage.class);
     types.put("_rpc_applicationSentListing:", ApplicationSentListingMessage.class);
     types.put("_rpc_applicationSentData:", ApplicationDataMessage.class);
+    types.put("_rpc_applicationConnected:", ApplicationConnectedMessage.class);
+    // _rpc_applicationDisconnected: simulator stopped..
+
   }
 
   public IOSMessage create(String rawMessage) {

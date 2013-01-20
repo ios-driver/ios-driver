@@ -39,7 +39,7 @@ public class WebInspector {
   private static final Logger log = Logger.getLogger(WebInspector.class.getName());
 
   private final ServerSideSession session;
-  private final DebugProtocol protocol;
+  private final SimulatorProtocolImpl protocol;
   public final UIADriver nativeDriver;
 
   private int width = -1;
@@ -110,13 +110,14 @@ public class WebInspector {
     this.session = session;
     DOMContext context = session.getContext().getDOMContext();
     protocol =
-        new DebugProtocol(context, bundleId, new AlertDetector((RemoteUIADriver) nativeDriver));
+        new SimulatorProtocolImpl(context, bundleId,
+                                  new AlertDetector((RemoteUIADriver) nativeDriver));
     enablePageEvent();
 
   }
 
 
-  public DebugProtocol getProtocol() {
+  public SimulatorProtocolImpl getProtocol() {
     return protocol;
   }
 

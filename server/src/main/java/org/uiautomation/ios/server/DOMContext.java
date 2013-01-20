@@ -314,7 +314,7 @@ public class DOMContext implements EventListener {
 
   public void setWindow(String pageId) throws Exception {
     newContext();
-    session.getWebInspector().getProtocol().switchTo(pageId);
+    //session.getWebInspector().getProtocol().switchTo(pageId);
     session.getWebInspector().enablePageEvent();
   }
 }

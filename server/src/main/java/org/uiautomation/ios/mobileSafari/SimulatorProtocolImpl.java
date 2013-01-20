@@ -19,10 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.mobileSafari.events.Event;
-import org.uiautomation.ios.mobileSafari.message.WebkitApplication;
-import org.uiautomation.ios.mobileSafari.message.WebkitDevice;
 import org.uiautomation.ios.mobileSafari.message.WebkitPage;
-import org.uiautomation.ios.webInspector.DOM.DOM;
 import org.uiautomation.ios.webInspector.DOM.RemoteExceptionException;
 
 import java.io.ByteArrayOutputStream;
@@ -35,9 +32,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class DebugProtocol {
+public class SimulatorProtocolImpl {
 
-  private static final Logger log = Logger.getLogger(DebugProtocol.class.getName());
+  private static final Logger log = Logger.getLogger(SimulatorProtocolImpl.class.getName());
 
   private static Socket socket;
   private ByteArrayOutputStream buf = new ByteArrayOutputStream();
@@ -53,14 +50,11 @@ public class DebugProtocol {
   private Thread listen;
   private volatile boolean keepGoing = true;
   private final String bundleId;
-  private String currentPageKey = "1";
 
   /**
    * connect to the webview
    */
-  public DebugProtocol(EventListener listener, String bundleId, ResponseFinder... finders)
-      throws Exception,
-             InterruptedException {
+  public SimulatorProtocolImpl(EventListener listener, String bundleId, ResponseFinder... finders) {
     this.handler = new DefaultMessageHandler(listener, finders);
     this.bundleId = bundleId;
 
@@ -102,25 +96,29 @@ public class DebugProtocol {
     //monitor.start();  */
   }
 
-  public void init() throws Exception {
+  public void init() {
     System.out.println("\nINIT\n");
-    if (socket != null && (socket.isConnected() || !socket.isClosed())) {
-      socket.close();
+    try {
+      if (socket != null && (socket.isConnected() || !socket.isClosed())) {
+        socket.close();
+      }
+      socket = new Socket(LOCALHOST_IPV6, port);
+    } catch (IOException e) {
+      throw new WebDriverException(e);
     }
-    socket = new Socket(LOCALHOST_IPV6, port);
+
     //sendCommand(PlistManager.SET_CONNECTION_KEY);
     //sendCommand(PlistManager.CONNECT_TO_APP);
     //sendCommand(PlistManager.SET_SENDER_KEY);
   }
 
 
-  public void sendSetConnectionKey(String connectionIdentifier) throws Exception {
+  public void sendSetConnectionKey(String connectionIdentifier) {
     Map<String, String> var = ImmutableMap.of("$WIRConnectionIdentifierKey", connectionIdentifier);
     sendCommand(PlistManager.SET_CONNECTION_KEY, var);
   }
 
-  public void sendConnectToApplication(String connectionIdentifier, String bundleId)
-      throws Exception {
+  public void sendConnectToApplication(String connectionIdentifier, String bundleId) {
     Map<String, String> var = ImmutableMap.of
         (
             "$WIRConnectionIdentifierKey", connectionIdentifier,
@@ -130,8 +128,7 @@ public class DebugProtocol {
   }
 
   public void sendSenderKey(String connectionIdentifier, String bundleId, String senderKey,
-                            String pageId)
-      throws Exception {
+                            String pageId) {
     Map<String, String> var = ImmutableMap.of
         (
             "$WIRConnectionIdentifierKey", connectionIdentifier,
@@ -142,12 +139,6 @@ public class DebugProtocol {
     sendCommand(PlistManager.SET_SENDER_KEY, var);
   }
 
-
-  private String updateTemplate(String xml) {
-    xml = xml.replace("$bundleId", this.bundleId);
-    xml = xml.replace("$WIRPageIdentifierKey", currentPageKey);
-    return xml;
-  }
 
   public JSONObject sendCommand(JSONObject command) {
     return sendCommand(command, "", "", "", "");
@@ -217,7 +208,7 @@ public class DebugProtocol {
    * initialize the connection between the webview and the remote debugger do not have json content,
    * they're just an exchange of keys.
    */
-  private void sendCommand(String command, Map<String, String> variables) throws Exception {
+  private void sendCommand(String command, Map<String, String> variables) {
     String xml = plist.loadFromTemplate(command);
     for (String key : variables.keySet()) {
       xml = xml.replace(key, variables.get(key));
@@ -311,7 +302,7 @@ public class DebugProtocol {
   }
 
   public static void test() throws Exception {
-    final DebugProtocol protocol = new DebugProtocol(new EventListener() {
+    final SimulatorProtocolImpl protocol = new SimulatorProtocolImpl(new EventListener() {
       @Override
       public void onPageLoad() {
 
@@ -347,9 +338,5 @@ public class DebugProtocol {
     } */
   }
 
-  public void switchTo(String pageId) {
-    this.currentPageKey = pageId;
-
-  }
 
 }

@@ -17,7 +17,7 @@ package org.uiautomation.ios.context;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.uiautomation.ios.mobileSafari.DebugProtocol;
+import org.uiautomation.ios.mobileSafari.SimulatorProtocolImpl;
 import org.uiautomation.ios.webInspector.DOM.DOM;
 
 import java.util.logging.Logger;
@@ -32,10 +32,11 @@ public class WebInspector {
   private final String senderKey;
   private final String connectionKey;
   private final String bundleId;
-  private final DebugProtocol simulatorProtocol;
+  private final SimulatorProtocolImpl simulatorProtocol;
 
   public WebInspector(WebViewContext webViewContext, int pageIdentifierKey,
-                      DebugProtocol simulatorProtocol, String bundleId, String connectionKey) {
+                      SimulatorProtocolImpl simulatorProtocol, String bundleId,
+                      String connectionKey) {
     this.bundleId = bundleId;
     this.connectionKey = connectionKey;
     this.context = webViewContext;
@@ -45,14 +46,17 @@ public class WebInspector {
   }
 
 
-  public void test() throws JSONException {
+  public void test() {
+    try {
+      JSONObject cmd = new JSONObject();
+      cmd.put("method", "Page.enable");
+      JSONObject response = sendCommand(cmd);
 
-    JSONObject cmd = new JSONObject();
-    cmd.put("method", "Page.enable");
-    JSONObject response = sendCommand(cmd);
-
-    JSONObject doc = DOM.getDocument();
-    sendCommand(doc);
+      JSONObject doc = DOM.getDocument();
+      sendCommand(doc);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   private JSONObject sendCommand(JSONObject command) {

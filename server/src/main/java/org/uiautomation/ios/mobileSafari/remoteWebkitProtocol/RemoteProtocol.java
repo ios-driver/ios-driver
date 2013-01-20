@@ -34,7 +34,7 @@ public class RemoteProtocol {
   private List<WebkitApplication> applications = new ArrayList<WebkitApplication>();
 
 
-  public RemoteProtocol() throws Exception {
+  public RemoteProtocol() {
     simulator = new SimulatorSession();
     usbProtocol = new Object();
   }
@@ -46,6 +46,10 @@ public class RemoteProtocol {
 
   public WebInspector connect(String bundleId, String deviceId) {
     return null;
+  }
+
+  public void connect(String bundleId) {
+    simulator.connect(bundleId);
   }
 
 

@@ -37,7 +37,7 @@ import org.uiautomation.ios.UIAModels.predicate.OrCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.device.Device;
-import org.uiautomation.ios.mobileSafari.DebugProtocol;
+import org.uiautomation.ios.mobileSafari.SimulatorProtocolImpl;
 import org.uiautomation.ios.mobileSafari.IosAtoms;
 import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.mobileSafari.WebInspector;
@@ -55,7 +55,7 @@ public class RemoteWebElement {
 
   private final UIADriver nativeDriver;
   protected final WebInspector inspector;
-  protected final DebugProtocol protocol;
+  protected final SimulatorProtocolImpl protocol;
   private UIAElement nativeElement;
   private final ServerSideSession session;
   private final NodeId nodeId;

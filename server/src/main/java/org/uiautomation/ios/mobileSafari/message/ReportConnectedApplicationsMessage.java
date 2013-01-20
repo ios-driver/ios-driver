@@ -31,7 +31,7 @@ public class ReportConnectedApplicationsMessage extends BaseIOSWebKitMessage {
 
     for (String key : keys) {
       NSDictionary app = (NSDictionary) list.objectForKey(key);
-      WebkitApplication application = new WebkitApplication(key, app);
+      WebkitApplication application = new WebkitApplication(app);
       apps.add(application);
     }
   }

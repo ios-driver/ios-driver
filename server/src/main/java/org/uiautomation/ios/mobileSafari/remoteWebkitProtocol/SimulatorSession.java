@@ -17,9 +17,10 @@ package org.uiautomation.ios.mobileSafari.remoteWebkitProtocol;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.context.WebInspector;
-import org.uiautomation.ios.mobileSafari.DebugProtocol;
 import org.uiautomation.ios.mobileSafari.EventListener;
+import org.uiautomation.ios.mobileSafari.SimulatorProtocolImpl;
 import org.uiautomation.ios.mobileSafari.events.Event;
+import org.uiautomation.ios.mobileSafari.message.ApplicationConnectedMessage;
 import org.uiautomation.ios.mobileSafari.message.ApplicationDataMessage;
 import org.uiautomation.ios.mobileSafari.message.ApplicationSentListingMessage;
 import org.uiautomation.ios.mobileSafari.message.IOSMessage;
@@ -29,6 +30,7 @@ import org.uiautomation.ios.mobileSafari.message.WebkitApplication;
 import org.uiautomation.ios.mobileSafari.message.WebkitDevice;
 import org.uiautomation.ios.mobileSafari.message.WebkitPage;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -38,7 +40,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class SimulatorSession {
 
-  private DebugProtocol simulatorProtocol;
+  private SimulatorProtocolImpl simulatorProtocol;
   private WebkitDevice device;
   private List<WebkitApplication> applications;
   private List<WebkitPage> pages;
@@ -49,21 +51,20 @@ public class SimulatorSession {
   private Condition simSentApps = simLock.newCondition();
   private Condition simSentPages = simLock.newCondition();
 
+  private final List<WebInspector> created = new ArrayList<WebInspector>();
+
   private final String connectionKey;
 
-  public SimulatorSession() throws Exception {
+  public SimulatorSession() {
     connectionKey = UUID.randomUUID().toString();
-
-    simulatorProtocol = new DebugProtocol(new DefaultMessageListener(this), null);
+    simulatorProtocol = new SimulatorProtocolImpl(new DefaultMessageListener(this), null);
     simulatorProtocol.sendSetConnectionKey(connectionKey);
     waitForSimToRegister();
     waitForSimToSendApps();
-
-
   }
 
 
-  public void connect(String bundleId) throws Exception {
+  public void connect(String bundleId) {
     List<WebkitApplication> knownApps = getApplications();
     for (WebkitApplication app : knownApps) {
       if (bundleId.equals(app.getBundleId())) {
@@ -73,28 +74,34 @@ public class SimulatorSession {
         return;
       }
     }
-    throw new WebDriverException(bundleId + " not in the list " + knownApps);
+    throw new WebDriverException(bundleId + " not in the list " + knownApps
+                                 + ".Either it's not started, or it has no webview to connect to.");
   }
 
-  private void waitForSimToSendPages() throws InterruptedException {
+  private void waitForSimToSendPages() {
     try {
       simLock.lock();
       if (pages != null) {
         return;
       }
       simSentPages.await(5, TimeUnit.SECONDS);
+    } catch (InterruptedException e) {
+      throw new WebDriverException("InterruptedException before getting the pages.");
     } finally {
       simLock.unlock();
     }
   }
 
-  private void waitForSimToRegister() throws InterruptedException {
+  private void waitForSimToRegister() {
     try {
       simLock.lock();
       if (device != null) {
         return;
       }
       simRegistered.await(5, TimeUnit.SECONDS);
+    } catch (InterruptedException e) {
+      throw new WebDriverException(
+          "InterruptedException while waiting for the simulator to respond.");
     } finally {
       simLock.unlock();
     }
@@ -118,7 +125,7 @@ public class SimulatorSession {
     }
   }
 
-  private void waitForSimToSendApps() throws InterruptedException {
+  private void waitForSimToSendApps() {
 
     try {
       simLock.lock();
@@ -126,6 +133,9 @@ public class SimulatorSession {
         return;
       }
       simSentApps.await(5, TimeUnit.SECONDS);
+    } catch (InterruptedException e) {
+      throw new WebDriverException(
+          "InterruptedException while waiting for the simulator to send its apps.");
     } finally {
       simLock.unlock();
     }
@@ -165,7 +175,7 @@ public class SimulatorSession {
     return pages;
   }
 
-  public WebInspector connect(WebkitPage webkitPage) throws Exception {
+  public WebInspector connect(WebkitPage webkitPage) {
     for (WebkitPage page : getPages()) {
       if (page.equals(webkitPage)) {
         WebInspector
@@ -176,6 +186,7 @@ public class SimulatorSession {
         simulatorProtocol.sendConnectToApplication(connectionKey, bundleId);
         simulatorProtocol.sendSenderKey(connectionKey, bundleId, inspector.getSenderKey(),
                                         "" + page.getPageId());
+        created.add(inspector);
         return inspector;
       }
     }
@@ -218,7 +229,15 @@ class DefaultMessageListener implements MessageListener, EventListener {
       System.out.println(message);
     }
 
-    //System.err.println(message);
+    if (message instanceof ApplicationConnectedMessage) {
+      ApplicationConnectedMessage m = (ApplicationConnectedMessage) message;
+      List<WebkitApplication> apps = new ArrayList<WebkitApplication>();
+      apps.add(m.getApplication());
+      simulator.setApplications(apps);
+      simulator.signalSimSentApps();
+    }
+
+    System.err.println(message);
   }
 
   @Override
