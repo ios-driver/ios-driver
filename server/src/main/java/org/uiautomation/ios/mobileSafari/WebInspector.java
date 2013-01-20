@@ -74,7 +74,7 @@ public class WebInspector {
   private RemoteWebElement retrieveDocument() throws Exception {
     JSONObject result = protocol.sendCommand(DOM.getDocument());
     JSONObject root = result.getJSONObject("root");
-    RemoteWebElement rme = new RemoteWebElement(new NodeId(root.getInt("nodeId")), session);
+    RemoteWebElement rme = new RemoteWebElement(new NodeId(root.getInt("nodeId")), null);
     return rme;
   }
 
@@ -172,7 +172,7 @@ public class WebInspector {
 
 
   public RemoteWebElement getMainWindow() {
-    return new RemoteWebElement(new NodeId(0), session);
+    return new RemoteWebElement(new NodeId(0), null);
   }
 
 
@@ -194,7 +194,7 @@ public class WebInspector {
           if (jsonArg.optInt("ELEMENT") > 0) {
             RemoteWebElement
                 rwep =
-                new RemoteWebElement(new NodeId(jsonArg.optInt("ELEMENT")), session);
+                new RemoteWebElement(new NodeId(jsonArg.optInt("ELEMENT")), null);
             arguments.put(new JSONObject().put("objectId", rwep.getRemoteObject().getId()));
           }
         } else if (arg instanceof JSONArray) {
@@ -377,7 +377,7 @@ public class WebInspector {
       }
 
       if ("array".equals(body.optString("subtype"))) {
-        RemoteObject array = new RemoteObject(body.getString("objectId"), session);
+        RemoteObject array = new RemoteObject(body.getString("objectId"), session, null);
         RemoteObjectArray a = new RemoteObjectArray(array);
         ArrayList<Object> res = new ArrayList<Object>();
         for (Object ro : a) {
@@ -389,15 +389,15 @@ public class WebInspector {
       if (body.has("objectId")) {
         if ("node".equals(body.optString("subtype")) || "Window"
             .equals(body.optString("className"))) {
-          return (T) new RemoteObject(body.getString("objectId"), session);
+          return (T) new RemoteObject(body.getString("objectId"), session, null);
         } else {
-          RemoteObject ro = new RemoteObject(body.getString("objectId"), session);
+          RemoteObject ro = new RemoteObject(body.getString("objectId"), session, null);
           JSONObject o = new JSONObject(ro.stringify());
           return (T) o;
         }
 
       }
-      return (T) new RemoteObject(body.getString("objectId"), session);
+      return (T) new RemoteObject(body.getString("objectId"), session, null);
 
     }
     throw new RuntimeException("NI " + body);

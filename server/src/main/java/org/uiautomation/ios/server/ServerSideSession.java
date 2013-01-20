@@ -25,7 +25,7 @@ import org.uiautomation.ios.client.uiamodels.impl.*;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.device.Device;
 import org.uiautomation.ios.mobileSafari.WebInspector;
-import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.RemoteProtocol;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.RemoteIOSWebDriver;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
@@ -44,9 +44,9 @@ public class ServerSideSession extends Session {
   public final IOSDriver driver;
 
   //private WebInspector inspector;
-  private RemoteUIADriver nativeDriver;
 
-  private RemoteProtocol webContext;
+  private RemoteUIADriver nativeDriver;
+  private RemoteIOSWebDriver webDriver;
 
   private final Context context;
 
@@ -145,32 +145,22 @@ public class ServerSideSession extends Session {
       e.printStackTrace();
     }
     nativeDriver = new ServerSideNativeDriver(url, new SessionId(instruments.getSessionId()));
-    webContext = new RemoteProtocol();
+    webDriver = new RemoteIOSWebDriver(this);
   }
 
-  public WebInspector getWebInspector() {
-    /*if (inspector == null) {
-      String bundleId = application.getMetadata("CFBundleIdentifier");
-      try {
-        this.inspector = new WebInspector(nativeDriver, bundleId, this);
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-    return inspector;  */
-    return null;
+  public RemoteIOSWebDriver getRemoteWebDriver() {
+    return webDriver;
   }
 
   public void setMode(WorkingMode mode) {
     context.switchToMode(mode);
     if (mode == WorkingMode.Web) {
       String bundleId = application.getMetadata("CFBundleIdentifier");
-      webContext.connect(bundleId);
-      System.out.println("pages :" + webContext.getSimulator().getPages().size());
-      org.uiautomation.ios.context.WebInspector
-          i = webContext.getSimulator().connect(webContext.getSimulator().getPages().get(0));
+      webDriver.connect(bundleId);
+      System.out.println("pages :" + webDriver.getPages().size());
+      webDriver.switchTo(webDriver.getPages().get(0));
       while (true) {
-        i.test();
+        webDriver.getCurrentUrl();
         try {
           Thread.sleep(5000);
         } catch (InterruptedException e) {
@@ -187,5 +177,6 @@ public class ServerSideSession extends Session {
   public Context getContext() {
     return context;
   }
+
 
 }

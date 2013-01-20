@@ -37,7 +37,7 @@ public class ExecuteScriptHandler extends BaseWebCommandHandler {
   public Response handle() throws Exception {
     String script = getRequest().getPayload().getString("script");
     JSONArray args = getRequest().getPayload().getJSONArray("args");
-    Object res = getSession().getWebInspector().executeScript(script, args);
+    Object res = getSession().getRemoteWebDriver().executeScript(script, args);
 
     Response resp = new Response();
     resp.setSessionId(getSession().getSessionId());
@@ -59,7 +59,10 @@ public class ExecuteScriptHandler extends BaseWebCommandHandler {
       Collection<Object> all = (Collection<Object>) res;
       for (Object ro : all) {
         if (ro instanceof RemoteObject) {
-          JSONObject jo = new JSONObject().put("ELEMENT", "" + ((RemoteObject) ro).getWebElement().getNodeId().getId());
+          JSONObject
+              jo =
+              new JSONObject()
+                  .put("ELEMENT", "" + ((RemoteObject) ro).getWebElement().getNodeId().getId());
           rwes.add(jo);
         } else {
           rwes.add(ro);

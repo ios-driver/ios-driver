@@ -36,11 +36,11 @@ public class ForwardHandler extends BaseWebCommandHandler {
     if (useNativeEvents) {
       // forwardNative();
     } else {
-      getSession().getWebInspector().forward();
+      getSession().getRemoteWebDriver().navigate().forward();
     }
 
     // no page loading event for forward ?
-    // getSession().getWebInspector().waitForPageToLoad();
+    // getSession().getRemoteWebDriver().waitForPageToLoad();
     Response res = new Response();
     res.setSessionId(getSession().getSessionId());
     res.setStatus(0);

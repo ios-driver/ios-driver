@@ -19,13 +19,13 @@ import com.dd.plist.NSNumber;
 
 public class WebkitApplication {
 
-  private final String key;
+
   private final String WIRApplicationIdentifierKey;
   private final String WIRApplicationNameKey;
   private final boolean WIRIsApplicationProxyKey;
 
-  public WebkitApplication(String key, NSDictionary dict) {
-    this.key = key;
+  public WebkitApplication(NSDictionary dict) {
+
     WIRApplicationIdentifierKey = dict.objectForKey("WIRApplicationIdentifierKey").toString();
     WIRApplicationNameKey = dict.objectForKey("WIRApplicationNameKey").toString();
     NSNumber o = (NSNumber) dict.objectForKey("WIRIsApplicationProxyKey");

@@ -15,14 +15,13 @@
 package org.uiautomation.ios.context;
 
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.mobileSafari.SimulatorProtocolImpl;
-import org.uiautomation.ios.webInspector.DOM.DOM;
+import org.uiautomation.ios.server.ServerSideSession;
 
 import java.util.logging.Logger;
 
-public class WebInspector {
+public class WebInspector extends BaseWebInspector {
 
   private static final Logger log = Logger.getLogger(WebInspector.class.getName());
 
@@ -36,7 +35,8 @@ public class WebInspector {
 
   public WebInspector(WebViewContext webViewContext, int pageIdentifierKey,
                       SimulatorProtocolImpl simulatorProtocol, String bundleId,
-                      String connectionKey) {
+                      String connectionKey, ServerSideSession session) {
+    super(session);
     this.bundleId = bundleId;
     this.connectionKey = connectionKey;
     this.context = webViewContext;
@@ -46,20 +46,7 @@ public class WebInspector {
   }
 
 
-  public void test() {
-    try {
-      JSONObject cmd = new JSONObject();
-      cmd.put("method", "Page.enable");
-      JSONObject response = sendCommand(cmd);
-
-      JSONObject doc = DOM.getDocument();
-      sendCommand(doc);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  private JSONObject sendCommand(JSONObject command) {
+  public JSONObject sendCommand(JSONObject command) {
     JSONObject
         res =
         simulatorProtocol
@@ -71,6 +58,9 @@ public class WebInspector {
     return senderKey;
   }
 
+  public int getPageIdentifier() {
+    return pageIdentifierKey;
+  }
 
   private String generateSenderString(int pageIdentifierKey) {
     if (pageIdentifierKey < 10) {
@@ -79,10 +69,5 @@ public class WebInspector {
       return senderBase + pageIdentifierKey;
     }
 
-  }
-
-
-  public String getBundleId() {
-    return bundleId;
   }
 }

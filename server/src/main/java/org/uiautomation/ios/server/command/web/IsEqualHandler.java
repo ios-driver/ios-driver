@@ -44,9 +44,7 @@ public class IsEqualHandler extends BaseWebCommandHandler {
     if (id == other) {
       return true;
     }
-    RemoteWebElement rwe1 = new RemoteWebElement(new NodeId(id), getSession());
-    RemoteWebElement rwe2 = new RemoteWebElement(new NodeId(other), getSession());
-    return rwe1.equalsRemoteWebElement(rwe2);
+    return id == other;
   }
 
   @Override

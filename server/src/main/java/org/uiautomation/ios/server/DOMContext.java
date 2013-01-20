@@ -14,7 +14,6 @@
 package org.uiautomation.ios.server;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriverException;
@@ -25,7 +24,6 @@ import org.uiautomation.ios.mobileSafari.events.Event;
 import org.uiautomation.ios.mobileSafari.events.EventHistory;
 import org.uiautomation.ios.mobileSafari.events.inserted.ChildIframeInserted;
 import org.uiautomation.ios.mobileSafari.message.WebkitPage;
-import org.uiautomation.ios.webInspector.DOM.DOM;
 import org.uiautomation.ios.webInspector.DOM.RemoteExceptionException;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 
@@ -186,7 +184,7 @@ public class DOMContext implements EventListener {
   public String getDocumentReadyState() {
     String state = null;
     try {
-      state = (String) session.getWebInspector().executeScript(
+      state = (String) session.getRemoteWebDriver().executeScript(
           "var state = document.readyState; return state",
           new JSONArray());
     } catch (RemoteExceptionException e) {
@@ -198,7 +196,7 @@ public class DOMContext implements EventListener {
     return state; ///*"interactive".equals(state)
     /*String state = null;
     try {
-      state = (String)session.getWebInspector().evaluate("document.readyState;");
+      state = (String)session.getRemoteWebDriver().evaluate("document.readyState;");
     } catch (Exception e) {
       e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
     }
@@ -268,10 +266,10 @@ public class DOMContext implements EventListener {
   }
 
   private void assignNewFrameFromEvent(ChildIframeInserted newFrameEvent) throws Exception {
-    RemoteWebElement frame = new RemoteWebElement(newFrameEvent.getNode(), session);
-    RemoteWebElement document = new RemoteWebElement(newFrameEvent.getContentDocument(), session);
-    RemoteWebElement window = frame.getContentWindow();
-    setCurrentFrame(frame, document, window);
+    //RemoteWebElement frame = new RemoteWebElement(newFrameEvent.getNode(), session);
+    //RemoteWebElement document = new RemoteWebElement(newFrameEvent.getContentDocument(), session);
+    //RemoteWebElement window = frame.getContentWindow();
+    //setCurrentFrame(frame, document, window);
     isReady = true;
   }
 
@@ -314,7 +312,7 @@ public class DOMContext implements EventListener {
 
   public void setWindow(String pageId) throws Exception {
     newContext();
-    //session.getWebInspector().getProtocol().switchTo(pageId);
-    session.getWebInspector().enablePageEvent();
+    //session.getRemoteWebDriver().getProtocol().switchTo(pageId);
+    //session.getRemoteWebDriver().enablePageEvent();
   }
 }

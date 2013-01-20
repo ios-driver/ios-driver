@@ -56,7 +56,7 @@ public class FindElementHandler extends BaseWebCommandHandler {
           + " ms.");
     } else {
       JSONObject res = new JSONObject();
-      res.put("ELEMENT", "" + rwe.getNodeId().getId());
+      res.put("ELEMENT", rwe.getReference());
       Response resp = new Response();
       resp.setSessionId(getSession().getSessionId());
       resp.setStatus(0);
@@ -74,10 +74,10 @@ public class FindElementHandler extends BaseWebCommandHandler {
     RemoteWebElement element = null;
 
     if (getRequest().hasVariable(":reference")) {
-      int id = Integer.parseInt(getRequest().getVariableValue(":reference"));
-      element = new RemoteWebElement(new NodeId(id), getSession());
+      String reference = getRequest().getVariableValue(":reference");
+      element = getSession().getRemoteWebDriver().createElement(reference);
     } else {
-      element = getSession().getWebInspector().getDocument();
+      element = getSession().getRemoteWebDriver().getDocument();
     }
     RemoteWebElement rwe;
 

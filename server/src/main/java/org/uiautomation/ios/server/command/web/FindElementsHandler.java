@@ -78,10 +78,10 @@ public class FindElementsHandler extends BaseWebCommandHandler {
     RemoteWebElement element = null;
 
     if (getRequest().hasVariable(":reference")) {
-      int id = Integer.parseInt(getRequest().getVariableValue(":reference"));
-      element = new RemoteWebElement(new NodeId(id), getSession());
+      String ref = getRequest().getVariableValue(":reference");
+      element = getSession().getRemoteWebDriver().createElement(ref);
     } else {
-      element = getSession().getWebInspector().getDocument();
+      element = getSession().getRemoteWebDriver().getDocument();
     }
 
     List<RemoteWebElement> res;

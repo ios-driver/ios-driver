@@ -36,8 +36,8 @@ public class SetValueHandler extends BaseWebCommandHandler {
 
   @Override
   public Response handle() throws Exception {
-    int id = Integer.parseInt(getRequest().getVariableValue(":reference"));
-    RemoteWebElement element = new RemoteWebElement(new NodeId(id), getSession());
+    String ref = getRequest().getVariableValue(":reference");
+    RemoteWebElement element = getSession().getRemoteWebDriver().createElement(ref);
 
     JSONArray array = getRequest().getPayload().getJSONArray("value");
     log.fine("payload : " + getRequest().getPayload().toString(2));
@@ -50,7 +50,8 @@ public class SetValueHandler extends BaseWebCommandHandler {
     boolean useNativeEvents = getConfiguration("nativeEvents", nativeEvents);
 
     if (useNativeEvents) {
-      element.setValueNative(value);
+      //element.setValueNative(value);
+      throw new RuntimeException("NI setValue native");
     } else {
       element.setValueAtoms(value);
     }

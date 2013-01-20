@@ -22,7 +22,7 @@ import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.mobileSafari.WebInspector;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.RemoteIOSWebDriver;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.IOSApplication;
@@ -35,7 +35,8 @@ import com.google.common.collect.ImmutableMap;
 public class LogElementTreeNHandler extends UIAScriptHandler {
 
   private static final String jsTemplate = "var root = UIAutomation.cache.get(':reference');"
-      + "var result = root.tree(:attachScreenshot);" + "UIAutomation.createJSONResponse(':sessionId',0,result);";
+                                           + "var result = root.tree(:attachScreenshot);"
+                                           + "UIAutomation.createJSONResponse(':sessionId',0,result);";
 
   public LogElementTreeNHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -114,14 +115,15 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
 
       if (screenshot) {
         String path = getDriver().getSession(response.getSessionId()).getOutputFolder() + "/Run 1/"
-            + TakeScreenshotNHandler.SCREEN_NAME + ".png";
+                      + TakeScreenshotNHandler.SCREEN_NAME + ".png";
         File source = new File(path);
         FileTo64EncodedStringUtils encoder = new FileTo64EncodedStringUtils(source);
         try {
           String content64 = encoder.encode();
           value.put("screenshot", ImmutableMap.of("64encoded", content64));
         } catch (Exception e) {
-          throw new WebDriverException("Error converting " + source.getAbsolutePath() + " to a 64 encoded string "
+          throw new WebDriverException(
+              "Error converting " + source.getAbsolutePath() + " to a 64 encoded string "
               + e.getMessage(), e);
         } finally {
           source.delete();
@@ -146,9 +148,9 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
       Map<String, Object> webView = (Map<String, Object>) getWebView(tree);
       if (webView != null) {
         ServerSideSession session = getDriver().getSession(getRequest().getSession());
-        WebInspector inspector = session.getWebInspector();
+        RemoteIOSWebDriver inspector = session.getRemoteWebDriver();
         try {
-          String rawHTML = inspector.getHTMLSource();
+          String rawHTML = inspector.getPageSource();
           webView.put("source", rawHTML);
         } catch (Exception e) {
 

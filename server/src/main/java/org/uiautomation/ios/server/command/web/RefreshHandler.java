@@ -29,8 +29,8 @@ public class RefreshHandler extends BaseWebCommandHandler {
   @Override
   public Response handle() throws Exception {
     getSession().getContext().getDOMContext().newContext();
-    getSession().getWebInspector().refresh();
-    getSession().getWebInspector().waitForPageToLoad();
+    getSession().getRemoteWebDriver().navigate().refresh();
+    getSession().getRemoteWebDriver().waitForPageToLoad();
     Response res = new Response();
     res.setSessionId(getSession().getSessionId());
     res.setStatus(0);

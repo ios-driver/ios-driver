@@ -29,6 +29,7 @@ import org.uiautomation.ios.mobileSafari.message.ReportSetupMessage;
 import org.uiautomation.ios.mobileSafari.message.WebkitApplication;
 import org.uiautomation.ios.mobileSafari.message.WebkitDevice;
 import org.uiautomation.ios.mobileSafari.message.WebkitPage;
+import org.uiautomation.ios.server.ServerSideSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -175,13 +176,13 @@ public class SimulatorSession {
     return pages;
   }
 
-  public WebInspector connect(WebkitPage webkitPage) {
+  public WebInspector connect(WebkitPage webkitPage, ServerSideSession session) {
     for (WebkitPage page : getPages()) {
       if (page.equals(webkitPage)) {
         WebInspector
             inspector =
             new WebInspector(null, webkitPage.getPageId(), simulatorProtocol, bundleId,
-                             connectionKey);
+                             connectionKey, session);
         simulatorProtocol.sendSetConnectionKey(connectionKey);
         simulatorProtocol.sendConnectToApplication(connectionKey, bundleId);
         simulatorProtocol.sendSenderKey(connectionKey, bundleId, inspector.getSenderKey(),
@@ -226,7 +227,7 @@ class DefaultMessageListener implements MessageListener, EventListener {
     }
 
     if (message instanceof ApplicationDataMessage) {
-      System.out.println(message);
+      //System.out.println(message);
     }
 
     if (message instanceof ApplicationConnectedMessage) {
@@ -237,7 +238,7 @@ class DefaultMessageListener implements MessageListener, EventListener {
       simulator.signalSimSentApps();
     }
 
-    System.err.println(message);
+    //System.err.println(message);
   }
 
   @Override

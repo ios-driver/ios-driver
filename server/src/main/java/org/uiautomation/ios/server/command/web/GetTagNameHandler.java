@@ -30,8 +30,8 @@ public class GetTagNameHandler extends BaseWebCommandHandler {
 
   @Override
   public Response handle() throws Exception {
-    int id = Integer.parseInt(getRequest().getVariableValue(":reference"));
-    RemoteWebElement element = new RemoteWebElement(new NodeId(id), getSession());
+    String ref = getRequest().getVariableValue(":reference");
+    RemoteWebElement element = getSession().getRemoteWebDriver().createElement(ref);
     String value = element.getTagName();
     Response res = new Response();
     res.setSessionId(getSession().getSessionId());

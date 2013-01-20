@@ -13,8 +13,6 @@
  */
 package org.uiautomation.ios.server.command.web;
 
-import java.util.List;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.NoSuchElementException;
@@ -22,10 +20,11 @@ import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.UnsupportedCommandException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
+
+import java.util.List;
 
 public class SetFrameHandler extends BaseWebCommandHandler {
 
@@ -49,8 +48,7 @@ public class SetFrameHandler extends BaseWebCommandHandler {
         iframe = getIframe((Integer) p);
       } else if (p instanceof JSONObject) {
         String id = ((JSONObject) p).getString("ELEMENT");
-        NodeId node = new NodeId(Integer.parseInt(id));
-        iframe = new RemoteWebElement(node, getSession());
+        iframe = getSession().getRemoteWebDriver().createElement(id);
       } else {
         throw new UnsupportedCommandException("not supported : frame selection by " + p.getClass());
       }
@@ -68,19 +66,22 @@ public class SetFrameHandler extends BaseWebCommandHandler {
   }
 
   private RemoteWebElement getIframe(Integer index) throws Exception {
-    RemoteWebElement currentDocument = getSession().getWebInspector().getDocument();
+    RemoteWebElement currentDocument = getSession().getRemoteWebDriver().getDocument();
     List<RemoteWebElement> iframes = currentDocument.findElementsByCSSSelector("iframe,frame");
     try {
       return iframes.get(index);
     } catch (IndexOutOfBoundsException i) {
-      throw new NoSuchFrameException("detected " + iframes.size() + " frames. Cannot get index = " + index);
+      throw new NoSuchFrameException(
+          "detected " + iframes.size() + " frames. Cannot get index = " + index);
     }
   }
 
   private RemoteWebElement getIframe(String id) throws Exception {
-    RemoteWebElement currentDocument = getSession().getWebInspector().getDocument();
+    RemoteWebElement currentDocument = getSession().getRemoteWebDriver().getDocument();
 
-    String selector = "iframe[name='" + id + "'],iframe[id='" + id + "'],frame[name='" + id + "'],frame[id='" + id
+    String
+        selector =
+        "iframe[name='" + id + "'],iframe[id='" + id + "'],frame[name='" + id + "'],frame[id='" + id
         + "']";
     try {
       RemoteWebElement frame = currentDocument.findElementByCSSSelector(selector);

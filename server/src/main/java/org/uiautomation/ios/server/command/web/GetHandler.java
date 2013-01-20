@@ -56,7 +56,7 @@ public class GetHandler extends BaseWebCommandHandler {
     boolean newPageWillBeLoaded = true;
     if (url.contains("#")) {
       try {
-        String currentURL = getSession().getWebInspector().getPageURL();
+        String currentURL = getSession().getRemoteWebDriver().getCurrentUrl();
         int index = url.indexOf(currentURL);
 
         if (index == 0) {
@@ -82,7 +82,7 @@ public class GetHandler extends BaseWebCommandHandler {
       fakeTypeURL(url);
     }
     if (newPageWillBeLoaded) {
-      getSession().getWebInspector().waitForPageToLoad();
+      getSession().getRemoteWebDriver().waitForPageToLoad();
     }
     Response res = new Response();
     res.setSessionId(getSession().getSessionId());
@@ -108,7 +108,7 @@ public class GetHandler extends BaseWebCommandHandler {
 
   private void fakeTypeURL(String url) {
     try {
-      getSession().getWebInspector().get(url);
+      getSession().getRemoteWebDriver().get(url);
 
     } catch (Exception e) {
       throw new WebDriverException("cannot navigate to URL " + url + ", error " + e.getMessage());

@@ -17,7 +17,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.mobileSafari.SimulatorProtocolImpl;
+
+import org.uiautomation.ios.context.WebInspector;
 import org.uiautomation.ios.mobileSafari.IosAtoms;
 import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.server.ServerSideSession;
@@ -28,27 +29,25 @@ public class RemoteObject {
 
   private final String objectId;
   private final ServerSideSession session;
-  private final SimulatorProtocolImpl protocol;
+  private final WebInspector inspector;
 
-  public RemoteObject(String objectId, ServerSideSession session) throws JSONException {
+  public RemoteObject(String objectId, ServerSideSession session, WebInspector inspector)
+      throws JSONException {
     this.session = session;
-    this.protocol = session.getWebInspector().getProtocol();
+    this.inspector = inspector;
     this.objectId = objectId;
   }
 
-  public SimulatorProtocolImpl getProtocol() {
-    return protocol;
-  }
 
   public String getId() {
     return objectId;
   }
 
   public RemoteWebElement getWebElement() throws JSONException, Exception {
-    JSONObject result = protocol.sendCommand(DOM.requestNode(objectId));
+    JSONObject result = inspector.sendCommand(DOM.requestNode(objectId));
     int id = result.getInt("nodeId");
     NodeId nodeId = new NodeId(id);
-    return new RemoteWebElement(nodeId, session, this);
+    return new RemoteWebElement(nodeId, this, null);
   }
 
   public List<RemoteObject> flatten() throws Exception {
@@ -74,8 +73,8 @@ public class RemoteObject {
                 "return res;})")
             .put("returnByValue", false));
 
-    JSONObject response = protocol.sendCommand(cmd);
-    return session.getWebInspector().cast(response);
+    JSONObject response = inspector.sendCommand(cmd);
+    return inspector.cast(response);
   }
 
   private boolean isArray() {
@@ -102,8 +101,8 @@ public class RemoteObject {
                  "(function(arg) { var res = this" + function + "; return res;})")
             .put("arguments", args).put("returnByValue", false));
 
-    JSONObject response = protocol.sendCommand(cmd);
-    return session.getWebInspector().cast(response);
+    JSONObject response = inspector.sendCommand(cmd);
+    return inspector.cast(response);
 
   }
 
@@ -121,8 +120,8 @@ public class RemoteObject {
                    "(function() { var res = " + IosAtoms.STRINGIFY + "(this); return res;})")
               .put("arguments", args).put("returnByValue", true));
 
-      JSONObject response = protocol.sendCommand(cmd);
-      return session.getWebInspector().cast(response);
+      JSONObject response = inspector.sendCommand(cmd);
+      return inspector.cast(response);
     } catch (JSONException e) {
       throw new WebDriverException(e);
     }
@@ -143,7 +142,7 @@ public class RemoteObject {
             .put("arguments", args)
             .put("returnByValue", true));
 
-    JSONObject response = protocol.sendCommand(cmd);
-    return session.getWebInspector().cast(response);
+    JSONObject response = inspector.sendCommand(cmd);
+    return inspector.cast(response);
   }
 }
