@@ -117,11 +117,16 @@ public abstract class BaseWebInspector implements MessageListener {
   public void get(String url) {
     JSONObject command = Page.navigate(url);
     sendCommand(command);
+    try {
+      Thread.sleep(100);
+    } catch (InterruptedException e) {
+      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+    }
     checkForPageLoad();
   }
 
   public void waitForPageToLoad() {
-    long
+    /*long
         timeout =
         (Long) session.configure(WebDriverLikeCommand.URL)
             .opt("page load", defaultPageLoadTimeoutInMs);
@@ -149,8 +154,7 @@ public abstract class BaseWebInspector implements MessageListener {
       }
     } finally {
       System.out.println("BaseWebInspector:waitForPageToLoad" + b.toString());
-    }
-
+    } */
 
   }
 
@@ -188,7 +192,7 @@ public abstract class BaseWebInspector implements MessageListener {
               new JSONObject().put("expression", "document.title;").put("returnByValue", true));
       JSONObject response = sendCommand(cmd);
       return cast(response);
-    } catch (Exception e) {
+    } catch (JSONException e) {
       throw new WebDriverException(e);
     }
     /*String title = (String) executeScript("var state = document.title; return state",new JSONArray());
@@ -478,7 +482,8 @@ public abstract class BaseWebInspector implements MessageListener {
 
   public void checkForPageLoad() {
     // a new page appeared.
-    if (getLoadedFlag() == null) {
+    String id = getLoadedFlag();
+    if (id == null) {
 
       long
           timeout =
@@ -533,20 +538,17 @@ public abstract class BaseWebInspector implements MessageListener {
   }
 
   public void back() throws JSONException {
-    RemoteWebElement document = getDocument();
-
-    String f = "(function(arg) { var f=" + IosAtoms.BACK + "(arg);})";
-    JSONObject cmd = new JSONObject();
-
-    cmd.put("method", "Runtime.callFunctionOn");
-
-    JSONArray args = new JSONArray();
-
-    cmd.put("params", new JSONObject().put("objectId", document.getRemoteObject().getId())
-        .put("functionDeclaration", f).put("arguments", args).put("returnByValue", true));
-
-    JSONObject response = sendCommand(cmd);
-    cast(response);
+    try {
+      String f = "(function() { var f=" + IosAtoms.BACK + "();})()";
+      JSONObject cmd = new JSONObject();
+      cmd.put("method", "Runtime.evaluate");
+      cmd.put("params",
+              new JSONObject().put("expression", f).put("returnByValue", true));
+      JSONObject response = sendCommand(cmd);
+      cast(response);
+    } catch (JSONException e) {
+      throw new WebDriverException(e);
+    }
   }
 
   public void refresh() throws Exception {
@@ -556,19 +558,17 @@ public abstract class BaseWebInspector implements MessageListener {
   }
 
   public void forward() throws Exception {
-    RemoteWebElement document = getDocument();
-    String f = "(function(arg) { var f=" + IosAtoms.FORWARD + "(arg);})";
-    JSONObject cmd = new JSONObject();
-
-    cmd.put("method", "Runtime.callFunctionOn");
-
-    JSONArray args = new JSONArray();
-
-    cmd.put("params", new JSONObject().put("objectId", document.getRemoteObject().getId())
-        .put("functionDeclaration", f).put("arguments", args).put("returnByValue", true));
-
-    JSONObject response = sendCommand(cmd);
-    cast(response);
+    try {
+      String f = "(function() { var f=" + IosAtoms.FORWARD + "();})()";
+      JSONObject cmd = new JSONObject();
+      cmd.put("method", "Runtime.evaluate");
+      cmd.put("params",
+              new JSONObject().put("expression", f).put("returnByValue", true));
+      JSONObject response = sendCommand(cmd);
+      cast(response);
+    } catch (JSONException e) {
+      throw new WebDriverException(e);
+    }
   }
 
 

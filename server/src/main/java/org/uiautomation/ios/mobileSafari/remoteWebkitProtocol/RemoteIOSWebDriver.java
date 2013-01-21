@@ -24,6 +24,7 @@ import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.context.BaseWebInspector;
 import org.uiautomation.ios.context.WebInspector;
 import org.uiautomation.ios.mobileSafari.NodeId;
+import org.uiautomation.ios.mobileSafari.ResponseFinder;
 import org.uiautomation.ios.mobileSafari.message.WebkitApplication;
 import org.uiautomation.ios.mobileSafari.message.WebkitDevice;
 import org.uiautomation.ios.mobileSafari.message.WebkitPage;
@@ -65,10 +66,14 @@ public class RemoteIOSWebDriver {
   private BaseWebInspector currentInspector;
   private Map<Integer, BaseWebInspector> inspectors = new HashMap<Integer, BaseWebInspector>();
 
-  public RemoteIOSWebDriver(ServerSideSession session) {
-    simulator = new SimulatorSession();
+  public RemoteIOSWebDriver(ServerSideSession session, ResponseFinder... finders) {
+    simulator = new SimulatorSession(finders);
     usbProtocol = new Object();
     this.session = session;
+  }
+
+  public void stop() {
+    simulator.stop();
   }
 
   private SimulatorSession getSimulator() {

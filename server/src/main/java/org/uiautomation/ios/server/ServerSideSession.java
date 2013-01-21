@@ -24,6 +24,7 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.*;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.device.Device;
+import org.uiautomation.ios.mobileSafari.AlertDetector;
 import org.uiautomation.ios.mobileSafari.WebInspector;
 import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.RemoteIOSWebDriver;
 import org.uiautomation.ios.server.application.IOSApplication;
@@ -112,7 +113,9 @@ public class ServerSideSession extends Session {
   }
 
   public void stop() {
+    // nativDriver should have instruments within it.
     instruments.stop();
+    webDriver.stop();
   }
 
   public void forceStop() {
@@ -145,7 +148,7 @@ public class ServerSideSession extends Session {
       e.printStackTrace();
     }
     nativeDriver = new ServerSideNativeDriver(url, new SessionId(instruments.getSessionId()));
-    webDriver = new RemoteIOSWebDriver(this);
+    webDriver = new RemoteIOSWebDriver(this, new AlertDetector(nativeDriver));
   }
 
   public RemoteIOSWebDriver getRemoteWebDriver() {

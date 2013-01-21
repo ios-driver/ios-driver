@@ -58,6 +58,12 @@ public class DOMContext implements EventListener {
   private String windowHandle;
   private String id;
 
+  public DOMContext(BaseWebInspector inspector) {
+    this.inspector = inspector;
+    id = UUID.randomUUID().toString();
+    System.out.println("created with " + id);
+  }
+
   public RemoteWebElement getDocument() {
     int cpt = 0;
     while (!isReady) {
@@ -82,6 +88,7 @@ public class DOMContext implements EventListener {
 
   public void newContext() {
     id = UUID.randomUUID().toString();
+    System.out.println("new context  " + id);
     window = null;
     document = null;
     iframe = null;
@@ -221,10 +228,6 @@ public class DOMContext implements EventListener {
     }
   }
 
-  public DOMContext(BaseWebInspector inspector) {
-    this.inspector = inspector;
-    id = UUID.randomUUID().toString();
-  }
 
   @Override
   public synchronized void domHasChanged(Event e) {

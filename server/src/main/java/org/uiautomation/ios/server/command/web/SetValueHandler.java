@@ -18,10 +18,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
+import org.uiautomation.ios.webInspector.DOM.RemoteWebNativeBackedElement;
 
 import java.util.logging.Logger;
 
@@ -49,9 +49,8 @@ public class SetValueHandler extends BaseWebCommandHandler {
 
     boolean useNativeEvents = getConfiguration("nativeEvents", nativeEvents);
 
-    if (useNativeEvents) {
-      //element.setValueNative(value);
-      throw new RuntimeException("NI setValue native");
+    if (useNativeEvents && (element instanceof RemoteWebNativeBackedElement)) {
+      ((RemoteWebNativeBackedElement) element).setValueNative(value);
     } else {
       element.setValueAtoms(value);
     }

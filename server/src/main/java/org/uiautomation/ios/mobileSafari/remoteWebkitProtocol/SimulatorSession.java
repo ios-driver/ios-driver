@@ -19,6 +19,7 @@ import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.context.BaseWebInspector;
 import org.uiautomation.ios.context.WebInspector;
 import org.uiautomation.ios.mobileSafari.EventListener;
+import org.uiautomation.ios.mobileSafari.ResponseFinder;
 import org.uiautomation.ios.mobileSafari.SimulatorProtocolImpl;
 import org.uiautomation.ios.mobileSafari.events.Event;
 import org.uiautomation.ios.mobileSafari.message.ApplicationConnectedMessage;
@@ -57,12 +58,16 @@ public class SimulatorSession {
 
   private final String connectionKey;
 
-  public SimulatorSession() {
+  public SimulatorSession(ResponseFinder... finders) {
     connectionKey = UUID.randomUUID().toString();
-    simulatorProtocol = new SimulatorProtocolImpl(new DefaultMessageListener(this), null);
+    simulatorProtocol = new SimulatorProtocolImpl(new DefaultMessageListener(this), finders);
     simulatorProtocol.sendSetConnectionKey(connectionKey);
     waitForSimToRegister();
     waitForSimToSendApps();
+  }
+
+  public void stop() {
+    simulatorProtocol.stop();
   }
 
 

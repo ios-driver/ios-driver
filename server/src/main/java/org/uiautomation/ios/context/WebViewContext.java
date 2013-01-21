@@ -34,7 +34,7 @@ public class WebViewContext {
   public WebViewContext(String bundleId, MessageListener listener, ResponseFinder... finders)
       throws Exception {
     this.bundleId = bundleId;
-    protocol = new SimulatorProtocolImpl(listener, bundleId, finders);
+    protocol = new SimulatorProtocolImpl(listener, finders);
   }
 }
 

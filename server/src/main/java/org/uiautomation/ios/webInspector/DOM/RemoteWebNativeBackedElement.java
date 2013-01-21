@@ -17,6 +17,7 @@ package org.uiautomation.ios.webInspector.DOM;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIAWebView;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
@@ -29,7 +30,6 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.communication.device.Device;
 import org.uiautomation.ios.context.BaseWebInspector;
 import org.uiautomation.ios.mobileSafari.NodeId;
-import org.uiautomation.ios.context.WebInspector;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.AppleLocale;
 import org.uiautomation.ios.server.application.ContentResult;
@@ -51,8 +51,13 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     this.nativeDriver = session.getNativeDriver();
   }
 
-  private void clickNative() throws Exception {
-    ((JavascriptExecutor) nativeDriver).executeScript(getNativeElementClickOnIt());
+  public void nativeClick() {
+    try {
+      ((JavascriptExecutor) nativeDriver).executeScript(getNativeElementClickOnIt());
+      inspector.checkForPageLoad();
+    } catch (Exception e) {
+      throw new WebDriverException(e);
+    }
   }
 
   private String getNativeElementClickOnIt() throws Exception {
@@ -259,4 +264,6 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     ((JavascriptExecutor) nativeDriver)
         .executeScript(getNativeElementClickOnItAndTypeUsingKeyboardScript(value));
   }
+
+
 }

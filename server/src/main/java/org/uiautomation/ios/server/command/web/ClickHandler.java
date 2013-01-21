@@ -20,10 +20,11 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
+import org.uiautomation.ios.webInspector.DOM.RemoteWebNativeBackedElement;
 
 public class ClickHandler extends BaseWebCommandHandler {
 
-  private static final boolean nativeEvents = false;
+  private static final boolean nativeEvents = true;
 
   public ClickHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -37,7 +38,11 @@ public class ClickHandler extends BaseWebCommandHandler {
 
     boolean useNativeEvents = getConfiguration("nativeEvents", nativeEvents);
 
-    element.click(useNativeEvents);
+    if (nativeEvents && (element instanceof RemoteWebNativeBackedElement)) {
+      ((RemoteWebNativeBackedElement) element).nativeClick();
+    } else {
+      element.click();
+    }
 
     Response resp = new Response();
     resp.setSessionId(getSession().getSessionId());

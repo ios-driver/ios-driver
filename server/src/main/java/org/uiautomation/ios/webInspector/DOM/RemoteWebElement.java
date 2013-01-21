@@ -78,14 +78,9 @@ public class RemoteWebElement {
     return inspector.getPageIdentifier() + "_" + getNodeId().getId();
   }
 
-  public void click(boolean nativeEvents) throws Exception {
-    if (nativeEvents) {
-      //clickNative();
-      throw new RuntimeException("no native clicks");
-    } else {
-      clickAtom();
-      inspector.checkForPageLoad();
-    }
+  public void click() throws Exception {
+    clickAtom();
+    inspector.checkForPageLoad();
   }
 
   // TODO freyanud no return here.

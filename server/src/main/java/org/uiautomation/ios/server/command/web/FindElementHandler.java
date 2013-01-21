@@ -18,7 +18,6 @@ import org.json.JSONObject;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.webInspector.DOM.RemoteExceptionException;
@@ -44,9 +43,13 @@ public class FindElementHandler extends BaseWebCommandHandler {
       } catch (NoSuchElementException e) {
         //ignore.
       } catch (RemoteExceptionException e2) {
-        // ignore.
-        // if the page is reloading, the previous nodeId won't be there anymore, resulting in a
-        // RemoteExceptionException: Could not find node with given id.Keep looking.
+        // looking on the root element, but document became invalid.
+        // Something (alert during onload ) might have prevented the page
+        // refresh.
+        if (!getRequest().hasVariable(":reference")) {
+          getSession().getRemoteWebDriver().getContext().newContext();
+        }
+
       }
     } while (System.currentTimeMillis() < deadline);
 

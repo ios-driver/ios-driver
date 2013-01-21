@@ -48,15 +48,13 @@ public class SimulatorProtocolImpl {
   private final boolean displayPerformance = false;
   private Thread listen;
   private volatile boolean keepGoing = true;
-  private final String bundleId;
 
   /**
    * connect to the webview
    */
-  public SimulatorProtocolImpl(MessageListener listener, String bundleId,
+  public SimulatorProtocolImpl(MessageListener listener,
                                ResponseFinder... finders) {
     this.handler = new DefaultMessageHandler(listener, finders);
-    this.bundleId = bundleId;
 
     init();
 
