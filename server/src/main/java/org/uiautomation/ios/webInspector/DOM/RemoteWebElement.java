@@ -23,6 +23,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.uiautomation.ios.UIAModels.UIADriver;
 import org.uiautomation.ios.UIAModels.UIAElement;
@@ -60,11 +61,14 @@ public class RemoteWebElement {
   private RemoteObject remoteObject;
 
   public RemoteWebElement(NodeId id, BaseWebInspector inspector) {
+    if (inspector == null) {
+      throw new WebDriverException("inspector cannot be null.");
+    }
     this.inspector = inspector;
     this.nodeId = id;
   }
 
-  public RemoteWebElement(NodeId nodeId, RemoteObject remoteObject, WebInspector inspector)
+  public RemoteWebElement(NodeId nodeId, RemoteObject remoteObject, BaseWebInspector inspector)
       throws Exception {
     this(nodeId, inspector);
     this.remoteObject = remoteObject;
@@ -416,7 +420,7 @@ public class RemoteWebElement {
 
   }
 
-  public RemoteWebElement findElementByCSSSelector(String selector) throws Exception {
+  public RemoteWebElement findElementByCSSSelector(String selector) {
     JSONObject response = inspector.sendCommand(DOM.querySelector(nodeId, selector));
     // TODO freynaud
     NodeId id = new NodeId(response.optInt("nodeId"));
@@ -427,12 +431,12 @@ public class RemoteWebElement {
     return res;
   }
 
-  public List<RemoteWebElement> findElementsByCSSSelector(String selector) throws Exception {
+  public List<RemoteWebElement> findElementsByCSSSelector(String selector) {
     JSONObject response = inspector.sendCommand(DOM.querySelectorAll(nodeId, selector));
     JSONArray nodesId = response.optJSONArray("nodeIds");
     ArrayList<RemoteWebElement> res = new ArrayList<RemoteWebElement>();
     for (int i = 0; i < nodesId.length(); i++) {
-      NodeId id = new NodeId(nodesId.getInt(i));
+      NodeId id = new NodeId(nodesId.optInt(i));
       res.add(new RemoteWebElement(id, inspector));
     }
     return res;

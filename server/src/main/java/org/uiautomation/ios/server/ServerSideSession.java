@@ -159,14 +159,6 @@ public class ServerSideSession extends Session {
       webDriver.connect(bundleId);
       System.out.println("pages :" + webDriver.getPages().size());
       webDriver.switchTo(webDriver.getPages().get(0));
-      while (true) {
-        webDriver.getCurrentUrl();
-        try {
-          Thread.sleep(5000);
-        } catch (InterruptedException e) {
-          e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-      }
     }
   }
 

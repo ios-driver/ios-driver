@@ -60,7 +60,7 @@ public class FindElementsHandler extends BaseWebCommandHandler {
 
     List<JSONObject> list = new ArrayList<JSONObject>();
     for (RemoteWebElement el : elements) {
-      list.add(new JSONObject().put("ELEMENT", "" + el.getNodeId().getId()));
+      list.add(new JSONObject().put("ELEMENT", "" + el.getReference()));
     }
 
     Response resp = new Response();

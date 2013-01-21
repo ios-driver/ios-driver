@@ -16,6 +16,7 @@ package org.uiautomation.ios.mobileSafari.remoteWebkitProtocol;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -25,7 +26,6 @@ import org.uiautomation.ios.mobileSafari.message.WebkitApplication;
 import org.uiautomation.ios.mobileSafari.message.WebkitDevice;
 import org.uiautomation.ios.mobileSafari.message.WebkitPage;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.server.command.web.ToCSSSelectorConvertor;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebNativeBackedElement;
 
@@ -45,7 +45,7 @@ public class RemoteIOSWebDriver implements JavascriptExecutor {
 
     //driver.get("http://ebay.co.uk");
     System.out.println("URL : " + driver.getCurrentUrl());
-    RemoteWebElement el = driver.findElementByCss("#v4-1");
+    RemoteWebElement el = driver.findElementByCssSelector("#v4-1");
     System.out.println(el.getText());
 
   }
@@ -109,9 +109,9 @@ public class RemoteIOSWebDriver implements JavascriptExecutor {
 
   }
 
-  public RemoteWebElement getDocument() {
+  /*public RemoteWebElement getDocument() {
     return currentInspector.getDocument();
-  }
+  }*/
 
 
   public void get(String url) {
@@ -135,14 +135,22 @@ public class RemoteIOSWebDriver implements JavascriptExecutor {
   }
 
 
-  public List<WebElement> findElements(By by) {
+  public List<RemoteWebElement> findElements(By by) {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
 
-  public RemoteWebElement findElementByCss(String cssSelector) throws Exception {
-    RemoteWebElement document = getDocument();
-    return document.findElementByCSSSelector(cssSelector);
+  public RemoteWebElement findElement(By by) {
+    return null;  //To change body of implemented methods use File | Settings | File Templates.
+  }
+
+
+  public RemoteWebElement findElementByCssSelector(String cssSelector) throws Exception {
+    return currentInspector.findElementByCSSSelector(cssSelector);
+  }
+
+  public List<RemoteWebElement> findElementsByCssSelector(String cssSelector) {
+    return currentInspector.findElementsByCSSSelector(cssSelector);
   }
 
   public String getPageSource() {
@@ -186,7 +194,10 @@ public class RemoteIOSWebDriver implements JavascriptExecutor {
 
   }
 
-
+  // TODO remove.
+  public RemoteWebElement getDocument() {
+    return currentInspector.getDocument();
+  }
 }
 
 

@@ -66,8 +66,8 @@ public class SetFrameHandler extends BaseWebCommandHandler {
   }
 
   private RemoteWebElement getIframe(Integer index) throws Exception {
-    RemoteWebElement currentDocument = getSession().getRemoteWebDriver().getDocument();
-    List<RemoteWebElement> iframes = currentDocument.findElementsByCSSSelector("iframe,frame");
+    List<RemoteWebElement> iframes = getSession().getRemoteWebDriver().findElementsByCssSelector(
+        "iframe,frame");
     try {
       return iframes.get(index);
     } catch (IndexOutOfBoundsException i) {

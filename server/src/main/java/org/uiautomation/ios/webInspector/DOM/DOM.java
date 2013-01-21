@@ -44,18 +44,27 @@ public class DOM {
     return cmd;
   }
 
-  public static JSONObject querySelector(NodeId id, String selector) throws JSONException {
-    JSONObject cmd = new JSONObject();
-    cmd.put("method", "DOM.querySelector");
-    cmd.put("params", new JSONObject().put("nodeId", id.getId()).put("selector", selector));
-    return cmd;
+  public static JSONObject querySelector(NodeId id, String selector) {
+    try {
+      JSONObject cmd = new JSONObject();
+      cmd.put("method", "DOM.querySelector");
+      cmd.put("params", new JSONObject().put("nodeId", id.getId()).put("selector", selector));
+      return cmd;
+    } catch (Exception e) {
+      throw new WebDriverException(e);
+    }
   }
 
-  public static JSONObject querySelectorAll(NodeId id, String selector) throws JSONException {
-    JSONObject cmd = new JSONObject();
-    cmd.put("method", "DOM.querySelectorAll");
-    cmd.put("params", new JSONObject().put("nodeId", id.getId()).put("selector", selector));
-    return cmd;
+  public static JSONObject querySelectorAll(NodeId id, String selector) {
+    try {
+      JSONObject cmd = new JSONObject();
+      cmd.put("method", "DOM.querySelectorAll");
+      cmd.put("params", new JSONObject().put("nodeId", id.getId()).put("selector", selector));
+      return cmd;
+    } catch (Exception e) {
+      throw new WebDriverException(e);
+    }
+
   }
 
   public static JSONObject getAttributes(NodeId id) throws JSONException {

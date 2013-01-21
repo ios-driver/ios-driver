@@ -377,7 +377,7 @@ public class WebInspector {
       }
 
       if ("array".equals(body.optString("subtype"))) {
-        RemoteObject array = new RemoteObject(body.getString("objectId"), session, null);
+        RemoteObject array = new RemoteObject(body.getString("objectId"), null);
         RemoteObjectArray a = new RemoteObjectArray(array);
         ArrayList<Object> res = new ArrayList<Object>();
         for (Object ro : a) {
@@ -389,15 +389,15 @@ public class WebInspector {
       if (body.has("objectId")) {
         if ("node".equals(body.optString("subtype")) || "Window"
             .equals(body.optString("className"))) {
-          return (T) new RemoteObject(body.getString("objectId"), session, null);
+          return (T) new RemoteObject(body.getString("objectId"), null);
         } else {
-          RemoteObject ro = new RemoteObject(body.getString("objectId"), session, null);
+          RemoteObject ro = new RemoteObject(body.getString("objectId"), null);
           JSONObject o = new JSONObject(ro.stringify());
           return (T) o;
         }
 
       }
-      return (T) new RemoteObject(body.getString("objectId"), session, null);
+      return (T) new RemoteObject(body.getString("objectId"), null);
 
     }
     throw new RuntimeException("NI " + body);

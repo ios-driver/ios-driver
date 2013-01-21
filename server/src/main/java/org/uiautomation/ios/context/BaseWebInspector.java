@@ -64,8 +64,9 @@ public abstract class BaseWebInspector implements WebDriver, JavascriptExecutor 
     return result;
   }
 
+
   public RemoteWebElement getMainWindow() {
-    return new RemoteWebElement(new NodeId(0), null);
+    return new RemoteWebElement(new NodeId(0), this);
   }
 
 
@@ -91,13 +92,13 @@ public abstract class BaseWebInspector implements WebDriver, JavascriptExecutor 
     return rme;
   }
 
-  @Override
+
   public void get(String url) {
     JSONObject command = Page.navigate(url);
     sendCommand(command);
   }
 
-  @Override
+
   public String getCurrentUrl() {
 
     try {
@@ -121,57 +122,67 @@ public abstract class BaseWebInspector implements WebDriver, JavascriptExecutor 
 
   }
 
-  @Override
+
   public String getTitle() {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
-  @Override
+
   public List<WebElement> findElements(By by) {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
-  @Override
+
   public WebElement findElement(By by) {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
-  @Override
+
   public String getPageSource() {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+    try {
+      JSONObject cmd = new JSONObject();
+      cmd.put("method", "Runtime.evaluate");
+      cmd.put("params", new JSONObject().put("expression", "document.documentElement.outerHTML;")
+          .put("returnByValue", true));
+      JSONObject response = sendCommand(cmd);
+      return cast(response);
+    } catch (Exception e) {
+      throw new WebDriverException(e);
+    }
+
   }
 
-  @Override
+
   public void close() {
     //To change body of implemented methods use File | Settings | File Templates.
   }
 
-  @Override
+
   public void quit() {
     //To change body of implemented methods use File | Settings | File Templates.
   }
 
-  @Override
+
   public Set<String> getWindowHandles() {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
-  @Override
+
   public String getWindowHandle() {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
-  @Override
+
   public TargetLocator switchTo() {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
-  @Override
+
   public Navigation navigate() {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
-  @Override
+
   public Options manage() {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
@@ -223,7 +234,7 @@ public abstract class BaseWebInspector implements WebDriver, JavascriptExecutor 
       }
 
       if ("array".equals(body.optString("subtype"))) {
-        RemoteObject array = new RemoteObject(body.getString("objectId"), session, null);
+        RemoteObject array = new RemoteObject(body.getString("objectId"), this);
         RemoteObjectArray a = new RemoteObjectArray(array);
         ArrayList<Object> res = new ArrayList<Object>();
         for (Object ro : a) {
@@ -235,26 +246,26 @@ public abstract class BaseWebInspector implements WebDriver, JavascriptExecutor 
       if (body.has("objectId")) {
         if ("node".equals(body.optString("subtype")) || "Window"
             .equals(body.optString("className"))) {
-          return (T) new RemoteObject(body.getString("objectId"), session, null);
+          return (T) new RemoteObject(body.getString("objectId"), this);
         } else {
-          RemoteObject ro = new RemoteObject(body.getString("objectId"), session, null);
+          RemoteObject ro = new RemoteObject(body.getString("objectId"), this);
           JSONObject o = new JSONObject(ro.stringify());
           return (T) o;
         }
 
       }
-      return (T) new RemoteObject(body.getString("objectId"), session, null);
+      return (T) new RemoteObject(body.getString("objectId"), this);
 
     }
     throw new RuntimeException("NI " + body);
   }
 
-  @Override
+
   public Object executeScript(String script, Object... args) {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
-  @Override
+
   public Object executeAsyncScript(String script, Object... args) {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
@@ -293,4 +304,13 @@ public abstract class BaseWebInspector implements WebDriver, JavascriptExecutor 
   }
 
 
+  public RemoteWebElement findElementByCSSSelector(String cssSelector) {
+    RemoteWebElement document = getDocument();
+    return document.findElementByCSSSelector(cssSelector);
+  }
+
+  public List<RemoteWebElement> findElementsByCSSSelector(String cssSelector) {
+    RemoteWebElement document = getDocument();
+    return document.findElementsByCSSSelector(cssSelector);
+  }
 }

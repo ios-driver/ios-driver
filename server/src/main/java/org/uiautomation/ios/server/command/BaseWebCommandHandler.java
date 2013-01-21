@@ -32,6 +32,11 @@ public abstract class BaseWebCommandHandler extends BaseCommandHandler {
   }
 
   protected void waitForPageToLoad() throws InterruptedException {
+    boolean tmp = true;
+    if (tmp) {
+      Thread.sleep(1000);
+      return;
+    }
     boolean loadHappened = false;
     long
         timeout =

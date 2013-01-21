@@ -17,23 +17,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
-
+import org.uiautomation.ios.context.BaseWebInspector;
 import org.uiautomation.ios.context.WebInspector;
 import org.uiautomation.ios.mobileSafari.IosAtoms;
 import org.uiautomation.ios.mobileSafari.NodeId;
-import org.uiautomation.ios.server.ServerSideSession;
 
 import java.util.List;
 
 public class RemoteObject {
 
   private final String objectId;
-  private final ServerSideSession session;
-  private final WebInspector inspector;
+  private final BaseWebInspector inspector;
 
-  public RemoteObject(String objectId, ServerSideSession session, WebInspector inspector)
+  public RemoteObject(String objectId, BaseWebInspector inspector)
       throws JSONException {
-    this.session = session;
     this.inspector = inspector;
     this.objectId = objectId;
   }
@@ -47,7 +44,7 @@ public class RemoteObject {
     JSONObject result = inspector.sendCommand(DOM.requestNode(objectId));
     int id = result.getInt("nodeId");
     NodeId nodeId = new NodeId(id);
-    return new RemoteWebElement(nodeId, this, null);
+    return new RemoteWebElement(nodeId, this, inspector);
   }
 
   public List<RemoteObject> flatten() throws Exception {
