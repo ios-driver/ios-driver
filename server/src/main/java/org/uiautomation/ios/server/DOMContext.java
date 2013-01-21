@@ -61,7 +61,6 @@ public class DOMContext implements EventListener {
   public DOMContext(BaseWebInspector inspector) {
     this.inspector = inspector;
     id = UUID.randomUUID().toString();
-    System.out.println("created with " + id);
   }
 
   public RemoteWebElement getDocument() {
@@ -73,7 +72,6 @@ public class DOMContext implements EventListener {
         throw new TimeoutException("doc not ready.");
       }
       try {
-        // System.err.println("cannot get document. Something is happening.");
         Thread.sleep(250);
       } catch (InterruptedException e) {
         e.printStackTrace();
@@ -88,7 +86,6 @@ public class DOMContext implements EventListener {
 
   public void newContext() {
     id = UUID.randomUUID().toString();
-    System.out.println("new context  " + id);
     window = null;
     document = null;
     iframe = null;

@@ -294,7 +294,6 @@ public enum CommandMapping {
     Class<?>[] argsClass = new Class[]{IOSDriver.class, WebDriverLikeRequest.class};
 
     Constructor<?> c = clazz.getConstructor(argsClass);
-    System.out.println("handler : " + clazz);
     Handler handler = (Handler) c.newInstance(args);
     return handler;
 

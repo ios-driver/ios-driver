@@ -253,7 +253,6 @@ public class AlertsTest extends BaseSeleniumTest {
     clickOnElementById("alert");
 
     try {
-      System.out.println(driver.getTitle());
       Assert.fail("Expected UnhandledAlertException");
     } catch (UnhandledAlertException e) {
       // this is expected
@@ -367,7 +366,6 @@ public class AlertsTest extends BaseSeleniumTest {
   @Test(enabled = false)
   public void testShouldNotHandleAlertInAnotherWindow() {
     String mainWindow = driver.getWindowHandle();
-    System.out.println("handle " + mainWindow);
     String onloadWindow = null;
     try {
       driver.findElement(By.id("open-window-with-onload-alert")).click();

@@ -256,7 +256,6 @@ public class PageLoadingTest extends BaseSeleniumTest {
       String slowPage = appServer.whereIs("sleep?time=5");
 
       driver.get(slowPage);
-      System.out.println(driver.getPageSource());
       Assert.fail("I should have timed out");
     } finally {
       driver.manage().timeouts().pageLoadTimeout(-1, SECONDS);

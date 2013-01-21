@@ -68,12 +68,14 @@ public class DefaultMessageHandler implements MessageHandler {
   private void process(String rawMessage) {
     IOSMessage message = factory.create(rawMessage);
 
+    System.out.println(message);
     for (MessageListener l : listeners) {
       l.onMessage(message);
     }
 
     if (message instanceof ApplicationDataMessage) {
       JSONObject content = ((ApplicationDataMessage) message).getMessage();
+      //System.out.println("METHOD"+content.optString("method"));
       if ((content.optInt("id", -1) != -1)) {
         responses.add(content);
       }

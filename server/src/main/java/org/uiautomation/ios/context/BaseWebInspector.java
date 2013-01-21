@@ -95,9 +95,11 @@ public abstract class BaseWebInspector implements MessageListener {
         throw new TimeoutException("Timeout waiting to get the document.");
       }
       try {
+        log.fine("trying to get the document");
         element = retrieveDocument();
+        log.fine("got it");
         readyState = element.getRemoteObject().call(".readyState");
-        System.out.println("RDY STE =" + readyState);
+        log.fine("ready ? " + readyState);
       } catch (Exception e) {
         log.warning("Workaround in DOMContext, the given document is corrupted, nodeId ");
       }
@@ -483,20 +485,54 @@ public abstract class BaseWebInspector implements MessageListener {
   public void checkForPageLoad() {
     // a new page appeared.
     String id = getLoadedFlag();
-    if (id == null) {
+    System.out.println("on a page with id =" + id + " - " + context.getId());
+    if (!context.getId().equals(id)) {
 
       long
-          timeout =
-          (Long) session.configure(WebDriverLikeCommand.URL)
-              .opt("page load", defaultPageLoadTimeoutInMs);
-      if (timeout < 0) {
-        timeout = defaultPageLoadTimeoutInMs;
-      }
+          timeout = getTimeout();
 
       long deadline = System.currentTimeMillis() + timeout;
       context.newContext();
-      getDocument(deadline);
+
+      /*for (int i=0;i<100;i++){
+        try {
+          retrieveDocument().findElementByCSSSelector("#v4-1");
+          //System.out.println(doc.getRemoteObject().call(".readyState"));
+          } catch (Exception e) {
+          System.err.println(e.getMessage()); //To change body of catch statement use File | Settings | File Templates.
+        }
+      }  */
       flagPageLoaded();
+      System.out.println("on a page with id =" + getLoadedFlag());
+    }
+  }
+
+  private String getMainPageReadyState() {
+    try {
+      JSONObject cmd = new JSONObject();
+      cmd.put("method", "Runtime.evaluate");
+      cmd.put("params",
+              new JSONObject().put("expression", "document.readyState;")
+                  .put("returnByValue", true));
+      JSONObject response = sendCommand(cmd);
+      return cast(response);
+    } catch (JSONException e) {
+      throw new WebDriverException(e);
+    }
+  }
+
+  private long getTimeout() {
+    if (session == null) {
+      return defaultPageLoadTimeoutInMs;
+    } else {
+      long timeout =
+          (Long) session.configure(WebDriverLikeCommand.URL)
+              .opt("page load", defaultPageLoadTimeoutInMs);
+      if (timeout < 0) {
+        return defaultPageLoadTimeoutInMs;
+      }
+      return timeout;
+
     }
   }
 

@@ -84,7 +84,6 @@ public class SimulatorProtocolImpl {
   }
 
   public void init() {
-    System.out.println("\nINIT\n");
     try {
       if (socket != null && (socket.isConnected() || !socket.isClosed())) {
         socket.close();

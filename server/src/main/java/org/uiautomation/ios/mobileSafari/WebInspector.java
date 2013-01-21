@@ -181,7 +181,6 @@ public class WebInspector {
 
     try {
       RemoteWebElement document = getDocument();
-      System.out.println("document :" + document.getNodeId());
       RemoteWebElement window = null;//session.getContext().getDOMContext().getWindow();
       JSONObject cmd = new JSONObject();
 

@@ -16,6 +16,7 @@ package org.uiautomation.ios.mobileSafari.remoteWebkitProtocol;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -30,6 +31,7 @@ import org.uiautomation.ios.mobileSafari.message.WebkitDevice;
 import org.uiautomation.ios.mobileSafari.message.WebkitPage;
 import org.uiautomation.ios.server.DOMContext;
 import org.uiautomation.ios.server.ServerSideSession;
+import org.uiautomation.ios.webInspector.DOM.DOM;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebNativeBackedElement;
 
@@ -48,11 +50,13 @@ public class RemoteIOSWebDriver {
     driver.connect(uiCatalog);
     driver.switchTo(driver.getPages().get(0));
 
-    //driver.get("http://ebay.co.uk");
-    System.out.println("URL : " + driver.getCurrentUrl());
+    driver.get("http://www.ebay.com");
     RemoteWebElement el = driver.findElementByCssSelector("#v4-1");
     System.out.println(el.getText());
 
+    driver.get("http://www.ebay.fr");
+    el = driver.getDocument().findElementByLinkText("Jeux", true);
+    System.out.println(el.getText());
   }
 
   static String safari = "com.apple.mobilesafari";
