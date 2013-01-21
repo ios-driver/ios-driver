@@ -39,7 +39,7 @@ public class SetFrameHandler extends BaseWebCommandHandler {
     Object p = getRequest().getPayload().get("id");
 
     if (JSONObject.NULL.equals(p)) {
-      getSession().getContext().getDOMContext().setCurrentFrame(null, null, null);
+      getSession().getRemoteWebDriver().getContext().setCurrentFrame(null, null, null);
     } else {
       RemoteWebElement iframe;
       if (p instanceof String) {
@@ -55,7 +55,7 @@ public class SetFrameHandler extends BaseWebCommandHandler {
 
       RemoteWebElement document = iframe.getContentDocument();
       RemoteWebElement window = iframe.getContentWindow();
-      getSession().getContext().getDOMContext().setCurrentFrame(iframe, document, window);
+      getSession().getRemoteWebDriver().getContext().setCurrentFrame(iframe, document, window);
     }
 
     Response res = new Response();

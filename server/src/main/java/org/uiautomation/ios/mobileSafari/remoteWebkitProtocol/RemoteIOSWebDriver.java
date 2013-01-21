@@ -14,17 +14,20 @@
 
 package org.uiautomation.ios.mobileSafari.remoteWebkitProtocol;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.context.BaseWebInspector;
 import org.uiautomation.ios.context.WebInspector;
 import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.mobileSafari.message.WebkitApplication;
 import org.uiautomation.ios.mobileSafari.message.WebkitDevice;
 import org.uiautomation.ios.mobileSafari.message.WebkitPage;
+import org.uiautomation.ios.server.DOMContext;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebNativeBackedElement;
@@ -33,10 +36,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-public class RemoteIOSWebDriver implements JavascriptExecutor {
+public class RemoteIOSWebDriver {
 
+
+  private DOMContext context;
 
   public static void main(String[] args) throws Exception {
     RemoteIOSWebDriver driver = new RemoteIOSWebDriver(null);
@@ -58,8 +62,8 @@ public class RemoteIOSWebDriver implements JavascriptExecutor {
   private List<WebkitApplication> applications = new ArrayList<WebkitApplication>();
   private final ServerSideSession session;
 
-  private WebInspector currentInspector;
-  private Map<Integer, WebInspector> inspectors = new HashMap<Integer, WebInspector>();
+  private BaseWebInspector currentInspector;
+  private Map<Integer, BaseWebInspector> inspectors = new HashMap<Integer, BaseWebInspector>();
 
   public RemoteIOSWebDriver(ServerSideSession session) {
     simulator = new SimulatorSession();
@@ -99,6 +103,14 @@ public class RemoteIOSWebDriver implements JavascriptExecutor {
     return simulator.getPages();
   }
 
+  public void switchTo(String pageId) {
+    for (WebkitPage p : getPages()) {
+      if ((p.getPageId() + "").equals(pageId)) {
+        switchTo(p);
+      }
+    }
+    throw new WebDriverException("no such page " + pageId);
+  }
 
   public void switchTo(WebkitPage page) {
     currentInspector = simulator.connect(page, session);
@@ -106,7 +118,7 @@ public class RemoteIOSWebDriver implements JavascriptExecutor {
   }
 
   public void waitForPageToLoad() {
-
+    currentInspector.waitForPageToLoad();
   }
 
   /*public RemoteWebElement getDocument() {
@@ -131,7 +143,7 @@ public class RemoteIOSWebDriver implements JavascriptExecutor {
 
 
   public String getTitle() {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+    return currentInspector.getTitle();
   }
 
 
@@ -154,7 +166,7 @@ public class RemoteIOSWebDriver implements JavascriptExecutor {
   }
 
   public String getPageSource() {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+    return currentInspector.getPageSource();
   }
 
   public void close() {
@@ -165,28 +177,46 @@ public class RemoteIOSWebDriver implements JavascriptExecutor {
     //To change body of implemented methods use File | Settings | File Templates.
   }
 
-  public Set<String> getWindowHandles() {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+  public List<WebkitPage> getWindowHandles() {
+    return getPages();
   }
 
   public String getWindowHandle() {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+    return "" + currentInspector.getPageIdentifier();
   }
 
   public WebDriver.TargetLocator switchTo() {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
-  public WebDriver.Navigation navigate() {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+  public void back() throws JSONException {
+
+    currentInspector.back();
+
+  }
+
+  public void forward() {
+    try {
+      currentInspector.forward();
+    } catch (Exception e) {
+      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+    }
+  }
+
+  public void refresh() {
+    try {
+      currentInspector.refresh();
+    } catch (Exception e) {
+      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+    }
   }
 
   public WebDriver.Options manage() {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
-  public Object executeScript(String script, Object... args) {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+  public Object executeScript(String script, JSONArray args) {
+    return currentInspector.executeScript(script, args);
   }
 
   public Object executeAsyncScript(String script, Object... args) {
@@ -197,6 +227,18 @@ public class RemoteIOSWebDriver implements JavascriptExecutor {
   // TODO remove.
   public RemoteWebElement getDocument() {
     return currentInspector.getDocument();
+  }
+
+  public boolean isLoading() {
+    return !currentInspector.isReady();
+  }
+
+  public DOMContext getContext() {
+    return currentInspector.getContext();
+  }
+
+  public String getLoadedFlag() {
+    return currentInspector.getLoadedFlag();
   }
 }
 

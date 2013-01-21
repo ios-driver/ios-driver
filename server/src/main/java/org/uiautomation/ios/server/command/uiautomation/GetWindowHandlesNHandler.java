@@ -45,7 +45,7 @@ public class GetWindowHandlesNHandler extends BaseNativeCommandHandler {
     if (sss.getMode() == WorkingMode.Native) {
       handles.add(WorkingMode.Native.toString());
     } else {
-      List<WebkitPage> pages = getSession().getContext().getDOMContext().getWindowHandles();
+      List<WebkitPage> pages = getSession().getRemoteWebDriver().getWindowHandles();
       if (pages.size() > 0) {
         for (WebkitPage page : pages) {
           handles.add(WorkingMode.Web + "_" + page.getPageId());

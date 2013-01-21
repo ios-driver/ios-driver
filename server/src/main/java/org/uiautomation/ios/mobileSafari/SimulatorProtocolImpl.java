@@ -18,8 +18,7 @@ import com.google.common.collect.ImmutableMap;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.mobileSafari.events.Event;
-import org.uiautomation.ios.mobileSafari.message.WebkitPage;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.MessageListener;
 import org.uiautomation.ios.webInspector.DOM.RemoteExceptionException;
 
 import java.io.ByteArrayOutputStream;
@@ -54,7 +53,8 @@ public class SimulatorProtocolImpl {
   /**
    * connect to the webview
    */
-  public SimulatorProtocolImpl(EventListener listener, String bundleId, ResponseFinder... finders) {
+  public SimulatorProtocolImpl(MessageListener listener, String bundleId,
+                               ResponseFinder... finders) {
     this.handler = new DefaultMessageHandler(listener, finders);
     this.bundleId = bundleId;
 
@@ -79,21 +79,10 @@ public class SimulatorProtocolImpl {
 
     listen.start();
 
-    /*Thread monitor = new Thread(new Runnable() {
-      @Override
-      public void run() {
-        while (true) {
-          try {
-            Thread.sleep(5000);
-            System.out.println("Monitor : " + sendCommand(DOM.getDocument()).optJSONObject("root")
-                .optString("documentURL"));
-          } catch (Exception e) {
-            System.out.println("Monitor issue " + e.getMessage());
-          }
-        }
-      }
-    });
-    //monitor.start();  */
+  }
+
+  public void addListener(MessageListener listener) {
+    handler.addListener(listener);
   }
 
   public void init() {
@@ -294,48 +283,6 @@ public class SimulatorProtocolImpl {
     }
     keepGoing = true;
 
-  }
-
-  public static void main(String[] args) throws Exception {
-    test();
-
-  }
-
-  public static void test() throws Exception {
-    final SimulatorProtocolImpl protocol = new SimulatorProtocolImpl(new EventListener() {
-      @Override
-      public void onPageLoad() {
-
-      }
-
-      @Override
-      public void domHasChanged(Event event) {
-        //To change body of implemented methods use File | Settings | File Templates.
-      }
-
-      @Override
-      public void frameDied(JSONObject message) {
-        //To change body of implemented methods use File | Settings | File Templates.
-      }
-
-      @Override
-      public void setWindowHandles(List<WebkitPage> handles) {
-        //To change body of implemented methods use File | Settings | File Templates.
-      }
-      //}, "com.apple.mobilesafari");
-    }, "com.yourcompany.UICatalog");
-
-    /*while (true) {
-      Thread.sleep(5000);
-      try {
-        System.out.println(
-            "Monitor : " + protocol.sendCommand(DOM.getDocument()).optJSONObject("root")
-                .optString("documentURL"));
-      } catch (Exception e) {
-        System.err.println(e.getMessage());
-      }
-
-    } */
   }
 
 

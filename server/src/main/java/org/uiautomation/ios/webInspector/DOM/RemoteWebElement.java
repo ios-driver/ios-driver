@@ -84,6 +84,7 @@ public class RemoteWebElement {
       throw new RuntimeException("no native clicks");
     } else {
       clickAtom();
+      inspector.checkForPageLoad();
     }
   }
 
@@ -540,6 +541,7 @@ public class RemoteWebElement {
 
     JSONObject response = inspector.sendCommand(cmd);
     inspector.cast(response);
+    inspector.checkForPageLoad();
 
   }
 

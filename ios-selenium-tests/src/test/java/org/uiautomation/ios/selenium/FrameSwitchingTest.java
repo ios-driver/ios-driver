@@ -271,13 +271,13 @@ public class FrameSwitchingTest extends BaseSeleniumTest {
 
   //@Ignore(ANDROID)
   @Test
-  public void testShouldAllowTheUserToSwitchToAnIFrameAndRemainFocusedOnIt() {
+  public void testShouldAllowTheUserToSwitchToAnIFrameAndRemainFocusedOnIt()
+      throws InterruptedException {
     driver.get(pages.iframePage);
     driver.switchTo().frame(0);
 
     WebElement element = driver.findElement(By.id("submitButton"));
     element.click();
-
     assertEquals(getTextOfGreetingElement(), ("Success!"));
   }
 

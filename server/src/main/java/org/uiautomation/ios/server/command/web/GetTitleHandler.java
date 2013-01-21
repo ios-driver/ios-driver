@@ -28,6 +28,7 @@ public class GetTitleHandler extends BaseWebCommandHandler {
 
   @Override
   public Response handle() throws Exception {
+    waitForPageToLoad();
     String title = getSession().getRemoteWebDriver().getTitle();
     Response res = new Response();
     res.setSessionId(getSession().getSessionId());

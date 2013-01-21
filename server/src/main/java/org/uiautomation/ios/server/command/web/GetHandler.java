@@ -15,7 +15,6 @@ package org.uiautomation.ios.server.command.web;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
@@ -53,7 +52,7 @@ public class GetHandler extends BaseWebCommandHandler {
   public Response handle() throws Exception {
     long start = System.currentTimeMillis();
     String url = getRequest().getPayload().getString("url");
-    boolean newPageWillBeLoaded = true;
+    /*boolean newPageWillBeLoaded = true;
     if (url.contains("#")) {
       try {
         String currentURL = getSession().getRemoteWebDriver().getCurrentUrl();
@@ -71,8 +70,8 @@ public class GetHandler extends BaseWebCommandHandler {
     }
 
     if (newPageWillBeLoaded) {
-      getSession().getContext().getDOMContext().newContext();
-    }
+      getSession().getRemoteWebDriver().getContext().newContext();
+    }    */
 
     boolean useNativeEvents = getConfiguration("nativeEvents", nativeEvents);
 
@@ -81,9 +80,9 @@ public class GetHandler extends BaseWebCommandHandler {
     } else {
       fakeTypeURL(url);
     }
-    if (newPageWillBeLoaded) {
+    /*if (newPageWillBeLoaded) {
       getSession().getRemoteWebDriver().waitForPageToLoad();
-    }
+    } */
     Response res = new Response();
     res.setSessionId(getSession().getSessionId());
     res.setStatus(0);
@@ -107,12 +106,7 @@ public class GetHandler extends BaseWebCommandHandler {
   }
 
   private void fakeTypeURL(String url) {
-    try {
-      getSession().getRemoteWebDriver().get(url);
-
-    } catch (Exception e) {
-      throw new WebDriverException("cannot navigate to URL " + url + ", error " + e.getMessage());
-    }
+    getSession().getRemoteWebDriver().get(url);
   }
 
 }

@@ -16,6 +16,7 @@ package org.uiautomation.ios.mobileSafari.remoteWebkitProtocol;
 
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.context.BaseWebInspector;
 import org.uiautomation.ios.context.WebInspector;
 import org.uiautomation.ios.mobileSafari.EventListener;
 import org.uiautomation.ios.mobileSafari.SimulatorProtocolImpl;
@@ -176,7 +177,7 @@ public class SimulatorSession {
     return pages;
   }
 
-  public WebInspector connect(WebkitPage webkitPage, ServerSideSession session) {
+  public BaseWebInspector connect(WebkitPage webkitPage, ServerSideSession session) {
     for (WebkitPage page : getPages()) {
       if (page.equals(webkitPage)) {
         WebInspector
@@ -187,7 +188,10 @@ public class SimulatorSession {
         simulatorProtocol.sendConnectToApplication(connectionKey, bundleId);
         simulatorProtocol.sendSenderKey(connectionKey, bundleId, inspector.getSenderKey(),
                                         "" + page.getPageId());
-        created.add(inspector);
+        boolean ok = created.add(inspector);
+        if (ok) {
+          simulatorProtocol.addListener(inspector);
+        }
         return inspector;
       }
     }
@@ -223,7 +227,7 @@ class DefaultMessageListener implements MessageListener, EventListener {
       ApplicationSentListingMessage m = (ApplicationSentListingMessage) message;
       simulator.setPages(m.getPages());
       simulator.signalSimSentPages();
-      System.out.println(message);
+      //System.out.println(message);
     }
 
     if (message instanceof ApplicationDataMessage) {

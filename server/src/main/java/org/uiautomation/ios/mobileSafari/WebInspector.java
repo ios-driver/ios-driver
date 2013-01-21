@@ -39,7 +39,7 @@ public class WebInspector {
   private static final Logger log = Logger.getLogger(WebInspector.class.getName());
 
   private final ServerSideSession session;
-  private final SimulatorProtocolImpl protocol;
+  private SimulatorProtocolImpl protocol;
   public final UIADriver nativeDriver;
 
   private int width = -1;
@@ -47,7 +47,7 @@ public class WebInspector {
   public static final Long defaultPageLoadTimeoutInMs = 30000L;
 
   public RemoteWebElement getDocument() {
-    DOMContext context = session.getContext().getDOMContext();
+    DOMContext context = null;//session.getContext().getDOMContext();
     RemoteWebElement result = context.getDocument();
     if (result == null) {
       result = retrieveDocumentAndCheckReady();
@@ -108,11 +108,11 @@ public class WebInspector {
       throws Exception {
     this.nativeDriver = nativeDriver;
     this.session = session;
-    DOMContext context = session.getContext().getDOMContext();
-    protocol =
+    DOMContext context = null;//session.getContext().getDOMContext();
+    /*protocol =
         new SimulatorProtocolImpl(context, bundleId,
                                   new AlertDetector((RemoteUIADriver) nativeDriver));
-    enablePageEvent();
+    enablePageEvent();  */
 
   }
 
@@ -182,7 +182,7 @@ public class WebInspector {
     try {
       RemoteWebElement document = getDocument();
       System.out.println("document :" + document.getNodeId());
-      RemoteWebElement window = session.getContext().getDOMContext().getWindow();
+      RemoteWebElement window = null;//session.getContext().getDOMContext().getWindow();
       JSONObject cmd = new JSONObject();
 
       JSONArray arguments = new JSONArray();
@@ -208,7 +208,8 @@ public class WebInspector {
 
       }
 
-      if (!session.getContext().getDOMContext().isOnMainFrame()) {
+      //if (!session.getContext().getDOMContext().isOnMainFrame()) {
+      if (true) {
         arguments.put(new JSONObject().put("objectId", document.getRemoteObject().getId()));
         arguments.put(new JSONObject().put("objectId", window.getRemoteObject().getId()));
 
@@ -411,7 +412,7 @@ public class WebInspector {
     if (timeout < 0) {
       timeout = defaultPageLoadTimeoutInMs;
     }
-    session.getContext().getDOMContext().waitForPageToLoad(timeout);
+    //session.getContext().getDOMContext().waitForPageToLoad(timeout);
   }
 
   public void back() throws Exception {

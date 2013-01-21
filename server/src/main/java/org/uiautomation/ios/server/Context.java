@@ -22,10 +22,10 @@ import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 public class Context {
 
   private WorkingMode mode = WorkingMode.Native;
-  private final DOMContext context;
+  //private final DOMContext context;
 
   public Context(ServerSideSession session) {
-    context = new DOMContext(session);
+    //context = new DOMContext(session);
   }
 
   public void switchToMode(WorkingMode mode) {
@@ -40,7 +40,7 @@ public class Context {
 
   }
 
-  public DOMContext getDOMContext() {
+  /*public DOMContext getDOMContext() {
     return context;
-  }
+  } */
 }

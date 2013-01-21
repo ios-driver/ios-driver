@@ -44,14 +44,14 @@ public class SetCurrentContextNHandler extends BaseNativeCommandHandler {
       if (views.isEmpty()) {
         throw new NoSuchWindowException("Cannot find a web view in the current app.");
       }*/
-      if (getSession().getContext().getDOMContext().getWindowHandles().isEmpty()) {
+      if (getSession().getRemoteWebDriver().getWindowHandles().isEmpty()) {
         throw new NoSuchWindowException("Cannot find a web view in the current app.");
       }
       if (WorkingMode.Web.toString().equals(context)) {
         getSession().setMode(WorkingMode.Web);
       } else {
         String pageId = context.replace(WorkingMode.Web + "_", "");
-        getSession().getContext().getDOMContext().setWindow(pageId);
+        getSession().getRemoteWebDriver().switchTo(pageId);
       }
 
     }

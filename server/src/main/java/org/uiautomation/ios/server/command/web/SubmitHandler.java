@@ -30,8 +30,8 @@ public class SubmitHandler extends BaseWebCommandHandler {
 
   @Override
   public Response handle() throws Exception {
-    int id = Integer.parseInt(getRequest().getVariableValue(":reference"));
-    RemoteWebElement element = new RemoteWebElement(new NodeId(id), null);
+    String ref = getRequest().getVariableValue(":reference");
+    RemoteWebElement element = getSession().getRemoteWebDriver().createElement(ref);
     element.submit();
     Response res = new Response();
     res.setSessionId(getSession().getSessionId());

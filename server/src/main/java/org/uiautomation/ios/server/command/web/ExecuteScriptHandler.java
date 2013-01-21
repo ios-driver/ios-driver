@@ -46,7 +46,7 @@ public class ExecuteScriptHandler extends BaseWebCommandHandler {
     if (res instanceof RemoteObject) {
       RemoteObject ro = (RemoteObject) res;
       RemoteWebElement rwe = ro.getWebElement();
-      JSONObject jo = new JSONObject().put("ELEMENT", rwe.getNodeId().getId());
+      JSONObject jo = new JSONObject().put("ELEMENT", rwe.getReference());
       resp.setValue(jo);
     } else if (res instanceof Integer) {
       resp.setValue(res);

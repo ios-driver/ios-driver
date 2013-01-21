@@ -36,7 +36,7 @@ public class GetCurrentContextNHandler extends BaseNativeCommandHandler {
     WorkingMode mode = getSession().getMode();
     String value = mode.toString();
     if (mode == WorkingMode.Web) {
-      value = WorkingMode.Web + "_" + getSession().getContext().getDOMContext().getWindowHandle();
+      value = WorkingMode.Web + "_" + getSession().getRemoteWebDriver().getWindowHandle();
     }
     Response resp = new Response();
     resp.setSessionId(getSession().getSessionId());

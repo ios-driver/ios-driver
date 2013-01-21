@@ -16,6 +16,7 @@ package org.uiautomation.ios.mobileSafari;
 
 import org.json.JSONObject;
 import org.openqa.selenium.TimeoutException;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.MessageListener;
 
 public interface MessageHandler {
 
@@ -24,4 +25,6 @@ public interface MessageHandler {
   public JSONObject getResponse(int id) throws TimeoutException;
 
   public void stop();
+
+  void addListener(MessageListener listener);
 }

@@ -23,15 +23,11 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.mobileSafari.events.ChildNodeRemoved;
 import org.uiautomation.ios.mobileSafari.events.Event;
-import org.uiautomation.ios.mobileSafari.events.EventFactory;
 import org.uiautomation.ios.mobileSafari.events.inserted.ChildIframeInserted;
 import org.uiautomation.ios.mobileSafari.message.ApplicationDataMessage;
-import org.uiautomation.ios.mobileSafari.message.ApplicationSentListingMessage;
 import org.uiautomation.ios.mobileSafari.message.IOSMessage;
 import org.uiautomation.ios.mobileSafari.message.MessageFactory;
-import org.uiautomation.ios.mobileSafari.message.WebkitDebugMessage;
 import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.MessageListener;
-import org.uiautomation.ios.webInspector.DOM.DOM;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +38,7 @@ import java.util.logging.Logger;
 public class DefaultMessageHandler implements MessageHandler {
 
   private final List<JSONObject> responses = new CopyOnWriteArrayList<JSONObject>();
-  private final EventListener listener;
+  private final List<MessageListener> listeners = new CopyOnWriteArrayList<MessageListener>();
   private Thread t;
   private static boolean showIgnoredMessaged = true;
   private static final Logger log = Logger.getLogger(DefaultMessageHandler.class.getName());
@@ -50,8 +46,8 @@ public class DefaultMessageHandler implements MessageHandler {
   private final MessageFactory factory = new MessageFactory();
 
 
-  public DefaultMessageHandler(EventListener listener, ResponseFinder... finders) {
-    this.listener = listener;
+  public DefaultMessageHandler(MessageListener listener, ResponseFinder... finders) {
+    listeners.add(listener);
     for (ResponseFinder finder : finders) {
       this.extraFinders.add(finder);
     }
@@ -72,7 +68,18 @@ public class DefaultMessageHandler implements MessageHandler {
   private void process(String rawMessage) {
     IOSMessage message = factory.create(rawMessage);
 
-    if (listener instanceof MessageListener) {
+    for (MessageListener l : listeners) {
+      l.onMessage(message);
+    }
+
+    if (message instanceof ApplicationDataMessage) {
+      JSONObject content = ((ApplicationDataMessage) message).getMessage();
+      if ((content.optInt("id", -1) != -1)) {
+        responses.add(content);
+      }
+    }
+
+    /*if (listener instanceof MessageListener) {
       ((MessageListener) listener).onMessage(message);
     }
 
@@ -109,8 +116,7 @@ public class DefaultMessageHandler implements MessageHandler {
       listener.setWindowHandles(listingMessage.getPages());
     } else {
       //System.out.println(message);
-    }
-
+    }*/
 
   }
 
@@ -249,7 +255,11 @@ public class DefaultMessageHandler implements MessageHandler {
     if (t != null) {
       t.interrupt();
     }
+  }
 
+  @Override
+  public void addListener(MessageListener listener) {
+    listeners.add(listener);
   }
 
 }

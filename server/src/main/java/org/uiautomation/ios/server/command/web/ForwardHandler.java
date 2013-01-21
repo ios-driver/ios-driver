@@ -32,11 +32,11 @@ public class ForwardHandler extends BaseWebCommandHandler {
   @Override
   public Response handle() throws Exception {
     boolean useNativeEvents = getConfiguration("nativeEvents", nativeEvents);
-    getSession().getContext().getDOMContext().newContext();
+    getSession().getRemoteWebDriver().getContext().newContext();
     if (useNativeEvents) {
       // forwardNative();
     } else {
-      getSession().getRemoteWebDriver().navigate().forward();
+      getSession().getRemoteWebDriver().forward();
     }
 
     // no page loading event for forward ?

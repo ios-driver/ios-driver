@@ -80,7 +80,7 @@ public class FindElementHandler extends BaseWebCommandHandler {
       element = getSession().getRemoteWebDriver().getDocument();
     }
     RemoteWebElement rwe;
-
+    System.out.println("find element on " + element.getReference());
     if ("link text".equals(type)) {
       rwe = element.findElementByLinkText(value, false);
     } else if ("partial link text".equals(type)) {

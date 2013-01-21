@@ -13,11 +13,8 @@
  */
 package org.uiautomation.ios.server.command;
 
-import org.openqa.selenium.TimeoutException;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
-import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.mobileSafari.WebInspector;
 import org.uiautomation.ios.server.IOSDriver;
 
 public abstract class BaseWebCommandHandler extends BaseCommandHandler {
@@ -32,36 +29,7 @@ public abstract class BaseWebCommandHandler extends BaseCommandHandler {
   }
 
   protected void waitForPageToLoad() throws InterruptedException {
-    boolean tmp = true;
-    if (tmp) {
-      Thread.sleep(1000);
-      return;
-    }
-    boolean loadHappened = false;
-    long
-        timeout =
-        (Long) getSession().configure(WebDriverLikeCommand.URL)
-            .opt("page load", WebInspector.defaultPageLoadTimeoutInMs);
-
-    long deadline = System.currentTimeMillis() + timeout;
-    while (getSession().getContext().getDOMContext()
-        .isLoading()) {
-
-      if (System.currentTimeMillis() > deadline) {
-        throw new TimeoutException(
-            "failed to load the page after " + timeout + " ms. Page is currently is state : "
-            + getSession().getContext().getDOMContext().getDocumentReadyState());
-      }
-      loadHappened = true;
-      Thread.sleep(500);
-    }
-
-    // if safari, wait for things to stop moving ( for instance for the JS to execute and the URL
-    // bar to finish its animation.
-    if (loadHappened) {
-      Thread.sleep(1000);
-    }
-
+    getSession().getRemoteWebDriver().waitForPageToLoad();
   }
 
   protected <T> T getConfiguration(String key, T defaultValue) {

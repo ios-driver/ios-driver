@@ -27,6 +27,7 @@ import org.uiautomation.ios.UIAModels.predicate.OrCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.communication.device.Device;
+import org.uiautomation.ios.context.BaseWebInspector;
 import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.context.WebInspector;
 import org.uiautomation.ios.server.ServerSideSession;
@@ -43,7 +44,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
   private final ServerSideSession session;
   private final RemoteUIADriver nativeDriver;
 
-  public RemoteWebNativeBackedElement(NodeId id, WebInspector inspector,
+  public RemoteWebNativeBackedElement(NodeId id, BaseWebInspector inspector,
                                       ServerSideSession session) {
     super(id, inspector);
     this.session = session;

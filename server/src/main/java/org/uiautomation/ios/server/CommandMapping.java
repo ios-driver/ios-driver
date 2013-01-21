@@ -61,6 +61,7 @@ import org.uiautomation.ios.server.command.web.FindElementsHandler;
 import org.uiautomation.ios.server.command.web.ForwardHandler;
 import org.uiautomation.ios.server.command.web.GetAttributeHandler;
 import org.uiautomation.ios.server.command.web.GetHandler;
+import org.uiautomation.ios.server.command.web.GetPageSourceHandler;
 import org.uiautomation.ios.server.command.web.GetTagNameHandler;
 import org.uiautomation.ios.server.command.web.GetTextHandler;
 import org.uiautomation.ios.server.command.web.GetTitleHandler;
@@ -109,7 +110,7 @@ public enum CommandMapping {
   EQUAL(NotImplementedNativeHandler.class, IsEqualHandler.class),
   // UIATarget
   TREE(LogElementTreeNHandler.class),
-  TREE_ROOT(LogElementTreeNHandler.class),
+  TREE_ROOT(LogElementTreeNHandler.class, GetPageSourceHandler.class),
 
   TARGET_RECT(".rect()"),
   TARGET_TAP(".tap({x::x,y::y})"),

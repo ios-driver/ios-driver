@@ -17,6 +17,7 @@ package org.uiautomation.ios.context;
 import org.uiautomation.ios.mobileSafari.SimulatorProtocolImpl;
 import org.uiautomation.ios.mobileSafari.EventListener;
 import org.uiautomation.ios.mobileSafari.ResponseFinder;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.MessageListener;
 
 /**
  * Context for the webview accessed with the remote webkit protocol. If the application was launched
@@ -30,7 +31,7 @@ public class WebViewContext {
   private final SimulatorProtocolImpl protocol;
   private final String bundleId;
 
-  public WebViewContext(String bundleId, EventListener listener, ResponseFinder... finders)
+  public WebViewContext(String bundleId, MessageListener listener, ResponseFinder... finders)
       throws Exception {
     this.bundleId = bundleId;
     protocol = new SimulatorProtocolImpl(listener, bundleId, finders);
