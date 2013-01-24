@@ -32,6 +32,6 @@ public class RawEvent implements Event {
 
   @Override
   public String toString() {
-    return raw.optString("method");
+    return raw.optString("method") + " " + raw;
   }
 }

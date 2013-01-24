@@ -18,7 +18,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
@@ -31,7 +30,7 @@ import org.uiautomation.ios.mobileSafari.message.WebkitDevice;
 import org.uiautomation.ios.mobileSafari.message.WebkitPage;
 import org.uiautomation.ios.server.DOMContext;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.webInspector.DOM.DOM;
+import org.uiautomation.ios.webInspector.DOM.Page;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebNativeBackedElement;
 
@@ -50,13 +49,19 @@ public class RemoteIOSWebDriver {
     driver.connect(uiCatalog);
     driver.switchTo(driver.getPages().get(0));
 
-    driver.get("http://www.ebay.com");
-    RemoteWebElement el = driver.findElementByCssSelector("#v4-1");
-    System.out.println(el.getText());
+    driver.get("http://localhost:11257/common/frameset.html");
 
-    driver.get("http://www.ebay.fr");
-    el = driver.getDocument().findElementByLinkText("Jeux", true);
-    System.out.println(el.getText());
+    JSONObject res = driver.currentInspector.sendCommand(Page.getResourceTree());
+    System.out.println(res.toString(2));
+    for (int i = 1; i < 10; i++) {
+      long start = System.currentTimeMillis();
+      driver.get("http://localhost:45188/common/sleep?time=" + i);
+      System.out.println(
+          "get duration for a page taking " + i + " sec " + (System.currentTimeMillis() - start)
+          + " ms.");
+      RemoteWebElement body = driver.findElementByCssSelector("body");
+      //System.out.println(body.getText());
+    }
   }
 
   static String safari = "com.apple.mobilesafari";

@@ -32,6 +32,7 @@ import org.uiautomation.ios.mobileSafari.message.WebkitApplication;
 import org.uiautomation.ios.mobileSafari.message.WebkitDevice;
 import org.uiautomation.ios.mobileSafari.message.WebkitPage;
 import org.uiautomation.ios.server.ServerSideSession;
+import org.uiautomation.ios.webInspector.DOM.Page;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -189,10 +190,13 @@ public class SimulatorSession {
             inspector =
             new WebInspector(null, webkitPage.getPageId(), simulatorProtocol, bundleId,
                              connectionKey, session);
+        // TODO move to webinspector
         simulatorProtocol.sendSetConnectionKey(connectionKey);
         simulatorProtocol.sendConnectToApplication(connectionKey, bundleId);
         simulatorProtocol.sendSenderKey(connectionKey, bundleId, inspector.getSenderKey(),
                                         "" + page.getPageId());
+        inspector.sendCommand(Page.enablePageEvent());
+
         boolean ok = created.add(inspector);
         if (ok) {
           simulatorProtocol.addListener(inspector);

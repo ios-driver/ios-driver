@@ -30,6 +30,10 @@ import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
 
@@ -57,6 +61,9 @@ public class DOMContext implements EventListener {
   private List<WebkitPage> windowHandles;
   private String windowHandle;
   private String id;
+
+  private Lock eventsLock = new ReentrantLock();
+  private Condition pageLoadEvent = eventsLock.newCondition();
 
   public DOMContext(BaseWebInspector inspector) {
     this.inspector = inspector;
@@ -324,5 +331,27 @@ public class DOMContext implements EventListener {
 
   public String getId() {
     return id;
+  }
+
+  public void waitForLoadEvent() throws InterruptedException {
+    try {
+      eventsLock.lock();
+      pageLoadEvent.await(30, TimeUnit.SECONDS);
+    } finally {
+      eventsLock.unlock();
+    }
+
+  }
+
+  // needs to be static ?
+  public void signallNewPageLoadRecieved() {
+    try {
+      eventsLock.lock();
+      System.out.println("Got new page signal");
+      pageLoadEvent.signalAll();
+    } finally {
+      eventsLock.unlock();
+    }
+
   }
 }

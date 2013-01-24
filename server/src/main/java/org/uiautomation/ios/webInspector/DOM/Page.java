@@ -30,4 +30,35 @@ public class Page {
       throw new WebDriverException(e);
     }
   }
+
+  public static JSONObject enablePageEvent() {
+    try {
+      JSONObject cmd = new JSONObject();
+      cmd.put("method", "Page.enable");
+      return cmd;
+    } catch (JSONException e) {
+      throw new WebDriverException(e);
+    }
+  }
+
+  public static JSONObject getResourceTree() {
+    try {
+      JSONObject cmd = new JSONObject();
+      cmd.put("method", "Page.getResourceTree");
+      return cmd;
+    } catch (JSONException e) {
+      throw new WebDriverException(e);
+    }
+  }
+  /*public static JSONObject captureScreenshot() {
+    try {
+      JSONObject cmd = new JSONObject();
+      cmd.put("method", "Page.captureScreenshot");
+      return cmd;
+    } catch (JSONException e) {
+      throw new WebDriverException(e);
+    }
+  } */
+
+
 }

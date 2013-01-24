@@ -119,8 +119,10 @@ public abstract class BaseWebInspector implements MessageListener {
   public void get(String url) {
     JSONObject command = Page.navigate(url);
     sendCommand(command);
+
     try {
-      Thread.sleep(100);
+      context.waitForLoadEvent();
+      context.newContext();
     } catch (InterruptedException e) {
       e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
     }
@@ -485,7 +487,7 @@ public abstract class BaseWebInspector implements MessageListener {
   public void checkForPageLoad() {
     // a new page appeared.
     String id = getLoadedFlag();
-    System.out.println("on a page with id =" + id + " - " + context.getId());
+    //System.out.println("on a page with id =" + id + " - " + context.getId());
     if (!context.getId().equals(id)) {
 
       long
@@ -503,7 +505,7 @@ public abstract class BaseWebInspector implements MessageListener {
         }
       }  */
       flagPageLoaded();
-      System.out.println("on a page with id =" + getLoadedFlag());
+      //System.out.println("on a page with id =" + getLoadedFlag());
     }
   }
 
@@ -564,8 +566,12 @@ public abstract class BaseWebInspector implements MessageListener {
       if ("Page.frameDetached".equals(m.getMessage().optString("method"))) {
         context.frameDied(m.getMessage());
       }
+      if ("Page.loadEventFired".equals(m.getMessage().optString("method"))) {
+        context.signallNewPageLoadRecieved();
+      }
+      if ("Profiler.resetProfiles".equals(m.getMessage().optString("method"))) {
 
-
+      }
     }
   }
 
