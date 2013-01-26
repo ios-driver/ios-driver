@@ -47,7 +47,7 @@ public class SimulatorSession {
   private SimulatorProtocolImpl simulatorProtocol;
   private WebkitDevice device;
   private List<WebkitApplication> applications;
-  private List<WebkitPage> pages;
+  private List<WebkitPage> pages = new ArrayList<WebkitPage>();
 
   private String bundleId;
   private Lock simLock = new ReentrantLock();
@@ -98,6 +98,10 @@ public class SimulatorSession {
     } finally {
       simLock.unlock();
     }
+  }
+
+  public boolean isConnected() {
+    return !applications.isEmpty();
   }
 
   private void waitForSimToRegister() {

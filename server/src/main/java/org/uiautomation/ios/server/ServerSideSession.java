@@ -13,7 +13,9 @@
  */
 package org.uiautomation.ios.server;
 
+import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.SessionNotCreatedException;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.SessionId;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Session;
@@ -25,7 +27,6 @@ import org.uiautomation.ios.client.uiamodels.impl.*;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.device.Device;
 import org.uiautomation.ios.mobileSafari.AlertDetector;
-import org.uiautomation.ios.mobileSafari.WebInspector;
 import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.RemoteIOSWebDriver;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
@@ -115,7 +116,10 @@ public class ServerSideSession extends Session {
   public void stop() {
     // nativDriver should have instruments within it.
     instruments.stop();
-    webDriver.stop();
+    if (webDriver != null) {
+      webDriver.stop();
+    }
+
   }
 
   public void forceStop() {
@@ -148,21 +152,32 @@ public class ServerSideSession extends Session {
       e.printStackTrace();
     }
     nativeDriver = new ServerSideNativeDriver(url, new SessionId(instruments.getSessionId()));
-    webDriver = new RemoteIOSWebDriver(this, new AlertDetector(nativeDriver));
+    String version = capabilities.getSDKVersion();
+    Float v = Float.parseFloat(version);
+    if (v >= 6) {
+      webDriver = new RemoteIOSWebDriver(this, new AlertDetector(nativeDriver));
+    }
+
   }
 
   public RemoteIOSWebDriver getRemoteWebDriver() {
+    if (webDriver == null) {
+      throw new WebDriverException("hybrid / web apps are only supported for ios6+");
+    }
     return webDriver;
   }
 
   public void setMode(WorkingMode mode) {
-    context.switchToMode(mode);
     if (mode == WorkingMode.Web) {
-      String bundleId = application.getMetadata("CFBundleIdentifier");
-      webDriver.connect(bundleId);
-      System.out.println("pages :" + webDriver.getPages().size());
-      webDriver.switchTo(webDriver.getPages().get(0));
+      try {
+        String bundleId = application.getMetadata("CFBundleIdentifier");
+        webDriver.connect(bundleId);
+        webDriver.switchTo(webDriver.getPages().get(0));
+      } catch (Exception e) {
+        throw new NoSuchWindowException("Cannot switch to window " + mode, e);
+      }
     }
+    context.switchToMode(mode);
   }
 
   public WorkingMode getMode() {

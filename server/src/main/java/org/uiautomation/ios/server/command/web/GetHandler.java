@@ -24,8 +24,10 @@ import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.UIAModels.predicate.ValueCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAKeyboard;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.RemoteIOSWebDriver;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
+import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 
 public class GetHandler extends BaseWebCommandHandler {
 
@@ -106,7 +108,20 @@ public class GetHandler extends BaseWebCommandHandler {
   }
 
   private void fakeTypeURL(String url) {
-    getSession().getRemoteWebDriver().get(url);
+    String uiCatalog = "com.yourcompany.UICatalog";
+    RemoteIOSWebDriver driver = new RemoteIOSWebDriver(null);
+    driver.connect(uiCatalog);
+    driver.switchTo(driver.getPages().get(0));
+    driver.get("http://ebay.co.uk/");
+
+    try {
+      RemoteWebElement body = driver.findElementByCssSelector("body");
+      System.out.println(body.getText());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    //getSession().getRemoteWebDriver().get(url);
   }
 
 }

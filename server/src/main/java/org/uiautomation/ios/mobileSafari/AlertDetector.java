@@ -92,7 +92,6 @@ public class AlertDetector implements ResponseFinder {
   public void interruptSearch() {
     long start = System.currentTimeMillis();
     stopRequested = true;
-
     while (!getFinished()) {
       try {
         Thread.sleep(20);
@@ -110,7 +109,7 @@ public class AlertDetector implements ResponseFinder {
       throw new RuntimeException("Bug");
     }
     if (ex != null) {
-      alert.dismiss();
+      //alert.dismiss();
       throw ex;
     }
     return null;

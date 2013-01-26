@@ -20,6 +20,7 @@ import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
@@ -117,48 +118,18 @@ public abstract class BaseWebInspector implements MessageListener {
 
 
   public void get(String url) {
-    JSONObject command = Page.navigate(url);
-    sendCommand(command);
 
     try {
-      context.waitForLoadEvent();
+      context.eventsLock().lock();
+      JSONObject command = Page.navigate(url);
+      sendCommand(command);
       context.newContext();
-    } catch (InterruptedException e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-    }
-    checkForPageLoad();
-  }
-
-  public void waitForPageToLoad() {
-    /*long
-        timeout =
-        (Long) session.configure(WebDriverLikeCommand.URL)
-            .opt("page load", defaultPageLoadTimeoutInMs);
-    if (timeout < 0) {
-      timeout = defaultPageLoadTimeoutInMs;
-    }
-    long deadLine = System.currentTimeMillis() + timeout;
-
-    StringBuilder b = new StringBuilder();
-    try {
-      if (newPage) {
-        b.append("new page. ");
-        b.append("waiting for the page to be loaded.");
-        while (!isReady() && getLoadedFlag() != null) {
-          if (System.currentTimeMillis() > deadLine) {
-            throw new TimeoutException("failed to load the page");
-          }
-        }
-
-        newPage = false;
-        b.append("the page has been loaded and flagged so.");
-
-      } else {
-        b.append("no new page. ");
-      }
+      checkForPageLoad();
+      context.waitForLoadEvent();
     } finally {
-      System.out.println("BaseWebInspector:waitForPageToLoad" + b.toString());
-    } */
+      context.eventsLock().unlock();
+    }
+
 
   }
 
@@ -188,7 +159,6 @@ public abstract class BaseWebInspector implements MessageListener {
 
 
   public String getTitle() {
-    waitForPageToLoad();
     try {
       JSONObject cmd = new JSONObject();
       cmd.put("method", "Runtime.evaluate");
@@ -447,23 +417,22 @@ public abstract class BaseWebInspector implements MessageListener {
       cmd.put("params",
               new JSONObject().put("expression", "window.top.iosdriver='" + context.getId() + "'"));
       sendCommand(cmd);
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (JSONException e) {
+      throw new WebDriverException(e);
     }
 
   }
 
   public String getLoadedFlag() {
+    JSONObject cmd = new JSONObject();
     try {
-      JSONObject cmd = new JSONObject();
       cmd.put("method", "Runtime.evaluate");
       cmd.put("params", new JSONObject().put("expression", "window.top.iosdriver"));
-      JSONObject response = sendCommand(cmd);
-      return cast(response);
-    } catch (Exception e) {
-      e.printStackTrace();
-      return null;
+    } catch (JSONException e) {
+      throw new WebDriverException(e);
     }
+    JSONObject response = sendCommand(cmd);
+    return cast(response);
   }
 
   public boolean isReady() {
@@ -494,7 +463,7 @@ public abstract class BaseWebInspector implements MessageListener {
           timeout = getTimeout();
 
       long deadline = System.currentTimeMillis() + timeout;
-      context.newContext();
+      //context.newContext();
 
       /*for (int i=0;i<100;i++){
         try {

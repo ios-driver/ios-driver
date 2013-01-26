@@ -25,12 +25,11 @@
 + batch commands for web to native calls
 - remove or document non webdriver commands.
 - delete window
-- handle alerts for web
++ handle alerts for web
 - cleanup and document setValue vs sendKeys
-- send info to jason to start / compile etc + feature list.
 + implicit wait for web ( would help with pageLoad issues )
 + avoid switching between native and web for internal command.
-- make an executable
+
 
 
 TODOs:
@@ -62,3 +61,4 @@ TODOs:
 - make keyboard a static id, like alert ?
 - remove the context switching for the alert detector
 - handle multi web windows
+- DesiredCapabilities.unexpectedAlertBehaviour

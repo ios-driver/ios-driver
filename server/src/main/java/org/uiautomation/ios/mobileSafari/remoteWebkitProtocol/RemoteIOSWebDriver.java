@@ -48,8 +48,11 @@ public class RemoteIOSWebDriver {
     RemoteIOSWebDriver driver = new RemoteIOSWebDriver(null);
     driver.connect(uiCatalog);
     driver.switchTo(driver.getPages().get(0));
+    driver.get("http://ebay.co.uk/");
 
-    driver.get("http://localhost:11257/common/frameset.html");
+    RemoteWebElement body = driver.findElementByCssSelector("body");
+    System.out.println(body.getText());
+    /*driver.get("http://ebay.co.uk/common/frameset.html");
 
     JSONObject res = driver.currentInspector.sendCommand(Page.getResourceTree());
     System.out.println(res.toString(2));
@@ -61,7 +64,7 @@ public class RemoteIOSWebDriver {
           + " ms.");
       RemoteWebElement body = driver.findElementByCssSelector("body");
       //System.out.println(body.getText());
-    }
+    } */
   }
 
   static String safari = "com.apple.mobilesafari";
@@ -85,7 +88,7 @@ public class RemoteIOSWebDriver {
     simulator.stop();
   }
 
-  private SimulatorSession getSimulator() {
+  public SimulatorSession getSimulator() {
     return simulator;
   }
 
@@ -132,7 +135,7 @@ public class RemoteIOSWebDriver {
   }
 
   public void waitForPageToLoad() {
-    currentInspector.waitForPageToLoad();
+    //currentInspector.waitForPageToLoad();
   }
 
   /*public RemoteWebElement getDocument() {

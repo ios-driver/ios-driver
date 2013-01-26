@@ -26,7 +26,6 @@ import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class GetWindowHandlesNHandler extends BaseNativeCommandHandler {
@@ -41,19 +40,11 @@ public class GetWindowHandlesNHandler extends BaseNativeCommandHandler {
     ServerSideSession sss = getDriver().getSession(getRequest().getSession());
 
     Set<String> handles = new HashSet<String>();
+    handles.add(WorkingMode.Native.toString());
 
-    if (sss.getMode() == WorkingMode.Native) {
-      handles.add(WorkingMode.Native.toString());
-    } else {
-      List<WebkitPage> pages = getSession().getRemoteWebDriver().getWindowHandles();
-      if (pages.size() > 0) {
-        for (WebkitPage page : pages) {
-          handles.add(WorkingMode.Web + "_" + page.getPageId());
-        }
-      } else {
-        if (sss.getNativeDriver().findElements(new TypeCriteria(UIAWebView.class)).size() > 0) {
-          handles.add(WorkingMode.Web.toString());
-        }
+    if (sss.getNativeDriver().findElements(new TypeCriteria(UIAWebView.class)).size() > 0) {
+      for (WebkitPage page : getSession().getRemoteWebDriver().getSimulator().getPages()) {
+        handles.add(WorkingMode.Web + "_" + page.getPageId());
       }
     }
 
@@ -63,6 +54,7 @@ public class GetWindowHandlesNHandler extends BaseNativeCommandHandler {
     resp.setValue(handles);
     return resp;
   }
+
 
   @Override
   public JSONObject configurationDescription() throws JSONException {

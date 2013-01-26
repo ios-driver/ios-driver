@@ -27,7 +27,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -69,6 +68,8 @@ public class SimulatorProtocolImpl {
           }
         } catch (IOException socketClosed) {
           //ignore.
+        } catch (InterruptedException inte) {
+          // ignore
         } catch (Exception e) {
           e.printStackTrace();
         }

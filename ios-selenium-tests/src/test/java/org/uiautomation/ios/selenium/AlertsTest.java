@@ -6,12 +6,10 @@ import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchWindowException;
-import org.openqa.selenium.Platform;
 import org.openqa.selenium.UnhandledAlertException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteMobileSafariDriver;
 
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -250,12 +248,14 @@ public class AlertsTest extends BaseSeleniumTest {
   @Test
   public void testShouldThrowAnExceptionIfAnAlertHasNotBeenDealtWithAndDismissTheAlert() {
     driver.get(pages.alertsPage);
-    clickOnElementById("alert");
-
+    driver.findElement(By.id("alert")).click();
+    Alert alert = null;
     try {
+      alert = waitFor(alertToBePresent(driver));
+      driver.getTitle();
       Assert.fail("Expected UnhandledAlertException");
     } catch (UnhandledAlertException e) {
-      // this is expected
+      alert.dismiss();
     }
 
     // But the next call should be good.
@@ -265,6 +265,7 @@ public class AlertsTest extends BaseSeleniumTest {
 
   @Test
   public void testSwitchingToMissingAlertThrows() throws Exception {
+    driver.get(pages.alertsPage);
     try {
       driver.switchTo().alert();
       fail("Expected exception");
@@ -351,9 +352,13 @@ public class AlertsTest extends BaseSeleniumTest {
   }
 
 
-  @Test(enabled = false)
+  @Test
   public void testShouldHandleAlertOnPageLoadUsingGet() {
-    driver.get(appServer.whereIs("pageWithOnLoad.html"));
+    try {
+      driver.get(appServer.whereIs("pageWithOnLoad.html"));
+    } catch (UnhandledAlertException e) {
+      System.out.println("there was an alert.");
+    }
 
     Alert alert = waitFor(alertToBePresent(driver));
     String value = alert.getText();
@@ -455,12 +460,4 @@ public class AlertsTest extends BaseSeleniumTest {
   }
 
 
-  private void clickOnElementById(String id) {
-    driver.findElement(By.id(id)).click();
-    try {
-      Thread.sleep(500);
-    } catch (InterruptedException e) {
-      //
-    }
-  }
 }

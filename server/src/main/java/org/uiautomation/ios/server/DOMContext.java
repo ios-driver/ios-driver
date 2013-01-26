@@ -92,6 +92,7 @@ public class DOMContext implements EventListener {
   }
 
   public void newContext() {
+    log.fine("newContext was called.");
     id = UUID.randomUUID().toString();
     window = null;
     document = null;
@@ -110,20 +111,26 @@ public class DOMContext implements EventListener {
 
   // TODO freynaud reset() != pageLoad
   public void reset() {
+    log.fine("reset called on " + toString());
     RemoteWebElement newDocument = null;
     RemoteWebElement newWindow = null;
 
     // check is what changed was the context for the current frame.
     if (iframe != null) {
+      log.info("iframe was null");
       try {
         newDocument = iframe.getContentDocument();
         newWindow = iframe.getContentWindow();
+        log.fine("newDoc=" + newDocument + " newWindow=" + newWindow);
         setCurrentFrame(iframe, newDocument, newWindow);
+
         return;
       } catch (Exception e) {
         e.printStackTrace();
       }
     }
+    log.fine(
+        "iframe ==null , no iframe selected, the page load must be from the main page,newContext()");
     // couldn't update the current frame. Reseting everything.
     newContext();
   }
@@ -333,21 +340,27 @@ public class DOMContext implements EventListener {
     return id;
   }
 
-  public void waitForLoadEvent() throws InterruptedException {
+  public void waitForLoadEvent() {
     try {
       eventsLock.lock();
       pageLoadEvent.await(30, TimeUnit.SECONDS);
+    } catch (InterruptedException e) {
+      throw new TimeoutException("timeout waiting for page load event.");
     } finally {
       eventsLock.unlock();
     }
+  }
 
+
+  public Lock eventsLock() {
+    return eventsLock;
   }
 
   // needs to be static ?
   public void signallNewPageLoadRecieved() {
     try {
       eventsLock.lock();
-      System.out.println("Got new page signal");
+      reset();
       pageLoadEvent.signalAll();
     } finally {
       eventsLock.unlock();

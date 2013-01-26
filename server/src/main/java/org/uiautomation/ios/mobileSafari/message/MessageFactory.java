@@ -5,13 +5,11 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
-import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
-import org.uiautomation.ios.server.command.Handler;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Created with IntelliJ IDEA. User: freynaud Date: 17/01/2013 Time: 15:08 To change this template
@@ -19,6 +17,7 @@ import java.util.Map;
  */
 public class MessageFactory {
 
+  private static final Logger log = Logger.getLogger(MessageFactory.class.getName());
   private final
   Map<String, Class<? extends BaseIOSWebKitMessage>>
       types =
@@ -30,8 +29,7 @@ public class MessageFactory {
     types.put("_rpc_applicationSentListing:", ApplicationSentListingMessage.class);
     types.put("_rpc_applicationSentData:", ApplicationDataMessage.class);
     types.put("_rpc_applicationConnected:", ApplicationConnectedMessage.class);
-    // _rpc_applicationDisconnected: simulator stopped..
-
+    types.put("_rpc_applicationDisconnected:", ApplicationDisconnectedMessage.class);
   }
 
   public IOSMessage create(String rawMessage) {
@@ -48,6 +46,7 @@ public class MessageFactory {
 
       Constructor<?> c = impl.getConstructor(argsClass);
       IOSMessage message = (IOSMessage) c.newInstance(args);
+      log.warning("Message: " + message);
       return message;
     } catch (Exception e1) {
       e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.

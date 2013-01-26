@@ -21,6 +21,7 @@ import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAKeyboard;
+import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 
 public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
 
@@ -48,6 +49,9 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
                                                                                      MatchingStrategy.starts)));
       el.tap();
 
+      while (driver.getWindowHandles().size() != 2) {
+        Thread.sleep(50);
+      }
       handles = driver.getWindowHandles();
       Assert.assertEquals(handles.size(), 2);
 
@@ -121,19 +125,14 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
               "Web", MatchingStrategy.starts)));
       webCell.tap();
 
-      //handles = driver.getWindowHandles();
-      //Assert.assertEquals(handles.size(), 2);
-
-      UIATextField
-          url =
-          (UIATextField) driver.findElement(By.xpath("//UIATextField[@name='URL entry']"));
-      url.sendKeys("http://ebay.co.uk");
-      //RemoteUIAKeyboard keyboard = (RemoteUIAKeyboard) driver.getKeyboard();
-      //UIAElement go = (UIAElement) keyboard.findElement(By.xpath("//UIAButton[@name='Go']"));
-      //go.tap();
       driver.switchTo().window("Web");
 
-      final By by = By.id("v4-1");
+      driver.get("http://ebay.co.uk");
+      WebElement body = driver.findElement(By.cssSelector("body"));
+      System.out.println(body.getText());
+
+
+     /* final By by = By.id("v4-1");
 
       long end = System.currentTimeMillis() + 5000;
       WebElement el;
@@ -146,9 +145,7 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
         }
       }
       el = driver.findElement(by);
-      System.out.println(el.getText());
-    } catch (Exception e) {
-      e.printStackTrace();
+      System.out.println(el.getText());   */
     } finally {
       driver.quit();
     }
