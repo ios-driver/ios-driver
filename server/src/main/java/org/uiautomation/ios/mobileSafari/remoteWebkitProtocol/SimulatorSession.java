@@ -89,7 +89,7 @@ public class SimulatorSession {
   private void waitForSimToSendPages() {
     try {
       simLock.lock();
-      if (pages != null) {
+      if (pages != null && pages.size() > 0) {
         return;
       }
       simSentPages.await(5, TimeUnit.SECONDS);
@@ -240,7 +240,7 @@ class DefaultMessageListener implements MessageListener, EventListener {
       ApplicationSentListingMessage m = (ApplicationSentListingMessage) message;
       simulator.setPages(m.getPages());
       simulator.signalSimSentPages();
-      //System.out.println(message);
+      //
     }
 
     if (message instanceof ApplicationDataMessage) {
