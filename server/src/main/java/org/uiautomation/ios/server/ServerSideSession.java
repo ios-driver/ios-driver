@@ -174,6 +174,7 @@ public class ServerSideSession extends Session {
         webDriver.connect(bundleId);
         webDriver.switchTo(webDriver.getPages().get(0));
       } catch (Exception e) {
+        e.printStackTrace();
         throw new NoSuchWindowException("Cannot switch to window " + mode, e);
       }
     }

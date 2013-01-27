@@ -61,4 +61,4 @@ TODOs:
 - make keyboard a static id, like alert ?
 - remove the context switching for the alert detector
 - handle multi web windows
-- DesiredCapabilities.unexpectedAlertBehaviour
+- DesiredCapabilities.unexpectedAlertBehaviour   unexpectedAlertBehaviour 	string 	What the browser should do with an unhandled alert before throwing out the UnhandledAlertException. Possible values are "accept", "dismiss" and "ignore"

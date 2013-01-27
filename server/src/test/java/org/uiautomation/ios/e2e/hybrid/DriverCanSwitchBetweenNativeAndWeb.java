@@ -109,7 +109,7 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
 
   }
 
-  @Test
+  @Test(enabled = false)
   public void nativeWebViewSeesNewPages() throws Exception {
     IOSCapabilities safari = IOSCapabilities.iphone("UICatalog");
     safari.setCapability(IOSCapabilities.TIME_HACK, false);
