@@ -29,24 +29,52 @@
                 <li class="active"><a href="native.html" id="native">Native</a></li>
                 <li><a href="safari.html" id="safari">Safari</a></li>
                 <li><a href="hybrid.html" id="hybrid">Hybrid</a></li>
-                <li ><a href="bug.html" id="bug">Report a bug</a></li>
+                <li><a href="bug.html" id="bug">Report a bug</a></li>
             </ul>
         </div>
 
 
         <section id="downloads">
             <a class="zip_download_link"
-               href="https://github.com/downloads/freynaud/ios-driver/server-standalone-0.5.0.jar">Download 0.5.0</a>
+               href="https://github.com/downloads/freynaud/ios-driver/server-standalone-0.5.0.jar">Download
+                0.5.0</a>
         </section>
     </header>
 </div>
 
 <!-- MAIN CONTENT -->
 <div id="main_content_wrap" class="outer">
-<section id="main_content" class="inner">
+    <section id="main_content" class="inner">
 
-TODO
-</section>
+        <h3>Starting parameters :</h3>
+
+        <p>the map of parameters ( the DesiredCapabilities object ) accept a set of parameters that
+            will
+            define the configuration the simulator will start with</p>
+
+        <lu>
+            <li>device: iphone (default) | ipad</li>
+            <li>language: en | fr | zh . The list of supported languages depends on your
+                application.
+            </li>
+            <li>locale: en_GB ...</li>
+            <li>CFBundleName : UIACatalog | Safari ... name for your application, specified in its
+                info.plist
+            </li>
+            <li>CFBundleVersion : {string} version of the app to start ( optional )</li>
+            <li>variation: (Regular | Retina35 | Retina4) for iphone. (Regular | Retina) for ipad
+            </li>
+            <li>simulator : true</li>
+            <li>ios.switches : an array of system parameters that will be passed to the app when it
+                is launched. Useful if the app can be configured to point to a QA envt with system
+                variable for instance.
+            </li>
+            <li>sdkVersion : {string} 5.0 | .. | 6.1</li>
+            <li> TODO doc : magic prefix plist_</li>
+        </lu>
+
+
+    </section>
 </div>
 
 <!-- FOOTER  -->
