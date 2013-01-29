@@ -43,19 +43,23 @@ ol, ul {
 #menu ul{
 	margin-top:25px;
 	margin-bottom:-32px;
+	
 }
 
 #menu li{
-	 display: inline;
+	display: inline;
 	min-width: 12em;
 	min-height: 4em;
-	background-color:#0069BA;
+	background-color:#0090FF;
 	list-style: none;
 	padding-right: 1.5em;
+	border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
 	}
+	
 
 #menu a{
-	color:#000000;
+	color:#FFFFFF;
 	width: 100%;
 	height: 100%;
     text-decoration: none;
@@ -64,11 +68,15 @@ ol, ul {
 }
 
 #menu a:hover{
-    text-shadow: 0 0 2px #FFFFFF;
+    text-shadow: 5px 5px 10px #FFFFFF;
 }
 
 #menu .active{
 	background-color: #F2F2F2;
+}
+
+#menu .active a{
+	color:#212121;
 }
 
 
