@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'/>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1"/>
+    <meta name="description" content="ios-driver : IOS native app automation"/>
+
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>ios-driver</title>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div id="header_wrap" class="outer">
+    <header class="inner">
+        <a id="forkme_banner" href="https://github.com/freynaud/ios-driver">View on GitHub</a>
+
+        <h1 id="project_title">ios-driver</h1>
+
+        <h2 id="project_tagline">IOS automation for native, hybrid (beta) and mobile web.</h2>
+
+        <div id="menu">
+            <a href="index.html" id="index">Home</a>
+            <a href="setup.html" id="setup">Setup</a>
+            <a href="native.html" id="native">Native</a>
+            <a href="safari.html" id="safari">Safari</a>
+            <a href="hybrid.html" id="hybrid">Hybrid</a>
+        </div>
+        <section id="downloads">
+            <a class="zip_download_link"
+               href="https://github.com/downloads/freynaud/ios-driver/server-standalone-1.0.0-SNAPSHOT.jar">Download</a>
+        </section>
+    </header>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main_content_wrap" class="outer">
+    <section id="main_content" class="inner">
+
+
+        <h3>Technical overview</h3>
+        Webdriver is a great automation for browser. It comes with a very clean API that describes
+        how a
+        users can interact with a browser.This API can be used for ios automation as well. In the
+        end,
+        whatever you test, as long as the user interacts with a GUI, it's always "find something",
+        "interact
+        with it".
+        Using that API for ios automation has 2 main advantages :
+        - it's a proven, stable API that is about to become a W3C standard
+        - it decouples the remote implementation from the local client. Selenium already comes with
+        Java,
+        C#, Python, Ruby clients. You can reuse whichever one your confortable and focus on the
+        business
+        logic of your tests rather than on learning a new API.
+
+        <h3>System requirements for OSX</h3>
+
+        <p>ios-driver is built upon 2 different frameworks from apple. </p>
+
+        <p>For <b>native apps</b>, it uses the UIAutomation framework from Apple.<a
+                href="http://developer.apple.com/library/ios/#documentation/DeveloperTools/Reference/UIAutomationRef/_index.html">doc</a>You
+            need xcode with an IOS SDK &gt; 5.0.
+            To check :</p>
+
+<pre><code>$ xcodebuild -showsdks
+</code></pre>
+
+        <p>it should return something like :</p>
+
+<pre><code>Mac OS X SDKs:
+    Mac OS X 10.6 -sdk macosx10.6
+    Mac OS X 10.7 -sdk macosx10.7
+
+    iOS SDKs:
+    iOS 5.1 -sdk iphoneos5.1
+
+    iOS Simulator SDKs:
+    Simulator - iOS 4.3 -sdk iphonesimulator4.3
+    Simulator - iOS 5.0 -sdk iphonesimulator5.0
+    Simulator - iOS 5.1 -sdk iphonesimulator5.1
+</code></pre>
+
+        <p>If you have iOS 5.0 or above in the Simulator SDKs, the UIAutomation part of will
+            ios-driver will
+            work.</p>
+
+        <p>For mobile web, or UIWebviews in hybrid apps ( beta ), it uses the remote webkit
+            debug protocol.That requires ios 6+ and safari6+. If you don't have that, the native
+            part of ios
+            driver will still work, but you won't be able to test mobile web pages on safari, or to
+            interact
+            with UIWebviews using dom selectors.</p>
+
+        <p>The sever is written in Java.</p>
+
+<pre><code>$ java -version
+</code></pre>
+
+        <p>will return the version you're currently running, or prompt you to install it.</p>
+
+        <h3>Getting the application to test</h3>
+
+        <p>( for the doc example, I'll use the apple app <a
+                href="http://developer.apple.com/library/ios/#samplecode/InternationalMountains/Introduction/Intro.html">InternationalMountains</a>
+            You need to attach an app that will work with UIAutomation.
+            You can use xcodebuild command line ( from you CI for instance ) or use the xcode UI.
+        </p>
+
+        <p>With the UI :
+            from the menu bar, Product &gt; Profile</p>
+
+        <p>Select Automation.That will build the app and start Instruments. you can close
+            Instruments.
+            From xcode, select Organizer &gt; Projects
+            You will have the application in the folder mentioned in Derived data.
+            It will be a folder that looks like :
+            ~/Library/Developer/Xcode/DerivedData/InternationalMountains-cjnsqcubuvgivjgopgboswocznce/</p>
+
+        <p>from there navigate to /Build/Products/Debug-iphonesimulator
+            and take you application. ( YourAppName.app )</p>
+
+        <p>Save it in a more convenient path, for instance ~/Documents/build/myapp.app</p>
+
+        <h3>Launching ios-driver</h3>
+
+        <p>Download server-standalone-1.0.0-SNAPSHOT.jar</p>
+
+        <p>cd to the folder where you downloaded the jar, and run </p>
+
+<pre><code>$ java -jar server-standalone-1.0.0-SNAPSHOT.jar -aut ~/Documents/build/myapp.app -port
+    4444
+</code></pre>
+
+        <p>You should see in the following log of the terminal :</p>
+
+<pre><code>2012-09-24 20:03:39.724:INFO::jetty-7.x.y-SNAPSHOT
+    2012-09-24 20:03:39.791:INFO::Started SelectChannelConnector@0.0.0.0:4444
+</code></pre>
+
+        <p>check that the application is recognized by opening a browser and navigating to :
+            http://localhost:4444/wd/hub/status</p>
+
+        <p>You should see a json object with all the info about the app.</p>
+
+<pre><code>{
+    "sessionId": null,
+    "status": 0,
+    "value": {
+    "build": {
+    "revision": "bec94e77cb2c1d95c392cf82267e81e595caff82",
+    "time": "20120924-1640",
+    "version": "1.0.0-SNAPSHOT"
+    },
+    "ios": {"simulatorVersion": "5.1"},
+    "java": {"version": "1.6.0_35"},
+    "os": {
+    "arch": "x86_64",
+    "name": "Mac OS X",
+    "version": "10.7.4"
+    },
+    "supportedApps": [{
+    "CFBundleDevelopmentRegion": "en",
+    "CFBundleExecutable": "InternationalMountains",
+    "CFBundleIconFile": "Icon.png",
+    "CFBundleIdentifier": "com.yourcompany.InternationalMountains",
+    "CFBundleInfoDictionaryVersion": "6.0",
+    "CFBundleName": "InternationalMountains",
+    "CFBundlePackageType": "APPL",
+    "CFBundleSignature": "????",
+    "CFBundleSupportedPlatforms": ["iPhoneSimulator"],
+    "CFBundleVersion": "1.1",
+    "DTPlatformName": "iphonesimulator",
+    "DTSDKName": "iphonesimulator5.1",
+    "LSRequiresIPhoneOS": true,
+    "NSMainNibFile": "MainWindow",
+    "UIDeviceFamily": [1],
+    "applicationPath": "/Users/freynaud/build/InternationalMountains.app",
+    "device": "iPhone Simulator",
+    "resources": {"CFBundleIconFile": "/wd/hub/resources/hash=-674408620"},
+    "sdkVersion": "5.1",
+    "supportedLanguages": [
+    "zh-Hant",
+    "fr",
+    "en"
+    ],
+    "timeHack": true
+    }]
+    }
+    }
+</code></pre>
+
+
+        <!-- FOOTER  -->
+        <div id="footer_wrap" class="outer">
+            <footer class="inner">
+                <p class="copyright">ios-driver maintained by <a
+                        href="https://github.com/freynaud">freynaud</a></p>
+
+                <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+            </footer>
+        </div>
+
+
+</body>
+</html>

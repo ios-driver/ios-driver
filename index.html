@@ -1,206 +1,214 @@
 <!DOCTYPE html>
 <html>
 
-  <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="ios-driver : IOS native app automation" />
+<head>
+    <meta charset='utf-8'/>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1"/>
+    <meta name="description" content="ios-driver : IOS native app automation"/>
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
     <title>ios-driver</title>
-  </head>
+</head>
 
-  <body>
+<body>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/freynaud/ios-driver">View on GitHub</a>
+<!-- HEADER -->
+<div id="header_wrap" class="outer">
+    <header class="inner">
+        <a id="forkme_banner" href="https://github.com/freynaud/ios-driver">View on GitHub</a>
 
-          <h1 id="project_title">ios-driver</h1>
-          <h2 id="project_tagline">IOS native app automation</h2>
+        <h1 id="project_title">ios-driver</h1>
 
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/downloads/freynaud/ios-driver/server-standalone-1.0.0-SNAPSHOT.jar">Download</a>
-            </section>
-        </header>
-    </div>
+        <h2 id="project_tagline">IOS automation for native, hybrid (beta) and mobile web.</h2>
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h3>System requirements for OSX</h3>
+        <div id="menu">
+            <a href="index.html" id="index">Home</a>
+            <a href="setup.html" id="setup">Setup</a>
+            <a href="native.html" id="native">Native</a>
+            <a href="safari.html" id="safari">Safari</a>
+            <a href="hybrid.html" id="hybrid">Hybrid</a>
+            <a href="bug.html" id="bug">Report a bug</a>
+        </div>
 
-<p>ios-driver is based on the UIAutomation framework from Apple.<a href="http://developer.apple.com/library/ios/#documentation/DeveloperTools/Reference/UIAutomationRef/_index.html">doc</a>
-You need xcode with an IOS SDK &gt; 5.0.
-To check :</p>
 
-<pre><code>$  xcodebuild -showsdks
+        <section id="downloads">
+            <a class="zip_download_link"
+               href="https://github.com/downloads/freynaud/ios-driver/server-standalone-0.0.5-SNAPSHOT.jar">Download</a>
+        </section>
+    </header>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main_content_wrap" class="outer">
+    <section id="main_content" class="inner">
+
+
+        <h3>Overview</h3>
+        Test any IOS native, hybrid (beta), or mobile web application using the selenium API. IOS
+        automation
+        becomes just another driver. You can reuse the helper classes from your web tests to create
+        data,
+        and follow the same designs you're used to ( page object etc ).
+
+
+        <h3>Getting the application to test</h3>
+
+        <p>( for the doc example, I'll use the apple app <a
+                href="http://developer.apple.com/library/ios/#samplecode/InternationalMountains/Introduction/Intro.html">InternationalMountains</a>
+            You need to attach an app that will work with UIAutomation.
+            You can use xcodebuild command line ( from you CI for instance ) or use the xcode UI.
+        </p>
+
+        <p>With the UI :
+            from the menu bar, Product &gt; Profile</p>
+
+        <p>Select Automation.That will build the app and start Instruments. you can close
+            Instruments.
+            From xcode, select Organizer &gt; Projects
+            You will have the application in the folder mentioned in Derived data.
+            It will be a folder that looks like :
+            ~/Library/Developer/Xcode/DerivedData/InternationalMountains-cjnsqcubuvgivjgopgboswocznce/</p>
+
+        <p>from there navigate to /Build/Products/Debug-iphonesimulator
+            and take you application. ( YourAppName.app )</p>
+
+        <p>Save it in a more convenient path, for instance ~/Documents/build/myapp.app</p>
+
+        <h3>Launching ios-driver</h3>
+
+        <p>Download server-standalone-1.0.0-SNAPSHOT.jar</p>
+
+        <p>cd to the folder where you downloaded the jar, and run </p>
+
+<pre><code>$ java -jar server-standalone-0.0.5-SNAPSHOT.jar -aut ~/Documents/build/myapp.app -port
+    4444
 </code></pre>
 
-<p>it should return something like :</p>
-
-<pre><code>Mac OS X SDKs:
-    Mac OS X 10.6                   -sdk macosx10.6
-    Mac OS X 10.7                   -sdk macosx10.7
-
-iOS SDKs:
-    iOS 5.1                         -sdk iphoneos5.1
-
-iOS Simulator SDKs:
-    Simulator - iOS 4.3             -sdk iphonesimulator4.3
-    Simulator - iOS 5.0             -sdk iphonesimulator5.0
-    Simulator - iOS 5.1             -sdk iphonesimulator5.1
-</code></pre>
-
-<p>If you have iOS 5.0 or above in the Simulator SDKs, UIAutomation will work with ios-driver.</p>
-
-<p>The sever is written in Java.</p>
-
-<pre><code>$  java -version
-</code></pre>
-
-<p>will return the version you're currently running, or prompt you to install it.</p>
-
-<h3>Getting the application to test</h3>
-
-<p>( for the doc example, I'll use the apple app <a href="http://developer.apple.com/library/ios/#samplecode/InternationalMountains/Introduction/Intro.html">InternationalMountains</a>
-You need to attach an app that will work with UIAutomation.
-You can use xcodebuild command line ( from you CI for instance ) or use the xcode UI.</p>
-
-<p>With the UI : 
-from the menu bar, Product &gt; Profile</p>
-
-<p>Select Automation.That will build the app and start Instruments. you can close Instruments.
-From xcode, select Organizer &gt; Projects
-You will have the application in the folder mentioned in Derived data. 
-It will be a folder that looks like :
-~/Library/Developer/Xcode/DerivedData/InternationalMountains-cjnsqcubuvgivjgopgboswocznce/</p>
-
-<p>from there navigate to /Build/Products/Debug-iphonesimulator
-and take you application. ( YourAppName.app )</p>
-
-<p>Save it in a more convenient path, for instance ~/Documents/build/myapp.app</p>
-
-<h3>Launching ios-driver</h3>
-
-<p>Download server-standalone-1.0.0-SNAPSHOT.jar</p>
-
-<p>cd to the folder where you downloaded the jar, and run </p>
-
-<pre><code>$  java -jar server-standalone-1.0.0-SNAPSHOT.jar -aut ~/Documents/build/myapp.app -port 4444
-</code></pre>
-
-<p>You should see in the following log of the terminal :</p>
+        <p>You should see in the following log of the terminal :</p>
 
 <pre><code>2012-09-24 20:03:39.724:INFO::jetty-7.x.y-SNAPSHOT
-2012-09-24 20:03:39.791:INFO::Started SelectChannelConnector@0.0.0.0:4444
+    2012-09-24 20:03:39.791:INFO::Started SelectChannelConnector@0.0.0.0:4444
 </code></pre>
 
-<p>check that the application is recognized by opening a browser and navigating to :
-http://localhost:4444/wd/hub/status</p>
+        <p>check that the application is recognized by opening a browser and navigating to :
+            http://localhost:4444/wd/hub/status</p>
 
-<p>You should see a json object with all the info about the app.</p>
+        <p>You should see a json object with all the info about the app.</p>
 
 <pre><code>{
-  "sessionId": null,
-  "status": 0,
-  "value": {
+    "sessionId": null,
+    "status": 0,
+    "value": {
     "build": {
-      "revision": "bec94e77cb2c1d95c392cf82267e81e595caff82",
-      "time": "20120924-1640",
-      "version": "1.0.0-SNAPSHOT"
+    "revision": "bec94e77cb2c1d95c392cf82267e81e595caff82",
+    "time": "20120924-1640",
+    "version": "0.0.5-SNAPSHOT"
     },
     "ios": {"simulatorVersion": "5.1"},
     "java": {"version": "1.6.0_35"},
     "os": {
-      "arch": "x86_64",
-      "name": "Mac OS X",
-      "version": "10.7.4"
+    "arch": "x86_64",
+    "name": "Mac OS X",
+    "version": "10.7.4"
     },
     "supportedApps": [{
-      "CFBundleDevelopmentRegion": "en",
-      "CFBundleExecutable": "InternationalMountains",
-      "CFBundleIconFile": "Icon.png",
-      "CFBundleIdentifier": "com.yourcompany.InternationalMountains",
-      "CFBundleInfoDictionaryVersion": "6.0",
-      "CFBundleName": "InternationalMountains",
-      "CFBundlePackageType": "APPL",
-      "CFBundleSignature": "????",
-      "CFBundleSupportedPlatforms": ["iPhoneSimulator"],
-      "CFBundleVersion": "1.1",
-      "DTPlatformName": "iphonesimulator",
-      "DTSDKName": "iphonesimulator5.1",
-      "LSRequiresIPhoneOS": true,
-      "NSMainNibFile": "MainWindow",
-      "UIDeviceFamily": [1],
-      "applicationPath": "/Users/freynaud/build/InternationalMountains.app",
-      "device": "iPhone Simulator",
-      "resources": {"CFBundleIconFile": "/wd/hub/resources/hash=-674408620"},
-      "sdkVersion": "5.1",
-      "supportedLanguages": [
-        "zh-Hant",
-        "fr",
-        "en"
-      ],
-      "timeHack": true
+    "CFBundleDevelopmentRegion": "en",
+    "CFBundleExecutable": "InternationalMountains",
+    "CFBundleIconFile": "Icon.png",
+    "CFBundleIdentifier": "com.yourcompany.InternationalMountains",
+    "CFBundleInfoDictionaryVersion": "6.0",
+    "CFBundleName": "InternationalMountains",
+    "CFBundlePackageType": "APPL",
+    "CFBundleSignature": "????",
+    "CFBundleSupportedPlatforms": ["iPhoneSimulator"],
+    "CFBundleVersion": "1.1",
+    "DTPlatformName": "iphonesimulator",
+    "DTSDKName": "iphonesimulator5.1",
+    "LSRequiresIPhoneOS": true,
+    "NSMainNibFile": "MainWindow",
+    "UIDeviceFamily": [1],
+    "applicationPath": "/Users/freynaud/build/InternationalMountains.app",
+    "device": "iPhone Simulator",
+    "resources": {"CFBundleIconFile": "/wd/hub/resources/hash=-674408620"},
+    "sdkVersion": "5.1",
+    "supportedLanguages": [
+    "zh-Hant",
+    "fr",
+    "en"
+    ],
+    "timeHack": true
     }]
-  }
+    }
+    }
+</code></pre>
+
+        <h3>Starting the application.</h3>
+
+        <p>start, click on the first element, take a screenshot and quit.</p>
+
+<pre><code>
+public static void main(String[] args) throws MalformedURLException {
+    // create a selenium desiredCapabilities object with the right values.
+    DesiredCapabilities cap = IOSCapabilities.iphone("InternationalMountains", "1.1");
+    // start the application
+    RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), cap);
+
+    // check that the 9 mountains of the app are there.
+    List<WebElement> cells = driver.findElements(By.className("UIATableCell"));
+    Assert.assertEquals(9,cells.size());
+
+    // get the cell with name = Old mountain
+    WebElement old = driver.findElement(By.xpath("//UIATableCell[@name='Old Mountain']"));
+    old.click();
+
+    // take a screenshot using the normal selenium api.
+    TakesScreenshot screen =(TakesScreenshot)new Augmenter().augment(driver);
+    File ss = new File("screenshot.png");
+    screen.getScreenshotAs(OutputType.FILE).renameTo(ss);
+
+     System.out.println("screenshot take :"+ss.getAbsolutePath());
+     // end the test
+     driver.quit();
 }
 </code></pre>
 
-<h3>Starting the application using the java client.</h3>
+        <p>you should now have a screenshot of mountain 1 details :</p>
+        <img src="images/step2.png" alt="step2.png" height='480' width='320'>
 
-<p>using the intl mountain app with language = Chinese. </p>
+        <p>IOS automation is very content based. There is no id like for web pages. This makes
+            localized
+            pages a bit trickier to test.
+            Fortunately the localization data is embedded into the app, so the server can access it
+            if you
+            know the key for the content. You can use the IDE embedded in the ios-driver server to
+            access
+            it.
+            Add a break point on target.takeScreenshot("step2.png");</p>
 
-<p>start, click on the first element, take a screenshot and quit.</p>
+        <p>When the application has stopped there, open a browser and got to
+            http://localhost:4444/ide/
+            You will see the app with its object tree.
+            <img src="images/IDE2.png" alt="ide"></p>
 
-<pre><code>public static void main(String[] args) {
+        <p>Mouse over the element you're interested in. In this example the description of the
+            mountain, and
+            note the content key for that element : "sentenceFormat".
+            The criteria to locate that element will be :</p>
 
-    IOSCapabilities cap = IOSCapabilities.iphone("InternationalMountains", "1.1");
-    cap.setLanguage("zh-Hant");
-
-    RemoteUIADriver driver = new RemoteUIADriver("http://localhost:4444/wd/hub", cap);
-
-    UIATarget target = driver.getLocalTarget();
-    UIAWindow mainWindow = target.getFrontMostApp().getMainWindow();
-
-    // find the first element of type UIATableCell.
-    UIAElement element = mainWindow.findElement(new TypeCriteria(UIATableCell.class));
-    element.tap();
-
-    target.takeScreenshot("step2.png");
-
-    driver.quit();
-}
+<pre><code> NameCriteria criteria = new NameCriteria("sentenceFormat",
+    L10NStrategy.serverL10N, MatchingStrategy.regex);
 </code></pre>
 
-<p>you should now have a screenshot of mountain 1 details :</p>
-<img src="images/step2.png" alt="step2.png" height='480' width='320' >
+        <p>In this case, the 3 element attributes, name label and value have the same value. So
+            LabelCriteria or ValueCriteria would work too.
+            We need the server to handle the localization : L10NStrategy.serverL10N
+            We need a regex match, because the date and mountain name are variable :
+            MatchingStrategy.regex</p>
 
-<p>IOS automation is very content based. There is no id like for web pages. This makes localized pages a bit trickier to test. 
-Fortunately the localization data is embedded into the app, so the server can access it if you know the key for the content. You can use the IDE embedded in the ios-driver server to access it.
-Add a break point on  target.takeScreenshot("step2.png");</p>
+        <p>Now add that in the main, and add a sysout to see the content of the element :</p>
 
-<p>When the application has stopped there, open a browser and got to http://localhost:4444/ide/
-You will see the app with its object tree. 
-<img src="images/IDE2.png" alt="ide"></p>
-
-<p>Mouse over the element you're interested in. In this example the description of the mountain, and note the content key for that element :  "sentenceFormat".
-The criteria to locate that element will be :</p>
-
-<pre><code> NameCriteria criteria =  new NameCriteria("sentenceFormat", 
-	L10NStrategy.serverL10N, MatchingStrategy.regex);
-</code></pre>
-
-<p>In this case, the 3 element attributes, name label and value have the same value. So LabelCriteria or ValueCriteria would work too.
-We need the server to handle the localization :  L10NStrategy.serverL10N
-We need a regex match, because the date and mountain name are variable : MatchingStrategy.regex</p>
-
-<p>Now add that in the main, and add a sysout to see the content of the element :</p>
-
-<pre><code>  public static void main(String[] args) {
+<pre><code> public static void main(String[] args) {
 
     IOSCapabilities cap = IOSCapabilities.iphone("InternationalMountains", "1.1");
     cap.setLanguage("zh-Hant");
@@ -216,31 +224,34 @@ We need a regex match, because the date and mountain name are variable : Matchin
     element.tap();
 
     NameCriteria criteria =
-        new NameCriteria("sentenceFormat", L10NStrategy.serverL10N, MatchingStrategy.regex);
+    new NameCriteria("sentenceFormat", L10NStrategy.serverL10N, MatchingStrategy.regex);
     UIAElement text = mainWindow.findElement(criteria);
     System.out.println(text.getName());
     driver.quit();
-  }
+    }
 </code></pre>
 
-<p>will print out :</p>
+        <p>will print out :</p>
 
 <pre><code>山 1 是8,848米高。它第一次攀登了在29 May 1953。
 </code></pre>
 
-<p>The same test will run for all the languages supported by this app, so fr and en, without having to change anything but the value passed in the capability.setLanguage.</p>
-      </section>
-    </div>
+        <p>The same test will run for all the languages supported by this app, so fr and en, without
+            having
+            to change anything but the value passed in the capability.setLanguage.</p>
+    </section>
+</div>
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">ios-driver maintained by <a href="https://github.com/freynaud">freynaud</a></p>
+<!-- FOOTER  -->
+<div id="footer_wrap" class="outer">
+    <footer class="inner">
+        <p class="copyright">ios-driver maintained by <a
+                href="https://github.com/freynaud">freynaud</a></p>
+
         <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
+    </footer>
+</div>
 
-    
 
-  </body>
+</body>
 </html>
