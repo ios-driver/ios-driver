@@ -145,9 +145,28 @@
 
         <p>You should see in the following log of the terminal :</p>
 
-<pre><code>2012-09-24 20:03:39.724:INFO::jetty-7.x.y-SNAPSHOT
-    2012-09-24 20:03:39.791:INFO::Started SelectChannelConnector@0.0.0.0:4444
-</code></pre>
+<pre>
+
+43:49:493 INFO IOSServer.init
+server status: http://0.0.0.0:4444/inspector/
+tests can access the server at http://0.0.0.0:4444/wd/hub
+server status: http://0.0.0.0:4444/wd/hub/status
+using xcode install : /Applications/Xcode46-DP2.app
+using IOS version 6.1
+ios >= 6.0. Safari and hybrid apps are supported.
+
+Applications :
+---------------
+	CFBundleName=Geocoder,CFBundleVersion=1.2
+	CFBundleName=InternationalMountains,CFBundleVersion=1.1
+	CFBundleName=Safari,CFBundleVersion=8536.25
+	CFBundleName=UICatalog,CFBundleVersion=2.10
+	CFBundleName=UICatalog,CFBundleVersion=2.10
+	CFBundleName=Safari,CFBundleVersion=8536.25
+
+2013-01-29 20:43:49.506:INFO::jetty-7.2.0.v20101020
+2013-01-29 20:43:49.568:INFO::Started SelectChannelConnector@0.0.0.0:4444
+</pre>
 
         <p>check that the application is recognized by opening a browser and navigating to :
             http://localhost:4444/wd/hub/status</p>

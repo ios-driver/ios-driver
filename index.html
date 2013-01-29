@@ -5,7 +5,7 @@
     <meta charset='utf-8'/>
     <meta http-equiv="X-UA-Compatible" content="chrome=1"/>
     <meta name="description" content="ios-driver : IOS native app automation"/>
-    <link href="stylesheets/prettify.css" type="text/css" rel="stylesheet" />
+    <link href="stylesheets/prettify.css" type="text/css" rel="stylesheet"/>
     <script type="text/javascript" src="javascripts/prettify.js"></script>
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
@@ -38,180 +38,53 @@
 
         <section id="downloads">
             <a class="zip_download_link"
-               href="https://github.com/downloads/freynaud/ios-driver/server-standalone-0.5.0.jar">Download 0.5.0</a>
+               href="https://github.com/downloads/freynaud/ios-driver/server-standalone-0.5.0.jar">Download
+                0.5.0</a>
         </section>
     </header>
 </div>
 
 <!-- MAIN CONTENT -->
 <div id="main_content_wrap" class="outer">
-<section id="main_content" class="inner">
+    <section id="main_content" class="inner">
 
 
-<h3>Overview</h3>
-Test any IOS native, hybrid, or mobile web application using the selenium API. IOS
-automation
-becomes just another driver. You can reuse the helper classes from your web tests to create
-data,
-and follow the same designs you're used to ( page object etc ).
+        <h3>Overview</h3>
+        Test any IOS native, hybrid, or mobile web application using the selenium API. IOS
+        automation
+        becomes just another driver. You can reuse the helper classes from your web tests to create
+        data,
+        and follow the same designs you're used to ( page object etc ).
+
+        <h3>High level features :</h3>
+        <ul>
+            <li>Implements the JSON wire protocol</li>
+            <li>can use grid to manage device / simulator farm</li>
+            <li>first class support for localized native apps ( 1 test works for all the localized
+                versions )</li>
+            <li>no need to change the source</li>
+            <li>no need to jailbreak the phone</li>
+            <li>no ios-driver app to install on the phone</li>
+        </ul>
+
+        <h3>Scaling</h3>
+
+        <p>ios-driver has been built with scaling in mind. GUI based tests aren't fast enough to
+            provide
+            feedback if they are run sequentially. By following the webdriver protocol, ios-driver
+            can be
+            used as a selenium grid node, and the tests can be run in parallel on the same
+            architecture as
+            the one already running the web tests.</p>
+        <img src="images/scale.png" alt="step2.png" width='640'>
+
+        <p>TODO doc : write an example capability matcher.</p>
 
 
-<h3>Scaling</h3>
-<p>ios-driver has been built with scaling in mind. GUI based tests aren't fast enough to provide
-    feedback if they are run sequentially. By following the webdriver protocol, ios-driver can be
-    used as a selenium grid node, and the tests can be run in parallel on the same architecture as
-    the one already running the web tests.</p>
-    <img src="images/scale.png" alt="step2.png"  width='640'>
-   <p>TODO doc : write an example capability matcher.</p>
-
-<h3>Writing the first native test</h3>
-
-<p>Make sure you've been through the  <a href="setup.html" id="setup2">setup</a> page and that all
-the requirements are met</p>
-
-<p>Start the server and connect the Intl moutains demo app from Apple</p>
-<pre>
-$java -jar server-standalone-0.5.0.jar -aut ~/Documents/build/InternationalMountains.app -port 4444
-</code></pre>
-
-<p>start the app, find some elements,click on the first element,print some text,take a screenshot and
-    quit.</p>
-
-<pre class="prettyprint" >
-public static void main(String[] args) throws MalformedURLException {
-    // create a selenium desiredCapabilities object with the right values.
-    DesiredCapabilities cap = IOSCapabilities.iphone("InternationalMountains", "1.1");
-    // start the application
-    RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), cap);
-
-    // check that the 9 mountains of the app are there.
-    List cells = driver.findElements(By.className("UIATableCell"));
-    Assert.assertEquals(9,cells.size());
-
-    // get the 1st mountain
-    WebElement first = cells.get(0);
-    first.click();
-
-    // take a screenshot using the normal selenium api.
-    TakesScreenshot screen =(TakesScreenshot)new Augmenter().augment(driver);
-    File ss = new File("screenshot.png");
-    screen.getScreenshotAs(OutputType.FILE).renameTo(ss);
-    System.out.println("screenshot take :"+ss.getAbsolutePath());
-
-    // access the content
-    By selector = By.xpath("//UIAStaticText[contains(@name,'climbed')]");
-    WebElement text = driver.findElement(selector);
-    System.out.println(text.getAttribute("name"));
-
-    // end the test
-    driver.quit();
-}
-</pre>
-
-<p>will print out :</p>
-
-<pre>
-Mountain 1 was first climbed on 29 May 1953 and has a height of 8,848 meters
-</pre>
-
-<p>and you now have a screenshot of the old mountain details :</p>
-<img src="images/screenshot.png" alt="step2.png" height='480' width='320'>
+        <h3>Status</h3>
 
 
-<h3>Native tests and localization</h3>
-
-<p>IOS automation is very content based. There is no id like for web pages. This makes testing of
-    localized pages a bit trickier to test.Fortunately the localization data is embedded into the
-    app, so the server can access it if you know the key for the content. </p>
-<p> In the previous example, the app started in the default language, english and the locator is
-    hardcoded to english.Let's start it in chinese, and make the test content free.</p>
-
-<p> To specify the language : </p>
-
-
-<pre>
-
-    DesiredCapabilities cap = IOSCapabilities.iphone("InternationalMountains", "1.1");
-    cap.setCapability(IOSCapabilities.LANGUAGE,"zh");
-
-</pre>
-
-
-<p> and make the locator content free : </p>
-
-<pre>
-    // access the content
-    By contentFree = By.xpath("//UIAStaticText[matches(@name,l10n('sentenceFormat'))]");
-    WebElement text = driver.findElement(contentFree);
-
-
-</pre>
-
-
-<p>The complete test code is now content free, and you can switch between en, fr and zh without having
-to maintain your own localization dictionary.You can now start building your generic page objects,
-and focus on the functionality rather than the content. </p>
-
-Complete code for zh :
-<pre class="prettyprint" >
-
-
-public static void main(String[] args) throws MalformedURLException {
-    // create a selenium desiredCapabilities object with the right values.
-    DesiredCapabilities cap = IOSCapabilities.iphone("InternationalMountains", "1.1");
-    cap.setCapability(IOSCapabilities.LANGUAGE,"zh");
-
-    // start the application
-    RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), cap);
-
-    // check that the 9 mountains of the app are there.
-    List<WebElement> cells = driver.findElements(By.className("UIATableCell"));
-    Assert.assertEquals(9,cells.size());
-
-    // get the 1st mountain
-    WebElement first = cells.get(0);
-    first.click();
-
-    // take a screenshot using the normal selenium api.
-    TakesScreenshot screen =(TakesScreenshot)new Augmenter().augment(driver);
-    File ss = new File("screenshot-zh.png");
-    screen.getScreenshotAs(OutputType.FILE).renameTo(ss);
-    System.out.println("screenshot take :"+ss.getAbsolutePath());
-
-    // access the content
-    By contentFree = By.xpath("//UIAStaticText[matches(@name,l10n('sentenceFormat'))]");
-    WebElement text = driver.findElement(contentFree);
-    System.out.println(text.getAttribute("name"));
-
-    // end the test
-    driver.quit();
-}
-</pre>
-
-will print out :
-<pre>
-      screenshot take :/Users/freynaud/Documents/workspace/ios-driver/screenshot-zh.png
-      山 1 是8,848米高。它第一次攀登了在29 May 1953。
-</pre>
-
-<p>and produce the following screenshot :</p>
-
-<img src="images/screenshot-zh.png" alt="step2.png" height='480' width='320'>
-
-
-
-<p>The previous example had some "magic" values.UIATableCell, UIAStaticText, sentenceFormat.If you're
-the developer of the app, those value will make sense. If you're not, you can use the inspector to
-find them. The inspector allows you to have the 'inspect element' feature you use to write a selenium
-web test.Read more about it here : <a href="inspector.html" id="inspector2">Inspector</a></p>
-
-
-
-
-
-
-
-</section>
+    </section>
 </div>
 
 <!-- FOOTER  -->
