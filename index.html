@@ -23,13 +23,15 @@
         <h2 id="project_tagline">IOS automation for native, hybrid (beta) and mobile web.</h2>
 
         <div id="menu">
-            <a href="index.html" id="index"> Getting Started</a>
-            <a href="setup.html" id="setup">Setup</a>
-            <a href="inspector.html" id="inspector">Inspector</a>
-            <a href="native.html" id="native">Native</a>
-            <a href="safari.html" id="safari">Safari</a>
-            <a href="hybrid.html" id="hybrid">Hybrid</a>
-            <a href="bug.html" id="bug">Report a bug</a>
+            <ul>
+                <li class="active"><a href="index.html" id="home">Home</a></li>
+                <li><a href="setup.html" id="setup">Setup</a></li>
+                <li><a href="inspector.html" id="inspector">Inspector</a></li>
+                <li><a href="native.html" id="native">Native</a></li>
+                <li><a href="safari.html" id="safari">Safari</a></li>
+                <li><a href="hybrid.html" id="hybrid">Hybrid</a></li>
+                <li><a href="bug.html" id="bug">Report a bug</a></li>
+            </ul>
         </div>
 
 
@@ -154,7 +156,7 @@ public static void main(String[] args) throws MalformedURLException {
     RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), cap);
 
     // check that the 9 mountains of the app are there.
-    List <WebElement> cells = driver.findElements(By.className("UIATableCell"));
+    List<WebElement> cells = driver.findElements(By.className("UIATableCell"));
     Assert.assertEquals(9,cells.size());
 
     // get the 1st mountain
