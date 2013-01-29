@@ -247,7 +247,7 @@ var screen_w = 0;
 var to_top = 0;
 var to_left = 0;
 
-var margin = 25;
+var margin = 0;
 var treeAndDetailInPercent = 0.48;
 findFrameSizeInPixels = function () {
     var width = window.innerWidth;

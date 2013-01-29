@@ -25,8 +25,9 @@ public abstract class BaseFindElementNHandler extends UIAScriptHandler {
   public BaseFindElementNHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
     this.xpathMode = getRequest().getPayload().has("using")
-        && "xpath".equals(getRequest().getPayload().optString("using"));
-    this.reference = request.hasVariable(":reference") ? request.getVariableValue(":reference") : "1";
+                     && "xpath".equals(getRequest().getPayload().optString("using"));
+    this.reference =
+        request.hasVariable(":reference") ? request.getVariableValue(":reference") : "1";
   }
 
   protected boolean isXPathMode() {
@@ -90,7 +91,7 @@ public abstract class BaseFindElementNHandler extends UIAScriptHandler {
     } else if (payload.has("using")) {
       String using = payload.getString("using");
       String value = payload.getString("value");
-      if ("tag name".equals(using)) {
+      if ("tag name".equals(using) || "class name".equals(using)) {
         try {
           Package p = UIAElement.class.getPackage();
           Criteria c = new TypeCriteria(Class.forName(p.getName() + "." + value));

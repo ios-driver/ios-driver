@@ -115,8 +115,9 @@ public class RemoteWebElement {
       if ("No node with given id found".equals(e.getMessage())) {
         return false;
       }
+      throw new RuntimeException("case not implemented" + e.getMessage());
     }
-    throw new RuntimeException("case not implemented");
+
   }
 
   public RemoteObject getRemoteObject() {
@@ -159,15 +160,7 @@ public class RemoteWebElement {
   }
 
   public void highlight() {
-    /*try {
-      inspector.highlightNode(nodeId);
-    } catch (JSONException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }   */
+    inspector.highlightNode(nodeId);
   }
 
 

@@ -57,16 +57,16 @@ public class IDEServlet extends HttpServlet {
   public void init() throws ServletException {
     super.init();
     URL u = null;
-   
+
     try {
       IOSDriver driver = (IOSDriver) getServletContext().getAttribute(IOSServer.DRIVER);
-      if (driver !=null){
+      if (driver != null) {
         int port = driver.getPort();
-        u = new URL(System.getProperty("endpoint", "http://localhost:"+port+"/wd/hub"));
-      }else {
+        u = new URL(System.getProperty("endpoint", "http://localhost:" + port + "/wd/hub"));
+      } else {
         log.warning("couldn't find the end point.");
       }
-      
+
     } catch (MalformedURLException e) {
       e.printStackTrace();
     }
@@ -93,10 +93,10 @@ public class IDEServlet extends HttpServlet {
       View view = controller.handle(req);
       view.render(response);
     } catch (Exception e) {
+      e.printStackTrace();
       log.warning(e.getMessage());
     }
   }
-
 
 
   private IDECommandController getController(String pathInfo) {
@@ -107,7 +107,6 @@ public class IDEServlet extends HttpServlet {
     }
     return new NotImplementedIDEController();
   }
-
 
 
 }

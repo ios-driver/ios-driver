@@ -81,7 +81,7 @@ public class ResponseFinderList {
       }
     }
 
-    throw new RuntimeException("bug.");
+    throw new RuntimeException("bug.One of the finder should have got something.");
   }
 
 

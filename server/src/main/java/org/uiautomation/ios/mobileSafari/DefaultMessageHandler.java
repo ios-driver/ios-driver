@@ -174,10 +174,17 @@ public class DefaultMessageHandler implements MessageHandler {
     finders.addAll(extraFinders);
 
     ResponseFinderList all = new ResponseFinderList(finders);
-    JSONObject res = all.findResponse(id);
-    log.fine(
-        "response " + id + " , " + (System.currentTimeMillis() - start) + "ms. " + res.toString());
-    return res;
+    try {
+      JSONObject res = all.findResponse(id);
+      log.fine(
+          "response " + id + " , " + (System.currentTimeMillis() - start) + "ms. " + res
+              .toString());
+
+      return res;
+    } catch (RuntimeException e) {
+      System.out.println("Cannot find response for " + id);
+      throw e;
+    }
   }
 
 

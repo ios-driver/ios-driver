@@ -136,12 +136,13 @@ public class SimulatorProtocolImpl {
    *
    * @param command . For command format, read https://www.webkit.org/blog/?p=1875&preview=true.
    */
-  public JSONObject sendCommand(JSONObject command, String connectionIdentifier, String bundleId,
-                                String senderKey, String pageId) {
-    //System.out.println("sending command "+command);
+  public synchronized JSONObject sendCommand(JSONObject command, String connectionIdentifier,
+                                             String bundleId,
+                                             String senderKey, String pageId) {
     try {
       commandId++;
       command.put("id", commandId);
+      System.out.println("sending command " + command);
 
       long start = System.currentTimeMillis();
 

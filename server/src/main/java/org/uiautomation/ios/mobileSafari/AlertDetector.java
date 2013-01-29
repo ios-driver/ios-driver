@@ -47,7 +47,7 @@ public class AlertDetector implements ResponseFinder {
   }
 
   @Override
-  public void startSearch(int id) throws InterruptedException {
+  public synchronized void startSearch(int id) throws InterruptedException {
     reset();
     try {
       Thread.sleep(timeBeforeLookingForAlert);

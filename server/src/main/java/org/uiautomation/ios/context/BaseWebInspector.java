@@ -68,7 +68,8 @@ public abstract class BaseWebInspector implements MessageListener {
   public abstract int getPageIdentifier();
 
   public RemoteWebElement getDocument() {
-    return getDocument(-1);
+    long deadline = System.currentTimeMillis() + defaultPageLoadTimeoutInMs;
+    return getDocument(deadline);
   }
 
   public RemoteWebElement getDocument(long deadline) {
@@ -89,7 +90,6 @@ public abstract class BaseWebInspector implements MessageListener {
 
   private RemoteWebElement retrieveDocumentAndCheckReady(long deadline) {
     RemoteWebElement element = null;
-    long start = System.currentTimeMillis();
     String readyState = "";
     while (!readyState.equals("complete")) {
       if (deadline > 0 && System.currentTimeMillis() > deadline) {
@@ -102,7 +102,8 @@ public abstract class BaseWebInspector implements MessageListener {
         readyState = element.getRemoteObject().call(".readyState");
         log.fine("ready ? " + readyState);
       } catch (Exception e) {
-        log.warning("Workaround in DOMContext, the given document is corrupted, nodeId ");
+        log.warning(
+            "The given document is corrupted, nodeId=" + element.getNodeId() + e.getMessage());
       }
     }
     return element;
@@ -455,7 +456,7 @@ public abstract class BaseWebInspector implements MessageListener {
 
   public void checkForPageLoad() {
     // a new page appeared.
-    String id = getLoadedFlag();
+    /*String id = getLoadedFlag();
     //System.out.println("on a page with id =" + id + " - " + context.getId());
     if (!context.getId().equals(id)) {
 
@@ -472,10 +473,11 @@ public abstract class BaseWebInspector implements MessageListener {
           } catch (Exception e) {
           System.err.println(e.getMessage()); //To change body of catch statement use File | Settings | File Templates.
         }
-      }  */
+      }
       flagPageLoaded();
-      //System.out.println("on a page with id =" + getLoadedFlag());
-    }
+        */
+    //System.out.println("on a page with id =" + getLoadedFlag());
+    //}
   }
 
   private String getMainPageReadyState() {
@@ -583,4 +585,7 @@ public abstract class BaseWebInspector implements MessageListener {
   }
 
 
+  public void highlightNode(NodeId nodeId) {
+    sendCommand(DOM.highlightNode(nodeId));
+  }
 }

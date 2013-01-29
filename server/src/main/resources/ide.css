@@ -1,258 +1,268 @@
 @CHARSET "UTF-8";
 
 body {
-	background: #CCCCCC;
-	font-family: sans-serif;
-	margin: 0%;
-	padding: 0%;
-	font-size: 0.9em;
+    background: #CCCCCC;
+    font-family: sans-serif;
+    margin: 0%;
+    padding: 0%;
+    font-size: 0.9em;
 }
 
 h3 {
-	font-weight: bold;
-	border-bottom: 3px solid #FF9900;
-	color: #444444;
+    font-weight: bold;
+    border-bottom: 3px solid #FF9900;
+    color: #444444;
 }
 
 h4 {
-	font-weight: bold;
-	border-bottom: 3px solid #FF9900;
-	color: #444444;
+    font-weight: bold;
+    border-bottom: 3px solid #FF9900;
+    color: #444444;
 }
 
 #simulator {
-	position: absolute;
-	margin-top: 45px;
-	left: 0px;
-	float: left;
-	margin-bottom: 6em;
-	min-height: 95%;
+    position: absolute;
+    margin-top: 45px;
+    left: 0px;
+    float: left;
+    margin-bottom: 6em;
+    min-height: 95%;
 }
+
 /* making it of size 0
  to have the rotate of the top left corner. */
 #rotationCenter {
-	position: absolute;
-	height: 0px;
-	width: 0px;
+    position: absolute;
+    height: 0px;
+    width: 0px;
 }
+
+#capabilities {
+    width: 40%;
+}
+
 #frame {
-	position: absolute;
-	top: 0px;
-	left: 0px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
 }
+
 #screen {
-	position: absolute;
+    position: absolute;
 }
+
 #mouseOver {
-	position: absolute;
-	z-index: 4;
+    position: absolute;
+    z-index: 4;
 }
+
 #tree {
-	height: 100%;
-	float: right;
-	width: 23%;
-	overflow: auto;
-	margin-top: 0px;
+    height: 100%;
+    float: right;
+    width: 23%;
+    overflow: auto;
+    margin-top: 0px;
 }
 
 #details {
-	margin-top:45px;
-	width:100%;
-	height: 100%;
-	overflow: auto;
-	padding: 2px;
-	background: #FAFAFA;
-	border-radius: 8px;
-	-moz-border-radius: 8px; /* Firefox 3.6 and earlier */
+    margin-top: 45px;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    padding: 2px;
+    background: #FAFAFA;
+    border-radius: 8px;
+    -moz-border-radius: 8px; /* Firefox 3.6 and earlier */
 }
 
-#detailsparent{
-	float: right;
-	width: 17%;
-	color: #444444;
-	height: 100%;
-	margin-top: 0px;
-	height: 100%;
+#detailsparent {
+    float: right;
+    width: 17%;
+    color: #444444;
+    height: 100%;
+    margin-top: 0px;
+    height: 100%;
 }
 
 #topmenu {
-	position: absolute;
-	background: #455372;
-	width: 15%;
-	height: 45px;
-	float: right;
-	border-top-right-radius: 14px;
-	border-bottom-right-radius: 14px;
-	-moz-border-top-right-radius: 14px;
-	-moz-border-bottom-right-radius: 14px;
+    position: absolute;
+    background: #455372;
+    width: 15%;
+    height: 45px;
+    float: right;
+    border-top-right-radius: 14px;
+    border-bottom-right-radius: 14px;
+    -moz-border-top-right-radius: 14px;
+    -moz-border-bottom-right-radius: 14px;
 }
 
 #htmlmenu {
-	background: #455372;
-	width: 100%;
-	height: 45px;
-	right:-5px;
-	top:0px;
-	float: right;
-	border-top-left-radius: 14px;
-	border-bottom-left-radius: 14px;
-	-moz-border-top-left-radius: 14px;
-	-moz-border-bottom-left-radius: 14px;
+    background: #455372;
+    width: 100%;
+    height: 45px;
+    right: -5px;
+    top: 0px;
+    float: right;
+    border-top-left-radius: 14px;
+    border-bottom-left-radius: 14px;
+    -moz-border-top-left-radius: 14px;
+    -moz-border-bottom-left-radius: 14px;
 }
 
 #picture {
-	float: left;
-	-moz-transform: scale(0.6);
-	margin-top: -6px;
+    float: left;
+    -moz-transform: scale(0.6);
+    margin-top: -6px;
 }
 
 #topmenu ul li, #htmlmenu ul li {
-	margin-right: 2em;
-	padding-right: 2em;
-	list-style: none;
-	display: inline;
-	color: #FFFFFF;
+    margin-right: 1em;
+    padding-right: 1em;
+    list-style: none;
+    display: inline;
+    color: #FFFFFF;
 }
 
 .arrow-right {
-	width: 0;
-	height: 0;
-	border-top: 5px solid transparent;
-	border-bottom: 5px solid transparent;
-	border-left: 5px solid #FF9900;
-	margin-left: 10px;
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 5px solid #FF9900;
+    margin-left: 10px;
 }
 
 #topmenu ul, #htmlmenu ul {
-	margin-top: 0.9em;
-	display: inline;
-	float: left;
+    margin-top: 0.9em;
+    display: inline;
+    float: left;
 }
 
 #topmenu a:visited, a:link, #htmlmenu a:visited {
-	text-decoration: none;
-	color: #FFFFFF;
+    text-decoration: none;
+    color: #FFFFFF;
 }
 
 #topmenu a:hover, #htmlmenu a:hover {
-	text-decoration: none;
-	border-bottom: 3px solid #FF9900;
-	color: #FFFFFF;
+    text-decoration: none;
+    border-bottom: 3px solid #FF9900;
+    color: #FFFFFF;
 }
 
 #details p {
-	width: 100%;
-	border-bottom: 1px solid #CCCCCC;
-	padding-bottom: 0.3em;
+    width: 100%;
+    border-bottom: 1px solid #CCCCCC;
+    padding-bottom: 0.3em;
 }
+
 #highlight {
-	position: absolute;
-	background-color: yellow;
-	left: 0px;
-	top: 45px;
-	height: 0px;
-	width: 0px;
-	z-index: 3;
-	opacity: 0.5;
+    position: absolute;
+    background-color: yellow;
+    left: 0px;
+    top: 45px;
+    height: 0px;
+    width: 0px;
+    z-index: 3;
+    opacity: 0.5;
 }
 
 .overlay, .overlayhtml {
-	position: fixed;
-	top: 0px;
-	bottom: 0px;
-	left: 0px;
-	right: 0px;
-	z-index: 100;
+    position: fixed;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    z-index: 100;
 }
 
 .box {
-	position: fixed;
-	left: -2000px;
-	width: 48%;
-	background-color: #fff;
-	color: #7F7F7F;
-	padding: 20px;
-	min-height: 30%;
-	border-right: 15px solid #455372;
-	border: 8px solid #455372;
-	border-radius: 8px;
-	-moz-border-radius: 8px; /* Firefox 3.6 and earlier */
-	z-index: 101;
-	overflow: auto;
+    position: fixed;
+    left: -2000px;
+    width: 48%;
+    background-color: #fff;
+    color: #7F7F7F;
+    padding: 20px;
+    min-height: 30%;
+    border-right: 15px solid #455372;
+    border: 8px solid #455372;
+    border-radius: 8px;
+    -moz-border-radius: 8px; /* Firefox 3.6 and earlier */
+    z-index: 101;
+    overflow: auto;
 }
 
 .boxhtml {
-	position: fixed;
-	right: -2000px;
-	width: 45%;
-	background-color: #fff;
-	color: #7F7F7F;
-	padding: 20px;
-	height: 90%;
-	border-right: 15px solid #455372;
-	border: 8px solid #455372;
-	border-radius: 8px;
-	-moz-border-radius: 8px; /* Firefox 3.6 and earlier */
-	z-index: 101;
+    position: fixed;
+    right: -2000px;
+    width: 45%;
+    background-color: #fff;
+    color: #7F7F7F;
+    padding: 20px;
+    height: 90%;
+    border-right: 15px solid #455372;
+    border: 8px solid #455372;
+    border-radius: 8px;
+    -moz-border-radius: 8px; /* Firefox 3.6 and earlier */
+    z-index: 101;
 
 }
 
-#webinspector{
-width:100%;
-height: 90%;
-overflow:auto;
+#webinspector {
+    width: 100%;
+    height: 90%;
+    overflow: auto;
 }
 
 .box ul {
-	list-style: none;
+    list-style: none;
 }
 
 .box ul li {
-	margin-bottom: 0.3em;
-	text-transform: uppercase;
-	margin-right: 3em;
+    margin-bottom: 0.3em;
+    text-transform: uppercase;
+    margin-right: 3em;
 }
 
 a.boxclose {
-	float: right;
-	margin-top: -20px;
-	margin-right: -20px;
-	background: #455372;
-	width: 40px;
-	height: 25px;
+    float: right;
+    margin-top: -20px;
+    margin-right: -20px;
+    background: #455372;
+    width: 40px;
+    height: 25px;
 }
 
- a.boxclosehtml {
-	float: left;
-	margin-top: -20px;
-	margin-left: -20px;
-	background: #455372;
-	width: 40px;
-	height: 25px;
+a.boxclosehtml {
+    float: left;
+    margin-top: -20px;
+    margin-left: -20px;
+    background: #455372;
+    width: 40px;
+    height: 25px;
 }
 
-.boxclose p{
-	margin:0px;
-	padding-left:15px;
+.boxclose p {
+    margin: 0px;
+    padding-left: 15px;
 }
 
-.boxclosehtml p{
-	margin:0px;
-	padding-right:15px;
+.boxclosehtml p {
+    margin: 0px;
+    padding-right: 15px;
 }
 
 .arrow-left {
-	width: 0; 
-	height: 0; 
-	border-top: 10px solid transparent;
-	border-bottom: 10px solid transparent; 
-	border-right:10px solid #FFFFFF; 
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid #FFFFFF;
 }
 
 .arrow-right-html {
-	width: 0; 
-	height: 0; 
-	border-top: 10px solid transparent;
-	border-bottom: 10px solid transparent; 
-	border-left:10px solid #FFFFFF; 
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid #FFFFFF;
 }

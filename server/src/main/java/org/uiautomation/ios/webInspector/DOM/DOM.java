@@ -74,19 +74,27 @@ public class DOM {
     return cmd;
   }
 
-  public static JSONObject highlightNode(NodeId id) throws JSONException {
-    JSONObject color = new JSONObject().put("a", 0.5).put("r", 50).put("g", 100).put("b", 255);
+  public static JSONObject highlightNode(NodeId id) {
+    try {
+      JSONObject color = new JSONObject()
+          .put("a", 0.5)
+          .put("r", 50)
+          .put("g", 100)
+          .put("b", 255);
 
-    JSONObject cmd = new JSONObject();
-    cmd.put("method", "DOM.highlightNode");
-    cmd.put(
-        "params",
-        new JSONObject().put("nodeId", id.getId()).put("highlightConfig",
-                                                       new JSONObject().put("showInfo", true)
-                                                           .put("contentColor", color)
-
-        ));
-    return cmd;
+      JSONObject cmd = new JSONObject();
+      cmd.put("method", "DOM.highlightNode");
+      cmd.put(
+          "params",
+          new JSONObject()
+              .put("nodeId", id.getId())
+              .put("highlightConfig", new JSONObject()
+                  .put("showInfo", true)
+                  .put("contentColor", color)
+              ));
+      return cmd;
+    } catch (JSONException e) {
+      throw new WebDriverException(e);
+    }
   }
-
 }

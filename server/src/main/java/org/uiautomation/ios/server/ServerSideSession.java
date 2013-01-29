@@ -157,6 +157,9 @@ public class ServerSideSession extends Session {
     if (v >= 6) {
       webDriver = new RemoteIOSWebDriver(this, new AlertDetector(nativeDriver));
     }
+    if ("Safari".equals(capabilities.getBundleName())) {
+      setMode(WorkingMode.Web);
+    }
 
   }
 
