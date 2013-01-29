@@ -34,11 +34,10 @@ public class ClickHandler extends BaseWebCommandHandler {
   public Response handle() throws Exception {
     String reference = getRequest().getVariableValue(":reference");
     RemoteWebElement element = getSession().getRemoteWebDriver().createElement(reference);
-    element.highlight();
 
     boolean useNativeEvents = getConfiguration("nativeEvents", nativeEvents);
 
-    if (nativeEvents && (element instanceof RemoteWebNativeBackedElement)) {
+    if (useNativeEvents && (element instanceof RemoteWebNativeBackedElement)) {
       ((RemoteWebNativeBackedElement) element).nativeClick();
     } else {
       element.click();
