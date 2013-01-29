@@ -42,7 +42,7 @@
     <section id="main_content" class="inner">
 
 
-        <h3>Technical overview</h3>
+ <h3>Technical overview</h3>
         Webdriver is a great automation for browser. It comes with a very clean API that describes
         how a
         users can interact with a browser.This API can be used for ios automation as well. In the
@@ -83,6 +83,8 @@
     Simulator - iOS 4.3 -sdk iphonesimulator4.3
     Simulator - iOS 5.0 -sdk iphonesimulator5.0
     Simulator - iOS 5.1 -sdk iphonesimulator5.1
+    Simulator - iOS 6.0 -sdk iphonesimulator6.0
+    Simulator - iOS 6.1 -sdk iphonesimulator6.1
 </code></pre>
 
         <p>If you have iOS 5.0 or above in the Simulator SDKs, the UIAutomation part of will
@@ -103,7 +105,7 @@
 
         <p>will return the version you're currently running, or prompt you to install it.</p>
 
-        <h3>Getting the application to test</h3>
+<h3>Getting a test application</h3>
 
         <p>( for the doc example, I'll use the apple app <a
                 href="http://developer.apple.com/library/ios/#samplecode/InternationalMountains/Introduction/Intro.html">InternationalMountains</a>
@@ -132,7 +134,7 @@
 
         <p>cd to the folder where you downloaded the jar, and run </p>
 
-<pre><code>$ java -jar server-standalone-1.0.0-SNAPSHOT.jar -aut ~/Documents/build/myapp.app -port
+<pre><code>$ java -jar server-standalone-0.5.0-SNAPSHOT.jar -aut ~/Documents/build/myapp.app -port
     4444
 </code></pre>
 
@@ -147,23 +149,32 @@
 
         <p>You should see a json object with all the info about the app.</p>
 
-<pre><code>{
-    "sessionId": null,
+
+
+
+<pre><code>
+
+
+{
+    "class": "org.openqa.selenium.remote.Response",
+    "hCode": 228832089,
+    "sessionId": "3dcc2e66-ebf8-4e96-8579-82f06c6b2b61",
     "status": 0,
     "value": {
-    "build": {
-    "revision": "bec94e77cb2c1d95c392cf82267e81e595caff82",
-    "time": "20120924-1640",
-    "version": "1.0.0-SNAPSHOT"
-    },
-    "ios": {"simulatorVersion": "5.1"},
-    "java": {"version": "1.6.0_35"},
+        "build": {
+            "revision": "b0e9250cafe9870fc3b0a0224cb6e8d242aa1374",
+            "time": "20130129-1201",
+            "version": "0.5.0-SNAPSHOT"
+        },
+    "ios": {"simulatorVersion": "6.1"},
+    "java": {"version": "1.6.0_37"},
     "os": {
-    "arch": "x86_64",
-    "name": "Mac OS X",
-    "version": "10.7.4"
+        "arch": "x86_64",
+        "name": "Mac OS X",
+        "version": "10.8.1"
     },
-    "supportedApps": [{
+    "supportedApps": [
+    {
     "CFBundleDevelopmentRegion": "en",
     "CFBundleExecutable": "InternationalMountains",
     "CFBundleIconFile": "Icon.png",
@@ -180,18 +191,18 @@
     "NSMainNibFile": "MainWindow",
     "UIDeviceFamily": [1],
     "applicationPath": "/Users/freynaud/build/InternationalMountains.app",
-    "device": "iPhone Simulator",
     "resources": {"CFBundleIconFile": "/wd/hub/resources/hash=-674408620"},
-    "sdkVersion": "5.1",
+    "sdkVersion": "6.1",
+    "simulator": true,
+    "supportedDevices": ["iphone"],
     "supportedLanguages": [
-    "zh-Hant",
-    "fr",
-    "en"
+        "zh",
+        "fr",
+        "en"
     ],
-    "timeHack": true
-    }]
-    }
-    }
+}
+
+
 </code></pre>
 
 
