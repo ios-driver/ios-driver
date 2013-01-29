@@ -56,8 +56,13 @@ data,
 and follow the same designs you're used to ( page object etc ).
 
 
-
-
+<h3>Scaling</h3>
+<p>ios-driver has been built with scaling in mind. GUI based tests aren't fast enough to provide
+    feedback if they are run sequentially. By following the webdriver protocol, ios-driver can be
+    used as a selenium grid node, and the tests can be run in parallel on the same architecture as
+    the one already running the web tests.</p>
+    <img src="images/scale.png" alt="step2.png"  width='640'>
+   <p>TODO doc : write an example capability matcher.</p>
 
 <h3>Writing the first native test</h3>
 
