@@ -5,13 +5,14 @@
     <meta charset='utf-8'/>
     <meta http-equiv="X-UA-Compatible" content="chrome=1"/>
     <meta name="description" content="ios-driver : IOS native app automation"/>
-
+    <link href="stylesheets/prettify.css" type="text/css" rel="stylesheet"/>
+    <script type="text/javascript" src="javascripts/prettify.js"></script>
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
     <title>ios-driver</title>
 </head>
 
-<body>
+<body onload="prettyPrint()">
 
 <!-- HEADER -->
 <div id="header_wrap" class="outer">
@@ -20,12 +21,12 @@
 
         <h1 id="project_title">ios-driver</h1>
 
-        <h2 id="project_tagline">IOS automation for native, hybrid (beta) and mobile web.</h2>
+        <h2 id="project_tagline">IOS automation for native, hybrid and mobile web.</h2>
 
         <div id="menu">
             <ul>
                 <li><a href="index.html" id="home">Home</a></li>
-                <li ><a href="setup.html" id="setup">Setup</a></li>
+                <li><a href="setup.html" id="setup">Setup</a></li>
                 <li><a href="inspector.html" id="inspector">Inspector</a></li>
                 <li><a href="native.html" id="native">Native</a></li>
                 <li class="active"><a href="safari.html" id="safari">Safari</a></li>
@@ -37,24 +38,27 @@
 
         <section id="downloads">
             <a class="zip_download_link"
-               href="https://github.com/downloads/freynaud/ios-driver/server-standalone-0.5.0-SNAPSHOT.jar">Download</a>
+               href="https://github.com/downloads/freynaud/ios-driver/server-standalone-0.5.0.jar">Download 0.5.0</a>
         </section>
     </header>
 </div>
 
 <!-- MAIN CONTENT -->
 <div id="main_content_wrap" class="outer">
-<section id="main_content" class="inner">
+    <section id="main_content" class="inner">
 
-<p>You can use ios-driver to test web pages on mobile safari.Because ios-driver internally uses 2
-drivers, a native one and a web one, your tests can use native event ( so type text using the
-keyboard for instance) and web based selector.</p>
+        <p>You can use ios-driver to test web pages on mobile safari.Because ios-driver internally
+            uses 2
+            drivers, a native one and a web one, your tests can use native event ( so type text
+            using the
+            keyboard for instance) and web based selector.</p>
 
-<p>ios-driver follows the web driver API, so you can use your favorite client bindings to write your
-test.</p>
+        <p>ios-driver follows the web driver API, so you can use your favorite client bindings to
+            write your
+            test.</p>
 
-<h3>The basics</h3>
-<pre><code>
+        <h3>The basics</h3>
+<pre class="prettyprint">
 public static void main(String[] args) throws Exception {
     DesiredCapabilities safari = IOSCapabilities.iphone("Safari");
     RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), safari);
@@ -64,18 +68,18 @@ public static void main(String[] args) throws Exception {
     System.out.println(driver.getTitle());
     driver.quit();
 }
-</code></pre>
+</pre>
 
- <p>will print</p>
- <pre><code>
+        <p>will print</p>
+<pre>
      eBay Mobile | Electronics, Cars, Clothing, Collectibles and Daily Deals online.
- </code></pre>
+</pre>
 
 
-
-<h3>Using the underlying native driver : sendKeys</h3>
-<iframe width="640" height="480" src="http://www.youtube.com/embed/cpYE5g4qAVw" frameborder="0" allowfullscreen></iframe>
-<pre><code>
+        <h3>Using the underlying native driver : sendKeys</h3>
+        <iframe width="640" height="480" src="http://www.youtube.com/embed/cpYE5g4qAVw"
+                frameborder="0" allowfullscreen></iframe>
+<pre class="prettyprint">
 public static void main(String[] args) throws Exception {
 
     DesiredCapabilities safari = IOSCapabilities.iphone("Safari");
@@ -90,61 +94,64 @@ public static void main(String[] args) throws Exception {
 
     driver.quit();
 }
-</code></pre>
+</pre>
 
 
+        <h3>Working with alerts</h3>
 
-<h3>Working with alerts</h3>
-<p>ios-driver can use its native part to get aways from the javascript sandbox and handle alerts for example :</p>
+        <p>ios-driver can use its native part to get aways from the javascript sandbox and handle
+            alerts for example :</p>
 
-<iframe width="640" height="480" src="http://www.youtube.com/embed/2qR7mGs2Gn0" frameborder="0" allowfullscreen></iframe>
-    <pre>
-        <code>
-            @Test
-            public void testHandlesTwoAlertsFromOneInteraction() {
-                driver.findElement(By.id("double-prompt")).click();
+        <iframe width="640" height="480" src="http://www.youtube.com/embed/2qR7mGs2Gn0"
+                frameborder="0" allowfullscreen></iframe>
+ <pre class="prettyprint">
 
-                Alert alert1 = waitFor(alertToBePresent(driver));
-                alert1.sendKeys("brie");
-                alert1.accept();
+@Test
+public void testHandlesTwoAlertsFromOneInteraction() {
+    driver.findElement(By.id("double-prompt")).click();
 
-                Alert alert2 = waitFor(alertToBePresent(driver));
-                alert2.sendKeys("cheddar");
-                alert2.accept();
+    Alert alert1 = waitFor(alertToBePresent(driver));
+    alert1.sendKeys("brie");
+    alert1.accept();
 
-                waitFor(elementTextToEqual(driver, By.id("text1"), "brie"));
-                waitFor(elementTextToEqual(driver, By.id("text2"), "cheddar"));
-            }
-        </code>
-    </pre>
+    Alert alert2 = waitFor(alertToBePresent(driver));
+    alert2.sendKeys("cheddar");
+    alert2.accept();
 
-<h3> Changing the device and the orientation.</h3>
+    waitFor(elementTextToEqual(driver, By.id("text1"), "brie"));
+    waitFor(elementTextToEqual(driver, By.id("text2"), "cheddar"));
+}
 
-    <iframe width="640" height="480" src="http://www.youtube.com/embed/FK17niDWoqA" frameborder="0" allowfullscreen></iframe>
-   <pre>
-       <code>
-       public static void main(String[] args) throws Exception {
+</pre>
 
-           DesiredCapabilities safari = IOSCapabilities.ipad("Safari");
-           RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), safari);
+        <h3> Changing the device and the orientation.</h3>
 
-           driver.get("http://hp.mobileweb.ebay.co.uk/home");
+        <iframe width="640" height="480" src="http://www.youtube.com/embed/FK17niDWoqA"
+                frameborder="0" allowfullscreen></iframe>
+   <pre class="prettyprint">
 
-           ((Rotatable)new Augmenter().augment(driver)).rotate(ScreenOrientation.LANDSCAPE);
+public static void main(String[] args) throws Exception {
 
-           WebElement search = driver.findElement(By.id("srchDv"));
-           search.sendKeys("ipod");
-           search.submit();
+   DesiredCapabilities safari = IOSCapabilities.ipad("Safari");
+   RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), safari);
 
-           waitFor(pageTitleToBe(driver, "ipod | eBay Mobile Web"));
+   driver.get("http://hp.mobileweb.ebay.co.uk/home");
 
-           driver.quit();
-       }
-       </code>
+   ((Rotatable)new Augmenter().augment(driver)).rotate(ScreenOrientation.LANDSCAPE);
+
+   WebElement search = driver.findElement(By.id("srchDv"));
+   search.sendKeys("ipod");
+   search.submit();
+
+   waitFor(pageTitleToBe(driver, "ipod | eBay Mobile Web"));
+
+   driver.quit();
+}
+
    </pre>
 
 
-</section>
+    </section>
 </div>
 
 <!-- FOOTER  -->

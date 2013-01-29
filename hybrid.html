@@ -5,13 +5,14 @@
     <meta charset='utf-8'/>
     <meta http-equiv="X-UA-Compatible" content="chrome=1"/>
     <meta name="description" content="ios-driver : IOS native app automation"/>
-
+    <link href="stylesheets/prettify.css" type="text/css" rel="stylesheet"/>
+    <script type="text/javascript" src="javascripts/prettify.js"></script>
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
     <title>ios-driver</title>
 </head>
 
-<body>
+<body onload="prettyPrint()">
 
 <!-- HEADER -->
 <div id="header_wrap" class="outer">
@@ -20,7 +21,7 @@
 
         <h1 id="project_title">ios-driver</h1>
 
-        <h2 id="project_tagline">IOS automation for native, hybrid (beta) and mobile web.</h2>
+        <h2 id="project_tagline">IOS automation for native, hybrid and mobile web.</h2>
 
         <div id="menu">
             <ul>
@@ -37,19 +38,47 @@
 
         <section id="downloads">
             <a class="zip_download_link"
-               href="https://github.com/downloads/freynaud/ios-driver/server-standalone-0.5.0-SNAPSHOT.jar">Download</a>
+               href="https://github.com/downloads/freynaud/ios-driver/server-standalone-0.5.0.jar">Download 0.5.0</a>
         </section>
     </header>
 </div>
 
 <!-- MAIN CONTENT -->
 <div id="main_content_wrap" class="outer">
-    <section id="main_content" class="inner">
+<section id="main_content" class="inner">
 
-        TODO
+<p>Hybrid application support is still in beta(1)</p>
+<p>Hybrid support means you can test a native app that has some embedded webviews, and when such a
+webview is reached, you can interact with the webview using a classic implementation of webdriver that
+lets you browse the dom, use css selector etc.</p>
+<p>To use the hybrid app support, start the app like a native one, and once you encounter a webview,
+you can switch to the web mode using the webdriver window switching API.</p>
 
+<pre  class="prettyprint">
+public static void main(String[] args) throws Exception {
+      IOSCapabilities catalog = IOSCapabilities.iphone("UICatalog");
 
-    </section>
+      RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), catalog);
+      // by default, the app starts in native mode.
+      WebElement web = driver.findElement(By.xpath("//UIATableCell[contains(@name,'Web')]"));
+      web.click();
+
+      // now that a webview is displayed, switch to web mode.
+      driver.switchTo().window("Web");
+
+      // and select items using natural web selectors.
+      final By cssSelector = By.cssSelector("a[href='http://store.apple.com/']");
+
+      // reuse whatever contrust your webdriver tests are using.
+      WebElement el = waitFor(elementToExist(driver, cssSelector));
+      Assert.assertEquals(el.getAttribute("href"), "http://store.apple.com/");
+
+      driver.quit();
+}
+</pre>
+
+<p>(1)It works until a page in a webview refreshes. After that point, the webview doesn't refresh.</p>
+</section>
 </div>
 
 <!-- FOOTER  -->

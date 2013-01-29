@@ -5,13 +5,14 @@
     <meta charset='utf-8'/>
     <meta http-equiv="X-UA-Compatible" content="chrome=1"/>
     <meta name="description" content="ios-driver : IOS native app automation"/>
-
+    <link href="stylesheets/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="javascripts/prettify.js"></script>
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
     <title>ios-driver</title>
 </head>
 
-<body>
+<body onload="prettyPrint()">
 
 <!-- HEADER -->
 <div id="header_wrap" class="outer">
@@ -24,7 +25,7 @@
 
         <div id="menu">
             <ul>
-                <li ><a href="index.html" id="home">Home</a></li>
+                <li><a href="index.html" id="home">Home</a></li>
                 <li><a href="setup.html" id="setup">Setup</a></li>
                 <li><a href="inspector.html" id="inspector">Inspector</a></li>
                 <li><a href="native.html" id="native">Native</a></li>
@@ -37,7 +38,7 @@
 
         <section id="downloads">
             <a class="zip_download_link"
-               href="https://github.com/downloads/freynaud/ios-driver/server-standalone-0.5.0-SNAPSHOT.jar">Download</a>
+               href="https://github.com/downloads/freynaud/ios-driver/server-standalone-0.5.0.jar">Download 0.5.0</a>
         </section>
     </header>
 </div>
@@ -46,32 +47,40 @@
 <div id="main_content_wrap" class="outer">
 <section id="main_content" class="inner">
 
+
     <p>First,check that the issue you're facing is not already part of the
-        <a href="https://github.com/freynaud/ios-driver/blob/master/release.notes">TODO list</a></p>
-    <p>
-    ios-driver is currently under development. Bugs are fixed and feature added quickly. When you
-    file a bug, make sure you add the version you're using. You can find the version hitting the url
-    http://localhost:4444/wd/hub/status . Copy the build part, that looks like :</p>
+            <a href="https://github.com/freynaud/ios-driver/blob/master/release.notes">TODO list</a></p>
+        <p>
+            ios-driver is currently under development. Bugs are fixed and feature added quickly. When you
+            file a bug, make sure you add the version you're using. You can find the version hitting the url
+            http://localhost:4444/wd/hub/status . Copy the build part, that looks like :</p>
 
 
-<pre><code>
+<pre>
 
-    "build": {
-        "revision": "b0e9250cafe9870fc3b0a0224cb6e8d242aa1374",
-        "time": "20130129-1201",
-        "version": "0.5.0-SNAPSHOT"
-    },
-    "ios": {"simulatorVersion": "6.1"},
-    "java": {"version": "1.6.0_37"},
-    "os": {
-        "arch": "x86_64",
-        "name": "Mac OS X",
-        "version": "10.8.1"
-    }
- </code></pre>
+"build": {
+    "revision": "b0e9250cafe9870fc3b0a0224cb6e8d242aa1374",
+    "time": "20130129-1201",
+    "version": "0.5.0-SNAPSHOT"
+},
+"ios": {"simulatorVersion": "6.1"},
+"java": {"version": "1.6.0_37"},
+"os": {
+    "arch": "x86_64",
+    "name": "Mac OS X",
+    "version": "10.8.1"
+}
+</pre>
 
 
- <p>and file a bug on <a href="https://github.com/freynaud/ios-driver/issues">github</a> </p>
+        <p>and file a bug on <a href="https://github.com/freynaud/ios-driver/issues">github</a> </p>
+
+
+
+
+
+
+
 </section>
 </div>
 

@@ -5,13 +5,14 @@
     <meta charset='utf-8'/>
     <meta http-equiv="X-UA-Compatible" content="chrome=1"/>
     <meta name="description" content="ios-driver : IOS native app automation"/>
-
+    <link href="stylesheets/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="javascripts/prettify.js"></script>
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
     <title>ios-driver</title>
 </head>
 
-<body>
+<body onload="prettyPrint()">
 
 <!-- HEADER -->
 <div id="header_wrap" class="outer">
@@ -20,7 +21,7 @@
 
         <h1 id="project_title">ios-driver</h1>
 
-        <h2 id="project_tagline">IOS automation for native, hybrid (beta) and mobile web.</h2>
+        <h2 id="project_tagline">IOS automation for native, hybrid and mobile web.</h2>
 
         <div id="menu">
             <ul>
@@ -37,7 +38,7 @@
 
         <section id="downloads">
             <a class="zip_download_link"
-               href="https://github.com/downloads/freynaud/ios-driver/server-standalone-0.5.0-SNAPSHOT.jar">Download</a>
+               href="https://github.com/downloads/freynaud/ios-driver/server-standalone-0.5.0.jar">Download 0.5.0</a>
         </section>
     </header>
 </div>
@@ -64,14 +65,14 @@ and follow the same designs you're used to ( page object etc ).
 the requirements are met</p>
 
 <p>Start the server and connect the Intl moutains demo app from Apple</p>
-<pre><code>$ java -jar server-standalone-0.5.0.jar -aut ~/Documents/build/InternationalMountains.app -port
-    4444
+<pre>
+$java -jar server-standalone-0.5.0.jar -aut ~/Documents/build/InternationalMountains.app -port 4444
 </code></pre>
 
 <p>start the app, find some elements,click on the first element,print some text,take a screenshot and
     quit.</p>
 
-<pre><code>
+<pre class="prettyprint" >
 public static void main(String[] args) throws MalformedURLException {
     // create a selenium desiredCapabilities object with the right values.
     DesiredCapabilities cap = IOSCapabilities.iphone("InternationalMountains", "1.1");
@@ -79,7 +80,7 @@ public static void main(String[] args) throws MalformedURLException {
     RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), cap);
 
     // check that the 9 mountains of the app are there.
-    List <WebElement> cells = driver.findElements(By.className("UIATableCell"));
+    List cells = driver.findElements(By.className("UIATableCell"));
     Assert.assertEquals(9,cells.size());
 
     // get the 1st mountain
@@ -93,19 +94,21 @@ public static void main(String[] args) throws MalformedURLException {
     System.out.println("screenshot take :"+ss.getAbsolutePath());
 
     // access the content
-    WebElement text = driver.findElement(By.xpath("//UIAStaticText[contains(@name,'climbed')]"));
+    By selector = By.xpath("//UIAStaticText[contains(@name,'climbed')]");
+    WebElement text = driver.findElement(selector);
     System.out.println(text.getAttribute("name"));
 
     // end the test
     driver.quit();
 }
-</code></pre>
+</pre>
 
 <p>will print out :</p>
 
-<pre><code>
+<pre>
 Mountain 1 was first climbed on 29 May 1953 and has a height of 8,848 meters
-</code></pre>
+</pre>
+
 <p>and you now have a screenshot of the old mountain details :</p>
 <img src="images/screenshot.png" alt="step2.png" height='480' width='320'>
 
@@ -121,21 +124,22 @@ Mountain 1 was first climbed on 29 May 1953 and has a height of 8,848 meters
 <p> To specify the language : </p>
 
 
-<pre><code>
+<pre>
+
     DesiredCapabilities cap = IOSCapabilities.iphone("InternationalMountains", "1.1");
     cap.setCapability(IOSCapabilities.LANGUAGE,"zh");
-</code>
+
 </pre>
 
 
 <p> and make the locator content free : </p>
 
-<pre><code>
+<pre>
     // access the content
     By contentFree = By.xpath("//UIAStaticText[matches(@name,l10n('sentenceFormat'))]");
     WebElement text = driver.findElement(contentFree);
 
-</code>
+
 </pre>
 
 
@@ -144,8 +148,8 @@ to maintain your own localization dictionary.You can now start building your gen
 and focus on the functionality rather than the content. </p>
 
 Complete code for zh :
-<pre>
-<code>
+<pre class="prettyprint" >
+
 
 public static void main(String[] args) throws MalformedURLException {
     // create a selenium desiredCapabilities object with the right values.
@@ -177,13 +181,13 @@ public static void main(String[] args) throws MalformedURLException {
     // end the test
     driver.quit();
 }
-</code></pre>
+</pre>
 
 will print out :
-<pre><code>
+<pre>
       screenshot take :/Users/freynaud/Documents/workspace/ios-driver/screenshot-zh.png
       山 1 是8,848米高。它第一次攀登了在29 May 1953。
-</code></pre>
+</pre>
 
 <p>and produce the following screenshot :</p>
 
