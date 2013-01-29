@@ -108,7 +108,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
       script.append("if (delta<20){delta=20;};");
       script.append("var y = top+delta;");
     }
-    script.append("UIATarget.localTarget().tap({'x':x,'y':y})");
+    script.append("UIATarget.localTarget().tap({'x':x,'y':y});");
     // script.append("var nativeElement = root.element(-1,{'x':x,'y':y});");
     // scroll into view.
     // script.append("nativeElement.isStale();");
@@ -121,7 +121,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
   private String getNativeElementClickOnItAndTypeUsingKeyboardScript(String value)
       throws Exception {
     // web stuff.
-    Point po = findPosition();
+    /*Point po = findPosition();
     Dimension dim = inspector.getSize();
     int webPageWidth = inspector.getInnerWidth();
     if (dim.getWidth() != webPageWidth) {
@@ -170,7 +170,10 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     // scroll into view.
     script.append("nativeElement.isStale();");
     // tap at the end of the element to try to append the text at the end.
-    script.append("nativeElement.tap(0.99,0.5);");
+    script.append("nativeElement.tap(0.99,0.5);"); */
+
+    StringBuilder script = new StringBuilder();
+    script.append(getNativeElementClickOnIt());
     script.append("var keyboard = UIAutomation.cache.get('1').keyboard();");
     script.append("keyboard.typeString('" + value + "');");
     Criteria iPhone = new NameCriteria("Done");

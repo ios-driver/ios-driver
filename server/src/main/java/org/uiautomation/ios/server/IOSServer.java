@@ -14,14 +14,13 @@
 
 package org.uiautomation.ios.server;
 
-import java.net.InetSocketAddress;
-
-import javax.servlet.Servlet;
+import com.beust.jcommander.JCommander;
 
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.inspector.IDEServlet;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.grid.RegistrationRequest;
@@ -29,10 +28,12 @@ import org.uiautomation.ios.server.servlet.IOSServlet;
 import org.uiautomation.ios.server.servlet.ResourceServlet;
 import org.uiautomation.ios.server.servlet.UIAScriptServlet;
 
-import com.beust.jcommander.JCommander;
+import java.net.InetSocketAddress;
+import java.util.logging.Logger;
 
 public class IOSServer {
 
+  private static final Logger log = Logger.getLogger(IOSServer.class.getName());
   public static final String DRIVER = IOSDriver.class.getName();
   private Server server;
   private int port;
@@ -40,13 +41,14 @@ public class IOSServer {
   private IOSServerConfiguration options;
 
   public static void main(String[] args) throws Exception {
-
     IOSServer server = new IOSServer(args);
     server.start();
     IOSServerConfiguration options = server.getOptions();
     if (options.getRegistrationURL() != null) {
-      RegistrationRequest request = new RegistrationRequest(options.getRegistrationURL(), options.getHost(),
-          options.getPort(), options.getSupportedApps());
+      RegistrationRequest
+          request =
+          new RegistrationRequest(options.getRegistrationURL(), options.getHost(),
+                                  options.getPort(), options.getSupportedApps());
       request.registerToHub();
     }
   }
@@ -81,10 +83,10 @@ public class IOSServer {
     wd.addServlet(ResourceServlet.class, "/resources/*");
 
     ServletContextHandler extra = new ServletContextHandler(server, "/", true, false);
-    extra.addServlet(IDEServlet.class, "/ide/*");
+    extra.addServlet(IDEServlet.class, "/inspector/*");
 
     HandlerList handlers = new HandlerList();
-    handlers.setHandlers(new Handler[] { wd, extra });
+    handlers.setHandlers(new Handler[]{wd, extra});
     server.setHandler(handlers);
 
     IOSDriver driver = new IOSDriver(port);
@@ -92,13 +94,41 @@ public class IOSServer {
       driver.addSupportedApplication(new IOSApplication(app));
     }
 
+    StringBuilder b = new StringBuilder();
+    b.append("\nserver status: http://0.0.0.0:" + options.getPort() + "/inspector/");
+    b.append("\ntests can access the server at http://0.0.0.0:" + options.getPort() + "/wd/hub");
+    b.append("\nserver status: http://0.0.0.0:" + options.getPort() + "/wd/hub/status");
+    b.append("\nusing xcode install : " + driver.getHostInfo().getXCodeInstall());
+    b.append("\nusing IOS version " + driver.getHostInfo().getSDK());
+
+    boolean safari = false;
     // automatically add safari for SDK 6.0 and above.
     for (String s : driver.getHostInfo().getInstalledSDKs()) {
       Float version = Float.parseFloat(s);
       if (version >= 6L) {
-        driver.addSupportedApplication(IOSApplication.findSafariLocation(driver.getHostInfo().getXCodeInstall(), s));
+        safari = true;
+        driver.addSupportedApplication(
+            IOSApplication.findSafariLocation(driver.getHostInfo().getXCodeInstall(), s));
       }
     }
+    if (safari) {
+      b.append("\nios >= 6.0. Safari and hybrid apps are supported.");
+    } else {
+      b.append("\nios < 6.0. Safari and hybrid apps are NOT supported.");
+    }
+
+    b.append("\n\nApplications :\n--------------- \n");
+    for (IOSApplication app : driver.getSupportedApplications()) {
+      b.append("\tCFBundleName=" + (app.getMetadata(IOSCapabilities.BUNDLE_NAME).isEmpty() ? app
+          .getMetadata(IOSCapabilities.BUNDLE_DISPLAY_NAME) : app
+                                        .getMetadata(IOSCapabilities.BUNDLE_NAME)));
+      String version = app.getMetadata(IOSCapabilities.BUNDLE_VERSION);
+      if (version != null && !version.isEmpty()) {
+        b.append(",CFBundleVersion=" + version);
+      }
+      b.append("\n");
+    }
+    log.info(b.toString());
 
     wd.setAttribute(DRIVER, driver);
     extra.setAttribute(DRIVER, driver);

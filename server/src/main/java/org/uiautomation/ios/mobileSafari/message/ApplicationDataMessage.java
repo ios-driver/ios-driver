@@ -36,7 +36,6 @@ public class ApplicationDataMessage extends BaseIOSWebKitMessage {
     String s = new String(bytes);
     message = new JSONObject(s);
     log.fine("got : " + rawMessage + "\n\tContent :" + message.toString());
-    log.warning("got : " + message.toString());
   }
 
   public JSONObject getMessage() {

@@ -142,7 +142,6 @@ public class SimulatorProtocolImpl {
     try {
       commandId++;
       command.put("id", commandId);
-      System.out.println("sending command " + command);
 
       long start = System.currentTimeMillis();
 

@@ -39,7 +39,6 @@ public class FindElementHandler extends BaseWebCommandHandler {
     do {
       try {
         rwe = findElement();
-        rwe.highlight();
         break;
       } catch (NoSuchElementException e) {
         //ignore.

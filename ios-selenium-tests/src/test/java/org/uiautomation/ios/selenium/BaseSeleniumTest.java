@@ -24,18 +24,31 @@ public class BaseSeleniumTest {
 
   @BeforeClass
   public void setup() throws Throwable {
-    server = new IOSServer(config);
-    server.start();
-
+    startIOSServer();
+    startTestServer();
     IOSCapabilities safari = IOSCapabilities.iphone("Safari");
     safari.setCapability(IOSCapabilities.TIME_HACK, false);
     // safari.setLanguage("fr");
     driver = new RemoteMobileSafariDriver(new URL(url), safari);
+
+  }
+
+  public void startIOSServer() throws Exception {
+    server = new IOSServer(config);
+    server.start();
+  }
+
+  public void startTestServer() {
     appServer = new WebbitAppServer();
     appServer.start();
 
     pages = new Pages(appServer);
   }
+
+  public void stopIOSServer() throws Exception {
+    server.stop();
+  }
+
 
   @AfterClass
   public void tearDown() throws Exception {
@@ -45,7 +58,7 @@ public class BaseSeleniumTest {
     } catch (Exception e) {
       System.err.println("cannot quit properly :" + e.getMessage());
     }
-    server.stop();
+    stopIOSServer();
     appServer.stop();
   }
 }

@@ -76,17 +76,5 @@ public class Demo extends BaseIOSDriverTest {
     driver.quit();
   }
 
-  public static void main(String[] args) throws Exception {
-    new Demo().startServer();
-    DesiredCapabilities safari = IOSCapabilities.iphone("Safari");
-    RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), safari);
 
-    driver.get("http://hp.mobileweb.ebay.co.uk/home");
-    WebElement search = driver.findElement(By.id("srchDv"));
-    search.sendKeys("ipod");
-    search.submit();
-
-    System.out.println(driver.getTitle());
-    driver.quit();
-  }
 }

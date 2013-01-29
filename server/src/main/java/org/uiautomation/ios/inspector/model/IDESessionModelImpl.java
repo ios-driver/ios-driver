@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.uiautomation.ios.client.uiamodels.impl.*;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -49,7 +50,7 @@ public class IDESessionModelImpl implements IDESessionModel {
     this.session = session;
     this.screenshot = new File(session.getSessionId() + ".png");
     this.remoteEndPoint = remoteURL;
-    driver = new AttachRemoteUIADriver(remoteURL, new SessionId(session.getSessionId()));
+    driver = new ServerSideNativeDriver(remoteURL, new SessionId(session.getSessionId()));
   }
 
   /*
