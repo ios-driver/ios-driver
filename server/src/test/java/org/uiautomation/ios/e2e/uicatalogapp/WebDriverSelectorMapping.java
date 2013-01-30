@@ -67,6 +67,14 @@ public class WebDriverSelectorMapping extends BaseIOSDriverTest {
   }
 
   @Test
+  public void testCanFindByRegexName() {
+    By b = By.partialLinkText("name=first climbed on (.*) and has a height");
+    WebElement element = driver.findElement(b);
+    Assert.assertEquals(element.getAttribute("name"), english);
+  }
+
+
+  @Test
   public void testCanFindByPartialLabel() {
     By b = By.partialLinkText("label=" + partial);
     WebElement element = driver.findElement(b);

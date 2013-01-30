@@ -34,6 +34,7 @@
 
 TODOs:
 -------
+- append text at the end of an input field
 - file upload
 - BrowserConnection
 - HasTouchScreen
