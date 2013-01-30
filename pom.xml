@@ -1,36 +1,39 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.uiautomation</groupId>
-	<artifactId>ios-driver</artifactId>
-	<version>0.5.0-SNAPSHOT</version>
-	<packaging>pom</packaging>
-	<name>IOS automation</name>
-	<description>bridge over the apple JS UIAutomation and the webkit remote debug protocol frameworks to make them compatible with a webdriver like architecture.Allows remote parallel excecution using Selenium Grid2</description>
-	<modules>
-		<module>common</module>
-		<module>client</module>
-		<module>server</module>
-		<module>ios-selenium-tests</module>
-	</modules>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.uiautomation</groupId>
+    <artifactId>ios-driver</artifactId>
+    <version>0.5.0</version>
+    <packaging>pom</packaging>
+    <name>IOS automation</name>
+    <description>bridge over the apple JS UIAutomation and the webkit remote debug protocol
+        frameworks to make them compatible with a webdriver like architecture.Allows remote parallel
+        excecution using Selenium Grid2
+    </description>
+    <modules>
+        <module>common</module>
+        <module>client</module>
+        <module>server</module>
+        <module>ios-selenium-tests</module>
+    </modules>
 
-	<developers>
-		<developer>
-			<id>freynaud</id>
-			<name>François Reynaud</name>
-		</developer>
-	</developers>
+    <developers>
+        <developer>
+            <id>freynaud</id>
+            <name>François Reynaud</name>
+        </developer>
+    </developers>
 
-	<licenses>
-		<license>
-			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
-		</license>
-	</licenses>
+    <licenses>
+        <license>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
 
 </project>

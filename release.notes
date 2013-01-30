@@ -18,15 +18,13 @@
 + inspector to better support hybrid apps.
 
 
-0.5.0 (current)
+0.5.0
 ------
-- xpath to css convertor for web
++ fix language loading in safari
++ redo page loading for webviews
 + execute scripts for native
 + batch commands for web to native calls
-- remove or document non webdriver commands.
-- delete window
 + handle alerts for web
-- cleanup and document setValue vs sendKeys
 + implicit wait for web ( would help with pageLoad issues )
 + avoid switching between native and web for internal command.
 
@@ -34,6 +32,10 @@
 
 TODOs:
 -------
+- xpath to css convertor for web
+- cleanup and document setValue vs sendKeys
+- remove or document non webdriver commands.
+- delete window
 - append text at the end of an input field
 - file upload
 - BrowserConnection
