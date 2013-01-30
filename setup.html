@@ -48,11 +48,11 @@
 
 
  <h3>Technical overview</h3>
-        Webdriver is a great automation for browser. It comes with a very clean API that describes
-        how a
-        users can interact with a browser.This API can be used for ios automation as well. In the
+        Webdriver is a great automation tool for browsers. It comes with a very clean API that describes
+        how
+        users can interact with a browser. The same API can be used for ios automation as well. In the
         end,
-        whatever you test, as long as the user interacts with a GUI, it's always "find something",
+        whatever you test, as long as the user interacts with a GUI, it's always "find something" and then 
         "interact
         with it".
         Using that API for ios automation has 2 main advantages :
@@ -61,11 +61,11 @@
         Java,
         C#, Python, Ruby clients. You can reuse whichever one your confortable and focus on the
         business
-        logic of your tests rather than on learning a new API.
+        logic of your tests instead of having to learn a new API.
 
         <h3>System requirements for OSX</h3>
 
-        <p>ios-driver is built upon 2 different frameworks from apple. </p>
+        <p>ios-driver is built upon 2 different frameworks from Apple. </p>
 
         <p>For <b>native apps</b>, it uses the UIAutomation framework from Apple.<a
                 href="http://developer.apple.com/library/ios/#documentation/DeveloperTools/Reference/UIAutomationRef/_index.html">doc</a>You
@@ -92,18 +92,18 @@
     Simulator - iOS 6.1 -sdk iphonesimulator6.1
 </code></pre>
 
-        <p>If you have iOS 5.0 or above in the Simulator SDKs, the UIAutomation part of will
+        <p>If you have iOS 5.0 or above in the Simulator SDKs, the UIAutomation part of
             ios-driver will
             work.</p>
 
         <p>For mobile web, or UIWebviews in hybrid apps ( beta ), it uses the remote webkit
-            debug protocol.That requires ios 6+ and safari6+. If you don't have that, the native
+            debug protocol. That requires ios 6+ and safari6+. If you don't have that, the native
             part of ios
             driver will still work, but you won't be able to test mobile web pages on safari, or to
             interact
             with UIWebviews using dom selectors.</p>
 
-        <p>The sever is written in Java.</p>
+        <p>The server is written in Java.</p>
 
 <pre><code>$ java -version
 </code></pre>
@@ -121,7 +121,7 @@
         <p>With the UI :
             from the menu bar, Product &gt; Profile</p>
 
-        <p>Select Automation.That will build the app and start Instruments. you can close
+        <p>Select Automation. That will build the app and start Instruments. You can close
             Instruments.
             From xcode, select Organizer &gt; Projects
             You will have the application in the folder mentioned in Derived data.

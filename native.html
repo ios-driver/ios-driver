@@ -53,13 +53,13 @@
         <p>Make sure you've been through the  <a href="setup.html" id="setup2">setup</a> page and that all
             the requirements are met</p>
 
-        <p>Start the server and connect the Intl moutains demo app from Apple</p>
+        <p>Start the server and connect the Intl moutains demo app from Apple through the following command</p>
 <pre>
 $java -jar server-standalone-0.5.0.jar -aut ~/Documents/build/InternationalMountains.app -port 4444
     </code></pre>
 
-        <p>start the app, find some elements,click on the first element,print some text,take a screenshot and
-            quit.</p>
+        <p>The following code starts the app, finds some elements, clicks on the first element, prints some text, takes a screenshot and
+            quits.</p>
 
 <pre class="prettyprint" >
 public static void main(String[] args) throws MalformedURLException {
@@ -104,11 +104,11 @@ Mountain 1 was first climbed on 29 May 1953 and has a height of 8,848 meters
 
         <h3>Native tests and localization</h3>
 
-        <p>IOS automation is very content based. There is no id like for web pages. This makes testing of
-            localized pages a bit trickier to test.Fortunately the localization data is embedded into the
+        <p>IOS automation is very content based. There are no IDs like for web pages. This makes testing of
+            localized pages a bit trickier. Fortunately the localization data is embedded into the
             app, so the server can access it if you know the key for the content. </p>
-        <p> In the previous example, the app started in the default language, english and the locator is
-            hardcoded to english.Let's start it in chinese, and make the test content free.</p>
+        <p> In the previous example, the app started in the default language, English and the locator is
+            hardcoded to English. Let's start it in Chinese, and make the test content free.</p>
 
         <p> To specify the language : </p>
 
@@ -133,7 +133,7 @@ Mountain 1 was first climbed on 29 May 1953 and has a height of 8,848 meters
 
 
         <p>The complete test code is now content free, and you can switch between en, fr and zh without having
-            to maintain your own localization dictionary.You can now start building your generic page objects,
+            to maintain your own localization dictionary. You can now start building your generic page objects,
             and focus on the functionality rather than the content. </p>
 
         Complete code for zh :
@@ -184,10 +184,10 @@ public static void main(String[] args) throws MalformedURLException {
 
 
 
-        <p>The previous example had some "magic" values.UIATableCell, UIAStaticText, sentenceFormat.If you're
+        <p>The previous example had some "magic" values. UIATableCell, UIAStaticText, sentenceFormat. If you're
             the developer of the app, those value will make sense. If you're not, you can use the inspector to
             find them. The inspector allows you to have the 'inspect element' feature you use to write a selenium
-            web test.Read more about it here : <a href="inspector.html" id="inspector2">Inspector</a></p>
+            web test. Read more about it here : <a href="inspector.html" id="inspector2">Inspector</a></p>
 
 
         <h3>Creating locators :</h3>
@@ -211,7 +211,7 @@ public static void main(String[] args) throws MalformedURLException {
 
         <p>the map of parameters ( the DesiredCapabilities object ) accept a set of parameters that
             will
-            define the configuration the simulator will start with</p>
+            define the configuration the simulator will start with:</p>
 
         <lu>
             <li>device: iphone (default) | ipad</li>
@@ -238,7 +238,7 @@ public static void main(String[] args) throws MalformedURLException {
 
         <p>The underlying framework running the native part is instruments. Instruments tests are
             written in JS. It's possible to execute instruments scripts directly by using the default
-        webdriver client.The arguments and returned objects follow the webdriver convention.</p>
+        webdriver client. The arguments and returned objects follow the webdriver convention.</p>
 
         <p>For example :</p>
 <pre class="prettyprint" >
@@ -273,9 +273,9 @@ private Object executeScript(String script, Object... args) {
 }
 </pre>
 
-<p>Some instruments JS methods do not work as expected and have been overwritten in ios-driver.You
+<p>Some instruments JS methods do not work as expected and have been overwritten in ios-driver. You
 can find the documentation about those differences and all the additional functions can be found
- <a href="jsdoc/index.html">here</a></p>
+ <a href="jsdoc/index.html">here.</a></p>
 
     </section>
 </div>
