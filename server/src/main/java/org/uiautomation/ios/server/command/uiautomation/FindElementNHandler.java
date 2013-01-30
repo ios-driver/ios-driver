@@ -24,8 +24,8 @@ import org.uiautomation.ios.server.IOSDriver;
 public class FindElementNHandler extends BaseFindElementNHandler {
 
   private static final String jsTemplate = "var root = UIAutomation.cache.get(':reference');"
-      + "var result = root.element(:depth,:criteria);" 
-      + "UIAutomation.createJSONResponse(':sessionId',0,result);";
+                                           + "var result = root.element(:depth,:criteria);"
+                                           + "UIAutomation.createJSONResponse(':sessionId',0,result);";
 
   public FindElementNHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -35,12 +35,13 @@ public class FindElementNHandler extends BaseFindElementNHandler {
     if (isXPathMode()) {
       setJS("I will not be executed.");
     } else {
-      setJS(getJSForFindElementUsingInstruments());
+      setJS(""); //getJSForFindElementUsingInstruments());
     }
   }
 
   @Override
   public Response handle() throws Exception {
+    setJS(getJSForFindElementUsingInstruments());
     if (!isXPathMode()) {
       return super.handle();
     } else {
@@ -60,13 +61,13 @@ public class FindElementNHandler extends BaseFindElementNHandler {
 
   private String getJSForFindElementUsingInstruments() {
     int depth = getRequest().getPayload().optInt("depth", -1);
-      String js = jsTemplate
-          .replace(":sessionId", getRequest().getSession())
-          .replace(":depth", "" + depth)
-          .replace(":reference", getReference())
-          .replace(":criteria", getCriteria().stringify().toString());
-     return js;
+    String js = jsTemplate
+        .replace(":sessionId", getRequest().getSession())
+        .replace(":depth", "" + depth)
+        .replace(":reference", getReference())
+        .replace(":criteria", getCriteria().stringify().toString());
+    return js;
   }
 
-  
+
 }

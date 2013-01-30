@@ -118,6 +118,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
 
   }
 
+  // TODO freynaud use keyboard.js bot.Keyboard.prototype.moveCursor = function(element)
   private String getNativeElementClickOnItAndTypeUsingKeyboardScript(String value)
       throws Exception {
     // web stuff.

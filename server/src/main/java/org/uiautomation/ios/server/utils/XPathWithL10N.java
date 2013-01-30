@@ -1,13 +1,13 @@
 package org.uiautomation.ios.server.utils;
 
+import org.openqa.selenium.WebDriverException;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.openqa.selenium.WebDriverException;
 
 public class XPathWithL10N {
 
@@ -54,7 +54,7 @@ public class XPathWithL10N {
     return keys;
   }
 
-  private String getKey(String function) {
+  public String getKey(String function) {
     String res = function.replaceAll("l10n\\(", "");
     res = res.replaceAll("(\"|'|\\))", "");
     return res;
@@ -64,4 +64,8 @@ public class XPathWithL10N {
     return keys;
   }
 
+
+  public String getKey() {
+    return getKeysToL10N().iterator().next();
+  }
 }

@@ -1,5 +1,7 @@
 package org.uiautomation.ios.e2e.uicatalogapp;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -47,6 +49,7 @@ public class CriteriaTest extends BaseIOSDriverTest {
     Assert.assertEquals(element.getName(), buttonName);
   }
 
+
   @Test
   public void regexMatch() {
 
@@ -68,7 +71,7 @@ public class CriteriaTest extends BaseIOSDriverTest {
     UIAElement element = driver.findElement(c);
 
     UIARect position = element.getRect();
-  
+
     // top left corner
     Criteria test = new LocationCriteria(position.getX(), position.getY());
     UIAElement res = driver.findElement(test);
