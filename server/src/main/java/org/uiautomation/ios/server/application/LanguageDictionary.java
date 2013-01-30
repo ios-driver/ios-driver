@@ -33,27 +33,22 @@ import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.server.utils.PlistFileUtils;
 
 /**
- * 
- * Represents the apple localisation of an IOS native app for a given language.
- * In Xcode, it will be Localizable.string ( theLanguage ) file.
+ * Represents the apple localisation of an IOS native app for a given language. In Xcode, it will be
+ * Localizable.string ( theLanguage ) file.
  */
 public class LanguageDictionary {
 
   // TODO freynaud
-  // public final Form normalizer = Form.NFD;
   public static final Form norme = Form.NFKC;
   private final AppleLocale language;
-  // private final boolean legacyFormat;
   private final Map<String, String> content = new HashMap<String, String>();
   private static final Logger log = Logger.getLogger(LanguageDictionary.class.getName());
 
   /**
-   * Creates a new dictionary for the language specified. Will guess the format
-   * of the underlying project structure, legacy ( with verbose name) or new.
-   * 
-   * @param language
-   * @throws WebDriverException
-   *           if the language isn't recognized.
+   * Creates a new dictionary for the language specified. Will guess the format of the underlying
+   * project structure, legacy ( with verbose name) or new.
+   *
+   * @throws WebDriverException if the language isn't recognized.
    */
   public LanguageDictionary(String lrojName) throws WebDriverException {
     language = new AppleLocale(lrojName);
@@ -66,7 +61,9 @@ public class LanguageDictionary {
       String original = content.get(key);
 
       boolean match = match(string, original);
-      boolean tooGeneric = key.equals("%@ %d of %d") || key.equals("%@ at %@") || key.equals("(%@)");
+      boolean
+          tooGeneric =
+          key.equals("%@ %d of %d") || key.equals("%@ at %@") || key.equals("(%@)");
       if (match && !tooGeneric) {
         ContentResult r = new ContentResult(language, key, original, string);
         for (String s : r.getArgs()) {
@@ -128,11 +125,8 @@ public class LanguageDictionary {
   }
 
   /**
-   * 
-   * @param aut
-   *          the application under test. /A/B/C/xxx.app
+   * @param aut the application under test. /A/B/C/xxx.app
    * @return the list of the folders hosting the l10ned files.
-   * @throws WebDriverException
    */
   public static List<File> getL10NFiles(File aut) {
     List<File> res = new ArrayList<File>();
@@ -155,23 +149,16 @@ public class LanguageDictionary {
   }
 
   /**
-   * Take a json file ( plist exported as json format ) localizable.strings and
-   * loads its content.
-   * 
-   * @param content
-   * @throws JSONException
+   * Take a json file ( plist exported as json format ) localizable.strings and loads its content.
    */
   public void addJSONContent(JSONObject content) throws JSONException {
     this.content.putAll(convertToMap(content));
   }
 
   /**
-   * 
-   * @param json
-   *          the json object containing all the key : value pairs for the
-   *          translation of the app.
+   * @param json the json object containing all the key : value pairs for the translation of the
+   *             app.
    * @return a key : value map.
-   * @throws JSONException
    */
   private Map<String, String> convertToMap(JSONObject json) throws JSONException {
     Map<String, String> res = new HashMap<String, String>();
@@ -185,11 +172,7 @@ public class LanguageDictionary {
   }
 
   /**
-   * 
-   * @param f
-   *          the Localizable.strings file to use for the content.
-   * @return
-   * @throws Exception
+   * @param f the Localizable.strings file to use for the content.
    */
   public static LanguageDictionary createFromFile(File f) throws Exception {
     String name = extractLanguageName(f);
@@ -208,10 +191,6 @@ public class LanguageDictionary {
 
   /**
    * load the content of the binary file and returns it as a json object.
-   * 
-   * @param binaryFile
-   * @return
-   * @throws Exception
    */
   public JSONObject readContentFromBinaryFile(File binaryFile) throws Exception {
     PlistFileUtils util = new PlistFileUtils(binaryFile);
@@ -222,7 +201,7 @@ public class LanguageDictionary {
    * format used to store the l10n files. See
    * http://stackoverflow.com/questions/7051120/why-doesnt-my
    * -file-move-into-en-lproj-but-instead-into-a-new-english-lproj
-   * 
+   *
    * @return
    */
   /*
@@ -231,8 +210,6 @@ public class LanguageDictionary {
 
   /**
    * the language this dictionary is for.
-   * 
-   * @return
    */
   public AppleLocale getLanguage() {
     return language;
@@ -248,18 +225,23 @@ public class LanguageDictionary {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
+    if (this == obj) {
       return true;
-    if (obj == null)
+    }
+    if (obj == null) {
       return false;
-    if (getClass() != obj.getClass())
+    }
+    if (getClass() != obj.getClass()) {
       return false;
+    }
     LanguageDictionary other = (LanguageDictionary) obj;
     if (language == null) {
-      if (other.language != null)
+      if (other.language != null) {
         return false;
-    } else if (!language.equals(other.language))
+      }
+    } else if (!language.equals(other.language)) {
       return false;
+    }
     return true;
   }
 
@@ -275,7 +257,7 @@ public class LanguageDictionary {
       String r = String.format(format, res.getArgs().toArray());
       return r;
     } catch (Exception e) {
-      log.warning("Error working on  "+languageTemplate);
+      log.warning("Error working on  " + languageTemplate);
       return "ERR:languageTemplate";
     }
 
