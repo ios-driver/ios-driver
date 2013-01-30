@@ -25,6 +25,10 @@ UIATarget.prototype.locale = function () {
 
 UIATarget.prototype.setDeviceOrientation_original = UIATarget.prototype.setDeviceOrientation;
 
+/**
+ * Sets the orientation of the device, and wait for the animation to finish.
+ * @param orientation
+ */
 UIATarget.prototype.setDeviceOrientation = function (orientation) {
     this.setDeviceOrientation_original(orientation);
     var timeNeededForTheRotationAnimationToComplete = 0.8; // seconds.
@@ -36,6 +40,10 @@ UIATarget.prototype.setDeviceOrientation = function (orientation) {
     }
 }
 
+/**
+ *
+ * @return {string} the orientation, with the naming convention following the webdriver ones.
+ */
 UIATarget.prototype.getDeviceOrientation = function () {
     var orientation = UIATarget.localTarget().frontMostApp().interfaceOrientation();
     var map = {};
