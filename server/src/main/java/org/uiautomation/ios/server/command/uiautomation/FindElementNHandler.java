@@ -13,13 +13,13 @@
  */
 package org.uiautomation.ios.server.command.uiautomation;
 
-import java.util.Map;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
+
+import java.util.Map;
 
 public class FindElementNHandler extends BaseFindElementNHandler {
 
@@ -35,14 +35,14 @@ public class FindElementNHandler extends BaseFindElementNHandler {
     if (isXPathMode()) {
       setJS("I will not be executed.");
     } else {
-      setJS(""); //getJSForFindElementUsingInstruments());
+      setJS("");
     }
   }
 
   @Override
   public Response handle() throws Exception {
-    setJS(getJSForFindElementUsingInstruments());
     if (!isXPathMode()) {
+      setJS(getJSForFindElementUsingInstruments());
       return super.handle();
     } else {
       return createResponse(findElementParsingLocalXMLTree());
