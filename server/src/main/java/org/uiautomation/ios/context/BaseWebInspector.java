@@ -127,11 +127,11 @@ public abstract class BaseWebInspector implements MessageListener {
       context.newContext();
       checkForPageLoad();
       context.waitForLoadEvent();
+      // wait for everything to be ready by fetching the doc.
+      getDocument();
     } finally {
       context.eventsLock().unlock();
     }
-
-
   }
 
 
