@@ -191,18 +191,79 @@ public static void main(String[] args) throws MalformedURLException {
 
 
         <h3>Creating locators :</h3>
-        <p>first, have a look at the <a href="inspector.html">inspector</a>, it will give you a lot of information about the
+        <p>First, have a look at the <a href="inspector.html">inspector</a>, it will give you a lot of information about the
         internals of the application under test.</p>
 
+        <p>UIAutomation elements don't have id. You need to use some of their other properties to
+            identify them.The webdriver protocol isn't meant to be used for non-web applications, so
+            there is a bit of mapping involved.</p>
+
         <h5>name, value, label</h5>
+        <p>are mapped to linkText and partialLinkText</p>
+        <pre class="prettyprint">
+
+            By b = By.linkText("name=theName");
+            WebElement element = driver.findElement(b);
+
+            By b = By.linkText("value=theValue");
+            WebElement element = driver.findElement(b);
+
+            By b = By.linkText("label=theLabel");
+            WebElement element = driver.findElement(b);
+
+        </pre>
+
+        <p>partial/ regex matches are achieved using partialLinkText</p>
+
+        <pre class="prettyprint">
+            By b = By.partialLinkText("name=portionOfTheName");
+            WebElement element = driver.findElement(b);
+
+            // or regex.
+            By b = By.partialLinkText("name=portion(.*)Name");
+            WebElement element = driver.findElement(b);
+
+            // and can also handle localization
+            By b = By.partialLinkText("name=l10n('yourContentKey')");
+            WebElement element = driver.findElement(b);
+
+        </pre>
+
         <h5>type</h5>
+       <p>selection based on the element type are done with class name.</p>
+        <pre class="prettyprint">
+            By b = By.className("UIAButton");
+            WebElement element = driver.findElement(b);
+        </pre>
+
         <h5>xpath</h5>
+       <p>xpath2 is the most powerful mechanism for selector on ios-driver.It allows to combine all
+       the criteria above.</p>
+
+        <p>To match ""山 1 是8,848米高。它第一次攀登了在29 May 1953" from the Intl mountain demo app for
+        instance you can use :</p>
+        <pre class="prettyprint">
+
+            By b =  By.xpath("//*[matches(@name,l10n('meterFormat'))]");
+            // or
+            By b =  By.xpath("//UIAStaticText[matches(@name,l10n('meterFormat'))]");
+            // or
+            By b =  By.xpath("//UIAStaticText[@name,'山 1 是8,848米高。它第一次攀登了在29 May 1953')]");
+            // or
+            By b =  By.xpath("//UIAStaticText[contains(@name,'山')]");
+
+
+       </pre>
+
+        <p>will match any UIElement with name matching the value behind the meterFormat content key.</p>
+
+
 
 
 
         <h3>Starting parameters :</h3>
 
-        <p>the map of parameters ( the DesiredCapabilities object ) accept a set of parameters that
+        <p>The map of parameters ( the DesiredCapabilities object ) accept a set of parameters that
             will
             define the configuration the simulator will start with:</p>
 
