@@ -4,13 +4,14 @@
     <meta charset='utf-8'/>
     <meta http-equiv="X-UA-Compatible" content="chrome=1"/>
     <meta name="description" content="ios-driver : IOS native app automation"/>
-
+    <link href="stylesheets/prettify.css" type="text/css" rel="stylesheet"/>
+    <script type="text/javascript" src="javascripts/prettify.js"></script>
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
     <title>ios-driver</title>
 </head>
 
-<body>
+<body onload="prettyPrint()">
 
 <!-- HEADER -->
 <div id="header_wrap" class="outer">
@@ -220,6 +221,48 @@ public static void main(String[] args) throws MalformedURLException {
             <li> TODO doc : magic prefix plist_</li>
         </lu>
 
+        <h3>Executing raw instruments JS :</h3>
+
+        <p>The underlying framework running the native part is instruments. Instruments tests are
+            written in JS. It's possible to execute instruments scripts directly by using the default
+        webdriver client.The arguments and returned objects follow the webdriver convention.</p>
+
+        <p>For example :</p>
+<pre class="prettyprint" >
+
+/**
+*  instruments scripts can return a list of element. the elements can be used later on in the tests.
+*/
+@Test
+public void testShouldBeAbleToReturnAnArrayOfWebElements() {
+    WebDriver driver = new RemoteWebDriver(...);
+    // ...
+    List<WebElement> items = (List<WebElement>) executeScript("return UIATarget.localTarget().frontMostApp().windows()");
+    assertEquals(items.size(), 2);
+    driver.quit();
+}
+
+/**
+* Elements can be passed as parameter for the raw instruments scripts.
+*/
+@Test
+public void testShouldBeAbleToPassAWebElementAsArgument() {
+    WebDriver driver = new RemoteWebDriver(...);
+    // ...
+    WebElement cell = driver.findElement(By.xpath("//UIATableCell[@name='" + buttonsName + "']"));
+    String res = (String) executeScript("return arguments[0].type();", cell);
+    assertEquals(res, "UIATableCell");
+    driver.quit();
+}
+
+private Object executeScript(String script, Object... args) {
+    return ((JavascriptExecutor) driver).executeScript(script, args);
+}
+</pre>
+
+<p>Some instruments JS methods do not work as expected and have been overwritten in ios-driver.You
+can find the documentation about those differences and all the additional functions can be found
+ <a href="jsdoc/index.html">here</a></p>
 
     </section>
 </div>
