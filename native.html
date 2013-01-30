@@ -191,7 +191,7 @@ public static void main(String[] args) throws MalformedURLException {
 
 
         <h3>Creating locators :</h3>
-        <p>first, have a look at the <a href="inspector.html">inspector</a>, it will give you a lot of information about the
+        <p>First, have a look at the <a href="inspector.html">inspector</a>, it will give you a lot of information about the
         internals of the application under test.</p>
 
         <p>UIAutomation elements don't have id. You need to use some of their other properties to
@@ -205,12 +205,16 @@ public static void main(String[] args) throws MalformedURLException {
 
 
         <h5>xpath</h5>
+        <pre class="prettyprint">
+   By contentFree = By.xpath("//UIAStaticText[matches(@name,l10n('sentenceFormat'))]");
+   WebElement text = driver.findElement(contentFree);
+        </pre>
 
 
 
         <h3>Starting parameters :</h3>
 
-        <p>the map of parameters ( the DesiredCapabilities object ) accept a set of parameters that
+        <p>The map of parameters ( the DesiredCapabilities object ) accept a set of parameters that
             will
             define the configuration the simulator will start with:</p>
 
