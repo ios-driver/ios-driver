@@ -34,6 +34,7 @@
 - inspector should save the tmp screenshot in tmp dir
 - inspector cleanup
 - add selenium tests for the inspector ( update mocks ? )
+- make sendKeys type at the end of the input fields
 
 
 TODOs:
