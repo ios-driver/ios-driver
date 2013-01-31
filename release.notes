@@ -29,6 +29,12 @@
 + avoid switching between native and web for internal command.
 
 
+0.6.0 (current)
+-----
+- inspector should save the tmp screenshot in tmp dir
+- inspector cleanup
+- add selenium tests for the inspector ( update mocks ? )
+
 
 TODOs:
 -------
@@ -50,12 +56,10 @@ TODOs:
 - split handlers into native, web, and misc
 - fix the inspector ratio, mouse over is off.
 - see what happens for native events on hybrid apps.
-- add selenium tests for the inspector ( update mocks ? )
 - confusion between locale and languages
 - real device for web.
 - setup and teardown for device.
 - encapsulate result of logEleemntTree.
-- inspector should save the tmp screenshot in tmp dir
 - nativeDriver.executeScript should return UIAElement cast to what they are rather than WebElements.
 - use implicit wait to wait for the native keyboard 
 - remove all calls to plutil
