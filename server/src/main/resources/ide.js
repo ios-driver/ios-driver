@@ -30,12 +30,18 @@ $(document).ready(function () {
 
     });
     var root;
+    var xml;
     tree.bind("loaded.jstree", function (event, data) {
         root = tree.jstree('get_json')[0];
+        xml = root.metadata.xml;
+        xmlDoc = $.parseXML(xml);
+        //$xml = $(xmlDoc);
+        var xpath = "//UIANavigationBar";
+        var title = xmlDoc.evaluate(xpath, xmlDoc, null, XPathResult.ANY_TYPE, null);
+        console.log(title);
         var webView = extractWebView(root);
         if (webView != null) {
             setHTMLSource(webView.metadata.source);
-
         } else {
             setHTMLSource(null);
         }

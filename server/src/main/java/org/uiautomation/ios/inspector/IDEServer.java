@@ -39,7 +39,7 @@ public class IDEServer {
     servletContextHandler.setAttribute(Cache.KEY, c);
   }
 
-  public void init()  {
+  public void init() {
 
     servletContextHandler.addServlet(IDEServlet.class, "/*");
 
@@ -68,7 +68,7 @@ public class IDEServer {
 
   public IDEServer(int port) {
     server = new Server(new InetSocketAddress("localhost", port));
-    servletContextHandler = new ServletContextHandler(server, "/ide", true, false);
+    servletContextHandler = new ServletContextHandler(server, "/inspector", true, false);
   }
 
 }

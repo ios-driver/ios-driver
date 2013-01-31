@@ -1,11 +1,5 @@
 package org.uiautomation.ios.inspector;
 
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.uiautomation.ios.IOSCapabilities;
@@ -15,6 +9,13 @@ import org.uiautomation.ios.communication.device.Device;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.inspector.model.Cache;
 import org.uiautomation.ios.inspector.model.IDESessionModel;
+
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MockedCache implements Cache {
 
@@ -34,8 +35,11 @@ public class MockedCache implements Cache {
   }
 
   private void addModel(Device device, DeviceVariation variation, Orientation o) throws Exception {
-
-    String name = device + "_" + variation + "_" + o;
+    String v = o.toString();
+    if (!v.startsWith("UIA_DEVICE")) {
+      v = "UIA_DEVICE_ORIENTATION_" + v;
+    }
+    String name = device + "_" + variation + "_" + v;
 
     String capability = "mock/" + device + "_" + variation + ".json";
     String screenshot = "mock/" + name + ".jpg";
@@ -62,7 +66,9 @@ public class MockedCache implements Cache {
     JSONObject t = new JSONObject(tree.toString());
     IOSCapabilities c = new IOSCapabilities(new JSONObject(cap.toString()));
 
-    IDESessionModel model = new MockedModel(session, screenshot, t, c, new JSONObject(s.toString()));
+    IDESessionModel
+        model =
+        new MockedModel(session, screenshot, t, c, new JSONObject(s.toString()));
     cache.put(session, model);
 
   }

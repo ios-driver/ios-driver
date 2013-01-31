@@ -42,14 +42,17 @@ public class IDEMainView implements View {
       b.append("<head>");
 
       b.append(" <link rel='stylesheet' href='" + getResource("ide.css") + "'  type='text/css'/>");
-      b.append("<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>");
-      b.append("<script type='text/javascript' src='" + getResource("jquery.jstree.js") + "'></script>");
+      b.append(
+          "<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js'></script>");
+      b.append(
+          "<script type='text/javascript' src='" + getResource("jquery.jstree.js") + "'></script>");
 
       Device device = model.getCapabilities().getDevice();
-      DeviceVariation variation=model.getCapabilities().getDeviceVariation();
+      DeviceVariation variation = model.getCapabilities().getDeviceVariation();
 
       b.append("<script type='text/javascript' src='" + getResource("ide.js") + "'></script>");
-      b.append("<script type='text/javascript' src='" + getResource("uiactions.js") + "'></script>");
+      b.append(
+          "<script type='text/javascript' src='" + getResource("uiactions.js") + "'></script>");
 
       b.append("</head>");
 
@@ -63,14 +66,14 @@ public class IDEMainView implements View {
       b.append(" <div id='rotationCenter'>");
 
       b.append("<div id='frame'>");
-      b.append("<img src='" + getFrame(device,variation) + "' />");
+      b.append("<img src='" + getFrame(device, variation) + "' />");
       b.append("        <div id='screen'>");
-      
+
       int width = 320;
-      if (device==Device.ipad){
-        width=768;
+      if (device == Device.ipad) {
+        width = 768;
       }
-      b.append("         <img src='" + getScreen(device) + "' width='"+width+"px' />");
+      b.append("         <img src='" + getScreen(device) + "' width='" + width + "px' />");
       b.append("</div>");
       b.append("</div>");
       b.append("</div>");
@@ -84,24 +87,23 @@ public class IDEMainView implements View {
       b.append("</div>");
       b.append("<div id ='details' ></div>");
       b.append("</div>");
-      
-      
+
       b.append("<div id ='tree'  ></div>");
 
       String d = "iphone";
       if (model.getCapabilities().getDevice() == Device.ipad) {
         d = "ipad";
       }
-      b.append("<script >configure('" + d + "','"+ variation + "','" + model.getDeviceOrientation() + "');</script>");
+      b.append("<script >configure('" + d + "','" + variation + "','" + model.getDeviceOrientation()
+               + "');</script>");
       b.append("<script >resize();</script>");
       b.append("<div id ='topmenu'>");
       b.append("<div id=\"picture\"/>");
       String icon = getIcon();
-      if (icon!=null){
+      if (icon != null) {
         b.append("<img src=\"" + getIcon() + "\"/>");
       }
-          
-     
+
       b.append("</div>");
       b.append("<ul>");
       b.append("<li id=\"capabilities\"><a href=\"#\">See Capabilities</a></li>");
@@ -132,9 +134,11 @@ public class IDEMainView implements View {
        */
       b.append("<div class=\"overlayhtml\" id=\"overlayhtml\" style=\"display:none;\"></div>");
       b.append("<div class=\"boxhtml\" id=\"boxhtml\">");
-      b.append("<a class=\"boxclosehtml\" id=\"boxclosehtml\"><p class=\"arrow-right-html\"></p></a>");
+      b.append(
+          "<a class=\"boxclosehtml\" id=\"boxclosehtml\"><p class=\"arrow-right-html\"></p></a>");
       b.append("<h4>Web Inspector</h4>");
-      b.append("<iframe id=\"webinspector\" src=\"ide/session/"+model.getSession()+"/latestWebView\"></iframe> ");
+      b.append("<iframe id=\"webinspector\" src=\"ide/session/" + model.getSession()
+               + "/latestWebView\"></iframe> ");
       b.append("</div>");
       /* END OVERLAY HTML */
 
@@ -158,7 +162,8 @@ public class IDEMainView implements View {
       Set<String> keys = model.getCapabilities().getRawCapabilities().keySet();
       for (String capability : keys) {
         capabilities.append("<p><b>" + capability + "</b>: "
-            + model.getCapabilities().getRawCapabilities().get(capability) + "</p>");
+                            + model.getCapabilities().getRawCapabilities().get(capability)
+                            + "</p>");
       }
       return capabilities.toString();
     }
@@ -169,13 +174,12 @@ public class IDEMainView implements View {
     return getResource("session/" + model.getSession().getSessionId() + "/screenshot.png");
   }
 
-  private String getFrame(Device device,DeviceVariation variation) {
-    
-    
-    if (device == Device.iphone ) {
-      if (variation == DeviceVariation.Retina4){
+  private String getFrame(Device device, DeviceVariation variation) {
+
+    if (device == Device.iphone) {
+      if (variation == DeviceVariation.Retina4) {
         return getResource("frame_iphone5.png");
-      }else{
+      } else {
         return getResource("frame_iphone.png");
       }
     } else {
@@ -234,5 +238,5 @@ public class IDEMainView implements View {
     }
     return null;
   }
-  
+
 }

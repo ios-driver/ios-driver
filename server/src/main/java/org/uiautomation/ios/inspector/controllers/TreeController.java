@@ -24,6 +24,7 @@ import org.uiautomation.ios.inspector.model.Cache;
 import org.uiautomation.ios.inspector.model.IDESessionModel;
 import org.uiautomation.ios.inspector.views.JSONView;
 import org.uiautomation.ios.inspector.views.View;
+import org.uiautomation.ios.server.utils.JSONToXMLConvertor;
 
 public class TreeController implements IDECommandController {
 
@@ -43,13 +44,15 @@ public class TreeController implements IDECommandController {
     final Session s = new Session(extractSession(req.getPathInfo()));
     IDESessionModel model = cache.getModel(s);
     JSONObject rootNode = model.getTree().getJSONObject("tree");
-    JSONObject jsTreeObject = createFrom(rootNode);
+    JSONToXMLConvertor conv = new JSONToXMLConvertor(rootNode);
+    JSONObject jsTreeObject = createFrom(rootNode, conv.asXML());
     return new JSONView(jsTreeObject);
 
   }
 
-  private JSONObject createFrom(JSONObject from) throws JSONException {
+  private JSONObject createFrom(JSONObject from, String xml) throws JSONException {
     JSONObject node = new JSONObject();
+
     node.put("data", getNodeTitle(from));
     node.put("id", getNodeTitle(from));
 
@@ -59,13 +62,17 @@ public class TreeController implements IDECommandController {
     node.put("attr", attr);
 
     JSONObject metadata = new JSONObject();
+    if (xml != null) {
+      metadata.put("xml", xml);
+    }
+
     metadata.put("type", from.getString("type"));
     metadata.put("reference", from.getString("ref"));
     metadata.put("label", from.getString("label"));
     metadata.put("name", from.getString("name"));
     metadata.put("value", from.getString("value"));
     metadata.put("l10n", from.getJSONObject("l10n"));
-    if (from.has("source")){
+    if (from.has("source")) {
       metadata.put("source", from.getString("source"));
     }
 
@@ -84,7 +91,7 @@ public class TreeController implements IDECommandController {
       node.put("children", jstreeChildren);
       for (int i = 0; i < children.length(); i++) {
         JSONObject child = children.getJSONObject(i);
-        JSONObject jstreenode = createFrom(child);
+        JSONObject jstreenode = createFrom(child, null);
         jstreeChildren.put(jstreenode);
       }
     }

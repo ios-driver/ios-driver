@@ -3,6 +3,7 @@ package org.uiautomation.ios.inspector;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.json.JSONObject;
@@ -19,7 +20,8 @@ public class MockedModel implements IDESessionModel {
   private final JSONObject status;
   private final IOSCapabilities cap;
 
-  public MockedModel(Session session, String screenshotResource, JSONObject tree, IOSCapabilities cap, JSONObject status) {
+  public MockedModel(Session session, String screenshotResource, JSONObject tree,
+                     IOSCapabilities cap, JSONObject status) {
     this.session = session;
     this.tree = tree;
     this.screenshotResource = screenshotResource;
@@ -44,7 +46,9 @@ public class MockedModel implements IDESessionModel {
 
   @Override
   public InputStream getScreenshot() {
-    InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(screenshotResource);
+    InputStream
+        is =
+        Thread.currentThread().getContextClassLoader().getResourceAsStream(screenshotResource);
     if (is == null) {
       try {
         return new FileInputStream(screenshotResource);
@@ -70,7 +74,11 @@ public class MockedModel implements IDESessionModel {
 
   @Override
   public URL getEndPoint() {
-    throw new RuntimeException("NI");
+    try {
+      return new URL("http://localhost:4444/wd/hub");
+    } catch (MalformedURLException e) {
+      throw new RuntimeException("NI");
+    }
   }
 
   @Override
