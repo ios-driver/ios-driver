@@ -83,7 +83,7 @@ public class IDEMainView implements View {
       b.append("</div>");
 
       b.append(
-          "<div id='xpathHelper' >Xpath :<br><input type='text' value='' id='xpathInput' /><br><div id='xpathLog' > log</div></div>");
+          "<div id='xpathHelper' >Xpath :<br><input type='text' value='' id='xpathInput' size='50' /><br><div id='xpathLog' > log</div></div>");
       b.append("<div id ='detailsparent' >");
       b.append("<div id ='htmlmenu'>");
       b.append("<ul>");
