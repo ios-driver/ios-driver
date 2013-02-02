@@ -51,6 +51,8 @@ public class IDEMainView implements View {
 
       Device device = model.getCapabilities().getDevice();
       DeviceVariation variation = model.getCapabilities().getDeviceVariation();
+      b.append(
+          "<script type='text/javascript' src='" + getResource("inspector.js") + "'></script>");
 
       b.append("<script type='text/javascript' src='" + getResource("ide.js") + "'></script>");
       b.append(
@@ -81,6 +83,8 @@ public class IDEMainView implements View {
       b.append("</div>");
       b.append("</div>");
 
+      b.append(
+          "<div id='xpathHelper' >Xpath :<br><input type='text' value='' id='xpathInput' /><br><div id='xpathLog' > log</div></div>");
       b.append("<div id ='detailsparent' >");
       b.append("<div id ='htmlmenu'>");
       b.append("<ul>");

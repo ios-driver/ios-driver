@@ -84,6 +84,15 @@ h4 {
     height: 100%;
 }
 
+#xpathHelper {
+    position: absolute;
+    background: #f5f5f5;
+    width: 350px;
+    height: 100px;
+    top: 250px;
+    left: 450px;
+}
+
 #topmenu {
     position: absolute;
     background: #455372;
@@ -266,3 +275,4 @@ a.boxclosehtml {
     border-bottom: 10px solid transparent;
     border-left: 10px solid #FFFFFF;
 }
+
