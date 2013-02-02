@@ -46,6 +46,8 @@ public class IDEMainView implements View {
           "<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js'></script>");
       b.append(
           "<script type='text/javascript' src='" + getResource("jquery.jstree.js") + "'></script>");
+      b.append(
+          "<script type='text/javascript' src='" + getResource("jquery.xpath.js") + "'></script>");
 
       Device device = model.getCapabilities().getDevice();
       DeviceVariation variation = model.getCapabilities().getDeviceVariation();

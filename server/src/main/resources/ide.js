@@ -1,56 +1,94 @@
 $(document).ready(function () {
 
-    // offsetX Y set in the main page as global variable.
-    var tree = $("#tree").jstree({
-                                     "core": {
-                                         "animation": 0,
-                                         "load_open": true
-                                     },
-                                     "json_data": {
-                                         "ajax": {
-                                             "url": "tree"
-                                         }
-                                     },
-                                     "themes": {
-                                         "theme": "apple",
-                                         // "dots" : false,
-                                         // "icons" : false
-                                     },
-                                     "plugins": ["themes", "json_data", "ui"]
-                                 });
+    function Inspector() {
+    };
 
-    tree.bind("select_node.jstree", function (e, data) {
+    var inspector = new Inspector();
+
+    // offsetX Y set in the main page as global variable.
+    inspector.tree = $("#tree").jstree({
+                                           "core": {
+                                               "animation": 0,
+                                               "load_open": true
+                                           },
+                                           "json_data": {
+                                               "ajax": {
+                                                   "url": "tree"
+                                               }
+                                           },
+                                           "themes": {
+                                               "theme": "apple",
+                                               // "dots" : false,
+                                               // "icons" : false
+                                           },
+                                           "plugins": ["themes", "json_data", "ui"]
+                                       });
+
+    inspector.tree.bind("select_node.jstree", function (e, data) {
 
     });
 
-    tree.bind("hover_node.jstree", function (e, data) {
+    inspector.tree.bind("hover_node.jstree", function (e, data) {
         if (!lock) {
             setSelected(data);
         }
 
     });
-    var root;
-    var xml;
-    tree.bind("loaded.jstree", function (event, data) {
-        root = tree.jstree('get_json')[0];
-        xml = root.metadata.xml;
-        xmlDoc = $.parseXML(xml);
-        //$xml = $(xmlDoc);
-        var xpath = "//UIANavigationBar";
-        var title = xmlDoc.evaluate(xpath, xmlDoc, null, XPathResult.ANY_TYPE, null);
-        console.log(title);
-        var webView = extractWebView(root);
+
+    inspector.tree.bind("loaded.jstree", function (event, data) {
+        inspector.root = inspector.tree.jstree('get_json')[0];
+        inspector.xml = inspector.root.metadata.xml;
+
+        var webView = extractWebView(inspector.root);
         if (webView != null) {
             setHTMLSource(webView.metadata.source);
         } else {
             setHTMLSource(null);
         }
-        tree.jstree("open_all");
+        inspector.tree.jstree("open_all");
     });
-    tree.bind("refresh.jstree", function (event, data) {
-        root = tree.jstree('get_json')[0];
-        tree.jstree("open_all");
+
+    Inspector.prototype.findElementsByXpath2 = function (xpath) {
+
+        var xpath = "//UIANavigationBar[matches(@name,'UICatal(.*)')]";
+
+        var parseXml;
+
+        if (window.DOMParser) {
+            parseXml = function (xmlStr) {
+                return (new window.DOMParser()).parseFromString(xmlStr, "text/xml");
+            };
+        } else if ("undefined" !== typeof window.ActiveXObject
+            && new window.ActiveXObject("Microsoft.XMLDOM")) {
+            parseXml = function (xmlStr) {
+                var xmlDoc = new window.ActiveXObject("Microsoft.XMLDOM");
+                xmlDoc.async = "false";
+                xmlDoc.loadXML(xmlStr);
+                return xmlDoc;
+            };
+        } else {
+            parseXml = function (xmlStr) {
+                return null;
+            }
+        }
+
+        var xmlObject = parseXml(inspector.xml);
+        var context = xmlObject.ownerDocument == null
+            ? xmlObject.documentElement
+            : xmlObject.ownerDocument.documentElement;
+        var nsResolver = xmlObject.createNSResolver(context);
+        var res = $(context).xpath(xpath);
+        /*var iterator = xmlObject.evaluate(xpath, xmlObject, nsResolver, XPathResult.ANY_TYPE,null);
+         console.log(iterator.iterateNext()); */
+        console.log(res);
+
+    }
+
+    inspector.tree.bind("refresh.jstree", function (event, data) {
+        inspector.root = inspector.tree.jstree('get_json')[0];
+        inspector.tree.jstree("open_all");
     });
+
     extractWebView = function (node) {
         var type = node.metadata.type;
         if ("UIAWebView" === type) {
@@ -97,8 +135,8 @@ $(document).ready(function () {
             l10n = node.rslt.obj.data('l10n');
 
         }
-        tree.jstree('deselect_all');
-        tree.jstree('select_node', '#' + ref);
+        inspector.tree.jstree('deselect_all');
+        inspector.tree.jstree('select_node', '#' + ref);
         var translationFound = (l10n.matches != 0);
 
         highlight(rect.x, rect.y, rect.h, rect.w, translationFound);
@@ -155,16 +193,16 @@ $(document).ready(function () {
                                + ",h=" + rect.h + "w=" + rect.w + "</p>" + prettyL10N);
 
     };
-    var root;
-    $("#mouseOver").mousemove(function (e) {
 
+    $("#mouseOver").mousemove(function (e) {
+        inspector.findElementsByXpath2("test");
         if (!lock) {
             var x = e.pageX / scale - realOffsetX;
             var y = e.pageY / scale - (realOffsetY + 45);
             // x = x / scale;
             // y = y / scale;
             console.log(x + "," + y);
-            var finder = new CandidateFinder(x, y, root);
+            var finder = new CandidateFinder(x, y, inspector.root);
             var node = finder.getNode();
             if (node) {
                 setSelected(node);
