@@ -65,7 +65,6 @@ public class IDEMainView implements View {
 
       b.append("<div id='simulator'>");
 
-      b.append("<div id ='highlight' ></div>");
       b.append("<div id='mouseOver'></div>");
       b.append(" <div id='rotationCenter'>");
 

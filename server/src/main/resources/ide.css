@@ -164,13 +164,9 @@ h4 {
     padding-bottom: 0.3em;
 }
 
-#highlight {
+.highlight {
     position: absolute;
     background-color: yellow;
-    left: 0px;
-    top: 45px;
-    height: 0px;
-    width: 0px;
     z-index: 3;
     opacity: 0.5;
 }
