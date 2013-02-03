@@ -36,8 +36,8 @@ SafariPageNavigator.prototype.enter = function () {
         var pages = buttons[4];
         log("there are " + pages.value() + " pages.");
         pages.tap();
+        this.target.delay(0.3);
         this.initSelectWebViewMode();
-        this.target.delay(2);
         return this;
         // select web view mode already.
     } else if (buttons.length === 2) {
@@ -128,7 +128,7 @@ SafariPageNavigator.prototype.select = function (direction) {
         'y': y
     };
     this.target.tap(point);
-    this.target.delay(2);
+    this.target.delay(0.4);
 
 }
 

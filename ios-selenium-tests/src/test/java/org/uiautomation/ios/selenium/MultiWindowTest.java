@@ -15,10 +15,10 @@
 package org.uiautomation.ios.selenium;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.UIAModels.UIAElement;
-import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.LocationCriteria;
@@ -72,16 +72,46 @@ public class MultiWindowTest extends BaseSeleniumTest {
     //http://localhost:7694/common/click_frames.html
     driver.switchTo().frame("source");
 
+    // click to create a new window.
     driver.findElement(By.id("new-window")).click();
-    //Thread.sleep(5000);
-    driver.switchTo().window(WorkingMode.Native.toString());
-    long start = System.currentTimeMillis();
-    driver.executeScript("new SafariPageNavigator().enter().next(2);");
-    System.out.println("duration : " + (System.currentTimeMillis() - start) + "ms");
-    //Thread.sleep(5000);
+    waitForWindow(driver, "Web_2");
+
+    // native + 2 web windows.
+    Assert.assertEquals(driver.getWindowHandles().size(), 3);
+
+    // mobile safari auto switches to a newly opened window.
+    switchTo("Web_1");
+    driver.switchTo().defaultContent();
+    Assert.assertEquals(driver.getTitle(), "click frames");
+    Assert.assertTrue(driver.getCurrentUrl().endsWith("click_frames.html"));
+
+    // click to create window n°3.
+    driver.switchTo().frame("source");
+    driver.findElement(By.id("new-window")).click();
+    waitForWindow(driver, "Web_3");
+
+    switchTo("Web_1");
+    switchTo("Web_3");
+    switchTo("Web_1");
+    switchTo("Web_2");
+
 
   }
 
+  private void switchTo(String handle) {
+    driver.switchTo().window(handle);
+    Assert.assertEquals(driver.getWindowHandle(), handle);
+  }
+
+  private void waitForWindow(WebDriver driver, String handle) {
+    while (!driver.getWindowHandle().equals(handle)) {
+      try {
+        Thread.sleep(50);
+      } catch (InterruptedException e) {
+        // ignore
+      }
+    }
+  }
 
   public static void main(String[] args) {
 

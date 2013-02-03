@@ -14,6 +14,9 @@
 
 package org.uiautomation.ios.mobileSafari.remoteWebkitProtocol;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.openqa.selenium.By;
@@ -33,6 +36,7 @@ import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebNativeBackedElement;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -203,21 +207,34 @@ public class RemoteIOSWebDriver {
     return "" + currentInspector.getPageIdentifier();
   }
 
-  public int getWindowHandleIndexDifference(String pageId) {
-    int currentIndex = -1;
+  public int getWindowHandleIndex() {
+    int pageId = currentInspector.getPageIdentifier();
     for (WebkitPage p : getPages()) {
+      if (p.getPageId() == pageId) {
+        return getPages().indexOf(p);
+      }
+    }
+    throw new WebDriverException("Cannot find current page.");
+  }
+
+  public int getWindowHandleIndexDifference(String pageId) {
+    // first, sort pages.
+    List<WebkitPage> pages = getPages();
+    int currentIndex = -1;
+    for (WebkitPage p : pages) {
       if (p.getPageId() == currentInspector.getPageIdentifier()) {
-        currentIndex = getPages().indexOf(p);
+        currentIndex = pages.indexOf(p);
       }
     }
     int destination = -1;
-    for (WebkitPage p : getPages()) {
+    for (WebkitPage p : pages) {
       if ((p.getPageId() + "").equals(pageId)) {
-        destination = getPages().indexOf(p);
+        destination = pages.indexOf(p);
       }
     }
     return destination - currentIndex;
   }
+
 
   public WebDriver.TargetLocator switchTo() {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
@@ -274,6 +291,8 @@ public class RemoteIOSWebDriver {
   public String getLoadedFlag() {
     return currentInspector.getLoadedFlag();
   }
+
+
 }
 
 

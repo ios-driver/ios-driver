@@ -14,6 +14,8 @@
 
 package org.uiautomation.ios.mobileSafari.remoteWebkitProtocol;
 
+import com.google.common.collect.ImmutableList;
+
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.context.BaseWebInspector;
@@ -183,7 +185,7 @@ public class SimulatorSession {
   }
 
   public void setPages(List<WebkitPage> pages) {
-    this.pages = pages;
+    this.pages = ImmutableList.copyOf(pages);
   }
 
   public List<WebkitPage> getPages() {
@@ -243,26 +245,42 @@ class DefaultMessageListener implements MessageListener, EventListener {
 
     if (message instanceof ApplicationSentListingMessage) {
       ApplicationSentListingMessage m = (ApplicationSentListingMessage) message;
-      System.out.println("Message " + m.toString());
       int change = m.getPages().size() - simulator.getPages().size();
-      simulator.setPages(m.getPages());
-      simulator.signalSimSentPages();
 
-      System.out.println("change : " + change);
       if (change != 0) {
-        System.out
-            .println("SimulatorSession#DefaultMessageListener - page number changed by " + change);
+        List<WebkitPage> pages = new ArrayList<WebkitPage>();
+        pages.addAll(simulator.getPages());
+        for (WebkitPage p : simulator.getPages()) {
+          m.getPages().remove(p);
+        }
+        if (m.getPages().size() != 1) {
+          throw new WebDriverException(m.getPages().size() + " new pages.");
+        }
+        WebkitPage newOne = m.getPages().get(0);
+
+        int
+            index =
+            simulator.getPages().size() == 0 ? 0
+                                             : session.getRemoteWebDriver().getWindowHandleIndex()
+                                               + 1;
+        pages.add(index, newOne);
+
+        simulator.setPages(pages);
+        simulator.signalSimSentPages();
+
         if (simulator.getPages().size() == 0) {
-          System.out.println("first page. Nothing to do.");
+          //log.fine("first page. Nothing to do.");
         } else {
-          System.out.println("a new page appeared. Safari focused it.");
-          WebkitPage focus = m.getPages().get(m.getPages().size() - 1);
+          WebkitPage focus = newOne;
+
           if (session != null) {
+            waitForWindowSwitchingAnimation();
             session.getRemoteWebDriver().switchTo(focus);
           } else {
             simulator.connect(focus);
           }
         }
+
       }
 
     }
@@ -280,6 +298,14 @@ class DefaultMessageListener implements MessageListener, EventListener {
     }
 
     //System.err.println(message);
+  }
+
+
+  private void waitForWindowSwitchingAnimation() {
+    try {
+      Thread.sleep(400);
+    } catch (InterruptedException ignore) {
+    }
   }
 
   @Override

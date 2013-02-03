@@ -8,7 +8,7 @@ import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 
 
-public class WebkitPage {
+public class WebkitPage implements Comparable<WebkitPage> {
 
   private final String WIRTitleKey;
   private final String WIRURLKey;
@@ -39,6 +39,11 @@ public class WebkitPage {
 
   public String getConnection() {
     return WIRConnectionIdentifierKey;
+  }
+
+  @Override
+  public String toString() {
+    return "[" + WIRPageIdentifierKey + "]" + ", title:" + WIRTitleKey;
   }
 
   @Override
@@ -76,5 +81,10 @@ public class WebkitPage {
       throw new WebDriverException(e);
     }
     return json;
+  }
+
+  @Override
+  public int compareTo(WebkitPage webkitPage) {
+    return this.getPageId() - webkitPage.getPageId();
   }
 }
