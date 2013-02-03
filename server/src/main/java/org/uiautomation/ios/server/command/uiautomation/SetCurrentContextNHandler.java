@@ -49,8 +49,11 @@ public class SetCurrentContextNHandler extends BaseNativeCommandHandler {
         String pageId = context.replace(WorkingMode.Web + "_", "");
 
         int delta = getSession().getRemoteWebDriver().getWindowHandleIndexDifference(pageId);
-        getSession().getNativeDriver()
-            .executeScript("new SafariPageNavigator().enter().goToWebView(" + delta + ");");
+        System.out.println("delta " + delta);
+        if (delta != 0) {
+          getSession().getNativeDriver()
+              .executeScript("new SafariPageNavigator().enter().goToWebView(" + delta + ");");
+        }
         getSession().getRemoteWebDriver().switchTo(pageId);
 
 

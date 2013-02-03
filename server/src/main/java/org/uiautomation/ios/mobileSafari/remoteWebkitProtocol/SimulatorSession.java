@@ -54,14 +54,17 @@ public class SimulatorSession {
   private Condition simRegistered = simLock.newCondition();
   private Condition simSentApps = simLock.newCondition();
   private Condition simSentPages = simLock.newCondition();
+  private final ServerSideSession session;
 
   private final List<WebInspector> created = new ArrayList<WebInspector>();
 
   private final String connectionKey;
 
-  public SimulatorSession(ResponseFinder... finders) {
+  public SimulatorSession(ServerSideSession session, ResponseFinder... finders) {
+    this.session = session;
     connectionKey = UUID.randomUUID().toString();
-    simulatorProtocol = new SimulatorProtocolImpl(new DefaultMessageListener(this), finders);
+    simulatorProtocol =
+        new SimulatorProtocolImpl(new DefaultMessageListener(this, session), finders);
     simulatorProtocol.sendSetConnectionKey(connectionKey);
     waitForSimToRegister();
     waitForSimToSendApps();
@@ -187,8 +190,7 @@ public class SimulatorSession {
     return pages;
   }
 
-  public BaseWebInspector connect(WebkitPage webkitPage, ServerSideSession session) {
-    System.out.println("BaseWebInspector, connect to pageId=" + webkitPage.getPageId());
+  public BaseWebInspector connect(WebkitPage webkitPage) {
     for (WebkitPage page : getPages()) {
       if (page.equals(webkitPage)) {
         WebInspector
@@ -217,9 +219,11 @@ public class SimulatorSession {
 class DefaultMessageListener implements MessageListener, EventListener {
 
   private final SimulatorSession simulator;
+  private final ServerSideSession session;
 
-  public DefaultMessageListener(SimulatorSession simulator) {
+  public DefaultMessageListener(SimulatorSession simulator, ServerSideSession session) {
     this.simulator = simulator;
+    this.session = session;
   }
 
 
@@ -239,18 +243,28 @@ class DefaultMessageListener implements MessageListener, EventListener {
 
     if (message instanceof ApplicationSentListingMessage) {
       ApplicationSentListingMessage m = (ApplicationSentListingMessage) message;
+      System.out.println("Message " + m.toString());
       int change = m.getPages().size() - simulator.getPages().size();
+      simulator.setPages(m.getPages());
+      simulator.signalSimSentPages();
+
+      System.out.println("change : " + change);
       if (change != 0) {
         System.out
             .println("SimulatorSession#DefaultMessageListener - page number changed by " + change);
         if (simulator.getPages().size() == 0) {
           System.out.println("first page. Nothing to do.");
         } else {
-          System.out.println("a new page appeared. Safari probably focused it.");
+          System.out.println("a new page appeared. Safari focused it.");
+          WebkitPage focus = m.getPages().get(m.getPages().size() - 1);
+          if (session != null) {
+            session.getRemoteWebDriver().switchTo(focus);
+          } else {
+            simulator.connect(focus);
+          }
         }
       }
-      simulator.setPages(m.getPages());
-      simulator.signalSimSentPages();
+
     }
 
     if (message instanceof ApplicationDataMessage) {

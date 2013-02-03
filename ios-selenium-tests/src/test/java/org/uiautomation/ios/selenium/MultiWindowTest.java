@@ -33,19 +33,36 @@ public class MultiWindowTest extends BaseSeleniumTest {
     driver.switchTo().frame("source");
 
     driver.findElement(By.id("new-window")).click();
-    driver.switchTo().defaultContent();
 
     // native + 2 web windows.
     Assert.assertEquals(driver.getWindowHandles().size(), 3);
 
+    // mobile safari auto switches to a newly opened window.
+    driver.switchTo().window("Web_1");
+    driver.switchTo().defaultContent();
     Assert.assertEquals(driver.getTitle(), "click frames");
     Assert.assertTrue(driver.getCurrentUrl().endsWith("click_frames.html"));
+
     driver.switchTo().window("Web_2");
     Assert.assertEquals(driver.getTitle(), "XHTML Test Page");
     Assert.assertTrue(driver.getCurrentUrl().endsWith("xhtmlTest.html"));
+
     driver.switchTo().window("Web_1");
     Assert.assertEquals(driver.getTitle(), "click frames");
     Assert.assertTrue(driver.getCurrentUrl().endsWith("click_frames.html"));
+
+    driver.switchTo().window("Web_2");
+    Assert.assertEquals(driver.getTitle(), "XHTML Test Page");
+    Assert.assertTrue(driver.getCurrentUrl().endsWith("xhtmlTest.html"));
+
+    driver.switchTo().window("Web_1");
+    Assert.assertEquals(driver.getTitle(), "click frames");
+    Assert.assertTrue(driver.getCurrentUrl().endsWith("click_frames.html"));
+
+    driver.switchTo().window("Web_1");
+    Assert.assertEquals(driver.getTitle(), "click frames");
+    Assert.assertTrue(driver.getCurrentUrl().endsWith("click_frames.html"));
+
 
   }
 

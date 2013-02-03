@@ -75,7 +75,7 @@ public class RemoteIOSWebDriver {
   private Map<Integer, BaseWebInspector> inspectors = new HashMap<Integer, BaseWebInspector>();
 
   public RemoteIOSWebDriver(ServerSideSession session, ResponseFinder... finders) {
-    simulator = new SimulatorSession(finders);
+    simulator = new SimulatorSession(session, finders);
     usbProtocol = new Object();
     this.session = session;
   }
@@ -131,7 +131,7 @@ public class RemoteIOSWebDriver {
   }
 
   public void switchTo(WebkitPage page) {
-    currentInspector = simulator.connect(page, session);
+    currentInspector = simulator.connect(page);
     inspectors.put(page.getPageId(), currentInspector);
   }
 
