@@ -16,7 +16,6 @@ package org.uiautomation.ios.mobileSafari.remoteWebkitProtocol;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
@@ -30,7 +29,6 @@ import org.uiautomation.ios.mobileSafari.message.WebkitDevice;
 import org.uiautomation.ios.mobileSafari.message.WebkitPage;
 import org.uiautomation.ios.server.DOMContext;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.webInspector.DOM.Page;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebNativeBackedElement;
 
@@ -41,8 +39,6 @@ import java.util.Map;
 
 public class RemoteIOSWebDriver {
 
-
-  private DOMContext context;
 
   public static void main(String[] args) throws Exception {
     RemoteIOSWebDriver driver = new RemoteIOSWebDriver(null);
@@ -82,6 +78,10 @@ public class RemoteIOSWebDriver {
     simulator = new SimulatorSession(finders);
     usbProtocol = new Object();
     this.session = session;
+  }
+
+  public boolean isConnected() {
+    return currentInspector != null;
   }
 
   public void stop() {
@@ -124,6 +124,7 @@ public class RemoteIOSWebDriver {
     for (WebkitPage p : getPages()) {
       if ((p.getPageId() + "").equals(pageId)) {
         switchTo(p);
+        return;
       }
     }
     throw new WebDriverException("no such page " + pageId);
@@ -200,6 +201,22 @@ public class RemoteIOSWebDriver {
 
   public String getWindowHandle() {
     return "" + currentInspector.getPageIdentifier();
+  }
+
+  public int getWindowHandleIndexDifference(String pageId) {
+    int currentIndex = -1;
+    for (WebkitPage p : getPages()) {
+      if (p.getPageId() == currentInspector.getPageIdentifier()) {
+        currentIndex = getPages().indexOf(p);
+      }
+    }
+    int destination = -1;
+    for (WebkitPage p : getPages()) {
+      if ((p.getPageId() + "").equals(pageId)) {
+        destination = getPages().indexOf(p);
+      }
+    }
+    return destination - currentIndex;
   }
 
   public WebDriver.TargetLocator switchTo() {

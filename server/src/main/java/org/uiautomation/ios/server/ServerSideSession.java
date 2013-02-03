@@ -23,7 +23,7 @@ import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
 import org.uiautomation.ios.UIAModels.configuration.DriverConfiguration;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
-import org.uiautomation.ios.client.uiamodels.impl.*;
+import org.uiautomation.ios.client.uiamodels.impl.ServerSideNativeDriver;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.device.Device;
 import org.uiautomation.ios.mobileSafari.AlertDetector;
@@ -173,9 +173,11 @@ public class ServerSideSession extends Session {
   public void setMode(WorkingMode mode) {
     if (mode == WorkingMode.Web) {
       try {
-        String bundleId = application.getMetadata("CFBundleIdentifier");
-        webDriver.connect(bundleId);
-        webDriver.switchTo(webDriver.getPages().get(0));
+        if (!webDriver.isConnected()) {
+          String bundleId = application.getMetadata("CFBundleIdentifier");
+          webDriver.connect(bundleId);
+          webDriver.switchTo(webDriver.getPages().get(0));
+        }
       } catch (Exception e) {
         e.printStackTrace();
         throw new NoSuchWindowException("Cannot switch to window " + mode, e);

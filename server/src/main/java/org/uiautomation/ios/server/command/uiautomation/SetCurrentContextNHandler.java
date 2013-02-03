@@ -40,10 +40,6 @@ public class SetCurrentContextNHandler extends BaseNativeCommandHandler {
     getSession().setMode(mode);
 
     if (context.startsWith(WorkingMode.Web + "_")) {
-      /*List<UIAElement> views = getSession().getNativeDriver().findElements(new TypeCriteria(UIAWebView.class));
-      if (views.isEmpty()) {
-        throw new NoSuchWindowException("Cannot find a web view in the current app.");
-      }*/
       if (getSession().getRemoteWebDriver().getWindowHandles().isEmpty()) {
         throw new NoSuchWindowException("Cannot find a web view in the current app.");
       }
@@ -51,7 +47,13 @@ public class SetCurrentContextNHandler extends BaseNativeCommandHandler {
         getSession().setMode(WorkingMode.Web);
       } else {
         String pageId = context.replace(WorkingMode.Web + "_", "");
+
+        int delta = getSession().getRemoteWebDriver().getWindowHandleIndexDifference(pageId);
+        getSession().getNativeDriver()
+            .executeScript("new SafariPageNavigator().enter().goToWebView(" + delta + ");");
         getSession().getRemoteWebDriver().switchTo(pageId);
+
+
       }
 
     }

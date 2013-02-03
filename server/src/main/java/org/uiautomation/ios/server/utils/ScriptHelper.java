@@ -41,6 +41,8 @@ public class ScriptHelper {
   private final String lib4 = "instruments-js/UIATarget.js";
   private final String lib5 = "instruments-js/UIAAlert.js";
   private final String lib6 = "instruments-js/Cache.js";
+  private final String lib7 = "instruments-js/SafariPageNavigator.js";
+
   private static final String FILE_NAME = "uiamasterscript";
 
   private String load(String resource) throws IOException {
@@ -70,6 +72,7 @@ public class ScriptHelper {
 
     scriptContent.append(load(lib5));
     scriptContent.append(load(lib6));
+    scriptContent.append(load(lib7));
     scriptContent.append(c);
     scriptContent.append(load(main));
     return scriptContent.toString();

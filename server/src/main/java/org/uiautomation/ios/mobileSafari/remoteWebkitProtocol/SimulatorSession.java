@@ -188,6 +188,7 @@ public class SimulatorSession {
   }
 
   public BaseWebInspector connect(WebkitPage webkitPage, ServerSideSession session) {
+    System.out.println("BaseWebInspector, connect to pageId=" + webkitPage.getPageId());
     for (WebkitPage page : getPages()) {
       if (page.equals(webkitPage)) {
         WebInspector
@@ -238,9 +239,18 @@ class DefaultMessageListener implements MessageListener, EventListener {
 
     if (message instanceof ApplicationSentListingMessage) {
       ApplicationSentListingMessage m = (ApplicationSentListingMessage) message;
+      int change = m.getPages().size() - simulator.getPages().size();
+      if (change != 0) {
+        System.out
+            .println("SimulatorSession#DefaultMessageListener - page number changed by " + change);
+        if (simulator.getPages().size() == 0) {
+          System.out.println("first page. Nothing to do.");
+        } else {
+          System.out.println("a new page appeared. Safari probably focused it.");
+        }
+      }
       simulator.setPages(m.getPages());
       simulator.signalSimSentPages();
-      //
     }
 
     if (message instanceof ApplicationDataMessage) {
