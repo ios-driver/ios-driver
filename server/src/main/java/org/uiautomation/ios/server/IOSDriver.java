@@ -13,31 +13,32 @@
  */
 package org.uiautomation.ios.server;
 
-import static org.uiautomation.ios.IOSCapabilities.MAGIC_PREFIX;
+import org.json.JSONException;
+import org.openqa.selenium.SessionNotCreatedException;
+import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.IOSCapabilities;
+import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.ResourceCache;
+import org.uiautomation.iosdriver.DeviceDetector;
+import org.uiautomation.iosdriver.DeviceInfo;
+import org.uiautomation.iosdriver.DeviceManager;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.LogManager;
 
-import org.json.JSONException;
-import org.openqa.selenium.SessionNotCreatedException;
-import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.server.application.IOSApplication;
-import org.uiautomation.ios.server.application.AppleLocale;
-import org.uiautomation.ios.server.application.ResourceCache;
-import org.uiautomation.ios.server.utils.BuildInfo;
-import org.uiautomation.ios.server.utils.ClassicCommands;
+import static org.uiautomation.ios.IOSCapabilities.MAGIC_PREFIX;
 
-public class IOSDriver {
+public class IOSDriver implements DeviceDetector {
 
   private final List<ServerSideSession> sessions = new ArrayList<ServerSideSession>();
   private final Set<IOSApplication> supportedApplications = new HashSet<IOSApplication>();
+  private final List<DeviceInfo> connectedDevices = new CopyOnWriteArrayList<DeviceInfo>();
   private final HostInfo hostInfo;
   private final ResourceCache cache = new ResourceCache();
 
@@ -49,6 +50,8 @@ public class IOSDriver {
       System.err.println("Cannot configure logger.");
     }
     this.hostInfo = new HostInfo(port);
+    new DeviceManager(this).startDetection();
+
   }
 
   public void addSupportedApplication(IOSApplication application) {
@@ -197,4 +200,16 @@ public class IOSDriver {
     return supportedApplications;
   }
 
+  @Override
+  public void onDeviceAdded(DeviceInfo deviceInfo) {
+    System.out.println(
+        "ADDED : " + deviceInfo.getDeviceName() + ",IOS "
+        + deviceInfo.getProductVersion() + "[" + deviceInfo.getUniqueDeviceID() + "]");
+  }
+
+  @Override
+  public void onDeviceRemoved(DeviceInfo deviceInfo) {
+    System.out.println(
+        "REMOVED : " + deviceInfo.getDeviceName() + "[" + deviceInfo.getUniqueDeviceID() + "]");
+  }
 }
