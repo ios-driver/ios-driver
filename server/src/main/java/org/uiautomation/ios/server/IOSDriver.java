@@ -31,12 +31,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 import static org.uiautomation.ios.IOSCapabilities.MAGIC_PREFIX;
 
 public class IOSDriver implements DeviceDetector {
 
+
   private final List<ServerSideSession> sessions = new ArrayList<ServerSideSession>();
+  private static final Logger log = Logger.getLogger(IOSDriver.class.getName());
   private final Set<IOSApplication> supportedApplications = new HashSet<IOSApplication>();
   private final List<DeviceInfo> connectedDevices = new CopyOnWriteArrayList<DeviceInfo>();
   private final HostInfo hostInfo;
@@ -202,14 +205,14 @@ public class IOSDriver implements DeviceDetector {
 
   @Override
   public void onDeviceAdded(DeviceInfo deviceInfo) {
-    System.out.println(
+    log.info(
         "ADDED : " + deviceInfo.getDeviceName() + ",IOS "
         + deviceInfo.getProductVersion() + "[" + deviceInfo.getUniqueDeviceID() + "]");
   }
 
   @Override
   public void onDeviceRemoved(DeviceInfo deviceInfo) {
-    System.out.println(
+    log.info(
         "REMOVED : " + deviceInfo.getDeviceName() + "[" + deviceInfo.getUniqueDeviceID() + "]");
   }
 }
