@@ -49,8 +49,7 @@ public class WebInspector extends BaseWebInspector {
   public JSONObject sendCommand(JSONObject command) {
     JSONObject
         res =
-        simulatorProtocol
-            .sendCommand(command, connectionKey, bundleId, senderKey, "" + pageIdentifierKey);
+        simulatorProtocol.sendWebkitCommand(command, pageIdentifierKey);
     return res;
   }
 

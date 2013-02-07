@@ -1,0 +1,187 @@
+package org.uiautomation.ios.mobileSafari.remoteWebkitProtocol;
+
+import com.google.common.collect.ImmutableMap;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.mobileSafari.DefaultMessageHandler;
+import org.uiautomation.ios.mobileSafari.MessageHandler;
+import org.uiautomation.ios.mobileSafari.PlistManager;
+import org.uiautomation.ios.mobileSafari.ResponseFinder;
+import org.uiautomation.ios.webInspector.DOM.RemoteExceptionException;
+
+import java.util.Map;
+import java.util.UUID;
+import java.util.logging.Logger;
+
+public abstract class WebInspector2 {
+
+  private static final Logger log = Logger.getLogger(WebInspector2.class.getName());
+  protected final MessageHandler handler;
+  private Thread listen;
+  private volatile boolean keepGoing = true;
+  private String connectionId;
+  private String bundleId;
+  private final PlistManager plist = new PlistManager();
+  private final static String senderBase = "E0F4C128-F4FF-4D45-A538-BA382CD660";
+  private int commandId = 0;
+
+
+  protected abstract void start();
+
+
+  protected abstract void read() throws Exception;
+
+  protected abstract void sendMessage(String message);
+
+  public WebInspector2(MessageListener listener,
+                       ResponseFinder... finders) {
+    this.handler = new DefaultMessageHandler(listener, finders);
+
+    start();
+    listen = new Thread(new Runnable() {
+
+      @Override
+      public void run() {
+        try {
+          while (keepGoing) {
+            Thread.sleep(50);
+            read();
+          }
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+    });
+
+    listen.start();
+  }
+
+  public void addListener(MessageListener listener) {
+    handler.addListener(listener);
+  }
+
+
+  public void register() {
+    if (connectionId != null) {
+      throw new WebDriverException("Session already created.");
+    }
+    connectionId = UUID.randomUUID().toString();
+
+    Map<String, String> var = ImmutableMap.of("$WIRConnectionIdentifierKey", connectionId);
+    sendSystemCommand(PlistManager.SET_CONNECTION_KEY, var);
+  }
+
+  public void connect(String bundleId) {
+    if (connectionId == null) {
+      throw new WebDriverException("Cannot connect to app " + bundleId + ".Call register first.");
+    }
+    Map<String, String> var = ImmutableMap.of
+        (
+            "$WIRConnectionIdentifierKey", this.connectionId,
+            "$bundleId", bundleId
+        );
+    sendSystemCommand(PlistManager.CONNECT_TO_APP, var);
+    this.bundleId = bundleId;
+  }
+
+  public void attachToPage(int pageId) {
+    String senderKey = generateSenderString(pageId);
+    if (connectionId == null || bundleId == null) {
+      throw new WebDriverException("You need to call register and connect first.");
+    }
+
+    Map<String, String> var = ImmutableMap.of
+        (
+            "$WIRConnectionIdentifierKey", connectionId,
+            "$bundleId", bundleId,
+            "$WIRSenderKey", senderKey,
+            "$WIRPageIdentifierKey", "" + pageId
+        );
+    sendSystemCommand(PlistManager.SET_SENDER_KEY, var);
+  }
+
+  private void sendSystemCommand(String templateName, Map<String, String> variables) {
+    String xml = plist.loadFromTemplate(templateName);
+    for (String key : variables.keySet()) {
+      xml = xml.replace(key, variables.get(key));
+    }
+    sendMessage(xml);
+    //byte[] bytes = plist.plistXmlToBinary(xml);
+    //sendBinaryMessage(bytes);
+  }
+
+
+  public synchronized JSONObject sendWebkitCommand(JSONObject command, int pageId) {
+    String sender = generateSenderString(pageId);
+    try {
+      commandId++;
+      command.put("id", commandId);
+
+      long start = System.currentTimeMillis();
+
+      String xml = plist.JSONCommand(command);
+      // perf("got xml \t" + (System.currentTimeMillis() - start) + "ms.");
+      Map<String, String> var = ImmutableMap.of
+          (
+              "$WIRConnectionIdentifierKey", connectionId,
+              "$bundleId", bundleId,
+              "$WIRSenderKey", sender,
+              "$WIRPageIdentifierKey", "" + pageId
+          );
+      for (String key : var.keySet()) {
+        xml = xml.replace(key, var.get(key));
+      }
+      //System.out.println("sending "+xml);
+
+      //byte[] bytes = plist.plistXmlToBinary(xml);
+      // perf("prepared request \t" + (System.currentTimeMillis() - start) +
+      // "ms.");
+      //sendBinaryMessage(bytes);
+      sendMessage(xml);
+      // perf("sent request \t\t" + (System.currentTimeMillis() - start) + "ms.");
+      JSONObject response = handler.getResponse(command.getInt("id"));
+      // perf("got response\t\t" + (System.currentTimeMillis() - start) + "ms.");
+      JSONObject error = response.optJSONObject("error");
+      if (error != null) {
+        throw new RemoteExceptionException(error, command);
+      } else if (response.optBoolean("wasThrown", false)) {
+        throw new WebDriverException("remote JS exception " + response.toString(2));
+      } else {
+        log.fine(System.currentTimeMillis() + "\t\t" + (System.currentTimeMillis() - start) + "ms\t"
+                 + command.getString("method") + " " + command);
+        JSONObject res = response.getJSONObject("result");
+        if (res == null) {
+          System.err.println("GOT a null result from " + response.toString(2));
+        }
+        return res;
+      }
+    } catch (JSONException e) {
+      throw new WebDriverException(e);
+    }
+  }
+
+  private String generateSenderString(int pageIdentifierKey) {
+    if (pageIdentifierKey < 10) {
+      return senderBase + "0" + pageIdentifierKey;
+    } else {
+      return senderBase + pageIdentifierKey;
+    }
+
+  }
+
+  public void stop() {
+    if (handler != null) {
+      handler.stop();
+    }
+
+    keepGoing = false;
+    if (listen != null) {
+      listen.interrupt();
+    }
+    keepGoing = true;
+
+  }
+
+}

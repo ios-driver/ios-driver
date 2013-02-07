@@ -67,7 +67,7 @@ public class SimulatorSession {
     connectionKey = UUID.randomUUID().toString();
     simulatorProtocol =
         new SimulatorProtocolImpl(new DefaultMessageListener(this, session), finders);
-    simulatorProtocol.sendSetConnectionKey(connectionKey);
+    simulatorProtocol.register();
     waitForSimToRegister();
     waitForSimToSendApps();
   }
@@ -82,7 +82,7 @@ public class SimulatorSession {
     for (WebkitApplication app : knownApps) {
       if (bundleId.equals(app.getBundleId())) {
         this.bundleId = bundleId;
-        simulatorProtocol.sendConnectToApplication(connectionKey, bundleId);
+        simulatorProtocol.connect(bundleId);
         waitForSimToSendPages();
         return;
       }
@@ -200,10 +200,9 @@ public class SimulatorSession {
             new WebInspector(null, webkitPage.getPageId(), simulatorProtocol, bundleId,
                              connectionKey, session);
         // TODO move to webinspector
-        simulatorProtocol.sendSetConnectionKey(connectionKey);
-        simulatorProtocol.sendConnectToApplication(connectionKey, bundleId);
-        simulatorProtocol.sendSenderKey(connectionKey, bundleId, inspector.getSenderKey(),
-                                        "" + page.getPageId());
+        //simulatorProtocol.register();
+        //simulatorProtocol.connect(bundleId);
+        simulatorProtocol.attachToPage(page.getPageId());
         inspector.sendCommand(Page.enablePageEvent());
 
         boolean ok = created.add(inspector);
