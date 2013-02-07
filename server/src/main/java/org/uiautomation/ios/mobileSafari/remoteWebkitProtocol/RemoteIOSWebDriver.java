@@ -46,7 +46,7 @@ public class RemoteIOSWebDriver {
 
   public static void main(String[] args) throws Exception {
     RemoteIOSWebDriver driver = new RemoteIOSWebDriver(null);
-    driver.connect(uiCatalog);
+    driver.connect(safari);
     driver.switchTo(driver.getPages().get(0));
     driver.get("http://ebay.co.uk/");
 

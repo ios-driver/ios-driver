@@ -22,7 +22,6 @@ import org.uiautomation.ios.context.BaseWebInspector;
 import org.uiautomation.ios.context.WebInspector;
 import org.uiautomation.ios.mobileSafari.EventListener;
 import org.uiautomation.ios.mobileSafari.ResponseFinder;
-import org.uiautomation.ios.mobileSafari.SimulatorProtocolImpl;
 import org.uiautomation.ios.mobileSafari.events.Event;
 import org.uiautomation.ios.mobileSafari.message.ApplicationConnectedMessage;
 import org.uiautomation.ios.mobileSafari.message.ApplicationDataMessage;
@@ -34,7 +33,10 @@ import org.uiautomation.ios.mobileSafari.message.WebkitApplication;
 import org.uiautomation.ios.mobileSafari.message.WebkitDevice;
 import org.uiautomation.ios.mobileSafari.message.WebkitPage;
 import org.uiautomation.ios.server.ServerSideSession;
+import org.uiautomation.ios.webInspector.DOM.DOM;
 import org.uiautomation.ios.webInspector.DOM.Page;
+
+import org.uiautomation.ios.webInspector.DOM.Runtime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +48,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class SimulatorSession {
 
-  private SimulatorProtocolImpl simulatorProtocol;
+  private WebInspector2 simulatorProtocol;
   private WebkitDevice device;
   private List<WebkitApplication> applications;
   private List<WebkitPage> pages = new ArrayList<WebkitPage>();
@@ -65,8 +67,10 @@ public class SimulatorSession {
   public SimulatorSession(ServerSideSession session, ResponseFinder... finders) {
     this.session = session;
     connectionKey = UUID.randomUUID().toString();
+    //simulatorProtocol =
+    //    new SimulatorProtocolImpl(new DefaultMessageListener(this, session), finders);
     simulatorProtocol =
-        new SimulatorProtocolImpl(new DefaultMessageListener(this, session), finders);
+        new RealDeviceProtocolImpl(new DefaultMessageListener(this, session), finders);
     simulatorProtocol.register();
     waitForSimToRegister();
     waitForSimToSendApps();
@@ -203,6 +207,7 @@ public class SimulatorSession {
         //simulatorProtocol.register();
         //simulatorProtocol.connect(bundleId);
         simulatorProtocol.attachToPage(page.getPageId());
+        inspector.sendCommand(Runtime.evaluate("alert(ttt123)"));
         inspector.sendCommand(Page.enablePageEvent());
 
         boolean ok = created.add(inspector);

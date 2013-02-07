@@ -11,11 +11,11 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.uiautomation.ios.mobileSafari;
+package org.uiautomation.ios.mobileSafari.remoteWebkitProtocol;
 
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.MessageListener;
-import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.WebInspector2;
+import org.uiautomation.ios.mobileSafari.PlistManager;
+import org.uiautomation.ios.mobileSafari.ResponseFinder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -65,7 +65,7 @@ public class SimulatorProtocolImpl extends WebInspector2 {
    * sends the message to the AUT.
    */
   protected void sendMessage(String xml) {
-    System.out.println("sending " + xml);
+    //System.out.println("sending " + xml);
     try {
       byte[] bytes = xml.getBytes("UTF-8");
       OutputStream os = socket.getOutputStream();
@@ -96,7 +96,7 @@ public class SimulatorProtocolImpl extends WebInspector2 {
             message =
             new PlistManager().plistBinaryToXml(Arrays.copyOfRange(bytes, 4, size + 4));
         handler.handle(message);
-        System.out.println(message);
+        //System.out.println(message);
         buf = new ByteArrayOutputStream();
         buf.write(bytes, 4 + size, bytes.length - size - 4);
         //return message;

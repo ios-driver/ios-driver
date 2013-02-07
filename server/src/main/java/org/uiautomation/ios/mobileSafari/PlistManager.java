@@ -26,6 +26,7 @@ import org.openqa.selenium.WebDriverException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 
 public class PlistManager {
 
@@ -60,7 +61,14 @@ public class PlistManager {
 
   public String JSONCommand(JSONObject command) {
     String json = command.toString();
-    String s = Base64.encodeBase64String(json.getBytes());
+    String s = null;
+    try {
+      s = Base64.encodeBase64String(json.getBytes("UTF-8"));
+      s =
+          "eyJtZXRob2QiOiJSdW50aW1lLmV2YWx1YXRlIiwicGFyYW1zIjp7ImV4cHJlc3Npb24iOiJhbGVydCgndHQxMjMnKSIsIm9iamVjdEdyb3VwIjoiY29uc29sZSIsImluY2x1ZGVDb21tYW5kTGluZUFQSSI6dHJ1ZSwiZG9Ob3RQYXVzZU9uRXhjZXB0aW9uc0FuZE11dGVDb25zb2xlIjp0cnVlLCJyZXR1cm5CeVZhbHVlIjpmYWxzZX0sImlkIjo1N30=";
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+    }
     String template = loadFromTemplate(SEND_JSON_COMMAND);
     String res = template.replace("$json_encoded", s);
     return res;

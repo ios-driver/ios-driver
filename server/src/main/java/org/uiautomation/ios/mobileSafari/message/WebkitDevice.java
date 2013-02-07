@@ -18,18 +18,19 @@ import com.dd.plist.NSDictionary;
 
 public class WebkitDevice {
 
-  private final String WIRSimulatorNameKey;
-  private final String WIRSimulatorBuildKey;
+  //private final String WIRSimulatorNameKey;
+  //private final String WIRSimulatorBuildKey;
 
   public WebkitDevice(NSDictionary dict) {
-    WIRSimulatorNameKey = dict.objectForKey("WIRSimulatorNameKey").toString();
-    WIRSimulatorBuildKey = dict.objectForKey("WIRSimulatorBuildKey").toString();
+    //WIRSimulatorNameKey = dict.objectForKey("WIRSimulatorNameKey").toString();
+    //WIRSimulatorBuildKey = dict.objectForKey("WIRSimulatorBuildKey").toString();
   }
 
 
   @Override
   public String toString() {
-    return WIRSimulatorNameKey + ",build=" + WIRSimulatorBuildKey;
+    //return WIRSimulatorNameKey + ",build=" + WIRSimulatorBuildKey;
+    return "TODO";
   }
 
 }
