@@ -20,8 +20,10 @@ import com.dd.plist.XMLPropertyListParser;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.webInspector.DOM.Runtime;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,11 +63,21 @@ public class PlistManager {
 
   public String JSONCommand(JSONObject command) {
     String json = command.toString();
+    /*try {
+      json = "{\"method\":\"Runtime.evaluate\",\"params\":{\"expression\":\"alert('command "+command.getInt("id")+"')\",\"objectGroup\":\"console\",\"includeCommandLineAPI\":true,\"doNotPauseOnExceptionsAndMuteConsole\":true,\"returnByValue\":false},\"id\":"+command.getInt("id")+"}";
+    } catch (JSONException e) {
+      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+    }*/
     String s = null;
     try {
       s = Base64.encodeBase64String(json.getBytes("UTF-8"));
-      s =
-          "eyJtZXRob2QiOiJSdW50aW1lLmV2YWx1YXRlIiwicGFyYW1zIjp7ImV4cHJlc3Npb24iOiJhbGVydCgndHQxMjMnKSIsIm9iamVjdEdyb3VwIjoiY29uc29sZSIsImluY2x1ZGVDb21tYW5kTGluZUFQSSI6dHJ1ZSwiZG9Ob3RQYXVzZU9uRXhjZXB0aW9uc0FuZE11dGVDb25zb2xlIjp0cnVlLCJyZXR1cm5CeVZhbHVlIjpmYWxzZX0sImlkIjo1N30=";
+      System.out.println("encoded :" + s);
+      //s =
+      //    "eyJtZXRob2QiOiJSdW50aW1lLmV2YWx1YXRlIiwicGFyYW1zIjp7ImV4cHJlc3Npb24iOiJhbGVydCgndHQxMjMnKSIsIm9iamVjdEdyb3VwIjoiY29uc29sZSIsImluY2x1ZGVDb21tYW5kTGluZUFQSSI6dHJ1ZSwiZG9Ob3RQYXVzZU9uRXhjZXB0aW9uc0FuZE11dGVDb25zb2xlIjp0cnVlLCJyZXR1cm5CeVZhbHVlIjpmYWxzZX0sImlkIjo1N30=";
+      String decoded = new String(Base64.decodeBase64(s.getBytes("UTF-8")));
+      System.out.println(decoded);
+
+
     } catch (UnsupportedEncodingException e) {
       e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
     }
