@@ -182,6 +182,8 @@ public class InstrumentsManager {
   private List<String> createInstrumentCommand(String script) {
     List<String> command = new ArrayList<String>();
     command.add("instruments");
+    command.add("-w");
+    command.add("d1ce6333af579e27d166349dc8a1989503ba5b4f");
     command.add("-t");
     command.add(template.getAbsolutePath());
     command.add(application.getApplicationPath().getAbsolutePath());
@@ -192,7 +194,12 @@ public class InstrumentsManager {
     command.add("UIARESULTSPATH");
     command.add(output.getAbsolutePath());
     command.addAll(extraEnvtParams);
-
+    StringBuilder b = new StringBuilder();
+    for (String s : command) {
+      b.append(s);
+      b.append(" ");
+    }
+    System.out.println(b.toString());
     return command;
 
   }

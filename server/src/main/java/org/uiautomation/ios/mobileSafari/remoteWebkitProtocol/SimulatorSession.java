@@ -44,6 +44,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+// TODO freynaud merge with RemoteIOSWebDriver
 public class SimulatorSession {
 
   private WebInspector2 simulatorProtocol;
