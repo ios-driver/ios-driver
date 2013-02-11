@@ -46,12 +46,28 @@ public class RemoteIOSWebDriver {
 
   public static void main(String[] args) throws Exception {
     RemoteIOSWebDriver driver = new RemoteIOSWebDriver(null);
-    driver.connect(safari);
+    driver.connect(uiCatalog);
     driver.switchTo(driver.getPages().get(0));
     driver.get("http://ebay.co.uk/");
-
     RemoteWebElement body = driver.findElementByCssSelector("body");
     System.out.println(body.getText());
+    driver.get("http://google.co.uk/");
+    body = driver.findElementByCssSelector("body");
+    System.out.println(body.getText());
+
+    driver.stop();
+
+    driver = new RemoteIOSWebDriver(null);
+    driver.connect(uiCatalog);
+    driver.switchTo(driver.getPages().get(0));
+    driver.get("http://ebay.co.uk/");
+    body = driver.findElementByCssSelector("body");
+    System.out.println(body.getText());
+    driver.get("http://google.co.uk/");
+    body = driver.findElementByCssSelector("body");
+    System.out.println(body.getText());
+
+
     /*driver.get("http://ebay.co.uk/common/frameset.html");
 
     JSONObject res = driver.currentInspector.sendCommand(Page.getResourceTree());
@@ -82,6 +98,10 @@ public class RemoteIOSWebDriver {
     simulator = new SimulatorSession(session, finders);
     usbProtocol = new Object();
     this.session = session;
+  }
+
+  public void start() {
+    simulator.start();
   }
 
   public boolean isConnected() {

@@ -74,6 +74,10 @@ public class SimulatorSession {
     waitForSimToSendApps();
   }
 
+  public void start() {
+    simulatorProtocol.start();
+  }
+
   public void stop() {
     simulatorProtocol.stop();
   }

@@ -34,35 +34,38 @@ public abstract class WebInspector2 {
   private static final Logger log = Logger.getLogger(WebInspector2.class.getName());
   protected final MessageHandler handler;
   private Thread listen;
-  private volatile boolean keepGoing = true;
   private String connectionId;
   private String bundleId;
   private final PlistManager plist = new PlistManager();
   private final static String senderBase = "E0F4C128-F4FF-4D45-A538-BA382CD660";
   private int commandId = 56;
 
+  private volatile boolean keepGoing = true;
+  private volatile boolean readyToBeStopped = true;
 
-  protected abstract void start();
 
+  public abstract void start();
+
+  public abstract void stop();
 
   protected abstract void read() throws Exception;
 
   protected abstract void sendMessage(String message);
 
-  public WebInspector2(MessageListener listener,
-                       ResponseFinder... finders) {
-    this.handler = new DefaultMessageHandler(listener, finders);
 
-    start();
+  protected void startListenerThread() {
     listen = new Thread(new Runnable() {
 
       @Override
       public void run() {
         try {
+          readyToBeStopped = false;
+          keepGoing = true;
           while (keepGoing) {
-            Thread.sleep(50);
             read();
+            sleepTight(50);
           }
+          readyToBeStopped = true;
         } catch (Exception e) {
           e.printStackTrace();
         }
@@ -70,6 +73,12 @@ public abstract class WebInspector2 {
     });
 
     listen.start();
+  }
+
+
+  public WebInspector2(MessageListener listener,
+                       ResponseFinder... finders) {
+    this.handler = new DefaultMessageHandler(listener, finders);
   }
 
   public void addListener(MessageListener listener) {
@@ -185,7 +194,7 @@ public abstract class WebInspector2 {
 
   }
 
-  public void stop() {
+  public void stopListenerThread() {
     if (handler != null) {
       handler.stop();
     }
@@ -194,8 +203,15 @@ public abstract class WebInspector2 {
     if (listen != null) {
       listen.interrupt();
     }
-    keepGoing = true;
-
+    while (!readyToBeStopped) {
+      sleepTight(50);
+    }
   }
 
+  private void sleepTight(int ms) {
+    try {
+      Thread.sleep(ms);
+    } catch (InterruptedException ignore) {
+    }
+  }
 }

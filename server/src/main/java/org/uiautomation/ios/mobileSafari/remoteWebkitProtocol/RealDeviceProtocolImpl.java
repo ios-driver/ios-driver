@@ -24,18 +24,28 @@ public class RealDeviceProtocolImpl extends WebInspector2 {
   public RealDeviceProtocolImpl(DefaultMessageListener listener,
                                 ResponseFinder... finders) {
     super(listener, finders);
+    inspector = new WebInspector("d1ce6333af579e27d166349dc8a1989503ba5b4f");
+    start();
   }
 
   @Override
-  protected void start() {
-    inspector = new WebInspector("TODO");
+  public void start() {
     inspector.start();
+    startListenerThread();
+  }
+
+  @Override
+  public void stop() {
+    stopListenerThread();
+    inspector.stop();
   }
 
   @Override
   protected void read() throws Exception {
     String msg = inspector.receiveMessage();
-    handler.handle(msg);
+    if (msg != null) {
+      handler.handle(msg);
+    }
   }
 
   @Override
