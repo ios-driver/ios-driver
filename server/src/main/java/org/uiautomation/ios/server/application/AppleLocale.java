@@ -30,6 +30,10 @@ public class AppleLocale {
 
   private final Locale locale;
   private final String lproj;
+  
+  
+
+  
 
   private Locale findBestLocale(String lprojname) {
     String corrected = lprojname;
@@ -41,6 +45,18 @@ public class AppleLocale {
     }
     if ("Spanish".equals(lprojname)) {
       corrected = "es";
+    }
+    if("Dutch".equals(lprojname)){
+    	corrected = "nl";
+    }
+    if("English".equals(lprojname)){
+    	corrected= "en";
+    }
+    if("Italian".equals(lprojname)){
+    	corrected= "it";
+    }
+    if("Japanese".equals(lprojname)){
+    	corrected= "ja";
     }
     for (Locale l : Locale.getAvailableLocales()) {
       if (l.toString().equals(corrected)) {
