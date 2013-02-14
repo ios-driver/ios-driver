@@ -1,8 +1,10 @@
 package org.uiautomation.ios.e2e.config;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.SessionNotCreatedException;
+import org.openqa.selenium.WebDriverException;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -65,15 +67,30 @@ public class NewSessionTest extends BaseIOSDriverTest {
     }
   }
 
+  RemoteUIADriver driver = null;
+
   @Test
-  public void appWithNoContentCanStart() {
-    RemoteUIADriver driver = null;
+  public void appWithNoContentCanStart() throws Exception {
     try {
       driver = new RemoteUIADriver(getRemoteURL(), SampleApps.noContentCap());
 
       IOSCapabilities actual = driver.getCapabilities();
       Assert.assertEquals(actual.getBundleId(), "freynaud.testNoContent");
       Assert.assertEquals(actual.getBundleVersion(), "1.0");
+
+    } catch (Exception e) {
+      driver.quit();
+      throw e;
+    }
+
+
+  }
+
+  @Test(dependsOnMethods = "appWithNoContentCanStart",
+        expectedExceptions = WebDriverException.class)
+  public void usingL10NThrowsIfTheAppDoesntHaveContent() {
+    try {
+      driver.findElement(By.xpath("//*[@name=l10n('test')]"));
     } finally {
       if (driver != null) {
         driver.quit();

@@ -121,6 +121,10 @@ public class IOSApplication {
   }
 
   public LanguageDictionary getDictionary(AppleLocale language) throws WebDriverException {
+    if (!language.exist()) {
+      throw new WebDriverException("The application doesn't have any content files.The l10n "
+                                   + "features cannot be used.");
+    }
     for (LanguageDictionary dict : dictionaries) {
       if (dict.getLanguage() == language) {
         return dict;
