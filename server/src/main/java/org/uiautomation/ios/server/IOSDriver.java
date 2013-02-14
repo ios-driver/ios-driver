@@ -13,9 +13,13 @@
  */
 package org.uiautomation.ios.server;
 
-import static org.uiautomation.ios.IOSCapabilities.MAGIC_PREFIX;
+import org.json.JSONException;
+import org.openqa.selenium.SessionNotCreatedException;
+import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.IOSCapabilities;
+import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.ResourceCache;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -23,19 +27,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
-import org.json.JSONException;
-import org.openqa.selenium.SessionNotCreatedException;
-import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.server.application.IOSApplication;
-import org.uiautomation.ios.server.application.AppleLocale;
-import org.uiautomation.ios.server.application.ResourceCache;
-import org.uiautomation.ios.server.utils.BuildInfo;
-import org.uiautomation.ios.server.utils.ClassicCommands;
+import static org.uiautomation.ios.IOSCapabilities.MAGIC_PREFIX;
 
 public class IOSDriver {
 
+  private static final Logger log = Logger.getLogger(IOSDriver.class.getName());
   private final List<ServerSideSession> sessions = new ArrayList<ServerSideSession>();
   private final Set<IOSApplication> supportedApplications = new HashSet<IOSApplication>();
   private final HostInfo hostInfo;
@@ -162,7 +160,12 @@ public class IOSDriver {
       }
     }
     String l = desiredCapabilities.getLanguage();
-    if (l != null && !applicationCapabilities.getSupportedLanguages().contains(l)) {
+
+    if (applicationCapabilities.getSupportedLanguages().isEmpty()) {
+      log.info(
+          "The application doesn't have any content files."
+          + "The localization related features won't be availabled.");
+    } else if (l != null && !applicationCapabilities.getSupportedLanguages().contains(l)) {
       throw new SessionNotCreatedException(
           "Language requested, " + l + " ,isn't supported.Supported are : "
           + applicationCapabilities.getSupportedLanguages());

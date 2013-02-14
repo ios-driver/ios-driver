@@ -28,6 +28,7 @@ public class SampleApps {
   private static final String uiCatalogiPad = "/sampleApps/UICatalogiPad.app";
   private static final String intlMountains = "/sampleApps/InternationalMountains.app";
   private static final String geocoder = "/sampleApps/Geocoder.app";
+  private static final String noContent = "/sampleApps/testNoContent.app";
 
   private static final String sdkVersion = System.getProperty("SDK", null);
 
@@ -47,6 +48,10 @@ public class SampleApps {
 
   public static String getGeocoderFile() {
     return getFromClassPath(geocoder).getAbsolutePath();
+  }
+
+  public static String gettestNoContentFile() {
+    return getFromClassPath(noContent).getAbsolutePath();
   }
 
   public static String getUICatalogFile() {
@@ -83,6 +88,15 @@ public class SampleApps {
     return c;
   }
 
+  public static IOSCapabilities noContentCap() {
+    IOSCapabilities c = IOSCapabilities.iphone("testNoContent");
+    if (sdkVersion != null) {
+      log.info("SET SDK to " + sdkVersion);
+      c.setSDKVersion(sdkVersion);
+    }
+    return c;
+  }
+
   public static IOSCapabilities uiCatalogipadCap() {
     IOSCapabilities c = IOSCapabilities.ipad("UICatalog");
     c.setCapability(IOSCapabilities.TIME_HACK, false);
@@ -103,4 +117,6 @@ public class SampleApps {
     }
     return c;
   }
+
+
 }

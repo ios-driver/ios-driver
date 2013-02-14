@@ -49,8 +49,6 @@ public class IOSApplication {
   private final List<LanguageDictionary> dictionaries = new ArrayList<LanguageDictionary>();
 
   /**
-   * 
-   * @param currentLanguage
    * @param pathToApp
    * @throws WebDriverException
    */
@@ -63,14 +61,13 @@ public class IOSApplication {
     try {
       metadata = getFullPlist();
     } catch (Exception e) {
-      throw new WebDriverException("cannot load the metadata from the Info.plist file for " + pathToApp);
+      throw new WebDriverException(
+          "cannot load the metadata from the Info.plist file for " + pathToApp);
     }
   }
 
   /**
    * the content of the Info.plist for the app, as a json object.
-   * 
-   * @return
    */
   public JSONObject getMetadata() {
     return metadata;
@@ -87,9 +84,6 @@ public class IOSApplication {
 
   /**
    * get the list of languages the application if localized to.
-   * 
-   * @return
-   * @throws Exception
    */
   private List<AppleLocale> getSupportedLanguages() {
     if (dictionaries.isEmpty()) {
@@ -110,6 +104,9 @@ public class IOSApplication {
   }
 
   public AppleLocale getAppleLocaleFromLanguageCode(String languageCode) {
+    if (getSupportedLanguages().isEmpty()) {
+      return AppleLocale.emptyLocale(languageCode);
+    }
     for (AppleLocale loc : getSupportedLanguages()) {
       if (languageCode.equals(loc.getLocale().getLanguage())) {
         return loc;
@@ -135,8 +132,6 @@ public class IOSApplication {
 
   /**
    * Load all the dictionaries for the application.
-   * 
-   * @throws Exception
    */
   private void loadAllContent() throws WebDriverException {
     if (!dictionaries.isEmpty()) {
@@ -230,8 +225,6 @@ public class IOSApplication {
 
   /**
    * the list of resources to publish via http.
-   * 
-   * @return
    */
   public Map<String, String> getResources() {
     Map<String, String> resourceByResourceName = new HashMap<String, String>();
@@ -272,13 +265,18 @@ public class IOSApplication {
   }
 
   public void setLanguage(String lang) {
+    if (getSupportedLanguages().isEmpty()) {
+      currentLanguage = AppleLocale.emptyLocale(lang);
+      return;
+    }
     for (AppleLocale loc : getSupportedLanguages()) {
       if (loc.getLocale().toString().equals(lang)) {
         currentLanguage = loc;
         return;
       }
     }
-    throw new WebDriverException("Cannot find " + lang + " in the supported languages for the app.");
+    throw new WebDriverException(
+        "Cannot find " + lang + " in the supported languages for the app.");
   }
 
   @Override
@@ -291,25 +289,31 @@ public class IOSApplication {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
+    if (this == obj) {
       return true;
-    if (obj == null)
+    }
+    if (obj == null) {
       return false;
-    if (getClass() != obj.getClass())
+    }
+    if (getClass() != obj.getClass()) {
       return false;
+    }
     IOSApplication other = (IOSApplication) obj;
     if (app == null) {
-      if (other.app != null)
+      if (other.app != null) {
         return false;
-    } else if (!app.equals(other.app))
+      }
+    } else if (!app.equals(other.app)) {
       return false;
+    }
     return true;
   }
 
   public static IOSApplication findSafariLocation(File xcodeInstall, String sdkVersion) {
     File app = new File(xcodeInstall,
-        "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator" + sdkVersion
-            + ".sdk/Applications/MobileSafari.app");
+                        "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator"
+                        + sdkVersion
+                        + ".sdk/Applications/MobileSafari.app");
     if (!app.exists()) {
       throw new WebDriverException(app + " should be the safari app, but doesn't exist.");
     }
@@ -341,13 +345,15 @@ public class IOSApplication {
         }
       }
       if (last == null) {
-        throw new WebDriverException("Cannot find device " + device + " in the supported device list.");
+        throw new WebDriverException(
+            "Cannot find device " + device + " in the supported device list.");
       }
       rearrangedArray.setValue(index, last);
       root.put("UIDeviceFamily", rearrangedArray);
       BinaryPropertyListWriter.write(plist, root);
     } catch (Exception e) {
-      throw new WebDriverException("Cannot change the default device for the app." + e.getMessage(), e);
+      throw new WebDriverException("Cannot change the default device for the app." + e.getMessage(),
+                                   e);
     }
 
   }

@@ -14,24 +14,21 @@
 
 package org.uiautomation.ios.server.application;
 
-import java.util.Locale;
-
 import org.openqa.selenium.WebDriverException;
 
+import java.util.Locale;
+
 /**
- * 
- * name for localization has changed in 10.4 from English , French ( old ) to en
- * , fr ( new ) http://
- * stackoverflow.com/questions/7051120/why-doesnt-my-file-move
+ * name for localization has changed in 10.4 from English , French ( old ) to en , fr ( new )
+ * http:// stackoverflow.com/questions/7051120/why-doesnt-my-file-move
  * -into-en-lproj-but-instead-into- a-new-english-lproj
- * 
  */
 public class AppleLocale {
 
   private final Locale locale;
   private final String lproj;
 
-  private Locale findBestLocale(String lprojname) {
+  private static Locale findBestLocale(String lprojname) {
     String corrected = lprojname;
     if ("French".equals(lprojname)) {
       corrected = "fr";
@@ -96,12 +93,12 @@ public class AppleLocale {
   public String getLProj() {
     return lproj;
   }
-  
-  public String getAppleLanguagesForPreferencePlist(){
-    if (Locale.CHINESE == locale){
+
+  public String getAppleLanguagesForPreferencePlist() {
+    if (Locale.CHINESE == locale) {
       return "zh-Hant";
-    }else {
-      return locale.toString();
+    } else {
+      return locale == null ? null : locale.toString();
     }
   }
 
@@ -115,23 +112,42 @@ public class AppleLocale {
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
+    if (this == obj) {
       return true;
-    if (obj == null)
+    }
+    if (obj == null) {
       return false;
-    if (getClass() != obj.getClass())
+    }
+    if (getClass() != obj.getClass()) {
       return false;
+    }
     AppleLocale other = (AppleLocale) obj;
     if (locale == null) {
-      if (other.locale != null)
+      if (other.locale != null) {
         return false;
-    } else if (!locale.equals(other.locale))
+      }
+    } else if (!locale.equals(other.locale)) {
       return false;
+    }
     return true;
   }
 
   @Override
   public String toString() {
     return locale.toString() + " for project " + lproj + ".lproj";
+  }
+
+  private AppleLocale(Locale locale, String lproj) {
+    this.locale = locale;
+    this.lproj = lproj;
+  }
+
+  public static AppleLocale emptyLocale(String locale) {
+    Locale l = AppleLocale.findBestLocale(locale);
+    return new AppleLocale(l, null);
+  }
+
+  public boolean exist() {
+    return lproj != null;
   }
 }

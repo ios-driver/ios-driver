@@ -66,6 +66,22 @@ public class NewSessionTest extends BaseIOSDriverTest {
   }
 
   @Test
+  public void appWithNoContentCanStart() {
+    RemoteUIADriver driver = null;
+    try {
+      driver = new RemoteUIADriver(getRemoteURL(), SampleApps.noContentCap());
+
+      IOSCapabilities actual = driver.getCapabilities();
+      Assert.assertEquals(actual.getBundleId(), "freynaud.testNoContent");
+      Assert.assertEquals(actual.getBundleVersion(), "1.0");
+    } finally {
+      if (driver != null) {
+        driver.quit();
+      }
+    }
+  }
+
+  @Test
   public void startDefaultLanguageLocale() {
     RemoteUIADriver driver = null;
     try {
