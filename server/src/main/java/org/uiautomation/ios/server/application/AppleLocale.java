@@ -30,15 +30,11 @@ public class AppleLocale {
 
   private final Locale locale;
   private final String lproj;
-  
-  
-
-  
 
   private Locale findBestLocale(String lprojname) {
     String corrected = lprojname;
     if ("French".equals(lprojname)) {
-      corrected = "fr";
+      corrected = "fr"; 
     }
     if ("German".equals(lprojname)) {
       corrected = "de";
