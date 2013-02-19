@@ -200,4 +200,10 @@ public class ServerSideSession extends Session {
   }
 
 
+  public void restartWebkit() {
+    webDriver.stop();
+    webDriver = null;
+    webDriver = new RemoteIOSWebDriver(this, new AlertDetector(nativeDriver));
+    webDriver.switchTo(webDriver.getPages().get(0));
+  }
 }

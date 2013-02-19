@@ -22,6 +22,7 @@ import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.WebKitSeemsCorruptedException;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
@@ -78,7 +79,14 @@ public abstract class BaseCommandHandler implements Handler {
     for (PreHandleDecorator pre : preDecorators) {
       pre.decorate(request);
     }
-    Response response = handle();
+    Response response = null;
+    try {
+      response = handle();
+    } catch (WebKitSeemsCorruptedException e) {
+      session.restartWebkit();
+      response = handle();
+    }
+
     for (PostHandleDecorator post : postDecorators) {
       post.decorate(response);
     }
@@ -101,9 +109,9 @@ public abstract class BaseCommandHandler implements Handler {
     JSONObject res = new JSONObject().put("No config for this command", "");
     return res;
   }
-  
-  
-  protected Response createResponse(Object value){
+
+
+  protected Response createResponse(Object value) {
     Response r = new Response();
     r.setSessionId(getSession().getSessionId());
     r.setStatus(0);
