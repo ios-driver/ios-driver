@@ -70,59 +70,51 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
     safari.setCapability(IOSCapabilities.TIME_HACK, false);
 
     RemoteUIADriver driver = null;
-    //try {
-    driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
-    Set<String> handles = driver.getWindowHandles();
-    Assert.assertEquals(handles.size(), 1);
-    UIAElement
-        webCell =
-        driver.findElement(new AndCriteria(new TypeCriteria(UIATableCell.class), new NameCriteria(
-            "Web", MatchingStrategy.starts)));
-    webCell.tap();
+    try {
+      driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
+      Set<String> handles = driver.getWindowHandles();
+      Assert.assertEquals(handles.size(), 1);
+      UIAElement
+          webCell =
+          driver.findElement(new AndCriteria(new TypeCriteria(UIATableCell.class), new NameCriteria(
+              "Web", MatchingStrategy.starts)));
+      webCell.tap();
 
-    handles = driver.getWindowHandles();
-    Assert.assertEquals(handles.size(), 2);
-    driver.switchTo().window("Web");
+      handles = driver.getWindowHandles();
+      Assert.assertEquals(handles.size(), 2);
+      driver.switchTo().window("Web");
 
-    final By by = By.cssSelector("a[href='http://store.apple.com/']");
+      final By by = By.cssSelector("a[href='http://store.apple.com/']");
 
-    long end = System.currentTimeMillis() + 10000;
-    WebElement el;
-    while (System.currentTimeMillis() < end) {
-      try {
-        el = driver.findElement(by);
-        break;
-      } catch (NoSuchElementException e) {
-        // ignore
-        System.out.println("Cannot find element yet.");
+      long end = System.currentTimeMillis() + 10000;
+      WebElement el;
+      while (System.currentTimeMillis() < end) {
+        try {
+          el = driver.findElement(by);
+          break;
+        } catch (NoSuchElementException e) {
+          // ignore
+          System.out.println("Cannot find element yet.");
+        }
       }
-    }
-    el = driver.findElement(by);
-    el.click();
+      el = driver.findElement(by);
+      //el.click();
 /*    Assert.assertEquals(el.getAttribute("href"), "http://store.apple.com/");
     System.out.println("HREF=" + el.getAttribute("href"));
     WebElement body = driver.findElement(By.cssSelector("body"));
     System.out.println(body.getText()); **/
 
-    System.out.println("clicked !");
-    Thread.sleep(5000);
-    WebElement body = driver.findElement(By.cssSelector("body"));
-    System.out.println(driver.getTitle());
-    //System.out.println(body.getText());
+      driver.get("http://ebay.co.uk");
+      WebElement search = driver.findElement(By.id("kw"));
 
-    driver.get("http://ebay.co.uk");
-    WebElement search = driver.findElement(By.id("kw"));
-    //search.click();
-    System.out.println("click ....");
-    Thread.sleep(5000);
-    search.sendKeys("ipod");
-    body = driver.findElement(By.cssSelector("body"));
-    body.click();
-    //System.out.println(body.getText());
-    System.out.println(driver.getTitle());
-    /*} finally {
+      search.sendKeys("ipod");
+      WebElement body = driver.findElement(By.cssSelector("body"));
+
+      //System.out.println(body.getText());
+      System.out.println(body.getText());
+    } finally {
       driver.quit();
-    } */
+    }
 
   }
 

@@ -24,7 +24,7 @@ import org.uiautomation.ios.webInspector.DOM.RemoteWebNativeBackedElement;
 
 public class ClickHandler extends BaseWebCommandHandler {
 
-  private static final boolean nativeEvents = false;
+  private static final boolean nativeEvents = true;
 
   public ClickHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);

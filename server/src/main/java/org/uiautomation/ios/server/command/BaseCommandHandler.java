@@ -16,6 +16,7 @@ package org.uiautomation.ios.server.command;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,6 +30,7 @@ import org.uiautomation.ios.server.instruments.CommunicationChannel;
 
 public abstract class BaseCommandHandler implements Handler {
 
+  private static final Logger log = Logger.getLogger(BaseCommandHandler.class.getName());
   private final IOSDriver driver;
   private final ServerSideSession session;
   private final WebDriverLikeRequest request;
@@ -83,7 +85,9 @@ public abstract class BaseCommandHandler implements Handler {
     try {
       response = handle();
     } catch (WebKitSeemsCorruptedException e) {
+      log.warning("WebKitSeemsCorruptedException.Attempting a restart.");
       session.restartWebkit();
+      log.warning("restart done.");
       response = handle();
     }
 

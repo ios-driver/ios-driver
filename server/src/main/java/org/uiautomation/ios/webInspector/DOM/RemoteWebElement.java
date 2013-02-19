@@ -107,7 +107,6 @@ public class RemoteWebElement {
       } catch (RemoteExceptionException e) {
         // Node with given id does not belong to the document
         // No node with given id found
-        e.printStackTrace();
         throw new StaleElementReferenceException(getNodeId() + " is stale.");
       }
     }
