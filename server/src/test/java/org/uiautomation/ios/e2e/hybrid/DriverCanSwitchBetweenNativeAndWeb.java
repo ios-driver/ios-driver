@@ -103,11 +103,17 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
       el = driver.findElement(by);
       Assert.assertEquals(el.getAttribute("href"), "http://store.apple.com/");
       System.out.println("HREF=" + el.getAttribute("href"));
+      WebElement body = driver.findElement(By.cssSelector("body"));
+      System.out.println(body.getText());
 
-      Thread.sleep(10000);
+      el.click();
+      Thread.sleep(5000);
+      body = driver.findElement(By.cssSelector("body"));
+      System.out.println(body.getText());
 
-      driver.findElement(By.id("div"));
-
+      driver.get("http://ebay.co.uk");
+      body = driver.findElement(By.cssSelector("body"));
+      System.out.println(body.getText());
 
     } finally {
       driver.quit();
