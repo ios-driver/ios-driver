@@ -33,7 +33,7 @@ public class MessageFactory {
   }
 
   public IOSMessage create(String rawMessage) {
-
+    //System.out.println(rawMessage);
     try {
       BaseIOSWebKitMessage m = new BaseIOSWebKitMessage(rawMessage);
       Class<? extends BaseIOSWebKitMessage> impl = types.get(m.getSelector());
