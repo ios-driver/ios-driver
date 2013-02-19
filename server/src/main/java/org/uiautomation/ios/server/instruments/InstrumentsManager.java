@@ -14,17 +14,10 @@
 
 package org.uiautomation.ios.server.instruments;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.Device;
 import org.uiautomation.ios.communication.device.DeviceVariation;
-import org.uiautomation.ios.server.application.AppleLocale;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.simulator.IOSSimulatorManager;
 import org.uiautomation.ios.server.utils.ClassicCommands;
@@ -32,7 +25,16 @@ import org.uiautomation.ios.server.utils.Command;
 import org.uiautomation.ios.server.utils.ScriptHelper;
 import org.uiautomation.ios.server.utils.hack.TimeSpeeder;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
 public class InstrumentsManager {
+
+
+  public static final boolean realDevice = false;
 
   private static final Logger log = Logger.getLogger(InstrumentsManager.class.getName());
 
@@ -182,8 +184,10 @@ public class InstrumentsManager {
   private List<String> createInstrumentCommand(String script) {
     List<String> command = new ArrayList<String>();
     command.add("instruments");
-    command.add("-w");
-    command.add("d1ce6333af579e27d166349dc8a1989503ba5b4f");
+    if (realDevice) {
+      command.add("-w");
+      command.add("d1ce6333af579e27d166349dc8a1989503ba5b4f");
+    }
     command.add("-t");
     command.add(template.getAbsolutePath());
     command.add(application.getApplicationPath().getAbsolutePath());

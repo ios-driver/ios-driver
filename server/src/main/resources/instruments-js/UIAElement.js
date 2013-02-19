@@ -117,6 +117,20 @@ UIAElement.prototype.reference = function () {
     return this.id;
 }
 
+UIAElement.prototype.isVisibleOriginal = UIAElement.prototype.isVisible;
+
+/**
+ * similar to the original isVisible, but returning a boolean instead of an number.
+ * @return {boolean}
+ */
+UIAElement.prototype.isVisible = function () {
+    if (this.isVisibleOriginal()) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 UIAElement.prototype.scrollToVisible_original = UIAElement.prototype.scrollToVisible;
 /**
  * scrollToVisible only makes sense if the element if in a webview or a
@@ -146,17 +160,31 @@ UIAElement.prototype.isStale = function () {
             if (this.type() === "UIAWebView") {
                 return false;
             }
-            if (this.isVisible() == 1) {
-                return false;
-            } else {
-                return true;
+            log("visible: " + this.isVisible() + "enabled: " + this.isEnabled() + " valid :"
+                    + this.isValid());
+            /*if (this.isVisible()) {
+             return false;
+             } else {
+             return true;
+             }*/
+            var parent = this.parent();
+            while (parent.parent() && parent.parent().type() !== "UIAElementNil") {
+                parent = parent.parent();
+                log("parent  " + parent.type() + ", " + parent.name());
+
             }
+            return false;
         } catch (err) {
             if (err.message && err.message.indexOf('scrollToVisible cannot be used') != -1) {
+                log("F");
                 return true;
+            } else {
+                log("NI");
+                log(err)
             }
         }
     }
+    log("G");
     return false;
 }
 

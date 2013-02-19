@@ -21,7 +21,7 @@ import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.application.ResourceCache;
 import org.uiautomation.iosdriver.DeviceDetector;
 import org.uiautomation.iosdriver.DeviceInfo;
-import org.uiautomation.iosdriver.DeviceManager;
+import org.uiautomation.iosdriver.services.DeviceManagerService;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -53,7 +53,7 @@ public class IOSDriver implements DeviceDetector {
       System.err.println("Cannot configure logger.");
     }
     this.hostInfo = new HostInfo(port);
-    new DeviceManager(this).startDetection();
+    new DeviceManagerService(this).startDetection();
 
   }
 

@@ -15,16 +15,16 @@
 package org.uiautomation.ios.mobileSafari.remoteWebkitProtocol;
 
 import org.uiautomation.ios.mobileSafari.ResponseFinder;
-import org.uiautomation.iosdriver.WebInspector;
+import org.uiautomation.iosdriver.services.WebInspectorService;
 
 public class RealDeviceProtocolImpl extends WebInspector2 {
 
-  private WebInspector inspector;
+  private WebInspectorService inspector;
 
   public RealDeviceProtocolImpl(DefaultMessageListener listener,
                                 ResponseFinder... finders) {
     super(listener, finders);
-    inspector = new WebInspector("d1ce6333af579e27d166349dc8a1989503ba5b4f");
+    inspector = new WebInspectorService("d1ce6333af579e27d166349dc8a1989503ba5b4f");
     start();
   }
 

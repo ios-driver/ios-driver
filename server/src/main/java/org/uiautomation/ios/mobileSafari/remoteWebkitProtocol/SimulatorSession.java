@@ -33,6 +33,7 @@ import org.uiautomation.ios.mobileSafari.message.WebkitApplication;
 import org.uiautomation.ios.mobileSafari.message.WebkitDevice;
 import org.uiautomation.ios.mobileSafari.message.WebkitPage;
 import org.uiautomation.ios.server.ServerSideSession;
+import org.uiautomation.ios.server.instruments.InstrumentsManager;
 import org.uiautomation.ios.webInspector.DOM.Page;
 import org.uiautomation.ios.webInspector.DOM.Runtime;
 
@@ -43,9 +44,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Logger;
 
 // TODO freynaud merge with RemoteIOSWebDriver
 public class SimulatorSession {
+
+  private static final Logger log = Logger.getLogger(SimulatorSession.class.getName());
 
   private WebInspector2 simulatorProtocol;
   private WebkitDevice device;
@@ -66,13 +70,24 @@ public class SimulatorSession {
   public SimulatorSession(ServerSideSession session, ResponseFinder... finders) {
     this.session = session;
     connectionKey = UUID.randomUUID().toString();
-    //simulatorProtocol =
-    //    new SimulatorProtocolImpl(new DefaultMessageListener(this, session), finders);
-    simulatorProtocol =
-        new RealDeviceProtocolImpl(new DefaultMessageListener(this, session), finders);
+    if (InstrumentsManager.realDevice) {
+      simulatorProtocol =
+          new RealDeviceProtocolImpl(new DefaultMessageListener(this, session), finders);
+
+    } else {
+      simulatorProtocol =
+          new SimulatorProtocolImpl(new DefaultMessageListener(this, session), finders);
+
+    }
     simulatorProtocol.register();
     waitForSimToRegister();
     waitForSimToSendApps();
+
+    if (applications.size() == 1) {
+      connect(applications.get(0).getBundleId());
+    } else {
+      log.warning("session created but application size=" + applications.size());
+    }
   }
 
   public void start() {
@@ -85,6 +100,7 @@ public class SimulatorSession {
 
 
   public void connect(String bundleId) {
+
     List<WebkitApplication> knownApps = getApplications();
     for (WebkitApplication app : knownApps) {
       if (bundleId.equals(app.getBundleId())) {
@@ -210,7 +226,7 @@ public class SimulatorSession {
         //simulatorProtocol.register();
         //simulatorProtocol.connect(bundleId);
         simulatorProtocol.attachToPage(page.getPageId());
-        inspector.sendCommand(Runtime.evaluate("alert(ttt123)"));
+        // inspector.sendCommand(Runtime.evaluate("alert(ttt123)"));
         inspector.sendCommand(Page.enablePageEvent());
 
         boolean ok = created.add(inspector);
@@ -227,6 +243,8 @@ public class SimulatorSession {
 
 class DefaultMessageListener implements MessageListener, EventListener {
 
+  private static final Logger log = Logger.getLogger(DefaultMessageListener.class.getName());
+
   private final SimulatorSession simulator;
   private final ServerSideSession session;
 
@@ -238,6 +256,7 @@ class DefaultMessageListener implements MessageListener, EventListener {
 
   @Override
   public void onMessage(IOSMessage message) {
+
     if (message instanceof ReportSetupMessage) {
       ReportSetupMessage m = (ReportSetupMessage) message;
       simulator.setDevice(m.getDevice());
@@ -246,8 +265,13 @@ class DefaultMessageListener implements MessageListener, EventListener {
 
     if (message instanceof ReportConnectedApplicationsMessage) {
       ReportConnectedApplicationsMessage m = (ReportConnectedApplicationsMessage) message;
-      simulator.setApplications(m.getApplications());
-      simulator.signalSimSentApps();
+      if (m.getApplications().size() == 0) {
+        log.warning("ReportConnectedApplicationsMessage reported 0 app.");
+      } else {
+        simulator.setApplications(m.getApplications());
+        simulator.signalSimSentApps();
+      }
+
     }
 
     if (message instanceof ApplicationSentListingMessage) {
@@ -299,6 +323,7 @@ class DefaultMessageListener implements MessageListener, EventListener {
     if (message instanceof ApplicationConnectedMessage) {
       ApplicationConnectedMessage m = (ApplicationConnectedMessage) message;
       List<WebkitApplication> apps = new ArrayList<WebkitApplication>();
+      System.out.println("message apps : " + m.getApplication());
       apps.add(m.getApplication());
       simulator.setApplications(apps);
       simulator.signalSimSentApps();

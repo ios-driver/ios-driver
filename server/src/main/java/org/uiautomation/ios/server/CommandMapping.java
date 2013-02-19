@@ -148,7 +148,7 @@ public enum CommandMapping {
   //ELEMENTS(".elements2(:depth,:criteria)"),
   //ANCESTRY(NotImplementedNativeHandler.class, NotImplementedWebHandler.class),
 
-  DISPLAYED(".isVisible()", DefaultUIAScriptNHandler.class, IsDisplayedHanlder.class),
+  DISPLAYED(IsVisibleNHandler.class, IsDisplayedHanlder.class),
   //IS_STALE(".isStale()"),
 
   //LABEL(".label()"),

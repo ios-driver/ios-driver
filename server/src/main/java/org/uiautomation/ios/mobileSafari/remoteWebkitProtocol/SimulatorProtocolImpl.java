@@ -42,6 +42,7 @@ public class SimulatorProtocolImpl extends WebInspector2 {
   public SimulatorProtocolImpl(MessageListener listener,
                                ResponseFinder... finders) {
     super(listener, finders);
+    start();
   }
 
 

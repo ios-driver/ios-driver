@@ -132,7 +132,7 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
       webCell.tap();
 
       driver.switchTo().window("Web");
-
+      Thread.sleep(5000);
       driver.get("http://ebay.co.uk");
       WebElement body = driver.findElement(By.cssSelector("body"));
       System.out.println(body.getText());
@@ -152,8 +152,12 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
       }
       el = driver.findElement(by);
       System.out.println(el.getText());   */
+    } catch (Exception e) {
+      e.printStackTrace();
     } finally {
-      driver.quit();
+      if (driver != null) {
+        driver.quit();
+      }
     }
 
   }
