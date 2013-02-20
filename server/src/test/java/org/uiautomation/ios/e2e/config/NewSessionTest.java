@@ -68,11 +68,6 @@ public class NewSessionTest extends BaseIOSDriverTest {
   }
 
 
-  @Test(expectedExceptions = WebDriverException.class)
-  public void applicationIsntL10nInThatLanguage() {
-    new RemoteUIADriver(getRemoteURL(), SampleApps.intlMountainsCap("de"));
-  }
-
   RemoteUIADriver driver = null;
 
   @Test
@@ -97,17 +92,6 @@ public class NewSessionTest extends BaseIOSDriverTest {
     }
   }
 
-  @Test(dependsOnMethods = "appWithNoContentCanStart",
-        expectedExceptions = WebDriverException.class)
-  public void usingL10NThrowsIfTheAppDoesntHaveContent() {
-    try {
-
-    } finally {
-      if (driver != null) {
-        driver.quit();
-      }
-    }
-  }
 
   @Test
   public void startDefaultLanguageLocale() {

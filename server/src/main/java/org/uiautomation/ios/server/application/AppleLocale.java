@@ -14,9 +14,8 @@
 
 package org.uiautomation.ios.server.application;
 
-import org.openqa.selenium.WebDriverException;
-
 import java.util.Locale;
+import java.util.logging.Logger;
 
 /**
  * name for localization has changed in 10.4 from English , French ( old ) to en , fr ( new )
@@ -25,6 +24,7 @@ import java.util.Locale;
  */
 public class AppleLocale {
 
+  private static final Logger log = Logger.getLogger(AppleLocale.class.getName());
   private final Locale locale;
   private final String lproj;
 
@@ -72,16 +72,18 @@ public class AppleLocale {
         }
       }
     }
-
-    return null;
+    log.warning(lprojname + " isn't recognized.Please file a bug on github.You won't be able to "
+                + "start the app in that language.");
+    return new Locale(lprojname);
   }
 
   public AppleLocale(String lprojname) {
     Locale loc = findBestLocale(lprojname);
 
     if (loc == null) {
-      throw new WebDriverException("no support for " + lprojname);
+      loc = Locale.ENGLISH;
     }
+
     locale = loc;
     lproj = lprojname;
   }
