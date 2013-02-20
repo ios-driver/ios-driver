@@ -73,7 +73,6 @@ public class NewSessionTest extends BaseIOSDriverTest {
   public void appWithNoContentCanStart() throws Exception {
     try {
       driver = new RemoteUIADriver(getRemoteURL(), SampleApps.noContentCap());
-
       IOSCapabilities actual = driver.getCapabilities();
       Assert.assertEquals(actual.getBundleId(), "freynaud.testNoContent");
       Assert.assertEquals(actual.getBundleVersion(), "1.0");
@@ -82,8 +81,6 @@ public class NewSessionTest extends BaseIOSDriverTest {
       driver.quit();
       throw e;
     }
-
-
   }
 
   @Test(dependsOnMethods = "appWithNoContentCanStart",
@@ -103,7 +100,6 @@ public class NewSessionTest extends BaseIOSDriverTest {
     RemoteUIADriver driver = null;
     try {
       driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
-
       IOSCapabilities actual = driver.getCapabilities();
       Assert.assertEquals(actual.getBundleId(), "com.yourcompany.UICatalog");
       Assert.assertEquals(actual.getBundleVersion(), "2.10"); // default to UK
