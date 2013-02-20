@@ -1,7 +1,11 @@
 package org.uiautomation.ios.e2e.uicatalogapp;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.UnhandledAlertException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.RemoteWebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -19,6 +23,8 @@ import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+
+import java.util.List;
 
 public class AlertTest extends BaseIOSDriverTest {
 
@@ -60,6 +66,25 @@ public class AlertTest extends BaseIOSDriverTest {
     } finally {
       driver.getAlert().getCancelButton().tap();
     }
+  }
+
+  @Test
+  public void canSeeAlertsAsWebElements() throws Exception {
+    Criteria
+        c =
+        new AndCriteria(new TypeCriteria(UIAStaticText.class), new NameCriteria("Show Simple"));
+    UIAElement el = driver.findElements(c).get(1);
+    // opens an alert.
+    el.tap();
+
+    RemoteWebDriver d = (RemoteWebDriver) driver;
+    RemoteWebElement rwe = new RemoteWebElement();
+    rwe.setParent(d);
+    rwe.setId("3");
+
+    WebElement element = rwe.findElement(By.className("UIAButton"));
+    element.click();
+
   }
 
   @Test(expectedExceptions = NoAlertPresentException.class)
