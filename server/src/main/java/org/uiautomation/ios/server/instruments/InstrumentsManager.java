@@ -203,7 +203,7 @@ public class InstrumentsManager {
       b.append(s);
       b.append(" ");
     }
-    System.out.println(b.toString());
+    log.fine("Starting instruments\n:" + b.toString());
     return command;
 
   }
