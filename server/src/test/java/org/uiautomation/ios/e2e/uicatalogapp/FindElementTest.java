@@ -2,6 +2,8 @@ package org.uiautomation.ios.e2e.uicatalogapp;
 
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -50,7 +52,7 @@ public class FindElementTest extends BaseIOSDriverTest {
   }
 
   @Test
-  public void findElementByTagName() throws InterruptedException {
+  public void findElementByTagName() throws InterruptedException, JSONException {
     WebElement element = driver.findElement(By.tagName("UIATableCell"));
     Assert.assertEquals(element.getAttribute("name"), buttonsName);
   }

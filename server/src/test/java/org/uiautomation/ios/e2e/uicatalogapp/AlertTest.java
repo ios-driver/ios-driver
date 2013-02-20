@@ -1,5 +1,7 @@
 package org.uiautomation.ios.e2e.uicatalogapp;
 
+import org.eclipse.jetty.util.ajax.JSON;
+import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
@@ -24,12 +26,31 @@ import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 public class AlertTest extends BaseIOSDriverTest {
 
   private RemoteUIADriver driver;
 
+  public static void main(String[] args) throws Exception {
+    AlertTest t = new AlertTest();
+    t.startServer();
+    RemoteWebDriver
+        driver =
+        new RemoteUIADriver(new URL("http://localhost:4444/wd/hub"), SampleApps.uiCatalogCap());
+
+    WebElement alert = driver.findElement(By.className("UIAAlert"));
+    alert.findElement(By.className("UIASecureTextField")).sendKeys("password");
+    alert.findElement(By.xpath("//UIAButton[@name='OK']")).click();
+
+    driver.quit();
+    t.stopServer();
+  }
+
   @BeforeClass
   public void startDriver() {
+    //driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
     driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
     goToAlertScreen();
   }
@@ -84,7 +105,9 @@ public class AlertTest extends BaseIOSDriverTest {
     el.tap();
 
     WebElement rwe = d.findElement(By.className("UIAAlert"));
-
+    String json = rwe.getAttribute("tree");
+    JSONObject tree = new JSONObject(json);
+    Assert.assertEquals(tree.getString("type"), "UIAAlert");
     WebElement element = rwe.findElement(By.className("UIAButton"));
     element.click();
 

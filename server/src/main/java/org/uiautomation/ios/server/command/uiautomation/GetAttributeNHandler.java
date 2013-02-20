@@ -21,22 +21,36 @@ import org.uiautomation.ios.server.command.UIAScriptHandler;
 
 public class GetAttributeNHandler extends UIAScriptHandler {
 
-  private static final String template = 
+  private static final String template =
       "var parent = UIAutomation.cache.get(:reference);" +
       "var myStringResult = parent:attribute ;" +
       "UIAutomation.createJSONResponse(':sessionId',0,myStringResult)";
-  
+
+
+  private static final String logElementTree = "var root = UIAutomation.cache.get(':reference');"
+                                               + "var result = root.tree(false);"
+                                               + "var str = JSON.stringify(result.tree);"
+                                               + "UIAutomation.createJSONResponse(':sessionId',0,str);";
+
   public GetAttributeNHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
-    
-    String attributeMethod = "."+request.getVariableValue(":name")+"()";
-    String js =  template
-            .replace(":sessionId", request.getSession())
-            .replace(":attribute",attributeMethod)
-            .replace(":reference", request.getVariableValue(":reference"));
+
+    String attributeMethod = "." + request.getVariableValue(":name") + "()";
+    String reference = request.getVariableValue(":reference");
+    String js = null;
+
+    if (".tree()".equals(attributeMethod)) {
+      js = logElementTree.replace(":sessionId", request.getSession())
+          .replace(":reference", reference);
+    } else {
+      js = template
+          .replace(":sessionId", request.getSession())
+          .replace(":attribute", attributeMethod)
+          .replace(":reference", reference);
+    }
     setJS(js);
   }
-  
+
   @Override
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();

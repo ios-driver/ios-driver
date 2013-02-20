@@ -5,6 +5,12 @@
 UIAAlert.prototype.defaultButton_origin = UIAAlert.prototype.defaultButton;
 
 /**
+ * dismiss the alert.
+ */
+UIAAlert.prototype.dismiss = function () {
+
+}
+/**
  * return the default button, but also send an event that the alert disappeared.
  * @return {UIAButton} the default button for the alert.
  */
