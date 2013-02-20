@@ -52,7 +52,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
   }
 
   private boolean isSafari() {
-    return "com.apple.mobileSafari".equals(session.getApplication().getBundleId());
+    return "com.apple.mobilesafari".equals(session.getApplication().getBundleId());
   }
 
   public void nativeClick() {
