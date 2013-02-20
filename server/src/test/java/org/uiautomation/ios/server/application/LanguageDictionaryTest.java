@@ -25,8 +25,8 @@ public class LanguageDictionaryTest {
     Assert.assertEquals(dict.getLanguage().getLocale().toString(), "fr");
   }
 
- 
-  @Test(enabled=false,expectedExceptions = { WebDriverException.class })
+
+  @Test(enabled = false, expectedExceptions = {WebDriverException.class})
   public void notARecognizedLanguage() {
     String name = "Klingon";
     LanguageDictionary dict = new LanguageDictionary(name);
@@ -37,7 +37,7 @@ public class LanguageDictionaryTest {
   public void reflectionOnProjectToFindLanguageFiles() {
     File app = new File(SampleApps.getIntlMountainsFile());
     List<File> languageFiles = LanguageDictionary.getL10NFiles(app);
-    Assert.assertEquals(languageFiles.size(), 3);
+    Assert.assertEquals(languageFiles.size(), 4);
   }
 
   @Test
@@ -47,7 +47,7 @@ public class LanguageDictionaryTest {
     Assert.assertEquals(languageFiles.size(), 1);
   }
 
-  @Test(dependsOnMethods = { "reflectionOnProjectToFindLanguageFiles" })
+  @Test(dependsOnMethods = {"reflectionOnProjectToFindLanguageFiles"})
   public void reflectionOFindsTheRightLanguages() throws Exception {
     File app = new File(SampleApps.getIntlMountainsFile());
     List<File> languageFiles = LanguageDictionary.getL10NFiles(app);
@@ -63,7 +63,7 @@ public class LanguageDictionaryTest {
 
   }
 
-  @Test(dependsOnMethods = { "reflectionOnProjectToFindLanguageFiles2" })
+  @Test(dependsOnMethods = {"reflectionOnProjectToFindLanguageFiles2"})
   public void reflectionOFindsTheRightLanguages2() throws Exception {
     File app = new File(SampleApps.getUICatalogFile());
     List<File> languageFiles = LanguageDictionary.getL10NFiles(app);

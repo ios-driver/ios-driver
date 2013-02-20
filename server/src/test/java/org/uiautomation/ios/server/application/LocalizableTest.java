@@ -13,7 +13,7 @@ public class LocalizableTest {
     Assert.assertEquals(fr2, fr);
   }
 
-  @Test(expectedExceptions = { WebDriverException.class })
+  @Test
   public void doesntExistThrowsException() {
     AppleLocale kg = new AppleLocale("Klingon");
     Assert.assertNotNull(kg);
