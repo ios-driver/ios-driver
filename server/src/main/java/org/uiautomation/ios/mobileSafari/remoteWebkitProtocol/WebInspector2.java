@@ -65,9 +65,11 @@ public abstract class WebInspector2 {
             read();
             sleepTight(50);
           }
-          readyToBeStopped = true;
+
         } catch (Exception e) {
           //e.printStackTrace();
+        } finally {
+          readyToBeStopped = true;
         }
       }
     });

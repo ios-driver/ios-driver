@@ -143,8 +143,8 @@ public class RemoteUIAElementTest extends BaseIOSDriverTest {
   }
 
 
-  // TODO freynaud element.getName() creates some scrolling.
-  @Test(expectedExceptions = StaleElementReferenceException.class)
+  // TODO freynaud find a test for stale.
+  @Test(expectedExceptions = StaleElementReferenceException.class, enabled = false)
   public void staleElement() {
     try {
       String name = "Buttons, Various uses of UIButton";
@@ -153,13 +153,11 @@ public class RemoteUIAElementTest extends BaseIOSDriverTest {
       Criteria c = new AndCriteria(c1, c2);
       UIAElement element = driver.findElement(c);
       // should work.
-      System.out.println("before:" + element.getName());
       // new screen. The element doesn't exist anymore
       element.tap();
 
-      // cannot use a stale element. Exception thrown.
+      // that doesn't throw. The element isn't visible, but it's still accessible with UIAutomation.
       String s = element.getName();
-      System.out.println("after:" + s);
       Assert.fail("cannot access stale elements");
     } finally {
       UIAButton

@@ -44,6 +44,7 @@ public class IOSDriver implements DeviceDetector {
   private final List<DeviceInfo> connectedDevices = new CopyOnWriteArrayList<DeviceInfo>();
   private final HostInfo hostInfo;
   private final ResourceCache cache = new ResourceCache();
+  private final DeviceManagerService deviceManager;
 
   public IOSDriver(int port) {
     try {
@@ -53,8 +54,13 @@ public class IOSDriver implements DeviceDetector {
       System.err.println("Cannot configure logger.");
     }
     this.hostInfo = new HostInfo(port);
-    new DeviceManagerService(this).startDetection();
+    deviceManager = DeviceManagerService.create(this);
+    deviceManager.startDetection();
 
+  }
+
+  public void stop() {
+    deviceManager.stopDetection();
   }
 
   public void addSupportedApplication(IOSApplication application) {

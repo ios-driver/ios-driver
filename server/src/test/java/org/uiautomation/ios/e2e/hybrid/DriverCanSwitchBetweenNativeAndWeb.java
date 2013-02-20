@@ -22,7 +22,7 @@ import java.util.Set;
 
 public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
 
-  @Test
+  @Test(enabled = false)
   public void canSwitchToWebView() throws Exception {
     IOSCapabilities safari = IOSCapabilities.iphone("UICatalog");
     safari.setCapability(IOSCapabilities.TIME_HACK, false);
@@ -45,6 +45,7 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
               new AndCriteria(new TypeCriteria(UIATableCell.class), new NameCriteria("Web",
                                                                                      MatchingStrategy.starts)));
       el.tap();
+      Thread.sleep(2000);
 
       while (driver.getWindowHandles().size() != 2) {
         Thread.sleep(50);
@@ -99,18 +100,18 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
       }
       el = driver.findElement(by);
       //el.click();
-/*    Assert.assertEquals(el.getAttribute("href"), "http://store.apple.com/");
-    System.out.println("HREF=" + el.getAttribute("href"));
-    WebElement body = driver.findElement(By.cssSelector("body"));
-    System.out.println(body.getText()); **/
+      Assert.assertEquals(el.getAttribute("href"), "http://store.apple.com/");
+      System.out.println("HREF=" + el.getAttribute("href"));
+      WebElement body = driver.findElement(By.cssSelector("body"));
+      System.out.println(body.getText());
 
       driver.get("http://ebay.co.uk");
       WebElement search = driver.findElement(By.id("kw"));
 
       search.sendKeys("ipod");
-      WebElement body = driver.findElement(By.cssSelector("body"));
+      body = driver.findElement(By.cssSelector("body"));
 
-      //System.out.println(body.getText());
+      System.out.println(body.getText());
       System.out.println(body.getText());
     } finally {
       driver.quit();
