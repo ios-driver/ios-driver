@@ -59,8 +59,16 @@
 <div id="main_content_wrap" class="outer">
     <section id="main_content" class="inner">
 
-
-        <h3>Writing the first test for native ios apps</h3>
+        <lu>
+            <li><a href="#firstTest">Writing the first test</a></li>
+            <li><a href="#l10n">Handling localized apps</a></li>
+            <li><a href="#locator">Element locators</a></li>
+            <li><a href="#debugElement">Element debug info</a></li>
+            <li><a href="#advAlert">Adv. alert handling</a></li>
+            <li><a href="#params">Server parameters</a></li>
+            <li><a href="#rawJS">Raw instruments script snipets</a></li>
+        </lu>
+        <h3 id="firstTest">Writing the first test for native ios apps</h3>
 
         <p>Make sure you've been through the  <a href="setup.html" id="setup2">setup</a> page and that all
             the requirements are met</p>
@@ -114,7 +122,7 @@ Mountain 1 was first climbed on 29 May 1953 and has a height of 8,848 meters
         <img src="images/screenshot.png" alt="step2.png" height='480' width='320'>
 
 
-        <h3>Native tests and localization</h3>
+        <h3 id="l10n">Native tests and localization</h3>
 
         <p>IOS automation is very content based. There are no IDs like for web pages. This makes testing of
             localized pages a bit trickier. Fortunately the localization data is embedded into the
@@ -202,7 +210,7 @@ public static void main(String[] args) throws MalformedURLException {
             web test. Read more about it here : <a href="inspector.html" id="inspector2">Inspector</a></p>
 
 
-        <h3>Creating locators :</h3>
+        <h3 id="locator">Creating locators :</h3>
         <p>First, have a look at the <a href="inspector.html">inspector</a>, it will give you a lot of information about the
         internals of the application under test.</p>
 
@@ -210,7 +218,7 @@ public static void main(String[] args) throws MalformedURLException {
             identify them.The webdriver protocol isn't meant to be used for non-web applications, so
             there is a bit of mapping involved.</p>
 
-        <h5>name, value, label</h5>
+        <h5 >name, value, label</h5>
         <p>are mapped to linkText and partialLinkText</p>
         <pre class="prettyprint">
 
@@ -270,10 +278,86 @@ public static void main(String[] args) throws MalformedURLException {
         <p>will match any UIElement with name matching the value behind the meterFormat content key.</p>
 
 
+        <h3 id="debugElement">Finding debug information about a native WebElement</h3>
 
+        <p> It is possible to get all the information about a native WebElement and its children using
+        the getAttribute method and querying the 'tree' attribute.</p>
 
+          <pre class="prettyprint">
 
-        <h3>Starting parameters :</h3>
+@Test
+public void findElementByTagName() throws InterruptedException, JSONException {
+    WebElement element = driver.findElement(By.tagName("UIATableCell"));
+    Assert.assertEquals(element.getAttribute("name"), "Buttons, Various uses of UIButton");
+    JSONObject tree = new JSONObject(element.getAttribute("tree"));
+    System.out.println(tree.toString(2));
+}
+       </pre>
+
+        will print :
+
+        <pre>
+
+{
+  "ref": 4,
+  "label": null,
+  "value": null
+  "name": "Buttons, Various uses of UIButton",
+  "type": "UIATableCell",
+  "children": [{
+    "ref": 5,
+    "type": "UIAStaticText",
+    "value": "Buttons, Various uses of UIButton"
+    "label": "Buttons, Various uses of UIButton",
+    "name": "Buttons, Various uses of UIButton",
+    "rect": {
+      "origin": {
+        "x": 0,
+        "y": 64
+      },
+      "size": {
+        "height": 44,
+        "width": 320
+      }
+    },
+  }],
+  "rect": {
+    "origin": {
+      "x": 0,
+      "y": 64
+    },
+    "size": {
+      "height": 44,
+      "width": 320
+    }
+  }
+}
+06:12:637 WARNING DeviceManagerService$1.run  running to false.
+06:13:937 WARNING DeviceManagerService.stopDetection  waiting for the listener thread to finish
+
+        </pre>
+
+        <h3 id="advAlert">Advance Alert handling</h3>
+
+        <p>Native alerts are like any other native element, they're part of the tree and are
+            composed of UIAButton, UIAStaticText etc.alert can be inspected with the inspector</p>
+        <img src="images/alertInspector.png" alt="alert inspector" height='480' >
+
+        <p>as such, you can use regular calls to interact with the alert :
+
+<pre class="prettyprint">
+
+@Test
+public void enterPasswordInAlert()  {
+    // if no alert, next line throws a NoSuchElementException
+    WebElement alert = driver.findElement(By.className("UIAAlert"));
+
+    // browse inside the alert.
+    alert.findElement(By.className("UIASecureTextField")).sendKeys("password");
+    alert.findElement(By.xpath("//UIAButton[@name='OK']")).click();
+}
+</pre>
+        <h3 id="params" >Starting parameters :</h3>
 
         <p>The map of parameters ( the DesiredCapabilities object ) accept a set of parameters that
             will
@@ -300,7 +384,7 @@ public static void main(String[] args) throws MalformedURLException {
             <li> TODO doc : magic prefix plist_</li>
         </lu>
 
-        <h3>Executing raw instruments JS :</h3>
+        <h3 id="rawJS">Executing raw instruments JS :</h3>
 
         <p>The underlying framework running the native part is instruments. Instruments tests are
             written in JS. It's possible to execute instruments scripts directly by using the default
