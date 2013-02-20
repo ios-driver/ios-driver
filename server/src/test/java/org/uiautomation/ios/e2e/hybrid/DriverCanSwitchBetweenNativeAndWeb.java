@@ -22,7 +22,7 @@ import java.util.Set;
 
 public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
 
-  @Test(enabled = false)
+  @Test
   public void canSwitchToWebView() throws Exception {
     IOSCapabilities safari = IOSCapabilities.iphone("UICatalog");
     safari.setCapability(IOSCapabilities.TIME_HACK, false);
@@ -45,7 +45,6 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
               new AndCriteria(new TypeCriteria(UIATableCell.class), new NameCriteria("Web",
                                                                                      MatchingStrategy.starts)));
       el.tap();
-      Thread.sleep(2000);
 
       while (driver.getWindowHandles().size() != 2) {
         Thread.sleep(50);

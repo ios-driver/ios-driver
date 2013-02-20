@@ -13,9 +13,10 @@
  */
 package org.uiautomation.ios.server;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.SessionNotCreatedException;
-import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.SessionId;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Session;
@@ -175,8 +176,9 @@ public class ServerSideSession extends Session {
     return webDriver;
   }
 
-  public void setMode(WorkingMode mode) {
+  public void setMode(WorkingMode mode) throws NoSuchWindowException {
     if (mode == WorkingMode.Web) {
+      checkWebModeIsAvailable();
       try {
         if (!getRemoteWebDriver().isConnected()) {
           //String bundleId = application.getMetadata("CFBundleIdentifier");
@@ -189,6 +191,19 @@ public class ServerSideSession extends Session {
       }
     }
     context.switchToMode(mode);
+  }
+
+  private void checkWebModeIsAvailable() {
+    if (webDriver != null) {
+      return;
+    } else {
+      try {
+        getNativeDriver().findElement(By.className("UIAWebView"));
+      } catch (NoSuchElementException e) {
+        throw new NoSuchWindowException("The app currently doesn't have a webview displayed.");
+      }
+    }
+
   }
 
   public WorkingMode getMode() {
