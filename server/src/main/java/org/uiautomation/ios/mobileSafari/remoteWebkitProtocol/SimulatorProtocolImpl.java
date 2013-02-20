@@ -53,7 +53,9 @@ public class SimulatorProtocolImpl extends WebInspector2 {
       }
       socket = new Socket(LOCALHOST_IPV6, port);
     } catch (IOException e) {
-      throw new WebDriverException(e);
+      throw new WebDriverException(
+          "Cannot connect to the simulator socket on port 27753. Check that you don't have a firewall blocking it.",
+          e);
     }
     startListenerThread();
     //sendCommand(PlistManager.SET_CONNECTION_KEY);
