@@ -67,6 +67,12 @@ public class NewSessionTest extends BaseIOSDriverTest {
     }
   }
 
+
+  @Test(expectedExceptions = WebDriverException.class)
+  public void applicationIsntL10nInThatLanguage() {
+    new RemoteUIADriver(getRemoteURL(), SampleApps.intlMountainsCap("de"));
+  }
+
   RemoteUIADriver driver = null;
 
   @Test
@@ -77,9 +83,17 @@ public class NewSessionTest extends BaseIOSDriverTest {
       Assert.assertEquals(actual.getBundleId(), "freynaud.testNoContent");
       Assert.assertEquals(actual.getBundleVersion(), "1.0");
 
-    } catch (Exception e) {
-      driver.quit();
-      throw e;
+      try {
+        driver.findElement(By.xpath("//*[@name=l10n('test')]"));
+        Assert.fail("cannot use l10n features on an app with no content.");
+      } catch (WebDriverException expected) {
+        // expected
+      }
+    } finally {
+      if (driver != null) {
+        driver.quit();
+      }
+
     }
   }
 
@@ -87,7 +101,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
         expectedExceptions = WebDriverException.class)
   public void usingL10NThrowsIfTheAppDoesntHaveContent() {
     try {
-      driver.findElement(By.xpath("//*[@name=l10n('test')]"));
+
     } finally {
       if (driver != null) {
         driver.quit();
