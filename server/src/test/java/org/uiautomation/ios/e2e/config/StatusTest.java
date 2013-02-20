@@ -1,15 +1,5 @@
 package org.uiautomation.ios.e2e.config;
 
-import static org.uiautomation.ios.IOSCapabilities.BUNDLE_DISPLAY_NAME;
-import static org.uiautomation.ios.IOSCapabilities.BUNDLE_ID;
-import static org.uiautomation.ios.IOSCapabilities.BUNDLE_NAME;
-import static org.uiautomation.ios.IOSCapabilities.BUNDLE_VERSION;
-import static org.uiautomation.ios.IOSCapabilities.SUPPORTED_LANGUAGES;
-
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -22,6 +12,18 @@ import org.uiautomation.ios.BaseIOSDriverTest;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.communication.Helper;
 import org.uiautomation.ios.communication.HttpClientFactory;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.uiautomation.ios.IOSCapabilities.BUNDLE_DISPLAY_NAME;
+import static org.uiautomation.ios.IOSCapabilities.BUNDLE_ID;
+import static org.uiautomation.ios.IOSCapabilities.BUNDLE_NAME;
+import static org.uiautomation.ios.IOSCapabilities.BUNDLE_VERSION;
+import static org.uiautomation.ios.IOSCapabilities.SUPPORTED_LANGUAGES;
 
 public class StatusTest extends BaseIOSDriverTest {
 
@@ -42,19 +44,27 @@ public class StatusTest extends BaseIOSDriverTest {
     JSONArray array = o.getJSONObject("value").getJSONArray("supportedApps");
     Assert.assertTrue(array.length() > 3); // registered app + safari
 
-    JSONObject uicatalog = array.getJSONObject(3);
+    Map<String, JSONObject> apps = new HashMap<String, JSONObject>();
+    for (int i = 0; i < array.length(); i++) {
+      JSONObject a = array.getJSONObject(i);
+      String name = a.optString(BUNDLE_DISPLAY_NAME);
+      if (name.isEmpty()) {
+        name = a.optString(BUNDLE_NAME);
+      }
+      apps.put(name, a);
+    }
+    JSONObject uicatalog = apps.get("UICatalog");
 
     Assert.assertEquals(uicatalog.get(BUNDLE_DISPLAY_NAME), "UICatalog");
     Assert.assertEquals(uicatalog.get(BUNDLE_ID), "com.yourcompany.UICatalog");
     Assert.assertEquals(uicatalog.get(BUNDLE_NAME), "UICatalog");
     Assert.assertEquals(uicatalog.get(BUNDLE_VERSION), "2.10");
-    Assert.assertEquals(uicatalog.get("applicationPath"), SampleApps.getUICatalogIpad());
 
     JSONArray locales1 = uicatalog.getJSONArray(SUPPORTED_LANGUAGES);
     Assert.assertEquals(locales1.length(), 1);
     Assert.assertEquals(locales1.get(0), "en");
 
-    JSONObject intMount = array.getJSONObject(1);
+    JSONObject intMount = apps.get("InternationalMountains");
 
     Assert.assertEquals(intMount.get(BUNDLE_ID), "com.yourcompany.InternationalMountains");
     Assert.assertEquals(intMount.get(BUNDLE_NAME), "InternationalMountains");
@@ -62,11 +72,13 @@ public class StatusTest extends BaseIOSDriverTest {
     Assert.assertEquals(intMount.get("applicationPath"), SampleApps.getIntlMountainsFile());
 
     JSONArray locales2 = intMount.getJSONArray(SUPPORTED_LANGUAGES);
-    Assert.assertEquals(locales2.length(), 3);
+
+    int nbLanguages = 4;
+    Assert.assertEquals(locales2.length(), nbLanguages);
     List<String> all = new ArrayList<String>();
-    all.add(locales2.getString(0));
-    all.add(locales2.getString(1));
-    all.add(locales2.getString(2));
+    for (int i = 0; i < nbLanguages; i++) {
+      all.add(locales2.getString(i));
+    }
 
     Assert.assertTrue(all.contains("en"));
     Assert.assertTrue(all.contains("zh"));
