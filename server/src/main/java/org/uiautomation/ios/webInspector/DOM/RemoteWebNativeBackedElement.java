@@ -132,7 +132,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
       throws Exception {
 
     StringBuilder script = new StringBuilder();
-    script.append(getNativeElementClickOnIt());
+    //script.append(getNativeElementClickOnIt());
     script.append("var keyboard = UIAutomation.cache.get('1').keyboard();");
     script.append("keyboard.typeString('" + value + "');");
     Criteria iPhone = new NameCriteria("Done");
@@ -143,11 +143,14 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     script.append("root.element(-1," + c3.stringify().toString() + ").tap();");
 
     return script.toString();
-
   }
 
 
   public void setValueNative(String value) throws Exception {
+    ((JavascriptExecutor) nativeDriver)
+        .executeScript(getNativeElementClickOnIt());
+    Thread.sleep(750);
+    setCursorAtTheEnd();
     ((JavascriptExecutor) nativeDriver)
         .executeScript(getNativeElementClickOnItAndTypeUsingKeyboardScript(value));
   }

@@ -276,11 +276,11 @@ public class FormHandlingTest extends BaseSeleniumTest {
   // @Ignore(value = { SELENESE, IPHONE, ANDROID, OPERA_MOBILE }, reason =
   // "Not implemented going to the end of the line first;\n"
   // + "iPhone: sendKeys not implemented correctly")
-  @Test
-  public void testSendingKeyboardEventsShouldAppendTextinTextAreas() {
+  @Test//(invocationCount = 10)
+  public void testSendingKeyboardEventsShouldAppendTextinTextAreas() throws InterruptedException {
     driver.get(pages.formPage);
+    ;
     WebElement element = driver.findElement(By.id("withText"));
-
     element.sendKeys(". Some text");
     String value = element.getAttribute("value");
 

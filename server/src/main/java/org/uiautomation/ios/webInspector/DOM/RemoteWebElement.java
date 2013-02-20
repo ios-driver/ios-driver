@@ -77,6 +77,17 @@ public class RemoteWebElement {
     inspector.cast(response);
   }
 
+  public void setCursorAtTheEnd() {
+    try {
+      getRemoteObject().call(
+          ".selectionStart=this.value.length;this.selectionEnd=this.value.length;");
+    } catch (Exception e) {
+      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+    }
+
+
+  }
+
 
   public NodeId getNodeId() {
     return nodeId;
@@ -107,7 +118,7 @@ public class RemoteWebElement {
       } catch (RemoteExceptionException e) {
         // Node with given id does not belong to the document
         // No node with given id found
-        throw new StaleElementReferenceException(getNodeId() + " is stale.");
+        throw new StaleElementReferenceException(getNodeId() + " is stale." + e.getMessage());
       }
     }
     return remoteObject;
