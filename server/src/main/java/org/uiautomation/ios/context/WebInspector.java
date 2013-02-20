@@ -16,7 +16,8 @@ package org.uiautomation.ios.context;
 
 
 import org.json.JSONObject;
-import org.uiautomation.ios.mobileSafari.SimulatorProtocolImpl;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.SimulatorProtocolImpl;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.WebInspector2;
 import org.uiautomation.ios.server.ServerSideSession;
 
 import java.util.logging.Logger;
@@ -31,16 +32,16 @@ public class WebInspector extends BaseWebInspector {
   private final String senderKey;
   private final String connectionKey;
   private final String bundleId;
-  private final SimulatorProtocolImpl simulatorProtocol;
+  private final WebInspector2 inspector;
 
   public WebInspector(WebViewContext webViewContext, int pageIdentifierKey,
-                      SimulatorProtocolImpl simulatorProtocol, String bundleId,
+                      WebInspector2 inspector, String bundleId,
                       String connectionKey, ServerSideSession session) {
     super(session);
     this.bundleId = bundleId;
     this.connectionKey = connectionKey;
     this.context = webViewContext;
-    this.simulatorProtocol = simulatorProtocol;
+    this.inspector = inspector;
     this.pageIdentifierKey = pageIdentifierKey;
     this.senderKey = generateSenderString(pageIdentifierKey);
   }
@@ -49,8 +50,7 @@ public class WebInspector extends BaseWebInspector {
   public JSONObject sendCommand(JSONObject command) {
     JSONObject
         res =
-        simulatorProtocol
-            .sendCommand(command, connectionKey, bundleId, senderKey, "" + pageIdentifierKey);
+        inspector.sendWebkitCommand(command, pageIdentifierKey);
     return res;
   }
 

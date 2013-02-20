@@ -68,7 +68,6 @@ public class DefaultMessageHandler implements MessageHandler {
   private void process(String rawMessage) {
     IOSMessage message = factory.create(rawMessage);
 
-    //System.out.println(message);
     for (MessageListener l : listeners) {
       l.onMessage(message);
     }

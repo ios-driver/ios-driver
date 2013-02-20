@@ -13,9 +13,10 @@
  */
 package org.uiautomation.ios.server;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.SessionNotCreatedException;
-import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.SessionId;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Session;
@@ -37,9 +38,11 @@ import org.uiautomation.ios.server.utils.ClassicCommands;
 import java.io.File;
 import java.net.URL;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 public class ServerSideSession extends Session {
 
+  private static final Logger log = Logger.getLogger(ServerSideSession.class.getName());
   private final IOSApplication application;
   private final IOSCapabilities capabilities;
   private final InstrumentsManager instruments;
@@ -152,31 +155,35 @@ public class ServerSideSession extends Session {
       e.printStackTrace();
     }
     nativeDriver = new ServerSideNativeDriver(url, new SessionId(instruments.getSessionId()));
-    String version = capabilities.getSDKVersion();
-    Float v = Float.parseFloat(version);
-    if (v >= 6) {
-      webDriver = new RemoteIOSWebDriver(this, new AlertDetector(nativeDriver));
-    }
+
     if ("Safari".equals(capabilities.getBundleName())) {
       setMode(WorkingMode.Web);
     }
 
   }
 
-  public RemoteIOSWebDriver getRemoteWebDriver() {
+
+  public synchronized RemoteIOSWebDriver getRemoteWebDriver() {
     if (webDriver == null) {
-      throw new WebDriverException("hybrid / web apps are only supported for ios6+");
+      String version = capabilities.getSDKVersion();
+      Float v = Float.parseFloat(version);
+      if (v >= 6) {
+        webDriver = new RemoteIOSWebDriver(this, new AlertDetector(nativeDriver));
+      } else {
+        log.warning("Cannot create a driver. Version too old " + v);
+      }
     }
     return webDriver;
   }
 
-  public void setMode(WorkingMode mode) {
+  public void setMode(WorkingMode mode) throws NoSuchWindowException {
     if (mode == WorkingMode.Web) {
+      checkWebModeIsAvailable();
       try {
-        if (!webDriver.isConnected()) {
-          String bundleId = application.getMetadata("CFBundleIdentifier");
-          webDriver.connect(bundleId);
-          webDriver.switchTo(webDriver.getPages().get(0));
+        if (!getRemoteWebDriver().isConnected()) {
+          //String bundleId = application.getMetadata("CFBundleIdentifier");
+          //webDriver.connect(bundleId);
+          getRemoteWebDriver().switchTo(webDriver.getPages().get(0));
         }
       } catch (Exception e) {
         e.printStackTrace();
@@ -184,6 +191,19 @@ public class ServerSideSession extends Session {
       }
     }
     context.switchToMode(mode);
+  }
+
+  private void checkWebModeIsAvailable() {
+    if (webDriver != null) {
+      return;
+    } else {
+      try {
+        getNativeDriver().findElement(By.className("UIAWebView"));
+      } catch (NoSuchElementException e) {
+        throw new NoSuchWindowException("The app currently doesn't have a webview displayed.");
+      }
+    }
+
   }
 
   public WorkingMode getMode() {
@@ -195,4 +215,10 @@ public class ServerSideSession extends Session {
   }
 
 
+  public void restartWebkit() {
+    webDriver.stop();
+    webDriver = null;
+    webDriver = new RemoteIOSWebDriver(this, new AlertDetector(nativeDriver));
+    webDriver.switchTo(webDriver.getPages().get(0));
+  }
 }

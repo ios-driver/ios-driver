@@ -1,7 +1,5 @@
 package org.uiautomation.ios.e2e.hybrid;
 
-import java.util.Set;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NoSuchWindowException;
@@ -14,14 +12,13 @@ import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.UIAButton;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIATableCell;
-import org.uiautomation.ios.UIAModels.UIATextField;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAKeyboard;
-import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
+
+import java.util.Set;
 
 public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
 
@@ -101,21 +98,27 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
         }
       }
       el = driver.findElement(by);
+      //el.click();
       Assert.assertEquals(el.getAttribute("href"), "http://store.apple.com/");
       System.out.println("HREF=" + el.getAttribute("href"));
+      WebElement body = driver.findElement(By.cssSelector("body"));
+      System.out.println(body.getText());
 
-      Thread.sleep(10000);
+      driver.get("http://ebay.co.uk");
+      WebElement search = driver.findElement(By.id("kw"));
 
-      driver.findElement(By.id("div"));
+      search.sendKeys("ipod");
+      body = driver.findElement(By.cssSelector("body"));
 
-
+      System.out.println(body.getText());
+      System.out.println(body.getText());
     } finally {
       driver.quit();
     }
 
   }
 
-  @Test(enabled = false)
+  @Test//(enabled = false)
   public void nativeWebViewSeesNewPages() throws Exception {
     IOSCapabilities safari = IOSCapabilities.iphone("UICatalog");
     safari.setCapability(IOSCapabilities.TIME_HACK, false);
@@ -132,7 +135,7 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
       webCell.tap();
 
       driver.switchTo().window("Web");
-
+      Thread.sleep(5000);
       driver.get("http://ebay.co.uk");
       WebElement body = driver.findElement(By.cssSelector("body"));
       System.out.println(body.getText());
@@ -152,8 +155,12 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
       }
       el = driver.findElement(by);
       System.out.println(el.getText());   */
+    } catch (Exception e) {
+      e.printStackTrace();
     } finally {
-      driver.quit();
+      if (driver != null) {
+        driver.quit();
+      }
     }
 
   }

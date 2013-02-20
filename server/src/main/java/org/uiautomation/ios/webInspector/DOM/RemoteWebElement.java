@@ -14,40 +14,15 @@
 package org.uiautomation.ios.webInspector.DOM;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
-import org.uiautomation.ios.UIAModels.UIADriver;
-import org.uiautomation.ios.UIAModels.UIAElement;
-import org.uiautomation.ios.UIAModels.UIARect;
-import org.uiautomation.ios.UIAModels.UIAWebView;
-import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
-import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
-import org.uiautomation.ios.UIAModels.predicate.Criteria;
-import org.uiautomation.ios.UIAModels.predicate.L10NStrategy;
-import org.uiautomation.ios.UIAModels.predicate.LabelCriteria;
-import org.uiautomation.ios.UIAModels.predicate.LocationCriteria;
-import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
-import org.uiautomation.ios.UIAModels.predicate.OrCriteria;
-import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
-import org.uiautomation.ios.communication.WebDriverLikeCommand;
-import org.uiautomation.ios.communication.device.Device;
 import org.uiautomation.ios.context.BaseWebInspector;
 import org.uiautomation.ios.mobileSafari.IosAtoms;
 import org.uiautomation.ios.mobileSafari.NodeId;
-import org.uiautomation.ios.mobileSafari.SimulatorProtocolImpl;
-import org.uiautomation.ios.context.WebInspector;
-import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.server.application.AppleLocale;
-import org.uiautomation.ios.server.application.ContentResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,6 +77,17 @@ public class RemoteWebElement {
     inspector.cast(response);
   }
 
+  public void setCursorAtTheEnd() {
+    try {
+      getRemoteObject().call(
+          ".selectionStart=this.value.length;this.selectionEnd=this.value.length;");
+    } catch (Exception e) {
+      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+    }
+
+
+  }
+
 
   public NodeId getNodeId() {
     return nodeId;
@@ -132,7 +118,7 @@ public class RemoteWebElement {
       } catch (RemoteExceptionException e) {
         // Node with given id does not belong to the document
         // No node with given id found
-        throw new StaleElementReferenceException(getNodeId() + " is stale.");
+        throw new StaleElementReferenceException(getNodeId() + " is stale." + e.getMessage());
       }
     }
     return remoteObject;

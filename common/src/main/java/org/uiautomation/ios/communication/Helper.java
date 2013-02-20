@@ -13,15 +13,15 @@
  */
 package org.uiautomation.ios.communication;
 
-import java.io.InputStream;
-import java.io.StringWriter;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.JsonToBeanConverter;
 import org.openqa.selenium.remote.Response;
+
+import java.io.InputStream;
+import java.io.StringWriter;
 
 public class Helper {
 
@@ -55,8 +55,12 @@ public class Helper {
 
   public static Response exctractResponse(HttpResponse resp) {
     String s = extractString(resp);
-    Response response = new JsonToBeanConverter().convert(Response.class, s);
-    return response;
+    try {
+      Response response = new JsonToBeanConverter().convert(Response.class, s);
+      return response;
+    } catch (ClassCastException cce) {
+      throw new WebDriverException("not a valid response " + s);
+    }
 
   }
 

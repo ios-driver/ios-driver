@@ -16,18 +16,21 @@ package org.uiautomation.ios.server.command;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.WebKitSeemsCorruptedException;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
 
 public abstract class BaseCommandHandler implements Handler {
 
+  private static final Logger log = Logger.getLogger(BaseCommandHandler.class.getName());
   private final IOSDriver driver;
   private final ServerSideSession session;
   private final WebDriverLikeRequest request;
@@ -78,7 +81,16 @@ public abstract class BaseCommandHandler implements Handler {
     for (PreHandleDecorator pre : preDecorators) {
       pre.decorate(request);
     }
-    Response response = handle();
+    Response response = null;
+    try {
+      response = handle();
+    } catch (WebKitSeemsCorruptedException e) {
+      log.warning("WebKitSeemsCorruptedException.Attempting a restart.");
+      session.restartWebkit();
+      log.warning("restart done.");
+      response = handle();
+    }
+
     for (PostHandleDecorator post : postDecorators) {
       post.decorate(response);
     }
@@ -101,9 +113,9 @@ public abstract class BaseCommandHandler implements Handler {
     JSONObject res = new JSONObject().put("No config for this command", "");
     return res;
   }
-  
-  
-  protected Response createResponse(Object value){
+
+
+  protected Response createResponse(Object value) {
     Response r = new Response();
     r.setSessionId(getSession().getSessionId());
     r.setStatus(0);

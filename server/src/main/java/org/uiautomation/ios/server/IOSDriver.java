@@ -19,6 +19,9 @@ import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.application.ResourceCache;
+import org.uiautomation.iosdriver.DeviceDetector;
+import org.uiautomation.iosdriver.DeviceInfo;
+import org.uiautomation.iosdriver.services.DeviceManagerService;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,18 +29,22 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import static org.uiautomation.ios.IOSCapabilities.MAGIC_PREFIX;
 
-public class IOSDriver {
 
-  private static final Logger log = Logger.getLogger(IOSDriver.class.getName());
+public class IOSDriver implements DeviceDetector {
+
   private final List<ServerSideSession> sessions = new ArrayList<ServerSideSession>();
+  private static final Logger log = Logger.getLogger(IOSDriver.class.getName());
   private final Set<IOSApplication> supportedApplications = new HashSet<IOSApplication>();
+  private final List<DeviceInfo> connectedDevices = new CopyOnWriteArrayList<DeviceInfo>();
   private final HostInfo hostInfo;
   private final ResourceCache cache = new ResourceCache();
+  private final DeviceManagerService deviceManager;
 
   public IOSDriver(int port) {
     try {
@@ -47,6 +54,13 @@ public class IOSDriver {
       System.err.println("Cannot configure logger.");
     }
     this.hostInfo = new HostInfo(port);
+    deviceManager = DeviceManagerService.create(this);
+    deviceManager.startDetection();
+
+  }
+
+  public void stop() {
+    deviceManager.stopDetection();
   }
 
   public void addSupportedApplication(IOSApplication application) {
@@ -200,4 +214,16 @@ public class IOSDriver {
     return supportedApplications;
   }
 
+  @Override
+  public void onDeviceAdded(DeviceInfo deviceInfo) {
+    log.info(
+        "ADDED : " + deviceInfo.getDeviceName() + ",IOS "
+        + deviceInfo.getProductVersion() + "[" + deviceInfo.getUniqueDeviceID() + "]");
+  }
+
+  @Override
+  public void onDeviceRemoved(DeviceInfo deviceInfo) {
+    log.info(
+        "REMOVED : " + deviceInfo.getDeviceName() + "[" + deviceInfo.getUniqueDeviceID() + "]");
+  }
 }

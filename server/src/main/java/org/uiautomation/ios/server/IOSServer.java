@@ -39,6 +39,7 @@ public class IOSServer {
   private int port;
   public static final boolean debugMode = true;
   private IOSServerConfiguration options;
+  private IOSDriver driver;
 
   public static void main(String[] args) throws Exception {
     IOSServer server = new IOSServer(args);
@@ -89,7 +90,7 @@ public class IOSServer {
     handlers.setHandlers(new Handler[]{wd, extra});
     server.setHandler(handlers);
 
-    IOSDriver driver = new IOSDriver(port);
+    driver = new IOSDriver(port);
     for (String app : this.options.getSupportedApps()) {
       driver.addSupportedApplication(new IOSApplication(app));
     }
@@ -152,6 +153,7 @@ public class IOSServer {
   }
 
   public void stop() throws Exception {
+    driver.stop();
     server.stop();
   }
 

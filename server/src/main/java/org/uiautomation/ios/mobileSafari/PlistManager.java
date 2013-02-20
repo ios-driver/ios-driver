@@ -20,19 +20,25 @@ import com.dd.plist.XMLPropertyListParser;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.webInspector.DOM.Runtime;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.logging.Logger;
 
 public class PlistManager {
 
+  private static final Logger log = Logger.getLogger(PlistManager.class.getName());
   public static final String SET_CONNECTION_KEY = "webinspector/setConnectionKey.xml";
   public static final String CONNECT_TO_APP = "webinspector/connectToApp.xml";
   public static final String SET_SENDER_KEY = "webinspector/setSenderKey.xml";
   public static final String SEND_JSON_COMMAND = "webinspector/sendJSONCommand.xml";
+  private static final String encoding = "UTF-8";
 
   private static String cacheTemplate = loadFromTemplate(SEND_JSON_COMMAND);
 
@@ -60,7 +66,12 @@ public class PlistManager {
 
   public String JSONCommand(JSONObject command) {
     String json = command.toString();
-    String s = Base64.encodeBase64String(json.getBytes());
+    String s = null;
+    try {
+      s = Base64.encodeBase64String(json.getBytes(encoding));
+    } catch (UnsupportedEncodingException e) {
+      log.warning("encoding not supported :" + encoding);
+    }
     String template = loadFromTemplate(SEND_JSON_COMMAND);
     String res = template.replace("$json_encoded", s);
     return res;

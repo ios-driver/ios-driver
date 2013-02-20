@@ -28,7 +28,6 @@ public class ReportConnectedApplicationsMessage extends BaseIOSWebKitMessage {
     super(rawMessage);
     NSDictionary list = (NSDictionary) arguments.objectForKey("WIRApplicationDictionaryKey");
     String[] keys = list.allKeys();
-
     for (String key : keys) {
       NSDictionary app = (NSDictionary) list.objectForKey(key);
       WebkitApplication application = new WebkitApplication(app);

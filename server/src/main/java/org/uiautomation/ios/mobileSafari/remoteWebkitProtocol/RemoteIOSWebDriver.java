@@ -14,9 +14,6 @@
 
 package org.uiautomation.ios.mobileSafari.remoteWebkitProtocol;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.openqa.selenium.By;
@@ -24,7 +21,6 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.context.BaseWebInspector;
-import org.uiautomation.ios.context.WebInspector;
 import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.mobileSafari.ResponseFinder;
 import org.uiautomation.ios.mobileSafari.message.WebkitApplication;
@@ -36,7 +32,6 @@ import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebNativeBackedElement;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,12 +41,28 @@ public class RemoteIOSWebDriver {
 
   public static void main(String[] args) throws Exception {
     RemoteIOSWebDriver driver = new RemoteIOSWebDriver(null);
-    driver.connect(uiCatalog);
+    //driver.connect(uiCatalog);
     driver.switchTo(driver.getPages().get(0));
     driver.get("http://ebay.co.uk/");
-
     RemoteWebElement body = driver.findElementByCssSelector("body");
     System.out.println(body.getText());
+    driver.get("http://google.co.uk/");
+    body = driver.findElementByCssSelector("body");
+    System.out.println(body.getText());
+
+    driver.stop();
+
+    driver = new RemoteIOSWebDriver(null);
+    //driver.connect(uiCatalog);
+    driver.switchTo(driver.getPages().get(0));
+    driver.get("http://ebay.co.uk/");
+    body = driver.findElementByCssSelector("body");
+    System.out.println(body.getText());
+    driver.get("http://google.co.uk/");
+    body = driver.findElementByCssSelector("body");
+    System.out.println(body.getText());
+
+
     /*driver.get("http://ebay.co.uk/common/frameset.html");
 
     JSONObject res = driver.currentInspector.sendCommand(Page.getResourceTree());
@@ -84,6 +95,10 @@ public class RemoteIOSWebDriver {
     this.session = session;
   }
 
+  public void start() {
+    simulator.start();
+  }
+
   public boolean isConnected() {
     return currentInspector != null;
   }
@@ -112,9 +127,6 @@ public class RemoteIOSWebDriver {
     }
   }
 
-  public WebInspector connect(String bundleId, String deviceId) {
-    return null;
-  }
 
   public void connect(String bundleId) {
     simulator.connect(bundleId);
@@ -150,6 +162,25 @@ public class RemoteIOSWebDriver {
 
   public void get(String url) {
     currentInspector.get(url);
+  }
+
+  private void reset() {
+    try {
+      System.out.println("RESET");
+      this.stop();
+      RemoteIOSWebDriver driver = new RemoteIOSWebDriver(null);
+      //driver.connect(uiCatalog);
+      driver.switchTo(driver.getPages().get(0));
+      driver.get("http://ebay.co.uk/");
+      RemoteWebElement body = driver.findElementByCssSelector("body");
+      System.out.println(body.getText());
+      driver.get("http://google.co.uk/");
+      body = driver.findElementByCssSelector("body");
+      System.out.println(body.getText());
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
 

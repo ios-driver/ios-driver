@@ -35,6 +35,7 @@ import org.uiautomation.ios.mobileSafari.message.ApplicationDataMessage;
 import org.uiautomation.ios.mobileSafari.message.ApplicationSentListingMessage;
 import org.uiautomation.ios.mobileSafari.message.IOSMessage;
 import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.MessageListener;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.WebKitSeemsCorruptedException;
 import org.uiautomation.ios.server.DOMContext;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.webInspector.DOM.DOM;
@@ -104,6 +105,8 @@ public abstract class BaseWebInspector implements MessageListener {
       } catch (Exception e) {
         log.warning(
             "The given document is corrupted, nodeId=" + element.getNodeId() + e.getMessage());
+        throw new WebKitSeemsCorruptedException();
+
       }
     }
     return element;

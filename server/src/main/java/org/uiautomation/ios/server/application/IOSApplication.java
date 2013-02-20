@@ -219,6 +219,10 @@ public class IOSApplication {
     dictionaries.add(dict);
   }
 
+  public String getBundleId() {
+    return getMetadata("CFBundleIdentifier");
+  }
+
   public AppleLocale getCurrentLanguage() {
     return currentLanguage;
   }

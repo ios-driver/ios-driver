@@ -352,7 +352,7 @@ public class AlertsTest extends BaseSeleniumTest {
   }
 
 
-  @Test
+  @Test(enabled = false)
   public void testShouldHandleAlertOnPageLoadUsingGet() {
     try {
       driver.get(appServer.whereIs("pageWithOnLoad.html"));

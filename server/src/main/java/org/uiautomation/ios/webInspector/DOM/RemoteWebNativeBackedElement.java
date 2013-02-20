@@ -51,6 +51,10 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     this.nativeDriver = session.getNativeDriver();
   }
 
+  private boolean isSafari() {
+    return "com.apple.mobilesafari".equals(session.getApplication().getBundleId());
+  }
+
   public void nativeClick() {
     try {
       ((JavascriptExecutor) nativeDriver).executeScript(getNativeElementClickOnIt());
@@ -85,28 +89,38 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
 
     script.append("var x = left;");
     boolean ipad = session.getCapabilities().getDevice() == Device.ipad;
-    if (ipad) {
-      // for ipad, the adress bar h is fixed @ 96px.
-      script.append("var y = top+96;");
-    } else {
-      AppleLocale current = session.getApplication().getCurrentLanguage();
-      List<ContentResult>
-          results =
-          session.getApplication().getDictionary(current).getPotentialMatches("Address");
-      if (results.size() != 1) {
-        log.warning("translation returned " + results.size());
+
+    if (isSafari()) {
+      if (ipad) {
+        // for ipad, the adress bar h is fixed @ 96px.
+        script.append("var y = top+96;");
+      } else {
+        AppleLocale current = session.getApplication().getCurrentLanguage();
+        List<ContentResult>
+            results =
+            session.getApplication().getDictionary(current).getPotentialMatches("Address");
+        if (results.size() != 1) {
+          log.warning("translation returned " + results.size());
+        }
+        ContentResult result = results.get(0);
+        String addressL10ned = result.getL10nFormatted();
+        Criteria
+            c2 =
+            new AndCriteria(new TypeCriteria(UIAElement.class), new NameCriteria(addressL10ned),
+                            new LabelCriteria(addressL10ned));
+        script.append("var addressBar = root.element(-1," + c2.stringify().toString() + ");");
+        script.append("var addressBarSize = addressBar.rect();");
+        script.append("var delta = addressBarSize.origin.y +39;");
+        script.append("if (delta<20){delta=20;};");
+        script.append("var y = top+delta;");
       }
-      ContentResult result = results.get(0);
-      String addressL10ned = result.getL10nFormatted();
-      Criteria
-          c2 =
-          new AndCriteria(new TypeCriteria(UIAElement.class), new NameCriteria(addressL10ned),
-                          new LabelCriteria(addressL10ned));
-      script.append("var addressBar = root.element(-1," + c2.stringify().toString() + ");");
-      script.append("var addressBarSize = addressBar.rect();");
-      script.append("var delta = addressBarSize.origin.y +39;");
-      script.append("if (delta<20){delta=20;};");
-      script.append("var y = top+delta;");
+    } else {
+      Criteria wv = new TypeCriteria(UIAWebView.class);
+      script.append("var webview = root.element(-1," + wv.stringify().toString() + ");");
+      script.append("var size = webview.rect();");
+      script.append("var offsetY = size.origin.y;");
+      // UIAWebView.y
+      script.append("var y = top+offsetY;");
     }
     script.append("UIATarget.localTarget().tap({'x':x,'y':y});");
     return script.toString();
@@ -118,7 +132,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
       throws Exception {
 
     StringBuilder script = new StringBuilder();
-    script.append(getNativeElementClickOnIt());
+    //script.append(getNativeElementClickOnIt());
     script.append("var keyboard = UIAutomation.cache.get('1').keyboard();");
     script.append("keyboard.typeString('" + value + "');");
     Criteria iPhone = new NameCriteria("Done");
@@ -129,11 +143,14 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     script.append("root.element(-1," + c3.stringify().toString() + ").tap();");
 
     return script.toString();
-
   }
 
 
   public void setValueNative(String value) throws Exception {
+    ((JavascriptExecutor) nativeDriver)
+        .executeScript(getNativeElementClickOnIt());
+    Thread.sleep(750);
+    setCursorAtTheEnd();
     ((JavascriptExecutor) nativeDriver)
         .executeScript(getNativeElementClickOnItAndTypeUsingKeyboardScript(value));
   }

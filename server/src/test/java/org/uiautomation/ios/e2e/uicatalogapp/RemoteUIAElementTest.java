@@ -1,13 +1,10 @@
 package org.uiautomation.ios.e2e.uicatalogapp;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -25,6 +22,10 @@ import org.uiautomation.ios.UIAModels.predicate.EmptyCriteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RemoteUIAElementTest extends BaseIOSDriverTest {
 
@@ -56,19 +57,19 @@ public class RemoteUIAElementTest extends BaseIOSDriverTest {
     Assert.assertNull(element.getValue());
   }
 
-  @Test(dependsOnMethods = { "findElement" })
+  @Test(dependsOnMethods = {"findElement"})
   public void logElementTreeNoScreenshot() throws Exception {
     JSONObject tree = element.logElementTree(null, false);
     Assert.assertTrue(tree.has("tree"));
   }
-  
+
   @Test
   public void logElementTreeRootNoScreenshot() throws Exception {
     JSONObject tree = driver.logElementTree(null, false);
     Assert.assertTrue(tree.has("tree"));
   }
 
-  @Test(dependsOnMethods = { "findElement" })
+  @Test(dependsOnMethods = {"findElement"})
   public void logElementTreeWithScreenshot() throws Exception {
     File f = new File("logElementTreeWithScreenshotTmp");
     f.delete();
@@ -77,6 +78,7 @@ public class RemoteUIAElementTest extends BaseIOSDriverTest {
     Assert.assertTrue(f.exists());
     f.delete();
   }
+
   @Test
   public void logElementTreeRootWithScreenshot() throws Exception {
     File f = new File("logElementTreeWithScreenshotTmp");
@@ -91,67 +93,58 @@ public class RemoteUIAElementTest extends BaseIOSDriverTest {
   @Test(groups = "broken")
   public void findAllElements() throws InterruptedException {
     List<UIAElement> elements = driver.findElements(new EmptyCriteria());
-    Assert.assertTrue(elements.size()>40);
+    Assert.assertTrue(elements.size() > 40);
   }
 
-  @Test(groups = "broken",enabled=false)
+
+  @Test
   public void isVisibleTests() {
 
-    Criteria c = new TypeCriteria(UIATableView.class);
-    List<UIAElement> elements = driver.findElements(c);
+    WebElement navBar = driver.findElement(By.tagName("UIANavigationBar"));
+    Assert.assertTrue(navBar.isDisplayed(), "nav bar");
 
-    UIATableView tableView = (UIATableView) elements.get(0);
-    List<WebElement> cells = tableView.findElements(By.tagName("UIATableCell"));
+    List<WebElement> imgs = navBar.findElements(By.className("UIAImage"));
 
-    // list of visible components.
-    List<String> v = new ArrayList<String>();
-    v.add("Buttons, Various uses of UIButton");
-    v.add("Controls, Various uses of UIControl");
-    v.add("TextFields, Uses of UITextField");
-    v.add("SearchBar, Use of UISearchBar");
-    v.add("TextView, Use of UITextField");
-    v.add("Pickers, Uses of UIDatePicker, UIPickerView");
-    v.add("Images, Use of UIImageView");
-    v.add("Web, Use of UIWebView");
-    v.add("Segment, Various uses of UISegmentedControl");
-    v.add("Toolbar, Uses of UIToolbar");
+    Assert.assertEquals(imgs.size(), 2, "number of images in the menu");
 
-    for (WebElement el : cells) {
-      boolean visible = false;
-      if (v.contains(el.getAttribute("name"))) {
-        visible = true;
-      }
-      Assert.assertEquals(el.isDisplayed(), visible);
+    for (WebElement el : imgs) {
+      Assert.assertFalse(el.isDisplayed(), "image");
     }
+
+    WebElement text = navBar.findElement(By.className("UIAStaticText"));
+    Assert.assertTrue(text.isDisplayed(), "nav bar text");
+
+
   }
 
-  @Test(enabled=false)
-  public void canClickVisibleElement() {
-    Criteria invisibleOne = new AndCriteria(new NameCriteria("Buttons, Various uses of UIButton"), new TypeCriteria(
-        UIATableCell.class));
-    UIAElement element = driver.findElement(invisibleOne);
-    element.tap();
+  @Test//(dependsOnMethods ="isVisibleTests")
+  public void canOnlyClickVisibleElement() {
+    WebElement navBar = driver.findElement(By.tagName("UIANavigationBar"));
+    Assert.assertTrue(navBar.isDisplayed(), "nav bar");
+    navBar.click();
+
+    List<WebElement> imgs = navBar.findElements(By.className("UIAImage"));
+
+    Assert.assertEquals(imgs.size(), 2, "number of images in the menu");
+
+    for (WebElement el : imgs) {
+      Assert.assertFalse(el.isDisplayed(), "image");
+      try {
+        el.click();
+        Assert.fail("click on not visible should throw.");
+      } catch (ElementNotVisibleException e) {
+        // expected
+      }
+    }
+
+    WebElement text = navBar.findElement(By.className("UIAStaticText"));
+    Assert.assertTrue(text.isDisplayed(), "nav bar text");
+    text.click();
   }
 
-  // need to find a test for that.
-  // visible doesn't mean visible, but "can be visible after scrolling )
-  @Test(expectedExceptions = ElementNotVisibleException.class, groups = "broken", enabled = false)
-  public void cannotClickInvisibleElement() {
-    RemoteUIADriver driver = null;
 
-   
-
-      Criteria invisibleOne = new AndCriteria(new NameCriteria("Transitions, Shows UIViewAnimationTransitions"),
-          new TypeCriteria(UIATableCell.class));
-      UIAElement element = driver.findElement(invisibleOne);
-
-      element.tap();
-
-  
-  }
-
-  // TODO freynaud element.getName() creates some scrolling.
-  @Test(expectedExceptions = StaleElementReferenceException.class)
+  // TODO freynaud find a test for stale.
+  @Test(expectedExceptions = StaleElementReferenceException.class, enabled = false)
   public void staleElement() {
     try {
       String name = "Buttons, Various uses of UIButton";
@@ -160,15 +153,17 @@ public class RemoteUIAElementTest extends BaseIOSDriverTest {
       Criteria c = new AndCriteria(c1, c2);
       UIAElement element = driver.findElement(c);
       // should work.
-      element.getName();
       // new screen. The element doesn't exist anymore
       element.tap();
-      
-      // cannot use a stale element. Exception thrown.
-      element.getName();
+
+      // that doesn't throw. The element isn't visible, but it's still accessible with UIAutomation.
+      String s = element.getName();
       Assert.fail("cannot access stale elements");
     } finally {
-      UIAButton but = driver.findElement(new AndCriteria(new NameCriteria("Back"),new TypeCriteria(UIAButton.class)));
+      UIAButton
+          but =
+          driver.findElement(
+              new AndCriteria(new NameCriteria("Back"), new TypeCriteria(UIAButton.class)));
       but.tap();
     }
   }
