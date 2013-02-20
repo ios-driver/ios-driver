@@ -197,9 +197,9 @@ public enum CommandMapping {
   //TABLE_CELLS(".cells()"),
   //TABLE_VISIBLE_CELLS(".visibleCells()"),
   GET_ALERT_TEXT(GetAlertTextNHandler.class),
-  ACCEPT_ALERT(NotImplementedNativeHandler.class, AcceptAlertHandler.class),
-  DISMISS_ALERT(NotImplementedNativeHandler.class, DismissAlertHandler.class),
-  SET_ALERT_TEXT(NotImplementedNativeHandler.class, SetAlertTextHandler.class),
+  ACCEPT_ALERT(AcceptAlertHandler.class),
+  DISMISS_ALERT(DismissAlertHandler.class),
+  SET_ALERT_TEXT(SetAlertTextHandler.class),
   ALERT_CANCEL_BUTTON(".cancelButton()"),
   ALERT_DEFAULT_BUTTON(".defaultButton()"),;
 

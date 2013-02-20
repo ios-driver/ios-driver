@@ -20,15 +20,18 @@ import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.Keyboard;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.remote.Response;
+import org.uiautomation.ios.UIAModels.UIASecureTextField;
 import org.uiautomation.ios.UIAModels.UIATextField;
+import org.uiautomation.ios.UIAModels.predicate.OrCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAAlert;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 
 
-public class SetAlertTextHandler extends BaseWebCommandHandler {
+public class SetAlertTextHandler extends BaseNativeCommandHandler {
 
   public SetAlertTextHandler(IOSDriver driver,
                              WebDriverLikeRequest request) {
@@ -48,7 +51,10 @@ public class SetAlertTextHandler extends BaseWebCommandHandler {
 
     // check the alert is actually a prompt.
     try {
-      UIATextField prompt = alert.findElement(new TypeCriteria(UIATextField.class));
+      UIATextField
+          prompt =
+          alert.findElement(new OrCriteria(new TypeCriteria(UIATextField.class),
+                                           new TypeCriteria(UIASecureTextField.class)));
       Keyboard keyboard = getSession().getNativeDriver().getKeyboard();
       keyboard.sendKeys(value);
     } catch (NoSuchElementException e) {

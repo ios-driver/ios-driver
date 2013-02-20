@@ -20,9 +20,10 @@ import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAAlert;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 
-public class DismissAlertHandler extends BaseWebCommandHandler {
+public class DismissAlertHandler extends BaseNativeCommandHandler {
 
   public DismissAlertHandler(IOSDriver driver,
                              WebDriverLikeRequest request) {

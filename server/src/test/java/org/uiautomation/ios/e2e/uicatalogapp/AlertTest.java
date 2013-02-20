@@ -2,6 +2,7 @@ package org.uiautomation.ios.e2e.uicatalogapp;
 
 import org.eclipse.jetty.util.ajax.JSON;
 import org.json.JSONObject;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
@@ -111,6 +112,24 @@ public class AlertTest extends BaseIOSDriverTest {
     WebElement element = rwe.findElement(By.className("UIAButton"));
     element.click();
 
+  }
+
+
+  @Test
+  public void switchToAlert() throws Exception {
+    RemoteWebDriver d = (RemoteWebDriver) driver;
+    By b = By.xpath("//UIAStaticText[@name='Secure Text Input']");
+    WebElement el = driver.findElement(b);
+    try {
+      d.switchTo().alert();
+      Assert.fail("should have thrown");
+    } catch (NoAlertPresentException e) {
+      // expected
+    }
+    el.click();
+    Alert alert = d.switchTo().alert();
+    alert.sendKeys("test");
+    alert.accept();
   }
 
   @Test(expectedExceptions = NoAlertPresentException.class)
