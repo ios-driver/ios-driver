@@ -26,6 +26,11 @@ var Cache = function () {
             var id = 1;
             element.id = id;
             return id;
+        } else if (element && element.type && element.type() === "UIAAlert") {
+            var id = 3;
+            element.id = id;
+            this.storage[id] = element;
+            return id;
         } else {
             this.lastReference++;
             element.id = this.lastReference;
