@@ -31,13 +31,25 @@ public class AppleLocale {
   private static Locale findBestLocale(String lprojname) {
     String corrected = lprojname;
     if ("French".equals(lprojname)) {
-      corrected = "fr";
+      corrected = "fr"; 
     }
     if ("German".equals(lprojname)) {
       corrected = "de";
     }
     if ("Spanish".equals(lprojname)) {
       corrected = "es";
+    }
+    if("Dutch".equals(lprojname)){
+    	corrected = "nl";
+    }
+    if("English".equals(lprojname)){
+    	corrected= "en";
+    }
+    if("Italian".equals(lprojname)){
+    	corrected= "it";
+    }
+    if("Japanese".equals(lprojname)){
+    	corrected= "ja";
     }
     for (Locale l : Locale.getAvailableLocales()) {
       if (l.toString().equals(corrected)) {
