@@ -53,26 +53,29 @@ var Cache = function () {
      */
     this.get = function (reference, opt_checkStale) {
         var actionSheetCriteria = {"l10n": "none", "expected": "UIAActionSheet", "matching": "exact", "method": "type"};
-        var actionSheets = UIATarget.localTarget().frontMostApp().elements2(-1,
-                                                                            actionSheetCriteria);
+        var alertCriteria = {"l10n": "none", "expected": "UIAAlert", "matching": "exact", "method": "type"};
+        var app = UIATarget.localTarget().frontMostApp();
+        var actionSheets = app.elements2(-1, actionSheetCriteria);
+        var alerts = app.elements2(-1, alertCriteria);
 
         var checkStale = true;
         if (opt_checkStale === false) {
             checkStale = false;
         }
         if (reference == 0) {
-            return UIATarget.localTarget().frontMostApp().mainWindow();
+            return app.mainWindow();
         } else if (reference == this.FRONT_MOST_APP) {
-            return UIATarget.localTarget().frontMostApp();
+            return app;
         } else if (reference == this.LOCAL_TARGET_ID) {
             return UIATarget.localTarget();
         } else if (reference == this.ALERT_ID) {
-            var res = this.storage[this.ALERT_ID];
-            if (!res && actionSheets.length > 0) {
+            var res;
+            if (alerts.length > 0) {
+                res = alerts[0];
+            } else if (actionSheets.length > 0) {
                 res = actionSheets[0];
             }
             if (res) {
-                log("returning " + res.type());
                 return res;
             } else {
                 throw new UIAutomationException("No alert opened", 27);
@@ -83,7 +86,7 @@ var Cache = function () {
         var res = this.storage[reference];
 
         // there is an alert / action sheet
-        if (this.storage[3] || actionSheets.length != 0) {
+        if (alerts.length != 0 || actionSheets.length != 0) {
 
             if (res.isInAlert() || res.isInActionSheet()) {
                 return res;

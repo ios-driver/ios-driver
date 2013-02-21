@@ -87,6 +87,28 @@ public class ActionSheetTest extends BaseIOSDriverTest {
     }
   }
 
+  @Test
+  public void findWhenAlertAreGone() throws Exception {
+    RemoteWebDriver d = (RemoteWebDriver) driver;
+    By b = By.xpath(actionOKCancel);
+    WebElement el = driver.findElement(b);
+    el.click();
+
+    Alert alert = driver.switchTo().alert();
+    try {
+      el.click();
+      Assert.fail();
+    } catch (UnhandledAlertException e) {
+      //expected
+    }
+    alert.accept();
+    el.click();
+    driver.switchTo().alert();
+    alert.accept();
+
+  }
+
+
   private Alert waitForAlert(WebDriver driver) {
     long timeoutInMs = 2000;
     long deadline = System.currentTimeMillis() + timeoutInMs;

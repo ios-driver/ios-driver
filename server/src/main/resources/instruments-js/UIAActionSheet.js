@@ -3,6 +3,9 @@
  */
 
 
+UIAActionSheet.criteria =
+{"l10n": "none", "expected": "UIAButton", "matching": "exact", "method": "type"};
+
 UIAActionSheet.prototype.cancelButton_origin = UIAActionSheet.prototype.cancelButton;
 /**
  * dismiss the UIAActionSheet.
@@ -14,9 +17,8 @@ UIAActionSheet.prototype.dismiss = function () {
     var button = this.cancelButton();
     if (button.type() === "UIAElementNil") {
         log("cancel is not there,trying default first button.");
-        var criteria = {"l10n": "none", "expected": "UIAButton", "matching": "exact", "method": "type"};
         try {
-            button = this.element(-1, criteria);
+            button = this.element(-1, this.criteria);
         } catch
             (err) {
             throw new UIAutomationException("this UIAActionSheet doesn't "
@@ -30,10 +32,10 @@ UIAActionSheet.prototype.dismiss = function () {
  * accept the UIAActionSheet.
  */
 UIAActionSheet.prototype.accept = function () {
-    var button = this.defaultButton();
-    if (button.type() === "UIAElementNil") {
-        throw new UIAutomationException("this UIAActionSheet doesn't have a default normal buttons.",
-                                        7);
+    try {
+        var button = this.element(-1, this.criteria);
+    } catch (err) {
+        throw new UIAutomationException("this UIAActionSheet doesn't have any button.", 7);
     }
     button.tap();
 }
