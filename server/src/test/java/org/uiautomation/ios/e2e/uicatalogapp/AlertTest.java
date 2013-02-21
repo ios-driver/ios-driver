@@ -32,7 +32,6 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 import java.net.URL;
 
 
-//150
 public class AlertTest extends BaseIOSDriverTest {
 
   private static final String actionSheet = "(//UIAStaticText[@name='Show Simple'])[1]";

@@ -47,6 +47,26 @@ UIAElement.prototype.isInAlert = function () {
 }
 
 /**
+ * checks is the element is part of an action sheet.
+ * @return {boolean} true is the element is a descendant of an action sheet.
+ */
+UIAElement.prototype.isInActionSheet = function () {
+    var parent;
+    if (this.parent) {
+        parent = this.parent();
+    }
+
+    while (parent.type() != "UIAElementNil" && parent.type() != "UIATarget") {
+        if (parent.type() == "UIAActionSheet") {
+            return true;
+        }
+        parent = parent.parent();
+    }
+
+    return false;
+}
+
+/**
  * with IOS6, scrollToVisible crashes for elements that are not in a tableView or a webView.
  * As scrollToVisible is used internally by ios-driver to find if an element is stale, it is necessary
  * to workaround this bug.
@@ -125,6 +145,21 @@ UIAElement.prototype.isVisibleOriginal = UIAElement.prototype.isVisible;
  */
 UIAElement.prototype.isVisible = function () {
     if (this.isVisibleOriginal()) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+UIAElement.prototype.isEnabledOriginal = UIAElement.prototype.isEnabled;
+
+/**
+ * similar to the original isEnabled, but returning a boolean instead of an number.
+ * @return {boolean}
+ */
+UIAElement.prototype.isEnabled = function () {
+
+    if (this.isEnabledOriginal()) {
         return true;
     } else {
         return false;

@@ -29,3 +29,10 @@ function UIAApplication() {
  */
 function UIAAlert() {
 }
+
+/**
+ * Not in use. Only here to have the doc generated.
+ * @constructor
+ */
+function UIAActionSheet() {
+}

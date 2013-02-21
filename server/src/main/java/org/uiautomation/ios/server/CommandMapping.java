@@ -149,6 +149,7 @@ public enum CommandMapping {
   //ANCESTRY(NotImplementedNativeHandler.class, NotImplementedWebHandler.class),
 
   DISPLAYED(IsVisibleNHandler.class, IsDisplayedHanlder.class),
+  ENABLED(IsEnabledNHandler.class, NotImplementedWebHandler.class),
   //IS_STALE(".isStale()"),
 
   //LABEL(".label()"),

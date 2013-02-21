@@ -9,6 +9,7 @@
 var Cache = function () {
     this.FRONT_MOST_APP = 1;
     this.LOCAL_TARGET_ID = 2;
+    this.ALERT_ID = 3;
     this.storage = {};
     this.lastReference = 3;
 
@@ -51,6 +52,10 @@ var Cache = function () {
      * @return {UIAElement}
      */
     this.get = function (reference, opt_checkStale) {
+        var actionSheetCriteria = {"l10n": "none", "expected": "UIAActionSheet", "matching": "exact", "method": "type"};
+        var actionSheets = UIATarget.localTarget().frontMostApp().elements2(-1,
+                                                                            actionSheetCriteria);
+
         var checkStale = true;
         if (opt_checkStale === false) {
             checkStale = false;
@@ -61,9 +66,14 @@ var Cache = function () {
             return UIATarget.localTarget().frontMostApp();
         } else if (reference == this.LOCAL_TARGET_ID) {
             return UIATarget.localTarget();
-        } else if (reference == 3) {
-            if (this.storage[3]) {
-                return this.storage[3];
+        } else if (reference == this.ALERT_ID) {
+            var res = this.storage[this.ALERT_ID];
+            if (!res && actionSheets.length > 0) {
+                res = actionSheets[0];
+            }
+            if (res) {
+                log("returning " + res.type());
+                return res;
             } else {
                 throw new UIAutomationException("No alert opened", 27);
             }
@@ -72,14 +82,14 @@ var Cache = function () {
 
         var res = this.storage[reference];
 
-        // there is an alert.
-        if (this.storage[3]) {
+        // there is an alert / action sheet
+        if (this.storage[3] || actionSheets.length != 0) {
 
-            if (res.isInAlert()) {
+            if (res.isInAlert() || res.isInActionSheet()) {
                 return res;
             } else {
                 throw new UIAutomationException("cannot interact with object " + res
-                                                    + ". There is an alert.", 26);
+                                                    + ". There is an alert/action sheet.", 26);
             }
 
         } else {
