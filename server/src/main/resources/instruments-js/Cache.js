@@ -7,6 +7,8 @@
  * @constructor
  */
 var Cache = function () {
+    this.FRONT_MOST_APP = 1;
+    this.LOCAL_TARGET_ID = 2;
     this.storage = {};
     this.lastReference = 3;
 
@@ -55,9 +57,9 @@ var Cache = function () {
         }
         if (reference == 0) {
             return UIATarget.localTarget().frontMostApp().mainWindow();
-        } else if (reference == 1) {
+        } else if (reference == this.FRONT_MOST_APP) {
             return UIATarget.localTarget().frontMostApp();
-        } else if (reference == 2) {
+        } else if (reference == this.LOCAL_TARGET_ID) {
             return UIATarget.localTarget();
         } else if (reference == 3) {
             if (this.storage[3]) {

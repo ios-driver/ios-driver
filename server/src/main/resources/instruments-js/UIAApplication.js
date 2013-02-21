@@ -18,7 +18,6 @@ UIAApplication.prototype.keyboard = function () {
     if (keyboard.toString() === "[object UIAElementNil]") {
         UIATarget.localTarget().delay(2);
         keyboard = this.keyboard_original();
-        log("keyboard after 2 : " + keyboard);
         if (keyboard.toString() == "[object UIAElementNil]") {
             throw new UIAutomationException("cannot find keyboard", 7);
         } else {

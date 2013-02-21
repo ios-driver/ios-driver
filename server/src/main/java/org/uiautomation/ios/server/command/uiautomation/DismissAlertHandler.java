@@ -16,18 +16,20 @@ package org.uiautomation.ios.server.command.uiautomation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openqa.selenium.remote.Response;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAAlert;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
-import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
-import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 
-public class DismissAlertHandler extends BaseNativeCommandHandler {
+public class DismissAlertHandler extends BaseFindElementNHandler {
 
-  public DismissAlertHandler(IOSDriver driver,
-                             WebDriverLikeRequest request) {
+  private static final String jsTemplate = "var alert = UIAutomation.cache.get('3');"
+                                           + "alert.dismiss();"
+                                           + "UIAutomation.createJSONResponse(':sessionId',0,'');";
+
+  public DismissAlertHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
+    String js = jsTemplate
+        .replace(":sessionId", getRequest().getSession());
+    setJS(js);
   }
 
   @Override
@@ -35,10 +37,6 @@ public class DismissAlertHandler extends BaseNativeCommandHandler {
     return noConfigDefined();
   }
 
-  @Override
-  public Response handle() throws Exception {
-    RemoteUIAAlert alert = new RemoteUIAAlert(getSession().getNativeDriver(), "3");
-    alert.dismiss();
-    return createResponse("");
-  }
+
 }
+

@@ -168,11 +168,11 @@ UIAElement.prototype.isStale = function () {
              return true;
              }*/
             var parent = this.parent();
-            while (parent.parent() && parent.parent().type() !== "UIAElementNil") {
-                parent = parent.parent();
-                log("parent  " + parent.type() + ", " + parent.name());
+            /*while (parent.parent() && parent.parent().type() !== "UIAElementNil") {
+             parent = parent.parent();
+             log("parent  " + parent.type() + ", " + parent.name());
 
-            }
+             }*/
             return false;
         } catch (err) {
             if (err.message && err.message.indexOf('scrollToVisible cannot be used') != -1) {

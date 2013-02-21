@@ -1,17 +1,19 @@
 package org.uiautomation.ios.e2e.uicatalogapp;
 
-import org.eclipse.jetty.util.ajax.JSON;
 import org.json.JSONObject;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.InvalidElementStateException;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.UnhandledAlertException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
 import org.uiautomation.ios.SampleApps;
@@ -27,10 +29,16 @@ import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class AlertTest extends BaseIOSDriverTest {
+
+  private static final String actionSheet = "(//UIAStaticText[@name='Show Simple'])[1]";
+  private static final String alertOK = "(//UIAStaticText[@name='Show Simple'])[2]";
+  private static final String alertOKCancel = "(//UIAStaticText[@name='Show OK-Cancel'])[2]";
+  private static final String alert3Buttons = "//UIAStaticText[@name='Show Custom']";
+  private static final String alertPassword = "//UIAStaticText[@name='Secure Text Input']";
+
 
   private RemoteUIADriver driver;
 
@@ -132,6 +140,102 @@ public class AlertTest extends BaseIOSDriverTest {
     alert.accept();
   }
 
+
+  @DataProvider(name = "allAlerts")
+  public Object[][] createData1() {
+    return new Object[][]{
+        {alertOK},
+        {alertOKCancel},
+        {alert3Buttons},
+        {alertPassword},
+    };
+  }
+
+  @Test(dataProvider = "allAlerts")
+  public void dismissAlert(String alertLocator) throws Exception {
+    RemoteWebDriver d = (RemoteWebDriver) driver;
+    By b = By.xpath(alertLocator);
+    WebElement el = driver.findElement(b);
+    el.click();
+
+    Alert alert = waitForAlert(driver);
+    alert.dismiss();
+
+    try {
+      d.switchTo().alert();
+      Assert.fail("alert should be gone.");
+    } catch (NoAlertPresentException e) {
+      // expected
+    }
+  }
+
+  @Test(dataProvider = "allAlerts")
+  public void acceptAlert(String alertLocator) throws Exception {
+    RemoteWebDriver d = (RemoteWebDriver) driver;
+    By b = By.xpath(alertLocator);
+    WebElement el = driver.findElement(b);
+    el.click();
+
+    Alert alert = waitForAlert(driver);
+    alert.accept();
+
+    try {
+      d.switchTo().alert();
+      Assert.fail("alert should be gone.");
+    } catch (NoAlertPresentException e) {
+      // expected
+    }
+  }
+
+  @DataProvider(name = "non-input")
+  public Object[][] createData2() {
+    return new Object[][]{
+        {alertOK},
+        {alertOKCancel},
+        {alert3Buttons},
+    };
+  }
+
+  @Test(dataProvider = "non-input")
+  public void sendKeysAlertThrowsIfNoInput(String alertLocator) throws Exception {
+    RemoteWebDriver d = (RemoteWebDriver) driver;
+    By b = By.xpath(alertLocator);
+    WebElement el = driver.findElement(b);
+    el.click();
+
+    Alert alert = waitForAlert(driver);
+    try {
+      alert.sendKeys("test");
+      Assert.fail("should crash on sendKeys");
+    } catch (InvalidElementStateException e) {
+      //expected
+    }
+    alert.dismiss();
+  }
+
+  @Test
+  public void sendKeysAlert() throws Exception {
+    RemoteWebDriver d = (RemoteWebDriver) driver;
+    By b = By.xpath(alertPassword);
+    WebElement el = driver.findElement(b);
+    el.click();
+
+    Alert alert = waitForAlert(driver);
+    WebElement field = driver.findElement(By.xpath("//UIAAlert//UIASecureTextField"));
+    Assert.assertEquals(field.getAttribute("value"), "");
+    alert.sendKeys("test");
+    Assert.assertEquals(field.getAttribute("value"), "••••");
+    alert.accept();
+
+    try {
+      d.switchTo().alert();
+      Assert.fail("alert should be gone.");
+    } catch (NoAlertPresentException e) {
+      // expected
+    }
+  }
+
+
   @Test(expectedExceptions = NoAlertPresentException.class)
   public void checkUIAlertView() throws Exception {
 
@@ -152,6 +256,24 @@ public class AlertTest extends BaseIOSDriverTest {
     ok.tap();
 
     driver.getAlert();
+  }
 
+  private Alert waitForAlert(WebDriver driver) {
+    long timeoutInMs = 2000;
+    long deadline = System.currentTimeMillis() + timeoutInMs;
+    Alert res = null;
+    while (res == null) {
+      try {
+        res = driver.switchTo().alert();
+        return res;
+      } catch (NoAlertPresentException e) {
+        // ignore
+        if (System.currentTimeMillis() > deadline) {
+          throw e;
+        }
+      }
+
+    }
+    throw new Error("should have found an alert or timeout.");
   }
 }

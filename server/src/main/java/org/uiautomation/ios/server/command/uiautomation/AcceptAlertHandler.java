@@ -16,18 +16,20 @@ package org.uiautomation.ios.server.command.uiautomation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openqa.selenium.remote.Response;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAAlert;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
-import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
-import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 
-public class AcceptAlertHandler extends BaseNativeCommandHandler {
+public class AcceptAlertHandler extends BaseFindElementNHandler {
 
-  public AcceptAlertHandler(IOSDriver driver,
-                            WebDriverLikeRequest request) {
+  private static final String jsTemplate = "var alert = UIAutomation.cache.get('3');"
+                                           + "alert.accept();"
+                                           + "UIAutomation.createJSONResponse(':sessionId',0,'');";
+
+  public AcceptAlertHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
+    String js = jsTemplate
+        .replace(":sessionId", getRequest().getSession());
+    setJS(js);
   }
 
   @Override
@@ -35,10 +37,6 @@ public class AcceptAlertHandler extends BaseNativeCommandHandler {
     return noConfigDefined();
   }
 
-  @Override
-  public Response handle() throws Exception {
-    RemoteUIAAlert alert = new RemoteUIAAlert(getSession().getNativeDriver(), "3");
-    alert.getDefaultButton().tap();
-    return createResponse("");
-  }
+
 }
+

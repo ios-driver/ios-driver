@@ -16,53 +16,41 @@ package org.uiautomation.ios.server.command.uiautomation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openqa.selenium.ElementNotVisibleException;
-import org.openqa.selenium.Keyboard;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.remote.Response;
-import org.uiautomation.ios.UIAModels.UIASecureTextField;
-import org.uiautomation.ios.UIAModels.UIATextField;
-import org.uiautomation.ios.UIAModels.predicate.OrCriteria;
-import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAAlert;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
-import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
-import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 
 
-public class SetAlertTextHandler extends BaseNativeCommandHandler {
+public class SetAlertTextHandler extends BaseFindElementNHandler {
 
-  public SetAlertTextHandler(IOSDriver driver,
-                             WebDriverLikeRequest request) {
+  private static final String jsTemplate = "var alert = UIAutomation.cache.get(3);"
+                                           + "alert.sendKeys(':value');"
+                                           + "UIAutomation.createJSONResponse(':sessionId',0,'');";
+
+  public SetAlertTextHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
+
+    try {
+      String value = request.getPayload().getString("text");
+      String corrected = value.replaceAll("\\\\", "\\\\\\\\");
+      corrected = corrected.replaceAll("\\n", "\\\\n");
+
+      if (value.contains("\\t")) {
+        throw new WebDriverException("cannot tab on the ios keyboard.");
+      }
+      String js = jsTemplate
+          .replace(":sessionId", getRequest().getSession())
+          .replace(":value", corrected);
+      setJS(js);
+
+    } catch (JSONException e) {
+      throw new WebDriverException("error parsing request " + request + "\n" + e.getMessage(), e);
+    }
 
   }
 
   @Override
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
-  }
-
-  @Override
-  public Response handle() throws Exception {
-    RemoteUIAAlert alert = new RemoteUIAAlert(getSession().getNativeDriver(), "3");
-    String value = getRequest().getPayload().getString("text");
-
-    // check the alert is actually a prompt.
-    try {
-      UIATextField
-          prompt =
-          alert.findElement(new OrCriteria(new TypeCriteria(UIATextField.class),
-                                           new TypeCriteria(UIASecureTextField.class)));
-      Keyboard keyboard = getSession().getNativeDriver().getKeyboard();
-      keyboard.sendKeys(value);
-    } catch (NoSuchElementException e) {
-      throw new ElementNotVisibleException("the alert doesn't accept inputs.");
-    }
-
-    // prompt.setValue(value);
-
-    return createResponse("");
   }
 }

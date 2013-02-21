@@ -49,11 +49,14 @@ public class RemoteUIAAlert extends RemoteUIAElement implements UIAAlert, Alert 
 
   @Override
   public void dismiss() {
-    UIAButton butt = getCancelButton();
+    /*UIAButton butt = getCancelButton();
     if (butt == null) {
       butt = getDefaultButton();
     }
-    butt.tap();
+    butt.tap();*/
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.DISMISS_ALERT);
+    getDriver().execute(request);
+
   }
 
   @Override
