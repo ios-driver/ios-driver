@@ -81,7 +81,7 @@ public enum WebDriverLikeCommand {
   TAG_NAME("GET", "/session/:sessionId/element/:reference/name", String.class),
   CLEAR("POST", "/session/:sessionId/element/:reference/clear", Void.class),
   SELECTED("GET", "/session/:sessionId/element/:reference/selected", Boolean.class),
-  // GET /session/:sessionId/element/:id/enabled
+  ENABLED("GET", "/session/:sessionId/element/:reference/enabled", Boolean.class),
   ATTRIBUTE("GET", "/session/:sessionId/element/:reference/attribute/:name", String.class),
   EQUAL("GET", "/session/:sessionId/element/:reference/equals/:other", Boolean.class),
   DISPLAYED("GET", "/session/:sessionId/element/:reference/displayed", Boolean.class),
