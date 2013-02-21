@@ -53,6 +53,15 @@ UIAAlert.prototype.sendKeys = function (value) {
 
 }
 
+UIAAlert.prototype.getText = function () {
+    var criteria = {"l10n": "none", "expected": "UIAStaticText", "matching": "exact", "method": "type"};
+    var texts = this.elements2(-1, criteria);
+    if (texts.length > 1) {
+        return texts[1].name();
+    } else {
+        throw new UIAutomationException("this alerts doesn't have any text");
+    }
+}
 /**
  * return the default button, but also send an event that the alert disappeared.
  * @return {UIAButton} the default button for the alert.

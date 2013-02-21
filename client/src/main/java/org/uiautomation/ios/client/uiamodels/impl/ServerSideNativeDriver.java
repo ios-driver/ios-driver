@@ -48,7 +48,9 @@ public class ServerSideNativeDriver extends AttachRemoteUIADriver {
                                            Map<String, String> extraParamInPath) {
     String method = command.method();
     Path p = new Path(command).withSession(getSessionId());
-    if (element != null) {
+    // it's ok to have an element id but not mentioning it in the path. That's typically the case
+    // for alerts.
+    if (element != null && p.getPath().contains(Path.REFERENCE)) {
       p.withReference(element.getReference());
     }
 

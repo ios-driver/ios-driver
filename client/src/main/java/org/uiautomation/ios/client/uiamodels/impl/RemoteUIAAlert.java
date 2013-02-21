@@ -13,6 +13,8 @@
  */
 package org.uiautomation.ios.client.uiamodels.impl;
 
+import com.google.common.collect.ImmutableMap;
+
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.security.Credentials;
@@ -49,11 +51,6 @@ public class RemoteUIAAlert extends RemoteUIAElement implements UIAAlert, Alert 
 
   @Override
   public void dismiss() {
-    /*UIAButton butt = getCancelButton();
-    if (butt == null) {
-      butt = getDefaultButton();
-    }
-    butt.tap();*/
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.DISMISS_ALERT);
     getDriver().execute(request);
 
@@ -61,12 +58,16 @@ public class RemoteUIAAlert extends RemoteUIAElement implements UIAAlert, Alert 
 
   @Override
   public void accept() {
-    getDefaultButton().tap();
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ACCEPT_ALERT);
+    getDriver().execute(request);
   }
 
   @Override
   public void sendKeys(String keysToSend) {
-    //To change body of implemented methods use File | Settings | File Templates.
+    WebDriverLikeRequest
+        request =
+        buildRequest(WebDriverLikeCommand.SET_ALERT_TEXT, ImmutableMap.of("text", keysToSend));
+    getDriver().execute(request);
   }
 
   @Override
@@ -76,18 +77,8 @@ public class RemoteUIAAlert extends RemoteUIAElement implements UIAAlert, Alert 
 
   @Override
   public String getText() {
-    List<UIAElement> texts = this.findElements(new TypeCriteria(UIAStaticText.class));
-    // first one is the title, 2nd is what we want.
-    if (texts.size() >= 2) {
-      return texts.get(1).getValue();
-    } else {
-      // can't find the text, dump the alert object tree.
-      try {
-        return logElementTree(null, false).toString(2);
-      } catch (Exception e) {
-        throw new WebDriverException(e);
-      }
-    }
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.GET_ALERT_TEXT);
+    return getDriver().execute(request);
   }
 
 

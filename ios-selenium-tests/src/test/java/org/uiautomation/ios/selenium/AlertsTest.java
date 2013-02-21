@@ -2,7 +2,7 @@ package org.uiautomation.ios.selenium;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.ElementNotVisibleException;
+import org.openqa.selenium.InvalidElementStateException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchWindowException;
@@ -144,7 +144,7 @@ public class AlertsTest extends BaseSeleniumTest {
     try {
       alert.sendKeys("cheese");
       fail("Expected exception");
-    } catch (ElementNotVisibleException expected) {
+    } catch (InvalidElementStateException expected) {
     } finally {
       alert.accept();
     }

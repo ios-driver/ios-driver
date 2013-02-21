@@ -14,28 +14,26 @@
 
 package org.uiautomation.ios.server.command.uiautomation;
 
-import com.google.common.collect.ImmutableMap;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.remote.Response;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAAlert;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
-import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
 
 
-public class GetAlertTextNHandler extends BaseNativeCommandHandler implements AlertRelatedCommand {
+public class GetAlertTextNHandler extends BaseFindElementNHandler {
+
+  private static final String jsTemplate = "var alert = UIAutomation.cache.get(3);"
+                                           + "var text = alert.getText();"
+                                           + "UIAutomation.createJSONResponse(':sessionId',0,text);";
 
   public GetAlertTextNHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
-  }
 
-  @Override
-  public Response handle() throws Exception {
-    RemoteUIAAlert alert = getSession().getNativeDriver().getAlert();
-    return createResponse(alert.getText());
+    String js = jsTemplate
+        .replace(":sessionId", getRequest().getSession());
+    setJS(js);
+
+
   }
 
   @Override

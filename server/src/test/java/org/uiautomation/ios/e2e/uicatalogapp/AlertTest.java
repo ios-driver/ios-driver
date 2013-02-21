@@ -31,6 +31,8 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 
 import java.net.URL;
 
+
+//150
 public class AlertTest extends BaseIOSDriverTest {
 
   private static final String actionSheet = "(//UIAStaticText[@name='Show Simple'])[1]";
@@ -59,7 +61,6 @@ public class AlertTest extends BaseIOSDriverTest {
 
   @BeforeClass
   public void startDriver() {
-    //driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
     driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
     goToAlertScreen();
   }
@@ -78,6 +79,18 @@ public class AlertTest extends BaseIOSDriverTest {
     Criteria c = new AndCriteria(c1, c2);
     UIAElement element = driver.findElement(c);
     element.tap();
+  }
+
+  @Test
+  public void alertGetText() throws Exception {
+    RemoteWebDriver d = (RemoteWebDriver) driver;
+    By b = By.xpath(alertOK);
+    WebElement el = driver.findElement(b);
+    el.click();
+
+    Alert alert = waitForAlert(driver);
+    Assert.assertEquals(alert.getText(), "<Alert message>");
+    alert.dismiss();
   }
 
   @Test(expectedExceptions = UnhandledAlertException.class)
