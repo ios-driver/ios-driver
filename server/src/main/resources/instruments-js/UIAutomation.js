@@ -161,9 +161,10 @@ var UIAutomation = {
      * away.
      */
     setAlertHandler: function () {
+        var ignoreAllAlerts = false;
         UIATarget.onAlert = function onAlert(alert) {
-            UIAutomation.cache.setAlert(alert);
-            return true;
+            //UIAutomation.cache.setAlert(alert);
+            return !ignoreAllAlerts;
         }
     },
 
