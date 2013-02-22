@@ -149,7 +149,7 @@ UIAElement.prototype.isVisible = function () {
     } else {
         return false;
     }
-}
+};
 
 UIAElement.prototype.isEnabledOriginal = UIAElement.prototype.isEnabled;
 
