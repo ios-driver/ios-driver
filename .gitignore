@@ -40,3 +40,5 @@ ide/src/test/java/org/uiautomation/ios/selenium/PerformanceTest.java
 ios-selenium-tests/src/test/java/org/uiautomation/ios/selenium/PerformanceTest.java
 ios-selenium-tests/src/test/java/org/uiautomation/ios/selenium/playground/PerformanceTest.java
 *.svn*
+.idea/*
+*.iml
