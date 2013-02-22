@@ -15,6 +15,9 @@
 Inspector.logLevel = 4; // 0=none, 1=error, 2=error +warning, 3= error,warning,info   4 = all
 
 function Inspector(selector) {
+
+    this.busy = false;
+
     this.lock = false;
     this.recorder = new Recorder(this);
     this.log = new Logger(this);
@@ -142,7 +145,7 @@ Inspector.prototype.onTreeLoaded = function (event, data) {
 
     if (this.recorder.on) {
         $("#screenshot").attr("src", this.screenshotPath + "?time=" + new Date().getTime());
-        $('#greyout').css('display', 'none');
+        this.busy = false;
     }
 }
 
@@ -398,12 +401,10 @@ Inspector.prototype.onMouseMove = function (event) {
  */
 Inspector.prototype.onMouseClick = function (event) {
 
-    if (this.recorder.on) {
-        $('#greyout').css({ 'z-index': '100', display: 'block', opacity: 0.7, 'width': $(document).width(), 'height': $(document).height()});
-        $('body').css({'overflow': 'hidden'});
-
-        alert("ok");
-
+    console.log("Is busy " + this.busy);
+    if (this.recorder.on && !this.busy) {
+        this.busy = true;
+        console.log("Record click");
         var x = event.pageX / scale - realOffsetX;
         var y = event.pageY / scale - (realOffsetY + 45);
         // x = x / scale;
@@ -416,13 +417,13 @@ Inspector.prototype.onMouseClick = function (event) {
             if (confirm.length === 1) {
                 this.recorder.recordClick(xpath);
                 this.recorder.forwardClick(x, y);
+
             } else {
                 error(xpath + " should have a single result.It has " + confirm.length);
             }
         } else {
             warning("couldn't find an element for that click");
         }
-
     }
 
 }
