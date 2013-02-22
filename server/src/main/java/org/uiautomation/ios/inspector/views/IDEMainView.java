@@ -13,16 +13,16 @@
  */
 package org.uiautomation.ios.inspector.views;
 
-import java.util.Set;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.communication.device.Device;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.inspector.model.IDESessionModel;
+
+import java.util.Set;
+
+import javax.servlet.http.HttpServletResponse;
 
 public class IDEMainView implements View {
 
@@ -51,6 +51,11 @@ public class IDEMainView implements View {
 
       Device device = model.getCapabilities().getDevice();
       DeviceVariation variation = model.getCapabilities().getDeviceVariation();
+
+      b.append(
+          "<script type='text/javascript' src='" + getResource("Logger.js") + "'></script>");
+      b.append(
+          "<script type='text/javascript' src='" + getResource("Recorder.js") + "'></script>");
       b.append(
           "<script type='text/javascript' src='" + getResource("inspector.js") + "'></script>");
 
@@ -62,7 +67,7 @@ public class IDEMainView implements View {
 
       b.append("<body>");
       b.append("<html>");
-
+      b.append("<div id='greyout'></div>");
       b.append("<div id='simulator'>");
 
       b.append("<div id='mouseOver'></div>");
@@ -76,7 +81,8 @@ public class IDEMainView implements View {
       if (device == Device.ipad) {
         width = 768;
       }
-      b.append("         <img src='" + getScreen(device) + "' width='" + width + "px' />");
+      b.append("         <img id='screenshot' src='" + getScreen(device) + "' width='" + width
+               + "px' />");
       b.append("</div>");
       b.append("</div>");
       b.append("</div>");

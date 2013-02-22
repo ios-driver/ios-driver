@@ -43,6 +43,7 @@ public class TreeController implements IDECommandController {
   public View handle(HttpServletRequest req) throws Exception {
     final Session s = new Session(extractSession(req.getPathInfo()));
     IDESessionModel model = cache.getModel(s);
+    model.refresh();
     JSONObject rootNode = model.getTree().getJSONObject("tree");
     JSONToXMLConvertor conv = new JSONToXMLConvertor(rootNode);
     JSONObject jsTreeObject = createFrom(rootNode, conv.asXML());

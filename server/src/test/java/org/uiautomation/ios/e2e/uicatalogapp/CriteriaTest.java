@@ -51,8 +51,8 @@ public class CriteriaTest extends BaseIOSDriverTest {
 
 
   @Test
-  public void regexMatch() {
-
+  public void regexMatch() throws InterruptedException {
+    Thread.sleep(3600000);
     String regex = "Buttons, V[a-z]* uses of UIButton";
     Criteria c1 = new TypeCriteria(UIATableCell.class);
     PropertyEqualCriteria c2 = new NameCriteria(regex, MatchingStrategy.regex);

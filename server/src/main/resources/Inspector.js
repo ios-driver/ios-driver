@@ -12,19 +12,16 @@
  * the License.
  */
 
+Inspector.logLevel = 4; // 0=none, 1=error, 2=error +warning, 3= error,warning,info   4 = all
+
 function Inspector(selector) {
     this.lock = false;
+    this.recorder = new Recorder(this);
+    this.log = new Logger(this);
+    this.selector = selector;
 
-    this.init(selector);
-}
-
-/**
- *
- * @param selector {string} jquery selector of the element that will host the jsTree.
- */
-Inspector.prototype.init = function (selector) {
-    var me = this;
-    var jsTreeConfig = {
+    this.screenshotPath = $("#screenshot").attr("src");
+    this.jsTreeConfig = {
         "core": {
             "animation": 0,
             "load_open": true
@@ -40,8 +37,12 @@ Inspector.prototype.init = function (selector) {
         "plugins": ["themes", "json_data", "ui"]
     };
 
-    me.jstree = $(selector).jstree(jsTreeConfig);
+    this.init();
+}
 
+Inspector.prototype.reloadData = function () {
+    var me = this;
+    me.jstree = $(me.selector).jstree(me.jsTreeConfig);
     me.jstree.bind("loaded.jstree", function (event, data) {
         me.onTreeLoaded(event, data);
     });
@@ -49,8 +50,21 @@ Inspector.prototype.init = function (selector) {
         me.onNodeMouseOver(event, data);
     });
 
+}
+/**
+ *
+ * @param selector {string} jquery selector of the element that will host the jsTree.
+ */
+Inspector.prototype.init = function () {
+    var me = this;
+
+    this.reloadData();
+
     $("#mouseOver").mousemove(function (event) {
         me.onMouseMove(event);
+    });
+    $("#mouseOver").click(function (event) {
+        me.onMouseClick(event);
     });
 
     $(document).keydown(function (e) {
@@ -76,6 +90,7 @@ Inspector.prototype.init = function (selector) {
             $('#xpathLog').html("Error: " + err.message);
         }
     });
+
 }
 
 /**
@@ -124,10 +139,15 @@ Inspector.prototype.onTreeLoaded = function (event, data) {
     }
     this.expandTree();
     this.loadXpathContext();
+
+    if (this.recorder.on) {
+        $("#screenshot").attr("src", this.screenshotPath + "?time=" + new Date().getTime());
+        $('#greyout').css('display', 'none');
+    }
 }
 
 /**
- * unselect everything. Hoghlight on the device, the tree, and the optional details.
+ * unselect everything. Highlight on the device, the tree, and the optional details.
  */
 Inspector.prototype.unselect = function () {
     $('#details').html("");
@@ -360,7 +380,7 @@ Inspector.prototype.onMouseMove = function (event) {
         var y = event.pageY / scale - (realOffsetY + 45);
         // x = x / scale;
         // y = y / scale;
-        console.log(x + "," + y);
+        //console.log(x + "," + y);
         var finder = new NodeFinder(this.root);
         var node = finder.getNodeByPosition(x, y);
         if (node) {
@@ -372,6 +392,92 @@ Inspector.prototype.onMouseMove = function (event) {
     }
 }
 
+/**
+ * mouse move for the device mouse over.
+ * @param event
+ */
+Inspector.prototype.onMouseClick = function (event) {
+
+    if (this.recorder.on) {
+        $('#greyout').css({ 'z-index': '100', display: 'block', opacity: 0.7, 'width': $(document).width(), 'height': $(document).height()});
+        $('body').css({'overflow': 'hidden'});
+
+        alert("ok");
+
+        var x = event.pageX / scale - realOffsetX;
+        var y = event.pageY / scale - (realOffsetY + 45);
+        // x = x / scale;
+        // y = y / scale;
+        var finder = new NodeFinder(this.root);
+        var node = finder.getNodeByPosition(x, y);
+        if (node) {
+            var xpath = this.findXpathExpression(x, y, node);
+            var confirm = this.findElementsByXpath2(xpath);
+            if (confirm.length === 1) {
+                this.recorder.recordClick(xpath);
+                this.recorder.forwardClick(x, y);
+            } else {
+                error(xpath + " should have a single result.It has " + confirm.length);
+            }
+        } else {
+            warning("couldn't find an element for that click");
+        }
+
+    }
+
+}
+
+Inspector.prototype.refineXpathExpression = function (x, y, node, xpath, elements) {
+    var o = node.metadata;
+    var refined = "(" + xpath + ")";
+    for (var i = 1; i <= elements.length; i++) {
+        var res = refined + "[" + i + "]";
+        var els = this.findElementsByXpath2(res);
+        if (els.length == 1) {
+            this.log.debug(els[0]);
+            var id = els[0].ref;
+            if (o.ref === id) {
+                return res;
+            }
+        } else {
+            console.log("Error. Expected a single result for " + res + ".Found " + els.length);
+        }
+    }
+    console.log("Cannot refine xpath enough to get a single result.");
+};
+/**
+ * Find the easiest xpath expression for the node located @ x,y.
+ * @param x
+ * @param y
+ * @param node
+ * @return {string} the xpath expression.
+ */
+Inspector.prototype.findXpathExpression = function (x, y, node) {
+    var o = node.metadata;
+    var xpath = "//" + o.type;
+    if (o.name && o.name !== 'null') {
+        xpath += "[@name='" + o.name + "']";
+    } else if (o.label && o.label !== 'null') {
+        xpath += "[@label='" + o.label + "']";
+    } else if (o.value && o.value !== 'null') {
+        xpath += "[@value='" + o.value + "']";
+    } else {
+        this.log.debug("no attribute.xpath will be generic.");
+    }
+    var elements = this.findElementsByXpath2(xpath);
+    if (elements.length == 0) {
+        this.log.error("Error. The xpath doesn't seem to match anything.");
+    } else if (elements.length > 1) {
+        this.log.debug("There are several elements matching this xpath expression."
+                           + "It is not unique enough");
+        return this.refineXpathExpression(x, y, node, xpath, elements);
+
+    } else {
+        return xpath;
+        this.log.debug("ok. Found an xpath expression unique enough");
+    }
+
+}
 /**
  * toggle the lock mode for the page. Mouse over are disabled when the page is locked.
  */

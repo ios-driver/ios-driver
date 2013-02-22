@@ -13,13 +13,13 @@
  */
 package org.uiautomation.ios.inspector.views;
 
+import org.apache.commons.io.IOUtils;
+import org.openqa.selenium.WebDriverException;
+
 import java.io.IOException;
 import java.io.InputStream;
 
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.io.IOUtils;
-import org.openqa.selenium.WebDriverException;
 
 public class ResourceView implements View {
 
@@ -37,7 +37,7 @@ public class ResourceView implements View {
       IOUtils.copy(is, response.getOutputStream());
       IOUtils.closeQuietly(is);
     } catch (IOException e) {
-      throw new WebDriverException("Bug.", e);
+      throw new WebDriverException("Cannot load the requested resource : " + e.getMessage(), e);
     }
 
   }

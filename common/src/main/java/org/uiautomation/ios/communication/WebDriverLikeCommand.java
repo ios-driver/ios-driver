@@ -143,7 +143,7 @@ public enum WebDriverLikeCommand {
   KEYBOARD("GET", "/session/:sessionId/uiaApplication/:reference/keyboard", UIAKeyboard.class),
 
   // TODO freynaud : move and tap.
-  TARGET_TAP("GET", "/session/:sessionId/tap/:reference", Void.class),
+  TARGET_TAP("POST", "/session/:sessionId/tap/:reference", Void.class),
   TARGET_RECT("GET", "/session/:sessionId/uiaTarget/:reference/rect", UIARect.class),
 
   ALERT_CANCEL_BUTTON("GET", "/session/:sessionId/element/:reference/cancel", UIAButton.class),

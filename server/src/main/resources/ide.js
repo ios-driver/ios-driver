@@ -44,6 +44,7 @@ findFrameSizeInPixels = function () {
 var device;
 var orientation;
 var variation;
+
 configure = function (d, v, o) {
     device = d;
     orientation = o;
