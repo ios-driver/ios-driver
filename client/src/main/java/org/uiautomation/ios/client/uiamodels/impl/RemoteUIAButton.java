@@ -13,11 +13,12 @@
  */
 package org.uiautomation.ios.client.uiamodels.impl;
 
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.uiautomation.ios.UIAModels.UIAButton;
 
 public class RemoteUIAButton extends RemoteUIAElement implements UIAButton {
 
-  public RemoteUIAButton(RemoteUIADriver driver, String reference) {
+  public RemoteUIAButton(RemoteWebDriver driver, String reference) {
     super(driver, reference);
   }
 

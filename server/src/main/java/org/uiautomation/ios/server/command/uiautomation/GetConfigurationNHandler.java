@@ -16,11 +16,15 @@ package org.uiautomation.ios.server.command.uiautomation;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
+import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
+import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSDriver;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
 
-public class GetConfigurationNHandler extends BaseNativeCommandHandler{
+import java.util.Map;
+
+public class GetConfigurationNHandler extends BaseNativeCommandHandler {
 
   public GetConfigurationNHandler(IOSDriver driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -28,9 +32,24 @@ public class GetConfigurationNHandler extends BaseNativeCommandHandler{
 
   @Override
   public Response handle() throws Exception {
-    // TODO Auto-generated method stub
-    return null;
+    String name = (String) getRequest().getVariableValue(":command");
+    WebDriverLikeCommand command = WebDriverLikeCommand.valueOf(name);
+
+    CommandConfiguration conf = getSession().configure(command);
+
+    JSONObject res = new JSONObject();
+    Map<String, Object> m = conf.getAll();
+    for (String key : m.keySet()) {
+      res.put(key, m.get(key));
+    }
+
+    Response resp = new Response();
+    resp.setSessionId(getSession().getSessionId());
+    resp.setStatus(0);
+    resp.setValue(res);
+    return resp;
   }
+
   @Override
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();

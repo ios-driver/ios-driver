@@ -17,6 +17,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 public class CommandConfigurationStore implements CommandConfiguration {
 
   private final JSONObject config = new JSONObject();
@@ -38,9 +42,21 @@ public class CommandConfigurationStore implements CommandConfiguration {
   }
 
   @Override
+  public Map<String, Object> getAll() {
+    Map<String, Object> res = new HashMap<String, Object>();
+    Iterator<String> iter = config.keys();
+    while (iter.hasNext()) {
+      String key = iter.next();
+      Object value = config.opt(key);
+      res.put(key, value);
+    }
+    return res;
+  }
+
+  @Override
   public Object opt(String key, Object defaultValue) {
     Object res = get(key);
-    if (res == null){
+    if (res == null) {
       res = defaultValue;
     }
     return res;

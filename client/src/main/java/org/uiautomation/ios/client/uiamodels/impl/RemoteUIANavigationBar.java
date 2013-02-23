@@ -13,12 +13,13 @@
  */
 package org.uiautomation.ios.client.uiamodels.impl;
 
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.uiautomation.ios.UIAModels.UIAButton;
 import org.uiautomation.ios.UIAModels.UIANavigationBar;
 
 public class RemoteUIANavigationBar extends RemoteUIAElement implements UIANavigationBar {
 
-  public RemoteUIANavigationBar(RemoteUIADriver driver, String reference) {
+  public RemoteUIANavigationBar(RemoteWebDriver driver, String reference) {
     super(driver, reference);
   }
 

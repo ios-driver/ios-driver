@@ -64,6 +64,7 @@ public class IOSCapabilities extends DesiredCapabilities {
   public static final String ICON = "CFBundleIconFile";
 
   public static final String MAGIC_PREFIX = "plist_";
+  public static final String CONFIGURABLE = "configurable";
 
   // private final Map<String, Object> raw = new HashMap<String, Object>();
 

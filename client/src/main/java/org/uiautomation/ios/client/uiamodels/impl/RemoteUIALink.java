@@ -13,9 +13,11 @@
  */
 package org.uiautomation.ios.client.uiamodels.impl;
 
+import org.openqa.selenium.remote.RemoteWebDriver;
+
 public class RemoteUIALink extends RemoteUIAElement {
 
-  public RemoteUIALink(RemoteUIADriver driver, String reference) {
+  public RemoteUIALink(RemoteWebDriver driver, String reference) {
     super(driver, reference);
   }
 

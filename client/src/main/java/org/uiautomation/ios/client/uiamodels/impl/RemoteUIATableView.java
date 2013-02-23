@@ -13,11 +13,12 @@
  */
 package org.uiautomation.ios.client.uiamodels.impl;
 
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.uiautomation.ios.UIAModels.UIATableView;
 
 public class RemoteUIATableView extends RemoteUIAScrollView implements UIATableView {
 
-  public RemoteUIATableView(RemoteUIADriver driver, String reference) {
+  public RemoteUIATableView(RemoteWebDriver driver, String reference) {
     super(driver, reference);
   }
 

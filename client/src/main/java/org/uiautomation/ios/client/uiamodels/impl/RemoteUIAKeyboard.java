@@ -17,6 +17,7 @@ import com.google.common.collect.ImmutableMap;
 
 import org.openqa.selenium.Keyboard;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.uiautomation.ios.UIAModels.UIAKeyboard;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
@@ -26,7 +27,7 @@ import java.util.List;
 
 public class RemoteUIAKeyboard extends RemoteUIAElement implements Keyboard, UIAKeyboard {
 
-  public RemoteUIAKeyboard(RemoteUIADriver driver, String reference) {
+  public RemoteUIAKeyboard(RemoteWebDriver driver, String reference) {
     super(driver, reference);
   }
 
@@ -40,9 +41,10 @@ public class RemoteUIAKeyboard extends RemoteUIAElement implements Keyboard, UIA
     List<String> all = new ArrayList<String>();
     all.add(builder.toString());
 
-    WebDriverLikeRequest request = getDriver().buildRequest(WebDriverLikeCommand.SEND_KEYS, null,
-                                                            ImmutableMap.of("value", all));
-    getDriver().execute(request);
+    WebDriverLikeRequest request = commandExecutor.buildRequest(WebDriverLikeCommand.SEND_KEYS,
+                                                                null,
+                                                                ImmutableMap.of("value", all));
+    commandExecutor.execute(request);
   }
 
   @Override

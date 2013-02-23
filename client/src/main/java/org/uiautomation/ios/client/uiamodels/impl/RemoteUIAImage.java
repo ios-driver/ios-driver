@@ -14,12 +14,13 @@
 
 package org.uiautomation.ios.client.uiamodels.impl;
 
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.uiautomation.ios.UIAModels.UIAImage;
 
 // not documented by apple ?
 public class RemoteUIAImage extends RemoteUIAElement implements UIAImage {
 
-  public RemoteUIAImage(RemoteUIADriver driver, String reference) {
+  public RemoteUIAImage(RemoteWebDriver driver, String reference) {
     super(driver, reference);
   }
 

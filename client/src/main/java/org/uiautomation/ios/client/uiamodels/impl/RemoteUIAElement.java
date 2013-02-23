@@ -20,6 +20,7 @@ import org.json.JSONObject;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIAPoint;
 import org.uiautomation.ios.UIAModels.UIARect;
@@ -44,7 +45,7 @@ import java.util.Map;
  */
 public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
 
-  public RemoteUIAElement(RemoteUIADriver driver, String reference) {
+  public RemoteUIAElement(RemoteWebDriver driver, String reference) {
     super(driver, reference);
   }
 
@@ -75,7 +76,7 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENT,
                                                 ImmutableMap
                                                     .of("depth", -1, "criteria", c.stringify()));
-    return getDriver().execute(request);
+    return commandExecutor.execute(request);
   }
 
   @Override
@@ -84,7 +85,7 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENTS,
                                                 ImmutableMap
                                                     .of("depth", -1, "criteria", c.stringify()));
-    return getDriver().execute(request);
+    return commandExecutor.execute(request);
   }
 
   @Override
@@ -95,7 +96,7 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
 
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENT,
                                                 ImmutableMap.of("using", by, "value", using));
-    return getDriver().execute(request);
+    return commandExecutor.execute(request);
 
   }
 
@@ -107,17 +108,17 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
 
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENTS,
                                                 ImmutableMap.of("using", by, "value", using));
-    return getDriver().execute(request);
+    return commandExecutor.execute(request);
   }
 
   protected WebDriverLikeRequest buildRequest(WebDriverLikeCommand command, Map<String, ?> params) {
-    return getDriver().buildRequest(command, this, params);
+    return commandExecutor.buildRequest(command, this, params);
   }
 
   @Override
   public void tap() {
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.CLICK);
-    getDriver().execute(request);
+    commandExecutor.execute(request);
   }
 
   protected WebDriverLikeRequest buildRequest(WebDriverLikeCommand command) {
@@ -161,13 +162,13 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
 
   public JSONObject logElementTree(File screenshot, boolean translation, Path path,
                                    WebDriverLikeCommand command,
-                                   RemoteUIADriver driver) {
+                                   RemoteWebDriver driver) {
 
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TREE,
                                                 ImmutableMap
                                                     .of("attachScreenshot", screenshot != null,
                                                         "translation", translation));
-    JSONObject log = driver.execute(request);
+    JSONObject log = commandExecutor.execute(request);
     if (screenshot != null) {
       JSONObject screen = log.optJSONObject("screenshot");
       String content = screen.optString("64encoded");
@@ -193,7 +194,7 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
   @Override
   public boolean isDisplayed() {
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.DISPLAYED);
-    return (Boolean) getDriver().execute(request);
+    return (Boolean) commandExecutor.execute(request);
   }
 
   @Override
@@ -205,16 +206,16 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
     return driver.execute(request); */
     WebDriverLikeRequest
         request =
-        getDriver().buildRequest(WebDriverLikeCommand.ATTRIBUTE, this, null,
-                                 ImmutableMap.of("name", name));
-    return getDriver().execute(request);
+        commandExecutor.buildRequest(WebDriverLikeCommand.ATTRIBUTE, this, null,
+                                     ImmutableMap.of("name", name));
+    return commandExecutor.execute(request);
 
   }
 
   @Override
   public UIARect getRect() {
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.RECT);
-    Map<String, Object> rect = getDriver().execute(request);
+    Map<String, Object> rect = commandExecutor.execute(request);
     Map<String, Long> origin = (Map<String, Long>) rect.get("origin");
     Map<String, Long> size = (Map<String, Long>) rect.get("size");
 

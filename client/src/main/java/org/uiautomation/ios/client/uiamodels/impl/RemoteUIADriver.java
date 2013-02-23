@@ -25,6 +25,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.By;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Keyboard;
 import org.openqa.selenium.NoAlertPresentException;
@@ -368,7 +369,6 @@ public class RemoteUIADriver extends RemoteWebDriver
   @Override
   public CommandConfiguration configure(WebDriverLikeCommand command) {
     return configuration.configure(command);
-
   }
 
   @Override
@@ -395,6 +395,21 @@ public class RemoteUIADriver extends RemoteWebDriver
         buildRequest(WebDriverLikeCommand.TARGET_TAP, RemoteUIAElement.target(this),
                      ImmutableMap.of("x", x, "y", y));
     execute(request);
+  }
+
+  @Override
+  public void setConfiguration(WebDriverLikeCommand command, String key, Object value) {
+    //To change body of implemented methods use File | Settings | File Templates.
+  }
+
+  @Override
+  public Map<String, Object> getConfiguration(WebDriverLikeCommand command) {
+    return null;  //To change body of implemented methods use File | Settings | File Templates.
+  }
+
+  @Override
+  public WebElement findElement2(By by) {
+    return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
 

@@ -20,6 +20,8 @@ import org.uiautomation.ios.communication.Path;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 
+import java.util.Map;
+
 public class RemoteCommandConfiguration implements CommandConfiguration {
 
   private final WebDriverLikeCommand command;
@@ -50,6 +52,11 @@ public class RemoteCommandConfiguration implements CommandConfiguration {
   public Object get(String key) {
     // TODO Auto-generated method stub
     return null;
+  }
+
+  @Override
+  public Map<String, Object> getAll() {
+    return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
   @Override

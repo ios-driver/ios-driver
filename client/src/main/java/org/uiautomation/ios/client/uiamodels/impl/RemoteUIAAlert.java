@@ -17,6 +17,7 @@ import com.google.common.collect.ImmutableMap;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.security.Credentials;
 import org.uiautomation.ios.UIAModels.UIAAlert;
 import org.uiautomation.ios.UIAModels.UIAButton;
@@ -30,7 +31,7 @@ import java.util.List;
 
 public class RemoteUIAAlert extends RemoteUIAElement implements UIAAlert, Alert {
 
-  public RemoteUIAAlert(RemoteUIADriver driver, String reference) {
+  public RemoteUIAAlert(RemoteWebDriver driver, String reference) {
     super(driver, reference);
 
   }
@@ -38,28 +39,28 @@ public class RemoteUIAAlert extends RemoteUIAElement implements UIAAlert, Alert 
   @Override
   public UIAButton getCancelButton() {
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ALERT_CANCEL_BUTTON);
-    return getDriver().execute(request);
+    return commandExecutor.execute(request);
 
   }
 
   @Override
   public UIAButton getDefaultButton() {
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ALERT_DEFAULT_BUTTON);
-    UIAButton butt = getDriver().execute(request);
+    UIAButton butt = commandExecutor.execute(request);
     return butt;
   }
 
   @Override
   public void dismiss() {
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.DISMISS_ALERT);
-    getDriver().execute(request);
+    commandExecutor.execute(request);
 
   }
 
   @Override
   public void accept() {
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ACCEPT_ALERT);
-    getDriver().execute(request);
+    commandExecutor.execute(request);
   }
 
   @Override
@@ -67,7 +68,7 @@ public class RemoteUIAAlert extends RemoteUIAElement implements UIAAlert, Alert 
     WebDriverLikeRequest
         request =
         buildRequest(WebDriverLikeCommand.SET_ALERT_TEXT, ImmutableMap.of("text", keysToSend));
-    getDriver().execute(request);
+    commandExecutor.execute(request);
   }
 
   @Override
@@ -78,7 +79,7 @@ public class RemoteUIAAlert extends RemoteUIAElement implements UIAAlert, Alert 
   @Override
   public String getText() {
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.GET_ALERT_TEXT);
-    return getDriver().execute(request);
+    return commandExecutor.execute(request);
   }
 
 

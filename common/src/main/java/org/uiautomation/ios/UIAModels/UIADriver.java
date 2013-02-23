@@ -14,15 +14,19 @@
 package org.uiautomation.ios.UIAModels;
 
 import org.json.JSONObject;
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.configuration.DriverConfiguration;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
+import org.uiautomation.ios.communication.WebDriverLikeCommand;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 public interface UIADriver extends DriverConfiguration {
 
@@ -49,5 +53,11 @@ public interface UIADriver extends DriverConfiguration {
   public void tap(int x, int y);
 
   // public Set<String> getWindowHandles();
+
+  public void setConfiguration(WebDriverLikeCommand command, String key, Object value);
+
+  public Map<String, Object> getConfiguration(WebDriverLikeCommand command);
+
+  public WebElement findElement2(By by);
 
 }

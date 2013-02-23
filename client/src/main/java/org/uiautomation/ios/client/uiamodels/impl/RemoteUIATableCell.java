@@ -13,11 +13,12 @@
  */
 package org.uiautomation.ios.client.uiamodels.impl;
 
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.uiautomation.ios.UIAModels.UIATableCell;
 
 public class RemoteUIATableCell extends RemoteUIAElement implements UIATableCell {
 
-  public RemoteUIATableCell(RemoteUIADriver driver, String reference) {
+  public RemoteUIATableCell(RemoteWebDriver driver, String reference) {
     super(driver, reference);
   }
 

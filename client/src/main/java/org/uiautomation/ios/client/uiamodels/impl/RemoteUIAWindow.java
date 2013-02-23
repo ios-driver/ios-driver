@@ -13,11 +13,12 @@
  */
 package org.uiautomation.ios.client.uiamodels.impl;
 
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.uiautomation.ios.UIAModels.UIAWindow;
 
 public class RemoteUIAWindow extends RemoteUIAElement implements UIAWindow {
 
-  public RemoteUIAWindow(RemoteUIADriver driver, String reference) {
+  public RemoteUIAWindow(RemoteWebDriver driver, String reference) {
     super(driver, reference);
   }
 

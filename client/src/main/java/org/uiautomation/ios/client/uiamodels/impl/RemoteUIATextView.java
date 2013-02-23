@@ -13,6 +13,7 @@
  */
 package org.uiautomation.ios.client.uiamodels.impl;
 
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.uiautomation.ios.UIAModels.UIATextView;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
@@ -21,7 +22,7 @@ import com.google.common.collect.ImmutableMap;
 
 public class RemoteUIATextView extends RemoteUIAElement implements UIATextView {
 
-  public RemoteUIATextView(RemoteUIADriver driver, String reference) {
+  public RemoteUIATextView(RemoteWebDriver driver, String reference) {
     super(driver, reference);
   }
 
@@ -29,8 +30,8 @@ public class RemoteUIATextView extends RemoteUIAElement implements UIATextView {
   public void setValue(CharSequence... keysToSend) {
 
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.SET_VALUE,
-        ImmutableMap.of("value", keysToSend));
-    getDriver().execute(request);
+                                                ImmutableMap.of("value", keysToSend));
+    commandExecutor.execute(request);
   }
 
 }

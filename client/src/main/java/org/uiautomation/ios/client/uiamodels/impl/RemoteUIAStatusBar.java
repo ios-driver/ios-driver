@@ -13,11 +13,12 @@
  */
 package org.uiautomation.ios.client.uiamodels.impl;
 
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.uiautomation.ios.UIAModels.UIAStatusBar;
 
 public class RemoteUIAStatusBar extends RemoteUIAElement implements UIAStatusBar {
 
-  public RemoteUIAStatusBar(RemoteUIADriver driver, String reference) {
+  public RemoteUIAStatusBar(RemoteWebDriver driver, String reference) {
     super(driver, reference);
   }
 
