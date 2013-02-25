@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 public class SetValueHandler extends BaseWebCommandHandler {
 
   private static final Logger log = Logger.getLogger(SetValueHandler.class.getName());
-  private static final boolean nativeEvents = true;
+
 
   public SetValueHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -47,7 +47,7 @@ public class SetValueHandler extends BaseWebCommandHandler {
       value += array.get(i);
     }
 
-    boolean useNativeEvents = getConfiguration("nativeEvents", nativeEvents);
+    boolean useNativeEvents = (Boolean) getConfiguration("nativeEvents");
 
     if (useNativeEvents && (element instanceof RemoteWebNativeBackedElement)) {
       ((RemoteWebNativeBackedElement) element).setValueNative(value);
@@ -67,9 +67,9 @@ public class SetValueHandler extends BaseWebCommandHandler {
     JSONObject desc = new JSONObject();
     desc.put(
         "nativeEvents",
-        "{boolean}, default to "
-        + nativeEvents
-        + ".true = UIAutomation native events will be used to enter the URL (slow) , Web =  WebKit remote debugging will be used.Faster but doesn't fire events.");
+        "{boolean}"
+        + "true = UIAutomation native events will be used to enter text. , falwse =  WebKit remote "
+        + "debugging will be used.Faster but doesn't always fire all JS events.");
     return desc;
   }
 

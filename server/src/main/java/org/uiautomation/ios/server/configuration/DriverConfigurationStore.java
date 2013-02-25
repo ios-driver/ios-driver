@@ -22,9 +22,13 @@ import org.uiautomation.ios.communication.WebDriverLikeCommand;
 
 public class DriverConfigurationStore implements DriverConfiguration {
 
-  private final Map<WebDriverLikeCommand, CommandConfiguration> configurations = new HashMap<WebDriverLikeCommand, CommandConfiguration>();
+  private final
+  Map<WebDriverLikeCommand, CommandConfiguration>
+      configurations =
+      new HashMap<WebDriverLikeCommand, CommandConfiguration>();
 
   public DriverConfigurationStore() {
+    loadDefaults();
   }
 
   @Override
@@ -35,6 +39,12 @@ public class DriverConfigurationStore implements DriverConfiguration {
       configurations.put(command, config);
     }
     return config;
+  }
+
+
+  private void loadDefaults() {
+    configure(WebDriverLikeCommand.CLICK).set("nativeEvents", true);
+    configure(WebDriverLikeCommand.SEND_KEYS).set("nativeEvents", true);
   }
 
 }
