@@ -3,9 +3,8 @@ package org.uiautomation.ios.server.command.uiautomation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 
 public class SetLocationNHandler extends UIAScriptHandler {
@@ -13,7 +12,7 @@ public class SetLocationNHandler extends UIAScriptHandler {
   private static final String template = "var res = UIATarget.localTarget().setLocation(:coord);"
                                          + "UIAutomation.createJSONResponse(':sessionId',0,'')";
 
-  public SetLocationNHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public SetLocationNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
 
     JSONObject payload = request.getPayload();

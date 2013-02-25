@@ -65,6 +65,8 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   public static final String MAGIC_PREFIX = "plist_";
   public static final String CONFIGURABLE = "configurable";
+  public static final String ELEMENT_TREE = "elementTree";
+  public static final String IOS_SEARCH_CONTEXT = "iosSearchContext";
 
   // private final Map<String, Object> raw = new HashMap<String, Object>();
 

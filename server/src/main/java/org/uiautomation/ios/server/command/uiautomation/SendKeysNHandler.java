@@ -18,7 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 
 
@@ -28,7 +28,7 @@ public class SendKeysNHandler extends UIAScriptHandler {
                                          + "keyboard.typeString(':value');"
                                          + "UIAutomation.createJSONResponse(':sessionId',0,'')";
 
-  public SendKeysNHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public SendKeysNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
     try {
       JSONArray array = request.getPayload().getJSONArray("value");

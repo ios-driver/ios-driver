@@ -13,7 +13,7 @@ import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.UIAModels.predicate.ValueCriteria;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.application.LanguageDictionary;
 import org.uiautomation.ios.server.application.ServerSideL10NDecorator;
@@ -27,7 +27,7 @@ public abstract class BaseFindElementNHandler extends UIAScriptHandler {
   private final boolean xpathMode;
   private final String reference;
 
-  public BaseFindElementNHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public BaseFindElementNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
     this.xpathMode = getRequest().getPayload().has("using")
                      && "xpath".equals(getRequest().getPayload().optString("using"));

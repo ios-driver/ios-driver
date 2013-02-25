@@ -277,7 +277,8 @@ public enum CommandMapping {
   }
 
 
-  public Handler createHandler(IOSDriver driver, WebDriverLikeRequest request) throws Exception {
+  public Handler createHandler(IOSServerManager driver, WebDriverLikeRequest request)
+      throws Exception {
     boolean isNative = isNative(driver, request);
     Class<?> clazz;
 
@@ -292,7 +293,7 @@ public enum CommandMapping {
     }
 
     Object[] args = new Object[]{driver, request};
-    Class<?>[] argsClass = new Class[]{IOSDriver.class, WebDriverLikeRequest.class};
+    Class<?>[] argsClass = new Class[]{IOSServerManager.class, WebDriverLikeRequest.class};
 
     Constructor<?> c = clazz.getConstructor(argsClass);
     Handler handler = (Handler) c.newInstance(args);
@@ -300,7 +301,7 @@ public enum CommandMapping {
 
   }
 
-  private boolean isNative(IOSDriver driver, WebDriverLikeRequest request) {
+  private boolean isNative(IOSServerManager driver, WebDriverLikeRequest request) {
     // if there a force flag in the request.
     if (request.getPayload().has("native")) {
       return request.getPayload().optBoolean("native");

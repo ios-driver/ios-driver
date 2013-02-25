@@ -23,7 +23,7 @@ import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
@@ -32,7 +32,7 @@ import org.uiautomation.ios.server.utils.ClassicCommands;
 
 public class ServerStatusNHandler extends BaseNativeCommandHandler {
 
-  public ServerStatusNHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public ServerStatusNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
 
@@ -46,7 +46,8 @@ public class ServerStatusNHandler extends BaseNativeCommandHandler {
     JSONObject res = new JSONObject();
 
     res.put("os", new JSONObject().put("name", System.getProperty("os.name"))
-        .put("arch", System.getProperty("os.arch")).put("version", System.getProperty("os.version")));
+        .put("arch", System.getProperty("os.arch"))
+        .put("version", System.getProperty("os.version")));
 
     res.put("java", new JSONObject().put("version", System.getProperty("java.version")));
 
@@ -74,7 +75,8 @@ public class ServerStatusNHandler extends BaseNativeCommandHandler {
     res.put(
         "build",
         new JSONObject().put("version", BuildInfo.getAttribute("version"))
-            .put("time", BuildInfo.getAttribute("buildTimestamp")).put("revision", BuildInfo.getAttribute("sha")));
+            .put("time", BuildInfo.getAttribute("buildTimestamp"))
+            .put("revision", BuildInfo.getAttribute("sha")));
 
     List<ServerSideSession> sessions = getDriver().getSessions();
     Response resp = new Response();

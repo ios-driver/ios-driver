@@ -3,7 +3,7 @@ package org.uiautomation.ios.server.command.uiautomation;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 
 public class GetElementSizeNHandler extends UIAScriptHandler {
@@ -15,7 +15,7 @@ public class GetElementSizeNHandler extends UIAScriptHandler {
       "var result = element.rect();" +
       "UIAutomation.createJSONResponse(':sessionId',0,result)";
 
-  public GetElementSizeNHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public GetElementSizeNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
 
     String js = template

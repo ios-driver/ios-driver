@@ -20,31 +20,31 @@ import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 
 public class SetTimeoutHandler extends BaseWebCommandHandler {
 
-  public SetTimeoutHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public SetTimeoutHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
 
   /**
-   * type - {string} The type of operation to set the timeout for. Valid values
-   * are: "script" for script timeouts, "implicit" for modifying the implicit
-   * wait timeout and "page load" for setting a page load timeout.
+   * type - {string} The type of operation to set the timeout for. Valid values are: "script" for
+   * script timeouts, "implicit" for modifying the implicit wait timeout and "page load" for setting
+   * a page load timeout.
    */
   @Override
   public Response handle() throws Exception {
     JSONObject payload = getRequest().getPayload();
     String type = payload.optString("type");
-    if ("page load".equals(type)){
+    if ("page load".equals(type)) {
       long timeout = payload.getLong("ms");
       // meant for driver.get command
       CommandConfiguration conf = getSession().configure(WebDriverLikeCommand.URL);
-      conf.set("page load",timeout);
-    }else {
-      throw new UnsupportedCommandException("timeout "+payload+" NI");
+      conf.set("page load", timeout);
+    } else {
+      throw new UnsupportedCommandException("timeout " + payload + " NI");
     }
     Response res = new Response();
     res.setSessionId(getSession().getSessionId());

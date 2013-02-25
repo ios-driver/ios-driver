@@ -34,12 +34,12 @@ import java.util.logging.Logger;
 public class IOSServer {
 
   private static final Logger log = Logger.getLogger(IOSServer.class.getName());
-  public static final String DRIVER = IOSDriver.class.getName();
+  public static final String DRIVER = IOSServerManager.class.getName();
   private Server server;
   private int port;
   public static final boolean debugMode = true;
   private IOSServerConfiguration options;
-  private IOSDriver driver;
+  private IOSServerManager driver;
 
   public static void main(String[] args) throws Exception {
     IOSServer server = new IOSServer(args);
@@ -90,7 +90,7 @@ public class IOSServer {
     handlers.setHandlers(new Handler[]{wd, extra});
     server.setHandler(handlers);
 
-    driver = new IOSDriver(port);
+    driver = new IOSServerManager(port);
     for (String app : this.options.getSupportedApps()) {
       driver.addSupportedApplication(new IOSApplication(app));
     }

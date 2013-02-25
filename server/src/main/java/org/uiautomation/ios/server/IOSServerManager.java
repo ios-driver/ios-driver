@@ -36,20 +36,20 @@ import java.util.logging.Logger;
 import static org.uiautomation.ios.IOSCapabilities.MAGIC_PREFIX;
 
 
-public class IOSDriver implements DeviceDetector {
+public class IOSServerManager implements DeviceDetector {
 
   private final List<ServerSideSession> sessions = new ArrayList<ServerSideSession>();
-  private static final Logger log = Logger.getLogger(IOSDriver.class.getName());
+  private static final Logger log = Logger.getLogger(IOSServerManager.class.getName());
   private final Set<IOSApplication> supportedApplications = new HashSet<IOSApplication>();
   private final List<DeviceInfo> connectedDevices = new CopyOnWriteArrayList<DeviceInfo>();
   private final HostInfo hostInfo;
   private final ResourceCache cache = new ResourceCache();
   private final DeviceManagerService deviceManager;
 
-  public IOSDriver(int port) {
+  public IOSServerManager(int port) {
     try {
       LogManager.getLogManager()
-          .readConfiguration(IOSDriver.class.getResourceAsStream("/ios-logging.properties"));
+          .readConfiguration(IOSServerManager.class.getResourceAsStream("/ios-logging.properties"));
     } catch (Exception e) {
       System.err.println("Cannot configure logger.");
     }
@@ -120,7 +120,7 @@ public class IOSDriver implements DeviceDetector {
   public IOSApplication findMatchingApplication(IOSCapabilities desiredCapabilities) {
     for (IOSApplication app : supportedApplications) {
       IOSCapabilities appCapabilities = getCapabilities(app);
-      if (IOSDriver.matches(appCapabilities, desiredCapabilities)) {
+      if (IOSServerManager.matches(appCapabilities, desiredCapabilities)) {
         return app;
       }
     }

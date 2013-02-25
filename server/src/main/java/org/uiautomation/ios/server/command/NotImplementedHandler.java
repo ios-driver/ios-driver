@@ -14,11 +14,11 @@
 package org.uiautomation.ios.server.command;
 
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 
 public abstract class NotImplementedHandler extends BaseCommandHandler {
 
-  public NotImplementedHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public NotImplementedHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
 

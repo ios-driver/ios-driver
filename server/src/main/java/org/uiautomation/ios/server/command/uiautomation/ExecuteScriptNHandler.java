@@ -7,16 +7,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 
 public class ExecuteScriptNHandler extends UIAScriptHandler {
 
   private static final Logger log = Logger.getLogger(ExecuteScriptNHandler.class.getName());
 
-  private static final String template = "UIAutomation.createJSONResponse(':sessionId',0,:function)";
+  private static final
+  String
+      template =
+      "UIAutomation.createJSONResponse(':sessionId',0,:function)";
 
-  public ExecuteScriptNHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public ExecuteScriptNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
     try {
       String script = getRequest().getPayload().getString("script");
@@ -25,7 +28,10 @@ public class ExecuteScriptNHandler extends UIAScriptHandler {
       String arguments = buildArguments(args);
 
       String f = "(function() { " + script + "})";
-      String js = template.replace(":sessionId", request.getSession()).replace(":function", f + "(" + arguments + ")");
+      String
+          js =
+          template.replace(":sessionId", request.getSession())
+              .replace(":function", f + "(" + arguments + ")");
       setJS(js);
     } catch (JSONException e) {
       e.printStackTrace();

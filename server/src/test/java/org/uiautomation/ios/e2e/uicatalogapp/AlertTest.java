@@ -104,7 +104,7 @@ public class AlertTest extends BaseIOSDriverTest {
       el.tap();
       Assert.fail("shouldn't click behind alerts.");
     } finally {
-      driver.getAlert().getCancelButton().tap();
+      driver.switchTo().alert().dismiss();
     }
   }
 
@@ -258,7 +258,7 @@ public class AlertTest extends BaseIOSDriverTest {
     // opens an alert.
     el.tap();
 
-    UIAAlert alert = driver.getAlert();
+    UIAAlert alert = driver.findElement(new TypeCriteria(UIAAlert.class));
 
     // check the alert has all its elements
     alert.findElement(UIAStaticText.class, new NameCriteria("UIAlertView"));
@@ -267,7 +267,7 @@ public class AlertTest extends BaseIOSDriverTest {
 
     ok.tap();
 
-    driver.getAlert();
+    driver.switchTo().alert();
   }
 
   private Alert waitForAlert(WebDriver driver) {

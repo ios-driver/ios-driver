@@ -15,19 +15,18 @@ package org.uiautomation.ios.server.command;
 
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 
 /**
- * execute a snipet of javascript in the instruments script context and returns
- * the result.
- * 
+ * execute a snipet of javascript in the instruments script context and returns the result.
+ *
  * @author freynaud
- * 
  */
 public abstract class UIAScriptHandler extends BaseNativeCommandHandler {
+
   private String js;
 
-  public UIAScriptHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public UIAScriptHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
 

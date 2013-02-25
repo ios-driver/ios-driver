@@ -21,7 +21,7 @@ import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.mobileSafari.message.WebkitPage;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
 
@@ -30,7 +30,7 @@ import java.util.Set;
 
 public class GetWindowHandlesNHandler extends BaseNativeCommandHandler {
 
-  public GetWindowHandlesNHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public GetWindowHandlesNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
 

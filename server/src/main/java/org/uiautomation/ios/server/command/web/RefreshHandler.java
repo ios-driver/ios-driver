@@ -17,12 +17,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 
 public class RefreshHandler extends BaseWebCommandHandler {
 
-  public RefreshHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public RefreshHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
 

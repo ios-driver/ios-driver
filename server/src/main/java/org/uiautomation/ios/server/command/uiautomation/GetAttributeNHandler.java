@@ -16,7 +16,7 @@ package org.uiautomation.ios.server.command.uiautomation;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 
 public class GetAttributeNHandler extends UIAScriptHandler {
@@ -32,7 +32,7 @@ public class GetAttributeNHandler extends UIAScriptHandler {
                                                + "var str = JSON.stringify(result.tree);"
                                                + "UIAutomation.createJSONResponse(':sessionId',0,str);";
 
-  public GetAttributeNHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public GetAttributeNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
 
     String attributeMethod = "." + request.getVariableValue(":name") + "()";

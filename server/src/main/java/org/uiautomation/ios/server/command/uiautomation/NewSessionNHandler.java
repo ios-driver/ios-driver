@@ -19,7 +19,7 @@ import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
 
@@ -27,19 +27,20 @@ public class NewSessionNHandler extends BaseNativeCommandHandler {
 
   private ServerSideSession session;
 
-  public NewSessionNHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public NewSessionNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
-    
+
   }
 
   public Response handle() throws Exception {
     try {
       GetCapabilitiesNHandler.reset();
       JSONObject payload = getRequest().getPayload();
-      IOSCapabilities capabilities = new IOSCapabilities(payload.getJSONObject("desiredCapabilities"));
+      IOSCapabilities
+          capabilities =
+          new IOSCapabilities(payload.getJSONObject("desiredCapabilities"));
       session = getDriver().createSession(capabilities);
       session.start();
-
 
       Response resp = new Response();
       resp.setSessionId(session.getSessionId());

@@ -17,7 +17,7 @@ package org.uiautomation.ios.server.command.uiautomation;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 
 
 public class GetAlertTextNHandler extends BaseFindElementNHandler {
@@ -26,7 +26,7 @@ public class GetAlertTextNHandler extends BaseFindElementNHandler {
                                            + "var text = alert.getText();"
                                            + "UIAutomation.createJSONResponse(':sessionId',0,text);";
 
-  public GetAlertTextNHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public GetAlertTextNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
 
     String js = jsTemplate

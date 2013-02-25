@@ -18,14 +18,14 @@ import org.json.JSONObject;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.webInspector.DOM.RemoteExceptionException;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 
 public class FindElementHandler extends BaseWebCommandHandler {
 
-  public FindElementHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public FindElementHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
 

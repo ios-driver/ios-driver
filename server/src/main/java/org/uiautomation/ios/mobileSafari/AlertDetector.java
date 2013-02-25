@@ -18,7 +18,9 @@ import org.json.JSONObject;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.UIAModels.UIAAlert;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
+import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAAlert;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 
@@ -61,7 +63,7 @@ public class AlertDetector implements ResponseFinder {
       if (!stopRequested) {
         log.fine("starting to look for an alert.");
         //driver.switchTo().window(WorkingMode.Native.toString());
-        alert = driver.getAlert();
+        alert = driver.findElement(new TypeCriteria(UIAAlert.class));
         //driver.switchTo().window(WorkingMode.Web.toString());
         String alertDetails = "no details";
         alertDetails = alert.logElementTree(null, false).toString(2);

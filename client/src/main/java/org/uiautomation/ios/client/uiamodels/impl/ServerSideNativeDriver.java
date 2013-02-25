@@ -17,7 +17,9 @@ package org.uiautomation.ios.client.uiamodels.impl;
 
 import com.google.common.collect.ImmutableMap;
 
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.SessionId;
+import org.uiautomation.ios.client.uiamodels.impl.configuration.WebDriverLikeCommandExecutor;
 import org.uiautomation.ios.communication.Path;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
@@ -36,34 +38,43 @@ public class ServerSideNativeDriver extends AttachRemoteUIADriver {
 
   public ServerSideNativeDriver(URL url, SessionId session) {
     super(url, session);
+    executor = new ServerSideWebDriverLikeCommandExecutor(this);
   }
 
-  /**
-   * forces the requests to be executed native by adding the native flag in the param list.
-   */
-  @Override
-  public WebDriverLikeRequest buildRequest(WebDriverLikeCommand command,
-                                           RemoteUIAElement element,
-                                           Map<String, ?> params,
-                                           Map<String, String> extraParamInPath) {
-    String method = command.method();
-    Path p = new Path(command).withSession(getSessionId());
-    // it's ok to have an element id but not mentioning it in the path. That's typically the case
-    // for alerts.
-    if (element != null && p.getPath().contains(Path.REFERENCE)) {
-      p.withReference(element.getReference());
+
+  class ServerSideWebDriverLikeCommandExecutor extends WebDriverLikeCommandExecutor {
+
+    public ServerSideWebDriverLikeCommandExecutor(RemoteWebDriver driver) {
+      super(driver);
     }
 
-    ImmutableMap.Builder<String, Object> builder = new ImmutableMap.Builder<String, Object>();
-    builder.put("native", true);
-    if (params != null) {
-      builder.putAll(params);
-    }
+    /**
+     * forces the requests to be executed native by adding the native flag in the param list.
+     */
+    @Override
+    public WebDriverLikeRequest buildRequest(WebDriverLikeCommand command,
+                                             RemoteUIAElement element,
+                                             Map<String, ?> params,
+                                             Map<String, String> extraParamInPath) {
+      String method = command.method();
+      Path p = new Path(command).withSession(getSessionId());
+      // it's ok to have an element id but not mentioning it in the path. That's typically the case
+      // for alerts.
+      if (element != null && p.getPath().contains(Path.REFERENCE)) {
+        p.withReference(element.getReference());
+      }
 
-    for (String key : extraParamInPath.keySet()) {
-      p.validateAndReplace(":" + key, extraParamInPath.get(key));
+      ImmutableMap.Builder<String, Object> builder = new ImmutableMap.Builder<String, Object>();
+      builder.put("native", true);
+      if (params != null) {
+        builder.putAll(params);
+      }
+
+      for (String key : extraParamInPath.keySet()) {
+        p.validateAndReplace(":" + key, extraParamInPath.get(key));
+      }
+      WebDriverLikeRequest request = new WebDriverLikeRequest(method, p, builder.build());
+      return request;
     }
-    WebDriverLikeRequest request = new WebDriverLikeRequest(method, p, builder.build());
-    return request;
   }
 }

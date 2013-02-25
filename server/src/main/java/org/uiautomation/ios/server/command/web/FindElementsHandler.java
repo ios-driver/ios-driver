@@ -19,8 +19,7 @@ import org.json.JSONObject;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.mobileSafari.NodeId;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.webInspector.DOM.RemoteExceptionException;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
@@ -30,7 +29,7 @@ import java.util.List;
 
 public class FindElementsHandler extends BaseWebCommandHandler {
 
-  public FindElementsHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public FindElementsHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
 

@@ -19,7 +19,7 @@ import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 import org.uiautomation.ios.server.utils.hack.TimeSpeeder;
@@ -27,21 +27,21 @@ import org.uiautomation.ios.server.utils.hack.TimeSpeeder;
 public class GetTimeoutNHandler extends UIAScriptHandler {
 
 
-  private static final String getTimeout = 
-      "var timeout =UIAutomation.getTimeout(':type');"+
+  private static final String getTimeout =
+      "var timeout =UIAutomation.getTimeout(':type');" +
       "UIAutomation.createJSONResponse(':sessionId',0,timeout)";
 
-  public GetTimeoutNHandler(IOSDriver driver, WebDriverLikeRequest request)
+  public GetTimeoutNHandler(IOSServerManager driver, WebDriverLikeRequest request)
       throws Exception {
     super(driver, request);
     String type = request.getPayload().getString("type");
-    setJS(getTimeout.replace(":type",type));
+    setJS(getTimeout.replace(":type", type));
     addDecorator(new CorrectTimeout(driver));
   }
 
   class CorrectTimeout extends PostHandleDecorator {
 
-    public CorrectTimeout(IOSDriver driver) {
+    public CorrectTimeout(IOSServerManager driver) {
       super(driver);
     }
 
@@ -51,7 +51,7 @@ public class GetTimeoutNHandler extends UIAScriptHandler {
         Integer timeout = (Integer) response.getValue();
         float timeCorrection = TimeSpeeder.getInstance().getSecondDuration();
         float correctTimeout = timeout / timeCorrection;
-        response.setValue((int)correctTimeout);
+        response.setValue((int) correctTimeout);
       } catch (Exception e) {
         throw new WebDriverException(
             "error correcting the timeout to take the timespeeder into account." + e.getMessage(),
@@ -62,7 +62,7 @@ public class GetTimeoutNHandler extends UIAScriptHandler {
     }
 
   }
-  
+
   @Override
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();

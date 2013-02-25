@@ -20,18 +20,20 @@ import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
 
 public class SetConfigurationNHandler extends BaseNativeCommandHandler {
 
-  public SetConfigurationNHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public SetConfigurationNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
 
   @Override
   public Response handle() throws Exception {
-    WebDriverLikeCommand command = WebDriverLikeCommand.valueOf((String) getRequest().getVariableValue(":command"));
+    WebDriverLikeCommand
+        command =
+        WebDriverLikeCommand.valueOf((String) getRequest().getVariableValue(":command"));
     JSONObject payload = getRequest().getPayload();
 
     Iterator<String> iter = payload.keys();
@@ -48,6 +50,7 @@ public class SetConfigurationNHandler extends BaseNativeCommandHandler {
     return resp;
 
   }
+
   @Override
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();

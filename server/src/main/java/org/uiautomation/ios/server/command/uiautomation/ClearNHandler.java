@@ -16,7 +16,7 @@ package org.uiautomation.ios.server.command.uiautomation;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 
 
@@ -27,7 +27,7 @@ public class ClearNHandler extends UIAScriptHandler {
       "element.setValue('');" +
       "UIAutomation.createJSONResponse(':sessionId',0,'')";
 
-  public ClearNHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public ClearNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
     String js = voidTemplate
         .replace(":sessionId", request.getSession())

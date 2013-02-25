@@ -23,7 +23,7 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.RemoteIOSWebDriver;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
@@ -38,7 +38,7 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
                                            + "var result = root.tree(:attachScreenshot);"
                                            + "UIAutomation.createJSONResponse(':sessionId',0,result);";
 
-  public LogElementTreeNHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public LogElementTreeNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
 
     String reference = "1";
@@ -71,7 +71,7 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
 
   class AddTranslationToLog extends PostHandleDecorator {
 
-    public AddTranslationToLog(IOSDriver driver) {
+    public AddTranslationToLog(IOSServerManager driver) {
       super(driver);
     }
 
@@ -102,7 +102,7 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
 
   class AttachScreenshotToLog extends PostHandleDecorator {
 
-    public AttachScreenshotToLog(IOSDriver driver) {
+    public AttachScreenshotToLog(IOSServerManager driver) {
       super(driver);
     }
 
@@ -136,7 +136,7 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
 
   class GetHTMLForWebView extends PostHandleDecorator {
 
-    public GetHTMLForWebView(IOSDriver driver) {
+    public GetHTMLForWebView(IOSServerManager driver) {
       super(driver);
     }
 

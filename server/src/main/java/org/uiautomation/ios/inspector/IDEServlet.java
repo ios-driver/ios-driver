@@ -36,7 +36,7 @@ import org.uiautomation.ios.inspector.controllers.WebViewContentController;
 import org.uiautomation.ios.inspector.model.Cache;
 import org.uiautomation.ios.inspector.model.CacheDefaultImpl;
 import org.uiautomation.ios.inspector.views.View;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.IOSServer;
 
 
@@ -59,7 +59,9 @@ public class IDEServlet extends HttpServlet {
     URL u = null;
 
     try {
-      IOSDriver driver = (IOSDriver) getServletContext().getAttribute(IOSServer.DRIVER);
+      IOSServerManager
+          driver =
+          (IOSServerManager) getServletContext().getAttribute(IOSServer.DRIVER);
       if (driver != null) {
         int port = driver.getPort();
         u = new URL(System.getProperty("endpoint", "http://localhost:" + port + "/wd/hub"));

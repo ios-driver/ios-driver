@@ -18,11 +18,11 @@ import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 
 public class NotImplementedNativeHandler extends BaseNativeCommandHandler {
 
-  public NotImplementedNativeHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public NotImplementedNativeHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
 

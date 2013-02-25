@@ -27,19 +27,18 @@ import org.uiautomation.ios.UIAModels.UIAWindow;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.CommandMapping;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 
 /**
  * execute the command on instruments, and returns the result cast based on the expected result.
- * 
  */
 public class DefaultUIAScriptNHandler extends UIAScriptHandler {
 
   // TODO freynaud extract?
-  private static final String stringTemplate = 
+  private static final String stringTemplate =
       "var parent = UIAutomation.cache.get(:reference);" +
       "var myStringResult = parent:jsMethod ;" +
       "UIAutomation.createJSONResponse(':sessionId',0,myStringResult)";
@@ -55,7 +54,7 @@ public class DefaultUIAScriptNHandler extends UIAScriptHandler {
       "parent:jsMethod;UIAutomation.createJSONResponse(':sessionId',0,'')";
 
 
-  public DefaultUIAScriptNHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public DefaultUIAScriptNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
     setJS(computeJS());
   }
@@ -81,14 +80,30 @@ public class DefaultUIAScriptNHandler extends UIAScriptHandler {
 
 
   public boolean isAUIASimpleObject(Class<?> type) {
-    if (type == UIAApplication.class) return true;
-    if (type == UIATarget.class) return true;
-    if (type == UIAWindow.class) return true;
-    if (type == UIAButton.class) return true;
-    if (type == UIAElement.class) return true;
-    if (type == UIAElementArray.class) return true;
-    if (type == UIAKeyboard.class) return true;
-    if (type == UIAAlert.class) return true;
+    if (type == UIAApplication.class) {
+      return true;
+    }
+    if (type == UIATarget.class) {
+      return true;
+    }
+    if (type == UIAWindow.class) {
+      return true;
+    }
+    if (type == UIAButton.class) {
+      return true;
+    }
+    if (type == UIAElement.class) {
+      return true;
+    }
+    if (type == UIAElementArray.class) {
+      return true;
+    }
+    if (type == UIAKeyboard.class) {
+      return true;
+    }
+    if (type == UIAAlert.class) {
+      return true;
+    }
     return false;
   }
 
@@ -105,13 +120,14 @@ public class DefaultUIAScriptNHandler extends UIAScriptHandler {
 
     String js =
         template.replace(":jsMethod", method)
-        .replace(":sessionId", getRequest().getSession());
+            .replace(":sessionId", getRequest().getSession());
     if (getRequest().hasVariable(":reference")) {
       js = js.replace(":reference", getRequest().getVariableValue(":reference"));
     }
 
     return js;
   }
+
   @Override
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();

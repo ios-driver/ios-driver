@@ -17,18 +17,9 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.message.BasicHttpEntityEnclosingRequest;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.openqa.selenium.By;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Keyboard;
-import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Rotatable;
@@ -38,33 +29,24 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.html5.Location;
 import org.openqa.selenium.html5.LocationContext;
-import org.openqa.selenium.remote.BeanToJsonConverter;
 import org.openqa.selenium.remote.DriverCommand;
-import org.openqa.selenium.remote.ErrorHandler;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.remote.Response;
 import org.openqa.selenium.remote.internal.WebElementToJsonConverter;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Orientation;
-import org.uiautomation.ios.UIAModels.UIAAlert;
-import org.uiautomation.ios.UIAModels.UIADriver;
 import org.uiautomation.ios.UIAModels.UIAElement;
-import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
 import org.uiautomation.ios.UIAModels.configuration.DriverConfiguration;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
+import org.uiautomation.ios.client.uiamodels.impl.augmenter.Configurable;
+import org.uiautomation.ios.client.uiamodels.impl.augmenter.ElementTree;
+import org.uiautomation.ios.client.uiamodels.impl.augmenter.IOSSearchContext;
 import org.uiautomation.ios.client.uiamodels.impl.configuration.RemoteDriverConfiguration;
-import org.uiautomation.ios.communication.Helper;
-import org.uiautomation.ios.communication.HttpClientFactory;
-import org.uiautomation.ios.communication.Path;
+import org.uiautomation.ios.client.uiamodels.impl.configuration.WebDriverLikeCommandExecutor;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -74,7 +56,8 @@ import java.util.Set;
 
 // TakesScreenshot, Rotatable, BrowserConnection, HasTouchScreen, WebStorage, LocationContext, ApplicationCache
 public class RemoteUIADriver extends RemoteWebDriver
-    implements UIADriver, TakesScreenshot, Rotatable, LocationContext {
+    implements TakesScreenshot, Rotatable, LocationContext, ElementTree,
+               IOSSearchContext, Configurable {
 
   private String remoteURL;
   private Map<String, Object> requestedCapabilities;
@@ -82,60 +65,19 @@ public class RemoteUIADriver extends RemoteWebDriver
   private String host;
   private int port;
   private DriverConfiguration configuration;
-  private ErrorHandler errorHandler = new ErrorHandler();
+  protected WebDriverLikeCommandExecutor executor;
 
 
   protected RemoteUIADriver() {
     super();
+    executor = new WebDriverLikeCommandExecutor(this);
+
   }
-  /**
-   * create the remote driver, starting the remote session with the requested
-   * capabilities.
-   *
-   * @see #RemoteUIADriver(String, Map)
-   * @param remoteURL
-   * @param caps
-   */
-  /*
-   * public RemoteUIADriver(String remoteURL, IOSCapabilities
-   * requestedCapabilities) { this(remoteURL,
-   * requestedCapabilities.getRawCapabilities()); }
-   */
 
-  /**
-   * create the remote driver, starting the remote session with the requested capabilities.
-   */
-  /*
-   * public RemoteUIADriver(String remoteURL, Map<String, Object>
-   * requestedCapabilities) { this.remoteURL = remoteURL;
-   * this.requestedCapabilities = requestedCapabilities;
-   * 
-   * try { URL url = new URL(remoteURL); port = url.getPort(); host =
-   * url.getHost(); start();
-   * 
-   * setSessionId(getSessionId()); setCommandExecutor(new
-   * HttpCommandExecutor(url)); configuration = new
-   * RemoteDriverConfiguration(this);
-   * 
-   * } catch (MalformedURLException e) { throw new
-   * IOSAutomationException("invalid URL " + remoteURL, e); } catch
-   * (IOSAutomationException e) { throw e; } catch (Exception e) { throw new
-   * IOSAutomationException(e); } }
-   */
-
-  /*
-   * @Override protected void startClient() { }
-   * 
-   * @Override protected void startSession(Capabilities desiredCapabilities,
-   * Capabilities requiredCapabilities) { try { session = start();
-   * setSessionId(session.getSessionId());
-   * 
-   * 
-   * } catch (Exception e) { e.printStackTrace(); } }
-   */
   public RemoteUIADriver(URL url, IOSCapabilities cap) {
     super(url, cap);
     this.remoteURL = url.toExternalForm();
+    executor = new WebDriverLikeCommandExecutor(this);
     if (cap == null) {
       this.requestedCapabilities = null;
     } else {
@@ -146,80 +88,15 @@ public class RemoteUIADriver extends RemoteWebDriver
     host = url.getHost();
     configuration = new RemoteDriverConfiguration(this);
 
+
   }
 
-  public WebDriverLikeRequest buildRequest(WebDriverLikeCommand command, RemoteUIAElement element,
-                                           Map<String, ?> params,
-                                           Map<String, String> extraParamInPath) {
-    String method = command.method();
-    Path p = new Path(command).withSession(getSessionId());
-    if (element != null) {
-      p.withReference(element.getReference());
-    }
-    for (String key : extraParamInPath.keySet()) {
-      p.validateAndReplace(":" + key, extraParamInPath.get(key));
-    }
-    WebDriverLikeRequest request = new WebDriverLikeRequest(method, p, params);
-    return request;
-  }
-
-  public WebDriverLikeRequest buildRequest(WebDriverLikeCommand command, RemoteUIAElement element,
-                                           Map<String, ?> params) {
-    return buildRequest(command, element, params, new HashMap<String, String>());
-  }
-
-  public WebDriverLikeRequest buildRequest(WebDriverLikeCommand command) {
-    return buildRequest(command, null, null);
-  }
-
-  public WebDriverLikeRequest buildRequest(WebDriverLikeCommand command, Map<String, ?> params) {
-    return buildRequest(command, null, params);
-  }
-
-  /**
-   * send the request to the remote server for execution.
-   */
-  public <T> T execute(WebDriverLikeRequest request) {
-    Response response = null;
-    long total = 0;
-    try {
-      HttpClient client = HttpClientFactory.getClient();
-      String url = remoteURL + request.getPath();
-      BasicHttpEntityEnclosingRequest
-          r =
-          new BasicHttpEntityEnclosingRequest(request.getMethod(), url);
-      if (request.hasPayload()) {
-        r.setEntity(new StringEntity(request.getPayload().toString(), "UTF-8"));
-      }
-
-      HttpHost h = new HttpHost(host, port);
-      long start = System.currentTimeMillis();
-      HttpResponse res = client.execute(h, r);
-      total = System.currentTimeMillis() - start;
-
-      response = Helper.exctractResponse(res);
-    } catch (Exception e) {
-      throw new WebDriverException(e);
-    }
-    response = errorHandler.throwIfResponseFailed(response, total);
-    return cast(response.getValue());
-  }
 
   @Override
   public JSONObject logElementTree(File screenshot, boolean translation) throws WebDriverException {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TREE_ROOT,
-                                                ImmutableMap
-                                                    .of("attachScreenshot", screenshot != null,
-                                                        "translation", translation));
-    JSONObject log = execute(request);
-    if (screenshot != null) {
-      JSONObject screen = log.optJSONObject("screenshot");
-      String content = screen.optString("64encoded");
-      RemoteUIAElement.createFileFrom64EncodedString(screenshot, content);
-    }
-    log.remove("screenshot");
-    return log;
+    return RemoteUIADriver.logElementTree(executor, screenshot, translation);
   }
+
 
   @Override
   public IOSCapabilities getCapabilities() {
@@ -234,9 +111,10 @@ public class RemoteUIADriver extends RemoteWebDriver
       throw new IllegalArgumentException("Cannot find elements when the selector is null.");
     }
 
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENT_ROOT,
-                                                ImmutableMap.of("using", by, "value", using));
-    return execute(request);
+    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.ELEMENT_ROOT,
+                                                         ImmutableMap
+                                                             .of("using", by, "value", using));
+    return executor.execute(request);
 
   }
 
@@ -246,104 +124,27 @@ public class RemoteUIADriver extends RemoteWebDriver
       throw new IllegalArgumentException("Cannot find elements when the selector is null.");
     }
 
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENTS_ROOT,
-                                                ImmutableMap.of("using", by, "value", using));
-    return execute(request);
+    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.ELEMENTS_ROOT,
+                                                         ImmutableMap
+                                                             .of("using", by, "value", using));
+    return executor.execute(request);
   }
 
   @Override
   public <T extends UIAElement> T findElement(Criteria c) throws NoSuchElementException {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENT_ROOT,
-                                                ImmutableMap
-                                                    .of("depth", -1, "criteria", c.stringify()));
-    return execute(request);
+    return RemoteUIADriver.findElement(executor, c);
   }
+
 
   @Override
   public List<UIAElement> findElements(Criteria c) {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENTS_ROOT,
-                                                ImmutableMap
-                                                    .of("depth", -1, "criteria", c.stringify()));
-    return execute(request);
-  }
-
-  /*
-   * public RemoteIOSObject getRemoteObject(WebDriverLikeCommand command,
-   * JSONObject payload) { Path p = new
-   * Path(command).withSession(getSessionId()); WebDriverLikeRequest request =
-   * new WebDriverLikeRequest(command.method(), p, payload); Response response =
-   * execute(request); Map<String, Object> uiaObject = ((Map<String, Object>)
-   * response.getValue()); try { return RemoteIOSObject.createObject(this,
-   * uiaObject, command.returnType()); } catch (Exception e) { throw new
-   * WebDriverException(e.getMessage(), e); } }
-   */
-
-  /*
-   * public List<UIAElement> getRemoteUIAElements(WebDriverLikeCommand command,
-   * JSONObject payload) { Path p = new
-   * Path(command).withSession(getSessionId()); WebDriverLikeRequest request =
-   * new WebDriverLikeRequest(command.method(), p, payload); Response response =
-   * execute(request); List<Map<String, Object>> objects = (List<Map<String,
-   * Object>>) response.getValue(); List<UIAElement> res = new
-   * ArrayList<UIAElement>(); for (Map<String, Object> ro : objects) { try {
-   * res.add((UIAElement) RemoteIOSObject.createObject(this, ro,
-   * command.returnType())); } catch (Exception e) { // TODO Auto-generated
-   * catch block e.printStackTrace(); } } return res; }
-   */
-
-  private <T> T cast(Object o) {
-    if (o == null) {
-      return null;
-    }
-    if (o instanceof Map) {
-      Map<String, Object> map = (Map<String, Object>) o;
-      if (map.containsKey("ELEMENT")) {
-        return (T) RemoteIOSObject.createObject(this, map);
-      } else if (map.containsKey("tree")) {
-        String serialized = new BeanToJsonConverter().convert(o);
-        try {
-          return (T) new JSONObject(serialized);
-        } catch (JSONException e) {
-          throw new WebDriverException("cannot cast");
-        }
-      } else {
-        return (T) map;
-      }
-    }
-    if (o instanceof Collection) {
-      List<Object> res = new ArrayList<Object>();
-      Collection c = (Collection<Object>) o;
-      for (Object ob : c) {
-        res.add(cast(ob));
-      }
-      return (T) res;
-    }
-    return (T) o;
-  }
-
-  /*
-   * private JSONObject getJSONResult(WebDriverLikeCommand command) {
-   * 
-   * String genericPath = command.path(); String path =
-   * genericPath.replace(":sessionId", getSessionId().toString());
-   * WebDriverLikeRequest request = new WebDriverLikeRequest(command.method(),
-   * path, new JSONObject()); Response response = execute(request); return
-   * ((JSONObject) response.getValue());
-   * 
-   * }
-   */
-
-  public static void createFileFrom64EncodedString(File f, String encoded64) throws IOException {
-    byte[] img64 = Base64.decodeBase64(encoded64);
-    FileOutputStream os = new FileOutputStream(f);
-    os.write(img64);
-    os.close();
+    return findElements(executor, c);
   }
 
   @Override
   public Set<String> getWindowHandles() {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.WINDOW_HANDLES);
-    List<String> all = execute(request);
+    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.WINDOW_HANDLES);
+    List<String> all = executor.execute(request);
     Set<String> res = new HashSet<String>();
     res.addAll(all);
     return res;
@@ -360,16 +161,13 @@ public class RemoteUIADriver extends RemoteWebDriver
     Map<String, ?>
         params =
         ImmutableMap.of("script", script, "args", Lists.newArrayList(convertedArgs));
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.EXECUTE_SCRIPT, params);
+    WebDriverLikeRequest
+        request =
+        executor.buildRequest(WebDriverLikeCommand.EXECUTE_SCRIPT, params);
 
-    return execute(request);
-    //return execute(DriverCommand.EXECUTE_SCRIPT, params).getValue();
+    return executor.execute(request);
   }
 
-  @Override
-  public CommandConfiguration configure(WebDriverLikeCommand command) {
-    return configuration.configure(command);
-  }
 
   @Override
   public <X> X getScreenshotAs(OutputType<X> target) throws WebDriverException {
@@ -383,37 +181,24 @@ public class RemoteUIADriver extends RemoteWebDriver
   public Keyboard getKeyboard() {
     WebDriverLikeRequest
         request =
-        buildRequest(WebDriverLikeCommand.KEYBOARD, RemoteUIAElement.getFrontMostApp(this),
-                     null);
-    return execute(request);
+        executor.buildRequest(WebDriverLikeCommand.KEYBOARD, RemoteUIAElement.getFrontMostApp(this),
+                              null);
+    return executor.execute(request);
   }
 
-  @Override
+  /*@Override
   public void tap(int x, int y) {
     WebDriverLikeRequest
         request =
-        buildRequest(WebDriverLikeCommand.TARGET_TAP, RemoteUIAElement.target(this),
+        executor.buildRequest(WebDriverLikeCommand.TARGET_TAP, RemoteUIAElement.target(this),
                      ImmutableMap.of("x", x, "y", y));
-    execute(request);
-  }
-
-  @Override
-  public void setConfiguration(WebDriverLikeCommand command, String key, Object value) {
-    //To change body of implemented methods use File | Settings | File Templates.
-  }
-
-  @Override
-  public Map<String, Object> getConfiguration(WebDriverLikeCommand command) {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
-  }
-
-  @Override
-  public WebElement findElement2(By by) {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
-  }
+    executor.execute(request);
+  }*/
 
 
-  @Override
+
+
+  /*@Override
   public RemoteUIAAlert getAlert() throws NoAlertPresentException {
     RemoteUIAAlert alert = new RemoteUIAAlert(this, "3");
     // but need to access it once with a call just to check if an alert actually
@@ -421,50 +206,61 @@ public class RemoteUIADriver extends RemoteWebDriver
     // throw a no alert exception
     alert.getName();
     return alert;
-  }
+  } */
 
-  @Override
+  /*@Override
   public void pinchClose(int x1, int y1, int x2, int y2, int duration) {
     /*WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.PINCH_CLOSE,
                                                 ImmutableMap
                                                     .of("x1", x1, "y1", y1, "x2", x2, "y2", y2,
                                                         "duration", duration));
-    execute(request); */
-  }
+    execute(request);
+  }  */
 
   @Override
   public void rotate(ScreenOrientation orientation) {
     WebDriverLikeRequest
         request =
-        buildRequest(WebDriverLikeCommand.SET_ORIENTATION,
-                     ImmutableMap.of("orientation", orientation));
-    execute(request);
+        executor.buildRequest(WebDriverLikeCommand.SET_ORIENTATION,
+                              ImmutableMap.of("orientation", orientation));
+    executor.execute(request);
   }
 
   public void rotate(Orientation orientation) {
     WebDriverLikeRequest
         request =
-        buildRequest(WebDriverLikeCommand.SET_ORIENTATION,
-                     ImmutableMap.of("orientation", orientation));
-    execute(request);
+        executor.buildRequest(WebDriverLikeCommand.SET_ORIENTATION,
+                              ImmutableMap.of("orientation", orientation));
+    executor.execute(request);
   }
 
   @Override
   public ScreenOrientation getOrientation() {
     WebDriverLikeRequest
         request =
-        buildRequest(WebDriverLikeCommand.GET_ORIENTATION);
-    String res = execute(request);
+        executor.buildRequest(WebDriverLikeCommand.GET_ORIENTATION);
+    String res = executor.execute(request);
     return ScreenOrientation.valueOf(res);
   }
 
   public Orientation getNativeOrientation() {
     WebDriverLikeRequest
         request =
-        buildRequest(WebDriverLikeCommand.GET_ORIENTATION);
-    String res = execute(request);
+        executor.buildRequest(WebDriverLikeCommand.GET_ORIENTATION);
+    String res = executor.execute(request);
     return Orientation.valueOf(res);
   }
+
+  @Override
+  public void setConfiguration(WebDriverLikeCommand command, String key, Object value) {
+    RemoteUIADriver.setConfiguration(executor, command, key, value);
+  }
+
+  @Override
+  public Map<String, Object> getConfiguration(WebDriverLikeCommand command) {
+    return RemoteUIADriver.getConfiguration(executor, command);
+  }
+
 
   @Override
   public Location location() {
@@ -475,4 +271,64 @@ public class RemoteUIADriver extends RemoteWebDriver
   public void setLocation(Location location) {
     //To change body of implemented methods use File | Settings | File Templates.
   }
+
+
+  public static JSONObject logElementTree(WebDriverLikeCommandExecutor executor, File screenshot,
+                                          boolean translation) {
+    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.TREE_ROOT,
+                                                         ImmutableMap
+                                                             .of("attachScreenshot",
+                                                                 screenshot != null,
+                                                                 "translation", translation));
+    JSONObject log = executor.execute(request);
+    if (screenshot != null) {
+      JSONObject screen = log.optJSONObject("screenshot");
+      String content = screen.optString("64encoded");
+      RemoteUIAElement.createFileFrom64EncodedString(screenshot, content);
+    }
+    log.remove("screenshot");
+    return log;
+  }
+
+  public static List<UIAElement> findElements(WebDriverLikeCommandExecutor executor, Criteria c) {
+    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.ELEMENTS_ROOT,
+                                                         ImmutableMap
+                                                             .of("depth", -1, "criteria",
+                                                                 c.stringify()));
+    return executor.execute(request);
+  }
+
+  public static <T extends UIAElement> T findElement(WebDriverLikeCommandExecutor executor,
+                                                     Criteria c) {
+    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.ELEMENT_ROOT,
+                                                         ImmutableMap
+                                                             .of("depth", -1, "criteria",
+                                                                 c.stringify()));
+    return executor.execute(request);
+  }
+
+  public static Map<String, Object> getConfiguration(WebDriverLikeCommandExecutor executor,
+                                                     WebDriverLikeCommand command) {
+
+    WebDriverLikeRequest request = executor.buildRequest(
+        WebDriverLikeCommand.GET_CONFIGURATION,
+        null,
+        new HashMap<String, Object>(),
+        ImmutableMap.of("command", command.toString()));
+
+    return executor.execute(request);
+  }
+
+  public static void setConfiguration(WebDriverLikeCommandExecutor executor,
+                                      WebDriverLikeCommand command, String key, Object value) {
+
+    WebDriverLikeRequest
+        request =
+        executor
+            .buildRequest(WebDriverLikeCommand.CONFIGURE, null, ImmutableMap.of(key, value),
+                          ImmutableMap.of("command", command.toString()));
+    executor.execute(request);
+  }
+
+
 }

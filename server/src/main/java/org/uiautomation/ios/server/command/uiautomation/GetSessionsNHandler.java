@@ -21,14 +21,14 @@ import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
 
 public class GetSessionsNHandler extends BaseNativeCommandHandler {
 
-  public GetSessionsNHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public GetSessionsNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
 
@@ -53,7 +53,7 @@ public class GetSessionsNHandler extends BaseNativeCommandHandler {
     resp.setValue(res.toString());
     return resp;
   }
-  
+
   @Override
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();

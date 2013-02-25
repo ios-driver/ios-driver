@@ -23,21 +23,21 @@ import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.*;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.*;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
 
 public abstract class BaseCommandHandler implements Handler {
 
   private static final Logger log = Logger.getLogger(BaseCommandHandler.class.getName());
-  private final IOSDriver driver;
+  private final IOSServerManager driver;
   private final ServerSideSession session;
   private final WebDriverLikeRequest request;
   private final List<PreHandleDecorator> preDecorators = new ArrayList<PreHandleDecorator>();
   private final List<PostHandleDecorator> postDecorators = new ArrayList<PostHandleDecorator>();
 
-  public BaseCommandHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public BaseCommandHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     this.driver = driver;
     this.request = request;
 
@@ -63,7 +63,7 @@ public abstract class BaseCommandHandler implements Handler {
     preDecorators.add(decorator);
   }
 
-  protected IOSDriver getDriver() {
+  protected IOSServerManager getDriver() {
     return driver;
   }
 

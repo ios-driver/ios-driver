@@ -17,8 +17,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.logging.Logger;
 
-import org.uiautomation.ios.server.application.AppleLocale;
-
 
 public class SampleApps {
 
@@ -70,7 +68,6 @@ public class SampleApps {
     IOSCapabilities c = IOSCapabilities.iphone("Geocoder");
     c.setCapability(IOSCapabilities.LOCALE, "en");
 
-    c.setCapability(IOSCapabilities.TIME_HACK, false);
     if (sdkVersion != null) {
       log.info("SET SDK to " + sdkVersion);
       c.setSDKVersion(sdkVersion);
@@ -80,7 +77,6 @@ public class SampleApps {
 
   public static IOSCapabilities uiCatalogCap() {
     IOSCapabilities c = IOSCapabilities.iphone("UICatalog", "2.10");
-    c.setCapability(IOSCapabilities.TIME_HACK, false);
     if (sdkVersion != null) {
       log.info("SET SDK to " + sdkVersion);
       c.setSDKVersion(sdkVersion);
@@ -99,7 +95,6 @@ public class SampleApps {
 
   public static IOSCapabilities uiCatalogipadCap() {
     IOSCapabilities c = IOSCapabilities.ipad("UICatalog");
-    c.setCapability(IOSCapabilities.TIME_HACK, false);
     if (sdkVersion != null) {
       log.info("SET SDK to " + sdkVersion);
       c.setSDKVersion(sdkVersion);
@@ -110,7 +105,6 @@ public class SampleApps {
   public static IOSCapabilities intlMountainsCap(String lang) {
     IOSCapabilities c = IOSCapabilities.iphone("InternationalMountains", "1.1");
     c.setLanguage(lang);
-    c.setCapability(IOSCapabilities.TIME_HACK, false);
     if (sdkVersion != null) {
       log.info("SET SDK to " + sdkVersion);
       c.setSDKVersion(sdkVersion);

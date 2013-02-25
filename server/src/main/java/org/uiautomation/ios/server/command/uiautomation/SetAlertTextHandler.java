@@ -18,7 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 
 
 public class SetAlertTextHandler extends BaseFindElementNHandler {
@@ -27,7 +27,7 @@ public class SetAlertTextHandler extends BaseFindElementNHandler {
                                            + "alert.sendKeys(':value');"
                                            + "UIAutomation.createJSONResponse(':sessionId',0,'');";
 
-  public SetAlertTextHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public SetAlertTextHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
 
     try {

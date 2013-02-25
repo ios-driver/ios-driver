@@ -75,7 +75,7 @@ public class Model {
   }
 
   public void stop() {
-    UIADriver d = getDriver();
+    RemoteUIADriver d = getDriver();
     if (d == null) {
       throw new WebDriverException("driver not active.");
     } else {

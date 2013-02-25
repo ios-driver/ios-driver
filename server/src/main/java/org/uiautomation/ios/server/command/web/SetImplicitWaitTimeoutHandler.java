@@ -5,7 +5,7 @@ import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public class SetImplicitWaitTimeoutHandler extends BaseWebCommandHandler {
 
   private static final List<WebDriverLikeCommand> impacted = new ArrayList<WebDriverLikeCommand>();
 
-  public SetImplicitWaitTimeoutHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public SetImplicitWaitTimeoutHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
     impacted.add(WebDriverLikeCommand.ELEMENT);
     impacted.add(WebDriverLikeCommand.ELEMENT_ROOT);

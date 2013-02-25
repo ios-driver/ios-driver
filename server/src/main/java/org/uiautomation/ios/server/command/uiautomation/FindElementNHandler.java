@@ -17,7 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 
 import java.util.Map;
 
@@ -27,7 +27,7 @@ public class FindElementNHandler extends BaseFindElementNHandler {
                                            + "var result = root.element(:depth,:criteria);"
                                            + "UIAutomation.createJSONResponse(':sessionId',0,result);";
 
-  public FindElementNHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public FindElementNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
 
     // xpath query are done in the server, by pulling the complete tree as xml,

@@ -18,15 +18,12 @@ import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.mobileSafari.message.WebkitPage;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
-
-import java.util.List;
 
 public class GetCurrentContextNHandler extends BaseNativeCommandHandler {
 
-  public GetCurrentContextNHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public GetCurrentContextNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
 
   }

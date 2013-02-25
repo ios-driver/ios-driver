@@ -15,17 +15,17 @@ package org.uiautomation.ios.server.servlet;
 
 import javax.servlet.http.HttpServlet;
 
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.IOSServer;
 
 @SuppressWarnings("serial")
 public abstract class DriverBasedServlet extends HttpServlet {
 
-  private IOSDriver driver;
+  private IOSServerManager driver;
 
-  public synchronized IOSDriver getDriver() {
+  public synchronized IOSServerManager getDriver() {
     if (driver == null) {
-      driver = (IOSDriver) getServletContext().getAttribute(IOSServer.DRIVER);
+      driver = (IOSServerManager) getServletContext().getAttribute(IOSServer.DRIVER);
     }
     return driver;
   }

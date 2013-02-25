@@ -17,7 +17,7 @@ package org.uiautomation.ios.server.command.uiautomation;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 
 public class AcceptAlertHandler extends BaseFindElementNHandler {
 
@@ -25,7 +25,7 @@ public class AcceptAlertHandler extends BaseFindElementNHandler {
                                            + "alert.accept();"
                                            + "UIAutomation.createJSONResponse(':sessionId',0,'');";
 
-  public AcceptAlertHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public AcceptAlertHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
     String js = jsTemplate
         .replace(":sessionId", getRequest().getSession());

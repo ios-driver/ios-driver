@@ -19,7 +19,7 @@ import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.PreHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 import org.uiautomation.ios.server.utils.hack.TimeSpeeder;
@@ -27,18 +27,19 @@ import org.uiautomation.ios.server.utils.hack.TimeSpeeder;
 public class SetTimeoutNHandler extends UIAScriptHandler {
 
   protected static final String setTimeout = "UIAutomation.setTimeout(':type',:timeout);"
-      + "UIAutomation.createJSONResponse(':sessionId',0,'')";
+                                             + "UIAutomation.createJSONResponse(':sessionId',0,'')";
 
-  public SetTimeoutNHandler(IOSDriver driver, WebDriverLikeRequest request) throws Exception {
+  public SetTimeoutNHandler(IOSServerManager driver, WebDriverLikeRequest request)
+      throws Exception {
     super(driver, request);
-    addDecorator(new CorrectTimeout(driver,this));
+    addDecorator(new CorrectTimeout(driver, this));
   }
-  
-  protected String getVariableToCorrect(){
+
+  protected String getVariableToCorrect() {
     return "timeout";
   }
 
-  protected String getScript(IOSDriver driver, WebDriverLikeRequest r) throws Exception {  
+  protected String getScript(IOSServerManager driver, WebDriverLikeRequest r) throws Exception {
     int timeout = r.getPayload().getInt("timeout");
     String type = r.getPayload().getString("type");
     String s = setTimeout.replace(":timeout", String.format("%d", timeout));
@@ -55,8 +56,8 @@ public class SetTimeoutNHandler extends UIAScriptHandler {
   class CorrectTimeout extends PreHandleDecorator {
 
     private SetTimeoutNHandler handler;
-    
-    public CorrectTimeout(IOSDriver driver,SetTimeoutNHandler handler) {
+
+    public CorrectTimeout(IOSServerManager driver, SetTimeoutNHandler handler) {
       super(driver);
       this.handler = handler;
     }
@@ -69,7 +70,8 @@ public class SetTimeoutNHandler extends UIAScriptHandler {
         float correctTimeout = timeout * timeCorrection;
         request.getPayload().put(handler.getVariableToCorrect(), (int) correctTimeout);
       } catch (Exception e) {
-        throw new WebDriverException("error correcting the timeout to take the timespeeder into account."
+        throw new WebDriverException(
+            "error correcting the timeout to take the timespeeder into account."
             + e.getMessage(), e);
       }
 

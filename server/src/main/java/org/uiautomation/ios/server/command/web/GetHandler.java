@@ -24,7 +24,7 @@ import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.UIAModels.predicate.ValueCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAKeyboard;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 
 public class GetHandler extends BaseWebCommandHandler {
@@ -33,7 +33,7 @@ public class GetHandler extends BaseWebCommandHandler {
   private UIAElement addressBar;
   private static final boolean nativeEvents = false;
 
-  public GetHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public GetHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
 

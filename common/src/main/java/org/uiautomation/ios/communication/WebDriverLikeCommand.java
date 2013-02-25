@@ -135,8 +135,10 @@ public enum WebDriverLikeCommand {
   /*
   * Additional command, not part of the JSON Wire Protocol.
    */
-  CONFIGURE("POST", "/session/:sessionId/configure/command/:command", Void.class),
-  GET_CONFIGURATION("GET", "/session/:sessionId/configure/command/:command", Object.class),
+  CONFIGURE("POST", "/session/:sessionId/ios-driver/configure/command/:command", Void.class),
+  GET_CONFIGURATION("GET", "/session/:sessionId/ios-driver/configure/command/:command",
+                    Object.class),
+
   GET_TIMEOUT("GET", "/session/:sessionId/timeouts", Integer.class),
   TREE("GET", "/session/:sessionId/element/:reference/source", String.class),
   RECT("GET", "/session/:sessionId/element/:reference/rect", UIARect.class),

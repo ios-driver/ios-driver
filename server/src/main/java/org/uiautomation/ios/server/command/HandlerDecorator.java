@@ -13,19 +13,18 @@
  */
 package org.uiautomation.ios.server.command;
 
-import org.uiautomation.ios.server.IOSDriver;
-
+import org.uiautomation.ios.server.IOSServerManager;
 
 
 public abstract class HandlerDecorator {
 
-  private final IOSDriver driver;
+  private final IOSServerManager driver;
 
-  public HandlerDecorator(IOSDriver driver) {
+  public HandlerDecorator(IOSServerManager driver) {
     this.driver = driver;
   }
 
-  protected IOSDriver getDriver() {
+  protected IOSServerManager getDriver() {
     return driver;
   }
 

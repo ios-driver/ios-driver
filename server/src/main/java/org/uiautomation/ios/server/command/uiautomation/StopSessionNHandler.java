@@ -17,12 +17,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 
 public class StopSessionNHandler extends UIAScriptHandler {
 
-  public StopSessionNHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public StopSessionNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
     setJS("stop");
   }

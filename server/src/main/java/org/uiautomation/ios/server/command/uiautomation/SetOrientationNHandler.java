@@ -5,7 +5,7 @@ import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 
 public class SetOrientationNHandler extends UIAScriptHandler {
@@ -16,7 +16,7 @@ public class SetOrientationNHandler extends UIAScriptHandler {
       "UIATarget.localTarget().setDeviceOrientation(:orientation);"
       + "UIAutomation.createJSONResponse(':sessionId',0,'')";
 
-  public SetOrientationNHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public SetOrientationNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
 
     JSONObject payload = request.getPayload();

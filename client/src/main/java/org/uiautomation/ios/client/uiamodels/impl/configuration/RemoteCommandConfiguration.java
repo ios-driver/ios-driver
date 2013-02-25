@@ -41,7 +41,7 @@ public class RemoteCommandConfiguration implements CommandConfiguration {
       p.validateAndReplace(":sessionId", driver.getSessionId().toString());
       p.validateAndReplace(":command", command.name());
       WebDriverLikeRequest request = new WebDriverLikeRequest("POST", p, payload);
-      driver.execute(request);
+      //driver.execute(request);
     } catch (Exception e) {
       e.printStackTrace();
     }

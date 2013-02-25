@@ -46,7 +46,7 @@ public class ServerSideSession extends Session {
   private final IOSApplication application;
   private final IOSCapabilities capabilities;
   private final InstrumentsManager instruments;
-  public final IOSDriver driver;
+  public final IOSServerManager driver;
 
   //private WebInspector inspector;
 
@@ -62,7 +62,7 @@ public class ServerSideSession extends Session {
     return capabilities;
   }
 
-  ServerSideSession(IOSDriver driver, IOSCapabilities capabilities) {
+  ServerSideSession(IOSServerManager driver, IOSCapabilities capabilities) {
     super(UUID.randomUUID().toString());
 
     this.driver = driver;

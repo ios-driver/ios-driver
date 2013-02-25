@@ -21,7 +21,7 @@ import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 import org.uiautomation.ios.server.utils.FileTo64EncodedStringUtils;
@@ -29,10 +29,13 @@ import org.uiautomation.ios.server.utils.FileTo64EncodedStringUtils;
 public class TakeScreenshotNHandler extends UIAScriptHandler {
 
   public static final String SCREEN_NAME = "tmpScreenshot";
-  private static final String jsTemplate = "UIATarget.localTarget().captureScreenWithName('" + SCREEN_NAME + "');"
+  private static final
+  String
+      jsTemplate =
+      "UIATarget.localTarget().captureScreenWithName('" + SCREEN_NAME + "');"
       + "UIAutomation.createJSONResponse(':sessionId',0,'ok');";
 
-  public TakeScreenshotNHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public TakeScreenshotNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
     setJS(jsTemplate.replace(":sessionId", request.getSession()));
     addDecorator(new SendBack64EncodedStringDecorator(driver));
@@ -40,14 +43,17 @@ public class TakeScreenshotNHandler extends UIAScriptHandler {
 
   class SendBack64EncodedStringDecorator extends PostHandleDecorator {
 
-    public SendBack64EncodedStringDecorator(IOSDriver driver) {
+    public SendBack64EncodedStringDecorator(IOSServerManager driver) {
       super(driver);
     }
 
     @Override
     public void decorate(Response response) {
 
-      String path = getDriver().getSession(getRequest().getSession()).getOutputFolder() + "/Run 1/" + SCREEN_NAME
+      String
+          path =
+          getDriver().getSession(getRequest().getSession()).getOutputFolder() + "/Run 1/"
+          + SCREEN_NAME
           + ".png";
       File source = new File(path);
       FileTo64EncodedStringUtils encoder = new FileTo64EncodedStringUtils(source);
@@ -58,7 +64,8 @@ public class TakeScreenshotNHandler extends UIAScriptHandler {
         // value.put("64encoded", content64);
         response.setValue(content64);
       } catch (Exception e) {
-        throw new WebDriverException("Error converting " + source.getAbsolutePath() + " to a 64 encoded string "
+        throw new WebDriverException(
+            "Error converting " + source.getAbsolutePath() + " to a 64 encoded string "
             + e.getMessage(), e);
       } finally {
         source.delete();

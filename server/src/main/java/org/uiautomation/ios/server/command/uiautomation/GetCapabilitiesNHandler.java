@@ -18,7 +18,7 @@ import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
@@ -40,7 +40,7 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
   private static final String capabilities = "var json = UIAutomation.getCapabilities();"
                                              + "UIAutomation.createJSONResponse(':sessionId',0,json)";
 
-  public GetCapabilitiesNHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public GetCapabilitiesNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
     setJS(capabilities.replace(":sessionId", request.getSession()));
     addDecorator(new AddAllSupportedLocalesDecorator(getDriver()));
@@ -60,7 +60,7 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
 
   class AddAllSupportedLocalesDecorator extends PostHandleDecorator {
 
-    public AddAllSupportedLocalesDecorator(IOSDriver driver) {
+    public AddAllSupportedLocalesDecorator(IOSServerManager driver) {
       super(driver);
 
     }
@@ -77,6 +77,8 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
       o.put("supportedLocales", ls);
       o.put("takesScreenshot", true);
       o.put(IOSCapabilities.CONFIGURABLE, true);
+      o.put(IOSCapabilities.ELEMENT_TREE, true);
+      o.put(IOSCapabilities.IOS_SEARCH_CONTEXT, true);
 
       o.put("rotatable", true);
       o.put("locationContextEnabled", true);

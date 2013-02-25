@@ -14,11 +14,11 @@
 package org.uiautomation.ios.server.command;
 
 import org.openqa.selenium.remote.Response;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 
-public abstract class PostHandleDecorator extends HandlerDecorator{
+public abstract class PostHandleDecorator extends HandlerDecorator {
 
-  public PostHandleDecorator(IOSDriver driver) {
+  public PostHandleDecorator(IOSServerManager driver) {
     super(driver);
   }
 

@@ -19,14 +19,14 @@ import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.IOSDriver;
+import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
 
 import java.util.Map;
 
 public class GetConfigurationNHandler extends BaseNativeCommandHandler {
 
-  public GetConfigurationNHandler(IOSDriver driver, WebDriverLikeRequest request) {
+  public GetConfigurationNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
 
