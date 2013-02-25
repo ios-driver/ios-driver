@@ -19,6 +19,7 @@ import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.application.ResourceCache;
+import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.iosdriver.DeviceDetector;
 import org.uiautomation.iosdriver.DeviceInfo;
 import org.uiautomation.iosdriver.services.DeviceManagerService;
@@ -44,7 +45,7 @@ public class IOSServerManager implements DeviceDetector {
   private final List<DeviceInfo> connectedDevices = new CopyOnWriteArrayList<DeviceInfo>();
   private final HostInfo hostInfo;
   private final ResourceCache cache = new ResourceCache();
-  private final DeviceManagerService deviceManager;
+  private DeviceManagerService deviceManager;
 
   public IOSServerManager(int port) {
     try {
@@ -54,13 +55,17 @@ public class IOSServerManager implements DeviceDetector {
       System.err.println("Cannot configure logger.");
     }
     this.hostInfo = new HostInfo(port);
-    deviceManager = DeviceManagerService.create(this);
-    deviceManager.startDetection();
 
+    if (Configuration.BETA_FEATURE) {
+      deviceManager = DeviceManagerService.create(this);
+      deviceManager.startDetection();
+    }
   }
 
   public void stop() {
-    deviceManager.stopDetection();
+    if (Configuration.BETA_FEATURE) {
+      deviceManager.stopDetection();
+    }
   }
 
   public void addSupportedApplication(IOSApplication application) {

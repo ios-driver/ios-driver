@@ -14,11 +14,11 @@
 
 package org.uiautomation.ios.server;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /*
  * Class IOSServerConfiguration Configures with the given configurable arguments: -port <port> #
@@ -31,16 +31,25 @@ import com.beust.jcommander.Parameter;
  */
 public class IOSServerConfiguration {
 
+
+  @Parameter(description = "enable beta feature.Might be unstable.", names = "-beta")
+  private boolean beta = false;
+
   @Parameter(description = "port the server will listen on.", names = "-port")
   private int port = 5555;
 
-  @Parameter(description = "if specified, will send a registration request to the given url. Example : http://localhost:4444/grid/register", names = "-hub")
+  @Parameter(
+      description = "if specified, will send a registration request to the given url. Example : http://localhost:4444/grid/register",
+      names = "-hub")
   private String registrationURL = null;
 
-  @Parameter(description = "host of the node.Needs to be specified, as guessing can be wrong complex ntw configs", names = "-host")
+  @Parameter(
+      description = "host of the node.Needs to be specified, as guessing can be wrong complex ntw configs",
+      names = "-host")
   private String serverHost;
 
-  @Parameter(description = "location of the application under test.Absolute path expected.", names = { "-app", "-aut" }, required = false)
+  @Parameter(description = "location of the application under test.Absolute path expected.",
+             names = {"-app", "-aut"}, required = false)
   private List<String> supportedApps = new ArrayList<String>();
 
   public String getRegistrationURL() {
@@ -60,10 +69,9 @@ public class IOSServerConfiguration {
   }
 
   /**
-   * Returns a IOSServerConfiguration instance of the server configuration, from
-   * the given args parameters.<br>
-   * 
-   * @param args
+   * Returns a IOSServerConfiguration instance of the server configuration, from the given args
+   * parameters.<br>
+   *
    * @return A configuration instance of the server.
    */
   public static IOSServerConfiguration create(String[] args) {
@@ -76,6 +84,7 @@ public class IOSServerConfiguration {
     this.port = port;
   }
 
+
   public void setHost(String host) {
     this.serverHost = host;
   }
@@ -86,5 +95,13 @@ public class IOSServerConfiguration {
 
   public String getHost() {
     return this.serverHost;
+  }
+
+  public boolean isBeta() {
+    return beta;
+  }
+
+  public void setBeta(boolean beta) {
+    this.beta = beta;
   }
 }

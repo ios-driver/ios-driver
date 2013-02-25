@@ -23,6 +23,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.inspector.IDEServlet;
 import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.server.grid.RegistrationRequest;
 import org.uiautomation.ios.server.servlet.IOSServlet;
 import org.uiautomation.ios.server.servlet.ResourceServlet;
@@ -76,6 +77,7 @@ public class IOSServer {
   private void init(IOSServerConfiguration options) {
     this.options = options;
     this.port = options.getPort();
+    Configuration.BETA_FEATURE = options.isBeta();
     server = new Server(new InetSocketAddress("0.0.0.0", options.getPort()));
 
     ServletContextHandler wd = new ServletContextHandler(server, "/wd/hub", true, false);
@@ -96,6 +98,7 @@ public class IOSServer {
     }
 
     StringBuilder b = new StringBuilder();
+    b.append("\nBeta features enabled: " + Configuration.BETA_FEATURE);
     b.append("\nInspector: http://0.0.0.0:" + options.getPort() + "/inspector/");
     b.append("\ntests can access the server at http://0.0.0.0:" + options.getPort() + "/wd/hub");
     b.append("\nserver status: http://0.0.0.0:" + options.getPort() + "/wd/hub/status");

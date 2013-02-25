@@ -33,6 +33,7 @@ import org.uiautomation.ios.mobileSafari.message.WebkitApplication;
 import org.uiautomation.ios.mobileSafari.message.WebkitDevice;
 import org.uiautomation.ios.mobileSafari.message.WebkitPage;
 import org.uiautomation.ios.server.ServerSideSession;
+import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.server.instruments.InstrumentsManager;
 import org.uiautomation.ios.webInspector.DOM.Page;
 import org.uiautomation.ios.webInspector.DOM.Runtime;
@@ -71,6 +72,9 @@ public class SimulatorSession {
     this.session = session;
     connectionKey = UUID.randomUUID().toString();
     if (InstrumentsManager.realDevice) {
+      if (!Configuration.BETA_FEATURE) {
+        Configuration.off();
+      }
       simulatorProtocol =
           new RealDeviceProtocolImpl(new DefaultMessageListener(this, session), finders);
 
