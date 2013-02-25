@@ -13,6 +13,8 @@ import org.uiautomation.ios.BaseIOSDriverTest;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.UIATableCell;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteUIATableCell;
 import org.uiautomation.ios.client.uiamodels.impl.augmenter.Configurable;
 import org.uiautomation.ios.client.uiamodels.impl.augmenter.ElementTree;
 import org.uiautomation.ios.client.uiamodels.impl.augmenter.IOSDriverAugmenter;
@@ -67,5 +69,13 @@ public class AugmenterTest extends BaseIOSDriverTest {
   public void rotatable() {
     Rotatable rotator = IOSDriverAugmenter.augment(driver);
     rotator.rotate(ScreenOrientation.PORTRAIT);
+  }
+
+  @Test
+  public void cast() {
+    RemoteUIADriver iosdriver = IOSDriverAugmenter.getIOSDriver(driver);
+    WebElement
+        element = iosdriver.findElement(By.linkText("name=" + buttonName));
+    Assert.assertTrue(element instanceof RemoteUIATableCell);
   }
 }
