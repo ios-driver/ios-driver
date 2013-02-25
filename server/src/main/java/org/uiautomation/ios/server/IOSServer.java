@@ -98,7 +98,7 @@ public class IOSServer {
     }
 
     StringBuilder b = new StringBuilder();
-    b.append("\nBeta features enabled: " + Configuration.BETA_FEATURE);
+    b.append("\nBeta features enabled ( enabled by -beta flag ): " + Configuration.BETA_FEATURE);
     b.append("\nInspector: http://0.0.0.0:" + options.getPort() + "/inspector/");
     b.append("\ntests can access the server at http://0.0.0.0:" + options.getPort() + "/wd/hub");
     b.append("\nserver status: http://0.0.0.0:" + options.getPort() + "/wd/hub/status");
