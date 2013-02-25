@@ -67,6 +67,7 @@
             <li><a href="#advAlert">Adv. alert handling</a></li>
             <li><a href="#params">Server parameters</a></li>
             <li><a href="#rawJS">Raw instruments script snipets</a></li>
+            <li><a href="#augment">ios-driver extensions</a></li>
         </lu>
         <h3 id="firstTest">Writing the first test for native ios apps</h3>
 
@@ -427,9 +428,59 @@ private Object executeScript(String script, Object... args) {
 can find the documentation about those differences and all the additional functions can be found
  <a href="jsdoc/index.html">here.</a></p>
 
+
+
+
+<h3 id="augmenter">ios-driver specific methods.</h3>
+
+<p>Some ios specific methods do not map directly to the webdriver ones. For those, you can use the
+Augmenter class to add those functionality.</p>
+
+
+<h5 >Configurable</h5>
+
+<p>Allows to change the configuration of a command at runtime. For instance you can switch between
+native and atoms based clicks on an hybrid app doing the following :</p>
+
+<pre class="prettyprint" >
+// cast to the interface we need.
+Configurable config = IOSDriverAugmenter.augment(driver);
+
+// find the current state
+Map<String,Object> conf = config.getConfiguration(WebDriverLikeCommand.CLICK);
+System.out.println("default:"  + conf);
+
+// change to use JS based events.
+config.setConfiguration(WebDriverLikeCommand.CLICK, "nativeEvents", false);
+
+//... do some testing
+
+// use native events again.
+config.setConfiguration(WebDriverLikeCommand.CLICK, "nativeEvents", true);
+</pre>
+
+<p>will print <pre>default:{nativeEvents=true}</pre> , then will disable native events for the click
+methods, and activate them back. Native event are slower, but much accurate, so this is typically
+done to go through a flow quick, and then activate them again when you reach the page that needs to
+be tested.</p>
+<p>protocol call :</p>
+<pre class="prettyprint">
+// set the configuration for a command
+"POST", "/session/:sessionId/ios-driver/configure/command/:command"
+// get the configuration for a command
+"GET", "/session/:sessionId/ios-driver/configure/command/:command"
+</pre>
+<h5 >IOSSearchContext</h5>
+
+<p>Criteria based search instead of By.</p>
+
+<h5 >ElementTree</h5>
+
+<p>Gives access to the logElementTree function from instruments. This method also takes a screenshot
+of the app, and loads the localization files.</p>
+
     </section>
 </div>
-
 <!-- FOOTER  -->
 <div id="footer_wrap" class="outer">
     <footer class="inner">
