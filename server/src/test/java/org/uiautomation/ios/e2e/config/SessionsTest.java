@@ -14,11 +14,12 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
 import org.uiautomation.ios.SampleApps;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.communication.Helper;
 import org.uiautomation.ios.communication.HttpClientFactory;
 
 public class SessionsTest extends BaseIOSDriverTest {
+
   private String url;
 
   private JSONArray getSessions() throws Exception {
@@ -40,7 +41,7 @@ public class SessionsTest extends BaseIOSDriverTest {
 
     Assert.assertEquals(getSessions().length(), 0);
 
-    RemoteUIADriver driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
+    RemoteIOSDriver driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
     Assert.assertEquals(getSessions().length(), 1);
 
     JSONObject session = getSessions().getJSONObject(0);

@@ -13,11 +13,11 @@ import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 public class TextFieldTest extends BaseIOSDriverTest {
 
-  private RemoteUIADriver driver = null;
+  private RemoteIOSDriver driver = null;
   private UIATextField textfield;
 
   private UIATextField getTextField() {
@@ -27,14 +27,16 @@ public class TextFieldTest extends BaseIOSDriverTest {
     Criteria c = new AndCriteria(c1, c2);
     UIAElement element = driver.findElement(c);
     element.tap();
-    Criteria fieldC = new AndCriteria(new TypeCriteria(UIATextField.class), new NameCriteria("Normal"));
+    Criteria
+        fieldC =
+        new AndCriteria(new TypeCriteria(UIATextField.class), new NameCriteria("Normal"));
     UIATextField textfield = (UIATextField) driver.findElement(fieldC);
     return textfield;
   }
 
   @BeforeClass
   public void startDriver() {
-    driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
+    driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
     textfield = getTextField();
   }
 
@@ -79,7 +81,7 @@ public class TextFieldTest extends BaseIOSDriverTest {
     textfield.setValue(v);
     Assert.assertEquals(textfield.getValue(), v);
   }
-  
+
   @Test // TODO appears the other way around on the screen. Correct ?
   public void shalom2() {
     String v = "שָׁלוֹם François";

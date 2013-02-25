@@ -17,7 +17,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.uiautomation.ios.client.uiamodels.impl.*;
@@ -31,8 +30,7 @@ import org.openqa.selenium.remote.SessionId;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.UIAModels.Session;
-import org.uiautomation.ios.client.uiamodels.impl.AttachRemoteUIADriver;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.communication.Helper;
 import org.uiautomation.ios.communication.HttpClientFactory;
 
@@ -40,7 +38,7 @@ public class IDESessionModelImpl implements IDESessionModel {
 
   private final Session session;
   private IOSCapabilities caps;
-  private final RemoteUIADriver driver;
+  private final RemoteIOSDriver driver;
   private File screenshot;
   private final URL remoteEndPoint;
 

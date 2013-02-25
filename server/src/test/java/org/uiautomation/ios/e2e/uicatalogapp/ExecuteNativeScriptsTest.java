@@ -26,18 +26,18 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
 import org.uiautomation.ios.SampleApps;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
 
-  private RemoteUIADriver driver;
+  private RemoteIOSDriver driver;
 
   @BeforeClass
   public void startDriver() {
-    driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
+    driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
   }
 
   @AfterClass
@@ -59,7 +59,9 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
 
   @Test
   public void testShouldBeAbleToExecuteSimpleJavascriptAndReturnALong() {
-    Object result = executeScript("return UIATarget.localTarget().frontMostApp().windows().length;");
+    Object
+        result =
+        executeScript("return UIATarget.localTarget().frontMostApp().windows().length;");
 
     assertTrue(result instanceof Long, result.getClass().getName());
     assertTrue((Long) result > 1);
@@ -124,7 +126,8 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
 
     assertTrue(map.size() >= expected.size(), "Expected:<" + expected + ">, but was:<" + map + ">");
     for (Map.Entry<String, Object> entry : expected.entrySet()) {
-      assertEquals(entry.getValue(), map.get(entry.getKey()), "Difference at key:<" + entry.getKey() + ">");
+      assertEquals(entry.getValue(), map.get(entry.getKey()),
+                   "Difference at key:<" + entry.getKey() + ">");
     }
   }
 
@@ -144,7 +147,10 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
       }
     };
 
-    Object result = executeScript("return {foo:'bar', baz: ['a', 'b', 'c'], person: {first: 'John',last: 'Doe'}};");
+    Object
+        result =
+        executeScript(
+            "return {foo:'bar', baz: ['a', 'b', 'c'], person: {first: 'John',last: 'Doe'}};");
     assertTrue(result instanceof Map, "result was: " + result + " (" + result.getClass() + ")");
 
     Map<String, Object> map = (Map<String, Object>) result;
@@ -161,7 +167,9 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
   @Test
   public void testShouldBeAbleToExecuteSimpleJavascriptAndReturnAComplexObject() {
 
-    Object result = executeScript("return UIATarget.localTarget().frontMostApp().windows()[0].rect()");
+    Object
+        result =
+        executeScript("return UIATarget.localTarget().frontMostApp().windows()[0].rect()");
 
     assertTrue(result instanceof Map, "result was: " + result + " (" + result.getClass() + ")");
     Map<String, Object> map = (Map<String, Object>) result;
@@ -194,7 +202,7 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
     Long expectedResult = 1L;
     Object result = executeScript("return arguments[0];", expectedResult);
     assertTrue((result instanceof Integer || result instanceof Long),
-        "Expected result to be an Integer or Long but was a " + result.getClass());
+               "Expected result to be an Integer or Long but was a " + result.getClass());
     assertEquals(expectedResult.longValue(), result);
   }
 
@@ -203,7 +211,7 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
     Double expectedResult = 1.2;
     Object result = executeScript("return arguments[0];", expectedResult);
     assertTrue(result instanceof Float || result instanceof Double,
-        "Expected result to be a Double or Float but was a " + result.getClass());
+               "Expected result to be a Double or Float but was a " + result.getClass());
     assertEquals(expectedResult.doubleValue(), result);
   }
 
@@ -221,13 +229,18 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
 
   @Test
   public void testShouldBeAbleToCallFunctionsDefinedOnThePage() {
-    Object res = executeScript("var app =  UIATarget.localTarget().frontMostApp();var reference = UIAutomation.cache.store(app); return reference;");
+    Object
+        res =
+        executeScript(
+            "var app =  UIATarget.localTarget().frontMostApp();var reference = UIAutomation.cache.store(app); return reference;");
     assertEquals(res, 1L);
   }
 
   @Test
   public void testShouldBeAbleToPassAStringAnAsArgument() {
-    String value = (String) executeScript("return arguments[0] == 'fish' ? 'fish' : 'not fish';", "fish");
+    String
+        value =
+        (String) executeScript("return arguments[0] == 'fish' ? 'fish' : 'not fish';", "fish");
     assertEquals("fish", value);
   }
 
@@ -252,14 +265,14 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
 
   @Test
   public void testPassingArrayAsOnlyArgumentFlattensArray() {
-    Object[] array = new Object[] { "zero", 1, true, 3.14159, false };
+    Object[] array = new Object[]{"zero", 1, true, 3.14159, false};
     String value = (String) executeScript("return arguments[0]", array);
     assertEquals(array[0], value);
   }
 
   @Test
   public void testShouldBeAbleToPassAnArrayAsAdditionalArgument() {
-    Object[] array = new Object[] { "zero", 1, true, 3.14159, false };
+    Object[] array = new Object[]{"zero", 1, true, 3.14159, false};
     long length = (Long) executeScript("return arguments[1].length", "string", array);
     assertEquals(array.length, length);
   }
@@ -300,7 +313,9 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
 
   @Test
   public void testShouldBeAbleToReturnAnArrayOfWebElements() {
-    List<WebElement> items = (List<WebElement>) executeScript("return UIATarget.localTarget().frontMostApp().windows()");
+    List<WebElement>
+        items =
+        (List<WebElement>) executeScript("return UIATarget.localTarget().frontMostApp().windows()");
     assertEquals(items.size(), 2);
   }
 
@@ -352,9 +367,11 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
   public void testCanHandleAnArrayOfElementsAsAnObjectArray() {
 
     List<WebElement> forms = driver.findElements(By.xpath("//UIATableCell"));
-    Object[] args = new Object[] { forms };
+    Object[] args = new Object[]{forms};
 
-    String name = (String) ((JavascriptExecutor) driver).executeScript("return arguments[0][0].type()", args);
+    String
+        name =
+        (String) ((JavascriptExecutor) driver).executeScript("return arguments[0][0].type()", args);
 
     assertEquals(name, "UIATableCell");
   }

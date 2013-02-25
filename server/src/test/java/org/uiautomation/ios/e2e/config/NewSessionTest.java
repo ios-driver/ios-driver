@@ -12,7 +12,7 @@ import org.uiautomation.ios.BaseIOSDriverTest;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.Orientation;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.communication.device.Device;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.utils.ClassicCommands;
@@ -32,9 +32,9 @@ public class NewSessionTest extends BaseIOSDriverTest {
 
   @Test
   public void base() {
-    RemoteUIADriver driver = null;
+    RemoteIOSDriver driver = null;
     try {
-      driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
+      driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
       IOSCapabilities cap = IOSCapabilities.iphone("UICatalog", "2.10");
       String sdk = cap.getSDKVersion();
       if (sdk == null) {
@@ -53,9 +53,9 @@ public class NewSessionTest extends BaseIOSDriverTest {
 
   @Test
   public void noVersion() {
-    RemoteUIADriver driver = null;
+    RemoteIOSDriver driver = null;
     try {
-      driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
+      driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
 
       IOSCapabilities actual = driver.getCapabilities();
       Assert.assertEquals(actual.getBundleId(), "com.yourcompany.UICatalog");
@@ -68,12 +68,12 @@ public class NewSessionTest extends BaseIOSDriverTest {
   }
 
 
-  RemoteUIADriver driver = null;
+  RemoteIOSDriver driver = null;
 
   @Test
   public void appWithNoContentCanStart() throws Exception {
     try {
-      driver = new RemoteUIADriver(getRemoteURL(), SampleApps.noContentCap());
+      driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.noContentCap());
       IOSCapabilities actual = driver.getCapabilities();
       Assert.assertEquals(actual.getBundleId(), "freynaud.testNoContent");
       Assert.assertEquals(actual.getBundleVersion(), "1.0");
@@ -95,9 +95,9 @@ public class NewSessionTest extends BaseIOSDriverTest {
 
   @Test
   public void startDefaultLanguageLocale() {
-    RemoteUIADriver driver = null;
+    RemoteIOSDriver driver = null;
     try {
-      driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
+      driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
       IOSCapabilities actual = driver.getCapabilities();
       Assert.assertEquals(actual.getBundleId(), "com.yourcompany.UICatalog");
       Assert.assertEquals(actual.getBundleVersion(), "2.10"); // default to UK
@@ -113,12 +113,12 @@ public class NewSessionTest extends BaseIOSDriverTest {
 
   @Test
   public void startSpecifiedLanguageLocale() {
-    RemoteUIADriver driver = null;
+    RemoteIOSDriver driver = null;
     try {
       IOSCapabilities cap = IOSCapabilities.iphone("InternationalMountains");
       cap.setLanguage("fr");
       cap.setLocale("es");
-      driver = new RemoteUIADriver(getRemoteURL(), cap);
+      driver = new RemoteIOSDriver(getRemoteURL(), cap);
 
       IOSCapabilities actual = driver.getCapabilities();
       Assert.assertEquals(actual.getBundleId(), "com.yourcompany.InternationalMountains");
@@ -134,12 +134,12 @@ public class NewSessionTest extends BaseIOSDriverTest {
 
   @Test(expectedExceptions = SessionNotCreatedException.class)
   public void recognizeUnsupportedLanguageLocale() {
-    RemoteUIADriver driver = null;
+    RemoteIOSDriver driver = null;
     try {
       IOSCapabilities cap = IOSCapabilities.iphone("InternationalMountains");
       cap.setLanguage("es");
       cap.setLocale("es");
-      driver = new RemoteUIADriver(getRemoteURL(), cap);
+      driver = new RemoteIOSDriver(getRemoteURL(), cap);
     } finally {
       if (driver != null) {
         driver.quit();
@@ -150,9 +150,9 @@ public class NewSessionTest extends BaseIOSDriverTest {
 
   @Test(expectedExceptions = SessionNotCreatedException.class)
   public void doesntExist() {
-    RemoteUIADriver driver = null;
+    RemoteIOSDriver driver = null;
     try {
-      driver = new RemoteUIADriver(getRemoteURL(), IOSCapabilities.iphone("ferret", "2.10"));
+      driver = new RemoteIOSDriver(getRemoteURL(), IOSCapabilities.iphone("ferret", "2.10"));
     } finally {
       if (driver != null) {
         driver.quit();
@@ -162,11 +162,11 @@ public class NewSessionTest extends BaseIOSDriverTest {
 
   @Test(expectedExceptions = SessionNotCreatedException.class)
   public void sdkTooOld() {
-    RemoteUIADriver driver = null;
+    RemoteIOSDriver driver = null;
     try {
       IOSCapabilities cap = SampleApps.uiCatalogCap();
       cap.setSDKVersion("4.3");
-      driver = new RemoteUIADriver(getRemoteURL(), cap);
+      driver = new RemoteIOSDriver(getRemoteURL(), cap);
     } finally {
       if (driver != null) {
         driver.quit();
@@ -176,10 +176,10 @@ public class NewSessionTest extends BaseIOSDriverTest {
 
   @Test(expectedExceptions = SessionNotCreatedException.class)
   public void wrongVersion() {
-    RemoteUIADriver driver = null;
+    RemoteIOSDriver driver = null;
     try {
       driver =
-          new RemoteUIADriver(getRemoteURL(), IOSCapabilities.iphone("UICatalog", "not a number."));
+          new RemoteIOSDriver(getRemoteURL(), IOSCapabilities.iphone("UICatalog", "not a number."));
     } finally {
       if (driver != null) {
         driver.quit();
@@ -189,11 +189,11 @@ public class NewSessionTest extends BaseIOSDriverTest {
 
   @Test(expectedExceptions = SessionNotCreatedException.class)
   public void wrongSDK() {
-    RemoteUIADriver driver = null;
+    RemoteIOSDriver driver = null;
     try {
       IOSCapabilities cap = IOSCapabilities.iphone("InternationalMountains");
       cap.setSDKVersion("17");
-      driver = new RemoteUIADriver(getRemoteURL(), cap);
+      driver = new RemoteIOSDriver(getRemoteURL(), cap);
     } finally {
       if (driver != null) {
         driver.quit();
@@ -203,12 +203,12 @@ public class NewSessionTest extends BaseIOSDriverTest {
 
   @Test
   public void correctSDK() {
-    RemoteUIADriver driver = null;
+    RemoteIOSDriver driver = null;
     try {
       IOSCapabilities cap = IOSCapabilities.iphone("InternationalMountains");
       String sdk = ClassicCommands.getDefaultSDK();
       cap.setSDKVersion(sdk);
-      driver = new RemoteUIADriver(getRemoteURL(), cap);
+      driver = new RemoteIOSDriver(getRemoteURL(), cap);
       IOSCapabilities actual = driver.getCapabilities();
 
       Assert.assertEquals(actual.getSDKVersion(), sdk);
@@ -221,7 +221,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
 
   @Test
   public void supportAllInstalledSDKs() {
-    RemoteUIADriver driver = null;
+    RemoteIOSDriver driver = null;
     List<String> sdks = ClassicCommands.getInstalledSDKs();
     for (String sdk : sdks) {
       Float version = Float.parseFloat(sdk);
@@ -231,7 +231,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
           IOSCapabilities cap = IOSCapabilities.iphone("InternationalMountains");
           cap.setSDKVersion(sdk);
 
-          driver = new RemoteUIADriver(getRemoteURL(), cap);
+          driver = new RemoteIOSDriver(getRemoteURL(), cap);
           IOSCapabilities actual = driver.getCapabilities();
 
           Assert.assertEquals(actual.getSDKVersion(), sdk);
@@ -246,10 +246,10 @@ public class NewSessionTest extends BaseIOSDriverTest {
 
   @Test
   public void correctDevice() {
-    RemoteUIADriver driver = null;
+    RemoteIOSDriver driver = null;
     try {
       IOSCapabilities cap = IOSCapabilities.iphone("UICatalog");
-      driver = new RemoteUIADriver(getRemoteURL(), cap);
+      driver = new RemoteIOSDriver(getRemoteURL(), cap);
       IOSCapabilities actual = driver.getCapabilities();
       Assert.assertEquals(actual.getDevice(), Device.iphone);
 
@@ -261,7 +261,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
 
     try {
       IOSCapabilities cap = IOSCapabilities.ipad("UICatalog");
-      driver = new RemoteUIADriver(getRemoteURL(), cap);
+      driver = new RemoteIOSDriver(getRemoteURL(), cap);
       IOSCapabilities actual = driver.getCapabilities();
       Assert.assertEquals(actual.getDevice(), Device.ipad);
     } finally {
@@ -275,9 +275,9 @@ public class NewSessionTest extends BaseIOSDriverTest {
   public void canUseAnyFlagFromInfoPlistMatches() {
     IOSCapabilities cap = IOSCapabilities.iphone("UICatalog");
     cap.setCapability(IOSCapabilities.MAGIC_PREFIX + "CFBundleDevelopmentRegion", "en");
-    RemoteUIADriver driver = null;
+    RemoteIOSDriver driver = null;
     try {
-      driver = new RemoteUIADriver(getRemoteURL(), cap);
+      driver = new RemoteIOSDriver(getRemoteURL(), cap);
       IOSCapabilities actual = driver.getCapabilities();
       Assert.assertEquals(actual.getBundleId(), "com.yourcompany.UICatalog");
       Assert.assertEquals(actual.getBundleVersion(), "2.10");
@@ -315,9 +315,9 @@ public class NewSessionTest extends BaseIOSDriverTest {
     cap.setCapability(BUNDLE_NAME, "Safari");
 
     // normal iphone
-    RemoteUIADriver driver = null;
+    RemoteIOSDriver driver = null;
     try {
-      driver = new RemoteUIADriver(getRemoteURL(), cap);
+      driver = new RemoteIOSDriver(getRemoteURL(), cap);
       Capabilities actual = driver.getCapabilities();
 
       driver.switchTo().window("Web");

@@ -10,15 +10,15 @@ import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.OrCriteria;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 public class CriteriaKeepsOrderTest extends BaseIOSDriverTest {
 
-  private RemoteUIADriver driver;
+  private RemoteIOSDriver driver;
 
   @BeforeClass
   public void startDriver() {
-    driver = new RemoteUIADriver(getRemoteURL(), SampleApps.intlMountainsCap("en"));
+    driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.intlMountainsCap("en"));
   }
 
   @AfterClass
@@ -48,7 +48,9 @@ public class CriteriaKeepsOrderTest extends BaseIOSDriverTest {
     Criteria mountain3 = new NameCriteria("Mountain 3");
 
     UIAElement result1 = driver.findElement(new OrCriteria(mountain1, mountain2, mountain3));
-    UIAElement result3 = driver.findElement(new OrCriteria(new OrCriteria(mountain3, mountain2), mountain1));
+    UIAElement
+        result3 =
+        driver.findElement(new OrCriteria(new OrCriteria(mountain3, mountain2), mountain1));
 
     Assert.assertEquals(result1.getName(), "Mountain 1");
     Assert.assertEquals(result3.getName(), "Mountain 3");

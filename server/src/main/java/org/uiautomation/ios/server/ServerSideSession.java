@@ -23,7 +23,7 @@ import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
 import org.uiautomation.ios.UIAModels.configuration.DriverConfiguration;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.client.uiamodels.impl.ServerSideNativeDriver;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.device.Device;
@@ -50,7 +50,7 @@ public class ServerSideSession extends Session {
 
   //private WebInspector inspector;
 
-  private RemoteUIADriver nativeDriver;
+  private RemoteIOSDriver nativeDriver;
   private RemoteIOSWebDriver webDriver;
 
   private final Context context;
@@ -104,7 +104,7 @@ public class ServerSideSession extends Session {
     return configuration.configure(command);
   }
 
-  public RemoteUIADriver getNativeDriver() {
+  public RemoteIOSDriver getNativeDriver() {
     return nativeDriver;
   }
 

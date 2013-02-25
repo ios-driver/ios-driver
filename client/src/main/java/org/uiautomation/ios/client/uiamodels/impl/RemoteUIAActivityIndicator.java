@@ -13,11 +13,13 @@
  */
 package org.uiautomation.ios.client.uiamodels.impl;
 
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.uiautomation.ios.UIAModels.UIAActivityIndicator;
 
 public class RemoteUIAActivityIndicator extends RemoteUIAElement implements UIAActivityIndicator {
 
-  public RemoteUIAActivityIndicator(RemoteUIADriver driver, String reference) {
+  public RemoteUIAActivityIndicator(RemoteWebDriver driver, String reference) {
     super(driver, reference);
   }
 

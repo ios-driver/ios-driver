@@ -6,7 +6,7 @@ import org.openqa.selenium.remote.ExecuteMethod;
 import org.openqa.selenium.remote.InterfaceImplementation;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.client.uiamodels.impl.configuration.WebDriverLikeCommandExecutor;
 
 import java.lang.reflect.Method;
@@ -26,10 +26,10 @@ public class AddIOSSearchContext implements AugmenterProvider {
         Criteria criteria = (Criteria) args[0];
 
         if ("findElement".equals(method.getName())) {
-          return RemoteUIADriver.findElement(executor, criteria);
+          return RemoteIOSDriver.findElement(executor, criteria);
 
         } else if ("findElements".equals(method.getName())) {
-          return RemoteUIADriver.findElements(executor, criteria);
+          return RemoteIOSDriver.findElements(executor, criteria);
         } else {
           throw new WebDriverException(method.getName() + " isn't recognized for Configurable");
         }

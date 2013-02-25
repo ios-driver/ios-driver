@@ -12,13 +12,13 @@ import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 public class TimeoutTest extends BaseIOSDriverTest {
 
   /*
    * @Test public void getSetTimeout() throws InterruptedException {
-   * RemoteUIADriver driver = null; try {
+   * RemoteIOSDriver driver = null; try {
    * 
    * driver = getDriver(); driver.manage().timeouts().
    * Assert.assertEquals(driver.getTimeout("implicit"), 0);
@@ -30,9 +30,9 @@ public class TimeoutTest extends BaseIOSDriverTest {
 
   @Test
   public void getElement() throws InterruptedException {
-    RemoteUIADriver driver = null;
+    RemoteIOSDriver driver = null;
     try {
-      driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
+      driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
       String name = "Buttons, Various uses of UIButton2";
 
       Criteria c1 = new TypeCriteria(UIATableCell.class);

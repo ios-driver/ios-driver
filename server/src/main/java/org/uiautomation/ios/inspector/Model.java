@@ -21,24 +21,23 @@ import java.util.logging.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.UIAModels.UIADriver;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.server.application.IOSApplication;
 
 public class Model {
 
   private static final Logger log = Logger.getLogger(Model.class.getName());
 
-  private RemoteUIADriver driver;
+  private RemoteIOSDriver driver;
   private IOSApplication app;
 
   private JSONObject cache;
 
-  public RemoteUIADriver getDriver() {
+  public RemoteIOSDriver getDriver() {
     return driver;
   }
 
-  public void setDriver(RemoteUIADriver driver) {
+  public void setDriver(RemoteIOSDriver driver) {
     if (this.driver != null) {
       throw new WebDriverException("driver already instanciated.");
     }
@@ -75,7 +74,7 @@ public class Model {
   }
 
   public void stop() {
-    RemoteUIADriver d = getDriver();
+    RemoteIOSDriver d = getDriver();
     if (d == null) {
       throw new WebDriverException("driver not active.");
     } else {

@@ -16,7 +16,7 @@ import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 import java.util.Set;
 
@@ -27,9 +27,9 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
     IOSCapabilities safari = IOSCapabilities.iphone("UICatalog");
     safari.setCapability(IOSCapabilities.TIME_HACK, false);
 
-    RemoteUIADriver driver = null;
+    RemoteIOSDriver driver = null;
     try {
-      driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
+      driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
       Set<String> handles = driver.getWindowHandles();
       Assert.assertEquals(handles.size(), 1);
 
@@ -69,9 +69,9 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
     IOSCapabilities safari = IOSCapabilities.iphone("UICatalog");
     safari.setCapability(IOSCapabilities.TIME_HACK, false);
 
-    RemoteUIADriver driver = null;
+    RemoteIOSDriver driver = null;
     try {
-      driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
+      driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
       Set<String> handles = driver.getWindowHandles();
       Assert.assertEquals(handles.size(), 1);
       UIAElement
@@ -123,9 +123,9 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
     IOSCapabilities safari = IOSCapabilities.iphone("UICatalog");
     safari.setCapability(IOSCapabilities.TIME_HACK, false);
 
-    RemoteUIADriver driver = null;
+    RemoteIOSDriver driver = null;
     try {
-      driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
+      driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
       Set<String> handles = driver.getWindowHandles();
       Assert.assertEquals(handles.size(), 1);
       UIAElement

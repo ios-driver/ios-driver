@@ -247,12 +247,12 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
     getDriver().execute(request);    */
   }
 
-  public static RemoteUIAElement getFrontMostApp(RemoteUIADriver driver) {
+  public static RemoteUIAElement getFrontMostApp(RemoteIOSDriver driver) {
     return new RemoteUIAElement(driver, "1");
 
   }
 
-  public static RemoteUIAElement target(RemoteUIADriver driver) {
+  public static RemoteUIAElement target(RemoteIOSDriver driver) {
     return new RemoteUIAElement(driver, "2");
   }
 

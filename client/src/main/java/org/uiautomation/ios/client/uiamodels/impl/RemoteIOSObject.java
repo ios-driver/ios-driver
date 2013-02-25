@@ -70,7 +70,7 @@ public abstract class RemoteIOSObject extends RemoteWebElement {
 
       if (isArray) {
         // args = new Object[] {driver, ref, uiObject.getInt("length")};
-        // argsClass = new Class[] {RemoteUIADriver.class, String.class,
+        // argsClass = new Class[] {RemoteIOSDriver.class, String.class,
         // Integer.class};
       } else {
         args = new Object[]{driver, ref};

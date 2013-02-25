@@ -13,16 +13,14 @@
  */
 package org.uiautomation.ios.mobileSafari;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.UIAModels.UIAAlert;
-import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAAlert;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
 
 import java.util.logging.Logger;
 
@@ -34,10 +32,10 @@ public class AlertDetector implements ResponseFinder {
   private volatile boolean finished = false;
   private volatile boolean stopRequested = false;
   private final long timeBeforeLookingForAlert = 750;
-  private final RemoteUIADriver driver;
+  private final RemoteIOSDriver driver;
   private volatile RemoteUIAAlert alert;
 
-  public AlertDetector(RemoteUIADriver driver) {
+  public AlertDetector(RemoteIOSDriver driver) {
     this.driver = driver;
   }
 

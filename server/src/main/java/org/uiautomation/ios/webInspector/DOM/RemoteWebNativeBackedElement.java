@@ -26,7 +26,7 @@ import org.uiautomation.ios.UIAModels.predicate.LabelCriteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.OrCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.communication.device.Device;
 import org.uiautomation.ios.context.BaseWebInspector;
 import org.uiautomation.ios.mobileSafari.NodeId;
@@ -42,7 +42,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
 
   private static final Logger log = Logger.getLogger(RemoteWebNativeBackedElement.class.getName());
   private final ServerSideSession session;
-  private final RemoteUIADriver nativeDriver;
+  private final RemoteIOSDriver nativeDriver;
 
   public RemoteWebNativeBackedElement(NodeId id, BaseWebInspector inspector,
                                       ServerSideSession session) {

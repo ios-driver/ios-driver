@@ -15,7 +15,7 @@ package org.uiautomation.ios.client.uiamodels.impl.configuration;
 
 import org.json.JSONObject;
 import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.communication.Path;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
@@ -25,9 +25,9 @@ import java.util.Map;
 public class RemoteCommandConfiguration implements CommandConfiguration {
 
   private final WebDriverLikeCommand command;
-  private final RemoteUIADriver driver;
+  private final RemoteIOSDriver driver;
 
-  public RemoteCommandConfiguration(WebDriverLikeCommand command, RemoteUIADriver driver) {
+  public RemoteCommandConfiguration(WebDriverLikeCommand command, RemoteIOSDriver driver) {
     this.command = command;
     this.driver = driver;
   }

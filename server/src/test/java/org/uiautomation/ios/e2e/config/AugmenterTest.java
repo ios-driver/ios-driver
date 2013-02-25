@@ -13,7 +13,7 @@ import org.uiautomation.ios.BaseIOSDriverTest;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.UIATableCell;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIATableCell;
 import org.uiautomation.ios.client.uiamodels.impl.augmenter.Configurable;
 import org.uiautomation.ios.client.uiamodels.impl.augmenter.ElementTree;
@@ -73,7 +73,7 @@ public class AugmenterTest extends BaseIOSDriverTest {
 
   @Test
   public void cast() {
-    RemoteUIADriver iosdriver = IOSDriverAugmenter.getIOSDriver(driver);
+    RemoteIOSDriver iosdriver = IOSDriverAugmenter.getIOSDriver(driver);
     WebElement
         element = iosdriver.findElement(By.linkText("name=" + buttonName));
     Assert.assertTrue(element instanceof RemoteUIATableCell);

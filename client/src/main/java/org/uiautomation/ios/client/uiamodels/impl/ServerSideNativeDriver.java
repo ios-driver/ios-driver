@@ -34,7 +34,7 @@ import java.util.Map;
  * using the web mode, but using native clicks, using this driver to click will force the click to
  * be native without impacting the working mode, making it safely usable in threads.
  */
-public class ServerSideNativeDriver extends AttachRemoteUIADriver {
+public class ServerSideNativeDriver extends AttachRemoteIOSDriver {
 
   public ServerSideNativeDriver(URL url, SessionId session) {
     super(url, session);

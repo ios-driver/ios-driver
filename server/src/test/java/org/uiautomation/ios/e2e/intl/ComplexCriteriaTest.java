@@ -14,7 +14,7 @@ import org.uiautomation.ios.UIAModels.predicate.L10NStrategy;
 import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 public class ComplexCriteriaTest extends BaseIOSDriverTest {
 
@@ -30,10 +30,10 @@ public class ComplexCriteriaTest extends BaseIOSDriverTest {
 
   @Test(dataProvider = "intlMountain")
   public void selectAndValidateServerSideL10NedContent(String lang, String expectedContent) {
-    RemoteUIADriver driver = null;
+    RemoteIOSDriver driver = null;
     try {
 
-      driver = new RemoteUIADriver(getRemoteURL(), SampleApps.intlMountainsCap(lang));
+      driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.intlMountainsCap(lang));
 
       Criteria c1 = new TypeCriteria(UIATableCell.class);
       UIAElement element = driver.findElement(c1);

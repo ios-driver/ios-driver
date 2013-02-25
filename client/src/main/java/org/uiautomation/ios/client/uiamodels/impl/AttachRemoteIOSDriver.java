@@ -23,7 +23,7 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import java.net.URL;
 import java.util.Map;
 
-public class AttachRemoteUIADriver extends RemoteUIADriver {
+public class AttachRemoteIOSDriver extends RemoteIOSDriver {
 
   @Override
   protected void startClient() {
@@ -33,7 +33,7 @@ public class AttachRemoteUIADriver extends RemoteUIADriver {
   protected void startSession(Capabilities desiredCapabilities, Capabilities requiredCapabilities) {
   }
 
-  public AttachRemoteUIADriver(URL url, SessionId session) {
+  public AttachRemoteIOSDriver(URL url, SessionId session) {
     super(url, null);
     setCommandExecutor(new HttpCommandExecutor(url));
     setSessionId(session.toString());

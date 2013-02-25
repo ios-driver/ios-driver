@@ -4,7 +4,7 @@ import org.openqa.selenium.remote.AugmenterProvider;
 import org.openqa.selenium.remote.ExecuteMethod;
 import org.openqa.selenium.remote.InterfaceImplementation;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.client.uiamodels.impl.configuration.WebDriverLikeCommandExecutor;
 
 import java.io.File;
@@ -27,7 +27,7 @@ public class AddLogElementTree implements AugmenterProvider {
         File screenshot = (File) args[0];
         Boolean translation = (Boolean) args[1];
 
-        return RemoteUIADriver.logElementTree(executor, screenshot, translation);
+        return RemoteIOSDriver.logElementTree(executor, screenshot, translation);
       }
     };
   }

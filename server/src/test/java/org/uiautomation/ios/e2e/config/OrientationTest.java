@@ -11,7 +11,7 @@ import org.uiautomation.ios.BaseIOSDriverTest;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.Orientation;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 import java.net.MalformedURLException;
 
@@ -58,9 +58,9 @@ public class OrientationTest extends BaseIOSDriverTest {
 
   @Test
   public void canSetAndGetOrientationUsingTheNativeDriverAPI() throws MalformedURLException {
-    RemoteUIADriver driver = null;
+    RemoteIOSDriver driver = null;
     try {
-      driver = new RemoteUIADriver(getRemoteURL(), IOSCapabilities.iphone("Safari"));
+      driver = new RemoteIOSDriver(getRemoteURL(), IOSCapabilities.iphone("Safari"));
       driver.rotate(LANDSCAPE);
       Assert.assertEquals(driver.getOrientation(), LANDSCAPE);
 

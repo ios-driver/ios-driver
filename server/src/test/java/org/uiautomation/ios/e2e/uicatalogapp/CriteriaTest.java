@@ -1,7 +1,5 @@
 package org.uiautomation.ios.e2e.uicatalogapp;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -18,15 +16,15 @@ import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.PropertyEqualCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 public class CriteriaTest extends BaseIOSDriverTest {
 
-  private RemoteUIADriver driver;
+  private RemoteIOSDriver driver;
 
   @BeforeClass
   public void startDriver() {
-    driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
+    driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
   }
 
   @AfterClass

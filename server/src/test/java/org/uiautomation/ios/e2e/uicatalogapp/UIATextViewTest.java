@@ -13,16 +13,16 @@ import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 public class UIATextViewTest extends BaseIOSDriverTest {
 
-  private RemoteUIADriver driver;
+  private RemoteIOSDriver driver;
   private UIATextView textview;
 
   @BeforeClass
   public void startDriver() {
-    driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
+    driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
     textview = getTextView();
   }
 

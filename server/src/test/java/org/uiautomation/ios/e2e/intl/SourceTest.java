@@ -13,7 +13,7 @@ import org.uiautomation.ios.UIAModels.predicate.L10NStrategy;
 import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 import java.util.Locale;
 
@@ -26,11 +26,11 @@ public class SourceTest extends BaseIOSDriverTest {
 
   @Test
   public void logElement() throws Exception {
-    RemoteUIADriver driver = null;
+    RemoteIOSDriver driver = null;
     try {
 
       driver =
-          new RemoteUIADriver(getRemoteURL(),
+          new RemoteIOSDriver(getRemoteURL(),
                               SampleApps.intlMountainsCap(Locale.FRENCH.toString()));
       Criteria c1 = new TypeCriteria(UIATableCell.class);
       UIAElement element = driver.findElement(c1);

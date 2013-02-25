@@ -20,7 +20,7 @@ import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 public class ActionSheetTest extends BaseIOSDriverTest {
 
@@ -28,12 +28,12 @@ public class ActionSheetTest extends BaseIOSDriverTest {
   private static final String actionOKCancel = "(//UIAStaticText[@name='Show OK-Cancel'])[1]";
 
 
-  private RemoteUIADriver driver;
+  private RemoteIOSDriver driver;
 
 
   @BeforeClass
   public void startDriver() {
-    driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
+    driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
     goToAlertScreen();
   }
 

@@ -27,7 +27,7 @@ import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 import java.net.URL;
 
@@ -41,14 +41,14 @@ public class AlertTest extends BaseIOSDriverTest {
   private static final String alertPassword = "//UIAStaticText[@name='Secure Text Input']";
 
 
-  private RemoteUIADriver driver;
+  private RemoteIOSDriver driver;
 
   public static void main(String[] args) throws Exception {
     AlertTest t = new AlertTest();
     t.startServer();
     RemoteWebDriver
         driver =
-        new RemoteUIADriver(new URL("http://localhost:4444/wd/hub"), SampleApps.uiCatalogCap());
+        new RemoteIOSDriver(new URL("http://localhost:4444/wd/hub"), SampleApps.uiCatalogCap());
 
     WebElement alert = driver.findElement(By.className("UIAAlert"));
     alert.findElement(By.className("UIASecureTextField")).sendKeys("password");
@@ -60,7 +60,7 @@ public class AlertTest extends BaseIOSDriverTest {
 
   @BeforeClass
   public void startDriver() {
-    driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
+    driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
     goToAlertScreen();
   }
 

@@ -14,7 +14,7 @@ import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 public class WebDriverKeyboardTest extends BaseIOSDriverTest {
 
@@ -22,7 +22,7 @@ public class WebDriverKeyboardTest extends BaseIOSDriverTest {
 
   @BeforeClass
   public void startDriver() {
-    driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
+    driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
   }
 
   @AfterClass
@@ -37,10 +37,12 @@ public class WebDriverKeyboardTest extends BaseIOSDriverTest {
     Criteria c1 = new TypeCriteria(UIATableCell.class);
     Criteria c2 = new NameCriteria(name);
     Criteria c = new AndCriteria(c1, c2);
-    UIAElement element = ((RemoteUIADriver) driver).findElement(c);
+    UIAElement element = ((RemoteIOSDriver) driver).findElement(c);
     element.tap();
-    Criteria fieldC = new AndCriteria(new TypeCriteria(UIATextField.class), new NameCriteria("Normal"));
-    UIATextField textfield = (UIATextField) ((RemoteUIADriver) driver).findElement(fieldC);
+    Criteria
+        fieldC =
+        new AndCriteria(new TypeCriteria(UIATextField.class), new NameCriteria("Normal"));
+    UIATextField textfield = (UIATextField) ((RemoteIOSDriver) driver).findElement(fieldC);
     return textfield;
   }
 

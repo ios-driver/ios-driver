@@ -3,7 +3,6 @@ package org.uiautomation.ios.e2e.uicatalogapp;
 import java.util.List;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -21,16 +20,16 @@ import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 public class FindElementTest extends BaseIOSDriverTest {
 
-  private RemoteUIADriver driver;
+  private RemoteIOSDriver driver;
 
   @BeforeClass
   public void startDriver() {
     long start = System.currentTimeMillis();
-    driver = new RemoteUIADriver(getRemoteURL(), SampleApps.uiCatalogCap());
+    driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
   }
 
   @AfterClass

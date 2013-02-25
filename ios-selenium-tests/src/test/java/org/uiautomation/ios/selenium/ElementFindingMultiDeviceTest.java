@@ -5,14 +5,14 @@ import org.openqa.selenium.Pages;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.environment.webserver.AppServer;
 import org.openqa.selenium.environment.webserver.WebbitAppServer;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Orientation;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteMobileSafariDriver;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.communication.device.Device;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.IOSServer;
@@ -33,7 +33,7 @@ public class ElementFindingMultiDeviceTest {
   private IOSServer server;
   private static String[] args = {"-port", "4444", "-host", "localhost"};
   private static IOSServerConfiguration config = IOSServerConfiguration.create(args);
-  protected RemoteMobileSafariDriver driver = null;
+  protected RemoteWebDriver driver = null;
   private String url = "http://" + config.getHost() + ":" + config.getPort() + "/wd/hub";
   protected Pages pages;
   protected AppServer appServer;
@@ -79,9 +79,9 @@ public class ElementFindingMultiDeviceTest {
     cap.setCapability(LANGUAGE, "en");
     cap.setCapability(LOCALE, "en_GB");
     cap.setCapability(BUNDLE_NAME, "Safari");
-    RemoteUIADriver driver = null;
+    RemoteIOSDriver driver = null;
     try {
-      driver = new RemoteUIADriver(new URL(url), cap);
+      driver = new RemoteIOSDriver(new URL(url), cap);
       driver.switchTo().window("Web");
 
       for (Orientation o : getOrientationForDevice(device)) {

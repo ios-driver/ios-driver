@@ -55,7 +55,7 @@ import java.util.Set;
 
 
 // TakesScreenshot, Rotatable, BrowserConnection, HasTouchScreen, WebStorage, LocationContext, ApplicationCache
-public class RemoteUIADriver extends RemoteWebDriver
+public class RemoteIOSDriver extends RemoteWebDriver
     implements TakesScreenshot, Rotatable, LocationContext, ElementTree,
                IOSSearchContext, Configurable {
 
@@ -68,13 +68,13 @@ public class RemoteUIADriver extends RemoteWebDriver
   protected WebDriverLikeCommandExecutor executor;
 
 
-  protected RemoteUIADriver() {
+  protected RemoteIOSDriver() {
     super();
     executor = new WebDriverLikeCommandExecutor(this);
 
   }
 
-  public RemoteUIADriver(URL url, IOSCapabilities cap) {
+  public RemoteIOSDriver(URL url, IOSCapabilities cap) {
     super(url, cap);
     this.remoteURL = url.toExternalForm();
     executor = new WebDriverLikeCommandExecutor(this);
@@ -94,7 +94,7 @@ public class RemoteUIADriver extends RemoteWebDriver
 
   @Override
   public JSONObject logElementTree(File screenshot, boolean translation) throws WebDriverException {
-    return RemoteUIADriver.logElementTree(executor, screenshot, translation);
+    return RemoteIOSDriver.logElementTree(executor, screenshot, translation);
   }
 
 
@@ -132,7 +132,7 @@ public class RemoteUIADriver extends RemoteWebDriver
 
   @Override
   public <T extends UIAElement> T findElement(Criteria c) throws NoSuchElementException {
-    return RemoteUIADriver.findElement(executor, c);
+    return RemoteIOSDriver.findElement(executor, c);
   }
 
 
@@ -253,12 +253,12 @@ public class RemoteUIADriver extends RemoteWebDriver
 
   @Override
   public void setConfiguration(WebDriverLikeCommand command, String key, Object value) {
-    RemoteUIADriver.setConfiguration(executor, command, key, value);
+    RemoteIOSDriver.setConfiguration(executor, command, key, value);
   }
 
   @Override
   public Map<String, Object> getConfiguration(WebDriverLikeCommand command) {
-    return RemoteUIADriver.getConfiguration(executor, command);
+    return RemoteIOSDriver.getConfiguration(executor, command);
   }
 
 

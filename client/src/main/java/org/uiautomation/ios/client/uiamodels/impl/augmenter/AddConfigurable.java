@@ -5,7 +5,7 @@ import org.openqa.selenium.remote.AugmenterProvider;
 import org.openqa.selenium.remote.ExecuteMethod;
 import org.openqa.selenium.remote.InterfaceImplementation;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteUIADriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.client.uiamodels.impl.configuration.WebDriverLikeCommandExecutor;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 
@@ -28,11 +28,11 @@ public class AddConfigurable implements AugmenterProvider {
           WebDriverLikeCommand command = (WebDriverLikeCommand) args[0];
           String key = (String) args[1];
           Object value = args[2];
-          RemoteUIADriver.setConfiguration(executor, command, key, value);
+          RemoteIOSDriver.setConfiguration(executor, command, key, value);
           return null;
         } else if ("getConfiguration".equals(method.getName())) {
           WebDriverLikeCommand command = (WebDriverLikeCommand) args[0];
-          return RemoteUIADriver.getConfiguration(executor, command);
+          return RemoteIOSDriver.getConfiguration(executor, command);
         } else {
           throw new WebDriverException(method.getName() + " isn't recognized for Configurable");
         }
