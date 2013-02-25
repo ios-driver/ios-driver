@@ -45,6 +45,7 @@ public class DriverConfigurationStore implements DriverConfiguration {
   private void loadDefaults() {
     configure(WebDriverLikeCommand.CLICK).set("nativeEvents", true);
     configure(WebDriverLikeCommand.SEND_KEYS).set("nativeEvents", true);
+    configure(WebDriverLikeCommand.SET_VALUE).set("nativeEvents", true);
   }
 
 }
