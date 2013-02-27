@@ -42,7 +42,7 @@ public class IOSServer {
   private int port;
   private IOSServerConfiguration options;
   private IOSServerManager driver;
-  private Runnable ciFolderWatcher;
+  private FolderMonitor folderMonitor;
 
   public IOSServer(IOSServerConfiguration options) {
     init(options);
@@ -101,8 +101,8 @@ public class IOSServer {
 
     if (options.getAppFolderToMonitor() != null) {
       try {
-        Runnable ciFolderWatcher = new FolderMonitor(options, driver);
-        new Thread(ciFolderWatcher).start();
+        folderMonitor = new FolderMonitor(options, driver);
+        new Thread(folderMonitor).start();
       } catch (IOException e) {
         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
       }
@@ -169,6 +169,7 @@ public class IOSServer {
   }
 
   public void stop() throws Exception {
+    folderMonitor.stop();
     driver.stop();
     server.stop();
   }
