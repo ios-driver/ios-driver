@@ -15,7 +15,6 @@
 package org.uiautomation.ios.server;
 
 import com.beust.jcommander.JCommander;
-
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
@@ -28,19 +27,31 @@ import org.uiautomation.ios.server.grid.RegistrationRequest;
 import org.uiautomation.ios.server.servlet.IOSServlet;
 import org.uiautomation.ios.server.servlet.ResourceServlet;
 import org.uiautomation.ios.server.servlet.UIAScriptServlet;
+import org.uiautomation.ios.server.utils.FolderMonitor;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.logging.Logger;
 
 public class IOSServer {
 
-  private static final Logger log = Logger.getLogger(IOSServer.class.getName());
   public static final String DRIVER = IOSServerManager.class.getName();
+  public static final boolean debugMode = true;
+  private static final Logger log = Logger.getLogger(IOSServer.class.getName());
   private Server server;
   private int port;
-  public static final boolean debugMode = true;
   private IOSServerConfiguration options;
   private IOSServerManager driver;
+  private Runnable ciFolderWatcher;
+
+  public IOSServer(IOSServerConfiguration options) {
+    init(options);
+
+  }
+
+  public IOSServer(String[] args) {
+    init(args);
+  }
 
   public static void main(String[] args) throws Exception {
     IOSServer server = new IOSServer(args);
@@ -50,18 +61,9 @@ public class IOSServer {
       RegistrationRequest
           request =
           new RegistrationRequest(options.getRegistrationURL(), options.getHost(),
-                                  options.getPort(), options.getSupportedApps());
+              options.getPort(), options.getSupportedApps());
       request.registerToHub();
     }
-  }
-
-  public IOSServer(IOSServerConfiguration options) {
-    init(options);
-
-  }
-
-  public IOSServer(String[] args) {
-    init(args);
   }
 
   public IOSServerConfiguration getOptions() {
@@ -97,11 +99,22 @@ public class IOSServer {
       driver.addSupportedApplication(new IOSApplication(app));
     }
 
+    if (options.getAppFolderToMonitor() != null) {
+      try {
+        Runnable ciFolderWatcher = new FolderMonitor(options, driver);
+        new Thread(ciFolderWatcher).start();
+      } catch (IOException e) {
+        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      }
+    }
+
+
     StringBuilder b = new StringBuilder();
     b.append("\nBeta features enabled ( enabled by -beta flag ): " + Configuration.BETA_FEATURE);
     b.append("\nInspector: http://0.0.0.0:" + options.getPort() + "/inspector/");
     b.append("\ntests can access the server at http://0.0.0.0:" + options.getPort() + "/wd/hub");
     b.append("\nserver status: http://0.0.0.0:" + options.getPort() + "/wd/hub/status");
+    b.append("\nMonitoring '" + options.getAppFolderToMonitor() + "' for new applications");
     b.append("\nusing xcode install : " + driver.getHostInfo().getXCodeInstall());
     b.append("\nusing IOS version " + driver.getHostInfo().getSDK());
 
@@ -125,7 +138,7 @@ public class IOSServer {
     for (IOSApplication app : driver.getSupportedApplications()) {
       b.append("\tCFBundleName=" + (app.getMetadata(IOSCapabilities.BUNDLE_NAME).isEmpty() ? app
           .getMetadata(IOSCapabilities.BUNDLE_DISPLAY_NAME) : app
-                                        .getMetadata(IOSCapabilities.BUNDLE_NAME)));
+          .getMetadata(IOSCapabilities.BUNDLE_NAME)));
       String version = app.getMetadata(IOSCapabilities.BUNDLE_VERSION);
       if (version != null && !version.isEmpty()) {
         b.append(",CFBundleVersion=" + version);
