@@ -13,17 +13,15 @@
  */
 package org.uiautomation.ios.wkrdp.internal;
 
+import java.util.logging.Logger;
+
 import org.json.JSONObject;
-import org.openqa.selenium.NoAlertPresentException;
-import org.openqa.selenium.UnhandledAlertException;
-import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.*;
 import org.uiautomation.ios.UIAModels.UIAAlert;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAAlert;
 import org.uiautomation.ios.wkrdp.ResponseFinder;
-
-import java.util.logging.Logger;
 
 
 public class AlertDetector implements ResponseFinder {
@@ -46,34 +44,31 @@ public class AlertDetector implements ResponseFinder {
     ex = null;
     alert = null;
   }
-
+  
   @Override
-  public synchronized void startSearch(int id) throws InterruptedException {
+public synchronized void startSearch(int id) throws InterruptedException {
     reset();
-    try {
-      Thread.sleep(timeBeforeLookingForAlert);
-    } catch (InterruptedException ignore) {
-      setFinished(true);
-      return;
-    }
 
     try {
-
-      if (!stopRequested) {
-        log.fine("starting to look for an alert.");
-        //driver.switchTo().window(WorkingMode.Native.toString());
-        alert = driver.findElement(new TypeCriteria(UIAAlert.class));
-        //driver.switchTo().window(WorkingMode.Web.toString());
-        String alertDetails = "no details";
-        alertDetails = alert.logElementTree(null, false).toString(2);
-        log.fine("found an alert." + alertDetails);
-        ex = new UnhandledAlertException("alert present", alertDetails);
-      } else {
-        throw new InterruptedException(
-            "search interrupted. Another finder got a response already.");
+      while (!stopRequested) {
+        try {
+          Thread.sleep(timeBeforeLookingForAlert);
+          log.fine("starting to look for an alert.");
+          //driver.switchTo().window(WorkingMode.Native.toString());
+          alert = driver.findElement(new TypeCriteria(UIAAlert.class));
+          //driver.switchTo().window(WorkingMode.Web.toString());
+          String alertDetails = alert.logElementTree(null, false).toString(2);
+          log.fine("found an alert." + alertDetails);
+          ex = new UnhandledAlertException("alert present", alertDetails);
+          break;
+        } catch (NoSuchElementException ex) {
+          log.fine("there was no alert.");
+        } catch (NoAlertPresentException ex) {
+          log.fine("there was no alert.");
+        } catch (InterruptedException ignore) {
+          break;
+        }
       }
-    } catch (NoAlertPresentException ex) {
-      log.fine("there was no alert.");
     } catch (Exception e) {
       e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
     } finally {
