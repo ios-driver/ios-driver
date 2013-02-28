@@ -57,17 +57,22 @@ public class IOSServer {
     IOSServer server = new IOSServer(args);
     server.start();
     IOSServerConfiguration options = server.getOptions();
+    IOSServerManager driver = server.getDriver();
     if (options.getRegistrationURL() != null) {
       RegistrationRequest
           request =
           new RegistrationRequest(options.getRegistrationURL(), options.getHost(),
-              options.getPort(), options.getSupportedApps());
+              options.getPort(), driver.getSupportApplicationPaths());
       request.registerToHub();
     }
   }
 
   public IOSServerConfiguration getOptions() {
     return options;
+  }
+
+  public IOSServerManager getDriver() {
+    return driver;
   }
 
   private void init(String[] args) {

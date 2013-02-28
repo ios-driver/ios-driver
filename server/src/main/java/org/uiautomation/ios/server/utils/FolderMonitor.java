@@ -29,7 +29,6 @@ public class FolderMonitor implements Runnable {
   private IOSServerManager iosServerManager;
   private IOSServerConfiguration iosServerConfiguration;
   private WatchService folderWatcher;
-  private Path watchedFolder;
   private boolean stopped;
 
   public FolderMonitor(IOSServerConfiguration iosServerConfiguration, IOSServerManager iosServerManager) throws IOException {
@@ -38,7 +37,7 @@ public class FolderMonitor implements Runnable {
     stopped = false;
     init();
     folderWatcher = FileSystems.getDefault().newWatchService();
-    watchedFolder = Paths.get(iosServerConfiguration.getAppFolderToMonitor());
+    Path watchedFolder = Paths.get(iosServerConfiguration.getAppFolderToMonitor());
     try {
       watchedFolder.register(folderWatcher, StandardWatchEventKinds.ENTRY_CREATE,
           StandardWatchEventKinds.ENTRY_MODIFY,
@@ -100,13 +99,13 @@ public class FolderMonitor implements Runnable {
   private void addApplication(File filename) {
     String app = iosServerConfiguration.getAppFolderToMonitor() + File.separator + filename.getName();
     iosServerManager.addSupportedApplication(new IOSApplication(app));
-//    if (iosServerConfiguration.getRegistrationURL() != null) {
-//      RegistrationRequest
-//          request =
-//          new RegistrationRequest(iosServerConfiguration.getRegistrationURL(), iosServerConfiguration.getHost(),
-//              iosServerConfiguration.getPort(), iosServerConfiguration.getSupportedApps());
-//      request.registerToHub();
-//    }
+    if (iosServerConfiguration.getRegistrationURL() != null) {
+      RegistrationRequest
+          request =
+          new RegistrationRequest(iosServerConfiguration.getRegistrationURL(), iosServerConfiguration.getHost(),
+              iosServerConfiguration.getPort(), iosServerManager.getSupportApplicationPaths());
+      request.registerToHub();
+    }
   }
 
   private boolean isCreate(WatchEvent.Kind kind) {
