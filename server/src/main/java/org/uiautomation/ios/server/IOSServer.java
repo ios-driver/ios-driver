@@ -99,15 +99,7 @@ public class IOSServer {
       driver.addSupportedApplication(new IOSApplication(app));
     }
 
-    if (options.getAppFolderToMonitor() != null) {
-      try {
-        folderMonitor = new FolderMonitor(options, driver);
-        new Thread(folderMonitor).start();
-      } catch (IOException e) {
-        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-      }
-    }
-
+    startFolderMonitor();
 
     StringBuilder b = new StringBuilder();
     b.append("\nBeta features enabled ( enabled by -beta flag ): " + Configuration.BETA_FEATURE);
@@ -160,6 +152,17 @@ public class IOSServer {
       }
     });
 
+  }
+
+  private void startFolderMonitor() {
+    if (options.getAppFolderToMonitor() != null) {
+      try {
+        folderMonitor = new FolderMonitor(options, driver);
+        new Thread(folderMonitor).start();
+      } catch (IOException e) {
+        log.warning("Couldn't monitor the given folder: " + options.getAppFolderToMonitor());
+      }
+    }
   }
 
   public void start() throws Exception {

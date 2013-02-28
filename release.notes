@@ -50,7 +50,7 @@ TODOs:
 - WebStorage
 - LocationContext
 - ApplicationCache
-- improve UIAKeyboard, add hide()
+- improve UIAKeyboard, add hide()   - app.keyboard().buttons()["Done"].tap();
 - doc
 - kill instruments before starting.
 - reorganize classes in server.

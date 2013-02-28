@@ -26,7 +26,6 @@ import java.util.logging.Logger;
 
 public class FolderMonitor implements Runnable {
   private static final Logger log = Logger.getLogger(FolderMonitor.class.getName());
-
   private IOSServerManager iosServerManager;
   private IOSServerConfiguration iosServerConfiguration;
   private WatchService folderWatcher;
@@ -50,41 +49,43 @@ public class FolderMonitor implements Runnable {
     }
   }
 
-  private void init(){
+  private void init() {
     File[] listOfFiles = new File(iosServerConfiguration.getAppFolderToMonitor()).listFiles();
-    for(File file : listOfFiles){
-      if(isApp(file)){
+    for (File file : listOfFiles) {
+      if (isApp(file)) {
         addApplication(file);
       }
     }
-
   }
 
   @Override
   public void run() {
     while (!stopped) {
-      final WatchKey key;
+      checkForChanges();
       try {
-        key = folderWatcher.poll();
-
-        if (key != null) {
-          for (WatchEvent<?> watchEvent : key.pollEvents()) {
-            final WatchEvent<Path> ev = (WatchEvent<Path>) watchEvent;
-            final Path filename = ev.context();
-            final WatchEvent.Kind<?> kind = watchEvent.kind();
-            log.fine(kind + " : " + filename);
-            handleFileChange(kind, filename.toFile());
-          }
-
-          boolean valid = key.reset();
-          if (!valid) {
-            log.warning("Can't monitor folder anymore, has it been deleted?");
-            stop();
-          }
-        }
         Thread.sleep(5000);
       } catch (InterruptedException e) {
         e.printStackTrace();
+      }
+    }
+  }
+
+  private void checkForChanges() {
+    final WatchKey key = folderWatcher.poll();
+
+    if (key != null) {
+      for (WatchEvent<?> watchEvent : key.pollEvents()) {
+        final WatchEvent<Path> ev = (WatchEvent<Path>) watchEvent;
+        final Path filename = ev.context();
+        final WatchEvent.Kind<?> kind = watchEvent.kind();
+        log.fine(kind + " : " + filename);
+        handleFileChange(kind, filename.toFile());
+      }
+
+      boolean valid = key.reset();
+      if (!valid) {
+        log.warning("Can't monitor folder anymore, has it been deleted?");
+        stop();
       }
     }
   }
@@ -97,15 +98,15 @@ public class FolderMonitor implements Runnable {
   }
 
   private void addApplication(File filename) {
-    String app = iosServerConfiguration.getAppFolderToMonitor() +  File.separator + filename.getName();
+    String app = iosServerConfiguration.getAppFolderToMonitor() + File.separator + filename.getName();
     iosServerManager.addSupportedApplication(new IOSApplication(app));
-//    if (iosServerConfiguration.getRegistrationURL() != null) {
-//      RegistrationRequest
-//          request =
-//          new RegistrationRequest(iosServerConfiguration.getRegistrationURL(), iosServerConfiguration.getHost(),
-//              iosServerConfiguration.getPort(), iosServerConfiguration.getSupportedApps());
-//      request.registerToHub();
-//    }
+    if (iosServerConfiguration.getRegistrationURL() != null) {
+      RegistrationRequest
+          request =
+          new RegistrationRequest(iosServerConfiguration.getRegistrationURL(), iosServerConfiguration.getHost(),
+              iosServerConfiguration.getPort(), iosServerConfiguration.getSupportedApps());
+      request.registerToHub();
+    }
   }
 
   private boolean isCreate(WatchEvent.Kind kind) {
