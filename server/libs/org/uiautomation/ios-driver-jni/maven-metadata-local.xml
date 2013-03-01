@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metadata>
-    <groupId>org.uiautomation</groupId>
-    <artifactId>ios-driver-jni</artifactId>
-    <versioning>
-        <versions>
-            <version>0.6-SNAPSHOT</version>
-        </versions>
-        <lastUpdated>20130220162343</lastUpdated>
-    </versioning>
+  <groupId>org.uiautomation</groupId>
+  <artifactId>ios-driver-jni</artifactId>
+  <versioning>
+    <versions>
+      <version>0.6-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20130301153318</lastUpdated>
+  </versioning>
 </metadata>

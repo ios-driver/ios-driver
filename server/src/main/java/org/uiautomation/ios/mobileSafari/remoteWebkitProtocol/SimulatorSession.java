@@ -14,7 +14,10 @@
 
 package org.uiautomation.ios.mobileSafari.remoteWebkitProtocol;
 
-import com.google.common.collect.ImmutableList;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.*;
+import java.util.logging.Logger;
 
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
@@ -23,29 +26,13 @@ import org.uiautomation.ios.context.WebInspector;
 import org.uiautomation.ios.mobileSafari.EventListener;
 import org.uiautomation.ios.mobileSafari.ResponseFinder;
 import org.uiautomation.ios.mobileSafari.events.Event;
-import org.uiautomation.ios.mobileSafari.message.ApplicationConnectedMessage;
-import org.uiautomation.ios.mobileSafari.message.ApplicationDataMessage;
-import org.uiautomation.ios.mobileSafari.message.ApplicationSentListingMessage;
-import org.uiautomation.ios.mobileSafari.message.IOSMessage;
-import org.uiautomation.ios.mobileSafari.message.ReportConnectedApplicationsMessage;
-import org.uiautomation.ios.mobileSafari.message.ReportSetupMessage;
-import org.uiautomation.ios.mobileSafari.message.WebkitApplication;
-import org.uiautomation.ios.mobileSafari.message.WebkitDevice;
-import org.uiautomation.ios.mobileSafari.message.WebkitPage;
+import org.uiautomation.ios.mobileSafari.message.*;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.server.instruments.InstrumentsManager;
 import org.uiautomation.ios.webInspector.DOM.Page;
-import org.uiautomation.ios.webInspector.DOM.Runtime;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Logger;
+import com.google.common.collect.ImmutableList;
 
 // TODO freynaud merge with RemoteIOSWebDriver
 public class SimulatorSession {
@@ -281,6 +268,7 @@ class DefaultMessageListener implements MessageListener, EventListener {
     if (message instanceof ApplicationSentListingMessage) {
       ApplicationSentListingMessage m = (ApplicationSentListingMessage) message;
       int change = m.getPages().size() - simulator.getPages().size();
+      log.info("ApplicationSentListingMessage: message pages: " + m.getPages().size() + ", change: " + change);
 
       if (change != 0) {
         List<WebkitPage> pages = new ArrayList<WebkitPage>();
@@ -288,9 +276,10 @@ class DefaultMessageListener implements MessageListener, EventListener {
         for (WebkitPage p : simulator.getPages()) {
           m.getPages().remove(p);
         }
-        if (m.getPages().size() != 1) {
+        if (m.getPages().size() == 0) {
           throw new WebDriverException(m.getPages().size() + " new pages.");
         }
+        // TODO there can be more than one 'new' UIWebView, picking the first one for now.
         WebkitPage newOne = m.getPages().get(0);
 
         int
