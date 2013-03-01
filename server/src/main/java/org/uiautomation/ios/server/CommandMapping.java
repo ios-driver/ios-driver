@@ -67,6 +67,7 @@ import org.uiautomation.ios.server.command.web.GetTextHandler;
 import org.uiautomation.ios.server.command.web.GetTitleHandler;
 import org.uiautomation.ios.server.command.web.GetURL;
 import org.uiautomation.ios.server.command.web.IsDisplayedHanlder;
+import org.uiautomation.ios.server.command.web.IsEnabledHandler;
 import org.uiautomation.ios.server.command.web.IsEqualHandler;
 import org.uiautomation.ios.server.command.web.IsSelectedHandler;
 import org.uiautomation.ios.server.command.web.RefreshHandler;
@@ -149,7 +150,7 @@ public enum CommandMapping {
   //ANCESTRY(NotImplementedNativeHandler.class, NotImplementedWebHandler.class),
 
   DISPLAYED(IsVisibleNHandler.class, IsDisplayedHanlder.class),
-  ENABLED(IsEnabledNHandler.class, NotImplementedWebHandler.class),
+  ENABLED(IsEnabledNHandler.class, IsEnabledHandler.class),
   //IS_STALE(".isStale()"),
 
   //LABEL(".label()"),

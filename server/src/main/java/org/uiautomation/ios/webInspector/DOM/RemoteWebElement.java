@@ -61,19 +61,11 @@ public class RemoteWebElement {
   // TODO freyanud no return here.
   private void clickAtom() throws Exception {
     String f = "(function(arg) { " + "var text = " + IosAtoms.CLICK + "(arg);" + "return text;})";
-    JSONObject cmd = new JSONObject();
-
-    cmd.put("method", "Runtime.callFunctionOn");
 
     JSONArray args = new JSONArray();
     args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
 
-    cmd.put("params",
-            new JSONObject().put("objectId", getRemoteObject().getId())
-                .put("functionDeclaration", f)
-                .put("arguments", args).put("returnByValue", true));
-
-    JSONObject response = inspector.sendCommand(cmd);
+    JSONObject response = getInspectorResponse(f, args, true);
     inspector.cast(response);
   }
 
@@ -129,19 +121,11 @@ public class RemoteWebElement {
         f =
         "(function(arg) { " + "var text = " + IosAtoms.GET_VISIBLE_TEXT + "(arg);"
         + "return text;})";
-    JSONObject cmd = new JSONObject();
-
-    cmd.put("method", "Runtime.callFunctionOn");
 
     JSONArray args = new JSONArray();
     args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
 
-    cmd.put("params",
-            new JSONObject().put("objectId", getRemoteObject().getId())
-                .put("functionDeclaration", f)
-                .put("arguments", args).put("returnByValue", true));
-
-    JSONObject response = inspector.sendCommand(cmd);
+    JSONObject response = getInspectorResponse(f, args, true);
     return inspector.cast(response);
   }
 
@@ -192,17 +176,7 @@ public class RemoteWebElement {
     b.append("return " + IosAtoms.STRINGIFY + "(res);\n");
     b.append("})");
 
-    JSONObject cmd = new JSONObject();
-
-    cmd.put("method", "Runtime.callFunctionOn");
-
-    cmd.put(
-        "params",
-        new JSONObject().put("objectId", getRemoteObject().getId())
-            .put("functionDeclaration", b.toString())
-            .put("returnByValue", false));
-
-    JSONObject response = inspector.sendCommand(cmd);
+    JSONObject response = getInspectorResponse(b.toString(), null, false);
     String s = inspector.cast(response);
     JSONObject o = new JSONObject(s);
     return new Point(o.getInt("x"), o.getInt("y"));
@@ -214,16 +188,7 @@ public class RemoteWebElement {
         "(function(a) { " + "var el = this;" + " var rect = el.getClientRects()[0];" + " var res = "
         + IosAtoms.STRINGIFY + "({'top': rect.top,'left': rect.left });" + "return res;" + "})";
 
-    JSONObject cmd = new JSONObject();
-
-    cmd.put("method", "Runtime.callFunctionOn");
-
-    cmd.put(
-        "params",
-        new JSONObject().put("objectId", getRemoteObject().getId()).put("functionDeclaration", f)
-            .put("returnByValue", false));
-
-    JSONObject response = inspector.sendCommand(cmd);
+    JSONObject response = getInspectorResponse(f, null, false);
     String s = inspector.cast(response);
     JSONObject o = new JSONObject(s);
     return new Point(o.getInt("left"), o.getInt("top"));
@@ -248,20 +213,20 @@ public class RemoteWebElement {
         f =
         "(function(arg) { " + "var isDisplayed = " + IosAtoms.IS_SELECTED + "(arg);"
         + "return isDisplayed;})";
-    JSONObject cmd = new JSONObject();
-
-    cmd.put("method", "Runtime.callFunctionOn");
 
     JSONArray args = new JSONArray();
     args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
+    return (Boolean) inspector.cast(getInspectorResponse(f, args, true));
+  }
 
-    cmd.put("params",
-            new JSONObject().put("objectId", getRemoteObject().getId())
-                .put("functionDeclaration", f)
-                .put("arguments", args).put("returnByValue", true));
+  public boolean isEnabled() throws Exception {
 
-    JSONObject response = inspector.sendCommand(cmd);
-    return (Boolean) inspector.cast(response);
+    String f = "(function(arg) { " + "var isEnabled = " + IosAtoms.IS_ENABLED + "(arg);"
+                        + "return isEnabled;})";
+
+    JSONArray args = new JSONArray();
+    args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
+    return (Boolean) inspector.cast(getInspectorResponse(f, args, true));
   }
 
   public boolean isDisplayed() throws Exception {
@@ -269,20 +234,10 @@ public class RemoteWebElement {
         f =
         "(function(arg) { " + "var isDisplayed = " + IosAtoms.IS_SHOWN + "(arg);"
         + "return isDisplayed;})";
-    JSONObject cmd = new JSONObject();
-
-    cmd.put("method", "Runtime.callFunctionOn");
 
     JSONArray args = new JSONArray();
     args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
-
-    cmd.put("params",
-            new JSONObject().put("objectId", getRemoteObject().getId())
-                .put("functionDeclaration", f)
-                .put("arguments", args).put("returnByValue", true));
-
-    JSONObject response = inspector.sendCommand(cmd);
-    return (Boolean) inspector.cast(response);
+    return (Boolean) inspector.cast(getInspectorResponse(f, args, true));
   }
 
   public RemoteWebElement findElementByLinkText(String text, boolean partialMatch)
@@ -301,19 +256,10 @@ public class RemoteWebElement {
                + "}" // end for
                + "return null;" + "})"; // end function
 
-    JSONObject cmd = new JSONObject();
-
-    cmd.put("method", "Runtime.callFunctionOn");
-
     JSONArray args = new JSONArray();
     args.put(new JSONObject().put("value", text));
 
-    cmd.put("params",
-            new JSONObject().put("objectId", getRemoteObject().getId())
-                .put("functionDeclaration", f)
-                .put("arguments", args).put("returnByValue", false));
-
-    JSONObject response = inspector.sendCommand(cmd);
+    JSONObject response = getInspectorResponse(f, args, false);
     RemoteObject ro = inspector.cast(response);
     if (ro == null) {
       return null;
@@ -341,19 +287,10 @@ public class RemoteWebElement {
         + "}" // end for
         + "return result;" + "})"; // end function
 
-    JSONObject cmd = new JSONObject();
-
-    cmd.put("method", "Runtime.callFunctionOn");
-
     JSONArray args = new JSONArray();
     args.put(new JSONObject().put("value", text));
 
-    cmd.put("params",
-            new JSONObject().put("objectId", getRemoteObject().getId())
-                .put("functionDeclaration", f)
-                .put("arguments", args).put("returnByValue", false));
-
-    JSONObject response = inspector.sendCommand(cmd);
+    JSONObject response = getInspectorResponse(f, args, false);
     List<RemoteObject> ros = inspector.cast(response);
 
     List<RemoteWebElement> res = new ArrayList<RemoteWebElement>();
@@ -366,21 +303,10 @@ public class RemoteWebElement {
   public RemoteWebElement findElementByCSSSelectorOld(String selector) throws Exception {
     try {
 
-      JSONObject cmd = new JSONObject();
-
-      cmd.put("method", "Runtime.callFunctionOn");
-
       JSONArray args = new JSONArray();
       args.put(new JSONObject().put("value", selector));
 
-      cmd.put(
-          "params",
-          new JSONObject().put("objectId", getRemoteObject().getId())
-              .put("functionDeclaration",
-                   "(function(arg) { var el = this.querySelector(arg);return el;})")
-              .put("arguments", args).put("returnByValue", false));
-
-      JSONObject response = inspector.sendCommand(cmd);
+      JSONObject response = getInspectorResponse("(function(arg) { var el = this.querySelector(arg);return el;})", args, false);
       RemoteObject ro = inspector.cast(response);
       if (ro == null) {
         return null;
@@ -419,20 +345,7 @@ public class RemoteWebElement {
   }
 
   public String readyState() throws Exception {
-
-    JSONObject cmd = new JSONObject();
-
-    cmd.put("method", "Runtime.callFunctionOn");
-
-    JSONArray args = new JSONArray();
-    long start = System.currentTimeMillis();
-    cmd.put(
-        "params",
-        new JSONObject().put("objectId", getRemoteObject().getId())
-            .put("functionDeclaration",
-                 "(function(arg) { var state = document.readyState; return state;})")
-            .put("arguments", args).put("returnByValue", true));
-    JSONObject response = inspector.sendCommand(cmd);
+    JSONObject response = getInspectorResponse("(function(arg) { var state = document.readyState; return state;})", null, true);
     return inspector.cast(response);
   }
 
@@ -636,20 +549,9 @@ public class RemoteWebElement {
   }
 
   public RemoteWebElement getContentWindow() throws Exception {
-    JSONObject cmd = new JSONObject();
 
-    cmd.put("method", "Runtime.callFunctionOn");
-
-    JSONArray args = new JSONArray();
-
-    cmd.put(
-        "params",
-        new JSONObject().put("objectId", getRemoteObject().getId())
-            .put("functionDeclaration",
-                 "(function(arg) { var window = this.contentWindow; return window;})")
-            .put("arguments", args).put("returnByValue", false));
-
-    JSONObject response = inspector.sendCommand(cmd);
+    JSONObject response = getInspectorResponse("(function(arg) { var window = this.contentWindow; return window;})",
+        new JSONArray(), false);
     RemoteObject ro = inspector.cast(response);
     if (ro == null) {
       throw new NoSuchFrameException("Cannot find the window associated with the frame.");
@@ -663,5 +565,19 @@ public class RemoteWebElement {
     return tag.toLowerCase();
   }
 
+  private JSONObject getInspectorResponse(String javascript, JSONArray args, Boolean returnByValue) throws Exception {
+    JSONObject cmd = new JSONObject();
 
+    cmd.put("method", "Runtime.callFunctionOn");
+
+    JSONObject params = new JSONObject().put("objectId", getRemoteObject().getId())
+            .put("functionDeclaration", javascript)
+            .put("returnByValue", returnByValue);
+    if (args != null && args.length() > 0) {
+      params.put("arguments", args);
+    }
+    cmd.put("params", params);
+
+    return inspector.sendCommand(cmd);
+  }
 }
