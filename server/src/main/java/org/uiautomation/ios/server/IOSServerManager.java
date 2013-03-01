@@ -219,14 +219,6 @@ public class IOSServerManager implements DeviceDetector {
     return supportedApplications;
   }
 
-  public List<String> getSupportApplicationPaths(){
-    List<String> apps = new ArrayList<String>();
-    for(IOSApplication app : supportedApplications) {
-      apps.add(app.getApplicationPath().toString());
-    }
-    return apps;
-  }
-
   @Override
   public void onDeviceAdded(DeviceInfo deviceInfo) {
     log.info(

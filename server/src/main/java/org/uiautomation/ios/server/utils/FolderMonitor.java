@@ -99,13 +99,13 @@ public class FolderMonitor implements Runnable {
   private void addApplication(File filename) {
     String app = iosServerConfiguration.getAppFolderToMonitor() + File.separator + filename.getName();
     iosServerManager.addSupportedApplication(new IOSApplication(app));
-    if (iosServerConfiguration.getRegistrationURL() != null) {
-      RegistrationRequest
-          request =
-          new RegistrationRequest(iosServerConfiguration.getRegistrationURL(), iosServerConfiguration.getHost(),
-              iosServerConfiguration.getPort(), iosServerManager.getSupportApplicationPaths());
-      request.registerToHub();
-    }
+//    if (iosServerConfiguration.getRegistrationURL() != null) {
+//      RegistrationRequest
+//          request =
+//          new RegistrationRequest(iosServerConfiguration.getRegistrationURL(), iosServerConfiguration.getHost(),
+//              iosServerConfiguration.getPort(), iosServerManager.getSupportApplicationPaths());
+//      request.registerToHub();
+//    }
   }
 
   private boolean isCreate(WatchEvent.Kind kind) {

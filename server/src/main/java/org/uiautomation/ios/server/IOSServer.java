@@ -61,8 +61,7 @@ public class IOSServer {
     if (options.getRegistrationURL() != null) {
       RegistrationRequest
           request =
-          new RegistrationRequest(options.getRegistrationURL(), options.getHost(),
-              options.getPort(), driver.getSupportApplicationPaths());
+          new RegistrationRequest(options, driver);
       request.registerToHub();
     }
   }

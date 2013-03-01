@@ -14,12 +14,6 @@
 
 package org.uiautomation.ios.server.grid;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -31,36 +25,63 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
+import org.uiautomation.ios.communication.device.Device;
+import org.uiautomation.ios.server.IOSServerConfiguration;
+import org.uiautomation.ios.server.IOSServerManager;
+import org.uiautomation.ios.server.application.IOSApplication;
+
+import java.net.URL;
+import java.util.*;
 
 public class RegistrationRequest {
 
   private String hubURL;
   private String nodeHost;
-
   private List<Map<String, Object>> capabilities = new ArrayList<Map<String, Object>>();
   private Map<String, Object> configuration = new HashMap<String, Object>();
 
 
-  public RegistrationRequest(String hub, String nodeHost, int port, List<String> supportedApps) {
-    this.hubURL = hub;
-    this.nodeHost = nodeHost;
+  public RegistrationRequest(IOSServerConfiguration config, IOSServerManager driver) {
+    this.hubURL = config.getRegistrationURL();
+    this.nodeHost = config.getHost();
+    int port = config.getPort();
 
-    for (String app : supportedApps) {
-      IOSCapabilities cap = IOSCapabilities.iphone(app);
+    Set<IOSApplication> supportedApps = driver.getSupportedApplications();
+
+    for (IOSApplication app : supportedApps) {
+      IOSCapabilities cap = IOSCapabilities.ipad(app.getMetadata("CFBundleDisplayName"));
       cap.setCapability("browserName", "IOS Simulator");
-      capabilities.add(cap.getRawCapabilities());
+      if (cap.getBundleName().equals("Safari")) {
+        cap.setSDKVersion(app.getMetadata("DTSDKName").replace("iphonesimulator", ""));
+        addCapabilityForDevices(cap);
+      } else {
+        addCapabilityForEachSDKAndDevice(driver, cap);
+      }
     }
 
     configuration.put("remoteHost", "http://" + nodeHost + ":" + port);
     configuration.put("maxSession", 1);
   }
 
-  public void registerToHub() {
+  private void addCapabilityForEachSDKAndDevice(IOSServerManager driver, IOSCapabilities appCapabilities) {
+    for (String availableSDK : driver.getHostInfo().getInstalledSDKs()) {
+      appCapabilities.setSDKVersion(availableSDK);
+      addCapabilityForDevices(appCapabilities);
+    }
+  }
 
+  private void addCapabilityForDevices(IOSCapabilities appCapabilities) {
+    appCapabilities.setDevice(Device.ipad);
+    capabilities.add(new HashMap(appCapabilities.getRawCapabilities()));
+
+    appCapabilities.setDevice(Device.iphone);
+    capabilities.add(new HashMap(appCapabilities.getRawCapabilities()));
+  }
+
+  public void registerToHub() {
     HttpClient client = new DefaultHttpClient();
     try {
       URL registration = new URL(hubURL);
-
 
       BasicHttpEntityEnclosingRequest r =
           new BasicHttpEntityEnclosingRequest("POST", registration.toExternalForm());
