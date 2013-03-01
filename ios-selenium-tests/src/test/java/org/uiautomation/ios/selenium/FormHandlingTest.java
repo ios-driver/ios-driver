@@ -6,6 +6,7 @@ import static org.testng.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
@@ -319,9 +320,10 @@ public class FormHandlingTest extends BaseSeleniumTest {
   @Test
   public void testIsSelectedShouldWorkRightAfterSelecting() {
       driver.get(pages.formPage);
+
       WebElement checkbox = driver.findElement(By.id("checky"));
+      driver.manage().timeouts().implicitlyWait(100, TimeUnit.MILLISECONDS);
       checkbox.click();
-      // NOTE: works if one waits a few seconds: Thread.sleep(5000);
       assertTrue(checkbox.isSelected());
   }
 
