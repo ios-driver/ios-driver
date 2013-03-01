@@ -61,6 +61,7 @@ public class RegistrationRequest {
 
     configuration.put("remoteHost", "http://" + nodeHost + ":" + port);
     configuration.put("maxSession", 1);
+    configuration.put("proxy", "org.uiautomation.ios.grid.IOSRemoteProxy");
   }
 
   private void addCapabilityForEachSDKAndDevice(IOSServerManager driver, IOSCapabilities appCapabilities) {

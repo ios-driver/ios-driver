@@ -16,11 +16,19 @@ package org.uiautomation.ios.grid;
 import org.openqa.grid.common.RegistrationRequest;
 import org.openqa.grid.internal.Registry;
 import org.openqa.grid.internal.listeners.SelfHealingProxy;
+import org.openqa.grid.internal.utils.HtmlRenderer;
 import org.openqa.grid.selenium.proxy.DefaultRemoteProxy;
 
 public class IOSRemoteProxy extends DefaultRemoteProxy implements SelfHealingProxy {
 
+  private HtmlRenderer renderer = new IOSHtmlRenderer(this);
+
   public IOSRemoteProxy(RegistrationRequest request, Registry registry) {
     super(request, registry);
+  }
+
+  @Override
+  public HtmlRenderer getHtmlRender() {
+    return renderer;
   }
 }
