@@ -138,7 +138,7 @@ resize = function () {
         realOffsetY = margin + to_left;
         width = frame_h;
 
-    } else if (orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPELEFT') {
+    } else if (orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPELEFT' || orientation ==='LANDSCAPE' ) {
         angle = -90;
         $('#rotationCenter').css('left', margin + 'px');
         $('#rotationCenter').css('top', (frame_w + margin) + 'px');
@@ -148,7 +148,7 @@ resize = function () {
         realOffsetY = margin + to_left;
         width = frame_h;
 
-    } else if (orientation === 'UIA_DEVICE_ORIENTATION_PORTRAIT') {
+    } else if (orientation === 'UIA_DEVICE_ORIENTATION_PORTRAIT' || orientation ==='PORTRAIT') {
         angle = 0;
         $('#rotationCenter').css('left', margin + 'px');
         $('#rotationCenter').css('top', margin + 'px');
