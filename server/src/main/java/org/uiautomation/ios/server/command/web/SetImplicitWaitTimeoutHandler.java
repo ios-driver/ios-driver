@@ -7,6 +7,7 @@ import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
+import org.uiautomation.ios.server.command.uiautomation.SetImplicitWaitTimeoutNHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,7 @@ public class SetImplicitWaitTimeoutHandler extends BaseWebCommandHandler {
   @Override
   public Response handle() throws Exception {
     Integer ms = getRequest().getPayload().getInt("ms");
+    SetImplicitWaitTimeoutNHandler.TIMEOUT = ms;
     for (WebDriverLikeCommand command : impacted) {
       getSession().configure(command).set("implicit_wait", ms);
     }

@@ -21,6 +21,8 @@ import org.uiautomation.ios.server.IOSServerManager;
 
 public class SetImplicitWaitTimeoutNHandler extends SetTimeoutNHandler {
 
+  public static Integer TIMEOUT = null;
+
   public SetImplicitWaitTimeoutNHandler(IOSServerManager driver, WebDriverLikeRequest request)
       throws Exception {
     super(driver, request);
@@ -32,6 +34,7 @@ public class SetImplicitWaitTimeoutNHandler extends SetTimeoutNHandler {
 
   protected String getScript(IOSServerManager driver, WebDriverLikeRequest r) throws Exception {
     int timeout = r.getPayload().getInt("ms");
+    TIMEOUT = timeout;
     int timeoutInSec = timeout / 1000;
     String type = "implicit";
     String s = setTimeout.replace(":timeout", String.format("%d", timeoutInSec));

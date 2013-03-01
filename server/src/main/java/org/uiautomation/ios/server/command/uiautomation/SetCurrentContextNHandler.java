@@ -18,7 +18,10 @@ import org.json.JSONObject;
 import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
+import org.uiautomation.ios.communication.Path;
+import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
+import org.uiautomation.ios.server.CommandMapping;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
 
@@ -54,11 +57,27 @@ public class SetCurrentContextNHandler extends BaseNativeCommandHandler {
               .executeScript("new SafariPageNavigator().enter().goToWebView(" + delta + ");");
         }
         getSession().getRemoteWebDriver().switchTo(pageId);
-
-
       }
 
     }
+    // Set the current implicit wait timeout, if one has been set.
+    // This is to persist the implicit wait timeout after switching to webview and back.
+    if (SetImplicitWaitTimeoutNHandler.TIMEOUT != null) {
+      // mocking a request to SET_TIMEOUT
+      JSONObject payload = new JSONObject();
+      payload.append("ms", SetImplicitWaitTimeoutNHandler.TIMEOUT);
+      WebDriverLikeRequest wdlr = new WebDriverLikeRequest("POST", new Path(WebDriverLikeCommand.SET_TIMEOUT), payload);
+
+      // set the timeout by 'handling' the request, we don't care about it's response.
+      try {
+        CommandMapping.SET_TIMEOUT.createHandler(getDriver(), wdlr).handle();
+      } catch (Exception e) {
+        // dump out any exception, but ignore it as the primary concern is switching context
+        // which has succeeded if we got here
+        e.printStackTrace();
+      }
+    }
+
     Response resp = new Response();
     resp.setSessionId(getSession().getSessionId());
     resp.setStatus(0);
