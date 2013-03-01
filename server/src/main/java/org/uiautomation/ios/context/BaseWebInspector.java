@@ -192,7 +192,7 @@ public abstract class BaseWebInspector implements MessageListener {
     try {
       JSONObject cmd = new JSONObject();
       cmd.put("method", "Runtime.evaluate");
-      cmd.put("params", new JSONObject().put("expression", "document.documentElement.outerHTML;")
+      cmd.put("params", new JSONObject().put("expression", "new window.XMLSerializer().serializeToString(document);")
           .put("returnByValue", true));
       JSONObject response = sendCommand(cmd);
       return cast(response);

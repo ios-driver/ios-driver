@@ -30,11 +30,10 @@ public class GetPageSourceHandler extends BaseWebCommandHandler {
   @Override
   public Response handle() throws Exception {
 
-    String title = getSession().getRemoteWebDriver().getPageSource();
     Response res = new Response();
     res.setSessionId(getSession().getSessionId());
     res.setStatus(0);
-    res.setValue(title);
+    res.setValue(getSession().getRemoteWebDriver().getPageSource());
     return res;
   }
 

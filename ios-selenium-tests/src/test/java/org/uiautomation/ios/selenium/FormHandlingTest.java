@@ -1,21 +1,16 @@
 package org.uiautomation.ios.selenium;
 
-import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
-import org.testng.annotations.Test;
+import static org.openqa.selenium.TestWaiter.waitFor;
+import static org.openqa.selenium.WaitingConditions.pageTitleToBe;
+import static org.testng.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
-import static org.openqa.selenium.TestWaiter.waitFor;
-import static org.openqa.selenium.WaitingConditions.pageTitleToBe;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.*;
+import org.testng.annotations.Test;
 
 public class FormHandlingTest extends BaseSeleniumTest {
 
@@ -320,6 +315,16 @@ public class FormHandlingTest extends BaseSeleniumTest {
     value = element.getAttribute("value");
 
     assertEquals(value.length(), (0));
+  }
+  
+  @Test
+  public void testIsSelectedShouldWorkRightAfterSelecting() {
+      driver.get(pages.formPage);
+
+      WebElement checkbox = driver.findElement(By.id("checky"));
+      driver.manage().timeouts().implicitlyWait(100, TimeUnit.MILLISECONDS);
+      checkbox.click();
+      assertTrue(checkbox.isSelected());
   }
 
   @Test(enabled = false)
