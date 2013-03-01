@@ -287,7 +287,7 @@ public abstract class BaseWebInspector implements MessageListener {
 
   }
 
-  private void checkForJSErrors(JSONObject response) throws JSONException {
+  public void checkForJSErrors(JSONObject response) throws JSONException {
     if (response.optBoolean("wasThrown")) {
       JSONObject details = response.getJSONObject("result");
       String desc = details.optString("description");
