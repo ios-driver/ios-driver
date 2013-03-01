@@ -36,6 +36,7 @@ public class IOSHtmlRenderer implements HtmlRenderer {
     StringBuilder builder = new StringBuilder();
     builder.append("<fieldset>");
     builder.append("<legend>").append(proxy.getClass().getSimpleName()).append("</legend>");
+    builder.append(proxy.getIOSNodeStatus()).append("<br/>");
     builder.append("Listening on ").append(proxy.getRemoteHost());
     if (proxy.getTimeOut() > 0) {
       int inSec = proxy.getTimeOut() / 1000;
@@ -50,10 +51,13 @@ public class IOSHtmlRenderer implements HtmlRenderer {
       builder.append(slot.getCapabilities().containsKey(BROWSER) ? slot.getCapabilities().get(
           BROWSER) : slot.getCapabilities().get(APP));
       TestSession session = slot.getSession();
-      builder.append(" [").append(slot.getCapabilities().get("device")).append(" - ").append(slot.getCapabilities().get("sdkVersion")).append("]");
-      builder.append(" : ").append(slot.getCapabilities().get("CFBundleName"));
+      builder.append(" [").append(slot.getCapabilities().get("supportedDevices")).append(" - ").append(slot.getCapabilities().get("sdkVersion")).append("]");
+      builder.append(" : ").append(slot.getCapabilities().get("CFBundleExecutable"));
       builder.append(session == null ? " (free)" : "(busy, session " + session + ")");
-      builder.append("<br>");
+      builder.append("<br/>");
+    }
+    if (proxy.getIOSNodeStatus() == IOSNodeStatus.Dirty) {
+      //builder.append(proxy.getStatus().toString());
     }
     builder.append("</fieldset>");
     return builder.toString();

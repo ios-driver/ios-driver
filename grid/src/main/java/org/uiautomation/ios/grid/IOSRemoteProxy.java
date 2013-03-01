@@ -19,16 +19,32 @@ import org.openqa.grid.internal.listeners.SelfHealingProxy;
 import org.openqa.grid.internal.utils.HtmlRenderer;
 import org.openqa.grid.selenium.proxy.DefaultRemoteProxy;
 
+import java.io.IOException;
+
 public class IOSRemoteProxy extends DefaultRemoteProxy implements SelfHealingProxy {
 
+  private IOSNodeStatus iosNodeStatus;
+  private IOSCapabilitiesMonitor iosCapabilitiesMonitor;
   private HtmlRenderer renderer = new IOSHtmlRenderer(this);
 
   public IOSRemoteProxy(RegistrationRequest request, Registry registry) {
     super(request, registry);
+    iosCapabilitiesMonitor = new IOSCapabilitiesMonitor(this);
+    new Thread(iosCapabilitiesMonitor).start();
   }
 
   @Override
   public HtmlRenderer getHtmlRender() {
     return renderer;
+  }
+
+  public IOSNodeStatus getIOSNodeStatus() {
+    return iosNodeStatus;
+  }
+
+  public void markNodeForUpdate() {
+    this.iosNodeStatus = IOSNodeStatus.Dirty;
+
+
   }
 }

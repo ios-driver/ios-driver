@@ -62,7 +62,7 @@ public class FolderMonitor implements Runnable {
     while (!stopped) {
       checkForChanges();
       try {
-        Thread.sleep(5000);
+        Thread.sleep(1000);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }

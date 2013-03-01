@@ -13,16 +13,139 @@
  */
 package org.uiautomation.ios.grid;
 
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHttpRequest;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.openqa.grid.common.RegistrationRequest;
+import org.openqa.grid.internal.TestSlot;
+import org.openqa.grid.internal.utils.SelfRegisteringRemote;
+import org.uiautomation.ios.IOSCapabilities;
+import org.uiautomation.ios.communication.device.Device;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class IOSCapabilitiesMonitor implements Runnable {
   private boolean active;
+  private IOSRemoteProxy proxy;
+  private URL node;
+  private Map<String, Object> capabilities;
 
-  public IOSCapabilitiesMonitor() {
+  public IOSCapabilitiesMonitor(IOSRemoteProxy proxy) {
+    this.proxy = proxy;
+    this.node = proxy.getRemoteHost();
+    this.capabilities = new HashMap<String, Object>();
     active = true;
+  }
+
+  private static JSONObject extractObject(HttpResponse resp) throws IOException, JSONException {
+    BufferedReader rd = new BufferedReader(new InputStreamReader(resp.getEntity().getContent()));
+    StringBuilder s = new StringBuilder();
+    String line;
+    while ((line = rd.readLine()) != null) {
+      s.append(line);
+    }
+    rd.close();
+    return new JSONObject(s.toString());
+  }
+
+  private Map<String, Object> getNodeCapabilities() throws IOException, JSONException {
+    Map<String, Object> capability = new HashMap<String, Object>();
+
+    HttpClient client = new DefaultHttpClient();
+
+    String url = "http://" + node.getHost() + ":" + node.getPort() + "/wd/hub/status";
+
+    BasicHttpRequest r = new BasicHttpRequest("GET", url);
+
+    HttpResponse response = client.execute(new HttpHost(node.getHost(), node.getPort()), r);
+    JSONObject status = extractObject(response);
+
+    String ios = status.getJSONObject("value").getJSONObject("ios").optString("simulatorVersion");
+    JSONArray supportedApps = status.getJSONObject("value").getJSONArray("supportedApps");
+
+    for (int i = 0; i < supportedApps.length(); i++) {
+
+      if (ios.isEmpty()) {
+        capability.put("ios", "5.1");
+        capability.put("browserName", "IOS Device");
+        capability.put(IOSCapabilities.DEVICE, Device.iphone);
+      } else {
+        capability.put("ios", ios);
+        capability.put("browserName", "IOS Simulator");
+      }
+      JSONObject app = supportedApps.getJSONObject(i);
+      for (String key : JSONObject.getNames(app)) {
+        if ("locales".equals(key)) {
+          JSONArray loc = app.getJSONArray(key);
+          List<String> locales = new ArrayList<String>();
+          for (int j = 0; j < loc.length(); j++) {
+            locales.add(loc.getString(j));
+          }
+          capability.put("locales", locales);
+        } else {
+          Object o = app.get(key);
+          capability.put(key, o);
+        }
+      }
+    }
+    return capability;
+  }
+
+  private void registerCapabilities() throws JSONException, Exception {
+    RegistrationRequest registrationRequest = new RegistrationRequest();
+
+
+    registrationRequest.addDesiredCapability(capabilities);
+
+//    if (ios.isEmpty()) {
+//      node.getConfiguration().put(RegistrationRequest.ID, "IOS native device");
+//    } else {
+//      node.getConfiguration().put(RegistrationRequest.ID, "IOS native sim" + nodehost);
+//    }
+
+    registrationRequest.getConfiguration().put(RegistrationRequest.AUTO_REGISTER, true);
+    registrationRequest.getConfiguration().put(RegistrationRequest.PROXY_CLASS,
+        IOSRemoteProxy.class.getCanonicalName());
+
+    registrationRequest.getConfiguration().put(RegistrationRequest.HUB_HOST, proxy.getRegistry().getHub().getHost());
+    registrationRequest.getConfiguration().put(RegistrationRequest.HUB_PORT, proxy.getRegistry().getHub().getPort());
+    registrationRequest.getConfiguration().put(RegistrationRequest.REMOTE_HOST, "http://" + node.getHost() + ":" + node.getPort());
+    registrationRequest.getConfiguration().put(RegistrationRequest.MAX_SESSION, 1);
+
+    SelfRegisteringRemote remote = new SelfRegisteringRemote(registrationRequest);
+    remote.startRegistrationProcess();
+
   }
 
   @Override
   public void run() {
     while (active) {
+      try {
+        if (capabilities.isEmpty()) {
+          capabilities = new HashMap<String, Object>(getNodeCapabilities());
+          System.out.println("init!");
+          updateCapabilities();
+        } else {
+          if (capabilities == new HashMap<String, Object>(getNodeCapabilities())) {
+            System.out.println("caps updated.");
+            updateCapabilities();
+          }
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
 
       try {
         Thread.sleep(1000);
@@ -30,7 +153,23 @@ public class IOSCapabilitiesMonitor implements Runnable {
         e.printStackTrace();
       }
     }
+  }
 
+  private void updateCapabilities() throws Exception {
+    while (proxyBusy()) {
+      System.out.println("busy...");
+      Thread.sleep(1000);
+    }
+    registerCapabilities();
+  }
 
+  private boolean proxyBusy() {
+    List<TestSlot> slots = proxy.getTestSlots();
+    for (TestSlot slot : slots) {
+      if (slot.getSession() != null) {
+        return true;
+      }
+    }
+    return false;
   }
 }

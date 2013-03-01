@@ -30,35 +30,25 @@ import org.uiautomation.ios.server.IOSServerConfiguration;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.application.IOSApplication;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
 public class RegistrationRequest {
 
-  private String hubURL;
+  private URL hubURL;
   private String nodeHost;
   private List<Map<String, Object>> capabilities = new ArrayList<Map<String, Object>>();
   private Map<String, Object> configuration = new HashMap<String, Object>();
 
 
-  public RegistrationRequest(IOSServerConfiguration config, IOSServerManager driver) {
-    this.hubURL = config.getRegistrationURL();
+  public RegistrationRequest(IOSServerConfiguration config, IOSServerManager driver) throws MalformedURLException {
+    this.hubURL = new URL(config.getRegistrationURL());
     this.nodeHost = config.getHost();
     int port = config.getPort();
 
-    Set<IOSApplication> supportedApps = driver.getSupportedApplications();
-
-    for (IOSApplication app : supportedApps) {
-      IOSCapabilities cap = IOSCapabilities.ipad(app.getMetadata("CFBundleDisplayName"));
-      cap.setCapability("browserName", "IOS Simulator");
-      if (cap.getBundleName().equals("Safari")) {
-        cap.setSDKVersion(app.getMetadata("DTSDKName").replace("iphonesimulator", ""));
-        addCapabilityForDevices(cap);
-      } else {
-        addCapabilityForEachSDKAndDevice(driver, cap);
-      }
-    }
-
+    configuration.put("hubHost", hubURL.getHost());
+    configuration.put("hubPort", hubURL.getPort());
     configuration.put("remoteHost", "http://" + nodeHost + ":" + port);
     configuration.put("maxSession", 1);
     configuration.put("proxy", "org.uiautomation.ios.grid.IOSRemoteProxy");
@@ -82,16 +72,15 @@ public class RegistrationRequest {
   public void registerToHub() {
     HttpClient client = new DefaultHttpClient();
     try {
-      URL registration = new URL(hubURL);
 
       BasicHttpEntityEnclosingRequest r =
-          new BasicHttpEntityEnclosingRequest("POST", registration.toExternalForm());
+          new BasicHttpEntityEnclosingRequest("POST", hubURL.toExternalForm());
 
       String json = getJSONRequest().toString();
 
       r.setEntity(new StringEntity(json));
 
-      HttpHost host = new HttpHost(registration.getHost(), registration.getPort());
+      HttpHost host = new HttpHost(hubURL.getHost(), hubURL.getPort());
       HttpResponse response = client.execute(host, r);
       if (response.getStatusLine().getStatusCode() != 200) {
         throw new RuntimeException("Error sending the registration request.");
