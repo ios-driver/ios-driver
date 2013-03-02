@@ -100,24 +100,16 @@ public class IOSCapabilitiesMonitor implements Runnable {
 
   private List<DesiredCapabilities> getNodeCapabilities() {
     try {
-
       List<DesiredCapabilities> capabilities = new ArrayList<DesiredCapabilities>();
-      Map<String, Object> capability = new HashMap<String, Object>();
 
-      HttpClient client = new DefaultHttpClient();
-
-      String url = "http://" + node.getHost() + ":" + node.getPort() + "/wd/hub/status";
-
-      BasicHttpRequest r = new BasicHttpRequest("GET", url);
-
-      HttpResponse response = client.execute(new HttpHost(node.getHost(), node.getPort()), r);
-      JSONObject status = extractObject(response);
+      JSONObject status = getNodeStatusJson();
 
       String ios = status.getJSONObject("value").getJSONObject("ios").optString("simulatorVersion");
       JSONArray supportedApps = status.getJSONObject("value").getJSONArray("supportedApps");
 
       for (int i = 0; i < supportedApps.length(); i++) {
-
+        Map<String, Object> capability = new HashMap<String, Object>();
+        capability.put("maxInstances", "1");
         if (ios.isEmpty()) {
           capability.put("ios", "5.1");
           capability.put("browserName", "IOS Device");
@@ -147,6 +139,17 @@ public class IOSCapabilitiesMonitor implements Runnable {
       e.printStackTrace();
     }
     return null;
+  }
+
+  private JSONObject getNodeStatusJson() throws IOException, JSONException {
+    HttpClient client = new DefaultHttpClient();
+
+    String url = "http://" + node.getHost() + ":" + node.getPort() + "/wd/hub/status";
+
+    BasicHttpRequest r = new BasicHttpRequest("GET", url);
+
+    HttpResponse response = client.execute(new HttpHost(node.getHost(), node.getPort()), r);
+    return extractObject(response);
   }
 
   private void updateCapabilities(RegistrationRequest registrationRequest) {
