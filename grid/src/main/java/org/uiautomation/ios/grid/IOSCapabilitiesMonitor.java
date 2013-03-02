@@ -79,7 +79,7 @@ public class IOSCapabilitiesMonitor implements Runnable {
     }
   }
 
-  private RegistrationRequest createRegistrationRequest() throws JSONException, Exception {
+  private RegistrationRequest createRegistrationRequest() throws Exception {
     RegistrationRequest registrationRequest = new RegistrationRequest();
 
     registrationRequest.addDesiredCapability(getNodeCapabilities());

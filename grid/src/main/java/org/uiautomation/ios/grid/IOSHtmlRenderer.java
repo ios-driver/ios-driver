@@ -36,7 +36,6 @@ public class IOSHtmlRenderer implements HtmlRenderer {
     StringBuilder builder = new StringBuilder();
     builder.append("<fieldset>");
     builder.append("<legend>").append(proxy.getClass().getSimpleName()).append("</legend>");
-    builder.append(proxy.getIOSNodeStatus()).append("<br/>");
     builder.append("Listening on ").append(proxy.getRemoteHost());
     if (proxy.getTimeOut() > 0) {
       int inSec = proxy.getTimeOut() / 1000;
@@ -55,9 +54,6 @@ public class IOSHtmlRenderer implements HtmlRenderer {
       builder.append(" : ").append(slot.getCapabilities().get("CFBundleExecutable"));
       builder.append(session == null ? " (free)" : "(busy, session " + session + ")");
       builder.append("<br/>");
-    }
-    if (proxy.getIOSNodeStatus() == IOSNodeStatus.Dirty) {
-      //builder.append(proxy.getStatus().toString());
     }
     builder.append("</fieldset>");
     return builder.toString();
