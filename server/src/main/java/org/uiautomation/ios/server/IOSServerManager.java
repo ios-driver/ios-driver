@@ -23,7 +23,7 @@ import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.iosdriver.DeviceDetector;
 import org.uiautomation.iosdriver.DeviceInfo;
 import org.uiautomation.iosdriver.services.DeviceManagerService;
-import org.uiautomation.iosdriver.services.LoggerService;
+//import org.uiautomation.iosdriver.services.LoggerService;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -58,7 +58,7 @@ public class IOSServerManager implements DeviceDetector {
     this.hostInfo = new HostInfo(port);
 
     if (Configuration.BETA_FEATURE) {
-      LoggerService.enableDebug();
+      //LoggerService.enableDebug();
       deviceManager = DeviceManagerService.create(this);
       deviceManager.startDetection();
     }
