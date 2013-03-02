@@ -68,10 +68,9 @@ public class IOSCapabilitiesMonitor implements Runnable {
         RegistrationRequest latest = createRegistrationRequest();
         List<DesiredCapabilities> latestCapabilities = latest.getCapabilities();
         if (!registeredCapabilities.toString().equals(latestCapabilities.toString())) {
-          System.out.println("New capabilities registered on node. Updating...");
+          System.out.println("New capabilities registered on " + node.toString() + ". Updating...");
           updateCapabilities(latest);
         }
-        System.out.println("Capabilities match. " + Thread.currentThread().getName() + " sleeping...");
         Thread.sleep(2000);
       } catch (Exception e) {
         e.printStackTrace();
@@ -82,7 +81,10 @@ public class IOSCapabilitiesMonitor implements Runnable {
   private RegistrationRequest createRegistrationRequest() throws Exception {
     RegistrationRequest registrationRequest = new RegistrationRequest();
 
-    registrationRequest.addDesiredCapability(getNodeCapabilities());
+    List<DesiredCapabilities> capabilities = getNodeCapabilities();
+    for (DesiredCapabilities cap : capabilities) {
+      registrationRequest.addDesiredCapability(cap);
+    }
 
     registrationRequest.getConfiguration().put(RegistrationRequest.AUTO_REGISTER, true);
     registrationRequest.getConfiguration().put(RegistrationRequest.PROXY_CLASS,
@@ -96,8 +98,10 @@ public class IOSCapabilitiesMonitor implements Runnable {
     return registrationRequest;
   }
 
-  private Map<String, Object> getNodeCapabilities() {
+  private List<DesiredCapabilities> getNodeCapabilities() {
     try {
+
+      List<DesiredCapabilities> capabilities = new ArrayList<DesiredCapabilities>();
       Map<String, Object> capability = new HashMap<String, Object>();
 
       HttpClient client = new DefaultHttpClient();
@@ -136,8 +140,9 @@ public class IOSCapabilitiesMonitor implements Runnable {
             capability.put(key, o);
           }
         }
+        capabilities.add(new DesiredCapabilities(capability));
       }
-      return capability;
+      return capabilities;
     } catch (Exception e) {
       e.printStackTrace();
     }

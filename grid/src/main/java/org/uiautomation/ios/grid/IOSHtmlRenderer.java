@@ -24,10 +24,6 @@ public class IOSHtmlRenderer implements HtmlRenderer {
 
   private IOSRemoteProxy proxy;
 
-  @SuppressWarnings("unused")
-  private IOSHtmlRenderer() {
-  }
-
   public IOSHtmlRenderer(IOSRemoteProxy proxy) {
     this.proxy = proxy;
   }
