@@ -59,7 +59,14 @@
 <!-- MAIN CONTENT -->
 <div id="main_content_wrap" class="outer">
     <section id="main_content" class="inner">
-
+        <lu>
+            <li><a href="#basics">The basics</a></li>
+            <li><a href="#nativeType">Using native events for sendKeys</a></li>
+            <li><a href="#alerts">Working with alerts</a></li>
+            <li><a href="#orientation">Changing the device orientation</a></li>
+            <li><a href="#device">ipad support</a></li>
+            <li><a href="#select">Using select / html dropdown</a></li>
+        </lu>
         <p>You can use ios-driver to test web pages on mobile safari. Because ios-driver internally
             uses two different
             drivers, a native one and a web one, your tests can use native events (i.e typing text
@@ -70,7 +77,7 @@
             write your
             test.</p>
 
-        <h3>The basics</h3>
+        <h3 id="basics">The basics</h3>
 <pre class="prettyprint">
 public static void main(String[] args) throws Exception {
     DesiredCapabilities safari = IOSCapabilities.iphone("Safari");
@@ -89,7 +96,7 @@ public static void main(String[] args) throws Exception {
 </pre>
 
 
-        <h3>Using the underlying native driver : sendKeys</h3>
+        <h3 id="nativeType">Using the underlying native driver : sendKeys</h3>
         <iframe width="640" height="480" src="http://www.youtube.com/embed/cpYE5g4qAVw"
                 frameborder="0" allowfullscreen></iframe>
 <pre class="prettyprint">
@@ -110,7 +117,7 @@ public static void main(String[] args) throws Exception {
 </pre>
 
 
-        <h3>Working with alerts</h3>
+        <h3 id="alerts">Working with alerts</h3>
 
         <p>ios-driver can use its native part to get away from the javascript sandbox and handle
             alerts for example :</p>
@@ -137,7 +144,7 @@ public void testHandlesTwoAlertsFromOneInteraction() {
 
 </pre>
 
-        <h3> Changing the device and the orientation.</h3>
+        <h3 id="orientation"> Changing the device and the orientation.</h3>
 
         <iframe width="640" height="480" src="http://www.youtube.com/embed/FK17niDWoqA"
                 frameborder="0" allowfullscreen></iframe>
@@ -164,10 +171,50 @@ public static void main(String[] args) throws Exception {
    </pre>
 
 
-        <h3>Configuring safari to support both iphone and ipad.</h3>
+        <h3 id="device">Configuring safari to support both iphone and ipad.</h3>
 
      doc : TODO
 
+        <h3 id="select">Using select/option</h3>
+
+        <p>Select are currently not working with native events enabled. So you need to disable them
+            when interacting with them.The code will typically look like :</p>
+
+         <pre class="prettyprint">
+ // switching off native clicks
+Configurable c = IOSDriverAugmenter.augment(driver);
+c.setConfiguration(WebDriverLikeCommand.CLICK, "nativeEvents", false);
+
+// find the select
+WebElement select = driver.findElement(By.name("selectomatic"));
+
+// and its options
+List<WebElement> options =  select.findElements(By.tagName("option"));
+
+// select the 2nd option in the list.
+options.get(1).click();
+
+// turnign native clicks back on.
+c.setConfiguration(WebDriverLikeCommand.CLICK, "nativeEvents", true);
+         </pre>
+         <p>or, if you're using the Select helper class from the selenium support project
+             (<a href="https://github.com/SeleniumHQ/selenium/blob/master/java/client/src/org/openqa/selenium/support/ui/Select.java">Select.java</a>) : </p>
+
+        <pre class="prettyprint">
+ // switching off native clicks
+Configurable c = IOSDriverAugmenter.augment(driver);
+c.setConfiguration(WebDriverLikeCommand.CLICK, "nativeEvents", false);
+
+// use Select from Selenium support ui.
+Select select = new Select(driver.findElement(By.name("selectomatic")));
+List<WebElement> options = select.getOptions();
+
+// select the 2nd option in the list.
+select.setSelected(options.get(1));
+
+// turning native clicks back on.
+c.setConfiguration(WebDriverLikeCommand.CLICK, "nativeEvents", true);
+         </pre>
     </section>
 </div>
 
