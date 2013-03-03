@@ -194,16 +194,16 @@ public class RemoteWebElement {
     return new Point(o.getInt("left"), o.getInt("top"));
   }
 
-  public String getAttribute(String attributeName) throws Exception {
-    String res = getRemoteObject().call("." + attributeName);
+  public <T> T getAttribute(String attributeName) throws Exception {
+    T res = getRemoteObject().call("." + attributeName);
     if (res == null || "class".equals(attributeName)) {
       // textarea.value != testarea.getAttribute("value");
       res = getRemoteObject().call(".getAttribute('" + attributeName + "')");
     }
     if (res == null) {
-      return "";
+      return (T) "";
     } else {
-      return res;
+      return (T) res;
     }
   }
 
@@ -222,7 +222,7 @@ public class RemoteWebElement {
   public boolean isEnabled() throws Exception {
 
     String f = "(function(arg) { " + "var isEnabled = " + IosAtoms.IS_ENABLED + "(arg);"
-                        + "return isEnabled;})";
+               + "return isEnabled;})";
 
     JSONArray args = new JSONArray();
     args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
@@ -306,7 +306,10 @@ public class RemoteWebElement {
       JSONArray args = new JSONArray();
       args.put(new JSONObject().put("value", selector));
 
-      JSONObject response = getInspectorResponse("(function(arg) { var el = this.querySelector(arg);return el;})", args, false);
+      JSONObject
+          response =
+          getInspectorResponse("(function(arg) { var el = this.querySelector(arg);return el;})",
+                               args, false);
       RemoteObject ro = inspector.cast(response);
       if (ro == null) {
         return null;
@@ -345,7 +348,10 @@ public class RemoteWebElement {
   }
 
   public String readyState() throws Exception {
-    JSONObject response = getInspectorResponse("(function(arg) { var state = document.readyState; return state;})", null, true);
+    JSONObject
+        response =
+        getInspectorResponse("(function(arg) { var state = document.readyState; return state;})",
+                             null, true);
     return inspector.cast(response);
   }
 
@@ -550,8 +556,10 @@ public class RemoteWebElement {
 
   public RemoteWebElement getContentWindow() throws Exception {
 
-    JSONObject response = getInspectorResponse("(function(arg) { var window = this.contentWindow; return window;})",
-        new JSONArray(), false);
+    JSONObject
+        response =
+        getInspectorResponse("(function(arg) { var window = this.contentWindow; return window;})",
+                             new JSONArray(), false);
     RemoteObject ro = inspector.cast(response);
     if (ro == null) {
       throw new NoSuchFrameException("Cannot find the window associated with the frame.");
@@ -565,14 +573,15 @@ public class RemoteWebElement {
     return tag.toLowerCase();
   }
 
-  private JSONObject getInspectorResponse(String javascript, JSONArray args, Boolean returnByValue) throws Exception {
+  private JSONObject getInspectorResponse(String javascript, JSONArray args, Boolean returnByValue)
+      throws Exception {
     JSONObject cmd = new JSONObject();
 
     cmd.put("method", "Runtime.callFunctionOn");
 
     JSONObject params = new JSONObject().put("objectId", getRemoteObject().getId())
-            .put("functionDeclaration", javascript)
-            .put("returnByValue", returnByValue);
+        .put("functionDeclaration", javascript)
+        .put("returnByValue", returnByValue);
     if (args != null && args.length() > 0) {
       params.put("arguments", args);
     }
