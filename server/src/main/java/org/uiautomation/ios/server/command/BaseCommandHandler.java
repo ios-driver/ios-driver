@@ -25,8 +25,8 @@ import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.*;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
+import org.uiautomation.ios.wkrdp.WebKitSeemsCorruptedException;
 
 public abstract class BaseCommandHandler implements Handler {
 

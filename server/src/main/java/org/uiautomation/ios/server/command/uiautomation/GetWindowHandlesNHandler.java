@@ -20,7 +20,7 @@ import org.uiautomation.ios.UIAModels.UIAWebView;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.message.WebkitPage;
+import org.uiautomation.ios.wkrdp.message.WebkitPage;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
