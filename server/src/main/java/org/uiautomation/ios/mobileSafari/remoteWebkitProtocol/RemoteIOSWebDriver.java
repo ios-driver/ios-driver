@@ -14,20 +14,35 @@
 
 package org.uiautomation.ios.mobileSafari.remoteWebkitProtocol;
 
+import com.google.common.collect.ImmutableList;
+
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.context.BaseWebInspector;
+import org.uiautomation.ios.context.WebInspector;
+import org.uiautomation.ios.mobileSafari.EventListener;
 import org.uiautomation.ios.mobileSafari.NodeId;
 import org.uiautomation.ios.mobileSafari.ResponseFinder;
+import org.uiautomation.ios.mobileSafari.events.Event;
+import org.uiautomation.ios.mobileSafari.message.ApplicationConnectedMessage;
+import org.uiautomation.ios.mobileSafari.message.ApplicationDataMessage;
+import org.uiautomation.ios.mobileSafari.message.ApplicationSentListingMessage;
+import org.uiautomation.ios.mobileSafari.message.IOSMessage;
+import org.uiautomation.ios.mobileSafari.message.ReportConnectedApplicationsMessage;
+import org.uiautomation.ios.mobileSafari.message.ReportSetupMessage;
 import org.uiautomation.ios.mobileSafari.message.WebkitApplication;
 import org.uiautomation.ios.mobileSafari.message.WebkitDevice;
 import org.uiautomation.ios.mobileSafari.message.WebkitPage;
 import org.uiautomation.ios.server.DOMContext;
 import org.uiautomation.ios.server.ServerSideSession;
+import org.uiautomation.ios.server.configuration.Configuration;
+import org.uiautomation.ios.server.instruments.InstrumentsManager;
+import org.uiautomation.ios.webInspector.DOM.Page;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
 import org.uiautomation.ios.webInspector.DOM.RemoteWebNativeBackedElement;
 
@@ -35,6 +50,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Logger;
 
 public class RemoteIOSWebDriver {
 
@@ -80,36 +101,147 @@ public class RemoteIOSWebDriver {
 
   static String safari = "com.apple.mobilesafari";
   static String uiCatalog = "com.yourcompany.UICatalog";
-  private SimulatorSession simulator;
-  private Object usbProtocol;
+
+  //private SimulatorSession simulator;
+  //private Object usbProtocol;
+  private String bundleId;
+  private Lock simLock = new ReentrantLock();
+  private Condition simRegistered = simLock.newCondition();
+  private Condition simSentApps = simLock.newCondition();
+  private Condition simSentPages = simLock.newCondition();
+  private WebKitRemoteDebugProtocol protocol;
   private WebkitDevice device;
   private List<WebkitApplication> applications = new ArrayList<WebkitApplication>();
   private final ServerSideSession session;
-
+  private final String connectionKey;
   private BaseWebInspector currentInspector;
   private Map<Integer, BaseWebInspector> inspectors = new HashMap<Integer, BaseWebInspector>();
+  private static final Logger log = Logger.getLogger(RemoteIOSWebDriver.class.getName());
+  private List<WebkitPage> pages = new ArrayList<WebkitPage>();
+  private final List<WebInspector> created = new ArrayList<WebInspector>();
+
 
   public RemoteIOSWebDriver(ServerSideSession session, ResponseFinder... finders) {
-    simulator = new SimulatorSession(session, finders);
-    usbProtocol = new Object();
     this.session = session;
+    connectionKey = UUID.randomUUID().toString();
+    if (InstrumentsManager.realDevice) {
+      if (!Configuration.BETA_FEATURE) {
+        Configuration.off();
+      }
+      protocol =
+          new RealDeviceProtocolImpl(new DefaultMessageListener(this, session), finders);
+
+    } else {
+      protocol =
+          new SimulatorProtocolImpl(new DefaultMessageListener(this, session), finders);
+
+    }
+    protocol.register();
+    waitForSimToRegister();
+    waitForSimToSendApps();
+
+    if (applications.size() == 1) {
+      connect(applications.get(0).getBundleId());
+    } else {
+      log.warning("session created but application size=" + applications.size());
+    }
   }
 
-  public void start() {
-    simulator.start();
+
+  private void waitForSimToSendPages() {
+    try {
+      simLock.lock();
+      if (pages != null && pages.size() > 0) {
+        return;
+      }
+      simSentPages.await(5, TimeUnit.SECONDS);
+    } catch (InterruptedException e) {
+      throw new WebDriverException("InterruptedException before getting the pages.");
+    } finally {
+      simLock.unlock();
+    }
+  }
+
+  public void setPages(List<WebkitPage> pages) {
+    this.pages = ImmutableList.copyOf(pages);
+  }
+
+  public List<WebkitPage> getPages() {
+    return pages;
   }
 
   public boolean isConnected() {
-    return currentInspector != null;
+    log.fine("Applications  " + applications.size());
+    return !applications.isEmpty();
   }
+
+  private void waitForSimToRegister() {
+    try {
+      simLock.lock();
+      if (device != null) {
+        return;
+      }
+      simRegistered.await(5, TimeUnit.SECONDS);
+    } catch (InterruptedException e) {
+      throw new WebDriverException(
+          "InterruptedException while waiting for the simulator to respond.");
+    } finally {
+      simLock.unlock();
+    }
+  }
+
+  void signalSimSentPages() {
+    try {
+      simLock.lock();
+      simSentPages.signal();
+    } finally {
+      simLock.unlock();
+    }
+  }
+
+  void signalSimRegistered() {
+    try {
+      simLock.lock();
+      simRegistered.signal();
+    } finally {
+      simLock.unlock();
+    }
+  }
+
+  private void waitForSimToSendApps() {
+
+    try {
+      simLock.lock();
+      if (applications != null && !applications.isEmpty()) {
+        return;
+      }
+      simSentApps.await(5, TimeUnit.SECONDS);
+    } catch (InterruptedException e) {
+      throw new WebDriverException(
+          "InterruptedException while waiting for the simulator to send its apps.");
+    } finally {
+      simLock.unlock();
+    }
+  }
+
+  void signalSimSentApps() {
+    try {
+      simLock.lock();
+      simSentApps.signal();
+    } finally {
+      simLock.unlock();
+    }
+  }
+
+  public void start() {
+    protocol.start();
+  }
+
 
   public void stop() {
-    simulator.stop();
+    protocol.stop();
   }
 
-  public SimulatorSession getSimulator() {
-    return simulator;
-  }
 
   public RemoteWebElement createElement(String reference) {
     int pageId = Integer.parseInt(reference.split("_")[0]);
@@ -129,11 +261,32 @@ public class RemoteIOSWebDriver {
 
 
   public void connect(String bundleId) {
-    simulator.connect(bundleId);
+    List<WebkitApplication> knownApps = getApplications();
+    for (WebkitApplication app : knownApps) {
+      if (bundleId.equals(app.getBundleId())) {
+        this.bundleId = bundleId;
+        protocol.connect(bundleId);
+        waitForSimToSendPages();
+        switchTo(getPages().get(0));
+        System.out.println("currentInspector:" + currentInspector);
+        if (getPages().size() > 1) {
+          log.warning("Application started, but already have " + getPages().size()
+                      + " webviews. Connecting to the first one.");
+        }
+        return;
+      }
+    }
+    throw new WebDriverException(bundleId + " not in the list " + knownApps
+                                 + ".Either it's not started, or it has no webview to connect to.");
   }
 
-  public List<WebkitPage> getPages() {
-    return simulator.getPages();
+  public synchronized void setApplications(List<WebkitApplication> applications) {
+    this.applications = applications;
+  }
+
+  // TODO freynaud return a copy.
+  public synchronized List<WebkitApplication> getApplications() {
+    return applications;
   }
 
   public void switchTo(String pageId) {
@@ -147,8 +300,32 @@ public class RemoteIOSWebDriver {
   }
 
   public void switchTo(WebkitPage page) {
-    currentInspector = simulator.connect(page);
+    currentInspector = connect(page);
     inspectors.put(page.getPageId(), currentInspector);
+  }
+
+  private BaseWebInspector connect(WebkitPage webkitPage) {
+    for (WebkitPage page : getPages()) {
+      if (page.equals(webkitPage)) {
+        WebInspector
+            inspector =
+            new WebInspector(null, webkitPage.getPageId(), protocol, bundleId,
+                             connectionKey, session);
+        // TODO move to webinspector
+        //simulatorProtocol.register();
+        //simulatorProtocol.connect(bundleId);
+        protocol.attachToPage(page.getPageId());
+        // inspector.sendCommand(Runtime.evaluate("alert(ttt123)"));
+        inspector.sendCommand(Page.enablePageEvent());
+
+        boolean ok = created.add(inspector);
+        if (ok) {
+          protocol.addListener(inspector);
+        }
+        return inspector;
+      }
+    }
+    throw new WebDriverException("Cannot connect to page " + webkitPage + ".Cannot find it.");
   }
 
   public void waitForPageToLoad() {
@@ -323,8 +500,137 @@ public class RemoteIOSWebDriver {
     return currentInspector.getLoadedFlag();
   }
 
+  public synchronized void setDevice(WebkitDevice device) {
+    this.device = device;
+  }
+
+  public synchronized WebkitDevice getDevice() {
+    return device;
+  }
+
 
 }
 
 
+class DefaultMessageListener implements MessageListener, EventListener {
 
+  private static final Logger log = Logger.getLogger(DefaultMessageListener.class.getName());
+
+  private final RemoteIOSWebDriver driver;
+  private final ServerSideSession session;
+
+  public DefaultMessageListener(RemoteIOSWebDriver driver, ServerSideSession session) {
+    this.driver = driver;
+    this.session = session;
+  }
+
+
+  @Override
+  public void onMessage(IOSMessage message) {
+
+    if (message instanceof ReportSetupMessage) {
+      ReportSetupMessage m = (ReportSetupMessage) message;
+      driver.setDevice(m.getDevice());
+      driver.signalSimRegistered();
+    }
+
+    if (message instanceof ReportConnectedApplicationsMessage) {
+      ReportConnectedApplicationsMessage m = (ReportConnectedApplicationsMessage) message;
+      if (m.getApplications().size() == 0) {
+        log.warning("ReportConnectedApplicationsMessage reported 0 app.");
+      } else {
+        driver.setApplications(m.getApplications());
+        driver.signalSimSentApps();
+      }
+
+    }
+
+    if (message instanceof ApplicationSentListingMessage) {
+      ApplicationSentListingMessage m = (ApplicationSentListingMessage) message;
+      int change = m.getPages().size() - driver.getPages().size();
+      log.info("ApplicationSentListingMessage: message pages: " + m.getPages().size() + ", change: "
+               + change);
+
+      if (change != 0) {
+        List<WebkitPage> pages = new ArrayList<WebkitPage>();
+        pages.addAll(driver.getPages());
+        for (WebkitPage p : driver.getPages()) {
+          m.getPages().remove(p);
+        }
+        if (m.getPages().size() == 0) {
+          throw new WebDriverException(m.getPages().size() + " new pages.");
+        }
+        // TODO there can be more than one 'new' UIWebView, picking the first one for now.
+        WebkitPage newOne = m.getPages().get(0);
+
+        int
+            index =
+            driver.getPages().size() == 0 ? 0
+                                          : session.getRemoteWebDriver().getWindowHandleIndex()
+                                            + 1;
+        pages.add(index, newOne);
+
+        driver.setPages(pages);
+        driver.signalSimSentPages();
+
+        if (driver.getPages().size() == 0) {
+          //log.fine("first page. Nothing to do.");
+        } else {
+          WebkitPage focus = newOne;
+
+          if (session != null) {
+            waitForWindowSwitchingAnimation();
+            driver.switchTo(focus);
+          } else {
+            driver.switchTo(focus);
+          }
+        }
+
+      }
+
+    }
+
+    if (message instanceof ApplicationDataMessage) {
+      //System.out.println(message);
+    }
+
+    if (message instanceof ApplicationConnectedMessage) {
+      ApplicationConnectedMessage m = (ApplicationConnectedMessage) message;
+      List<WebkitApplication> apps = new ArrayList<WebkitApplication>();
+      System.out.println("message apps : " + m.getApplication());
+      apps.add(m.getApplication());
+      driver.setApplications(apps);
+      driver.signalSimSentApps();
+    }
+
+    //System.err.println(message);
+  }
+
+
+  private void waitForWindowSwitchingAnimation() {
+    try {
+      Thread.sleep(400);
+    } catch (InterruptedException ignore) {
+    }
+  }
+
+  @Override
+  public void onPageLoad() {
+    //To change body of implemented methods use File | Settings | File Templates.
+  }
+
+  @Override
+  public void domHasChanged(Event event) {
+    //To change body of implemented methods use File | Settings | File Templates.
+  }
+
+  @Override
+  public void frameDied(JSONObject message) {
+    //To change body of implemented methods use File | Settings | File Templates.
+  }
+
+  @Override
+  public void setWindowHandles(List<WebkitPage> handles) {
+    //To change body of implemented methods use File | Settings | File Templates.
+  }
+}
