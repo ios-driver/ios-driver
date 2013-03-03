@@ -24,7 +24,7 @@ import org.uiautomation.ios.inspector.model.Cache;
 import org.uiautomation.ios.inspector.model.IDESessionModel;
 import org.uiautomation.ios.inspector.views.JSONView;
 import org.uiautomation.ios.inspector.views.View;
-import org.uiautomation.ios.server.utils.JSONToXMLConvertor;
+import org.uiautomation.ios.utils.JSONToXMLConvertor;
 
 public class TreeController implements IDECommandController {
 

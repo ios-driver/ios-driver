@@ -15,14 +15,14 @@
 package org.uiautomation.ios.mobileSafari.remoteWebkitProtocol;
 
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.mobileSafari.message.ApplicationConnectedMessage;
-import org.uiautomation.ios.mobileSafari.message.ApplicationDataMessage;
-import org.uiautomation.ios.mobileSafari.message.ApplicationSentListingMessage;
-import org.uiautomation.ios.mobileSafari.message.IOSMessage;
-import org.uiautomation.ios.mobileSafari.message.ReportConnectedApplicationsMessage;
-import org.uiautomation.ios.mobileSafari.message.ReportSetupMessage;
-import org.uiautomation.ios.mobileSafari.message.WebkitApplication;
-import org.uiautomation.ios.mobileSafari.message.WebkitPage;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.message.ApplicationConnectedMessage;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.message.ApplicationDataMessage;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.message.ApplicationSentListingMessage;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.message.IOSMessage;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.message.ReportConnectedApplicationsMessage;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.message.ReportSetupMessage;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.message.WebkitApplication;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.message.WebkitPage;
 import org.uiautomation.ios.server.ServerSideSession;
 
 import java.util.ArrayList;

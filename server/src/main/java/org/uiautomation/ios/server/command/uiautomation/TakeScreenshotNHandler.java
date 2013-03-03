@@ -24,7 +24,7 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
-import org.uiautomation.ios.server.utils.FileTo64EncodedStringUtils;
+import org.uiautomation.ios.utils.FileTo64EncodedStringUtils;
 
 public class TakeScreenshotNHandler extends UIAScriptHandler {
 

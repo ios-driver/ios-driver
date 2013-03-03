@@ -1,7 +1,7 @@
 package org.uiautomation.ios.mobileSafari.remoteWebkitProtocol;
 
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.server.utils.hack.HorribleHack;
+import org.uiautomation.ios.utils.hack.HorribleHack;
 
 public class WebKitSeemsCorruptedException extends WebDriverException implements HorribleHack {
 

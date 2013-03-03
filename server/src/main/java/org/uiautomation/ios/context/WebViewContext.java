@@ -15,7 +15,7 @@
 package org.uiautomation.ios.context;
 
 import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.SimulatorProtocolImpl;
-import org.uiautomation.ios.mobileSafari.ResponseFinder;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.ResponseFinder;
 import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.MessageListener;
 
 /**

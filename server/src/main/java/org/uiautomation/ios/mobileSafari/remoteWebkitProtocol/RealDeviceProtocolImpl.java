@@ -14,7 +14,7 @@
 
 package org.uiautomation.ios.mobileSafari.remoteWebkitProtocol;
 
-import org.uiautomation.ios.mobileSafari.ResponseFinder;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.ResponseFinder;
 import org.uiautomation.iosdriver.services.WebInspectorService;
 
 /**

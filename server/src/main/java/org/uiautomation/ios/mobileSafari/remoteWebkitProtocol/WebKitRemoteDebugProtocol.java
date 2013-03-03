@@ -19,10 +19,10 @@ import com.google.common.collect.ImmutableMap;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.mobileSafari.DefaultMessageHandler;
-import org.uiautomation.ios.mobileSafari.MessageHandler;
-import org.uiautomation.ios.mobileSafari.PlistManager;
-import org.uiautomation.ios.mobileSafari.ResponseFinder;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.DefaultMessageHandler;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.MessageHandler;
+import org.uiautomation.ios.utils.PlistManager;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.ResponseFinder;
 import org.uiautomation.ios.webInspector.DOM.RemoteExceptionException;
 
 import java.util.Map;

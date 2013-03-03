@@ -19,7 +19,7 @@ import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.UIATableCell;
 import org.uiautomation.ios.client.uiamodels.impl.augmenter.IOSDriverAugmenter;
-import org.uiautomation.ios.server.utils.ClassicCommands;
+import org.uiautomation.ios.utils.ClassicCommands;
 
 public class SmokeIOSDriverTest extends BaseIOSDriverTest {
 

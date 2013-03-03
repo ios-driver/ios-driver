@@ -21,8 +21,8 @@ import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.communication.device.Device;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.instruments.IOSDeviceManager;
-import org.uiautomation.ios.server.utils.ClassicCommands;
-import org.uiautomation.ios.server.utils.SimulatorSettings;
+import org.uiautomation.ios.utils.ClassicCommands;
+import org.uiautomation.ios.utils.SimulatorSettings;
 
 // java version ( simplified )
 // of http://code.google.com/p/ios-sim-locale/source/browse/trunk/ios-sim-locale.m
@@ -43,8 +43,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   private final SimulatorSettings simulatorSettings;
 
   /**
-   * manages a single instance of the instruments process. Only 1 process can run at a given
-   * time.
+   * manages a single instance of the instruments process. Only 1 process can run at a given time.
    *
    * @param desiredSDKVersion the SDK version. For instance 5.0 or 4.3
    */

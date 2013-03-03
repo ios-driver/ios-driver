@@ -19,7 +19,7 @@ import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
-import org.uiautomation.ios.server.utils.ClassicCommands;
+import org.uiautomation.ios.utils.ClassicCommands;
 
 public class SmokeWebDriverTest extends BaseIOSDriverTest {
 
@@ -59,7 +59,8 @@ public class SmokeWebDriverTest extends BaseIOSDriverTest {
     Assert.assertEquals(actual.getCapability(IOSCapabilities.UI_SYSTEM_NAME), "iPhone OS");
     Assert.assertEquals(actual.getCapability(IOSCapabilities.UI_SDK_VERSION), sdk);
     Assert.assertNull(actual.getCapability(IOSCapabilities.UI_VERSION));
-    Assert.assertEquals(actual.getCapability(IOSCapabilities.BUNDLE_ID), "com.yourcompany.UICatalog");
+    Assert
+        .assertEquals(actual.getCapability(IOSCapabilities.BUNDLE_ID), "com.yourcompany.UICatalog");
     Assert.assertEquals(actual.getCapability(IOSCapabilities.BUNDLE_VERSION), "2.10");
 
   }

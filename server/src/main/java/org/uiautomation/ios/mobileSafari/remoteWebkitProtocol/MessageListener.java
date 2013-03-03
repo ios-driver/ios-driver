@@ -14,7 +14,7 @@
 
 package org.uiautomation.ios.mobileSafari.remoteWebkitProtocol;
 
-import org.uiautomation.ios.mobileSafari.message.IOSMessage;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.message.IOSMessage;
 
 public interface MessageListener {
 

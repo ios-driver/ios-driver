@@ -28,7 +28,7 @@ import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
-import org.uiautomation.ios.server.utils.FileTo64EncodedStringUtils;
+import org.uiautomation.ios.utils.FileTo64EncodedStringUtils;
 
 import com.google.common.collect.ImmutableMap;
 

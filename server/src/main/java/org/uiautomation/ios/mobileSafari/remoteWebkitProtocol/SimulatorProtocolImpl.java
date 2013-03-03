@@ -14,8 +14,8 @@
 package org.uiautomation.ios.mobileSafari.remoteWebkitProtocol;
 
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.mobileSafari.PlistManager;
-import org.uiautomation.ios.mobileSafari.ResponseFinder;
+import org.uiautomation.ios.utils.PlistManager;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.ResponseFinder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

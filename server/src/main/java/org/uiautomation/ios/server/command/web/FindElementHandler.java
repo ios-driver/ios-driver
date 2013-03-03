@@ -21,7 +21,7 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.webInspector.DOM.RemoteExceptionException;
-import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
+import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.model.RemoteWebElement;
 
 public class FindElementHandler extends BaseWebCommandHandler {
 
