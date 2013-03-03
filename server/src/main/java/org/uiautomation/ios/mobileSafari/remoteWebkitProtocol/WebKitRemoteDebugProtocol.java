@@ -29,6 +29,13 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+/**
+ * Communication logic for the WKRDP to connect to an app, and to a specific webview inside that
+ * app.
+ *
+ * @see WebKitRemoteDebugProtocol#sendWebkitCommand(org.json.JSONObject, int) to use the protocol
+ *      itself.
+ */
 public abstract class WebKitRemoteDebugProtocol {
 
   private static final Logger log = Logger.getLogger(WebKitRemoteDebugProtocol.class.getName());
@@ -38,7 +45,7 @@ public abstract class WebKitRemoteDebugProtocol {
   private String bundleId;
   private final PlistManager plist = new PlistManager();
   private final static String senderBase = "E0F4C128-F4FF-4D45-A538-BA382CD660";
-  private int commandId = 56;
+  private int commandId = 0;
 
   private volatile boolean keepGoing = true;
   private volatile boolean readyToBeStopped = true;

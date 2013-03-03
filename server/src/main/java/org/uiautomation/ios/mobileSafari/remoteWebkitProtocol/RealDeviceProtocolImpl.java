@@ -17,6 +17,9 @@ package org.uiautomation.ios.mobileSafari.remoteWebkitProtocol;
 import org.uiautomation.ios.mobileSafari.ResponseFinder;
 import org.uiautomation.iosdriver.services.WebInspectorService;
 
+/**
+ * WKRDP implementation for real device using a USB connection.
+ */
 public class RealDeviceProtocolImpl extends WebKitRemoteDebugProtocol {
 
   private WebInspectorService inspector;
