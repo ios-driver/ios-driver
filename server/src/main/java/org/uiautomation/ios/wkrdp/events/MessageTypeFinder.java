@@ -13,10 +13,10 @@
  */
 package org.uiautomation.ios.wkrdp.events;
 
-import java.util.logging.Logger;
-
 import org.json.JSONObject;
 import org.uiautomation.ios.wkrdp.events.inserted.ChildIframeInserted;
+
+import java.util.logging.Logger;
 
 public class MessageTypeFinder {
 

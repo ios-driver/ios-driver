@@ -29,7 +29,6 @@ import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.communication.device.Device;
 import org.uiautomation.ios.context.BaseWebInspector;
-import org.uiautomation.ios.wkrdp.model.NodeId;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.AppleLocale;
 import org.uiautomation.ios.server.application.ContentResult;

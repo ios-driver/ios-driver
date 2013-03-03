@@ -13,13 +13,13 @@
  */
 package org.uiautomation.ios.wkrdp.events;
 
+import org.uiautomation.ios.wkrdp.events.inserted.ChildIframeInserted;
+import org.uiautomation.ios.wkrdp.model.NodeId;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
-
-import org.uiautomation.ios.wkrdp.model.NodeId;
-import org.uiautomation.ios.wkrdp.events.inserted.ChildIframeInserted;
 
 public class EventHistory {
 

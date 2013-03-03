@@ -15,6 +15,7 @@
 package org.uiautomation.ios.wkrdp;
 
 import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.wkrdp.internal.WebKitSyncronizer;
 import org.uiautomation.ios.wkrdp.message.ApplicationConnectedMessage;
 import org.uiautomation.ios.wkrdp.message.ApplicationDataMessage;
@@ -24,13 +25,12 @@ import org.uiautomation.ios.wkrdp.message.ReportConnectedApplicationsMessage;
 import org.uiautomation.ios.wkrdp.message.ReportSetupMessage;
 import org.uiautomation.ios.wkrdp.message.WebkitApplication;
 import org.uiautomation.ios.wkrdp.message.WebkitPage;
-import org.uiautomation.ios.server.ServerSideSession;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-
+// TODO freynaud delete the interface ?
 public class WebKitNotificationListener implements MessageListener {
 
   private static final Logger log = Logger.getLogger(WebKitNotificationListener.class.getName());

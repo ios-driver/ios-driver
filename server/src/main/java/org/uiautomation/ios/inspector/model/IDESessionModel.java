@@ -13,14 +13,14 @@
  */
 package org.uiautomation.ios.inspector.model;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.net.URL;
-
 import org.json.JSONObject;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.UIAModels.Session;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.net.URL;
 
 public interface IDESessionModel {
 

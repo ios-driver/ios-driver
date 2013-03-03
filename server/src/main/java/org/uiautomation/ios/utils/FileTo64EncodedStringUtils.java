@@ -14,14 +14,14 @@
 
 package org.uiautomation.ios.utils;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
+import org.openqa.selenium.WebDriverException;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.IOUtils;
-import org.openqa.selenium.WebDriverException;
 
 public class FileTo64EncodedStringUtils {
 

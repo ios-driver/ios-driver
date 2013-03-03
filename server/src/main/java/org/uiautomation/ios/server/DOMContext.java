@@ -18,13 +18,13 @@ import org.json.JSONObject;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.context.BaseWebInspector;
-import org.uiautomation.ios.wkrdp.model.NodeId;
+import org.uiautomation.ios.wkrdp.RemoteExceptionException;
 import org.uiautomation.ios.wkrdp.events.ChildNodeRemoved;
 import org.uiautomation.ios.wkrdp.events.Event;
 import org.uiautomation.ios.wkrdp.events.EventHistory;
 import org.uiautomation.ios.wkrdp.events.inserted.ChildIframeInserted;
 import org.uiautomation.ios.wkrdp.message.WebkitPage;
-import org.uiautomation.ios.wkrdp.RemoteExceptionException;
+import org.uiautomation.ios.wkrdp.model.NodeId;
 import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
 
 import java.util.List;

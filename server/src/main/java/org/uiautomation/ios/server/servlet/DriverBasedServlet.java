@@ -13,10 +13,10 @@
  */
 package org.uiautomation.ios.server.servlet;
 
-import javax.servlet.http.HttpServlet;
-
-import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.IOSServer;
+import org.uiautomation.ios.server.IOSServerManager;
+
+import javax.servlet.http.HttpServlet;
 
 @SuppressWarnings("serial")
 public abstract class DriverBasedServlet extends HttpServlet {

@@ -13,13 +13,6 @@
  */
 package org.uiautomation.ios.inspector.model;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.net.URL;
-
-import org.uiautomation.ios.client.uiamodels.impl.*;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -31,8 +24,15 @@ import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
+import org.uiautomation.ios.client.uiamodels.impl.ServerSideNativeDriver;
 import org.uiautomation.ios.communication.Helper;
 import org.uiautomation.ios.communication.HttpClientFactory;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.net.URL;
 
 public class IDESessionModelImpl implements IDESessionModel {
 

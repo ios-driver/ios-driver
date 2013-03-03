@@ -13,11 +13,11 @@
  */
 package org.uiautomation.ios.wkrdp.events;
 
-import java.util.logging.Logger;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.wkrdp.model.NodeId;
+
+import java.util.logging.Logger;
 
 public class NodeEvent extends RawEvent {
 

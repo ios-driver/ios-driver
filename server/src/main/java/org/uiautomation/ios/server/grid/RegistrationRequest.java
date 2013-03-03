@@ -14,12 +14,6 @@
 
 package org.uiautomation.ios.server.grid;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -31,6 +25,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RegistrationRequest {
 
@@ -60,7 +60,6 @@ public class RegistrationRequest {
     HttpClient client = new DefaultHttpClient();
     try {
       URL registration = new URL(hubURL);
-
 
       BasicHttpEntityEnclosingRequest r =
           new BasicHttpEntityEnclosingRequest("POST", registration.toExternalForm());

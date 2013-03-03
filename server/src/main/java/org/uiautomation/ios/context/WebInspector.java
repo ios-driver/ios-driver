@@ -16,9 +16,7 @@ package org.uiautomation.ios.context;
 
 
 import org.json.JSONObject;
-import org.uiautomation.ios.wkrdp.internal.WebKitRemoteDebugProtocol;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.wkrdp.internal.WebKitRemoteDebugProtocol;
 import org.uiautomation.ios.wkrdp.internal.WebKitRemoteDebugProtocol;
 
 import java.util.logging.Logger;

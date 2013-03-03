@@ -27,15 +27,11 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.client.uiamodels.impl.ServerSideNativeDriver;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.device.Device;
-import org.uiautomation.ios.wkrdp.internal.AlertDetector;
-import org.uiautomation.ios.wkrdp.internal.AlertDetector;
-import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
 import org.uiautomation.ios.server.instruments.InstrumentsManager;
 import org.uiautomation.ios.utils.ClassicCommands;
-import org.uiautomation.ios.wkrdp.internal.AlertDetector;
 import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
 import org.uiautomation.ios.wkrdp.internal.AlertDetector;
 

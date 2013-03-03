@@ -13,11 +13,11 @@
  */
 package org.uiautomation.ios.wkrdp.events.inserted;
 
-import java.util.logging.Logger;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.wkrdp.events.NodeEvent;
+
+import java.util.logging.Logger;
 
 public class ChildNodeInserted extends NodeEvent {
 

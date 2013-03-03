@@ -21,12 +21,8 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.context.BaseWebInspector;
-import org.uiautomation.ios.wkrdp.internal.IosAtoms;
-import org.uiautomation.ios.wkrdp.internal.IosAtoms;
-import org.uiautomation.ios.wkrdp.internal.IosAtoms;
-import org.uiautomation.ios.wkrdp.model.NodeId;
-import org.uiautomation.ios.wkrdp.command.DOM;
 import org.uiautomation.ios.wkrdp.RemoteExceptionException;
+import org.uiautomation.ios.wkrdp.command.DOM;
 import org.uiautomation.ios.wkrdp.internal.IosAtoms;
 
 import java.util.ArrayList;

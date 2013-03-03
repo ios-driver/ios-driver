@@ -18,9 +18,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.context.BaseWebInspector;
-import org.uiautomation.ios.wkrdp.internal.IosAtoms;
-import org.uiautomation.ios.wkrdp.model.NodeId;
 import org.uiautomation.ios.wkrdp.command.DOM;
+import org.uiautomation.ios.wkrdp.internal.IosAtoms;
 
 import java.util.List;
 

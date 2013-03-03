@@ -14,10 +14,6 @@
 
 package org.uiautomation.ios.server.command;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
@@ -27,6 +23,10 @@ import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
 import org.uiautomation.ios.wkrdp.WebKitSeemsCorruptedException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 public abstract class BaseCommandHandler implements Handler {
 

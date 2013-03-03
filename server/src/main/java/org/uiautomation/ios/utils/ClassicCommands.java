@@ -13,11 +13,11 @@
  */
 package org.uiautomation.ios.utils;
 
+import org.openqa.selenium.WebDriverException;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.openqa.selenium.WebDriverException;
 
 public class ClassicCommands {
 

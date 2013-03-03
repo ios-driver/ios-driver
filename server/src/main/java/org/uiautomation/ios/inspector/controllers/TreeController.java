@@ -13,8 +13,6 @@
  */
 package org.uiautomation.ios.inspector.controllers;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,6 +23,8 @@ import org.uiautomation.ios.inspector.model.IDESessionModel;
 import org.uiautomation.ios.inspector.views.JSONView;
 import org.uiautomation.ios.inspector.views.View;
 import org.uiautomation.ios.utils.JSONToXMLConvertor;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class TreeController implements IDECommandController {
 

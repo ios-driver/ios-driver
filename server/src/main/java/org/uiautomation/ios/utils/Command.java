@@ -14,6 +14,8 @@
 
 package org.uiautomation.ios.utils;
 
+import org.openqa.selenium.WebDriverException;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -23,8 +25,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import org.openqa.selenium.WebDriverException;
 
 public class Command {
 

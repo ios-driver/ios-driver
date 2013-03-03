@@ -13,9 +13,9 @@
  */
 package org.uiautomation.ios.inspector.controllers;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.uiautomation.ios.inspector.views.View;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class NotImplementedIDEController implements IDECommandController {
 

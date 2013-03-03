@@ -13,16 +13,16 @@
  */
 package org.uiautomation.ios.utils;
 
+import org.apache.commons.io.IOUtils;
+import org.json.JSONObject;
+import org.uiautomation.ios.server.application.LanguageDictionary;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.StringWriter;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.io.IOUtils;
-import org.json.JSONObject;
-import org.uiautomation.ios.server.application.LanguageDictionary;
 
 public class PlistFileUtils {
 

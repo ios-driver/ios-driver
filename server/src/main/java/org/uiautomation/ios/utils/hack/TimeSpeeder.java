@@ -14,12 +14,12 @@
 
 package org.uiautomation.ios.utils.hack;
 
+import org.openqa.selenium.WebDriverException;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
-
-import org.openqa.selenium.WebDriverException;
 
 
 public class TimeSpeeder implements HorribleHack {

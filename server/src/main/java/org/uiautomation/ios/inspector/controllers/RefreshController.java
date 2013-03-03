@@ -13,13 +13,13 @@
  */
 package org.uiautomation.ios.inspector.controllers;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.inspector.model.Cache;
 import org.uiautomation.ios.inspector.views.RedirectView;
 import org.uiautomation.ios.inspector.views.View;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class RefreshController implements IDECommandController {
 

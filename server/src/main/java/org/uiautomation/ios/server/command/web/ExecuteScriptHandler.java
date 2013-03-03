@@ -13,10 +13,6 @@
  */
 package org.uiautomation.ios.server.command.web;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,6 +22,10 @@ import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.wkrdp.model.RemoteObject;
 import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class ExecuteScriptHandler extends BaseWebCommandHandler {
 

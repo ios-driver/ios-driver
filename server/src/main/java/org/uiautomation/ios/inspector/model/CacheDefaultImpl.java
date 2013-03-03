@@ -13,11 +13,11 @@
  */
 package org.uiautomation.ios.inspector.model;
 
+import org.uiautomation.ios.UIAModels.Session;
+
 import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.uiautomation.ios.UIAModels.Session;
 
 public class CacheDefaultImpl implements Cache {
 
@@ -26,8 +26,6 @@ public class CacheDefaultImpl implements Cache {
 
   /**
    * webdriver url. http://localhost:4444/wd/hub for instance.
-   * 
-   * @param endpoint
    */
   public CacheDefaultImpl(URL endpoint) {
     remote = endpoint;

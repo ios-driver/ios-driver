@@ -14,9 +14,8 @@
 
 package org.uiautomation.ios.context;
 
-import org.uiautomation.ios.wkrdp.internal.SimulatorProtocolImpl;
-import org.uiautomation.ios.wkrdp.ResponseFinder;
 import org.uiautomation.ios.wkrdp.MessageListener;
+import org.uiautomation.ios.wkrdp.ResponseFinder;
 import org.uiautomation.ios.wkrdp.internal.SimulatorProtocolImpl;
 
 /**
