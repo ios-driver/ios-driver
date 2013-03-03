@@ -53,7 +53,7 @@ public class ServerSideSession extends Session {
   private RemoteIOSDriver nativeDriver;
   private RemoteIOSWebDriver webDriver;
 
-  private WorkingMode mode;
+  private WorkingMode mode = WorkingMode.Native;
 
   private final DriverConfiguration configuration;
 

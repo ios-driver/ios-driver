@@ -37,7 +37,7 @@ public class DefaultWebKitResponseFinder implements ResponseFinder {
     response = null;
   }
 
-  public void addResponse(JSONObject repsonse) {
+  public void addResponse(JSONObject response) {
     responses.add(response);
   }
 
