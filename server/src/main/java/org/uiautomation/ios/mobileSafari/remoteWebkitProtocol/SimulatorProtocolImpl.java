@@ -25,7 +25,7 @@ import java.net.Socket;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-public class SimulatorProtocolImpl extends WebInspector2 {
+public class SimulatorProtocolImpl extends WebKitRemoteDebugProtocol {
 
   private static final Logger log = Logger.getLogger(SimulatorProtocolImpl.class.getName());
 

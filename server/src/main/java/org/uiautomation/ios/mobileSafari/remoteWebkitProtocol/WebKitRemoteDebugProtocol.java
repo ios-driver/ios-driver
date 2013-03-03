@@ -29,9 +29,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-public abstract class WebInspector2 {
+public abstract class WebKitRemoteDebugProtocol {
 
-  private static final Logger log = Logger.getLogger(WebInspector2.class.getName());
+  private static final Logger log = Logger.getLogger(WebKitRemoteDebugProtocol.class.getName());
   protected final MessageHandler handler;
   private Thread listen;
   private String connectionId;
@@ -78,8 +78,8 @@ public abstract class WebInspector2 {
   }
 
 
-  public WebInspector2(MessageListener listener,
-                       ResponseFinder... finders) {
+  public WebKitRemoteDebugProtocol(MessageListener listener,
+                                   ResponseFinder... finders) {
     this.handler = new DefaultMessageHandler(listener, finders);
   }
 

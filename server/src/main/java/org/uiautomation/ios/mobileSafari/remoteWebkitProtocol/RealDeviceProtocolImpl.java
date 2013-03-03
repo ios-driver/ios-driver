@@ -17,7 +17,7 @@ package org.uiautomation.ios.mobileSafari.remoteWebkitProtocol;
 import org.uiautomation.ios.mobileSafari.ResponseFinder;
 import org.uiautomation.iosdriver.services.WebInspectorService;
 
-public class RealDeviceProtocolImpl extends WebInspector2 {
+public class RealDeviceProtocolImpl extends WebKitRemoteDebugProtocol {
 
   private WebInspectorService inspector;
 

@@ -39,7 +39,7 @@ public class SimulatorSession {
 
   private static final Logger log = Logger.getLogger(SimulatorSession.class.getName());
 
-  private WebInspector2 simulatorProtocol;
+  private WebKitRemoteDebugProtocol simulatorProtocol;
   private WebkitDevice device;
   private List<WebkitApplication> applications;
   private List<WebkitPage> pages = new ArrayList<WebkitPage>();
@@ -268,7 +268,8 @@ class DefaultMessageListener implements MessageListener, EventListener {
     if (message instanceof ApplicationSentListingMessage) {
       ApplicationSentListingMessage m = (ApplicationSentListingMessage) message;
       int change = m.getPages().size() - simulator.getPages().size();
-      log.info("ApplicationSentListingMessage: message pages: " + m.getPages().size() + ", change: " + change);
+      log.info("ApplicationSentListingMessage: message pages: " + m.getPages().size() + ", change: "
+               + change);
 
       if (change != 0) {
         List<WebkitPage> pages = new ArrayList<WebkitPage>();
