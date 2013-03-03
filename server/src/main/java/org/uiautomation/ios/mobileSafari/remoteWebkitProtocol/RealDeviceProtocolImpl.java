@@ -21,7 +21,7 @@ public class RealDeviceProtocolImpl extends WebKitRemoteDebugProtocol {
 
   private WebInspectorService inspector;
 
-  public RealDeviceProtocolImpl(DefaultMessageListener listener,
+  public RealDeviceProtocolImpl(MessageListener listener,
                                 ResponseFinder... finders) {
     super(listener, finders);
     inspector = new WebInspectorService("d1ce6333af579e27d166349dc8a1989503ba5b4f");

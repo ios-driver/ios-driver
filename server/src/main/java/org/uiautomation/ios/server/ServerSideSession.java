@@ -53,7 +53,7 @@ public class ServerSideSession extends Session {
   private RemoteIOSDriver nativeDriver;
   private RemoteIOSWebDriver webDriver;
 
-  private final Context context;
+  private WorkingMode mode;
 
   private final DriverConfiguration configuration;
 
@@ -85,7 +85,7 @@ public class ServerSideSession extends Session {
       }
     }
     instruments = new InstrumentsManager(driver.getPort());
-    context = new Context(this);
+
     configuration = new DriverConfigurationStore();
 
     Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -179,7 +179,7 @@ public class ServerSideSession extends Session {
   public void setMode(WorkingMode mode) throws NoSuchWindowException {
     if (mode == WorkingMode.Web) {
       checkWebModeIsAvailable();
-      try {
+      /*try {
         if (!getRemoteWebDriver().isConnected()) {
           //String bundleId = application.getMetadata("CFBundleIdentifier");
           //webDriver.connect(bundleId);
@@ -188,9 +188,13 @@ public class ServerSideSession extends Session {
       } catch (Exception e) {
         e.printStackTrace();
         throw new NoSuchWindowException("Cannot switch to window " + mode, e);
-      }
+      }   */
     }
-    context.switchToMode(mode);
+    this.mode = mode;
+  }
+
+  public WorkingMode getWorkingMode() {
+    return this.mode;
   }
 
   private void checkWebModeIsAvailable() {
@@ -204,14 +208,6 @@ public class ServerSideSession extends Session {
       }
     }
 
-  }
-
-  public WorkingMode getMode() {
-    return context.getWorkingMode();
-  }
-
-  public Context getContext() {
-    return context;
   }
 
 
