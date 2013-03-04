@@ -27,13 +27,13 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.client.uiamodels.impl.ServerSideNativeDriver;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.device.Device;
-import org.uiautomation.ios.mobileSafari.AlertDetector;
-import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.RemoteIOSWebDriver;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
 import org.uiautomation.ios.server.instruments.InstrumentsManager;
-import org.uiautomation.ios.server.utils.ClassicCommands;
+import org.uiautomation.ios.utils.ClassicCommands;
+import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
+import org.uiautomation.ios.wkrdp.internal.AlertDetector;
 
 import java.io.File;
 import java.net.URL;
@@ -53,7 +53,7 @@ public class ServerSideSession extends Session {
   private RemoteIOSDriver nativeDriver;
   private RemoteIOSWebDriver webDriver;
 
-  private final Context context;
+  private WorkingMode mode = WorkingMode.Native;
 
   private final DriverConfiguration configuration;
 
@@ -85,7 +85,7 @@ public class ServerSideSession extends Session {
       }
     }
     instruments = new InstrumentsManager(driver.getPort());
-    context = new Context(this);
+
     configuration = new DriverConfigurationStore();
 
     Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -158,6 +158,7 @@ public class ServerSideSession extends Session {
 
     if ("Safari".equals(capabilities.getBundleName())) {
       setMode(WorkingMode.Web);
+      getRemoteWebDriver().get("about:blank");
     }
 
   }
@@ -179,7 +180,7 @@ public class ServerSideSession extends Session {
   public void setMode(WorkingMode mode) throws NoSuchWindowException {
     if (mode == WorkingMode.Web) {
       checkWebModeIsAvailable();
-      try {
+      /*try {
         if (!getRemoteWebDriver().isConnected()) {
           //String bundleId = application.getMetadata("CFBundleIdentifier");
           //webDriver.connect(bundleId);
@@ -188,9 +189,13 @@ public class ServerSideSession extends Session {
       } catch (Exception e) {
         e.printStackTrace();
         throw new NoSuchWindowException("Cannot switch to window " + mode, e);
-      }
+      }   */
     }
-    context.switchToMode(mode);
+    this.mode = mode;
+  }
+
+  public WorkingMode getWorkingMode() {
+    return this.mode;
   }
 
   private void checkWebModeIsAvailable() {
@@ -204,14 +209,6 @@ public class ServerSideSession extends Session {
       }
     }
 
-  }
-
-  public WorkingMode getMode() {
-    return context.getWorkingMode();
-  }
-
-  public Context getContext() {
-    return context;
   }
 
 

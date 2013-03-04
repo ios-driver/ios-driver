@@ -22,7 +22,7 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
-import org.uiautomation.ios.server.utils.hack.TimeSpeeder;
+import org.uiautomation.ios.utils.hack.TimeSpeeder;
 
 public class GetTimeoutNHandler extends UIAScriptHandler {
 

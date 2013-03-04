@@ -13,11 +13,6 @@
  */
 package org.uiautomation.ios.inspector.controllers;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.inspector.IDEServlet;
@@ -26,6 +21,11 @@ import org.uiautomation.ios.inspector.model.IDESessionModel;
 import org.uiautomation.ios.inspector.views.ResourceView;
 import org.uiautomation.ios.inspector.views.View;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
+import javax.servlet.http.HttpServletRequest;
+
 public class ResourceController implements IDECommandController {
 
   private final Cache cache;
@@ -33,12 +33,12 @@ public class ResourceController implements IDECommandController {
   public ResourceController(Cache cache) {
     this.cache = cache;
   }
-  
+
   public boolean canHandle(String pathInfo) {
     return pathInfo.contains("resources");
   }
 
-  public View handle(HttpServletRequest req)  {
+  public View handle(HttpServletRequest req) {
     String path = req.getPathInfo();
     String pattern = "/resources/";
     int end = path.indexOf(pattern) + pattern.length();
@@ -54,14 +54,14 @@ public class ResourceController implements IDECommandController {
       } catch (FileNotFoundException e) {
         is = null;
       }
-      
+
     } else {
       is = IDEServlet.class.getResourceAsStream("/" + resource);
     }
     String mime = getMimeType(resource);
     if (is == null) {
       throw new WebDriverException("error getting resource " + req.getPathInfo()
-          + req.getQueryString());
+                                   + req.getQueryString());
     }
     return new ResourceView(is, mime);
   }
@@ -81,9 +81,9 @@ public class ResourceController implements IDECommandController {
     }
     throw new WebDriverException("mime type NI" + resource);
   }
-  
+
   private String extractSession(String pathInfo) {
-    
+
     if (pathInfo.startsWith("/resources/session/")) {
       String tmp = pathInfo.replace("/resources/session/", "");
       if (tmp.contains("/")) {
@@ -110,5 +110,5 @@ public class ResourceController implements IDECommandController {
     
     
    */
-  
+
 }

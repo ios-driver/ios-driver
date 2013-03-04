@@ -25,62 +25,50 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.communication.device.Device;
-import org.uiautomation.ios.server.IOSServerConfiguration;
-import org.uiautomation.ios.server.IOSServerManager;
-import org.uiautomation.ios.server.application.IOSApplication;
 
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RegistrationRequest {
 
-  private URL hubURL;
+  private String hubURL;
   private String nodeHost;
+
   private List<Map<String, Object>> capabilities = new ArrayList<Map<String, Object>>();
   private Map<String, Object> configuration = new HashMap<String, Object>();
 
 
-  public RegistrationRequest(IOSServerConfiguration config, IOSServerManager driver) throws MalformedURLException {
-    this.hubURL = new URL(config.getRegistrationURL());
-    this.nodeHost = config.getHost();
-    int port = config.getPort();
+  public RegistrationRequest(String hub, String nodeHost, int port, List<String> supportedApps) {
+    this.hubURL = hub;
+    this.nodeHost = nodeHost;
 
-    configuration.put("hubHost", hubURL.getHost());
-    configuration.put("hubPort", hubURL.getPort());
+    for (String app : supportedApps) {
+      IOSCapabilities cap = IOSCapabilities.iphone(app);
+      cap.setCapability("browserName", "IOS Simulator");
+      capabilities.add(cap.getRawCapabilities());
+    }
+
     configuration.put("remoteHost", "http://" + nodeHost + ":" + port);
     configuration.put("maxSession", 1);
-    configuration.put("proxy", "org.uiautomation.ios.grid.IOSRemoteProxy");
-  }
-
-  private void addCapabilityForEachSDKAndDevice(IOSServerManager driver, IOSCapabilities appCapabilities) {
-    for (String availableSDK : driver.getHostInfo().getInstalledSDKs()) {
-      appCapabilities.setSDKVersion(availableSDK);
-      addCapabilityForDevices(appCapabilities);
-    }
-  }
-
-  private void addCapabilityForDevices(IOSCapabilities appCapabilities) {
-    appCapabilities.setDevice(Device.ipad);
-    capabilities.add(new HashMap(appCapabilities.getRawCapabilities()));
-
-    appCapabilities.setDevice(Device.iphone);
-    capabilities.add(new HashMap(appCapabilities.getRawCapabilities()));
   }
 
   public void registerToHub() {
+
     HttpClient client = new DefaultHttpClient();
     try {
+      URL registration = new URL(hubURL);
 
       BasicHttpEntityEnclosingRequest r =
-          new BasicHttpEntityEnclosingRequest("POST", hubURL.toExternalForm());
+          new BasicHttpEntityEnclosingRequest("POST", registration.toExternalForm());
 
       String json = getJSONRequest().toString();
 
       r.setEntity(new StringEntity(json));
 
-      HttpHost host = new HttpHost(hubURL.getHost(), hubURL.getPort());
+      HttpHost host = new HttpHost(registration.getHost(), registration.getPort());
       HttpResponse response = client.execute(host, r);
       if (response.getStatusLine().getStatusCode() != 200) {
         throw new RuntimeException("Error sending the registration request.");

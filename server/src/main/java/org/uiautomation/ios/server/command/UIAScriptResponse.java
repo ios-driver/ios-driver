@@ -13,12 +13,13 @@
  */
 package org.uiautomation.ios.server.command;
 
-import java.util.Map;
-
 import org.openqa.selenium.remote.JsonToBeanConverter;
 import org.openqa.selenium.remote.Response;
 
+import java.util.Map;
+
 public class UIAScriptResponse {
+
   private final String rawResponse;
   private final JsonToBeanConverter convertor = new JsonToBeanConverter();
   private boolean firstResponse = false;

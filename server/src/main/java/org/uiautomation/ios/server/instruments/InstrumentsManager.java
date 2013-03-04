@@ -20,10 +20,10 @@ import org.uiautomation.ios.communication.device.Device;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.simulator.IOSSimulatorManager;
-import org.uiautomation.ios.server.utils.ClassicCommands;
-import org.uiautomation.ios.server.utils.Command;
-import org.uiautomation.ios.server.utils.ScriptHelper;
-import org.uiautomation.ios.server.utils.hack.TimeSpeeder;
+import org.uiautomation.ios.utils.ClassicCommands;
+import org.uiautomation.ios.utils.Command;
+import org.uiautomation.ios.utils.ScriptHelper;
+import org.uiautomation.ios.utils.hack.TimeSpeeder;
 
 import java.io.File;
 import java.io.IOException;

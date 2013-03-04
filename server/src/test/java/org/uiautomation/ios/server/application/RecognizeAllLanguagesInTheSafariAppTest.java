@@ -1,10 +1,8 @@
 package org.uiautomation.ios.server.application;
 
-import java.util.Locale;
-
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.uiautomation.ios.server.utils.ClassicCommands;
+import org.uiautomation.ios.utils.ClassicCommands;
 
 public class RecognizeAllLanguagesInTheSafariAppTest {
 

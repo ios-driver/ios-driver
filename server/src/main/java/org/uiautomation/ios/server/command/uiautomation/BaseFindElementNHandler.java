@@ -18,9 +18,9 @@ import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.application.LanguageDictionary;
 import org.uiautomation.ios.server.application.ServerSideL10NDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
-import org.uiautomation.ios.server.utils.JSONToXMLConvertor;
-import org.uiautomation.ios.server.utils.XPath2Engine;
-import org.uiautomation.ios.server.utils.XPathWithL10N;
+import org.uiautomation.ios.utils.JSONToXMLConvertor;
+import org.uiautomation.ios.utils.XPath2Engine;
+import org.uiautomation.ios.utils.XPathWithL10N;
 
 public abstract class BaseFindElementNHandler extends UIAScriptHandler {
 

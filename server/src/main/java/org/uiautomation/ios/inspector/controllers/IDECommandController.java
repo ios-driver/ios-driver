@@ -13,13 +13,13 @@
  */
 package org.uiautomation.ios.inspector.controllers;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.uiautomation.ios.inspector.views.View;
+
+import javax.servlet.http.HttpServletRequest;
 
 public interface IDECommandController {
 
   public boolean canHandle(String pathInfo);
 
-  public View handle(HttpServletRequest req) throws  Exception;
+  public View handle(HttpServletRequest req) throws Exception;
 }

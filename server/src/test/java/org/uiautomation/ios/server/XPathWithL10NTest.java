@@ -3,7 +3,7 @@ package org.uiautomation.ios.server;
 import org.openqa.selenium.WebDriverException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.uiautomation.ios.server.utils.XPathWithL10N;
+import org.uiautomation.ios.utils.XPathWithL10N;
 
 public class XPathWithL10NTest {
 
@@ -62,6 +62,7 @@ public class XPathWithL10NTest {
     for (String key : xpath.getKeysToL10N()) {
       xpath.setTranslation(key, key.toUpperCase());
     }
-    Assert.assertEquals(xpath.getXPath(), "//*[contains(@name,'KEY_1')]//*[contains(@name,'KEY_2')]");
+    Assert
+        .assertEquals(xpath.getXPath(), "//*[contains(@name,'KEY_1')]//*[contains(@name,'KEY_2')]");
   }
 }

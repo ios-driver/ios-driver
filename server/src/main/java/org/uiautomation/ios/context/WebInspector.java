@@ -16,9 +16,8 @@ package org.uiautomation.ios.context;
 
 
 import org.json.JSONObject;
-import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.SimulatorProtocolImpl;
-import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.WebInspector2;
 import org.uiautomation.ios.server.ServerSideSession;
+import org.uiautomation.ios.wkrdp.internal.WebKitRemoteDebugProtocol;
 
 import java.util.logging.Logger;
 
@@ -32,10 +31,10 @@ public class WebInspector extends BaseWebInspector {
   private final String senderKey;
   private final String connectionKey;
   private final String bundleId;
-  private final WebInspector2 inspector;
+  private final WebKitRemoteDebugProtocol inspector;
 
   public WebInspector(WebViewContext webViewContext, int pageIdentifierKey,
-                      WebInspector2 inspector, String bundleId,
+                      WebKitRemoteDebugProtocol inspector, String bundleId,
                       String connectionKey, ServerSideSession session) {
     super(session);
     this.bundleId = bundleId;

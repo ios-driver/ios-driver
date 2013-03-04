@@ -13,10 +13,6 @@
  */
 package org.uiautomation.ios.inspector.controllers;
 
-import java.net.URL;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -29,6 +25,10 @@ import org.uiautomation.ios.communication.HttpClientFactory;
 import org.uiautomation.ios.inspector.model.Cache;
 import org.uiautomation.ios.inspector.views.RedirectView;
 import org.uiautomation.ios.inspector.views.View;
+
+import java.net.URL;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class SessionGuesserController implements IDECommandController {
 

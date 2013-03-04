@@ -21,8 +21,8 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.server.command.uiautomation.SetImplicitWaitTimeoutNHandler;
-import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
-import org.uiautomation.ios.webInspector.DOM.RemoteWebNativeBackedElement;
+import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
+import org.uiautomation.ios.wkrdp.model.RemoteWebNativeBackedElement;
 
 public class ClickHandler extends BaseWebCommandHandler {
 
@@ -42,7 +42,7 @@ public class ClickHandler extends BaseWebCommandHandler {
       ((RemoteWebNativeBackedElement) element).nativeClick();
       // native tapping in a webview delays triggering the event for 300ms (because iOS is looking to see if it's a gesture)
       // going to assume if you have implicit waits set you want this delay, if not you want it to return 'fast'
-      if (getSession().getContext().getWorkingMode() == WorkingMode.Web &&
+      if (getSession().getWorkingMode() == WorkingMode.Web &&
           SetImplicitWaitTimeoutNHandler.TIMEOUT != null &&
           SetImplicitWaitTimeoutNHandler.TIMEOUT > 0) {
         Thread.sleep(300);

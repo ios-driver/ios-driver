@@ -13,18 +13,6 @@
  */
 package org.uiautomation.ios.inspector;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.uiautomation.ios.inspector.controllers.IDECommandController;
 import org.uiautomation.ios.inspector.controllers.IDEController;
 import org.uiautomation.ios.inspector.controllers.NotImplementedIDEController;
@@ -36,8 +24,20 @@ import org.uiautomation.ios.inspector.controllers.WebViewContentController;
 import org.uiautomation.ios.inspector.model.Cache;
 import org.uiautomation.ios.inspector.model.CacheDefaultImpl;
 import org.uiautomation.ios.inspector.views.View;
-import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.IOSServer;
+import org.uiautomation.ios.server.IOSServerManager;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 public class IDEServlet extends HttpServlet {

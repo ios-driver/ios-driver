@@ -18,15 +18,14 @@ import org.json.JSONObject;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.context.BaseWebInspector;
-import org.uiautomation.ios.mobileSafari.EventListener;
-import org.uiautomation.ios.mobileSafari.NodeId;
-import org.uiautomation.ios.mobileSafari.events.ChildNodeRemoved;
-import org.uiautomation.ios.mobileSafari.events.Event;
-import org.uiautomation.ios.mobileSafari.events.EventHistory;
-import org.uiautomation.ios.mobileSafari.events.inserted.ChildIframeInserted;
-import org.uiautomation.ios.mobileSafari.message.WebkitPage;
-import org.uiautomation.ios.webInspector.DOM.RemoteExceptionException;
-import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
+import org.uiautomation.ios.wkrdp.RemoteExceptionException;
+import org.uiautomation.ios.wkrdp.events.ChildNodeRemoved;
+import org.uiautomation.ios.wkrdp.events.Event;
+import org.uiautomation.ios.wkrdp.events.EventHistory;
+import org.uiautomation.ios.wkrdp.events.inserted.ChildIframeInserted;
+import org.uiautomation.ios.wkrdp.message.WebkitPage;
+import org.uiautomation.ios.wkrdp.model.NodeId;
+import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
 
 import java.util.List;
 import java.util.UUID;
@@ -38,7 +37,7 @@ import java.util.logging.Logger;
 
 
 // TODO freynaud revisit pageLoad, reset, setFrame and newContext and expose only 1 thing.
-public class DOMContext implements EventListener {
+public class DOMContext {
 
   private static final Logger log = Logger.getLogger(DOMContext.class.getName());
 
@@ -174,7 +173,7 @@ public class DOMContext implements EventListener {
     return iframe;
   }
 
-  @Override
+
   public void onPageLoad() {
     pageLoaded = true;
     reset();
@@ -240,7 +239,6 @@ public class DOMContext implements EventListener {
   }
 
 
-  @Override
   public synchronized void domHasChanged(Event e) {
     try {
 
@@ -293,7 +291,6 @@ public class DOMContext implements EventListener {
     isReady = true;
   }
 
-  @Override
   public void frameDied(JSONObject message) {
     // if that's the one we're working on, deselect it.
     if (iframe != null) {
@@ -306,7 +303,6 @@ public class DOMContext implements EventListener {
 
   }
 
-  @Override
   public void setWindowHandles(List<WebkitPage> handles) {
     this.windowHandles = handles;
 

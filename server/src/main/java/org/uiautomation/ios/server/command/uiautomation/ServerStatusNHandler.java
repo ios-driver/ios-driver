@@ -14,9 +14,6 @@
 
 package org.uiautomation.ios.server.command.uiautomation;
 
-import java.util.List;
-import java.util.Map;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,8 +24,11 @@ import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
-import org.uiautomation.ios.server.utils.BuildInfo;
-import org.uiautomation.ios.server.utils.ClassicCommands;
+import org.uiautomation.ios.utils.BuildInfo;
+import org.uiautomation.ios.utils.ClassicCommands;
+
+import java.util.List;
+import java.util.Map;
 
 public class ServerStatusNHandler extends BaseNativeCommandHandler {
 

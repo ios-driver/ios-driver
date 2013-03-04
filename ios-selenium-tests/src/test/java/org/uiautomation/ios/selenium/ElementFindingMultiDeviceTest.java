@@ -82,12 +82,10 @@ public class ElementFindingMultiDeviceTest {
     RemoteIOSDriver driver = null;
     try {
       driver = new RemoteIOSDriver(new URL(url), cap);
-      driver.switchTo().window("Web");
 
       for (Orientation o : getOrientationForDevice(device)) {
         driver.rotate(o);
         driver.get(pages.formPage);
-
         WebElement element = driver.findElement(By.id("working"));
 
         element.sendKeys("some");

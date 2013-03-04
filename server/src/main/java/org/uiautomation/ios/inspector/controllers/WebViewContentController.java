@@ -1,7 +1,5 @@
 package org.uiautomation.ios.inspector.controllers;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
@@ -10,6 +8,8 @@ import org.uiautomation.ios.inspector.model.Cache;
 import org.uiautomation.ios.inspector.model.IDESessionModel;
 import org.uiautomation.ios.inspector.views.View;
 import org.uiautomation.ios.inspector.views.WebView;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class WebViewContentController implements IDECommandController {
 

@@ -20,10 +20,10 @@ import org.uiautomation.ios.UIAModels.UIAWebView;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.mobileSafari.message.WebkitPage;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
+import org.uiautomation.ios.wkrdp.message.WebkitPage;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -43,7 +43,7 @@ public class GetWindowHandlesNHandler extends BaseNativeCommandHandler {
     handles.add(WorkingMode.Native.toString());
 
     if (sss.getNativeDriver().findElements(new TypeCriteria(UIAWebView.class)).size() > 0) {
-      for (WebkitPage page : getSession().getRemoteWebDriver().getSimulator().getPages()) {
+      for (WebkitPage page : getSession().getRemoteWebDriver().getPages()) {
         handles.add(WorkingMode.Web + "_" + page.getPageId());
       }
     }

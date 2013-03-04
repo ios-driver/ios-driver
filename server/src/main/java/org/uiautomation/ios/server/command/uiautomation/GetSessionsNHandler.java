@@ -13,8 +13,6 @@
  */
 package org.uiautomation.ios.server.command.uiautomation;
 
-import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,6 +23,8 @@ import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
+
+import java.util.List;
 
 public class GetSessionsNHandler extends BaseNativeCommandHandler {
 

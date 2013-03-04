@@ -14,9 +14,9 @@
 
 package org.uiautomation.ios.context;
 
-import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.SimulatorProtocolImpl;
-import org.uiautomation.ios.mobileSafari.ResponseFinder;
-import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.MessageListener;
+import org.uiautomation.ios.wkrdp.MessageListener;
+import org.uiautomation.ios.wkrdp.ResponseFinder;
+import org.uiautomation.ios.wkrdp.internal.SimulatorProtocolImpl;
 
 /**
  * Context for the webview accessed with the remote webkit protocol. If the application was launched

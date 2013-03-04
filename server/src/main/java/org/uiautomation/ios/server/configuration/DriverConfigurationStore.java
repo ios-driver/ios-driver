@@ -13,12 +13,12 @@
  */
 package org.uiautomation.ios.server.configuration;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
 import org.uiautomation.ios.UIAModels.configuration.DriverConfiguration;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class DriverConfigurationStore implements DriverConfiguration {
 

@@ -20,29 +20,28 @@ import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
-import org.uiautomation.ios.mobileSafari.IosAtoms;
-import org.uiautomation.ios.mobileSafari.NodeId;
-import org.uiautomation.ios.mobileSafari.events.ChildNodeRemoved;
-import org.uiautomation.ios.mobileSafari.events.Event;
-import org.uiautomation.ios.mobileSafari.events.EventFactory;
-import org.uiautomation.ios.mobileSafari.events.inserted.ChildIframeInserted;
-import org.uiautomation.ios.mobileSafari.message.ApplicationDataMessage;
-import org.uiautomation.ios.mobileSafari.message.ApplicationSentListingMessage;
-import org.uiautomation.ios.mobileSafari.message.IOSMessage;
-import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.MessageListener;
-import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.WebKitSeemsCorruptedException;
 import org.uiautomation.ios.server.DOMContext;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.webInspector.DOM.DOM;
-import org.uiautomation.ios.webInspector.DOM.Page;
-import org.uiautomation.ios.webInspector.DOM.RemoteObject;
-import org.uiautomation.ios.webInspector.DOM.RemoteObjectArray;
-import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
+import org.uiautomation.ios.wkrdp.MessageListener;
+import org.uiautomation.ios.wkrdp.WebKitSeemsCorruptedException;
+import org.uiautomation.ios.wkrdp.command.DOM;
+import org.uiautomation.ios.wkrdp.command.Page;
+import org.uiautomation.ios.wkrdp.events.ChildNodeRemoved;
+import org.uiautomation.ios.wkrdp.events.Event;
+import org.uiautomation.ios.wkrdp.events.EventFactory;
+import org.uiautomation.ios.wkrdp.events.inserted.ChildIframeInserted;
+import org.uiautomation.ios.wkrdp.internal.IosAtoms;
+import org.uiautomation.ios.wkrdp.message.ApplicationDataMessage;
+import org.uiautomation.ios.wkrdp.message.ApplicationSentListingMessage;
+import org.uiautomation.ios.wkrdp.message.IOSMessage;
+import org.uiautomation.ios.wkrdp.model.NodeId;
+import org.uiautomation.ios.wkrdp.model.RemoteObject;
+import org.uiautomation.ios.wkrdp.model.RemoteObjectArray;
+import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
 
 import sun.net.dns.ResolverConfiguration;
 
@@ -192,7 +191,8 @@ public abstract class BaseWebInspector implements MessageListener {
     try {
       JSONObject cmd = new JSONObject();
       cmd.put("method", "Runtime.evaluate");
-      cmd.put("params", new JSONObject().put("expression", "new window.XMLSerializer().serializeToString(document);")
+      cmd.put("params", new JSONObject()
+          .put("expression", "new window.XMLSerializer().serializeToString(document);")
           .put("returnByValue", true));
       JSONObject response = sendCommand(cmd);
       return cast(response);

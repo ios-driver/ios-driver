@@ -13,24 +13,24 @@
  */
 package org.uiautomation.ios.server.command.uiautomation;
 
-import java.io.File;
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.ImmutableMap;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.mobileSafari.remoteWebkitProtocol.RemoteIOSWebDriver;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
-import org.uiautomation.ios.server.utils.FileTo64EncodedStringUtils;
+import org.uiautomation.ios.utils.FileTo64EncodedStringUtils;
+import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
 
-import com.google.common.collect.ImmutableMap;
+import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 public class LogElementTreeNHandler extends UIAScriptHandler {
 

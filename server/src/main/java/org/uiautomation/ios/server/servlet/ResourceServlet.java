@@ -14,6 +14,8 @@
 
 package org.uiautomation.ios.server.servlet;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -22,14 +24,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.IOUtils;
-
-
 
 @SuppressWarnings("serial")
 public class ResourceServlet extends DriverBasedServlet {
 
- 
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -40,7 +38,9 @@ public class ResourceServlet extends DriverBasedServlet {
   protected void process(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
     String resource = request.getPathInfo().replace(request.getServletPath(), "");
-    if (resource.startsWith("/")) resource = resource.replaceFirst("/", "");
+    if (resource.startsWith("/")) {
+      resource = resource.replaceFirst("/", "");
+    }
     File f = getDriver().getCache().getResourceForKey(resource);
 
     try {
@@ -50,5 +50,5 @@ public class ResourceServlet extends DriverBasedServlet {
     }
   }
 
- 
+
 }

@@ -1,7 +1,5 @@
 package org.uiautomation.ios.server.command.uiautomation;
 
-import java.util.logging.Logger;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,6 +7,8 @@ import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+
+import java.util.logging.Logger;
 
 public class ExecuteScriptNHandler extends UIAScriptHandler {
 

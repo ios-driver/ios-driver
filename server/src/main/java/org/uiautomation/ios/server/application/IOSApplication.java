@@ -14,31 +14,28 @@
 
 package org.uiautomation.ios.server.application;
 
-import static org.uiautomation.ios.IOSCapabilities.DEVICE_FAMILLY;
-import static org.uiautomation.ios.IOSCapabilities.ICON;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import com.dd.plist.BinaryPropertyListParser;
+import com.dd.plist.BinaryPropertyListWriter;
+import com.dd.plist.NSArray;
+import com.dd.plist.NSDictionary;
+import com.dd.plist.NSNumber;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.communication.device.Device;
-import org.uiautomation.ios.server.utils.PlistFileUtils;
+import org.uiautomation.ios.utils.PlistFileUtils;
 
-import com.dd.plist.BinaryPropertyListParser;
-import com.dd.plist.BinaryPropertyListWriter;
-import com.dd.plist.NSArray;
-import com.dd.plist.NSDictionary;
-import com.dd.plist.NSNumber;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.uiautomation.ios.IOSCapabilities.DEVICE_FAMILLY;
+import static org.uiautomation.ios.IOSCapabilities.ICON;
 
 // TODO freynaud create IOSApp vs Running App that has locale + language
 public class IOSApplication {

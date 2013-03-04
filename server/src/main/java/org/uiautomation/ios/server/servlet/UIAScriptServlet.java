@@ -13,15 +13,6 @@
  */
 package org.uiautomation.ios.server.servlet;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.text.Normalizer;
-import java.util.logging.Logger;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.openqa.selenium.remote.Response;
@@ -31,13 +22,23 @@ import org.uiautomation.ios.server.command.UIAScriptResponse;
 import org.uiautomation.ios.server.command.uiautomation.GetCapabilitiesNHandler;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
 
+import java.io.IOException;
+import java.io.StringWriter;
+import java.text.Normalizer;
+import java.util.logging.Logger;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 public class UIAScriptServlet extends DriverBasedServlet {
 
   private static final Logger log = Logger.getLogger(UIAScriptServlet.class.getName());
   private static final long serialVersionUID = 41227429706998662L;
 
   @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
     try {
       log("sendNextCommand");
       sendNextCommand(request, response);
@@ -48,7 +49,8 @@ public class UIAScriptServlet extends DriverBasedServlet {
   }
 
   @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
     try {
       getResponse(request, response);
     } catch (Exception e) {
@@ -57,7 +59,8 @@ public class UIAScriptServlet extends DriverBasedServlet {
     }
   }
 
-  private void sendNextCommand(HttpServletRequest request, HttpServletResponse response) throws Exception {
+  private void sendNextCommand(HttpServletRequest request, HttpServletResponse response)
+      throws Exception {
 
     UIAScriptRequest nextCommand = communication(request).getNextCommand();
     String script = nextCommand.getScript();
@@ -69,7 +72,8 @@ public class UIAScriptServlet extends DriverBasedServlet {
     response.getWriter().close();
   }
 
-  private void getResponse(HttpServletRequest request, HttpServletResponse response) throws Exception, JSONException {
+  private void getResponse(HttpServletRequest request, HttpServletResponse response)
+      throws Exception, JSONException {
 
     if (request.getInputStream() != null) {
       StringWriter writer = new StringWriter();

@@ -14,8 +14,6 @@
 
 package org.uiautomation.ios.server.command.uiautomation;
 
-import java.io.File;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
@@ -24,7 +22,9 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
-import org.uiautomation.ios.server.utils.FileTo64EncodedStringUtils;
+import org.uiautomation.ios.utils.FileTo64EncodedStringUtils;
+
+import java.io.File;
 
 public class TakeScreenshotNHandler extends UIAScriptHandler {
 

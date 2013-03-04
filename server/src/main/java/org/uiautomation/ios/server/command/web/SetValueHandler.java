@@ -20,8 +20,8 @@ import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
-import org.uiautomation.ios.webInspector.DOM.RemoteWebElement;
-import org.uiautomation.ios.webInspector.DOM.RemoteWebNativeBackedElement;
+import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
+import org.uiautomation.ios.wkrdp.model.RemoteWebNativeBackedElement;
 
 import java.util.logging.Logger;
 

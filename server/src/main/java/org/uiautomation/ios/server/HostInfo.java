@@ -14,8 +14,8 @@
 
 package org.uiautomation.ios.server;
 
-import org.uiautomation.ios.server.utils.BuildInfo;
-import org.uiautomation.ios.server.utils.ClassicCommands;
+import org.uiautomation.ios.utils.BuildInfo;
+import org.uiautomation.ios.utils.ClassicCommands;
 
 import java.io.File;
 import java.util.List;
