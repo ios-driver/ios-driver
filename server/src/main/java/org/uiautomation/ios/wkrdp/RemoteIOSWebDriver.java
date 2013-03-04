@@ -262,6 +262,10 @@ public class RemoteIOSWebDriver {
     return currentInspector.getCookies();
   }
 
+  public void deleteCookie(String name, String domain) {
+    currentInspector.deleteCookie(name, domain);
+  }
+
 
   public String getCurrentUrl() {
     try {

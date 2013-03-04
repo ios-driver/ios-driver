@@ -61,15 +61,18 @@ public class Page {
       throw new WebDriverException(e);
     }
   }
-  /*public static JSONObject captureScreenshot() {
+
+
+  public static JSONObject deleteCookie(String cookieName, String domain) {
     try {
       JSONObject cmd = new JSONObject();
-      cmd.put("method", "Page.captureScreenshot");
+      cmd.put("method", "Page.deleteCookie");
+      cmd.put("params", new JSONObject().put("cookieName", cookieName).put("domain", domain));
       return cmd;
     } catch (JSONException e) {
       throw new WebDriverException(e);
     }
-  } */
+  }
 
 
 }

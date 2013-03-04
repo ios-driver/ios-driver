@@ -63,8 +63,8 @@ public enum WebDriverLikeCommand {
 
   GET_COOKIE("GET", "/session/:sessionId/cookie", JSONObject.class),
   //POST /session/:sessionId/cookie
-  //DELETE /session/:sessionId/cookie
-  // DELETE /session/:sessionId/cookie/:name
+  DELETE_COOKIE("DELETE", "/session/:sessionId/cookie", Void.class),
+  DELETE_COOKIE_BY_NAME("DELETE", "/session/:sessionId/cookie/:name", void.class),
   SOURCE("GET", "/session/:sessionId/source", JSONObject.class),
   TITLE("GET", "/session/:sessionId/title", String.class),
   ELEMENT_ROOT("POST", "/session/:sessionId/element", UIAElement.class),

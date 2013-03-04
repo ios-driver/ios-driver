@@ -595,14 +595,18 @@ public abstract class BaseWebInspector implements MessageListener {
     sendCommand(DOM.highlightNode(nodeId));
   }
 
+  public void deleteCookie(String name, String domain) {
+    sendCommand(Page.deleteCookie(name, domain));
+  }
+
   public List<Cookie> getCookies() {
+
     List<Cookie> res = new ArrayList<Cookie>();
     JSONObject o = sendCommand(Page.getCookies());
     JSONArray cookies = o.optJSONArray("cookies");
     if (cookies != null) {
       for (int i = 0; i < cookies.length(); i++) {
         JSONObject cookie = cookies.optJSONObject(i);
-
         String name = cookie.optString("name");
         String value = cookie.optString("value");
         String domain = cookie.optString("domain");
