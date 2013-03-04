@@ -30,6 +30,7 @@ import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.wkrdp.MessageListener;
 import org.uiautomation.ios.wkrdp.WebKitSeemsCorruptedException;
 import org.uiautomation.ios.wkrdp.command.DOM;
+import org.uiautomation.ios.wkrdp.command.Network;
 import org.uiautomation.ios.wkrdp.command.Page;
 import org.uiautomation.ios.wkrdp.events.ChildNodeRemoved;
 import org.uiautomation.ios.wkrdp.events.Event;
@@ -595,7 +596,6 @@ public abstract class BaseWebInspector implements MessageListener {
   }
 
   public List<Cookie> getCookies() {
-
     List<Cookie> res = new ArrayList<Cookie>();
     JSONObject o = sendCommand(Page.getCookies());
     JSONArray cookies = o.optJSONArray("cookies");
@@ -616,7 +616,6 @@ public abstract class BaseWebInspector implements MessageListener {
     } else {
       // TODO
     }
-
     return null;
   }
 }

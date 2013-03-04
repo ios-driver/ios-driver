@@ -112,7 +112,8 @@ public class WebKitNotificationListener implements MessageListener {
     }
 
     if (message instanceof ApplicationDataMessage) {
-      //System.out.println(message);
+      //ApplicationDataMessage m = (ApplicationDataMessage)message;
+      //System.out.println(m.getMessage());
     }
 
     if (message instanceof ApplicationConnectedMessage) {
