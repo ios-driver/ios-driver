@@ -14,6 +14,7 @@
 package org.uiautomation.ios.wkrdp.model;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NoSuchFrameException;
@@ -54,20 +55,25 @@ public class RemoteWebElement {
     return inspector.getPageIdentifier() + "_" + getNodeId().getId();
   }
 
-  public void click() throws Exception {
+  public void click() {
     clickAtom();
     inspector.checkForPageLoad();
   }
 
   // TODO freyanud no return here.
-  private void clickAtom() throws Exception {
-    String f = "(function(arg) { " + "var text = " + IosAtoms.CLICK + "(arg);" + "return text;})";
+  private void clickAtom() {
+    try {
+      String f = "(function(arg) { " + "var text = " + IosAtoms.CLICK + "(arg);" + "return text;})";
 
-    JSONArray args = new JSONArray();
-    args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
+      JSONArray args = new JSONArray();
+      args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
 
-    JSONObject response = getInspectorResponse(f, args, true);
-    inspector.cast(response);
+      JSONObject response = getInspectorResponse(f, args, true);
+      inspector.cast(response);
+
+    } catch (JSONException e) {
+      throw new WebDriverException(e);
+    }
   }
 
   public void setCursorAtTheEnd() {
@@ -195,7 +201,7 @@ public class RemoteWebElement {
     return new Point(o.getInt("left"), o.getInt("top"));
   }
 
-  public <T> T getAttribute(String attributeName) throws Exception {
+  public <T> T getAttribute(String attributeName) {
     T res = getRemoteObject().call("." + attributeName);
     if (res == null || "class".equals(attributeName)) {
       // textarea.value != testarea.getAttribute("value");
@@ -569,25 +575,28 @@ public class RemoteWebElement {
     }
   }
 
-  public String getTagName() throws Exception {
+  public String getTagName() {
     String tag = getAttribute("tagName");
     return tag.toLowerCase();
   }
 
-  private JSONObject getInspectorResponse(String javascript, JSONArray args, Boolean returnByValue)
-      throws Exception {
+  private JSONObject getInspectorResponse(String javascript, JSONArray args,
+                                          Boolean returnByValue) {
     JSONObject cmd = new JSONObject();
+    try {
+      cmd.put("method", "Runtime.callFunctionOn");
 
-    cmd.put("method", "Runtime.callFunctionOn");
+      JSONObject params = new JSONObject().put("objectId", getRemoteObject().getId())
+          .put("functionDeclaration", javascript)
+          .put("returnByValue", returnByValue);
+      if (args != null && args.length() > 0) {
+        params.put("arguments", args);
+      }
+      cmd.put("params", params);
 
-    JSONObject params = new JSONObject().put("objectId", getRemoteObject().getId())
-        .put("functionDeclaration", javascript)
-        .put("returnByValue", returnByValue);
-    if (args != null && args.length() > 0) {
-      params.put("arguments", args);
+      return inspector.sendCommand(cmd);
+    } catch (JSONException e) {
+      throw new WebDriverException(e);
     }
-    cmd.put("params", params);
-
-    return inspector.sendCommand(cmd);
   }
 }

@@ -83,22 +83,26 @@ public class RemoteObject {
     return objectId;
   }
 
-  public <T> T call(String function) throws Exception {
+  public <T> T call(String function) {
     JSONObject cmd = new JSONObject();
-    cmd.put("method", "Runtime.callFunctionOn");
+    try {
+      cmd.put("method", "Runtime.callFunctionOn");
 
-    JSONArray args = new JSONArray();
-    args.put(new JSONObject().put("value", ""));
+      JSONArray args = new JSONArray();
+      args.put(new JSONObject().put("value", ""));
 
-    cmd.put(
-        "params",
-        new JSONObject().put("objectId", this.getId())
-            .put("functionDeclaration",
-                 "(function(arg) { var res = this" + function + "; return res;})")
-            .put("arguments", args).put("returnByValue", false));
+      cmd.put(
+          "params",
+          new JSONObject().put("objectId", this.getId())
+              .put("functionDeclaration",
+                   "(function(arg) { var res = this" + function + "; return res;})")
+              .put("arguments", args).put("returnByValue", false));
 
-    JSONObject response = inspector.sendCommand(cmd);
-    return inspector.cast(response);
+      JSONObject response = inspector.sendCommand(cmd);
+      return inspector.cast(response);
+    } catch (JSONException e) {
+      throw new WebDriverException(e);
+    }
 
   }
 
