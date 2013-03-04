@@ -18,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -29,6 +30,7 @@ import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.wkrdp.MessageListener;
 import org.uiautomation.ios.wkrdp.WebKitSeemsCorruptedException;
 import org.uiautomation.ios.wkrdp.command.DOM;
+import org.uiautomation.ios.wkrdp.command.Network;
 import org.uiautomation.ios.wkrdp.command.Page;
 import org.uiautomation.ios.wkrdp.events.ChildNodeRemoved;
 import org.uiautomation.ios.wkrdp.events.Event;
@@ -46,6 +48,7 @@ import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
 import sun.net.dns.ResolverConfiguration;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -590,5 +593,29 @@ public abstract class BaseWebInspector implements MessageListener {
 
   public void highlightNode(NodeId nodeId) {
     sendCommand(DOM.highlightNode(nodeId));
+  }
+
+  public List<Cookie> getCookies() {
+    List<Cookie> res = new ArrayList<Cookie>();
+    JSONObject o = sendCommand(Page.getCookies());
+    JSONArray cookies = o.optJSONArray("cookies");
+    if (cookies != null) {
+      for (int i = 0; i < cookies.length(); i++) {
+        JSONObject cookie = cookies.optJSONObject(i);
+
+        String name = cookie.optString("name");
+        String value = cookie.optString("value");
+        String domain = cookie.optString("domain");
+        String path = cookie.optString("path");
+        Date expiry = new Date(cookie.optLong("expires"));
+        boolean isSecure = cookie.optBoolean("secure");
+        Cookie c = new Cookie(name, value, domain, path, expiry, isSecure);
+        res.add(c);
+      }
+      return res;
+    } else {
+      // TODO
+    }
+    return null;
   }
 }

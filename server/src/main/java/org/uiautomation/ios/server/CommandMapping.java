@@ -65,6 +65,7 @@ import org.uiautomation.ios.server.command.web.FindElementHandler;
 import org.uiautomation.ios.server.command.web.FindElementsHandler;
 import org.uiautomation.ios.server.command.web.ForwardHandler;
 import org.uiautomation.ios.server.command.web.GetAttributeHandler;
+import org.uiautomation.ios.server.command.web.GetCookiesHandler;
 import org.uiautomation.ios.server.command.web.GetHandler;
 import org.uiautomation.ios.server.command.web.GetPageSourceHandler;
 import org.uiautomation.ios.server.command.web.GetTagNameHandler;
@@ -119,7 +120,7 @@ public enum CommandMapping {
   SOURCE(LogElementTreeNHandler.class, GetPageSourceHandler.class),
   TREE(LogElementTreeNHandler.class),
   TREE_ROOT(LogElementTreeNHandler.class),
-
+  GET_COOKIE(NotImplementedNativeHandler.class, GetCookiesHandler.class),
   TARGET_RECT(".rect()"),
   TARGET_TAP(".tap({x::x,y::y})"),
   SET_ORIENTATION(SetOrientationNHandler.class),
