@@ -65,7 +65,7 @@ public enum WebDriverLikeCommand {
   //POST /session/:sessionId/cookie
   //DELETE /session/:sessionId/cookie
   // DELETE /session/:sessionId/cookie/:name
-  TREE_ROOT("GET", "/session/:sessionId/source", JSONObject.class),
+  SOURCE("GET", "/session/:sessionId/source", JSONObject.class),
   TITLE("GET", "/session/:sessionId/title", String.class),
   ELEMENT_ROOT("POST", "/session/:sessionId/element", UIAElement.class),
   ELEMENTS_ROOT("POST", "/session/:sessionId/elements", UIAElementArray.class),
@@ -140,7 +140,8 @@ public enum WebDriverLikeCommand {
                     Object.class),
 
   GET_TIMEOUT("GET", "/session/:sessionId/timeouts", Integer.class),
-  TREE("GET", "/session/:sessionId/element/:reference/source", String.class),
+  TREE("GET", "/session/:sessionId/element/:reference/tree", String.class),
+  TREE_ROOT("GET", "/session/:sessionId/tree", JSONObject.class),
   RECT("GET", "/session/:sessionId/element/:reference/rect", UIARect.class),
   KEYBOARD("GET", "/session/:sessionId/uiaApplication/:reference/keyboard", UIAKeyboard.class),
 
