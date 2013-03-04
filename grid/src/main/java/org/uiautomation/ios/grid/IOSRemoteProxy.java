@@ -15,11 +15,16 @@ package org.uiautomation.ios.grid;
 
 import org.openqa.grid.common.RegistrationRequest;
 import org.openqa.grid.internal.Registry;
+import org.openqa.grid.internal.TestSession;
 import org.openqa.grid.internal.listeners.SelfHealingProxy;
 import org.openqa.grid.internal.utils.HtmlRenderer;
 import org.openqa.grid.selenium.proxy.DefaultRemoteProxy;
 
+import java.util.Map;
+
 public class IOSRemoteProxy extends DefaultRemoteProxy implements SelfHealingProxy {
+
+  private boolean restarting;
 
   private HtmlRenderer renderer = new IOSHtmlRenderer(this);
 
@@ -34,4 +39,21 @@ public class IOSRemoteProxy extends DefaultRemoteProxy implements SelfHealingPro
     return renderer;
   }
 
+  @Override
+  public TestSession getNewSession(Map<String, Object> requestedCapability) {
+    synchronized (this) {
+      if (isRestarting()) {
+        return null;
+      }
+      return super.getNewSession(requestedCapability);
+    }
+  }
+
+  public boolean isRestarting() {
+    return restarting;
+  }
+
+  public void setRestarting(boolean restarting) {
+    this.restarting = restarting;
+  }
 }

@@ -154,6 +154,7 @@ public class IOSCapabilitiesMonitor implements Runnable {
 
   private void updateCapabilities(RegistrationRequest registrationRequest) {
     try {
+      proxy.setRestarting(true);
       while (proxyBusy()) {
         System.out.println("Node busy... waiting...");
         Thread.sleep(1000);
