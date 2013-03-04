@@ -594,14 +594,11 @@ public class RemoteWebElement {
       }
       cmd.put("params", params);
 
-      return inspector.sendCommand(cmd);
+      JSONObject response = inspector.sendCommand(cmd);
+      inspector.checkForJSErrors(response);
+      return response;
     } catch (JSONException e) {
       throw new WebDriverException(e);
     }
-    cmd.put("params", params);
-
-    JSONObject response = inspector.sendCommand(cmd);
-    inspector.checkForJSErrors(response);
-    return response;
   }
 }
