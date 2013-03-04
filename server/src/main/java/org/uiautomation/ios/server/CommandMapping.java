@@ -115,8 +115,10 @@ public enum CommandMapping {
   EXECUTE_SCRIPT(ExecuteScriptNHandler.class, ExecuteScriptHandler.class),
   EQUAL(NotImplementedNativeHandler.class, IsEqualHandler.class),
   // UIATarget
+
+  SOURCE(LogElementTreeNHandler.class, GetPageSourceHandler.class),
   TREE(LogElementTreeNHandler.class),
-  TREE_ROOT(LogElementTreeNHandler.class, GetPageSourceHandler.class),
+  TREE_ROOT(LogElementTreeNHandler.class),
 
   TARGET_RECT(".rect()"),
   TARGET_TAP(".tap({x::x,y::y})"),

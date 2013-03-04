@@ -69,7 +69,7 @@ public class WebKitNotificationListener implements MessageListener {
     if (message instanceof ApplicationSentListingMessage) {
       ApplicationSentListingMessage m = (ApplicationSentListingMessage) message;
       int change = m.getPages().size() - driver.getPages().size();
-      log.info("ApplicationSentListingMessage: message pages: " + m.getPages().size() + ", change: "
+      log.fine("ApplicationSentListingMessage: message pages: " + m.getPages().size() + ", change: "
                + change);
 
       if (change != 0) {
