@@ -32,18 +32,28 @@
 0.6.0 (current)
 -----
 - inspector should save the tmp screenshot in tmp dir
-- inspector cleanup
++ inspector cleanup
 - add selenium tests for the inspector ( update mocks ? )
 - make sendKeys type at the end of the input fields
-
++ get / delete cookies
++ JNI to detect new devices
++ record clicks on the inspector
++ xpath help for the inspector
++ workaround to be able to use select / option on webpage
++ bug fix for hybrid apps. Page reload now doesn't corrupt the state anymore.
++ safari window switching
++ native events on hybrid apps working.
++ doc
++ append text at the end of an input field
++ non webdriver commands are documented and accessible via vendor extension, using the augmenter in java
++ investigate why safari is slow to start
 
 TODOs:
 -------
 - xpath to css convertor for web
 - cleanup and document setValue vs sendKeys
-- remove or document non webdriver commands.
+
 - delete window
-- append text at the end of an input field
 - file upload
 - BrowserConnection
 - HasTouchScreen
@@ -51,12 +61,10 @@ TODOs:
 - LocationContext
 - ApplicationCache
 - improve UIAKeyboard, add hide()
-- doc
 - kill instruments before starting.
 - reorganize classes in server.
 - split handlers into native, web, and misc
 - fix the inspector ratio, mouse over is off.
-- see what happens for native events on hybrid apps.
 - confusion between locale and languages
 - real device for web.
 - setup and teardown for device.
@@ -65,7 +73,7 @@ TODOs:
 - use implicit wait to wait for the native keyboard 
 - remove all calls to plutil
 - instruments crash from user define script. stackoverflow for method def for instance.
-- investigate why safari is slow to start
+
 - make keyboard a static id, like alert ?
 - remove the context switching for the alert detector
 - handle multi web windows
