@@ -158,6 +158,7 @@ public class ServerSideSession extends Session {
 
     if ("Safari".equals(capabilities.getBundleName())) {
       setMode(WorkingMode.Web);
+      getRemoteWebDriver().get("about:blank");
     }
 
   }
