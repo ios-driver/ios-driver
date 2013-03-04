@@ -51,6 +51,7 @@ public class SetCurrentContextNHandler extends BaseNativeCommandHandler {
       } else {
         String pageId = context.replace(WorkingMode.Web + "_", "");
 
+        // TODO freynaud. 2 windows doesnt mean 2 pages ...
         int delta = getSession().getRemoteWebDriver().getWindowHandleIndexDifference(pageId);
         if (delta != 0) {
           getSession().getNativeDriver()
@@ -66,7 +67,9 @@ public class SetCurrentContextNHandler extends BaseNativeCommandHandler {
       // mocking a request to SET_TIMEOUT
       JSONObject payload = new JSONObject();
       payload.append("ms", SetImplicitWaitTimeoutNHandler.TIMEOUT);
-      WebDriverLikeRequest wdlr = new WebDriverLikeRequest("POST", new Path(WebDriverLikeCommand.SET_TIMEOUT), payload);
+      WebDriverLikeRequest
+          wdlr =
+          new WebDriverLikeRequest("POST", new Path(WebDriverLikeCommand.SET_TIMEOUT), payload);
 
       // set the timeout by 'handling' the request, we don't care about it's response.
       try {

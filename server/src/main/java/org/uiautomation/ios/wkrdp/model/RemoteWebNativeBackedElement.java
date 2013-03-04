@@ -55,12 +55,18 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
   }
 
   public void nativeClick() {
-    try {
-      ((JavascriptExecutor) nativeDriver).executeScript(getNativeElementClickOnIt());
-      inspector.checkForPageLoad();
-    } catch (Exception e) {
-      throw new WebDriverException(e);
+    if ("option".equalsIgnoreCase(getTagName())) {
+      click();
+
+    } else {
+      try {
+        ((JavascriptExecutor) nativeDriver).executeScript(getNativeElementClickOnIt());
+        inspector.checkForPageLoad();
+      } catch (Exception e) {
+        throw new WebDriverException(e);
+      }
     }
+
   }
 
   private String getNativeElementClickOnIt() throws Exception {
