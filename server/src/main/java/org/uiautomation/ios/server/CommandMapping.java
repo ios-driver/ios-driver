@@ -60,6 +60,8 @@ import org.uiautomation.ios.server.command.uiautomation.TakeScreenshotNHandler;
 import org.uiautomation.ios.server.command.web.BackHandler;
 import org.uiautomation.ios.server.command.web.ClearHandler;
 import org.uiautomation.ios.server.command.web.ClickHandler;
+import org.uiautomation.ios.server.command.web.DeleteAllCookiesHandler;
+import org.uiautomation.ios.server.command.web.DeleteCookieByNameHandler;
 import org.uiautomation.ios.server.command.web.ExecuteScriptHandler;
 import org.uiautomation.ios.server.command.web.FindElementHandler;
 import org.uiautomation.ios.server.command.web.FindElementsHandler;
@@ -121,6 +123,8 @@ public enum CommandMapping {
   TREE(LogElementTreeNHandler.class),
   TREE_ROOT(LogElementTreeNHandler.class),
   GET_COOKIE(NotImplementedNativeHandler.class, GetCookiesHandler.class),
+  DELETE_COOKIE(NotImplementedNativeHandler.class, DeleteAllCookiesHandler.class),
+  DELETE_COOKIE_BY_NAME(NotImplementedNativeHandler.class, DeleteCookieByNameHandler.class),
   TARGET_RECT(".rect()"),
   TARGET_TAP(".tap({x::x,y::y})"),
   SET_ORIENTATION(SetOrientationNHandler.class),
