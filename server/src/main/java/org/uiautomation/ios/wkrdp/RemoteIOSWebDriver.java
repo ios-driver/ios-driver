@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
@@ -254,6 +255,11 @@ public class RemoteIOSWebDriver {
 
   public void get(String url) {
     currentInspector.get(url);
+  }
+
+
+  public List<Cookie> getCookies() {
+    return currentInspector.getCookies();
   }
 
 

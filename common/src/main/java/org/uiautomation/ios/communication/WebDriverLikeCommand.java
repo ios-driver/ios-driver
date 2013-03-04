@@ -61,7 +61,7 @@ public enum WebDriverLikeCommand {
   // GET /session/:sessionId/window/:windowHandle/position
   // POST /session/:sessionId/window/:windowHandle/maximize
 
-  //GET /session/:sessionId/cookie
+  GET_COOKIE("GET", "/session/:sessionId/cookie", JSONObject.class),
   //POST /session/:sessionId/cookie
   //DELETE /session/:sessionId/cookie
   // DELETE /session/:sessionId/cookie/:name

@@ -41,6 +41,17 @@ public class Page {
     }
   }
 
+  public static JSONObject getCookies() {
+    try {
+      JSONObject cmd = new JSONObject();
+      cmd.put("method", "Page.getCookies");
+      return cmd;
+    } catch (JSONException e) {
+      throw new WebDriverException(e);
+    }
+  }
+
+
   public static JSONObject getResourceTree() {
     try {
       JSONObject cmd = new JSONObject();
