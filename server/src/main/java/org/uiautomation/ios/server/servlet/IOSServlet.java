@@ -79,8 +79,10 @@ public class IOSServlet extends DriverBasedServlet {
     response.setContentType("application/json;charset=UTF-8");
     response.setCharacterEncoding("UTF-8");
     response.setStatus(200);
-
+    long start = System.currentTimeMillis();
     Response resp = getResponse(req);
+    System.out
+        .println(req.getGenericCommand() + " :" + (System.currentTimeMillis() - start) + "ms.");
     log.fine("got " + resp.toString());
 
     // TODO implement the json protocol properly.

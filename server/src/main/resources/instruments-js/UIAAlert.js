@@ -20,6 +20,8 @@ UIAAlert.prototype.dismiss = function () {
     }
 
     button.tap();
+    UIATarget.localTarget().delay(0.5);
+
 }
 
 /**
@@ -31,6 +33,7 @@ UIAAlert.prototype.accept = function () {
         throw new UIAutomationException("this alert doesn't have a default normal buttons.", 7);
     }
     button.tap();
+    UIATarget.localTarget().delay(0.5);
 }
 
 /**
