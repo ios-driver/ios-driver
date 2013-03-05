@@ -74,7 +74,7 @@ public class DeviceServlet extends DriverBasedServlet {
     StringBuilder b = new StringBuilder();
 
     b.append("<div id=\"tabs-" + device.getUuid() + "\">");
-    b.append("<p>Device info:</p>");
+    b.append("<h3>Device info:</h3>");
     b.append("  <ul>");
     b.append("  <li>name: " + device.getName() + "</li>");
     b.append("  <li>id: " + device.getUuid() + "</li>");
@@ -84,7 +84,7 @@ public class DeviceServlet extends DriverBasedServlet {
     b.append("  <li>SDK: " + device.getIosVersion() + "</li>");
     b.append("  </ul>");
 
-    b.append("<p>Applications:</p>");
+    b.append("<h3>Applications:</h3>");
 
     for (ApplicationInfo app : device.getApplications()) {
       b.append(app.getApplicationId() + ", ");
