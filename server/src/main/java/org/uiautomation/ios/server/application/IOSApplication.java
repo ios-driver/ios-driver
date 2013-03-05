@@ -63,6 +63,10 @@ public class IOSApplication {
     }
   }
 
+  public String toString() {
+    return ".APP:" + getApplicationPath().getAbsolutePath();
+  }
+
   /**
    * the content of the Info.plist for the app, as a json object.
    */

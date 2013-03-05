@@ -25,6 +25,7 @@ import org.uiautomation.ios.inspector.IDEServlet;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.server.grid.RegistrationRequest;
+import org.uiautomation.ios.server.servlet.ApplicationsServlet;
 import org.uiautomation.ios.server.servlet.DeviceServlet;
 import org.uiautomation.ios.server.servlet.IOSServlet;
 import org.uiautomation.ios.server.servlet.ResourceServlet;
@@ -86,6 +87,7 @@ public class IOSServer {
     wd.addServlet(IOSServlet.class, "/*");
     wd.addServlet(ResourceServlet.class, "/resources/*");
     wd.addServlet(DeviceServlet.class, "/devices/*");
+    wd.addServlet(ApplicationsServlet.class, "/applications/*");
 
     ServletContextHandler extra = new ServletContextHandler(server, "/", true, false);
     extra.addServlet(IDEServlet.class, "/inspector/*");
@@ -104,6 +106,8 @@ public class IOSServer {
     b.append("\nInspector: http://0.0.0.0:" + options.getPort() + "/inspector/");
     b.append("\ntests can access the server at http://0.0.0.0:" + options.getPort() + "/wd/hub");
     b.append("\nserver status: http://0.0.0.0:" + options.getPort() + "/wd/hub/status");
+    b.append("\nConnected devices: http://0.0.0.0:" + options.getPort() + "/wd/hub/devices/all");
+    b.append("\nApplications: http://0.0.0.0:" + options.getPort() + "/wd/hub/applications/all");
     b.append("\nusing xcode install : " + driver.getHostInfo().getXCodeInstall());
     b.append("\nusing IOS version " + driver.getHostInfo().getSDK());
     b.append("\nArchived apps " + driver.getApplicationStore().getFolder().getAbsolutePath());

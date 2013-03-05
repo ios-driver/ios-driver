@@ -74,6 +74,7 @@ public class IOSServerManager {
   }
 
   public void addSupportedApplication(IOSApplication application) {
+    apps.add(application);
     boolean added = supportedApplications.add(application);
     if (!added) {
       throw new WebDriverException("app already present :" + application.getApplicationPath());
