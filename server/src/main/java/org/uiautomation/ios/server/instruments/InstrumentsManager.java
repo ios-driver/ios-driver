@@ -20,6 +20,7 @@ import org.uiautomation.ios.communication.device.Device;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.simulator.IOSSimulatorManager;
+import org.uiautomation.ios.server.simulator.InstrumentsNoDelayLoader;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.Command;
 import org.uiautomation.ios.utils.ScriptHelper;
@@ -183,7 +184,8 @@ public class InstrumentsManager {
 
   private List<String> createInstrumentCommand(String script) {
     List<String> command = new ArrayList<String>();
-    command.add("instruments");
+
+    command.add(InstrumentsNoDelayLoader.getInstance().getInstruments().getAbsolutePath());
     if (realDevice) {
       command.add("-w");
       command.add("d1ce6333af579e27d166349dc8a1989503ba5b4f");
