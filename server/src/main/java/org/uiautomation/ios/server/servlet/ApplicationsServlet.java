@@ -25,16 +25,6 @@ public class ApplicationsServlet extends DriverBasedServlet {
     response.getWriter().close();
   }
 
-  /*private String content() {
-    StringBuilder b = new StringBuilder();
-    b.append("<ul>");
-    for (IOSApplication app : getDriver().getApplicationStore().getApplications()) {
-      b.append("<li>" + app.toString() + "</li>");
-    }
-    b.append("</ul>");
-    return b.toString();
-  }*/
-
 
   private String page() throws JSONException {
     StringBuilder b = new StringBuilder();
