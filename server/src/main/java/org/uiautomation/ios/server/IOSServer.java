@@ -25,6 +25,7 @@ import org.uiautomation.ios.inspector.IDEServlet;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.server.grid.RegistrationRequest;
+import org.uiautomation.ios.server.servlet.DeviceServlet;
 import org.uiautomation.ios.server.servlet.IOSServlet;
 import org.uiautomation.ios.server.servlet.ResourceServlet;
 import org.uiautomation.ios.server.servlet.UIAScriptServlet;
@@ -84,6 +85,7 @@ public class IOSServer {
     wd.addServlet(UIAScriptServlet.class, "/uiascriptproxy/*");
     wd.addServlet(IOSServlet.class, "/*");
     wd.addServlet(ResourceServlet.class, "/resources/*");
+    wd.addServlet(DeviceServlet.class, "/devices/*");
 
     ServletContextHandler extra = new ServletContextHandler(server, "/", true, false);
     extra.addServlet(IDEServlet.class, "/inspector/*");
@@ -104,6 +106,7 @@ public class IOSServer {
     b.append("\nserver status: http://0.0.0.0:" + options.getPort() + "/wd/hub/status");
     b.append("\nusing xcode install : " + driver.getHostInfo().getXCodeInstall());
     b.append("\nusing IOS version " + driver.getHostInfo().getSDK());
+    b.append("\nArchived apps " + driver.getApplicationStore().getFolder().getAbsolutePath());
 
     boolean safari = false;
     // automatically add safari for SDK 6.0 and above.

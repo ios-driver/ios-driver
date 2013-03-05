@@ -14,7 +14,7 @@
 
 package org.uiautomation.ios.server.instruments;
 
-import org.uiautomation.ios.communication.device.Device;
+import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 
 public interface IOSDeviceManager {
@@ -29,5 +29,5 @@ public interface IOSDeviceManager {
 
   void setLocationPreference(boolean authorized, String bundleId);
 
-  void setVariation(Device device, DeviceVariation variation);
+  void setVariation(DeviceType device, DeviceVariation variation);
 }

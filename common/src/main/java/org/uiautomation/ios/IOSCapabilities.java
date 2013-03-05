@@ -23,7 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.uiautomation.ios.communication.device.Device;
+import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 
 public class IOSCapabilities extends DesiredCapabilities {
@@ -72,7 +72,7 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   public static IOSCapabilities iphone(String bundleName, String bundleVersion) {
     IOSCapabilities res = new IOSCapabilities();
-    res.setCapability(DEVICE, Device.iphone);
+    res.setCapability(DEVICE, DeviceType.iphone);
     res.setCapability(LANGUAGE, "en");
     res.setCapability(LOCALE, "en_GB");
     res.setCapability(BUNDLE_NAME, bundleName);
@@ -86,7 +86,7 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   public static IOSCapabilities iphone(String bundleName) {
     IOSCapabilities res = new IOSCapabilities();
-    res.setCapability(DEVICE, Device.iphone);
+    res.setCapability(DEVICE, DeviceType.iphone);
     res.setCapability(LANGUAGE, "en");
     res.setCapability(LOCALE, "en_GB");
     res.setCapability(BUNDLE_NAME, bundleName);
@@ -95,7 +95,7 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   public static IOSCapabilities ipad(String bundleName) {
     IOSCapabilities res = new IOSCapabilities();
-    res.setCapability(DEVICE, Device.ipad);
+    res.setCapability(DEVICE, DeviceType.ipad);
     res.setCapability(LANGUAGE, "en");
     res.setCapability(LOCALE, "en_GB");
     res.setCapability(BUNDLE_NAME, bundleName);
@@ -161,19 +161,19 @@ public class IOSCapabilities extends DesiredCapabilities {
     return (Map<String, Object>) asMap();
   }
 
-  public void setSupportedDevices(List<Device> devices) {
+  public void setSupportedDevices(List<DeviceType> devices) {
     if (devices.isEmpty()) {
       throw new WebDriverException("your app need to support at least 1  device.");
     }
     setCapability(SUPPORTED_DEVICES, devices);
   }
 
-  public List<Device> getSupportedDevicesFromDeviceFamily() {
+  public List<DeviceType> getSupportedDevicesFromDeviceFamily() {
     JSONArray o = (JSONArray) asMap().get(DEVICE_FAMILLY);
-    List<Device> devices = new ArrayList<Device>();
+    List<DeviceType> devices = new ArrayList<DeviceType>();
     for (int i = 0; i < o.length(); i++) {
       try {
-        devices.add(Device.getFromFamilyCode(o.getInt(i)));
+        devices.add(DeviceType.getFromFamilyCode(o.getInt(i)));
       } catch (JSONException e) {
         throw new WebDriverException(o.toString() + " but should contain only 1 or 2.");
       }
@@ -181,9 +181,9 @@ public class IOSCapabilities extends DesiredCapabilities {
     return devices;
   }
 
-  public Device getDevice() {
+  public DeviceType getDevice() {
     Object o = getCapability(DEVICE);
-    return Device.valueOf(o);
+    return DeviceType.valueOf(o);
   }
 
   public String getSDKVersion() {
@@ -207,7 +207,7 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   }
 
-  public void setDevice(Device device) {
+  public void setDevice(DeviceType device) {
     setCapability(DEVICE, device);
   }
 

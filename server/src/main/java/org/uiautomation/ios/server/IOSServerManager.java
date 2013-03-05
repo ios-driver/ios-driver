@@ -20,10 +20,7 @@ import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.application.ResourceCache;
 import org.uiautomation.ios.server.configuration.Configuration;
-import org.uiautomation.iosdriver.DeviceDetector;
-import org.uiautomation.iosdriver.DeviceInfo;
 import org.uiautomation.iosdriver.services.DeviceManagerService;
-import org.uiautomation.iosdriver.services.LoggerService;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -31,22 +28,23 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import static org.uiautomation.ios.IOSCapabilities.MAGIC_PREFIX;
 
 
-public class IOSServerManager implements DeviceDetector {
+public class IOSServerManager {
 
   private final List<ServerSideSession> sessions = new ArrayList<ServerSideSession>();
   private static final Logger log = Logger.getLogger(IOSServerManager.class.getName());
   private final Set<IOSApplication> supportedApplications = new HashSet<IOSApplication>();
-  private final List<DeviceInfo> connectedDevices = new CopyOnWriteArrayList<DeviceInfo>();
+
   private final HostInfo hostInfo;
   private final ResourceCache cache = new ResourceCache();
   private DeviceManagerService deviceManager;
+  private final DeviceStore devices;
+  public final ApplicationStore apps;
 
   public IOSServerManager(int port) {
     try {
@@ -56,10 +54,11 @@ public class IOSServerManager implements DeviceDetector {
       System.err.println("Cannot configure logger.");
     }
     this.hostInfo = new HostInfo(port);
-
+    devices = new DeviceStore();
+    apps = new ApplicationStore();
     if (Configuration.BETA_FEATURE) {
-      LoggerService.enableDebug();
-      deviceManager = DeviceManagerService.create(this);
+      //LoggerService.enableDebug();
+      deviceManager = DeviceManagerService.create(devices);
       deviceManager.startDetection();
     }
   }
@@ -68,6 +67,10 @@ public class IOSServerManager implements DeviceDetector {
     if (Configuration.BETA_FEATURE) {
       deviceManager.stopDetection();
     }
+  }
+
+  public DeviceStore getDeviceStore() {
+    return devices;
   }
 
   public void addSupportedApplication(IOSApplication application) {
@@ -203,6 +206,10 @@ public class IOSServerManager implements DeviceDetector {
     return true;
   }
 
+  public ApplicationStore getApplicationStore() {
+    return apps;
+  }
+
   public List<ServerSideSession> getSessions() {
     return sessions;
   }
@@ -221,16 +228,5 @@ public class IOSServerManager implements DeviceDetector {
     return supportedApplications;
   }
 
-  @Override
-  public void onDeviceAdded(DeviceInfo deviceInfo) {
-    log.info(
-        "ADDED : " + deviceInfo.getDeviceName() + ",IOS "
-        + deviceInfo.getProductVersion() + "[" + deviceInfo.getUniqueDeviceID() + "]");
-  }
 
-  @Override
-  public void onDeviceRemoved(DeviceInfo deviceInfo) {
-    log.info(
-        "REMOVED : " + deviceInfo.getDeviceName() + "[" + deviceInfo.getUniqueDeviceID() + "]");
-  }
 }

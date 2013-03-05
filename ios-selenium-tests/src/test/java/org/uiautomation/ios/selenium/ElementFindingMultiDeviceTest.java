@@ -13,7 +13,7 @@ import org.testng.annotations.Test;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
-import org.uiautomation.ios.communication.device.Device;
+import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
@@ -57,18 +57,18 @@ public class ElementFindingMultiDeviceTest {
   public Object[][] createData1() {
     return new Object[][]{
 
-        {Device.iphone, DeviceVariation.Regular},
-        {Device.iphone, DeviceVariation.Retina35},
-        {Device.iphone, DeviceVariation.Retina4},
+        {DeviceType.iphone, DeviceVariation.Regular},
+        {DeviceType.iphone, DeviceVariation.Retina35},
+        {DeviceType.iphone, DeviceVariation.Retina4},
 
-        {Device.ipad, DeviceVariation.Regular},
-        {Device.ipad, DeviceVariation.Retina},
+        {DeviceType.ipad, DeviceVariation.Regular},
+        {DeviceType.ipad, DeviceVariation.Retina},
     };
   }
 
   @Test(dataProvider = "capabilities")
   public void testSendingKeyboardEventsShouldAppendTextInInputsMultipleDeviceFamilyAndOrientation(
-      Device device,
+      DeviceType device,
       DeviceVariation variation) throws Exception {
 
     IOSCapabilities cap = new IOSCapabilities();
@@ -105,12 +105,12 @@ public class ElementFindingMultiDeviceTest {
 
   }
 
-  private List<Orientation> getOrientationForDevice(Device device) {
+  private List<Orientation> getOrientationForDevice(DeviceType device) {
     List<Orientation> res = new ArrayList<Orientation>();
     res.add(Orientation.PORTRAIT);
     res.add(Orientation.LANDSCAPE);
     res.add(Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT);
-    if (device == Device.ipad) {
+    if (device == DeviceType.ipad) {
       res.add(Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN);
     }
     return res;

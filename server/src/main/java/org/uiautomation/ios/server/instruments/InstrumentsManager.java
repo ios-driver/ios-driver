@@ -16,7 +16,7 @@ package org.uiautomation.ios.server.instruments;
 
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.communication.device.Device;
+import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.simulator.IOSSimulatorManager;
@@ -60,7 +60,7 @@ public class InstrumentsManager {
     this.port = serverPort;
   }
 
-  public void startSession(Device device, DeviceVariation variation, String sdkVersion,
+  public void startSession(DeviceType device, DeviceVariation variation, String sdkVersion,
                            String locale, String language,
                            IOSApplication application, String sessionId, boolean timeHack,
                            List<String> envtParams)
@@ -155,7 +155,7 @@ public class InstrumentsManager {
      */
   }
 
-  private IOSDeviceManager prepareSimulator(String sdkVersion, Device device,
+  private IOSDeviceManager prepareSimulator(String sdkVersion, DeviceType device,
                                             DeviceVariation variation, String locale,
                                             String language, String bundleId) {
     // TODO freynaud handle real device ?

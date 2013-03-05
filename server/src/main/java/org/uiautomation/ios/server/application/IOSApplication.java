@@ -24,7 +24,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.communication.device.Device;
+import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.utils.PlistFileUtils;
 
 import java.io.File;
@@ -325,7 +325,7 @@ public class IOSApplication {
     return new IOSApplication(app.getAbsolutePath());
   }
 
-  public void setDefaultDevice(Device device) {
+  public void setDefaultDevice(DeviceType device) {
 
     try {
       File plist = new File(app, "Info.plist");

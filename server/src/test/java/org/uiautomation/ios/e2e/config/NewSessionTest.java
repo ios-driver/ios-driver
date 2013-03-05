@@ -13,7 +13,7 @@ import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
-import org.uiautomation.ios.communication.device.Device;
+import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.utils.ClassicCommands;
 
@@ -251,7 +251,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
       IOSCapabilities cap = IOSCapabilities.iphone("UICatalog");
       driver = new RemoteIOSDriver(getRemoteURL(), cap);
       IOSCapabilities actual = driver.getCapabilities();
-      Assert.assertEquals(actual.getDevice(), Device.iphone);
+      Assert.assertEquals(actual.getDevice(), DeviceType.iphone);
 
     } finally {
       if (driver != null) {
@@ -263,7 +263,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
       IOSCapabilities cap = IOSCapabilities.ipad("UICatalog");
       driver = new RemoteIOSDriver(getRemoteURL(), cap);
       IOSCapabilities actual = driver.getCapabilities();
-      Assert.assertEquals(actual.getDevice(), Device.ipad);
+      Assert.assertEquals(actual.getDevice(), DeviceType.ipad);
     } finally {
       if (driver != null) {
         driver.quit();
@@ -292,17 +292,18 @@ public class NewSessionTest extends BaseIOSDriverTest {
   public Object[][] createData1() {
     return new Object[][]{
 
-        {Device.iphone, DeviceVariation.Regular, 320, 480},
-        {Device.iphone, DeviceVariation.Retina35, 640, 960},
-        {Device.iphone, DeviceVariation.Retina4, 640, 1136},
-        {Device.ipad, DeviceVariation.Regular, 768, 1024},
-        {Device.ipad, DeviceVariation.Retina, 1536, 2048},
+        {DeviceType.iphone, DeviceVariation.Regular, 320, 480},
+        {DeviceType.iphone, DeviceVariation.Retina35, 640, 960},
+        {DeviceType.iphone, DeviceVariation.Retina4, 640, 1136},
+        {DeviceType.ipad, DeviceVariation.Regular, 768, 1024},
+        {DeviceType.ipad, DeviceVariation.Retina, 1536, 2048},
 
     };
   }
 
   @Test(dataProvider = "capabilities")
-  public void supportApplicationWithMultipleDeviceFamily(Device device, DeviceVariation variation,
+  public void supportApplicationWithMultipleDeviceFamily(DeviceType device,
+                                                         DeviceVariation variation,
                                                          int expectedW,
                                                          int expectedH) throws Exception {
     IOSCapabilities cap = new IOSCapabilities();
@@ -327,7 +328,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
         if (o == Orientation.UIA_DEVICE_ORIENTATION_FACEUP
             || o == Orientation.UIA_DEVICE_ORIENTATION_FACEDOWN
             || (o == Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN
-                && device == Device.iphone)) {
+                && device == DeviceType.iphone)) {
           continue;
         }
         driver.rotate(o);

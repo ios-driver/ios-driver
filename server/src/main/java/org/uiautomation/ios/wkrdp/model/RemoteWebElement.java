@@ -576,7 +576,9 @@ public class RemoteWebElement {
   }
 
   public String getTagName() {
+    long start = System.currentTimeMillis();
     String tag = getAttribute("tagName");
+    System.out.println((System.currentTimeMillis() - start) + "ms");
     return tag.toLowerCase();
   }
 

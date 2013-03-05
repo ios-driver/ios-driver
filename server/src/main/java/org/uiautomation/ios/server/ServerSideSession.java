@@ -26,7 +26,7 @@ import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.client.uiamodels.impl.ServerSideNativeDriver;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
-import org.uiautomation.ios.communication.device.Device;
+import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
@@ -96,7 +96,7 @@ public class ServerSideSession extends Session {
     });
   }
 
-  public Device getDevice() {
+  public DeviceType getDevice() {
     return capabilities.getDevice();
   }
 

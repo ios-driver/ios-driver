@@ -18,7 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.communication.device.Device;
+import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.command.uiautomation.NewSessionNHandler;
 
@@ -103,14 +103,14 @@ public class SimulatorSettings {
    * update the preference to have the simulator start in the correct more ( ie retina vs normal,
    * iphone screen size ).
    */
-  public void setVariation(Device device, DeviceVariation variation) {
+  public void setVariation(DeviceType device, DeviceVariation variation) {
     String value = getSimulateDeviceValue(device, variation);
     setDefaultSimulatorPreference("SimulateDevice", value);
   }
 
   /**
    * update the preference of the simulator. Similar to using the IOS Simulator menu > Hardware >
-   * [Device | Version ]
+   * [DeviceType | Version ]
    */
   private void setDefaultSimulatorPreference(String key, String value) {
     List<String> com = new ArrayList<String>();
@@ -172,7 +172,7 @@ public class SimulatorSettings {
     return f.exists();
   }
 
-  private String getSimulateDeviceValue(Device device, DeviceVariation variation) {
+  private String getSimulateDeviceValue(DeviceType device, DeviceVariation variation) {
     switch (device) {
       case iphone:
         return getIphoneString(variation);

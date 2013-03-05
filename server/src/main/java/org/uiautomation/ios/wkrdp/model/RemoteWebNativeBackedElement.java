@@ -27,7 +27,7 @@ import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.OrCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
-import org.uiautomation.ios.communication.device.Device;
+import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.context.BaseWebInspector;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.AppleLocale;
@@ -55,6 +55,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
   }
 
   public void nativeClick() {
+
     if ("option".equalsIgnoreCase(getTagName())) {
       click();
 
@@ -93,7 +94,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     script.append("var left = (" + left + "*ratio)+1;");
 
     script.append("var x = left;");
-    boolean ipad = session.getCapabilities().getDevice() == Device.ipad;
+    boolean ipad = session.getCapabilities().getDevice() == DeviceType.ipad;
 
     if (isSafari()) {
       if (ipad) {

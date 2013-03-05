@@ -14,7 +14,7 @@
 package org.uiautomation.ios.server.simulator;
 
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.communication.device.Device;
+import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.instruments.IOSDeviceManager;
 import org.uiautomation.ios.utils.ClassicCommands;
@@ -47,7 +47,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
    *
    * @param desiredSDKVersion the SDK version. For instance 5.0 or 4.3
    */
-  public IOSSimulatorManager(String desiredSDKVersion, Device device) {
+  public IOSSimulatorManager(String desiredSDKVersion, DeviceType device) {
     if (isSimulatorRunning() && !isWarmupRequired()) {
       throw new WebDriverException("another instance of the simulator is already running.");
     }
@@ -161,7 +161,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   }
 
   @Override
-  public void setVariation(Device device, DeviceVariation variation) {
+  public void setVariation(DeviceType device, DeviceVariation variation) {
     simulatorSettings.setVariation(device, variation);
   }
 
