@@ -266,7 +266,8 @@ public class AlertTest extends BaseIOSDriverTest {
     UIAButton ok = alert.findElement(UIAButton.class, new NameCriteria("OK"));
 
     ok.tap();
-
+    // wait for the alert to disappear.
+    Thread.sleep(500);
     driver.switchTo().alert();
   }
 

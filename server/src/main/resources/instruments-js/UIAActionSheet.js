@@ -26,6 +26,7 @@ UIAActionSheet.prototype.dismiss = function () {
         }
     }
     button.tap();
+    UIATarget.localTarget().delay(0.5);
 }
 
 /**
@@ -38,6 +39,7 @@ UIAActionSheet.prototype.accept = function () {
         throw new UIAutomationException("this UIAActionSheet doesn't have any button.", 7);
     }
     button.tap();
+    UIATarget.localTarget().delay(0.5);
 }
 
 /**
