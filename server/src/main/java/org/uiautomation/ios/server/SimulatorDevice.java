@@ -6,7 +6,7 @@ import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.application.IPAApplication;
 import org.uiautomation.ios.utils.ClassicCommands;
 
-public class SimulatorDevice implements Device {
+public class SimulatorDevice extends Device {
 
   @Override
   public IOSCapabilities getCapability() {

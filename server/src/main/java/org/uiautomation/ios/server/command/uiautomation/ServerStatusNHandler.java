@@ -63,7 +63,7 @@ public class ServerStatusNHandler extends BaseNativeCommandHandler {
       }
       app.put("resources", resources);
 
-      Map<String, Object> capabilities = getDriver().getCapabilities(a).getRawCapabilities();
+      Map<String, Object> capabilities = (Map<String, Object>) a.getCapabilities().asMap();
       for (String key : capabilities.keySet()) {
         app.put(key, capabilities.get(key));
       }

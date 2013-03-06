@@ -49,7 +49,7 @@ public class IOSCapabilities extends DesiredCapabilities {
   public static final String IOS_SWITCHES = "ios.switches";
   public static final String LANGUAGE = "language";
   public static final String SUPPORTED_LANGUAGES = "supportedLanguages";
-  public static final String SUPPORTED_DEVICES = "supportedDevices";
+  public static final String SUPPORTED_DEVICES = "deviceAlt";
   public static final String LOCALE = "locale";
   public static final String AUT = "aut";
   public static final String TIME_HACK = "timeHack";
@@ -105,8 +105,8 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   public IOSCapabilities() {
     setCapability(TIME_HACK, false);
-    //setCapability(VARIATION, DeviceVariation.Regular);
-    //setCapability(SIMULATOR, true);
+    setCapability(VARIATION, DeviceVariation.Regular);
+    setCapability(SIMULATOR, true);
   }
 
   public boolean isSimulator() {

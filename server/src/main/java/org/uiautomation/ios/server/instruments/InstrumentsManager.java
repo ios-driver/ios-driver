@@ -18,6 +18,8 @@ import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
+import org.uiautomation.ios.server.Device;
+import org.uiautomation.ios.server.RealDevice;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.simulator.IOSRealDeviceManager;
 import org.uiautomation.ios.server.simulator.IOSSimulatorManager;
@@ -42,13 +44,14 @@ public class InstrumentsManager {
   private File output;
   private final File template;
   private IOSApplication application;
+  private Device device;
   private IOSDeviceManager deviceManager;
   private String sessionId;
   private final int port;
   private String sdkVersion;
   private String locale;
   private String language;
-  private DeviceType device;
+  private DeviceType deviceType;
   private DeviceVariation variation;
   private IOSCapabilities caps;
   private List<String> extraEnvtParams;
@@ -65,13 +68,16 @@ public class InstrumentsManager {
     this.port = serverPort;
   }
 
-  public void startSession(String sessionId, IOSApplication application,
+  public void startSession(String sessionId,
+                           IOSApplication application,
+                           Device device,
                            IOSCapabilities capabilities) throws WebDriverException {
-    // TODO remove that
+
+    this.device = device;
     caps = capabilities;
     caps.setBundleId(application.getBundleId());
 
-    device = caps.getDevice();
+    deviceType = caps.getDevice();
     variation = caps.getDeviceVariation();
     sdkVersion = caps.getSDKVersion();
     locale = caps.getLocale();
@@ -89,7 +95,7 @@ public class InstrumentsManager {
       output = createTmpOutputFolder();
 
       this.application = application;
-      this.application.setDefaultDevice(device);
+      this.application.setDefaultDevice(deviceType);
 
       if (isWarmupRequired(sdkVersion)) {
         warmup();
@@ -185,12 +191,13 @@ public class InstrumentsManager {
     deviceManager.resetContentAndSettings();
     deviceManager.setL10N(locale, language);
     deviceManager.setKeyboardOptions();
-    deviceManager.setVariation(device, variation);
+    deviceManager.setVariation(deviceType, variation);
     deviceManager.setLocationPreference(true);
     return deviceManager;
   }
 
   public void stop() {
+    device.release();
     TimeSpeeder.getInstance().stop();
     simulatorProcess.waitFor();
     killSimulator();
@@ -208,9 +215,9 @@ public class InstrumentsManager {
     List<String> command = new ArrayList<String>();
 
     command.add(deviceManager.getInstrumentsClient());
-    if (caps.getDeviceUUID() != null) {
+    if (device instanceof RealDevice) {
       command.add("-w");
-      command.add(caps.getDeviceUUID());
+      command.add(((RealDevice) device).getUuid());
     }
     command.add("-t");
     command.add(template.getAbsolutePath());

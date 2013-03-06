@@ -14,8 +14,12 @@
 
 package org.uiautomation.ios;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
+
+import java.net.URL;
 
 /**
  * example for the documentation
@@ -33,6 +37,16 @@ public class Demo {
     IOSServer server = new IOSServer(config);
     server.start();
 
+    IOSCapabilities cap = IOSCapabilities.iphone("UICatalog");
+    cap.setCapability(IOSCapabilities.SIMULATOR, false);
+
+    RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), cap);
+    driver.findElement(By.xpath("//UIAWindow"));
+    driver.quit();
+
+    driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), cap);
+    driver.findElement(By.xpath("//UIAWindow"));
+    driver.quit();
 
   }
 

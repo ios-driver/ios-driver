@@ -43,7 +43,7 @@ public class GetSessionsNHandler extends BaseNativeCommandHandler {
       session.put("id", s.getSessionId());
 
       IOSApplication app = s.getApplication();
-      IOSCapabilities cap = getDriver().getCapabilities(app);
+      IOSCapabilities cap = app.getCapabilities();
       session.put("capabilities", cap.getRawCapabilities());
       res.put(session);
     }

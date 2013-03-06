@@ -155,8 +155,6 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
       }
       el = driver.findElement(by);
       System.out.println(el.getText());   */
-    } catch (Exception e) {
-      e.printStackTrace();
     } finally {
       if (driver != null) {
         driver.quit();

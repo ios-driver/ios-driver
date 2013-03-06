@@ -46,6 +46,7 @@ public class ServerSideSession extends Session {
 
   private static final Logger log = Logger.getLogger(ServerSideSession.class.getName());
   private IOSApplication application;
+  private Device device;
   private final IOSCapabilities capabilities;
   private final InstrumentsManager instruments;
   public final IOSServerManager driver;
@@ -64,13 +65,15 @@ public class ServerSideSession extends Session {
     return capabilities;
   }
 
-  ServerSideSession(IOSServerManager driver, IOSCapabilities capabilities) {
+  ServerSideSession(IOSServerManager driver, IOSCapabilities desiredCapabilities) {
     super(UUID.randomUUID().toString());
 
     this.driver = driver;
-    this.capabilities = capabilities;
+    this.capabilities = desiredCapabilities;
 
-    application = driver.findMatchingApplication(capabilities);
+    application = driver.findAndCreateInstanceMatchingApplication(desiredCapabilities);
+    device = driver.findAndReserveMatchingDevice(desiredCapabilities);
+
     application.setLanguage(capabilities.getLanguage());
     if (!capabilities.isSimulator()) {
       capabilities.setDeviceUUID("d1ce6333af579e27d166349dc8a1989503ba5b4f");
@@ -153,7 +156,7 @@ public class ServerSideSession extends Session {
   }
 
   public void start() {
-    instruments.startSession(getSessionId(), application, capabilities);
+    instruments.startSession(getSessionId(), application, device, capabilities);
 
     URL url = null;
     try {

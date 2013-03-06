@@ -23,6 +23,7 @@ import com.dd.plist.NSNumber;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
@@ -35,12 +36,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import static org.uiautomation.ios.IOSCapabilities.DEVICE_FAMILLY;
 import static org.uiautomation.ios.IOSCapabilities.ICON;
+import static org.uiautomation.ios.IOSCapabilities.MAGIC_PREFIX;
 
 // TODO freynaud create IOSApp vs Running App that has locale + language
 public class IOSApplication {
+
+  private static final Logger log = Logger.getLogger(IOSApplication.class.getName());
 
   private final JSONObject metadata;
   private final File app;
@@ -369,11 +374,23 @@ public class IOSApplication {
 
   }
 
-  public IOSCapabilities getCapability() {
+  public IOSCapabilities getCapabilities() {
     IOSCapabilities cap = new IOSCapabilities();
     cap.setSupportedLanguages(getSupportedLanguagesCodes());
     cap.setCapability("applicationPath", getApplicationPath().getAbsoluteFile());
+    List<DeviceType> supported = getSupportedDevices();
 
+    if (supported.contains(DeviceType.iphone)) {
+      cap.setDevice(DeviceType.iphone);
+    } else {
+      cap.setDevice(DeviceType.ipad);
+    }
+
+    if (this instanceof IPAApplication) {
+      cap.setCapability(IOSCapabilities.SIMULATOR, false);
+    }
+
+    cap.setCapability(IOSCapabilities.SUPPORTED_DEVICES, supported);
     for (Iterator iterator = getMetadata().keys(); iterator.hasNext(); ) {
       String key = (String) iterator.next();
 
@@ -385,5 +402,98 @@ public class IOSApplication {
       }
     }
     return cap;
+  }
+
+  public static boolean canRun(IOSCapabilities desiredCapabilities, IOSCapabilities appCapability) {
+
+    if (desiredCapabilities.isSimulator() != appCapability.isSimulator()) {
+      return false;
+    }
+    if (desiredCapabilities.getBundleName() == null) {
+      throw new WebDriverException("you need to specify the bundle to test.");
+    }
+    String desired = desiredCapabilities.getBundleName();
+
+    String bundleName = (String) appCapability.getCapability(IOSCapabilities.BUNDLE_NAME);
+    String displayName = (String) appCapability.getCapability(IOSCapabilities.BUNDLE_DISPLAY_NAME);
+    String name = bundleName != null ? bundleName : displayName;
+
+    if (!desired.equals(name)) {
+      return false;
+    }
+
+    if (desiredCapabilities.getBundleVersion() != null && !desiredCapabilities.getBundleVersion()
+        .equals(appCapability.getBundleVersion())) {
+      return false;
+    }
+
+    if (desiredCapabilities.getDevice() == null) {
+      throw new WebDriverException("you need to specify the device.");
+    }
+    if (!(appCapability.getSupportedDevices()
+              .contains(desiredCapabilities.getDevice()))) {
+      return false;
+    }
+
+    // check any extra capability starting with plist_
+    for (String key : desiredCapabilities.getRawCapabilities().keySet()) {
+      if (key.startsWith(IOSCapabilities.MAGIC_PREFIX)) {
+        String realKey = key.replace(MAGIC_PREFIX, "");
+        if (!desiredCapabilities.getRawCapabilities().get(key)
+            .equals(appCapability.getRawCapabilities().get(realKey))) {
+          return false;
+        }
+      }
+    }
+    String l = desiredCapabilities.getLanguage();
+
+    if (appCapability.getSupportedLanguages().isEmpty()) {
+      log.info(
+          "The application doesn't have any content files."
+          + "The localization related features won't be availabled.");
+    } else if (l != null && !appCapability.getSupportedLanguages().contains(l)) {
+      throw new SessionNotCreatedException(
+          "Language requested, " + l + " ,isn't supported.Supported are : "
+          + appCapability.getSupportedLanguages());
+    }
+
+    return true;
+  }
+
+  public String getBundleVersion() {
+    return getMetadata(IOSCapabilities.BUNDLE_VERSION);
+  }
+
+  public String getApplicationName() {
+    String name = getMetadata(IOSCapabilities.BUNDLE_NAME);
+    String displayName = getMetadata(IOSCapabilities.BUNDLE_DISPLAY_NAME);
+    return name != null ? name : displayName;
+
+  }
+
+  public List<DeviceType> getSupportedDevices() {
+    List<DeviceType> families = new ArrayList<DeviceType>();
+    String s = (String) getMetadata(IOSCapabilities.DEVICE_FAMILLY);
+    try {
+      JSONArray ar = new JSONArray(s);
+      for (int i = 0; i < ar.length(); i++) {
+        int f = ar.getInt(i);
+        if (f == 1) {
+          families.add(DeviceType.iphone);
+          families.add(DeviceType.ipod);
+        } else {
+          families.add(DeviceType.ipad);
+        }
+      }
+      return families;
+
+    } catch (JSONException e) {
+      throw new WebDriverException(e);
+    }
+
+  }
+
+  public boolean isSimulator() {
+    return "iphonesimulator".equals(getMetadata("DTPlatformName"));
   }
 }

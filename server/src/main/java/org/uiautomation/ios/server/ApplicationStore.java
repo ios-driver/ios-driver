@@ -18,7 +18,8 @@ public class ApplicationStore {
 
   public ApplicationStore() {
 
-    workingDirectory = new File("archived");
+    //workingDirectory = new File("archived");
+    workingDirectory = new File("/Users/freynaud/build/archived");
     workingDirectory.mkdir();
     log.info("Real device app archive :" + workingDirectory.getAbsolutePath());
     load();
@@ -86,7 +87,7 @@ public class ApplicationStore {
     for (IOSApplication app : getApplications()) {
       if (d.canRun(app)) {
         System.out.println(d.toString() + " can run " + app.toString());
-        IOSCapabilities c = merge(d.getCapability(), app.getCapability());
+        IOSCapabilities c = merge(d.getCapability(), app.getCapabilities());
         res.add(c);
       } else {
         System.err.println(d.toString() + " cannot run " + app.toString());

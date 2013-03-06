@@ -10,7 +10,7 @@ import org.uiautomation.iosdriver.services.DeviceInstallerService;
 
 import java.util.List;
 
-public class RealDevice implements Device {
+public class RealDevice extends Device {
 
   private final String uuid;
   private final DeviceType type;
