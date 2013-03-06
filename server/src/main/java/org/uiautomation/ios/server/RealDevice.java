@@ -88,6 +88,7 @@ public class RealDevice implements Device {
     res.setCapability(IOSCapabilities.SIMULATOR, false);
     res.setCapability(IOSCapabilities.UI_SDK_VERSION, iosVersion);
     res.setCapability(IOSCapabilities.DEVICE, type);
+    res.setCapability(IOSCapabilities.UUID, uuid);
     return res;
   }
 

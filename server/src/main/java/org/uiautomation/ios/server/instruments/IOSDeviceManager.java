@@ -27,7 +27,7 @@ public interface IOSDeviceManager {
 
   public void setKeyboardOptions();
 
-  void setLocationPreference(boolean authorized, String bundleId);
+  void setLocationPreference(boolean authorized);
 
   void setVariation(DeviceType device, DeviceVariation variation);
 }

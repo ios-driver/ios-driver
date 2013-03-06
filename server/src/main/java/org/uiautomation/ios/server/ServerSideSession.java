@@ -27,6 +27,7 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.client.uiamodels.impl.ServerSideNativeDriver;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.device.DeviceType;
+import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
@@ -70,6 +71,10 @@ public class ServerSideSession extends Session {
 
     application = driver.findMatchingApplication(capabilities);
     application.setLanguage(capabilities.getLanguage());
+
+    if (capabilities.getDeviceVariation() == null) {
+      capabilities.setDeviceVariation(DeviceVariation.Regular);
+    }
     if (capabilities.getSDKVersion() == null) {
       capabilities.setSDKVersion(ClassicCommands.getDefaultSDK());
     } else {
@@ -139,14 +144,7 @@ public class ServerSideSession extends Session {
   }
 
   public void start() {
-    String
-        appleLanguage =
-        application.getAppleLocaleFromLanguageCode(capabilities.getLanguage())
-            .getAppleLanguagesForPreferencePlist();
-    instruments.startSession(capabilities.getDevice(), capabilities.getDeviceVariation(),
-                             capabilities.getSDKVersion(), capabilities.getLocale(),
-                             appleLanguage, application, getSessionId(), capabilities.isTimeHack(),
-                             capabilities.getExtraSwitches());
+    instruments.startSession(getSessionId(), application, capabilities);
 
     URL url = null;
     try {

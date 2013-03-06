@@ -14,6 +14,7 @@
 package org.uiautomation.ios.server.simulator;
 
 import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.instruments.IOSDeviceManager;
@@ -38,6 +39,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   public static final String SIMULATOR_PROCESS_NAME = "iPhone Simulator";
 
   private final List<String> sdks;
+  private final String bundleId;
   private final File xcodeInstall;
   private final String desiredSDKVersion;
   private final SimulatorSettings simulatorSettings;
@@ -47,16 +49,17 @@ public class IOSSimulatorManager implements IOSDeviceManager {
    *
    * @param desiredSDKVersion the SDK version. For instance 5.0 or 4.3
    */
-  public IOSSimulatorManager(String desiredSDKVersion, DeviceType device) {
+  public IOSSimulatorManager(IOSCapabilities capabilities) {
     if (isSimulatorRunning() && !isWarmupRequired()) {
       throw new WebDriverException("another instance of the simulator is already running.");
     }
 
     this.sdks = ClassicCommands.getInstalledSDKs();
-    this.desiredSDKVersion = validateSDK(desiredSDKVersion);
+    this.desiredSDKVersion = validateSDK(capabilities.getSDKVersion());
 
     xcodeInstall = ClassicCommands.getXCodeInstall();
     simulatorSettings = new SimulatorSettings(desiredSDKVersion);
+    bundleId = capabilities.getBundleId();
   }
 
   private boolean isWarmupRequired() {
@@ -64,7 +67,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     return true;
   }
 
-  public void forceDefaultSDK(String desiredSDKVersion) {
+  public void forceDefaultSDK() {
     Float desiredVersion = Float.parseFloat(desiredSDKVersion);
     for (String v : sdks) {
 
@@ -151,7 +154,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   }
 
   @Override
-  public void setLocationPreference(boolean authorized, String bundleId) {
+  public void setLocationPreference(boolean authorized) {
     simulatorSettings.setLocationPreference(authorized, bundleId);
   }
 

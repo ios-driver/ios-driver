@@ -67,6 +67,7 @@ public class IOSCapabilities extends DesiredCapabilities {
   public static final String CONFIGURABLE = "configurable";
   public static final String ELEMENT_TREE = "elementTree";
   public static final String IOS_SEARCH_CONTEXT = "iosSearchContext";
+  public static final String UUID = "uuid";
 
   // private final Map<String, Object> raw = new HashMap<String, Object>();
 
@@ -122,6 +123,10 @@ public class IOSCapabilities extends DesiredCapabilities {
   public String getBundleId() {
     Object o = asMap().get(BUNDLE_ID);
     return ((String) o);
+  }
+
+  public void setBundleId(String bundleId) {
+    setCapability(BUNDLE_ID, bundleId);
   }
 
   public String getBundleName() {
@@ -301,7 +306,8 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   public DeviceVariation getDeviceVariation() {
     Object o = getCapability(VARIATION);
-    return DeviceVariation.valueOf(o);
+    return o == null ? null : DeviceVariation.valueOf(o);
   }
+
 
 }

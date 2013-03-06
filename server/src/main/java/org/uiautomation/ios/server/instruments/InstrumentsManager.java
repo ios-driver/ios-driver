@@ -45,6 +45,11 @@ public class InstrumentsManager {
   private IOSDeviceManager simulator;
   private String sessionId;
   private final int port;
+  private String sdkVersion;
+  private String locale;
+  private String language;
+  private DeviceType device;
+  private DeviceVariation variation;
 
   private List<String> extraEnvtParams;
   private CommunicationChannel communicationChannel;
@@ -60,11 +65,20 @@ public class InstrumentsManager {
     this.port = serverPort;
   }
 
-  public void startSession(DeviceType device, DeviceVariation variation, String sdkVersion,
-                           String locale, String language,
-                           IOSApplication application, String sessionId, boolean timeHack,
-                           List<String> envtParams)
-      throws WebDriverException {
+  public void startSession(String sessionId, IOSApplication application,
+                           IOSCapabilities capabilities) throws WebDriverException {
+    // TODO remove that
+    capabilities.setBundleId(application.getBundleId());
+
+    device = capabilities.getDevice();
+    variation = capabilities.getDeviceVariation();
+    sdkVersion = capabilities.getSDKVersion();
+    locale = capabilities.getLocale();
+    language = application.getAppleLocaleFromLanguageCode(capabilities.getLanguage())
+        .getAppleLanguagesForPreferencePlist();
+    boolean timeHack = capabilities.isTimeHack();
+    List<String> envtParams = capabilities.getExtraSwitches();
+
     log.fine("starting session");
     IOSSimulatorManager sim = null;
     try {
@@ -80,12 +94,10 @@ public class InstrumentsManager {
         warmup();
       }
       log.fine("prepare simulator");
-      simulator =
-          prepareSimulator(sdkVersion, device, variation, locale, language,
-                           application.getMetadata(IOSCapabilities.BUNDLE_ID));
+      simulator = prepareSimulator(capabilities);
       sim = (IOSSimulatorManager) simulator;
       log.fine("forcing SDK");
-      sim.forceDefaultSDK(sdkVersion);
+      sim.forceDefaultSDK();
       log.fine("creating script");
       File
           uiscript =
@@ -155,16 +167,15 @@ public class InstrumentsManager {
      */
   }
 
-  private IOSDeviceManager prepareSimulator(String sdkVersion, DeviceType device,
-                                            DeviceVariation variation, String locale,
-                                            String language, String bundleId) {
+  private IOSDeviceManager prepareSimulator(IOSCapabilities capabilities) {
     // TODO freynaud handle real device ?
-    IOSDeviceManager simulator = new IOSSimulatorManager(sdkVersion, device);
+
+    IOSDeviceManager simulator = new IOSSimulatorManager(capabilities);
     simulator.resetContentAndSettings();
     simulator.setL10N(locale, language);
     simulator.setKeyboardOptions();
     simulator.setVariation(device, variation);
-    simulator.setLocationPreference(true, bundleId);
+    simulator.setLocationPreference(true);
     return simulator;
   }
 
