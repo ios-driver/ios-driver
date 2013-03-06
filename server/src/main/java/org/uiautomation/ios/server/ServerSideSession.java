@@ -76,6 +76,9 @@ public class ServerSideSession extends Session {
       capabilities.setDeviceUUID("d1ce6333af579e27d166349dc8a1989503ba5b4f");
       File ipa = new File("/Users/freynaud/build/archived/com.yourcompany.UICatalog.ipa");
       application = IPAApplication.createFrom(ipa);
+      InstrumentsManager.realDevice = true;
+    } else {
+      InstrumentsManager.realDevice = false;
     }
 
     if (capabilities.getDeviceVariation() == null) {

@@ -84,7 +84,7 @@ public class DeviceServlet extends DriverBasedServlet {
     b.append("  <li>SDK: " + device.getIosVersion() + "</li>");
     b.append("  </ul>");
 
-    b.append("<h3>Applications:</p>");
+    b.append("<h3>Applications:</h3>");
 
     for (ApplicationInfo app : device.getApplications()) {
       b.append(app.getApplicationId() + ", ");

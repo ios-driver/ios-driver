@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 public class InstrumentsManager {
 
 
-  public static final boolean realDevice = false;
+  public static boolean realDevice = false;
 
   private static final Logger log = Logger.getLogger(InstrumentsManager.class.getName());
 
