@@ -23,6 +23,7 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.APPIOSApplication;
+import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 import org.uiautomation.ios.utils.FileTo64EncodedStringUtils;
@@ -87,7 +88,7 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
 
     }
 
-    private void addTranslation(Map<String, Object> node, APPIOSApplication aut)
+    private void addTranslation(Map<String, Object> node, IOSRunningApplication aut)
         throws JSONException {
 
       node.put("l10n", aut.getTranslations((String) node.get("name")));

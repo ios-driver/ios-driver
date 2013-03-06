@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
 
 import java.util.List;
@@ -17,8 +18,8 @@ public class IOSRunningApplication {
   private DeviceType defaultDevice;
 
   public IOSRunningApplication(String language, APPIOSApplication app) {
-    this.currentLanguage = setLanguage(language);
     this.underlyingApplication = app;
+    this.currentLanguage = setLanguage(language);
   }
 
   public String getBundleId() {
@@ -103,7 +104,21 @@ public class IOSRunningApplication {
     return underlyingApplication.getDictionary(currentLanguage);
   }
 
+  public LanguageDictionary getDictionary(String lang) {
+    return underlyingApplication.getDictionary(lang);
+  }
+
   public List<String> getSupportedLanguagesCodes() {
     return underlyingApplication.getSupportedLanguagesCodes();
+  }
+
+  public IOSCapabilities getCapabilities() {
+    IOSCapabilities caps = underlyingApplication.getCapabilities();
+    caps.setLanguage(currentLanguage.getAppleLanguagesForPreferencePlist());
+    return caps;
+  }
+
+  public String translate(ContentResult contentResult, AppleLocale loc) {
+    return underlyingApplication.translate(contentResult, loc);
   }
 }
