@@ -30,7 +30,7 @@ public class InstrumentsNoDelayLoader {
   private InstrumentsNoDelayLoader() {
     dir = new File(System.getProperty("java.io.tmpdir"));
     extractFromJar("instruments");
-    extractFromJar("instrumentsShim.dylib");
+    extractFromJar("InstrumentsShim.dylib");
     extractFromJar("ScriptAgentShim.dylib");
     extractFromJar("SimShim.dylib");
     instruments = new File(dir, "instruments");
