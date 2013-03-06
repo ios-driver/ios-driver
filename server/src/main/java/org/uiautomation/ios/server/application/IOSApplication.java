@@ -24,6 +24,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.utils.PlistFileUtils;
 
@@ -31,6 +32,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -365,5 +367,23 @@ public class IOSApplication {
                                    e);
     }
 
+  }
+
+  public IOSCapabilities getCapability() {
+    IOSCapabilities cap = new IOSCapabilities();
+    cap.setSupportedLanguages(getSupportedLanguagesCodes());
+    cap.setCapability("applicationPath", getApplicationPath().getAbsoluteFile());
+
+    for (Iterator iterator = getMetadata().keys(); iterator.hasNext(); ) {
+      String key = (String) iterator.next();
+
+      try {
+        Object value = getMetadata().get(key);
+        cap.setCapability(key, value);
+      } catch (JSONException e) {
+        throw new WebDriverException("cannot get metadata", e);
+      }
+    }
+    return cap;
   }
 }

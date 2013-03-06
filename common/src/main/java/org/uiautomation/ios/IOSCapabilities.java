@@ -104,14 +104,20 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   public IOSCapabilities() {
     setCapability(TIME_HACK, false);
-    setCapability(VARIATION, DeviceVariation.Regular);
-    setCapability(SIMULATOR, true);
+    //setCapability(VARIATION, DeviceVariation.Regular);
+    //setCapability(SIMULATOR, true);
   }
 
-  /*
-   * public IOSCapabilities(Map<String, Object> from) { for (String key :
-   * from.keySet()) { setCapability(key, from.get(key)); } }
-   */
+  public boolean isSimulator() {
+    Object o = getCapability(SIMULATOR);
+    if (o == null) {
+      return false;
+    } else if (o instanceof Boolean) {
+      return (Boolean) o;
+    } else {
+      return Boolean.parseBoolean((String) o);
+    }
+  }
 
   public String getBundleId() {
     Object o = asMap().get(BUNDLE_ID);

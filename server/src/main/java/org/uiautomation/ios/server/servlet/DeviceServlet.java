@@ -16,6 +16,15 @@ public class DeviceServlet extends DriverBasedServlet {
     response.setContentType("text/html");
     response.setCharacterEncoding("UTF-8");
     response.setStatus(200);
+    /*StringBuilder b = new StringBuilder();
+    b.append("<html>");
+    b.append("<head>");
+    b.append(
+        "<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js'></script>");
+
+    response.getWriter().write("Connected devices:</br>");
+
+    response.getWriter().write(b.toString()); */
     response.getWriter().write(page());
     response.getWriter().close();
   }
@@ -42,7 +51,7 @@ public class DeviceServlet extends DriverBasedServlet {
     b.append("<div id=\"tabs\"> ");
     // tabs
     b.append("<ul>");
-    for (RealDevice d : getDriver().getDeviceStore().getDevices()) {
+    for (RealDevice d : getDriver().getDeviceStore().getRealDevices()) {
       b.append("<li>");
       b.append(
           "<a href='#tabs-" + d.getUuid() + "'>" + d.getProductType() + " IOS:" + d.getIosVersion()
@@ -50,9 +59,9 @@ public class DeviceServlet extends DriverBasedServlet {
       b.append("</li>");
     }
     b.append("</ul>");
-
+    //TODO simulators.
     // content
-    for (RealDevice d : getDriver().getDeviceStore().getDevices()) {
+    for (RealDevice d : getDriver().getDeviceStore().getRealDevices()) {
       b.append(device(d));
     }
     b.append("</div> ");
@@ -75,7 +84,7 @@ public class DeviceServlet extends DriverBasedServlet {
     b.append("  <li>SDK: " + device.getIosVersion() + "</li>");
     b.append("  </ul>");
 
-    b.append("<h3>Applications:</h3>");
+    b.append("<h3>Applications:</p>");
 
     for (ApplicationInfo app : device.getApplications()) {
       b.append(app.getApplicationId() + ", ");

@@ -1,5 +1,6 @@
 package org.uiautomation.ios.server;
 
+import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.server.application.IOSApplication;
 import org.uiautomation.ios.server.application.IPAApplication;
 
@@ -80,4 +81,29 @@ public class ApplicationStore {
   }
 
 
+  public List<IOSCapabilities> getCapabilities(Device d) {
+    List<IOSCapabilities> res = new ArrayList<IOSCapabilities>();
+    for (IOSApplication app : getApplications()) {
+      if (d.canRun(app)) {
+        System.out.println(d.toString() + " can run " + app.toString());
+        IOSCapabilities c = merge(d.getCapability(), app.getCapability());
+        res.add(c);
+      } else {
+        System.err.println(d.toString() + " cannot run " + app.toString());
+      }
+    }
+    return res;
+  }
+
+
+  private IOSCapabilities merge(IOSCapabilities device, IOSCapabilities application) {
+    IOSCapabilities res = new IOSCapabilities();
+    for (String key : device.asMap().keySet()) {
+      res.setCapability(key, device.getCapability(key));
+    }
+    for (String key : application.asMap().keySet()) {
+      res.setCapability(key, application.getCapability(key));
+    }
+    return res;
+  }
 }

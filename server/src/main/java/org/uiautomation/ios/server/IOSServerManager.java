@@ -55,6 +55,7 @@ public class IOSServerManager {
     }
     this.hostInfo = new HostInfo(port);
     devices = new DeviceStore();
+    devices.add(new SimulatorDevice());
     apps = new ApplicationStore();
     if (Configuration.BETA_FEATURE) {
       //LoggerService.enableDebug();
@@ -104,6 +105,14 @@ public class IOSServerManager {
     ServerSideSession session = getSession(opaqueKey);
     session.stop();
     sessions.remove(session);
+  }
+
+  public List<IOSCapabilities> getAllCapabilities() {
+    List<IOSCapabilities> res = new ArrayList<IOSCapabilities>();
+    for (Device d : getDeviceStore().getDevices()) {
+      res.addAll(getApplicationStore().getCapabilities(d));
+    }
+    return res;
   }
 
   public IOSCapabilities getCapabilities(IOSApplication application) {

@@ -1,9 +1,11 @@
 package org.uiautomation.ios.server;
 
+import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
+import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.IPAApplication;
 import org.uiautomation.iosdriver.ApplicationInfo;
 import org.uiautomation.iosdriver.DeviceInfo;
-import org.uiautomation.iosdriver.services.DeviceInstallerException;
 import org.uiautomation.iosdriver.services.DeviceInstallerService;
 
 import java.util.List;
@@ -78,6 +80,24 @@ public class RealDevice implements Device {
   @Override
   public int hashCode() {
     return uuid.hashCode();
+  }
+
+  @Override
+  public IOSCapabilities getCapability() {
+    IOSCapabilities res = new IOSCapabilities();
+    res.setCapability(IOSCapabilities.SIMULATOR, false);
+    res.setCapability(IOSCapabilities.UI_SDK_VERSION, iosVersion);
+    res.setCapability(IOSCapabilities.DEVICE, type);
+    return res;
+  }
+
+  @Override
+  public boolean canRun(IOSApplication app) {
+    if (!(app instanceof IPAApplication)) {
+      return false;
+    }
+    // UIAFamily doens't match
+    return true;
   }
 }
 
