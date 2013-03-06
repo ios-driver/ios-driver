@@ -12,7 +12,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
-public class IPAApplication extends IOSApplication {
+public class IPAApplication extends APPIOSApplication {
 
   private final File ipa;
 

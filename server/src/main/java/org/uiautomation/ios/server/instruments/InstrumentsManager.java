@@ -20,7 +20,8 @@ import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.Device;
 import org.uiautomation.ios.server.RealDevice;
-import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.APPIOSApplication;
+import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.simulator.IOSRealDeviceManager;
 import org.uiautomation.ios.server.simulator.IOSSimulatorManager;
 import org.uiautomation.ios.utils.ClassicCommands;
@@ -43,7 +44,7 @@ public class InstrumentsManager {
 
   private File output;
   private final File template;
-  private IOSApplication application;
+  private IOSRunningApplication application;
   private Device device;
   private IOSDeviceManager deviceManager;
   private String sessionId;
@@ -69,7 +70,7 @@ public class InstrumentsManager {
   }
 
   public void startSession(String sessionId,
-                           IOSApplication application,
+                           IOSRunningApplication application,
                            Device device,
                            IOSCapabilities capabilities) throws WebDriverException {
 
@@ -111,7 +112,7 @@ public class InstrumentsManager {
       File
           uiscript =
           new ScriptHelper()
-              .getScript(port, application.getApplicationPath().getAbsolutePath(), sessionId);
+              .getScript(port, application.getDotAppAbsolutePath(), sessionId);
       log.fine("starting instruments");
       List<String> instruments = createInstrumentCommand(uiscript.getAbsolutePath());
       communicationChannel = new CommunicationChannel();
@@ -221,7 +222,7 @@ public class InstrumentsManager {
     }
     command.add("-t");
     command.add(template.getAbsolutePath());
-    command.add(application.getApplicationPath().getAbsolutePath());
+    command.add(application.getDotAppAbsolutePath());
     command.add("-e");
     command.add("UIASCRIPT");
     command.add(script);

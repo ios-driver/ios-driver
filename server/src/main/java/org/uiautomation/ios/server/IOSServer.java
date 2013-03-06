@@ -22,7 +22,7 @@ import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.inspector.IDEServlet;
-import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.server.grid.RegistrationRequest;
 import org.uiautomation.ios.server.servlet.ApplicationsServlet;
@@ -100,7 +100,7 @@ public class IOSServer {
 
     driver = new IOSServerManager(port);
     for (String app : this.options.getSupportedApps()) {
-      driver.addSupportedApplication(new IOSApplication(app));
+      driver.addSupportedApplication(new APPIOSApplication(app));
     }
 
     StringBuilder b = new StringBuilder();
@@ -122,7 +122,7 @@ public class IOSServer {
       if (version >= 6L) {
         safari = true;
         driver.addSupportedApplication(
-            IOSApplication.findSafariLocation(driver.getHostInfo().getXCodeInstall(), s));
+            APPIOSApplication.findSafariLocation(driver.getHostInfo().getXCodeInstall(), s));
       }
     }
     if (safari) {
@@ -132,7 +132,7 @@ public class IOSServer {
     }
 
     b.append("\n\nApplications :\n--------------- \n");
-    for (IOSApplication app : driver.getSupportedApplications()) {
+    for (APPIOSApplication app : driver.getSupportedApplications()) {
       b.append("\tCFBundleName=" + (app.getMetadata(IOSCapabilities.BUNDLE_NAME).isEmpty() ? app
           .getMetadata(IOSCapabilities.BUNDLE_DISPLAY_NAME) : app
                                         .getMetadata(IOSCapabilities.BUNDLE_NAME)));

@@ -43,20 +43,19 @@ import static org.uiautomation.ios.IOSCapabilities.ICON;
 import static org.uiautomation.ios.IOSCapabilities.MAGIC_PREFIX;
 
 // TODO freynaud create IOSApp vs Running App that has locale + language
-public class IOSApplication {
+public class APPIOSApplication {
 
-  private static final Logger log = Logger.getLogger(IOSApplication.class.getName());
+  private static final Logger log = Logger.getLogger(APPIOSApplication.class.getName());
 
   private final JSONObject metadata;
   private final File app;
-  private AppleLocale currentLanguage;
   private final List<LanguageDictionary> dictionaries = new ArrayList<LanguageDictionary>();
 
   /**
    * @param pathToApp
    * @throws WebDriverException
    */
-  public IOSApplication(String pathToApp) {
+  public APPIOSApplication(String pathToApp) {
     this.app = new File(pathToApp);
     if (!app.exists()) {
       throw new WebDriverException(pathToApp + "isn't an IOS app.");
@@ -93,7 +92,7 @@ public class IOSApplication {
   /**
    * get the list of languages the application if localized to.
    */
-  private List<AppleLocale> getSupportedLanguages() {
+  List<AppleLocale> getSupportedLanguages() {
     if (dictionaries.isEmpty()) {
       loadAllContent();
     }
@@ -178,50 +177,6 @@ public class IOSApplication {
 
   }
 
-  // TODO freynaud return a Map
-  public JSONObject getTranslations(String name) throws JSONException {
-
-    JSONObject l10n = new JSONObject();
-    l10n.put("matches", 0);
-    if (name != null && !name.isEmpty() && !"null".equals(name)) {
-      try {
-        List<ContentResult> results = getPotentialMatches(name);
-
-        int size = results.size();
-        if (size != 0) {
-          l10n.put("matches", size);
-          l10n.put("key", results.get(0).getKey());
-        }
-
-        JSONArray langs = new JSONArray();
-        for (AppleLocale language : getSupportedLanguages()) {
-          JSONArray possibleMatches = new JSONArray();
-
-          for (ContentResult res : results) {
-            possibleMatches.put(translate(res, language));
-          }
-          JSONObject match = new JSONObject();
-          match.put(language.toString(), possibleMatches);
-          langs.put(match);
-
-        }
-        l10n.put("langs", langs);
-
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-    return l10n;
-  }
-
-  // TODO freynaud return a single resutl and throw when multiple are found
-  // would simplify
-  // everything
-  private List<ContentResult> getPotentialMatches(String name) throws WebDriverException {
-    LanguageDictionary dict = getDictionary(currentLanguage);
-    List<ContentResult> res = dict.getPotentialMatches(name);
-    return res;
-  }
 
   public void addDictionary(LanguageDictionary dict) {
     dictionaries.add(dict);
@@ -231,9 +186,6 @@ public class IOSApplication {
     return getMetadata("CFBundleIdentifier");
   }
 
-  public AppleLocale getCurrentLanguage() {
-    return currentLanguage;
-  }
 
   public File getApplicationPath() {
     return app;
@@ -280,20 +232,6 @@ public class IOSApplication {
     }
   }
 
-  public void setLanguage(String lang) {
-    if (getSupportedLanguages().isEmpty()) {
-      currentLanguage = AppleLocale.emptyLocale(lang);
-      return;
-    }
-    for (AppleLocale loc : getSupportedLanguages()) {
-      if (loc.getLocale().toString().equals(lang)) {
-        currentLanguage = loc;
-        return;
-      }
-    }
-    throw new WebDriverException(
-        "Cannot find " + lang + " in the supported languages for the app.");
-  }
 
   @Override
   public int hashCode() {
@@ -314,7 +252,7 @@ public class IOSApplication {
     if (getClass() != obj.getClass()) {
       return false;
     }
-    IOSApplication other = (IOSApplication) obj;
+    APPIOSApplication other = (APPIOSApplication) obj;
     if (app == null) {
       if (other.app != null) {
         return false;
@@ -325,7 +263,7 @@ public class IOSApplication {
     return true;
   }
 
-  public static IOSApplication findSafariLocation(File xcodeInstall, String sdkVersion) {
+  public static APPIOSApplication findSafariLocation(File xcodeInstall, String sdkVersion) {
     File app = new File(xcodeInstall,
                         "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator"
                         + sdkVersion
@@ -333,7 +271,7 @@ public class IOSApplication {
     if (!app.exists()) {
       throw new WebDriverException(app + " should be the safari app, but doesn't exist.");
     }
-    return new IOSApplication(app.getAbsolutePath());
+    return new APPIOSApplication(app.getAbsolutePath());
   }
 
   public void setDefaultDevice(DeviceType device) {
@@ -496,4 +434,10 @@ public class IOSApplication {
   public boolean isSimulator() {
     return "iphonesimulator".equals(getMetadata("DTPlatformName"));
   }
+
+  public IOSRunningApplication createInstance(String language) {
+    return new IOSRunningApplication(language, this);
+  }
+
+  ;
 }

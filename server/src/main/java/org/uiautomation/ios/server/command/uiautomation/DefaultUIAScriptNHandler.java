@@ -29,7 +29,8 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.CommandMapping;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.APPIOSApplication;
+import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 
 /**
@@ -107,7 +108,7 @@ public class DefaultUIAScriptNHandler extends UIAScriptHandler {
     return false;
   }
 
-  private IOSApplication getAUT() {
+  private IOSRunningApplication getAUT() {
     ServerSideSession session = getDriver().getSession(getRequest().getSession());
     return session.getApplication();
   }
@@ -116,7 +117,7 @@ public class DefaultUIAScriptNHandler extends UIAScriptHandler {
   private String getFinalJS(String template) {
     WebDriverLikeCommand command = getRequest().getGenericCommand();
     CommandMapping mapping = CommandMapping.get(command);
-    String method = mapping.jsMethod(getRequest().getPayload(), getAUT());
+    String method = mapping.jsMethod(getRequest().getPayload());
 
     String js =
         template.replace(":jsMethod", method)

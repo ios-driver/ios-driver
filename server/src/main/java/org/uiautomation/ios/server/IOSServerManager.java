@@ -16,7 +16,8 @@ package org.uiautomation.ios.server;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.APPIOSApplication;
+import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.application.ResourceCache;
 import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.iosdriver.services.DeviceManagerService;
@@ -34,7 +35,7 @@ public class IOSServerManager {
 
   private final List<ServerSideSession> sessions = new ArrayList<ServerSideSession>();
   private static final Logger log = Logger.getLogger(IOSServerManager.class.getName());
-  private final Set<IOSApplication> supportedApplications = new HashSet<IOSApplication>();
+  private final Set<APPIOSApplication> supportedApplications = new HashSet<APPIOSApplication>();
 
   private final HostInfo hostInfo;
   private final ResourceCache cache = new ResourceCache();
@@ -70,7 +71,7 @@ public class IOSServerManager {
     return devices;
   }
 
-  public void addSupportedApplication(IOSApplication application) {
+  public void addSupportedApplication(APPIOSApplication application) {
     apps.add(application);
     boolean added = supportedApplications.add(application);
     if (!added) {
@@ -112,12 +113,12 @@ public class IOSServerManager {
   }
 
 
-  public IOSApplication findAndCreateInstanceMatchingApplication(
+  public IOSRunningApplication findAndCreateInstanceMatchingApplication(
       IOSCapabilities desiredCapabilities) {
-    for (IOSApplication app : getApplicationStore().getApplications()) {
+    for (APPIOSApplication app : getApplicationStore().getApplications()) {
       IOSCapabilities appCapabilities = app.getCapabilities();
-      if (IOSApplication.canRun(desiredCapabilities, appCapabilities)) {
-        return app;
+      if (APPIOSApplication.canRun(desiredCapabilities, appCapabilities)) {
+        return app.createInstance(desiredCapabilities.getLanguage());
       }
     }
     throw new SessionNotCreatedException(
@@ -149,7 +150,7 @@ public class IOSServerManager {
   private static boolean matches(IOSCapabilities applicationCapabilities,
                                  IOSCapabilities desiredCapabilities) {
 
-    if (!IOSApplication.canRun(desiredCapabilities, applicationCapabilities)) {
+    if (!APPIOSApplication.canRun(desiredCapabilities, applicationCapabilities)) {
       return false;
     }
     if (!Device.canRun(desiredCapabilities, applicationCapabilities)) {
@@ -176,7 +177,7 @@ public class IOSServerManager {
   }
 
 
-  public Set<IOSApplication> getSupportedApplications() {
+  public Set<APPIOSApplication> getSupportedApplications() {
     return supportedApplications;
   }
 

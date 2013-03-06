@@ -22,7 +22,7 @@ public class ServerSideL10NFactory {
 
   private final ServerSideL10NDecorator decorator;
 
-  public ServerSideL10NFactory(IOSApplication aut) {
+  public ServerSideL10NFactory(IOSRunningApplication aut) {
     this.decorator = new ServerSideL10NDecorator(aut);
   }
 

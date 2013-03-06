@@ -101,10 +101,10 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
         // for ipad, the adress bar h is fixed @ 96px.
         script.append("var y = top+96;");
       } else {
-        AppleLocale current = session.getApplication().getCurrentLanguage();
+
         List<ContentResult>
             results =
-            session.getApplication().getDictionary(current).getPotentialMatches("Address");
+            session.getApplication().getCurrentDictionary().getPotentialMatches("Address");
         if (results.size() != 1) {
           log.warning("translation returned " + results.size());
         }

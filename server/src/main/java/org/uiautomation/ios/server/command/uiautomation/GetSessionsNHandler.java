@@ -21,7 +21,7 @@ import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
 
 import java.util.List;
@@ -42,7 +42,7 @@ public class GetSessionsNHandler extends BaseNativeCommandHandler {
       JSONObject session = new JSONObject();
       session.put("id", s.getSessionId());
 
-      IOSApplication app = s.getApplication();
+      APPIOSApplication app = s.getApplication();
       IOSCapabilities cap = app.getCapabilities();
       session.put("capabilities", cap.getRawCapabilities());
       res.put(session);

@@ -10,12 +10,12 @@ import org.uiautomation.ios.SampleApps;
 
 public class IOSL10NTest {
 
-  private IOSApplication app;
+  private APPIOSApplication app;
 
   @BeforeClass
   public void setup() throws Exception {
 
-    app = new IOSApplication(SampleApps.getIntlMountainsFile());
+    app = new APPIOSApplication(SampleApps.getIntlMountainsFile());
     app.setLanguage("en");
   }
 
@@ -57,7 +57,7 @@ public class IOSL10NTest {
     Assert.assertEquals(results.size(), 0);
   }
 
-  @Test(expectedExceptions = { WebDriverException.class })
+  @Test(expectedExceptions = {WebDriverException.class})
   public void languageNotFound() {
     String content = "42 feet";
     List<ContentResult> results = app.getDictionary("en").getPotentialMatches(content);

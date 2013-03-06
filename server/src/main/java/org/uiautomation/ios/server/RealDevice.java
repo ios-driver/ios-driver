@@ -2,7 +2,7 @@ package org.uiautomation.ios.server;
 
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
-import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.application.IPAApplication;
 import org.uiautomation.iosdriver.ApplicationInfo;
 import org.uiautomation.iosdriver.DeviceInfo;
@@ -93,7 +93,7 @@ public class RealDevice extends Device {
   }
 
   @Override
-  public boolean canRun(IOSApplication app) {
+  public boolean canRun(APPIOSApplication app) {
     if (!(app instanceof IPAApplication)) {
       return false;
     }

@@ -12,9 +12,8 @@ import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 public class ServerSideL10NTest {
 
 
-
   private ServerSideL10NFactory create(String lang) {
-    IOSApplication app = new IOSApplication(SampleApps.getIntlMountainsFile());
+    APPIOSApplication app = new APPIOSApplication(SampleApps.getIntlMountainsFile());
     app.setLanguage(lang);
     ServerSideL10NFactory factory = new ServerSideL10NFactory(app);
     return factory;

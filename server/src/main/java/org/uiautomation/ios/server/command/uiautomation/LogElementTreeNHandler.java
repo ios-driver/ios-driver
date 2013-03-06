@@ -22,7 +22,7 @@ import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 import org.uiautomation.ios.utils.FileTo64EncodedStringUtils;
@@ -87,7 +87,8 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
 
     }
 
-    private void addTranslation(Map<String, Object> node, IOSApplication aut) throws JSONException {
+    private void addTranslation(Map<String, Object> node, APPIOSApplication aut)
+        throws JSONException {
 
       node.put("l10n", aut.getTranslations((String) node.get("name")));
       List<Map<String, Object>> children = (List<Map<String, Object>>) node.get("children");

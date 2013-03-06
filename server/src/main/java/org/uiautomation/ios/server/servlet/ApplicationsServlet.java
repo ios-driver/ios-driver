@@ -1,7 +1,7 @@
 package org.uiautomation.ios.server.servlet;
 
 import org.json.JSONException;
-import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.APPIOSApplication;
 
 import java.io.IOException;
 import java.util.List;
@@ -65,7 +65,7 @@ public class ApplicationsServlet extends DriverBasedServlet {
   private String content(boolean real) throws JSONException {
     StringBuilder b = new StringBuilder();
     String id;
-    List<IOSApplication> list;
+    List<APPIOSApplication> list;
     if (real) {
       id = "ipa";
       list = getDriver().getApplicationStore().getRealDeviceApplications();
@@ -75,7 +75,7 @@ public class ApplicationsServlet extends DriverBasedServlet {
     }
     b.append("<div id=\"tabs-" + id + "\">");
 
-    for (IOSApplication app : list) {
+    for (APPIOSApplication app : list) {
       b.append("<h3>" + app.getBundleId() + "</h3>");
       b.append("  <pre>");
       b.append(app.getMetadata().toString(2));

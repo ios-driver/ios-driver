@@ -1,7 +1,7 @@
 package org.uiautomation.ios.server;
 
 import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.application.IPAApplication;
 
 import java.io.File;
@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 public class ApplicationStore {
 
   private static final Logger log = Logger.getLogger(ApplicationStore.class.getName());
-  private final List<IOSApplication> all = new CopyOnWriteArrayList<IOSApplication>();
+  private final List<APPIOSApplication> all = new CopyOnWriteArrayList<APPIOSApplication>();
   private final File workingDirectory;
 
   public ApplicationStore() {
@@ -25,7 +25,7 @@ public class ApplicationStore {
     load();
   }
 
-  public void add(IOSApplication app) {
+  public void add(APPIOSApplication app) {
     all.add(app);
   }
 
@@ -35,7 +35,7 @@ public class ApplicationStore {
       IPAApplication app = IPAApplication.createFrom(new File(path));
       all.add(app);
     } else if (path.endsWith(".app")) {
-      all.add(new IOSApplication(path));
+      all.add(new APPIOSApplication(path));
     }
   }
 
@@ -45,13 +45,13 @@ public class ApplicationStore {
     }
   }
 
-  public List<IOSApplication> getApplications() {
+  public List<APPIOSApplication> getApplications() {
     return all;
   }
 
-  public List<IOSApplication> getSimulatorApplications() {
-    List<IOSApplication> res = new ArrayList<IOSApplication>();
-    for (IOSApplication a : all) {
+  public List<APPIOSApplication> getSimulatorApplications() {
+    List<APPIOSApplication> res = new ArrayList<APPIOSApplication>();
+    for (APPIOSApplication a : all) {
       if (!(a instanceof IPAApplication)) {
         res.add(a);
       }
@@ -59,9 +59,9 @@ public class ApplicationStore {
     return res;
   }
 
-  public List<IOSApplication> getRealDeviceApplications() {
-    List<IOSApplication> res = new ArrayList<IOSApplication>();
-    for (IOSApplication a : all) {
+  public List<APPIOSApplication> getRealDeviceApplications() {
+    List<APPIOSApplication> res = new ArrayList<APPIOSApplication>();
+    for (APPIOSApplication a : all) {
       if (a instanceof IPAApplication) {
         res.add(a);
       }
@@ -75,7 +75,7 @@ public class ApplicationStore {
 
   public String toString() {
     StringBuilder b = new StringBuilder();
-    for (IOSApplication app : all) {
+    for (APPIOSApplication app : all) {
       b.append(app.toString());
     }
     return b.toString();
@@ -84,7 +84,7 @@ public class ApplicationStore {
 
   public List<IOSCapabilities> getCapabilities(Device d) {
     List<IOSCapabilities> res = new ArrayList<IOSCapabilities>();
-    for (IOSApplication app : getApplications()) {
+    for (APPIOSApplication app : getApplications()) {
       if (d.canRun(app)) {
         System.out.println(d.toString() + " can run " + app.toString());
         IOSCapabilities c = merge(d.getCapability(), app.getCapabilities());

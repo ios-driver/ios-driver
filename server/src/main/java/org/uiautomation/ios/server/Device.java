@@ -1,7 +1,7 @@
 package org.uiautomation.ios.server;
 
 import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.APPIOSApplication;
 
 public abstract class Device {
 
@@ -9,7 +9,7 @@ public abstract class Device {
 
   public abstract IOSCapabilities getCapability();
 
-  public abstract boolean canRun(IOSApplication app);
+  public abstract boolean canRun(APPIOSApplication app);
 
   public static boolean canRun(IOSCapabilities desiredCapabilities,
                                IOSCapabilities deviceCapability) {

@@ -28,7 +28,8 @@ import org.uiautomation.ios.client.uiamodels.impl.ServerSideNativeDriver;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
-import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.APPIOSApplication;
+import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.application.IPAApplication;
 import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
@@ -45,7 +46,7 @@ import java.util.logging.Logger;
 public class ServerSideSession extends Session {
 
   private static final Logger log = Logger.getLogger(ServerSideSession.class.getName());
-  private IOSApplication application;
+  private IOSRunningApplication application;
   private Device device;
   private final IOSCapabilities capabilities;
   private final InstrumentsManager instruments;
@@ -74,11 +75,10 @@ public class ServerSideSession extends Session {
     application = driver.findAndCreateInstanceMatchingApplication(desiredCapabilities);
     device = driver.findAndReserveMatchingDevice(desiredCapabilities);
 
-    application.setLanguage(capabilities.getLanguage());
     if (!capabilities.isSimulator()) {
       capabilities.setDeviceUUID("d1ce6333af579e27d166349dc8a1989503ba5b4f");
-      File ipa = new File("/Users/freynaud/build/archived/com.yourcompany.UICatalog.ipa");
-      application = IPAApplication.createFrom(ipa);
+      //File ipa = new File("/Users/freynaud/build/archived/com.yourcompany.UICatalog.ipa");
+      //application = IPAApplication.createFrom(ipa);
       InstrumentsManager.realDevice = true;
     } else {
       InstrumentsManager.realDevice = false;
@@ -125,7 +125,7 @@ public class ServerSideSession extends Session {
     return nativeDriver;
   }
 
-  public IOSApplication getApplication() {
+  public IOSRunningApplication getApplication() {
     return application;
   }
 

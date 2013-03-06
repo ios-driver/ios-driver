@@ -6,13 +6,13 @@ import org.uiautomation.ios.utils.ClassicCommands;
 
 public class RecognizeAllLanguagesInTheSafariAppTest {
 
-  private IOSApplication app;
+  private APPIOSApplication app;
 
   @BeforeClass
   public void setup() throws Exception {
 
     String s = ClassicCommands.getDefaultSDK();
-    app = IOSApplication.findSafariLocation(ClassicCommands.getXCodeInstall(), s);
+    app = APPIOSApplication.findSafariLocation(ClassicCommands.getXCodeInstall(), s);
 
   }
 
