@@ -169,6 +169,11 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   }
 
   @Override
+  public String getInstrumentsClient() {
+    return InstrumentsNoDelayLoader.getInstance().getInstruments().getAbsolutePath();
+  }
+
+  @Override
   public void resetContentAndSettings() {
     simulatorSettings.resetContentAndSettings();
 

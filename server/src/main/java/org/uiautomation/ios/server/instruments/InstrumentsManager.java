@@ -19,8 +19,8 @@ import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.simulator.IOSRealDeviceManager;
 import org.uiautomation.ios.server.simulator.IOSSimulatorManager;
-import org.uiautomation.ios.server.simulator.InstrumentsNoDelayLoader;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.Command;
 import org.uiautomation.ios.utils.ScriptHelper;
@@ -42,7 +42,7 @@ public class InstrumentsManager {
   private File output;
   private final File template;
   private IOSApplication application;
-  private IOSDeviceManager simulator;
+  private IOSDeviceManager deviceManager;
   private String sessionId;
   private final int port;
   private String sdkVersion;
@@ -50,7 +50,7 @@ public class InstrumentsManager {
   private String language;
   private DeviceType device;
   private DeviceVariation variation;
-
+  private IOSCapabilities caps;
   private List<String> extraEnvtParams;
   private CommunicationChannel communicationChannel;
   private Command simulatorProcess;
@@ -68,19 +68,20 @@ public class InstrumentsManager {
   public void startSession(String sessionId, IOSApplication application,
                            IOSCapabilities capabilities) throws WebDriverException {
     // TODO remove that
-    capabilities.setBundleId(application.getBundleId());
+    caps = capabilities;
+    caps.setBundleId(application.getBundleId());
 
-    device = capabilities.getDevice();
-    variation = capabilities.getDeviceVariation();
-    sdkVersion = capabilities.getSDKVersion();
-    locale = capabilities.getLocale();
-    language = application.getAppleLocaleFromLanguageCode(capabilities.getLanguage())
+    device = caps.getDevice();
+    variation = caps.getDeviceVariation();
+    sdkVersion = caps.getSDKVersion();
+    locale = caps.getLocale();
+    language = application.getAppleLocaleFromLanguageCode(caps.getLanguage())
         .getAppleLanguagesForPreferencePlist();
-    boolean timeHack = capabilities.isTimeHack();
-    List<String> envtParams = capabilities.getExtraSwitches();
+    boolean timeHack = caps.isTimeHack();
+    List<String> envtParams = caps.getExtraSwitches();
 
     log.fine("starting session");
-    IOSSimulatorManager sim = null;
+
     try {
       this.sessionId = sessionId;
       this.extraEnvtParams = envtParams;
@@ -94,11 +95,13 @@ public class InstrumentsManager {
         warmup();
       }
       log.fine("prepare simulator");
-      simulator = prepareSimulator(capabilities);
-      sim = (IOSSimulatorManager) simulator;
-      log.fine("forcing SDK");
-      sim.forceDefaultSDK();
-      log.fine("creating script");
+      deviceManager = prepareSimulator(capabilities);
+
+      if (deviceManager instanceof IOSSimulatorManager) {
+        log.fine("forcing SDK");
+        ((IOSSimulatorManager) deviceManager).forceDefaultSDK();
+        log.fine("creating script");
+      }
       File
           uiscript =
           new ScriptHelper()
@@ -138,8 +141,11 @@ public class InstrumentsManager {
           "error starting instrument for session " + sessionId + ", " + e.getMessage(), e);
     } finally {
       log.fine("start session done");
-      if (sim != null) {
-        sim.restoreExiledSDKs();
+
+      if (deviceManager instanceof IOSSimulatorManager) {
+        log.fine("forcing SDK");
+        ((IOSSimulatorManager) deviceManager).restoreExiledSDKs();
+        log.fine("creating script");
       }
     }
 
@@ -168,15 +174,20 @@ public class InstrumentsManager {
   }
 
   private IOSDeviceManager prepareSimulator(IOSCapabilities capabilities) {
-    // TODO freynaud handle real device ?
+    IOSDeviceManager deviceManager;
 
-    IOSDeviceManager simulator = new IOSSimulatorManager(capabilities);
-    simulator.resetContentAndSettings();
-    simulator.setL10N(locale, language);
-    simulator.setKeyboardOptions();
-    simulator.setVariation(device, variation);
-    simulator.setLocationPreference(true);
-    return simulator;
+    if (capabilities.getDeviceUUID() == null) {
+      deviceManager = new IOSSimulatorManager(capabilities);
+    } else {
+      deviceManager = new IOSRealDeviceManager(capabilities);
+    }
+
+    deviceManager.resetContentAndSettings();
+    deviceManager.setL10N(locale, language);
+    deviceManager.setKeyboardOptions();
+    deviceManager.setVariation(device, variation);
+    deviceManager.setLocationPreference(true);
+    return deviceManager;
   }
 
   public void stop() {
@@ -196,10 +207,10 @@ public class InstrumentsManager {
   private List<String> createInstrumentCommand(String script) {
     List<String> command = new ArrayList<String>();
 
-    command.add(InstrumentsNoDelayLoader.getInstance().getInstruments().getAbsolutePath());
-    if (realDevice) {
+    command.add(deviceManager.getInstrumentsClient());
+    if (caps.getDeviceUUID() != null) {
       command.add("-w");
-      command.add("d1ce6333af579e27d166349dc8a1989503ba5b4f");
+      command.add(caps.getDeviceUUID());
     }
     command.add("-t");
     command.add(template.getAbsolutePath());
@@ -216,7 +227,7 @@ public class InstrumentsManager {
       b.append(s);
       b.append(" ");
     }
-    log.fine("Starting instruments\n:" + b.toString());
+    log.warning("Starting instruments:\n" + b.toString());
     return command;
 
   }
@@ -230,8 +241,8 @@ public class InstrumentsManager {
   }
 
   private void killSimulator() {
-    if (simulator != null) {
-      simulator.cleanupDevice();
+    if (deviceManager != null) {
+      deviceManager.cleanupDevice();
     }
   }
 

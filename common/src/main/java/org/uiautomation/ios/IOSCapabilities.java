@@ -310,4 +310,11 @@ public class IOSCapabilities extends DesiredCapabilities {
   }
 
 
+  public String getDeviceUUID() {
+    return (String) getCapability(UUID);
+  }
+
+  public void setDeviceUUID(String deviceUUID) {
+    setCapability(UUID, deviceUUID);
+  }
 }

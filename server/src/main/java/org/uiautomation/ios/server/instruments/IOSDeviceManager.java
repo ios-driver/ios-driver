@@ -17,6 +17,8 @@ package org.uiautomation.ios.server.instruments;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 
+import java.io.File;
+
 public interface IOSDeviceManager {
 
   public void setL10N(String locale, String language);
@@ -30,4 +32,6 @@ public interface IOSDeviceManager {
   void setLocationPreference(boolean authorized);
 
   void setVariation(DeviceType device, DeviceVariation variation);
+
+  String getInstrumentsClient();
 }

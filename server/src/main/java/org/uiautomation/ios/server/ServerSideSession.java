@@ -29,6 +29,7 @@ import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.IPAApplication;
 import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
 import org.uiautomation.ios.server.instruments.InstrumentsManager;
@@ -44,7 +45,7 @@ import java.util.logging.Logger;
 public class ServerSideSession extends Session {
 
   private static final Logger log = Logger.getLogger(ServerSideSession.class.getName());
-  private final IOSApplication application;
+  private IOSApplication application;
   private final IOSCapabilities capabilities;
   private final InstrumentsManager instruments;
   public final IOSServerManager driver;
@@ -71,6 +72,11 @@ public class ServerSideSession extends Session {
 
     application = driver.findMatchingApplication(capabilities);
     application.setLanguage(capabilities.getLanguage());
+    if (!capabilities.isSimulator()) {
+      capabilities.setDeviceUUID("d1ce6333af579e27d166349dc8a1989503ba5b4f");
+      File ipa = new File("/Users/freynaud/build/archived/com.yourcompany.UICatalog.ipa");
+      application = IPAApplication.createFrom(ipa);
+    }
 
     if (capabilities.getDeviceVariation() == null) {
       capabilities.setDeviceVariation(DeviceVariation.Regular);
