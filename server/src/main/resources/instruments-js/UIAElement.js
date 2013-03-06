@@ -97,12 +97,14 @@ UIAElement.prototype.tap_original = UIAElement.prototype.tap;
  * @param {number} opt_YFactor where in the element. 0 is top border, 1 is bottom one.
  */
 UIAElement.prototype.tap = function (opt_XFactor, opt_YFactor) {
+
     var xFactor = 0.5;
     var yFactor = 0.5;
 
     if (opt_XFactor) {
         xFactor = opt_XFactor;
     }
+
     if (opt_YFactor) {
         yFactor = opt_YFactor;
     }
@@ -114,15 +116,24 @@ UIAElement.prototype.tap = function (opt_XFactor, opt_YFactor) {
             'x': Math.floor(x),
             'y': Math.floor(y)
         };
+
         UIATarget.localTarget().tap(point);
+        UIATarget.localTarget().delay(0.1);
+        var newScreen = !this.isVisible();
+        if (newScreen) {
+            log("wait for transition.");
+            //UIATarget.localTarget().delay(1);
+        }
+
         if (this.isInAlert() && this.type() == "UIAButton") {
             log("tapping in something in an alert.Alert is gone.");
             UIAutomation.cache.clearAlert();
         }
     } else {
-        var ex = new UIAutomationException("element is not visible", 11);
+        var ex = new UIAutomationException("element is not visible.", 11);
         throw ex;
     }
+
 }
 
 /**
@@ -195,8 +206,6 @@ UIAElement.prototype.isStale = function () {
             if (this.type() === "UIAWebView") {
                 return false;
             }
-            log("visible: " + this.isVisible() + "enabled: " + this.isEnabled() + " valid :"
-                    + this.isValid());
             /*if (this.isVisible()) {
              return false;
              } else {
@@ -367,6 +376,7 @@ UIAElement.prototype.tree = function (attachScreenshot) {
         return res;
     }
     var result = {};
+    var res = buildNode(this);
 
     if (attachScreenshot) {
         UIATarget.localTarget().captureScreenWithName('tmpScreenshot');
@@ -375,7 +385,6 @@ UIAElement.prototype.tree = function (attachScreenshot) {
         result.screenshot = false;
     }
 
-    var res = buildNode(this);
     result.tree = res;
     // TODO freynaud why is that broken ?
     // result.deviceOrientation = UIATarget.localTarget().deviceOrientation();

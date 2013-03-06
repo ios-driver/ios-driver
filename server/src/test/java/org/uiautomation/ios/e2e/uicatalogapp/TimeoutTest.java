@@ -47,14 +47,14 @@ public class TimeoutTest extends BaseIOSDriverTest {
         Assert.assertTrue(total < 2000);
       }
       try {
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
         start = System.currentTimeMillis();
         driver.findElement(c);
         Assert.fail("shouldn't find element" + name);
 
       } catch (NoSuchElementException e) {
         long total = System.currentTimeMillis() - start;
-        Assert.assertTrue(total > 10000);
+        Assert.assertTrue(total > 2000);
       }
     } finally {
       if (driver != null) {
