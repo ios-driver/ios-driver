@@ -180,10 +180,10 @@ public class InstrumentsManager {
   private IOSDeviceManager prepareSimulator(IOSCapabilities capabilities) {
     IOSDeviceManager deviceManager;
 
-    if (capabilities.getDeviceUUID() == null) {
-      deviceManager = new IOSSimulatorManager(capabilities);
-    } else {
+    if (device instanceof RealDevice) {
       deviceManager = new IOSRealDeviceManager(capabilities);
+    } else {
+      deviceManager = new IOSSimulatorManager(capabilities);
     }
 
     deviceManager.resetContentAndSettings();
