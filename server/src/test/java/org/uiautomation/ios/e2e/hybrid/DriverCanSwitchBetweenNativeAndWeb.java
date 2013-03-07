@@ -56,8 +56,15 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
           .findElement(
               new AndCriteria(new TypeCriteria(UIAButton.class), new NameCriteria("Back")));
       back.tap();
-      handles = driver.getWindowHandles();
-      Assert.assertEquals(handles.size(), 1);
+      long deadline = System.currentTimeMillis() + 5000;
+      while (driver.getWindowHandles().size() != 1) {
+        Thread.sleep(50);
+        if (System.currentTimeMillis() > deadline) {
+          break;
+        }
+      }
+      Assert.assertEquals(driver.getWindowHandles().size(), 1);
+
 
     } finally {
       driver.quit();
@@ -83,6 +90,8 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
       handles = driver.getWindowHandles();
       Assert.assertEquals(handles.size(), 2);
       driver.switchTo().window("Web");
+      // TODO fix that server side. Accessing a webview currently loading isn't handled ?
+      Thread.sleep(1000);
 
       final By by = By.cssSelector("a[href='http://store.apple.com/']");
 

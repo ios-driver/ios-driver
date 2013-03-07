@@ -17,6 +17,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.SessionNotCreatedException;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.SessionId;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Session;
@@ -26,11 +27,8 @@ import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.client.uiamodels.impl.ServerSideNativeDriver;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
-import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
-import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
-import org.uiautomation.ios.server.application.IPAApplication;
 import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
 import org.uiautomation.ios.server.instruments.InstrumentsManager;
@@ -73,48 +71,52 @@ public class ServerSideSession extends Session {
     this.capabilities = desiredCapabilities;
 
     application = driver.findAndCreateInstanceMatchingApplication(desiredCapabilities);
-    device = driver.findAndReserveMatchingDevice(desiredCapabilities);
 
-    if (!capabilities.isSimulator()) {
-      capabilities.setDeviceUUID("d1ce6333af579e27d166349dc8a1989503ba5b4f");
-      //File ipa = new File("/Users/freynaud/build/archived/com.yourcompany.UICatalog.ipa");
-      //application = IPAApplication.createFrom(ipa);
-      InstrumentsManager.realDevice = true;
-    } else {
-      InstrumentsManager.realDevice = false;
-    }
+    try {
+      device = driver.findAndReserveMatchingDevice(desiredCapabilities);
 
-    if (capabilities.getDeviceVariation() == null) {
-      capabilities.setDeviceVariation(DeviceVariation.Regular);
-    }
-    if (capabilities.getSDKVersion() == null) {
-      capabilities.setSDKVersion(ClassicCommands.getDefaultSDK());
-    } else {
-      String version = capabilities.getSDKVersion();
-      Float v = Float.parseFloat(version);
-      if (v < 5) {
-        throw new SessionNotCreatedException(v + " is too old. Only support SDK 5.0 and above.");
+      // update capabilities and put default values in the misisng fields.
+      if (capabilities.getDeviceVariation() == null) {
+        capabilities.setDeviceVariation(DeviceVariation.Regular);
+      }
+      capabilities.setBundleId(application.getBundleId());
+      // TODO device.getSDK()
+      if (capabilities.getSDKVersion() == null) {
+        capabilities.setSDKVersion(ClassicCommands.getDefaultSDK());
+      } else {
+        String version = capabilities.getSDKVersion();
+        Float v = Float.parseFloat(version);
+        if (v < 5) {
+          throw new SessionNotCreatedException(v + " is too old. Only support SDK 5.0 and above.");
+        }
+
+        if (!driver.getHostInfo().getInstalledSDKs().contains(version)) {
+          throw new SessionNotCreatedException(
+              "Cannot start on version " + version + ".Installed : "
+              + driver.getHostInfo().getInstalledSDKs());
+        }
       }
 
-      if (!driver.getHostInfo().getInstalledSDKs().contains(version)) {
-        throw new SessionNotCreatedException("Cannot start on version " + version + ".Installed : "
-                                             + driver.getHostInfo().getInstalledSDKs());
+      instruments = new InstrumentsManager(driver.getPort());
+      configuration = new DriverConfigurationStore();
+
+      Runtime.getRuntime().addShutdownHook(new Thread() {
+        @Override
+        public void run() {
+          forceStop();
+        }
+      });
+
+    } catch (WebDriverException e) {
+      if (device != null) {
+        device.release();
       }
+      throw e;
     }
-    instruments = new InstrumentsManager(driver.getPort());
-
-    configuration = new DriverConfigurationStore();
-
-    Runtime.getRuntime().addShutdownHook(new Thread() {
-      @Override
-      public void run() {
-        forceStop();
-      }
-    });
   }
 
-  public DeviceType getDevice() {
-    return capabilities.getDevice();
+  public Device getDevice() {
+    return device;
   }
 
   public CommandConfiguration configure(WebDriverLikeCommand command) {

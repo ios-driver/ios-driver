@@ -219,7 +219,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
     }
   }
 
-  @Test
+  @Test(enabled = false) // FB might find something better.
   public void supportAllInstalledSDKs() {
     RemoteIOSDriver driver = null;
     List<String> sdks = ClassicCommands.getInstalledSDKs();

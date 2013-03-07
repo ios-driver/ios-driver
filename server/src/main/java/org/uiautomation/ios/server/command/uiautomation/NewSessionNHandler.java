@@ -48,6 +48,9 @@ public class NewSessionNHandler extends BaseNativeCommandHandler {
       resp.setValue("");
       return resp;
     } catch (Exception e) {
+      if (session != null) {
+        session.stop();
+      }
       throw new SessionNotCreatedException(e.getMessage());
     }
 

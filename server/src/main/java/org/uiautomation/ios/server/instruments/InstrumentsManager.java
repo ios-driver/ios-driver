@@ -20,7 +20,6 @@ import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.Device;
 import org.uiautomation.ios.server.RealDevice;
-import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.simulator.IOSRealDeviceManager;
 import org.uiautomation.ios.server.simulator.IOSSimulatorManager;
@@ -37,8 +36,7 @@ import java.util.logging.Logger;
 
 public class InstrumentsManager {
 
-
-  public static boolean realDevice = false;
+  //public static boolean realDevice = false;
 
   private static final Logger log = Logger.getLogger(InstrumentsManager.class.getName());
 
@@ -76,7 +74,6 @@ public class InstrumentsManager {
 
     this.device = device;
     caps = capabilities;
-    caps.setBundleId(application.getBundleId());
 
     deviceType = caps.getDevice();
     variation = caps.getDeviceVariation();
@@ -198,9 +195,13 @@ public class InstrumentsManager {
   }
 
   public void stop() {
-    device.release();
+    if (device != null) {
+      device.release();
+    }
     TimeSpeeder.getInstance().stop();
-    simulatorProcess.waitFor();
+    if (simulatorProcess != null) {
+      simulatorProcess.waitFor();
+    }
     killSimulator();
   }
 
