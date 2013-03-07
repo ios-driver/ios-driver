@@ -45,11 +45,17 @@ public class IPAApplication extends APPIOSApplication {
 
   private static File getAssociatedApp(File ipa) {
     File payload = new File(getExtractedFolder(ipa), "payload");
-    assert (payload.exists());
     File[] apps = payload.listFiles();
-    assert (apps.length == 1);
-    File res = apps[0];
-    assert (res.getAbsolutePath().endsWith(".app"));
+
+    File res = null;
+    for (File f : apps) {
+      if (f.getAbsolutePath().endsWith(".app")) {
+        res = f;
+      }
+    }
+    if (res == null) {
+      throw new WebDriverException("Cannot find the .app in the unzipped app");
+    }
     return res;
   }
 

@@ -116,13 +116,15 @@ public class IOSServerManager {
   public IOSRunningApplication findAndCreateInstanceMatchingApplication(
       IOSCapabilities desiredCapabilities) {
     for (APPIOSApplication app : getApplicationStore().getApplications()) {
+      System.out.println("CHECKING " + app.toString());
       IOSCapabilities appCapabilities = app.getCapabilities();
       if (APPIOSApplication.canRun(desiredCapabilities, appCapabilities)) {
+        System.out.println("OK");
         return app.createInstance(desiredCapabilities.getLanguage());
       }
     }
     throw new SessionNotCreatedException(
-        desiredCapabilities.getRawCapabilities() + "not found on server.");
+        desiredCapabilities.getRawCapabilities() + " not found on server.");
   }
 
   public Device findAndReserveMatchingDevice(IOSCapabilities desiredCapabilities) {

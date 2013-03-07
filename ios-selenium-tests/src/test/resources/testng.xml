@@ -4,7 +4,6 @@
     <test name="web regression" preserve-order="true">
         <packages>
             <package name="org.uiautomation.ios.selenium"/>
-
         </packages>
 
     </test>

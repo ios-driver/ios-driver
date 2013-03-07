@@ -343,7 +343,6 @@ public class APPIOSApplication {
   }
 
   public static boolean canRun(IOSCapabilities desiredCapabilities, IOSCapabilities appCapability) {
-
     if (desiredCapabilities.isSimulator() != appCapability.isSimulator()) {
       return false;
     }
@@ -394,7 +393,6 @@ public class APPIOSApplication {
           "Language requested, " + l + " ,isn't supported.Supported are : "
           + appCapability.getSupportedLanguages());
     }
-
     return true;
   }
 
