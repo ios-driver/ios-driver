@@ -32,6 +32,9 @@ public class IOSHtmlRenderer implements HtmlRenderer {
     StringBuilder builder = new StringBuilder();
     builder.append("<fieldset>");
     builder.append("<legend>").append(proxy.getClass().getSimpleName()).append("</legend>");
+    if(proxy.isRestarting()){
+      builder.append("<b>***RESTARTING***</b><br/>");
+    }
     builder.append("Listening on ").append(proxy.getRemoteHost());
     if (proxy.getTimeOut() > 0) {
       int inSec = proxy.getTimeOut() / 1000;

@@ -14,15 +14,19 @@
 
 package org.uiautomation.ios.server.utils;
 
+import com.barbarysoftware.watchservice.WatchEvent;
+import com.barbarysoftware.watchservice.WatchKey;
+import com.barbarysoftware.watchservice.WatchService;
+import com.barbarysoftware.watchservice.WatchableFile;
 import org.uiautomation.ios.server.IOSServerConfiguration;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.application.IOSApplication;
-import org.uiautomation.ios.server.grid.RegistrationRequest;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.*;
 import java.util.logging.Logger;
+
+import static com.barbarysoftware.watchservice.StandardWatchEventKind.*;
 
 public class FolderMonitor implements Runnable {
   private static final Logger log = Logger.getLogger(FolderMonitor.class.getName());
@@ -36,16 +40,9 @@ public class FolderMonitor implements Runnable {
     this.iosServerManager = iosServerManager;
     stopped = false;
     init();
-    folderWatcher = FileSystems.getDefault().newWatchService();
-    Path watchedFolder = Paths.get(iosServerConfiguration.getAppFolderToMonitor());
-    try {
-      watchedFolder.register(folderWatcher, StandardWatchEventKinds.ENTRY_CREATE,
-          StandardWatchEventKinds.ENTRY_MODIFY,
-          StandardWatchEventKinds.ENTRY_DELETE);
-    } catch (NoSuchFileException e) {
-      stop();
-      log.warning("invalid location: " + iosServerConfiguration.getAppFolderToMonitor());
-    }
+    folderWatcher = WatchService.newWatchService();
+    WatchableFile watchedFolder = new WatchableFile(new File(iosServerConfiguration.getAppFolderToMonitor()));
+    watchedFolder.register(folderWatcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
   }
 
   private void init() {
@@ -70,15 +67,20 @@ public class FolderMonitor implements Runnable {
   }
 
   private void checkForChanges() {
-    final WatchKey key = folderWatcher.poll();
+    WatchKey key = folderWatcher.poll();
 
     if (key != null) {
       for (WatchEvent<?> watchEvent : key.pollEvents()) {
-        final WatchEvent<Path> ev = (WatchEvent<Path>) watchEvent;
-        final Path filename = ev.context();
         final WatchEvent.Kind<?> kind = watchEvent.kind();
+        if (kind == OVERFLOW) {
+          continue;
+        }
+
+        final WatchEvent<File> ev = (WatchEvent<File>) watchEvent;
+        final File filename = ev.context();
+
         log.fine(kind + " : " + filename);
-        handleFileChange(kind, filename.toFile());
+        handleFileChange(kind, new File(filename.getPath()));
       }
 
       boolean valid = key.reset();
@@ -90,26 +92,24 @@ public class FolderMonitor implements Runnable {
   }
 
   private void handleFileChange(WatchEvent.Kind kind, File filename) {
-    if (isCreate(kind) && isApp(filename)) {
+    if(!isApp(filename)){
+      return;
+    }
+    if (kind.equals(ENTRY_CREATE)) {
       log.info("New app found!");
       addApplication(filename);
+    }
+    else if(kind.equals(ENTRY_MODIFY)){
+      log.info("App modified - no handler implemented!");
+    }
+    else if(kind.equals(ENTRY_DELETE)){
+      log.info("App deleted - no handler implemented!");
     }
   }
 
   private void addApplication(File filename) {
     String app = iosServerConfiguration.getAppFolderToMonitor() + File.separator + filename.getName();
     iosServerManager.addSupportedApplication(new IOSApplication(app));
-//    if (iosServerConfiguration.getRegistrationURL() != null) {
-//      RegistrationRequest
-//          request =
-//          new RegistrationRequest(iosServerConfiguration.getRegistrationURL(), iosServerConfiguration.getHost(),
-//              iosServerConfiguration.getPort(), iosServerManager.getSupportApplicationPaths());
-//      request.registerToHub();
-//    }
-  }
-
-  private boolean isCreate(WatchEvent.Kind kind) {
-    return kind.equals(StandardWatchEventKinds.ENTRY_CREATE);
   }
 
   private boolean isApp(File file) {
