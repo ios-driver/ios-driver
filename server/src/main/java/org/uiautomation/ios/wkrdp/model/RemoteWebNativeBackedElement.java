@@ -152,6 +152,10 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
 
 
   public void setValueNative(String value) throws Exception {
+    if ("date".equals(getAttribute("type"))) {
+      setValueAtoms(value);
+      return;
+    }
     ((JavascriptExecutor) nativeDriver)
         .executeScript(getNativeElementClickOnIt());
     Thread.sleep(750);
