@@ -56,7 +56,7 @@ public class RealDevice extends Device {
   }
 
   public List<ApplicationInfo> getApplications() {
-    return installer.listUserApps();
+    return installer.getUserApplications();
   }
 
   @Override

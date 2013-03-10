@@ -40,6 +40,7 @@ public class DeviceServlet extends DriverBasedServlet {
         " <link rel=\"stylesheet\" href=\"http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css\" />");
     b.append("<script src=\"http://code.jquery.com/jquery-1.9.1.js\"></script>");
     b.append("<script src=\"http://code.jquery.com/ui/1.10.1/jquery-ui.js\"></script>");
+    b.append("<script src=\"/static/devices.js\"></script>");
     b.append("<script>");
     b.append(" $(function() {");
     b.append("  $( \"#tabs\" ).tabs();");
@@ -87,7 +88,9 @@ public class DeviceServlet extends DriverBasedServlet {
     b.append("<h3>Applications:</h3>");
 
     for (ApplicationInfo app : device.getApplications()) {
-      b.append(app.getApplicationId() + ", ");
+      b.append(
+          app.getApplicationId() + " <div class='archive' deviceId='" + device.getUuid() + "' app='"
+          + app.getApplicationId() + "'>ARCHIVE</div>");
       b.append("<ul>");
       for (String key : app.keySet()) {
         b.append("<li>" + key + ": " + app.getProperty(key) + "</li>");

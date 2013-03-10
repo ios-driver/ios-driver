@@ -37,7 +37,7 @@ public class Demo {
     IOSServer server = new IOSServer(config);
     server.start();
 
-    IOSCapabilities cap = IOSCapabilities.iphone("Chrome");
+    /*IOSCapabilities cap = IOSCapabilities.iphone("Chrome");
     cap.setCapability(IOSCapabilities.SIMULATOR, false);
 
     RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), cap);
@@ -46,7 +46,7 @@ public class Demo {
 
     driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), cap);
     driver.findElement(By.xpath("//UIAWindow"));
-    driver.quit();
+    driver.quit(); */
 
   }
 

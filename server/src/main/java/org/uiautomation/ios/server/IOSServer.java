@@ -26,10 +26,12 @@ import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.server.grid.RegistrationRequest;
 import org.uiautomation.ios.server.servlet.ApplicationsServlet;
+import org.uiautomation.ios.server.servlet.ArchiveServlet;
 import org.uiautomation.ios.server.servlet.CapabilitiesServlet;
 import org.uiautomation.ios.server.servlet.DeviceServlet;
 import org.uiautomation.ios.server.servlet.IOSServlet;
 import org.uiautomation.ios.server.servlet.ResourceServlet;
+import org.uiautomation.ios.server.servlet.StaticResourceServlet;
 import org.uiautomation.ios.server.servlet.UIAScriptServlet;
 
 import java.net.InetSocketAddress;
@@ -90,12 +92,16 @@ public class IOSServer {
     wd.addServlet(DeviceServlet.class, "/devices/*");
     wd.addServlet(ApplicationsServlet.class, "/applications/*");
     wd.addServlet(CapabilitiesServlet.class, "/capabilities/*");
+    wd.addServlet(ArchiveServlet.class, "/archive/*");
+
+    ServletContextHandler statics = new ServletContextHandler(server, "/static", true, false);
+    statics.addServlet(StaticResourceServlet.class, "/*");
 
     ServletContextHandler extra = new ServletContextHandler(server, "/", true, false);
     extra.addServlet(IDEServlet.class, "/inspector/*");
 
     HandlerList handlers = new HandlerList();
-    handlers.setHandlers(new Handler[]{wd, extra});
+    handlers.setHandlers(new Handler[]{wd, statics, extra});
     server.setHandler(handlers);
 
     driver = new IOSServerManager(port);
