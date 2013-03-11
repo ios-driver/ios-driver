@@ -17,7 +17,7 @@ package org.uiautomation.ios.server.utils;
 import name.pachler.nio.file.*;
 import org.uiautomation.ios.server.IOSServerConfiguration;
 import org.uiautomation.ios.server.IOSServerManager;
-import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.APPIOSApplication;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,101 +26,103 @@ import java.util.logging.Logger;
 
 
 public class FolderMonitor implements Runnable {
-  private static final Logger log = Logger.getLogger(FolderMonitor.class.getName());
-  private IOSServerManager iosServerManager;
-  private IOSServerConfiguration iosServerConfiguration;
-  private WatchService folderWatcher;
-  private WatchKey key;
-  private boolean stopped;
+    private static final Logger log = Logger.getLogger(FolderMonitor.class.getName());
+    private IOSServerManager iosServerManager;
+    private IOSServerConfiguration iosServerConfiguration;
+    private WatchService folderWatcher;
+    private WatchKey key;
+    private boolean stopped;
 
-  public FolderMonitor(IOSServerConfiguration iosServerConfiguration, IOSServerManager iosServerManager) throws IOException {
-    this.iosServerConfiguration = iosServerConfiguration;
-    this.iosServerManager = iosServerManager;
-    stopped = false;
-    init();
-    folderWatcher = FileSystems.getDefault().newWatchService();
+    public FolderMonitor(IOSServerConfiguration iosServerConfiguration, IOSServerManager iosServerManager) throws IOException {
+        this.iosServerConfiguration = iosServerConfiguration;
+        this.iosServerManager = iosServerManager;
+        stopped = false;
+        init();
+        folderWatcher = FileSystems.getDefault().newWatchService();
 
-    Path watchedFolder = Paths.get(iosServerConfiguration.getAppFolderToMonitor());
+        Path watchedFolder = Paths.get(iosServerConfiguration.getAppFolderToMonitor());
 
-    key = watchedFolder.register(folderWatcher, StandardWatchEventKind.ENTRY_CREATE, StandardWatchEventKind.ENTRY_DELETE);
-  }
-
-  private void init() {
-    File[] listOfFiles = new File(iosServerConfiguration.getAppFolderToMonitor()).listFiles();
-    for (File file : listOfFiles) {
-      if (isApp(file)) {
-        addApplication(file);
-      }
-    }
-  }
-
-  @Override
-  public void run() {
-    while (!stopped) {
-      checkForChanges();
-      try {
-        Thread.sleep(1000);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-    }
-  }
-
-  private void checkForChanges() {
-    WatchKey key = null;
-    try {
-      key = folderWatcher.poll();
-    } catch (InterruptedException e) {
-      log.warning("problem monitoring the folder, " + e.toString());
+        key = watchedFolder.register(folderWatcher, StandardWatchEventKind.ENTRY_CREATE, StandardWatchEventKind.ENTRY_DELETE);
     }
 
-    if (key != null) {
-      List<WatchEvent<?>> list = key.pollEvents();
-      key.reset();
-      for (WatchEvent<?> watchEvent : list) {
-        final WatchEvent.Kind<?> kind = watchEvent.kind();
-
-        final WatchEvent<File> ev = (WatchEvent<File>) watchEvent;
-        final File filename = ev.context();
-
-        log.fine(kind + " : " + filename);
-        handleFileChange(kind, new File(filename.getPath()));
-      }
-
-      boolean valid = key.reset();
-      if (!valid) {
-        log.warning("Can't monitor folder anymore, has it been deleted?");
-        stop();
-      }
+    private void init() {
+        File[] listOfFiles = new File(iosServerConfiguration.getAppFolderToMonitor()).listFiles();
+        for (File file : listOfFiles) {
+            if (isApp(file)) {
+                addApplication(file);
+            }
+        }
     }
-  }
 
-  private void handleFileChange(WatchEvent.Kind kind, File filename) {
-    if(!isApp(filename)){
-      return;
+    @Override
+    public void run() {
+        while (!stopped) {
+            checkForChanges();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
-    if (kind.equals(StandardWatchEventKind.ENTRY_CREATE)) {
-      log.info("New app found!");
-      addApplication(filename);
-    }
-    else if(kind.equals(StandardWatchEventKind.ENTRY_MODIFY)){
-      log.info("App modified - no handler implemented!");
-    }
-    else if(kind.equals(StandardWatchEventKind.ENTRY_DELETE)){
-      log.info("App deleted - no handler implemented!");
-    }
-  }
 
-  private void addApplication(File filename) {
-    String app = iosServerConfiguration.getAppFolderToMonitor() + File.separator + filename.getName();
-    iosServerManager.addSupportedApplication(new IOSApplication(app));
-  }
+    private void checkForChanges() {
+        WatchKey key = null;
+        try {
+            key = folderWatcher.poll();
+        } catch (InterruptedException e) {
+            log.warning("problem monitoring the folder, " + e.toString());
+        }
 
-  private boolean isApp(File file) {
-    return file.getName().endsWith(".app");
-  }
+        if (key != null) {
+            List<WatchEvent<?>> list = key.pollEvents();
+            key.reset();
+            for (WatchEvent<?> watchEvent : list) {
+                final WatchEvent.Kind<?> kind = watchEvent.kind();
 
-  public void stop() {
-    stopped = true;
-  }
+                final WatchEvent<File> ev = (WatchEvent<File>) watchEvent;
+                final File filename = ev.context();
+
+                log.fine(kind + " : " + filename);
+                handleFileChange(kind, new File(filename.getPath()));
+            }
+
+            boolean valid = key.reset();
+            if (!valid) {
+                log.warning("Can't monitor folder anymore, has it been deleted?");
+                stop();
+            }
+        }
+    }
+
+    private void handleFileChange(WatchEvent.Kind kind, File filename) {
+        if (!isApp(filename)) {
+            return;
+        }
+        if (kind.equals(StandardWatchEventKind.ENTRY_CREATE)) {
+            log.info("New app found!");
+            addApplication(filename);
+        } else if (kind.equals(StandardWatchEventKind.ENTRY_MODIFY)) {
+            log.info("App modified - no handler implemented!");
+        } else if (kind.equals(StandardWatchEventKind.ENTRY_DELETE)) {
+            log.info("App deleted - no handler implemented!");
+        }
+    }
+
+    private void addApplication(File filename) {
+        APPIOSApplication a = APPIOSApplication.createFrom(filename);
+        iosServerManager.addSupportedApplication(a);
+    }
+
+    private boolean isApp(File file) {
+        if (file.getAbsolutePath().contains("ipa.unzipped")) {
+            return false;
+        }
+        String ext = file.getName();
+        return ext.endsWith(".app") || ext.endsWith(".ipa");
+    }
+
+    public void stop() {
+        stopped = true;
+    }
 }
