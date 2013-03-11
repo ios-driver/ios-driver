@@ -106,7 +106,7 @@ public class IOSCapabilities extends DesiredCapabilities {
   public IOSCapabilities() {
     setCapability(TIME_HACK, false);
     setCapability(VARIATION, DeviceVariation.Regular);
-    setCapability(SIMULATOR, false);
+    setCapability(SIMULATOR, true);
   }
 
   public boolean isSimulator() {
