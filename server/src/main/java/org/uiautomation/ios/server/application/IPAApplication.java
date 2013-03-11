@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -15,6 +16,7 @@ import java.util.zip.ZipFile;
 public class IPAApplication extends APPIOSApplication {
 
   private final File ipa;
+  private static final Logger log = Logger.getLogger(IPAApplication.class.getName());
 
   private IPAApplication(File ipa, String pathToApp) {
     super(pathToApp);
@@ -24,14 +26,27 @@ public class IPAApplication extends APPIOSApplication {
   public static IPAApplication createFrom(File ipa) {
     File extracted = getExtractedFolder(ipa);
     if (!extracted.exists()) {
-      try {
-        extractFolder(ipa);
-      } catch (IOException e) {
-        throw new WebDriverException("Cannot unzip the ipa file.", e);
+      long deadline = System.currentTimeMillis() + 20 * 1000;
+      while (System.currentTimeMillis() < deadline) {
+        try {
+          extractFolder(ipa);
+          break;
+        } catch (IOException e) {
+          try {
+            Thread.sleep(2000);
+          } catch (InterruptedException e1) {
+            // ignore.
+          }
+          log.warning("Cannot unzip" + ipa + ". Could be ok, if the app is being copied.");
+        }
       }
+    }
+    if (!extracted.exists()) {
+      throw new WebDriverException("couldn't unzip the app :" + ipa);
     }
     File app = getAssociatedApp(ipa);
     IPAApplication res = new IPAApplication(ipa, app.getAbsolutePath());
+    log.warning(ipa + "app added.");
     return res;
   }
 
