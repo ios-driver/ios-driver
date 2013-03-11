@@ -116,7 +116,7 @@ public class IOSServer {
     handlers.setHandlers(new Handler[]{wd, statics, extra});
     server.setHandler(handlers);
 
-    driver = new IOSServerManager(port);
+    driver = new IOSServerManager(port, options.getAppFolderToMonitor());
     for (String app : this.options.getSupportedApps()) {
       driver.addSupportedApplication(new APPIOSApplication(app));
     }

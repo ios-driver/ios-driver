@@ -16,22 +16,19 @@ public class ApplicationStore {
   private final List<APPIOSApplication> all = new CopyOnWriteArrayList<APPIOSApplication>();
   private final File workingDirectory;
 
-  public ApplicationStore() {
-
-    workingDirectory = new File("archived");
+  public ApplicationStore(String folder) {
+    if (folder == null) {
+      folder = "archived";
+    }
+    workingDirectory = new File(folder);
     workingDirectory.mkdir();
-    log.info("Real device app archive :" + workingDirectory.getAbsolutePath());
+    log.info("App archive folder:" + workingDirectory.getAbsolutePath());
     load();
   }
 
   public void add(APPIOSApplication app) {
     all.add(app);
   }
-
-  public void addArchive(String bundleId) {
-    File arch = new File(workingDirectory, bundleId + ".zip");
-  }
-
 
   public void add(String path) {
     if (path.endsWith(".ipa")) {

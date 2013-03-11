@@ -103,6 +103,7 @@ public class FolderMonitor implements Runnable {
     if (!isApp(filename)) {
       return;
     }
+    System.out.println("file " + filename + " : " + kind);
     if (kind.equals(ENTRY_CREATE)) {
       log.info("New app found!");
       addApplication(filename);
@@ -119,7 +120,11 @@ public class FolderMonitor implements Runnable {
   }
 
   private boolean isApp(File file) {
-    return file.getName().endsWith(".app");
+    if (file.getAbsolutePath().contains("ipa.unzipped")) {
+      return false;
+    }
+    String ext = file.getName();
+    return ext.endsWith(".app") || ext.endsWith(".ipa");
   }
 
   public void stop() {

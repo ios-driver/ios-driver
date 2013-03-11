@@ -43,7 +43,7 @@ public class IOSServerManager {
   private final DeviceStore devices;
   public final ApplicationStore apps;
 
-  public IOSServerManager(int port) {
+  public IOSServerManager(int port, String folder) {
     try {
       LogManager.getLogManager()
           .readConfiguration(IOSServerManager.class.getResourceAsStream("/ios-logging.properties"));
@@ -53,7 +53,7 @@ public class IOSServerManager {
     this.hostInfo = new HostInfo(port);
     devices = new DeviceStore();
     devices.add(new SimulatorDevice());
-    apps = new ApplicationStore();
+    apps = new ApplicationStore(folder);
     if (Configuration.BETA_FEATURE) {
       //LoggerService.enableDebug();
       deviceManager = DeviceManagerService.create(devices);
@@ -73,10 +73,6 @@ public class IOSServerManager {
 
   public void addSupportedApplication(APPIOSApplication application) {
     apps.add(application);
-    boolean added = supportedApplications.add(application);
-    if (!added) {
-      throw new WebDriverException("app already present :" + application.getApplicationPath());
-    }
     cache.cacheResource(application);
   }
 

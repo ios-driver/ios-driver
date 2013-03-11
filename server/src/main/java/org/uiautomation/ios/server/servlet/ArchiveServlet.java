@@ -58,8 +58,9 @@ public class ArchiveServlet extends DriverBasedServlet {
     String line = null;
     try {
       BufferedReader reader = req.getReader();
-      while ((line = reader.readLine()) != null)
+      while ((line = reader.readLine()) != null) {
         jb.append(line);
+      }
     } catch (Exception e) { /*report an error*/ }
 
     try {
@@ -79,7 +80,6 @@ public class ArchiveServlet extends DriverBasedServlet {
 
           service.archive(bundleId, false, false, archiveFolder
               , true);
-          getDriver().getApplicationStore().addArchive(bundleId);
         }
       }).start();
 

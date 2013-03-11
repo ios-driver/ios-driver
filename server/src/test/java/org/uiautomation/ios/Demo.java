@@ -31,7 +31,8 @@ public class Demo {
     String[] a = {"-port", "4444", "-host", "localhost",
                   "-aut", SampleApps.getUICatalogFile(),
                   "-aut", SampleApps.getUICatalogIpad(),
-                  "-beta"};
+                  "-beta",
+                  "-folder", "archive"};
     IOSServerConfiguration config = IOSServerConfiguration.create(a);
 
     IOSServer server = new IOSServer(config);
