@@ -18,7 +18,7 @@ import org.json.JSONObject;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.server.command.Handler;
@@ -274,7 +274,7 @@ public enum CommandMapping {
     throw new RuntimeException("not mapped : " + wdlc);
   }
 
-  public String jsMethod(JSONObject payload, IOSApplication aut) {
+  public String jsMethod(JSONObject payload) {
     if (payload != null) {
       String res = nativeJSMethod;
       Iterator<String> iter = payload.keys();

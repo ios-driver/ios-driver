@@ -16,11 +16,13 @@ package org.uiautomation.ios.server.instruments;
 
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.communication.device.Device;
+import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
-import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.Device;
+import org.uiautomation.ios.server.RealDevice;
+import org.uiautomation.ios.server.application.IOSRunningApplication;
+import org.uiautomation.ios.server.simulator.IOSRealDeviceManager;
 import org.uiautomation.ios.server.simulator.IOSSimulatorManager;
-import org.uiautomation.ios.server.simulator.InstrumentsNoDelayLoader;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.Command;
 import org.uiautomation.ios.utils.ScriptHelper;
@@ -34,18 +36,23 @@ import java.util.logging.Logger;
 
 public class InstrumentsManager {
 
-
-  public static final boolean realDevice = false;
+  //public static boolean realDevice = false;
 
   private static final Logger log = Logger.getLogger(InstrumentsManager.class.getName());
 
   private File output;
   private final File template;
-  private IOSApplication application;
-  private IOSDeviceManager simulator;
+  private IOSRunningApplication application;
+  private Device device;
+  private IOSDeviceManager deviceManager;
   private String sessionId;
   private final int port;
-
+  private String sdkVersion;
+  private String locale;
+  private String language;
+  private DeviceType deviceType;
+  private DeviceVariation variation;
+  private IOSCapabilities caps;
   private List<String> extraEnvtParams;
   private CommunicationChannel communicationChannel;
   private Command simulatorProcess;
@@ -60,13 +67,25 @@ public class InstrumentsManager {
     this.port = serverPort;
   }
 
-  public void startSession(Device device, DeviceVariation variation, String sdkVersion,
-                           String locale, String language,
-                           IOSApplication application, String sessionId, boolean timeHack,
-                           List<String> envtParams)
-      throws WebDriverException {
+  public void startSession(String sessionId,
+                           IOSRunningApplication application,
+                           Device device,
+                           IOSCapabilities capabilities) throws WebDriverException {
+
+    this.device = device;
+    caps = capabilities;
+
+    deviceType = caps.getDevice();
+    variation = caps.getDeviceVariation();
+    sdkVersion = caps.getSDKVersion();
+    locale = caps.getLocale();
+    language = application.getAppleLocaleFromLanguageCode(caps.getLanguage())
+        .getAppleLanguagesForPreferencePlist();
+    boolean timeHack = caps.isTimeHack();
+    List<String> envtParams = caps.getExtraSwitches();
+
     log.fine("starting session");
-    IOSSimulatorManager sim = null;
+
     try {
       this.sessionId = sessionId;
       this.extraEnvtParams = envtParams;
@@ -74,23 +93,23 @@ public class InstrumentsManager {
       output = createTmpOutputFolder();
 
       this.application = application;
-      this.application.setDefaultDevice(device);
+      this.application.setDefaultDevice(deviceType);
 
       if (isWarmupRequired(sdkVersion)) {
         warmup();
       }
       log.fine("prepare simulator");
-      simulator =
-          prepareSimulator(sdkVersion, device, variation, locale, language,
-                           application.getMetadata(IOSCapabilities.BUNDLE_ID));
-      sim = (IOSSimulatorManager) simulator;
-      log.fine("forcing SDK");
-      sim.forceDefaultSDK(sdkVersion);
-      log.fine("creating script");
+      deviceManager = prepareSimulator(capabilities);
+
+      if (deviceManager instanceof IOSSimulatorManager) {
+        log.fine("forcing SDK");
+        ((IOSSimulatorManager) deviceManager).forceDefaultSDK();
+        log.fine("creating script");
+      }
       File
           uiscript =
           new ScriptHelper()
-              .getScript(port, application.getApplicationPath().getAbsolutePath(), sessionId);
+              .getScript(port, application.getDotAppAbsolutePath(), sessionId);
       log.fine("starting instruments");
       List<String> instruments = createInstrumentCommand(uiscript.getAbsolutePath());
       communicationChannel = new CommunicationChannel();
@@ -126,8 +145,11 @@ public class InstrumentsManager {
           "error starting instrument for session " + sessionId + ", " + e.getMessage(), e);
     } finally {
       log.fine("start session done");
-      if (sim != null) {
-        sim.restoreExiledSDKs();
+
+      if (deviceManager instanceof IOSSimulatorManager) {
+        log.fine("forcing SDK");
+        ((IOSSimulatorManager) deviceManager).restoreExiledSDKs();
+        log.fine("creating script");
       }
     }
 
@@ -155,22 +177,31 @@ public class InstrumentsManager {
      */
   }
 
-  private IOSDeviceManager prepareSimulator(String sdkVersion, Device device,
-                                            DeviceVariation variation, String locale,
-                                            String language, String bundleId) {
-    // TODO freynaud handle real device ?
-    IOSDeviceManager simulator = new IOSSimulatorManager(sdkVersion, device);
-    simulator.resetContentAndSettings();
-    simulator.setL10N(locale, language);
-    simulator.setKeyboardOptions();
-    simulator.setVariation(device, variation);
-    simulator.setLocationPreference(true, bundleId);
-    return simulator;
+  private IOSDeviceManager prepareSimulator(IOSCapabilities capabilities) {
+    IOSDeviceManager deviceManager;
+
+    if (device instanceof RealDevice) {
+      deviceManager = new IOSRealDeviceManager(capabilities);
+    } else {
+      deviceManager = new IOSSimulatorManager(capabilities);
+    }
+
+    deviceManager.resetContentAndSettings();
+    deviceManager.setL10N(locale, language);
+    deviceManager.setKeyboardOptions();
+    deviceManager.setVariation(deviceType, variation);
+    deviceManager.setLocationPreference(true);
+    return deviceManager;
   }
 
   public void stop() {
+    if (device != null) {
+      device.release();
+    }
     TimeSpeeder.getInstance().stop();
-    simulatorProcess.waitFor();
+    if (simulatorProcess != null) {
+      simulatorProcess.waitFor();
+    }
     killSimulator();
   }
 
@@ -185,14 +216,14 @@ public class InstrumentsManager {
   private List<String> createInstrumentCommand(String script) {
     List<String> command = new ArrayList<String>();
 
-    command.add(InstrumentsNoDelayLoader.getInstance().getInstruments().getAbsolutePath());
-    if (realDevice) {
+    command.add(deviceManager.getInstrumentsClient());
+    if (device instanceof RealDevice) {
       command.add("-w");
-      command.add("d1ce6333af579e27d166349dc8a1989503ba5b4f");
+      command.add(((RealDevice) device).getUuid());
     }
     command.add("-t");
     command.add(template.getAbsolutePath());
-    command.add(application.getApplicationPath().getAbsolutePath());
+    command.add(application.getDotAppAbsolutePath());
     command.add("-e");
     command.add("UIASCRIPT");
     command.add(script);
@@ -205,7 +236,7 @@ public class InstrumentsManager {
       b.append(s);
       b.append(" ");
     }
-    log.fine("Starting instruments\n:" + b.toString());
+    log.warning("Starting instruments:\n" + b.toString());
     return command;
 
   }
@@ -219,8 +250,8 @@ public class InstrumentsManager {
   }
 
   private void killSimulator() {
-    if (simulator != null) {
-      simulator.cleanupDevice();
+    if (deviceManager != null) {
+      deviceManager.cleanupDevice();
     }
   }
 

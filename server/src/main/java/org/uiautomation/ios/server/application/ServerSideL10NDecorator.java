@@ -23,9 +23,9 @@ import org.uiautomation.ios.UIAModels.predicate.PropertyEqualCriteria;
 
 public class ServerSideL10NDecorator implements CriteriaDecorator {
 
-  private final IOSApplication app;
+  private final IOSRunningApplication app;
 
-  public ServerSideL10NDecorator(IOSApplication app) {
+  public ServerSideL10NDecorator(IOSRunningApplication app) {
     this.app = app;
   }
 
@@ -36,18 +36,17 @@ public class ServerSideL10NDecorator implements CriteriaDecorator {
   }
 
 
-
   private void decorateContent(Criteria c) {
     if (!isElligibleForContent(c)) {
       return;
     }
     PropertyEqualCriteria criteria = (PropertyEqualCriteria) c;
     String oldValue = criteria.getValue();
-    LanguageDictionary dict = app.getDictionary(app.getCurrentLanguage());
+    LanguageDictionary dict = app.getCurrentDictionary();
     String newValue = dict.getContentForKey(oldValue);
     if (newValue == null) {
       throw new InvalidSelectorException("No entry for key " + oldValue + " in dictionary for "
-          + app.getCurrentLanguage());
+                                         + app.getCurrentLanguage());
     }
 
     criteria.setValue(LanguageDictionary.getRegexPattern(newValue));

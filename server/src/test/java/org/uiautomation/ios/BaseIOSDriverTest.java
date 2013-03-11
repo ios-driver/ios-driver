@@ -21,7 +21,8 @@ public abstract class BaseIOSDriverTest {
                      "-aut", SampleApps.getUICatalogIpad(),
                      "-aut", SampleApps.getGeocoderFile(),
                      "-aut", SampleApps.getIntlMountainsFile(),
-                     "-aut", SampleApps.gettestNoContentFile()
+                     "-aut", SampleApps.gettestNoContentFile(),
+                     "-beta"
     };
     config = IOSServerConfiguration.create(args);
 

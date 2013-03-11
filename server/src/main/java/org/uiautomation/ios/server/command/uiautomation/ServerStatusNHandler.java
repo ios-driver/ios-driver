@@ -22,7 +22,7 @@ import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
 import org.uiautomation.ios.utils.BuildInfo;
 import org.uiautomation.ios.utils.ClassicCommands;
@@ -54,7 +54,7 @@ public class ServerStatusNHandler extends BaseNativeCommandHandler {
     res.put("ios", new JSONObject().put("simulatorVersion", ClassicCommands.getDefaultSDK()));
 
     JSONArray supportedApps = new JSONArray();
-    for (IOSApplication a : getDriver().getSupportedApplications()) {
+    for (APPIOSApplication a : getDriver().getSupportedApplications()) {
       JSONObject app = new JSONObject();
 
       JSONObject resources = new JSONObject();
@@ -63,7 +63,7 @@ public class ServerStatusNHandler extends BaseNativeCommandHandler {
       }
       app.put("resources", resources);
 
-      Map<String, Object> capabilities = getDriver().getCapabilities(a).getRawCapabilities();
+      Map<String, Object> capabilities = (Map<String, Object>) a.getCapabilities().asMap();
       for (String key : capabilities.keySet()) {
         app.put(key, capabilities.get(key));
       }

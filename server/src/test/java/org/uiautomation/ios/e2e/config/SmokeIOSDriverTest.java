@@ -41,14 +41,15 @@ public class SmokeIOSDriverTest extends BaseIOSDriverTest {
   @Test
   public void castElementToWhatTheyAre() throws MalformedURLException {
     String expected = "UIATableCell";
-    WebElement element = driver.findElement(By.tagName(expected));
+    WebElement element = IOSDriverAugmenter.getIOSDriver(driver).findElement(By.tagName(expected));
     Assert.assertTrue(element instanceof UIATableCell);
   }
 
   @Test
   public void castElementsToWhatTheyAre() throws MalformedURLException {
     String expected = "UIATableCell";
-    List<WebElement> elements = driver.findElements(By.tagName(expected));
+    List<WebElement> elements = IOSDriverAugmenter.getIOSDriver(driver).findElements(
+        By.tagName(expected));
     for (WebElement el : elements) {
       Assert.assertTrue(el instanceof UIATableCell, "was " + el.getClass());
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 ios-driver committers.
+ * Copyright 2013 ios-driver committers.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the Licence at
@@ -12,25 +12,16 @@
  *  the License.
  */
 
-package org.uiautomation.ios.context;
+package org.uiautomation.ios.log;
+
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+public class LogStore {
+
+  private final ConcurrentLinkedQueue<IOSLog> logs = new ConcurrentLinkedQueue<IOSLog>();
 
 
-import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
-import org.uiautomation.ios.server.application.APPIOSApplication;
-
-
-public class ApplicationContext {
-
-  private WorkingMode mode = WorkingMode.Native;
-  //private final WebViewContext viewContext;
-  private final String bundleId;
-  private APPIOSApplication application;
-
-
-  public ApplicationContext(String bundleId) {
-    this.bundleId = bundleId;
-    //this.viewContext = new WebViewContext(bundleId);
+  public void log(IOSLog log) {
+    logs.add(log);
   }
-
-
 }

@@ -13,40 +13,35 @@
  */
 package org.uiautomation.ios.server;
 
-import org.json.JSONException;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.APPIOSApplication;
+import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.application.ResourceCache;
 import org.uiautomation.ios.server.configuration.Configuration;
-import org.uiautomation.iosdriver.DeviceDetector;
-import org.uiautomation.iosdriver.DeviceInfo;
 import org.uiautomation.iosdriver.services.DeviceManagerService;
-import org.uiautomation.iosdriver.services.LoggerService;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import static org.uiautomation.ios.IOSCapabilities.MAGIC_PREFIX;
 
-
-public class IOSServerManager implements DeviceDetector {
+public class IOSServerManager {
 
   private final List<ServerSideSession> sessions = new ArrayList<ServerSideSession>();
   private static final Logger log = Logger.getLogger(IOSServerManager.class.getName());
-  private final Set<IOSApplication> supportedApplications = new HashSet<IOSApplication>();
-  private final List<DeviceInfo> connectedDevices = new CopyOnWriteArrayList<DeviceInfo>();
+  private final Set<APPIOSApplication> supportedApplications = new HashSet<APPIOSApplication>();
+
   private final HostInfo hostInfo;
   private final ResourceCache cache = new ResourceCache();
   private DeviceManagerService deviceManager;
+  private final DeviceStore devices;
+  public final ApplicationStore apps;
 
   public IOSServerManager(int port) {
     try {
@@ -56,10 +51,12 @@ public class IOSServerManager implements DeviceDetector {
       System.err.println("Cannot configure logger.");
     }
     this.hostInfo = new HostInfo(port);
-
+    devices = new DeviceStore();
+    devices.add(new SimulatorDevice());
+    apps = new ApplicationStore();
     if (Configuration.BETA_FEATURE) {
-      LoggerService.enableDebug();
-      deviceManager = DeviceManagerService.create(this);
+      //LoggerService.enableDebug();
+      deviceManager = DeviceManagerService.create(devices);
       deviceManager.startDetection();
     }
   }
@@ -70,7 +67,12 @@ public class IOSServerManager implements DeviceDetector {
     }
   }
 
-  public void addSupportedApplication(IOSApplication application) {
+  public DeviceStore getDeviceStore() {
+    return devices;
+  }
+
+  public void addSupportedApplication(APPIOSApplication application) {
+    apps.add(application);
     boolean added = supportedApplications.add(application);
     if (!added) {
       throw new WebDriverException("app already present :" + application.getApplicationPath());
@@ -102,37 +104,41 @@ public class IOSServerManager implements DeviceDetector {
     sessions.remove(session);
   }
 
-  public IOSCapabilities getCapabilities(IOSApplication application) {
-    // some cap are from the host. SDK version is not defined by the app itself.
-    IOSCapabilities cap = new IOSCapabilities();
-    cap.setSDKVersion(hostInfo.getSDK());
-    cap.setSupportedLanguages(application.getSupportedLanguagesCodes());
-    cap.setCapability("applicationPath", application.getApplicationPath().getAbsoluteFile());
-
-    for (Iterator iterator = application.getMetadata().keys(); iterator.hasNext(); ) {
-      String key = (String) iterator.next();
-
-      try {
-        Object value = application.getMetadata().get(key);
-        cap.setCapability(key, value);
-      } catch (JSONException e) {
-        throw new WebDriverException("cannot get metadata", e);
-      }
+  public List<IOSCapabilities> getAllCapabilities() {
+    List<IOSCapabilities> res = new ArrayList<IOSCapabilities>();
+    for (Device d : getDeviceStore().getDevices()) {
+      res.addAll(getApplicationStore().getCapabilities(d));
     }
-
-    cap.setSupportedDevices(cap.getSupportedDevicesFromDeviceFamily());
-    return cap;
+    return res;
   }
 
-  public IOSApplication findMatchingApplication(IOSCapabilities desiredCapabilities) {
-    for (IOSApplication app : supportedApplications) {
-      IOSCapabilities appCapabilities = getCapabilities(app);
-      if (IOSServerManager.matches(appCapabilities, desiredCapabilities)) {
-        return app;
+
+  public IOSRunningApplication findAndCreateInstanceMatchingApplication(
+      IOSCapabilities desiredCapabilities) {
+    for (APPIOSApplication app : getApplicationStore().getApplications()) {
+      System.out.println("CHECKING " + app.toString());
+      IOSCapabilities appCapabilities = app.getCapabilities();
+      if (APPIOSApplication.canRun(desiredCapabilities, appCapabilities)) {
+        System.out.println("OK");
+        return app.createInstance(desiredCapabilities.getLanguage());
       }
     }
     throw new SessionNotCreatedException(
-        desiredCapabilities.getRawCapabilities() + "not found on server.");
+        desiredCapabilities.getRawCapabilities() + " not found on server.");
+  }
+
+  public Device findAndReserveMatchingDevice(IOSCapabilities desiredCapabilities) {
+    for (Device device : getDeviceStore().getDevices()) {
+      IOSCapabilities deviceCapabilities = device.getCapability();
+      if (Device.canRun(desiredCapabilities, deviceCapabilities)) {
+        Device d = device.reserve();
+        if (d != null) {
+          return d;
+        }
+      }
+    }
+    throw new SessionNotCreatedException(
+        desiredCapabilities.getRawCapabilities() + "not available.");
   }
 
   public static boolean matches(Map<String, Object> appCapabilities,
@@ -146,61 +152,17 @@ public class IOSServerManager implements DeviceDetector {
   private static boolean matches(IOSCapabilities applicationCapabilities,
                                  IOSCapabilities desiredCapabilities) {
 
-    if (desiredCapabilities.getBundleName() == null) {
-      throw new WebDriverException("you need to specify the bundle to test.");
-    }
-    String desired = desiredCapabilities.getBundleName();
-    String
-        appName =
-        (String) (applicationCapabilities.getBundleName() != null ? applicationCapabilities
-            .getBundleName() : applicationCapabilities.getCapability("CFBundleDisplayName"));
-
-    if (!desired.equals(appName)) {
+    if (!APPIOSApplication.canRun(desiredCapabilities, applicationCapabilities)) {
       return false;
     }
-    if (desiredCapabilities.getBundleVersion() != null
-        && !desiredCapabilities.getBundleVersion()
-        .equals(applicationCapabilities.getBundleVersion())) {
+    if (!Device.canRun(desiredCapabilities, applicationCapabilities)) {
       return false;
     }
-    if (desiredCapabilities.getDevice() == null) {
-      throw new WebDriverException("you need to specify the device.");
-    }
-    if (!(applicationCapabilities.getSupportedDevices()
-              .contains(desiredCapabilities.getDevice()))) {
-      return false;
-    }
-    // check any extra capability starting with plist_
-    for (String key : desiredCapabilities.getRawCapabilities().keySet()) {
-      if (key.startsWith(IOSCapabilities.MAGIC_PREFIX)) {
-        String realKey = key.replace(MAGIC_PREFIX, "");
-        if (!desiredCapabilities.getRawCapabilities().get(key)
-            .equals(applicationCapabilities.getRawCapabilities().get(realKey))) {
-          return false;
-        }
-      }
-    }
-    String l = desiredCapabilities.getLanguage();
-
-    if (applicationCapabilities.getSupportedLanguages().isEmpty()) {
-      log.info(
-          "The application doesn't have any content files."
-          + "The localization related features won't be availabled.");
-    } else if (l != null && !applicationCapabilities.getSupportedLanguages().contains(l)) {
-      throw new SessionNotCreatedException(
-          "Language requested, " + l + " ,isn't supported.Supported are : "
-          + applicationCapabilities.getSupportedLanguages());
-    }
-
-    String sdk = desiredCapabilities.getSDKVersion();
-    // TODO freynaud validate for multi SDK
-    /*
-     * if (sdk != null && !sdk.equals(applicationCapabilities.getSDKVersion()))
-     * { throw new IOSAutomationException("Cannot start sdk " + sdk +
-     * ". Run on " + applicationCapabilities.getSDKVersion()); }
-     */
-
     return true;
+  }
+
+  public ApplicationStore getApplicationStore() {
+    return apps;
   }
 
   public List<ServerSideSession> getSessions() {
@@ -217,20 +179,9 @@ public class IOSServerManager implements DeviceDetector {
   }
 
 
-  public Set<IOSApplication> getSupportedApplications() {
+  public Set<APPIOSApplication> getSupportedApplications() {
     return supportedApplications;
   }
 
-  @Override
-  public void onDeviceAdded(DeviceInfo deviceInfo) {
-    log.info(
-        "ADDED : " + deviceInfo.getDeviceName() + ",IOS "
-        + deviceInfo.getProductVersion() + "[" + deviceInfo.getUniqueDeviceID() + "]");
-  }
 
-  @Override
-  public void onDeviceRemoved(DeviceInfo deviceInfo) {
-    log.info(
-        "REMOVED : " + deviceInfo.getDeviceName() + "[" + deviceInfo.getUniqueDeviceID() + "]");
-  }
 }

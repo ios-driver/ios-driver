@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 ios-driver committers.
+ * Copyright 2013 ios-driver committers.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the Licence at
@@ -12,25 +12,24 @@
  *  the License.
  */
 
-package org.uiautomation.ios.context;
+package org.uiautomation.ios.log;
 
+public abstract class IOSLog {
 
-import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
-import org.uiautomation.ios.server.application.APPIOSApplication;
+  private final long dob;
+  private final int level;
 
-
-public class ApplicationContext {
-
-  private WorkingMode mode = WorkingMode.Native;
-  //private final WebViewContext viewContext;
-  private final String bundleId;
-  private APPIOSApplication application;
-
-
-  public ApplicationContext(String bundleId) {
-    this.bundleId = bundleId;
-    //this.viewContext = new WebViewContext(bundleId);
+  public static enum Level {
+    fine, info, warning, error;
   }
 
+  public IOSLog() {
+    dob = System.currentTimeMillis();
+    level = 1;
+  }
 
+  public IOSLog(int level) {
+    dob = System.currentTimeMillis();
+    this.level = level;
+  }
 }
