@@ -2,8 +2,8 @@ package org.uiautomation.ios.communication.device;
 
 import org.openqa.selenium.WebDriverException;
 
-public enum Device {
-  iphone(1), ipad(2);
+public enum DeviceType {
+  iphone(1), ipad(2), ipod(1);
 
   public int getDeviceFamily() {
     return deviceFamily;
@@ -11,25 +11,26 @@ public enum Device {
 
   private final int deviceFamily;
 
-  private Device(int deviceFamily) {
+  private DeviceType(int deviceFamily) {
     this.deviceFamily = deviceFamily;
   }
 
-  public static Device valueOf(Object o) {
-    if (o instanceof Device) {
-      return (Device) o;
+  public static DeviceType valueOf(Object o) {
+    if (o instanceof DeviceType) {
+      return (DeviceType) o;
     } else if (o instanceof String) {
-      for (Device device : Device.values()) {
+      for (DeviceType device : DeviceType.values()) {
         if (device.toString().equals(o)) {
           return device;
         }
       }
     }
-    throw new WebDriverException("Cannot cast " + (o == null ? "null" : o.getClass()+"="+o) + " to Device");
+    throw new WebDriverException(
+        "Cannot cast " + (o == null ? "null" : o.getClass() + "=" + o) + " to DeviceType");
   }
 
-  public static Device getFromFamilyCode(int deviceFamily) {
-    for (Device d : Device.values()) {
+  public static DeviceType getFromFamilyCode(int deviceFamily) {
+    for (DeviceType d : DeviceType.values()) {
       if (d.deviceFamily == deviceFamily) {
         return d;
       }

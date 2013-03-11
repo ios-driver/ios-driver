@@ -16,7 +16,7 @@ package org.uiautomation.ios.inspector.views;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.communication.device.Device;
+import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.inspector.model.IDESessionModel;
 
@@ -49,7 +49,7 @@ public class IDEMainView implements View {
       b.append(
           "<script type='text/javascript' src='" + getResource("jquery.xpath.js") + "'></script>");
 
-      Device device = model.getCapabilities().getDevice();
+      DeviceType device = model.getCapabilities().getDevice();
       DeviceVariation variation = model.getCapabilities().getDeviceVariation();
 
       b.append(
@@ -78,7 +78,7 @@ public class IDEMainView implements View {
       b.append("        <div id='screen'>");
 
       int width = 320;
-      if (device == Device.ipad) {
+      if (device == DeviceType.ipad) {
         width = 768;
       }
       b.append("         <img id='screenshot' src='" + getScreen(device) + "' width='" + width
@@ -89,16 +89,16 @@ public class IDEMainView implements View {
       b.append("</div>");
 
       b.append(
-    		  "<div id='xpathHelper' >Xpath Expression:</br><input type='text' value='' id='xpathInput' /><div id='xpathLog' > log</div></div>");
+          "<div id='xpathHelper' >Xpath Expression:</br><input type='text' value='' id='xpathInput' /><div id='xpathLog' > log</div></div>");
       b.append("<div id ='detailsparent' >");
-    
+
       b.append("<div id ='details' ></div>");
       b.append("</div>");
 
       b.append("<div id ='tree'  ></div>");
 
       String d = "iphone";
-      if (model.getCapabilities().getDevice() == Device.ipad) {
+      if (model.getCapabilities().getDevice() == DeviceType.ipad) {
         d = "ipad";
       }
       b.append("<script >configure('" + d + "','" + variation + "','" + model.getDeviceOrientation()
@@ -178,13 +178,13 @@ public class IDEMainView implements View {
     return "No capabilities available. Model = null";
   }
 
-  private String getScreen(Device device) {
+  private String getScreen(DeviceType device) {
     return getResource("session/" + model.getSession().getSessionId() + "/screenshot.png");
   }
 
-  private String getFrame(Device device, DeviceVariation variation) {
+  private String getFrame(DeviceType device, DeviceVariation variation) {
 
-    if (device == Device.iphone) {
+    if (device == DeviceType.iphone) {
       if (variation == DeviceVariation.Retina4) {
         return getResource("frame_iphone5.png");
       } else {

@@ -16,7 +16,7 @@ package org.uiautomation.ios.context;
 
 
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
-import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.APPIOSApplication;
 
 
 public class ApplicationContext {
@@ -24,7 +24,7 @@ public class ApplicationContext {
   private WorkingMode mode = WorkingMode.Native;
   //private final WebViewContext viewContext;
   private final String bundleId;
-  private IOSApplication application;
+  private APPIOSApplication application;
 
 
   public ApplicationContext(String bundleId) {

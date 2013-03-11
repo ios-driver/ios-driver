@@ -44,7 +44,8 @@ public class RegistrationRequest {
   private Map<String, Object> configuration = new HashMap<String, Object>();
 
 
-  public RegistrationRequest(IOSServerConfiguration config, IOSServerManager driver) throws MalformedURLException {
+  public RegistrationRequest(IOSServerConfiguration config, IOSServerManager driver)
+      throws MalformedURLException {
     this.hubURL = new URL(config.getRegistrationURL());
     this.nodeHost = config.getHost();
 

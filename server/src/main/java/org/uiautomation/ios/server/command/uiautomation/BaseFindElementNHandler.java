@@ -14,7 +14,7 @@ import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.UIAModels.predicate.ValueCriteria;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
-import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.application.LanguageDictionary;
 import org.uiautomation.ios.server.application.ServerSideL10NDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
@@ -73,9 +73,9 @@ public abstract class BaseFindElementNHandler extends UIAScriptHandler {
 
     XPathWithL10N l10ned = new XPathWithL10N(original);
 
-    IOSApplication app = getDriver().getSession(getRequest().getSession()).getApplication();
+    IOSRunningApplication app = getDriver().getSession(getRequest().getSession()).getApplication();
     for (String key : l10ned.getKeysToL10N()) {
-      LanguageDictionary dict = app.getDictionary(app.getCurrentLanguage());
+      LanguageDictionary dict = app.getCurrentDictionary();
       String value = dict.getContentForKey(key);
       value = LanguageDictionary.getRegexPattern(value);
       l10ned.setTranslation(key, value);

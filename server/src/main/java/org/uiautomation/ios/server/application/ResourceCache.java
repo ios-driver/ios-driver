@@ -22,7 +22,7 @@ public class ResourceCache {
 
   List<Mapping> mapping = new ArrayList<ResourceCache.Mapping>();
 
-  public void cacheResource(IOSApplication app) {
+  public void cacheResource(APPIOSApplication app) {
     for (String key : app.getResources().keySet()) {
       Mapping m = new Mapping(app, key, app.getResources().get(key));
       mapping.add(m);
@@ -38,7 +38,7 @@ public class ResourceCache {
     return null;
   }
 
-  public String getKey(IOSApplication app, String name) {
+  public String getKey(APPIOSApplication app, String name) {
     for (Mapping m : mapping) {
       if (app.equals(m.app) && m.name.equals(name)) {
         return m.key;
@@ -48,20 +48,20 @@ public class ResourceCache {
   }
 
   class Mapping {
-    private IOSApplication app;
+
+    private APPIOSApplication app;
     private String key;
     private String name;
     private String resource;
 
 
-    public Mapping(IOSApplication app, String name, String resource) {
+    public Mapping(APPIOSApplication app, String name, String resource) {
       this.name = name;
       this.app = app;
       this.resource = resource;
       this.key = "hash=" + resource.hashCode();
     }
   }
-
 
 
 }

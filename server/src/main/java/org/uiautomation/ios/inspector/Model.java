@@ -17,7 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
-import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.APPIOSApplication;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,7 +29,7 @@ public class Model {
   private static final Logger log = Logger.getLogger(Model.class.getName());
 
   private RemoteIOSDriver driver;
-  private IOSApplication app;
+  private APPIOSApplication app;
 
   private JSONObject cache;
 
@@ -94,11 +94,11 @@ public class Model {
     }
   }
 
-  public IOSApplication getApplication() {
+  public APPIOSApplication getApplication() {
     return app;
   }
 
-  public void setAUT(IOSApplication app) {
+  public void setAUT(APPIOSApplication app) {
     this.app = app;
 
   }

@@ -17,6 +17,8 @@ import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
+import java.util.NoSuchElementException;
+
 
 public class UIAKeyboardTest extends BaseIOSDriverTest {
 
@@ -25,11 +27,23 @@ public class UIAKeyboardTest extends BaseIOSDriverTest {
   private Keyboard keyboard;
 
   @BeforeClass
-  public void startDriver() {
+  public void startDriver() throws InterruptedException {
     driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
     textview = getTextView();
-    textview.tap();
-    keyboard = driver.getKeyboard();
+
+    long deadline = System.currentTimeMillis() + 5000;
+    while (keyboard == null) {
+      try {
+        Criteria fieldC = new TypeCriteria(UIATextView.class);
+        UIATextView res = (UIATextView) driver.findElement(fieldC);
+        res.tap();
+        keyboard = driver.getKeyboard();
+      } catch (NoSuchElementException e) {
+        if (System.currentTimeMillis() > deadline) {
+          throw e;
+        }
+      }
+    }
   }
 
   @AfterClass
@@ -49,6 +63,7 @@ public class UIAKeyboardTest extends BaseIOSDriverTest {
     Criteria fieldC = new TypeCriteria(UIATextView.class);
     UIATextView res = (UIATextView) driver.findElement(fieldC);
     return res;
+
   }
 
   @Test

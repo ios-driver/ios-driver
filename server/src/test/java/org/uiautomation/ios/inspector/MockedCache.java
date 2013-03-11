@@ -5,14 +5,13 @@ import org.json.JSONObject;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.UIAModels.Session;
-import org.uiautomation.ios.communication.device.Device;
+import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.inspector.model.Cache;
 import org.uiautomation.ios.inspector.model.IDESessionModel;
 
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,17 +23,18 @@ public class MockedCache implements Cache {
   public MockedCache() throws Exception {
 
     for (Orientation o : Orientation.values()) {
-      addModel(Device.iphone, DeviceVariation.Regular, o);
-      addModel(Device.iphone, DeviceVariation.Retina35, o);
-      addModel(Device.iphone, DeviceVariation.Retina4, o);
+      addModel(DeviceType.iphone, DeviceVariation.Regular, o);
+      addModel(DeviceType.iphone, DeviceVariation.Retina35, o);
+      addModel(DeviceType.iphone, DeviceVariation.Retina4, o);
 
-      addModel(Device.ipad, DeviceVariation.Regular, o);
-      addModel(Device.ipad, DeviceVariation.Retina, o);
+      addModel(DeviceType.ipad, DeviceVariation.Regular, o);
+      addModel(DeviceType.ipad, DeviceVariation.Retina, o);
     }
 
   }
 
-  private void addModel(Device device, DeviceVariation variation, Orientation o) throws Exception {
+  private void addModel(DeviceType device, DeviceVariation variation, Orientation o)
+      throws Exception {
     String v = o.toString();
     if (!v.startsWith("UIA_DEVICE")) {
       v = "UIA_DEVICE_ORIENTATION_" + v;

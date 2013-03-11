@@ -344,4 +344,13 @@ public class FormHandlingTest extends BaseSeleniumTest {
 
     assertEquals("Tasty cheese", text);
   }
+
+  @Test
+  public void testFillDateInput() {
+    driver.get(appServer.whereIs("dateElement.html"));
+    WebElement el = driver.findElement(By.id("dateInput"));
+    el.sendKeys("2012-01-01");
+    assertEquals("2012-01-01", el.getAttribute("value"));
+  }
+
 }

@@ -32,7 +32,7 @@ public class IOSHtmlRenderer implements HtmlRenderer {
     StringBuilder builder = new StringBuilder();
     builder.append("<fieldset>");
     builder.append("<legend>").append(proxy.getClass().getSimpleName()).append("</legend>");
-    if(proxy.isRestarting()){
+    if (proxy.isRestarting()) {
       builder.append("<b>***RESTARTING***</b><br/>");
     }
     builder.append("Listening on ").append(proxy.getRemoteHost());
@@ -44,12 +44,12 @@ public class IOSHtmlRenderer implements HtmlRenderer {
     builder.append("<br>Supports up to <b>").append(proxy.getMaxNumberOfConcurrentTestSessions())
         .append("</b> concurrent tests from : </u><br>");
 
-
     for (TestSlot slot : proxy.getTestSlots()) {
       builder.append(slot.getCapabilities().containsKey(BROWSER) ? slot.getCapabilities().get(
           BROWSER) : slot.getCapabilities().get(APP));
       TestSession session = slot.getSession();
-      builder.append(" [").append(slot.getCapabilities().get("supportedDevices")).append(" - ").append(slot.getCapabilities().get("sdkVersion")).append("]");
+      builder.append(" [").append(slot.getCapabilities().get("supportedDevices")).append(" - ")
+          .append(slot.getCapabilities().get("sdkVersion")).append("]");
       builder.append(" : ").append(slot.getCapabilities().get("CFBundleExecutable"));
       builder.append(session == null ? " (free)" : "(busy, session " + session + ")");
       builder.append("<br/>");

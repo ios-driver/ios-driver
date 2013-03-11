@@ -15,17 +15,23 @@
 package org.uiautomation.ios.server;
 
 import com.beust.jcommander.JCommander;
+
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.inspector.IDEServlet;
-import org.uiautomation.ios.server.application.IOSApplication;
+import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.server.grid.RegistrationRequest;
+import org.uiautomation.ios.server.servlet.ApplicationsServlet;
+import org.uiautomation.ios.server.servlet.ArchiveServlet;
+import org.uiautomation.ios.server.servlet.CapabilitiesServlet;
+import org.uiautomation.ios.server.servlet.DeviceServlet;
 import org.uiautomation.ios.server.servlet.IOSServlet;
 import org.uiautomation.ios.server.servlet.ResourceServlet;
+import org.uiautomation.ios.server.servlet.StaticResourceServlet;
 import org.uiautomation.ios.server.servlet.UIAScriptServlet;
 import org.uiautomation.ios.server.utils.FolderMonitor;
 
@@ -62,9 +68,9 @@ public class IOSServer {
       RegistrationRequest
           request =
           new RegistrationRequest(options, driver);
-      try{
-      request.registerToHub();
-      }catch (Exception e){
+      try {
+        request.registerToHub();
+      } catch (Exception e) {
         System.out.println(e.toString());
       }
 
@@ -95,17 +101,24 @@ public class IOSServer {
     wd.addServlet(UIAScriptServlet.class, "/uiascriptproxy/*");
     wd.addServlet(IOSServlet.class, "/*");
     wd.addServlet(ResourceServlet.class, "/resources/*");
+    wd.addServlet(DeviceServlet.class, "/devices/*");
+    wd.addServlet(ApplicationsServlet.class, "/applications/*");
+    wd.addServlet(CapabilitiesServlet.class, "/capabilities/*");
+    wd.addServlet(ArchiveServlet.class, "/archive/*");
+
+    ServletContextHandler statics = new ServletContextHandler(server, "/static", true, false);
+    statics.addServlet(StaticResourceServlet.class, "/*");
 
     ServletContextHandler extra = new ServletContextHandler(server, "/", true, false);
     extra.addServlet(IDEServlet.class, "/inspector/*");
 
     HandlerList handlers = new HandlerList();
-    handlers.setHandlers(new Handler[]{wd, extra});
+    handlers.setHandlers(new Handler[]{wd, statics, extra});
     server.setHandler(handlers);
 
-    driver = new IOSServerManager(port);
+    driver = new IOSServerManager(port, options.getAppFolderToMonitor());
     for (String app : this.options.getSupportedApps()) {
-      driver.addSupportedApplication(new IOSApplication(app));
+      driver.addSupportedApplication(new APPIOSApplication(app));
     }
 
     startFolderMonitor();
@@ -115,9 +128,13 @@ public class IOSServer {
     b.append("\nInspector: http://0.0.0.0:" + options.getPort() + "/inspector/");
     b.append("\ntests can access the server at http://0.0.0.0:" + options.getPort() + "/wd/hub");
     b.append("\nserver status: http://0.0.0.0:" + options.getPort() + "/wd/hub/status");
+    b.append("\nConnected devices: http://0.0.0.0:" + options.getPort() + "/wd/hub/devices/all");
+    b.append("\nApplications: http://0.0.0.0:" + options.getPort() + "/wd/hub/applications/all");
+    b.append("\nCapabilities: http://0.0.0.0:" + options.getPort() + "/wd/hub/capabilities/all");
     b.append("\nMonitoring '" + options.getAppFolderToMonitor() + "' for new applications");
     b.append("\nusing xcode install : " + driver.getHostInfo().getXCodeInstall());
     b.append("\nusing IOS version " + driver.getHostInfo().getSDK());
+    b.append("\nArchived apps " + driver.getApplicationStore().getFolder().getAbsolutePath());
 
     boolean safari = false;
     // automatically add safari for SDK 6.0 and above.
@@ -126,7 +143,7 @@ public class IOSServer {
       if (version >= 6L) {
         safari = true;
         driver.addSupportedApplication(
-            IOSApplication.findSafariLocation(driver.getHostInfo().getXCodeInstall(), s));
+            APPIOSApplication.findSafariLocation(driver.getHostInfo().getXCodeInstall(), s));
       }
     }
     if (safari) {
@@ -136,10 +153,10 @@ public class IOSServer {
     }
 
     b.append("\n\nApplications :\n--------------- \n");
-    for (IOSApplication app : driver.getSupportedApplications()) {
+    for (APPIOSApplication app : driver.getSupportedApplications()) {
       b.append("\tCFBundleName=" + (app.getMetadata(IOSCapabilities.BUNDLE_NAME).isEmpty() ? app
           .getMetadata(IOSCapabilities.BUNDLE_DISPLAY_NAME) : app
-          .getMetadata(IOSCapabilities.BUNDLE_NAME)));
+                                        .getMetadata(IOSCapabilities.BUNDLE_NAME)));
       String version = app.getMetadata(IOSCapabilities.BUNDLE_VERSION);
       if (version != null && !version.isEmpty()) {
         b.append(",CFBundleVersion=" + version);

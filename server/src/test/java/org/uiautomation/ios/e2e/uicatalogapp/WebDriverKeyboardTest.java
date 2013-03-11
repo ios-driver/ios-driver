@@ -55,10 +55,12 @@ public class WebDriverKeyboardTest extends BaseIOSDriverTest {
     textfield.sendKeys(message);
     Assert.assertEquals(textfield.getValue(), message);
   }
-  
-  @Test(enabled=false)
+
+  @Test(enabled = false)
   public void testSendKeysToTextFields() {
-    driver.findElement(By.xpath("//UIAStaticText[contains(@name,'TextFields, Uses of UITextField')]")).click();
+    driver
+        .findElement(By.xpath("//UIAStaticText[contains(@name,'TextFields, Uses of UITextField')]"))
+        .click();
     List<WebElement> textFields = driver.findElements(By.className("UIATextField"));
     textFields.get(0).sendKeys("first");
     textFields.get(1).sendKeys("second");

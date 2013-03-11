@@ -10,20 +10,20 @@ import org.uiautomation.ios.SampleApps;
 
 public class IOSL10NTest {
 
-  private IOSApplication app;
+  private IOSRunningApplication app;
 
   @BeforeClass
   public void setup() throws Exception {
 
-    app = new IOSApplication(SampleApps.getIntlMountainsFile());
-    app.setLanguage("en");
+    APPIOSApplication arch = new APPIOSApplication(SampleApps.getIntlMountainsFile());
+    app = arch.createInstance("en");
   }
 
   @Test
   public void noVariable() {
     String content = "Mountain Detail";
 
-    List<ContentResult> results = app.getDictionary("en").getPotentialMatches(content);
+    List<ContentResult> results = app.getCurrentDictionary().getPotentialMatches(content);
 
     Assert.assertEquals(results.size(), 1);
 
@@ -39,7 +39,7 @@ public class IOSL10NTest {
   public void matchesPatternStart() {
     // %@ items found in %@
     String content = "42 feet";
-    List<ContentResult> results = app.getDictionary("en").getPotentialMatches(content);
+    List<ContentResult> results = app.getCurrentDictionary().getPotentialMatches(content);
     Assert.assertEquals(results.size(), 1);
     ContentResult res = results.get(0);
     Assert.assertEquals(res.getArgs().size(), 1);
@@ -57,7 +57,7 @@ public class IOSL10NTest {
     Assert.assertEquals(results.size(), 0);
   }
 
-  @Test(expectedExceptions = { WebDriverException.class })
+  @Test(expectedExceptions = {WebDriverException.class})
   public void languageNotFound() {
     String content = "42 feet";
     List<ContentResult> results = app.getDictionary("en").getPotentialMatches(content);

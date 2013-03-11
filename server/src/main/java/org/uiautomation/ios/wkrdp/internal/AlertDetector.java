@@ -44,11 +44,11 @@ public class AlertDetector implements ResponseFinder {
     ex = null;
     alert = null;
   }
-  
+
   @Override
   public synchronized void startSearch(int id) throws InterruptedException {
     reset();
-    
+
     try {
       Thread.sleep(timeBeforeLookingForAlert);
     } catch (InterruptedException ignore) {

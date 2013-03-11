@@ -52,7 +52,8 @@ public class IOSServerConfiguration {
              names = {"-app", "-aut"}, required = false)
   private List<String> supportedApps = new ArrayList<String>();
 
-  @Parameter(description = "location of a folder to monitor where applications will be stored. Absolute path expected.",
+  @Parameter(
+      description = "location of a folder to monitor where applications will be stored. Absolute path expected.",
       names = {"-folder"}, required = false)
   private String appFolderToMonitor = null;
 

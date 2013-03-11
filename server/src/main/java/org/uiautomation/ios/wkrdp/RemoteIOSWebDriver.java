@@ -26,9 +26,9 @@ import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.context.BaseWebInspector;
 import org.uiautomation.ios.context.WebInspector;
 import org.uiautomation.ios.server.DOMContext;
+import org.uiautomation.ios.server.RealDevice;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.configuration.Configuration;
-import org.uiautomation.ios.server.instruments.InstrumentsManager;
 import org.uiautomation.ios.wkrdp.command.Page;
 import org.uiautomation.ios.wkrdp.internal.RealDeviceProtocolImpl;
 import org.uiautomation.ios.wkrdp.internal.SimulatorProtocolImpl;
@@ -115,16 +115,14 @@ public class RemoteIOSWebDriver {
     connectionKey = UUID.randomUUID().toString();
     sync = new WebKitSyncronizer(this);
     MessageListener notification = new WebKitNotificationListener(this, sync, session);
-    if (InstrumentsManager.realDevice) {
+    if (session.getDevice() instanceof RealDevice) {
       if (!Configuration.BETA_FEATURE) {
         Configuration.off();
       }
-      protocol =
-          new RealDeviceProtocolImpl(notification, finders);
+      protocol = new RealDeviceProtocolImpl(notification, finders);
 
     } else {
-      protocol =
-          new SimulatorProtocolImpl(notification, finders);
+      protocol = new SimulatorProtocolImpl(notification, finders);
 
     }
     protocol.register();

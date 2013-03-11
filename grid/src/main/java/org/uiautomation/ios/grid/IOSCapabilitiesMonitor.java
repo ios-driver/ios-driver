@@ -26,7 +26,7 @@ import org.openqa.grid.internal.TestSlot;
 import org.openqa.grid.internal.utils.SelfRegisteringRemote;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.communication.device.Device;
+import org.uiautomation.ios.communication.device.DeviceType;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 public class IOSCapabilitiesMonitor implements Runnable {
+
   private boolean active;
   private IOSRemoteProxy proxy;
   private URL node;
@@ -88,11 +89,14 @@ public class IOSCapabilitiesMonitor implements Runnable {
 
     registrationRequest.getConfiguration().put(RegistrationRequest.AUTO_REGISTER, true);
     registrationRequest.getConfiguration().put(RegistrationRequest.PROXY_CLASS,
-        IOSRemoteProxy.class.getCanonicalName());
+                                               IOSRemoteProxy.class.getCanonicalName());
 
-    registrationRequest.getConfiguration().put(RegistrationRequest.HUB_HOST, proxy.getRegistry().getHub().getHost());
-    registrationRequest.getConfiguration().put(RegistrationRequest.HUB_PORT, proxy.getRegistry().getHub().getPort());
-    registrationRequest.getConfiguration().put(RegistrationRequest.REMOTE_HOST, "http://" + node.getHost() + ":" + node.getPort());
+    registrationRequest.getConfiguration()
+        .put(RegistrationRequest.HUB_HOST, proxy.getRegistry().getHub().getHost());
+    registrationRequest.getConfiguration()
+        .put(RegistrationRequest.HUB_PORT, proxy.getRegistry().getHub().getPort());
+    registrationRequest.getConfiguration()
+        .put(RegistrationRequest.REMOTE_HOST, "http://" + node.getHost() + ":" + node.getPort());
     registrationRequest.getConfiguration().put(RegistrationRequest.MAX_SESSION, 1);
 
     return registrationRequest;
@@ -113,7 +117,7 @@ public class IOSCapabilitiesMonitor implements Runnable {
         if (ios.isEmpty()) {
           capability.put("ios", "5.1");
           capability.put("browserName", "IOS Device");
-          capability.put(IOSCapabilities.DEVICE, Device.iphone);
+          capability.put(IOSCapabilities.DEVICE, DeviceType.iphone);
         } else {
           capability.put("ios", ios);
           capability.put("browserName", "IOS Simulator");
