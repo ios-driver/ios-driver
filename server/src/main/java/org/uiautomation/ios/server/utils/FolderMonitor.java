@@ -103,7 +103,6 @@ public class FolderMonitor implements Runnable {
     if (!isApp(filename)) {
       return;
     }
-    System.out.println("file " + filename + " : " + kind);
     if (kind.equals(ENTRY_CREATE)) {
       log.info("New app found!");
       addApplication(filename);
