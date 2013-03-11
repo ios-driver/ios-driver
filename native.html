@@ -219,6 +219,8 @@ public static void main(String[] args) throws MalformedURLException {
             identify them.The webdriver protocol isn't meant to be used for non-web applications, so
             there is a bit of mapping involved.</p>
 
+
+
         <h5 >name, value, label</h5>
         <p>are mapped to linkText and partialLinkText</p>
         <pre class="prettyprint">
@@ -246,6 +248,25 @@ public static void main(String[] args) throws MalformedURLException {
 
             // and can also handle localization
             By b = By.partialLinkText("name=l10n('yourContentKey')");
+            WebElement element = driver.findElement(b);
+
+        </pre>
+
+        <h5>UIAccessibilityIdentification</h5>
+
+        <p>The closest thing to id would be <a href='http://developer.apple.com/library/ios/#documentation/uikit/reference/UIAccessibilityIdentification_Protocol/Introduction/Introduction.html' >
+            UIAccessibilityIdentification</a>. Therefore this is what is mapped to id.The following
+        3 criterias are similar :</p>
+
+        <pre class="prettyprint">
+
+            By b = By.id("signInButton");
+            WebElement element = driver.findElement(b);
+
+            By b = By.name("signInButton");
+            WebElement element = driver.findElement(b);
+
+            By b = By.linkText("name=signInButton");
             WebElement element = driver.findElement(b);
 
         </pre>
