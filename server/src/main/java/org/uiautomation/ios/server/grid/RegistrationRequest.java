@@ -25,7 +25,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
+import org.uiautomation.ios.server.IOSServerConfiguration;
+import org.uiautomation.ios.server.IOSServerManager;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,32 +37,30 @@ import java.util.Map;
 
 public class RegistrationRequest {
 
-  private String hubURL;
+  private URL hubURL;
   private String nodeHost;
 
   private List<Map<String, Object>> capabilities = new ArrayList<Map<String, Object>>();
   private Map<String, Object> configuration = new HashMap<String, Object>();
 
 
-  public RegistrationRequest(String hub, String nodeHost, int port, List<String> supportedApps) {
-    this.hubURL = hub;
-    this.nodeHost = nodeHost;
+  public RegistrationRequest(IOSServerConfiguration config, IOSServerManager driver)
+      throws MalformedURLException {
+    this.hubURL = new URL(config.getRegistrationURL());
+    this.nodeHost = config.getHost();
 
-    for (String app : supportedApps) {
-      IOSCapabilities cap = IOSCapabilities.iphone(app);
-      cap.setCapability("browserName", "IOS Simulator");
-      capabilities.add(cap.getRawCapabilities());
-    }
-
-    configuration.put("remoteHost", "http://" + nodeHost + ":" + port);
+    configuration.put("hubHost", hubURL.getHost());
+    configuration.put("hubPort", hubURL.getPort());
+    configuration.put("remoteHost", "http://" + nodeHost + ":" + config.getPort());
     configuration.put("maxSession", 1);
+    configuration.put("proxy", "org.uiautomation.ios.grid.IOSRemoteProxy");
   }
 
   public void registerToHub() {
 
     HttpClient client = new DefaultHttpClient();
     try {
-      URL registration = new URL(hubURL);
+      URL registration = hubURL;
 
       BasicHttpEntityEnclosingRequest r =
           new BasicHttpEntityEnclosingRequest("POST", registration.toExternalForm());

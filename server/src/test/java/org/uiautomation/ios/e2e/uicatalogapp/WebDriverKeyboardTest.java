@@ -1,6 +1,8 @@
 package org.uiautomation.ios.e2e.uicatalogapp;
 
-import org.openqa.selenium.WebDriver;
+import java.util.List;
+
+import org.openqa.selenium.*;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -52,6 +54,17 @@ public class WebDriverKeyboardTest extends BaseIOSDriverTest {
     UIATextField textfield = getTextField();
     textfield.sendKeys(message);
     Assert.assertEquals(textfield.getValue(), message);
+  }
 
+  @Test(enabled = false)
+  public void testSendKeysToTextFields() {
+    driver
+        .findElement(By.xpath("//UIAStaticText[contains(@name,'TextFields, Uses of UITextField')]"))
+        .click();
+    List<WebElement> textFields = driver.findElements(By.className("UIATextField"));
+    textFields.get(0).sendKeys("first");
+    textFields.get(1).sendKeys("second");
+    Assert.assertEquals(textFields.get(0).getText(), "first");
+    Assert.assertEquals(textFields.get(1).getText(), "second");
   }
 }

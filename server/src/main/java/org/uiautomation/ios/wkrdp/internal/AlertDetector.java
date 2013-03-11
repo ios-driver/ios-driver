@@ -44,15 +44,21 @@ public class AlertDetector implements ResponseFinder {
     ex = null;
     alert = null;
   }
-  
+
   @Override
-public synchronized void startSearch(int id) throws InterruptedException {
+  public synchronized void startSearch(int id) throws InterruptedException {
     reset();
+
+    try {
+      Thread.sleep(timeBeforeLookingForAlert);
+    } catch (InterruptedException ignore) {
+      setFinished(true);
+      return;
+    }
 
     try {
       while (!stopRequested) {
         try {
-          Thread.sleep(timeBeforeLookingForAlert);
           log.fine("starting to look for an alert.");
           //driver.switchTo().window(WorkingMode.Native.toString());
           alert = driver.findElement(new TypeCriteria(UIAAlert.class));
@@ -65,8 +71,6 @@ public synchronized void startSearch(int id) throws InterruptedException {
           log.fine("there was no alert.");
         } catch (NoAlertPresentException ex) {
           log.fine("there was no alert.");
-        } catch (InterruptedException ignore) {
-          break;
         }
       }
     } catch (Exception e) {

@@ -437,5 +437,17 @@ public class APPIOSApplication {
     return new IOSRunningApplication(language, this);
   }
 
-  ;
+  public static APPIOSApplication createFrom(File app) {
+    if (app == null || !app.exists()) {
+      return null;
+    } else if (app.getAbsolutePath().endsWith(".ipa")) {
+      return IPAApplication.createFrom(app);
+    } else if (app.getAbsolutePath().endsWith(".app")) {
+      return new APPIOSApplication(app.getAbsolutePath());
+    } else {
+      return null;
+    }
+  }
+
+
 }

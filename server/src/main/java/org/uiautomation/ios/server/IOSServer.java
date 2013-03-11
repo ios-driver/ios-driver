@@ -33,32 +33,22 @@ import org.uiautomation.ios.server.servlet.IOSServlet;
 import org.uiautomation.ios.server.servlet.ResourceServlet;
 import org.uiautomation.ios.server.servlet.StaticResourceServlet;
 import org.uiautomation.ios.server.servlet.UIAScriptServlet;
+import org.uiautomation.ios.server.utils.FolderMonitor;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.logging.Logger;
 
 public class IOSServer {
 
-  private static final Logger log = Logger.getLogger(IOSServer.class.getName());
   public static final String DRIVER = IOSServerManager.class.getName();
+  public static final boolean debugMode = true;
+  private static final Logger log = Logger.getLogger(IOSServer.class.getName());
   private Server server;
   private int port;
-  public static final boolean debugMode = true;
   private IOSServerConfiguration options;
   private IOSServerManager driver;
-
-  public static void main(String[] args) throws Exception {
-    IOSServer server = new IOSServer(args);
-    server.start();
-    IOSServerConfiguration options = server.getOptions();
-    if (options.getRegistrationURL() != null) {
-      RegistrationRequest
-          request =
-          new RegistrationRequest(options.getRegistrationURL(), options.getHost(),
-                                  options.getPort(), options.getSupportedApps());
-      request.registerToHub();
-    }
-  }
+  private FolderMonitor folderMonitor;
 
   public IOSServer(IOSServerConfiguration options) {
     init(options);
@@ -69,8 +59,30 @@ public class IOSServer {
     init(args);
   }
 
+  public static void main(String[] args) throws Exception {
+    IOSServer server = new IOSServer(args);
+    server.start();
+    IOSServerConfiguration options = server.getOptions();
+    IOSServerManager driver = server.getDriver();
+    if (options.getRegistrationURL() != null) {
+      RegistrationRequest
+          request =
+          new RegistrationRequest(options, driver);
+      try {
+        request.registerToHub();
+      } catch (Exception e) {
+        System.out.println(e.toString());
+      }
+
+    }
+  }
+
   public IOSServerConfiguration getOptions() {
     return options;
+  }
+
+  public IOSServerManager getDriver() {
+    return driver;
   }
 
   private void init(String[] args) {
@@ -109,6 +121,8 @@ public class IOSServer {
       driver.addSupportedApplication(new APPIOSApplication(app));
     }
 
+    startFolderMonitor();
+
     StringBuilder b = new StringBuilder();
     b.append("\nBeta features enabled ( enabled by -beta flag ): " + Configuration.BETA_FEATURE);
     b.append("\nInspector: http://0.0.0.0:" + options.getPort() + "/inspector/");
@@ -117,6 +131,7 @@ public class IOSServer {
     b.append("\nConnected devices: http://0.0.0.0:" + options.getPort() + "/wd/hub/devices/all");
     b.append("\nApplications: http://0.0.0.0:" + options.getPort() + "/wd/hub/applications/all");
     b.append("\nCapabilities: http://0.0.0.0:" + options.getPort() + "/wd/hub/capabilities/all");
+    b.append("\nMonitoring '" + options.getAppFolderToMonitor() + "' for new applications");
     b.append("\nusing xcode install : " + driver.getHostInfo().getXCodeInstall());
     b.append("\nusing IOS version " + driver.getHostInfo().getSDK());
     b.append("\nArchived apps " + driver.getApplicationStore().getFolder().getAbsolutePath());
@@ -165,6 +180,17 @@ public class IOSServer {
 
   }
 
+  private void startFolderMonitor() {
+    if (options.getAppFolderToMonitor() != null) {
+      try {
+        folderMonitor = new FolderMonitor(options, driver);
+        new Thread(folderMonitor).start();
+      } catch (IOException e) {
+        log.warning("Couldn't monitor the given folder: " + options.getAppFolderToMonitor());
+      }
+    }
+  }
+
   public void start() throws Exception {
     if (!server.isRunning()) {
       server.start();
@@ -172,6 +198,7 @@ public class IOSServer {
   }
 
   public void stop() throws Exception {
+    folderMonitor.stop();
     driver.stop();
     server.stop();
   }
