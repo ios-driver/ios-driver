@@ -128,7 +128,8 @@ public abstract class BaseFindElementNHandler extends UIAScriptHandler {
       } catch (ClassNotFoundException e) {
         throw new InvalidSelectorException(value + " is not a recognized type.");
       }
-    } else if ("name".equals(using)) {
+      //  http://developer.apple.com/library/ios/#documentation/uikit/reference/UIAccessibilityIdentification_Protocol/Introduction/Introduction.html
+    } else if ("name".equals(using) || "id".equals(using)) {
       Criteria c = new NameCriteria(getL10NValue(value));
       return c.stringify();
     } else if ("link text".equals(using) || "partial link text".equals(using)) {
