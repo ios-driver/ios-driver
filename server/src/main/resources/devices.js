@@ -30,12 +30,16 @@ function Archiver(container, app, device) {
 }
 Archiver.prototype.archive = function () {
     var me = this;
+    var data = {};
+    data.bundleId=this.app;
+    data.uuid=this.device;
+
     $.ajax({
                url: "/wd/hub/archive/save",
                async: false,
                type: "POST",
                contentType: 'application/json;charset=UTF-8',
-               data: JSON.stringify("logId=")
+               data: JSON.stringify(data)
 
            })
         .done(function (data) {

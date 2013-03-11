@@ -7,6 +7,7 @@ import org.uiautomation.iosdriver.services.DeviceInstallerService;
 import org.uiautomation.iosdriver.services.LoggerService;
 import org.uiautomation.iosdriver.services.jnitools.JNILoggerListener;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class ArchiveServlet extends DriverBasedServlet {
+
 
   private final
   Map<String, ArchiveStatus>
@@ -50,25 +52,47 @@ public class ArchiveServlet extends DriverBasedServlet {
     response.setStatus(200);
     LoggerService.registerListener(new ArchiveActivityListener());
 
-    final DeviceInstallerService
-        service =
-        new DeviceInstallerService("d1ce6333af579e27d166349dc8a1989503ba5b4f");
-
     statuses.clear();
-    final String logId = "uniqueLogTODO";
-    new Thread(new Runnable() {
-      @Override
-      public void run() {
+
+    StringBuffer jb = new StringBuffer();
+    String line = null;
+    try {
+      BufferedReader reader = req.getReader();
+      while ((line = reader.readLine()) != null)
+        jb.append(line);
+    } catch (Exception e) { /*report an error*/ }
+
+    try {
+      JSONObject json = new JSONObject(jb.toString());
+      final String bundleId = json.getString("bundleId");
+      final String uuid = json.getString("uuid");
+      final String logId = "uniqueLogTODO";
+      final DeviceInstallerService
+          service =
+          new DeviceInstallerService(uuid);
+      final File archiveFolder = getDriver().getApplicationStore().getArchiveFolder();
+      new Thread(new Runnable() {
+        @Override
+        public void run() {
         /*logId*/
-        service.archive("com.yourcompany.UICatalog", false, false,
-                        new File("/Users/freynaud/build/archived"), true);
-      }
-    }).start();
+          //File archiveFolder = new File("/Users/freynaud/build/tmp");
 
-    //service.archive("com.yourcompany.UICatalog", false, false, new File("/Users/freynaud/build/archived"),true);
+          service.archive(bundleId, false, false, archiveFolder
+              , true);
+          getDriver().getApplicationStore().addArchive(bundleId);
+        }
+      }).start();
 
-    response.getWriter().write("uniqueLogTODO");
-    response.getWriter().close();
+      //service.archive("com.yourcompany.UICatalog", false, false, new File("/Users/freynaud/build/archived"),true);
+
+      response.getWriter().write("uniqueLogTODO");
+      response.getWriter().close();
+    } catch (Exception e) {
+      // crash and burn
+      throw new IOException("Error parsing JSON request string");
+    }
+
+
   }
 
   private String status(String logId) {
@@ -92,7 +116,6 @@ public class ArchiveServlet extends DriverBasedServlet {
         Message m = new Message(message);
         ArchiveStatus status = getStatus(m.getLogId());
         status.update(m);
-
       }
     }
 

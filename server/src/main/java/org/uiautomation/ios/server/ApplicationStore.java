@@ -18,8 +18,7 @@ public class ApplicationStore {
 
   public ApplicationStore() {
 
-    //workingDirectory = new File("archived");
-    workingDirectory = new File("/Users/freynaud/build/archived");
+    workingDirectory = new File("archived");
     workingDirectory.mkdir();
     log.info("Real device app archive :" + workingDirectory.getAbsolutePath());
     load();
@@ -27,6 +26,10 @@ public class ApplicationStore {
 
   public void add(APPIOSApplication app) {
     all.add(app);
+  }
+
+  public void addArchive(String bundleId) {
+    File arch = new File(workingDirectory, bundleId + ".zip");
   }
 
 
@@ -107,4 +110,9 @@ public class ApplicationStore {
     }
     return res;
   }
+
+  public File getArchiveFolder() {
+    return workingDirectory;
+  }
+
 }

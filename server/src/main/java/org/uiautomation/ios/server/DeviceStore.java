@@ -3,6 +3,7 @@ package org.uiautomation.ios.server;
 import org.uiautomation.iosdriver.DeviceDetector;
 import org.uiautomation.iosdriver.DeviceInfo;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -48,4 +49,6 @@ public class DeviceStore implements DeviceDetector {
   public void add(SimulatorDevice simulatorDevice) {
     sims.add(simulatorDevice);
   }
+
+
 }
