@@ -14,25 +14,23 @@
 
 package org.uiautomation.ios.server.utils;
 
-import com.barbarysoftware.watchservice.WatchEvent;
-import com.barbarysoftware.watchservice.WatchKey;
-import com.barbarysoftware.watchservice.WatchService;
-import com.barbarysoftware.watchservice.WatchableFile;
+import name.pachler.nio.file.*;
 import org.uiautomation.ios.server.IOSServerConfiguration;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.application.IOSApplication;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Logger;
 
-import static com.barbarysoftware.watchservice.StandardWatchEventKind.*;
 
 public class FolderMonitor implements Runnable {
   private static final Logger log = Logger.getLogger(FolderMonitor.class.getName());
   private IOSServerManager iosServerManager;
   private IOSServerConfiguration iosServerConfiguration;
   private WatchService folderWatcher;
+  private WatchKey key;
   private boolean stopped;
 
   public FolderMonitor(IOSServerConfiguration iosServerConfiguration, IOSServerManager iosServerManager) throws IOException {
@@ -40,9 +38,11 @@ public class FolderMonitor implements Runnable {
     this.iosServerManager = iosServerManager;
     stopped = false;
     init();
-    folderWatcher = WatchService.newWatchService();
-    WatchableFile watchedFolder = new WatchableFile(new File(iosServerConfiguration.getAppFolderToMonitor()));
-    watchedFolder.register(folderWatcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+    folderWatcher = FileSystems.getDefault().newWatchService();
+
+    Path watchedFolder = Paths.get(iosServerConfiguration.getAppFolderToMonitor());
+
+    key = watchedFolder.register(folderWatcher, StandardWatchEventKind.ENTRY_CREATE, StandardWatchEventKind.ENTRY_DELETE);
   }
 
   private void init() {
@@ -67,14 +67,18 @@ public class FolderMonitor implements Runnable {
   }
 
   private void checkForChanges() {
-    WatchKey key = folderWatcher.poll();
+    WatchKey key = null;
+    try {
+      key = folderWatcher.poll();
+    } catch (InterruptedException e) {
+      log.warning("problem monitoring the folder, " + e.toString());
+    }
 
     if (key != null) {
-      for (WatchEvent<?> watchEvent : key.pollEvents()) {
+      List<WatchEvent<?>> list = key.pollEvents();
+      key.reset();
+      for (WatchEvent<?> watchEvent : list) {
         final WatchEvent.Kind<?> kind = watchEvent.kind();
-        if (kind == OVERFLOW) {
-          continue;
-        }
 
         final WatchEvent<File> ev = (WatchEvent<File>) watchEvent;
         final File filename = ev.context();
@@ -95,14 +99,14 @@ public class FolderMonitor implements Runnable {
     if(!isApp(filename)){
       return;
     }
-    if (kind.equals(ENTRY_CREATE)) {
+    if (kind.equals(StandardWatchEventKind.ENTRY_CREATE)) {
       log.info("New app found!");
       addApplication(filename);
     }
-    else if(kind.equals(ENTRY_MODIFY)){
+    else if(kind.equals(StandardWatchEventKind.ENTRY_MODIFY)){
       log.info("App modified - no handler implemented!");
     }
-    else if(kind.equals(ENTRY_DELETE)){
+    else if(kind.equals(StandardWatchEventKind.ENTRY_DELETE)){
       log.info("App deleted - no handler implemented!");
     }
   }

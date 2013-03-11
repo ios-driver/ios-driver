@@ -24,11 +24,11 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.barbarysoftware</groupId>
-            <artifactId>watchservice</artifactId>
-            <version>0.1</version>
+            <groupId>name.pachler</groupId>
+            <artifactId>jpathwatch</artifactId>
+            <version>0.95</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/libs/watchservice.jar</systemPath>
+            <systemPath>${project.basedir}/libs/jpathwatch-0-95.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
