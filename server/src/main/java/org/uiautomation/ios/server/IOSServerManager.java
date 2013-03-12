@@ -112,10 +112,8 @@ public class IOSServerManager {
   public IOSRunningApplication findAndCreateInstanceMatchingApplication(
       IOSCapabilities desiredCapabilities) {
     for (APPIOSApplication app : getApplicationStore().getApplications()) {
-      System.out.println("CHECKING " + app.toString());
       IOSCapabilities appCapabilities = app.getCapabilities();
       if (APPIOSApplication.canRun(desiredCapabilities, appCapabilities)) {
-        System.out.println("OK");
         return app.createInstance(desiredCapabilities.getLanguage());
       }
     }

@@ -5,6 +5,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
+import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIARect;
@@ -24,7 +25,9 @@ public class CriteriaTest extends BaseIOSDriverTest {
 
   @BeforeClass
   public void startDriver() {
-    driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
+    IOSCapabilities c = SampleApps.uiCatalogCap();
+    c.setSDKVersion("6.1");
+    driver = new RemoteIOSDriver(getRemoteURL(), c);
   }
 
   @AfterClass

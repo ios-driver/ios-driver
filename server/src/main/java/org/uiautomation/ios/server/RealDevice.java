@@ -97,7 +97,6 @@ public class RealDevice extends Device {
     if (!(app instanceof IPAApplication)) {
       return false;
     }
-    // UIAFamily doens't match
     return true;
   }
 }

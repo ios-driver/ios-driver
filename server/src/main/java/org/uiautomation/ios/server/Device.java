@@ -17,6 +17,16 @@ public abstract class Device {
     if (desiredCapabilities.isSimulator() != deviceCapability.isSimulator()) {
       return false;
     }
+
+    if (!deviceCapability.isSimulator()) {
+      // check SDK
+      if (desiredCapabilities.getSDKVersion() != null) {
+        if (!deviceCapability.getSDKVersion().equals(desiredCapabilities.getSDKVersion())) {
+          return false;
+        }
+      }
+      // TODO freynaud check device family.
+    }
     return true;
   }
 
