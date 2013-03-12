@@ -198,7 +198,9 @@ public class IOSServer {
   }
 
   public void stop() throws Exception {
-    folderMonitor.stop();
+    if (folderMonitor != null) {
+      folderMonitor.stop();
+    }
     driver.stop();
     server.stop();
   }

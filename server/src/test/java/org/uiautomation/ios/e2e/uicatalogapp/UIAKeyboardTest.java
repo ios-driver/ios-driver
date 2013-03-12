@@ -46,7 +46,7 @@ public class UIAKeyboardTest extends BaseIOSDriverTest {
     }
   }
 
-  @AfterClass
+  @AfterClass(alwaysRun = true)
   public void stopDriver() {
     if (driver != null) {
       driver.quit();
