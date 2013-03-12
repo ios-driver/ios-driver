@@ -35,7 +35,6 @@ public class IOSServerManager {
 
   private final List<ServerSideSession> sessions = new ArrayList<ServerSideSession>();
   private static final Logger log = Logger.getLogger(IOSServerManager.class.getName());
-  private final Set<APPIOSApplication> supportedApplications = new HashSet<APPIOSApplication>();
 
   private final HostInfo hostInfo;
   private final ResourceCache cache = new ResourceCache();
@@ -172,10 +171,7 @@ public class IOSServerManager {
     throw new WebDriverException("Cannot find session " + opaqueKey + " on the sesver.");
   }
 
-
-  public Set<APPIOSApplication> getSupportedApplications() {
-    return supportedApplications;
+  public List<APPIOSApplication> getSupportedApplications() {
+    return apps.getApplications();
   }
-
-
 }
