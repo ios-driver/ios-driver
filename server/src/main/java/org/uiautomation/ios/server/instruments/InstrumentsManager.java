@@ -182,7 +182,6 @@ public class InstrumentsManager {
     IOSDeviceManager deviceManager;
 
     if (device instanceof RealDevice) {
-      ;
       deviceManager = new IOSRealDeviceManager(capabilities,
                                                (RealDevice) device,
                                                (IPAApplication) application
