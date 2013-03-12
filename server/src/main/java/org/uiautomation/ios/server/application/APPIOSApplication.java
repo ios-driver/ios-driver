@@ -326,6 +326,8 @@ public class APPIOSApplication {
 
     if (this instanceof IPAApplication) {
       cap.setCapability(IOSCapabilities.SIMULATOR, false);
+    } else {
+      cap.setCapability(IOSCapabilities.SIMULATOR, true);
     }
 
     cap.setCapability(IOSCapabilities.SUPPORTED_DEVICES, supported);
