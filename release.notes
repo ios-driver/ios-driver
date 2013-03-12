@@ -46,7 +46,10 @@
 + doc
 + append text at the end of an input field
 + non webdriver commands are documented and accessible via vendor extension, using the augmenter in java
-+ investigate why safari is slow to start
++ investigate why safari is slow to start in unit test.
++ real device support for native and hybrid.
++ real device and application manager
+
 
 TODOs:
 -------
