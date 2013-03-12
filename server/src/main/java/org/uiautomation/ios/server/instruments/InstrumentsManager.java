@@ -21,6 +21,7 @@ import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.Device;
 import org.uiautomation.ios.server.RealDevice;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
+import org.uiautomation.ios.server.application.IPAApplication;
 import org.uiautomation.ios.server.simulator.IOSRealDeviceManager;
 import org.uiautomation.ios.server.simulator.IOSSimulatorManager;
 import org.uiautomation.ios.utils.ClassicCommands;
@@ -181,7 +182,11 @@ public class InstrumentsManager {
     IOSDeviceManager deviceManager;
 
     if (device instanceof RealDevice) {
-      deviceManager = new IOSRealDeviceManager(capabilities);
+      ;
+      deviceManager = new IOSRealDeviceManager(capabilities,
+                                               (RealDevice) device,
+                                               (IPAApplication) application
+                                                   .getUnderlyingApplication());
     } else {
       deviceManager = new IOSSimulatorManager(capabilities);
     }

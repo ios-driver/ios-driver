@@ -121,4 +121,8 @@ public class IOSRunningApplication {
   public String translate(ContentResult contentResult, AppleLocale loc) {
     return underlyingApplication.translate(contentResult, loc);
   }
+
+  public APPIOSApplication getUnderlyingApplication() {
+    return underlyingApplication;
+  }
 }

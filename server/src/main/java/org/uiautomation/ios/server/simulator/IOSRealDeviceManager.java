@@ -3,14 +3,21 @@ package org.uiautomation.ios.server.simulator;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
+import org.uiautomation.ios.server.RealDevice;
+import org.uiautomation.ios.server.application.IPAApplication;
 import org.uiautomation.ios.server.instruments.IOSDeviceManager;
-
-import java.io.File;
+import org.uiautomation.iosdriver.services.DeviceInstallerService;
 
 public class IOSRealDeviceManager implements IOSDeviceManager {
 
-  public IOSRealDeviceManager(IOSCapabilities capabilities) {
+  private final RealDevice device;
+  private final IOSCapabilities capabilities;
+  private final IPAApplication app;
 
+  public IOSRealDeviceManager(IOSCapabilities capabilities, RealDevice device, IPAApplication app) {
+    this.device = device;
+    this.capabilities = capabilities;
+    this.app = app;
   }
 
   @Override
@@ -20,7 +27,9 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
 
   @Override
   public void resetContentAndSettings() {
-    //To change body of implemented methods use File | Settings | File Templates.
+    DeviceInstallerService service = new DeviceInstallerService(device.getUuid());
+    service.uninstall(app.getBundleId());
+    service.install(app.getIPAFile());
   }
 
   @Override

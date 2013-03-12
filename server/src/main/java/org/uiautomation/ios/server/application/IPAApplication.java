@@ -123,4 +123,9 @@ public class IPAApplication extends APPIOSApplication {
     }
     return newPath;
   }
+
+
+  public File getIPAFile() {
+    return ipa;
+  }
 }
