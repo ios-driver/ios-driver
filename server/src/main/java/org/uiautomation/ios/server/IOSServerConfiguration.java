@@ -17,6 +17,7 @@ package org.uiautomation.ios.server;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,6 +112,10 @@ public class IOSServerConfiguration {
   }
 
   public String getAppFolderToMonitor() {
+    if (appFolderToMonitor ==  null){
+      File folder = new File("applications");
+      appFolderToMonitor = folder.getAbsolutePath();
+    }
     return appFolderToMonitor;
   }
 }
