@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.testng.annotations.Test;
+import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.client.uiamodels.impl.augmenter.Configurable;
 import org.uiautomation.ios.client.uiamodels.impl.augmenter.IOSDriverAugmenter;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
@@ -380,5 +381,23 @@ public class FormHandlingTest extends BaseSeleniumTest {
     input.clear();
     input.sendKeys(AUXILIARY_KEYS);
     assertEquals(AUXILIARY_KEYS, input.getAttribute("value"));
+  }
+
+  @Test
+  public void testCanEnterPhoneNumberIntoTELinput() {
+    driver.get(pages.formPage);
+    String stringyNumber = "1-800-FLOWERS";
+    String numberNumber = "18003569377";
+    String validationNumber = null;
+    // iphone has number trackpad, ipad is has full keyboard still
+    if (driver.getCapabilities().getCapability(IOSCapabilities.DEVICE).equals("iphone")) {
+      validationNumber = numberNumber;
+    } else {
+      validationNumber = stringyNumber;
+    }
+
+    WebElement input = driver.findElement(By.id("telephone"));
+    input.sendKeys(stringyNumber);
+    assertEquals(input.getAttribute("value"), validationNumber);
   }
 }
