@@ -140,7 +140,12 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     StringBuilder script = new StringBuilder();
     //script.append(getNativeElementClickOnIt());
     script.append("var keyboard = UIAutomation.cache.get('1').keyboard();");
-    script.append("keyboard.typeString('" + value + "');");
+    script.append("keyboard.typeString('");
+    // got to love java...
+    // first replacing a \ (backslash) with \\ (double backslash)
+    // and then ' (single quote) with \' (backslash, single quote)
+    script.append(value.replaceAll("\\\\","\\\\\\\\").replaceAll("'", "\\\\'"));
+    script.append("');");
     Criteria iPhone = new NameCriteria("Done");
     Criteria iPad = new NameCriteria("Hide keyboard");
 

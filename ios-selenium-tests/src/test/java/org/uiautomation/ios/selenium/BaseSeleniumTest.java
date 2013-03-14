@@ -27,7 +27,6 @@ public class BaseSeleniumTest {
     startIOSServer();
     startTestServer();
     IOSCapabilities safari = IOSCapabilities.iphone("Safari");
-    safari.setCapability(IOSCapabilities.TIME_HACK, false);
     // safari.setLanguage("fr");
     driver = new RemoteWebDriver(new URL(url), safari);
 

@@ -11,8 +11,13 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.testng.annotations.Test;
+import org.uiautomation.ios.client.uiamodels.impl.augmenter.Configurable;
+import org.uiautomation.ios.client.uiamodels.impl.augmenter.IOSDriverAugmenter;
+import org.uiautomation.ios.communication.WebDriverLikeCommand;
 
 public class FormHandlingTest extends BaseSeleniumTest {
+
+  private static final String AUXILIARY_KEYS = "-/:;()$&@\".,?!'[]{}#%^*+=_\\|~<>£€•";
 
   @Test
   public void testShouldClickOnSubmitInputElements() {
@@ -353,4 +358,27 @@ public class FormHandlingTest extends BaseSeleniumTest {
     assertEquals("2012-01-01", el.getAttribute("value"));
   }
 
+  @Test
+  public void testShouldBeAbleToSendKeysFromAuxiliaryKeyboard() {
+    driver.get(pages.formPage);
+    WebElement input = driver.findElement(By.id("working"));
+    input.sendKeys("1-800-FLOWERS");
+    assertEquals("1-800-FLOWERS", input.getAttribute("value"));
+    input.clear();
+    input.sendKeys(AUXILIARY_KEYS);
+    assertEquals(AUXILIARY_KEYS, input.getAttribute("value"));
+  }
+
+  @Test
+  public void testShouldBeAbleToSendKeysFromAuxiliaryKeyboardWithOutNativeEvents() {
+    Configurable c = IOSDriverAugmenter.augment(driver);
+    c.setConfiguration(WebDriverLikeCommand.SET_VALUE, "nativeEvents", false);
+    driver.get(pages.formPage);
+    WebElement input = driver.findElement(By.id("working"));
+    input.sendKeys("1-800-FLOWERS");
+    assertEquals("1-800-FLOWERS", input.getAttribute("value"));
+    input.clear();
+    input.sendKeys(AUXILIARY_KEYS);
+    assertEquals(AUXILIARY_KEYS, input.getAttribute("value"));
+  }
 }
