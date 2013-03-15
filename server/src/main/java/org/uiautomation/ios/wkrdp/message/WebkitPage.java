@@ -1,5 +1,7 @@
 package org.uiautomation.ios.wkrdp.message;
 
+import java.util.List;
+
 import com.dd.plist.NSDictionary;
 import com.dd.plist.NSObject;
 
@@ -86,5 +88,13 @@ public class WebkitPage implements Comparable<WebkitPage> {
   @Override
   public int compareTo(WebkitPage webkitPage) {
     return this.getPageId() - webkitPage.getPageId();
+  }
+  
+  public static boolean equals(List<WebkitPage> listA, List<WebkitPage> listB) {
+    if (listA.size() != listB.size())
+      return false;
+    for (WebkitPage a: listA)
+      if (!listB.contains(a)) return false;
+    return true;
   }
 }
