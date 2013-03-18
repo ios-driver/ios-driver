@@ -8,10 +8,10 @@
     <link href="stylesheets/prettify.css" type="text/css" rel="stylesheet"/>
     <script type="text/javascript" src="javascripts/prettify.js"></script>
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <title>ios-driver</title>
-<script type="text/javascript">
 
+<script type="text/javascript">
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-38099992-1']);
   _gaq.push(['_trackPageview']);
@@ -21,7 +21,21 @@
     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
-
+</script>
+<script type="text/javascript">
+$(document).ready(function($){
+    
+    	var nav = $('.nav-container');
+    
+    	$(window).scroll(function () {
+        	if ($(this).scrollTop() > 170) {
+            	nav.addClass("f-nav");
+        	} else {
+            	nav.removeClass("f-nav");
+        	}
+    	});
+ 
+	});
 </script>
 </head>
 
@@ -31,6 +45,7 @@
 <div id="header_wrap" class="outer">
     <header class="inner">
         <a id="forkme_banner" href="https://github.com/freynaud/ios-driver">View on GitHub</a>
+         <a id="download_me" href="https://s3-eu-west-1.amazonaws.com/ios-driver/ios-server-0.5.0.jar">Download 0.5.0</a>
 
         <h1 id="project_title">ios-driver</h1>
 
@@ -47,26 +62,25 @@
                 <li><a href="bug.html" id="bug">Report a bug</a></li>
             </ul>
         </div>
-
-
-        <section id="downloads">
-            <a class="zip_download_link"
-               href="https://s3-eu-west-1.amazonaws.com/ios-driver/ios-server-0.5.0.jar">Download 0.5.0</a>
-        </section>
     </header>
 </div>
 
 <!-- MAIN CONTENT -->
 <div id="main_content_wrap" class="outer">
     <section id="main_content" class="inner">
-        <lu>
-            <li><a href="#basics">The basics</a></li>
-            <li><a href="#nativeType">Using native events for sendKeys</a></li>
-            <li><a href="#alerts">Working with alerts</a></li>
-            <li><a href="#orientation">Changing the device orientation</a></li>
-            <li><a href="#device">ipad support</a></li>
-            <li><a href="#select">Using select / html dropdown</a></li>
-        </lu>
+    <div class="nav-container">
+			<div class = "nav">
+    			<ul >
+	            	<li><a href="#basics">Basics</a></li>
+		            <li><a href="#nativeType">Native sendKeys</a></li>
+		            <li><a href="#alerts">Alerts</a></li>
+		            <li><a href="#orientation">Device Orientation</a></li>
+		            <li><a href="#device">iPad Support</a></li>
+		            <li><a href="#select">Select/html dropdown</a></li>
+        		</ul>
+			</div>
+		</div>
+
         <p>You can use ios-driver to test web pages on mobile safari. Because ios-driver internally
             uses two different
             drivers, a native one and a web one, your tests can use native events (i.e typing text

@@ -8,6 +8,7 @@
     <link href="stylesheets/prettify.css" type="text/css" rel="stylesheet"/>
     <script type="text/javascript" src="javascripts/prettify.js"></script>
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
     <title>ios-driver</title>
 <script type="text/javascript">
@@ -23,6 +24,21 @@
   })();
 
 </script>
+<script type="text/javascript">
+$(document).ready(function($){
+    
+    	var nav = $('.nav-container');
+    
+    	$(window).scroll(function () {
+        	if ($(this).scrollTop() > 170) {
+            	nav.addClass("f-nav");
+        	} else {
+            	nav.removeClass("f-nav");
+        	}
+    	});
+ 
+	});
+</script>
 </head>
 
 <body onload="prettyPrint()">
@@ -31,6 +47,7 @@
 <div id="header_wrap" class="outer">
     <header class="inner">
         <a id="forkme_banner" href="https://github.com/freynaud/ios-driver">View on GitHub</a>
+         <a id="download_me" href="https://s3-eu-west-1.amazonaws.com/ios-driver/ios-server-0.5.0.jar">Download 0.5.0</a>
 
         <h1 id="project_title">ios-driver</h1>
 
@@ -47,12 +64,6 @@
                 <li><a href="bug.html" id="bug">Report a bug</a></li>
             </ul>
         </div>
-
-
-        <section id="downloads">
-            <a class="zip_download_link"
-               href="https://s3-eu-west-1.amazonaws.com/ios-driver/ios-server-0.5.0.jar">Download 0.5.0</a>
-        </section>
     </header>
 </div>
 
