@@ -13,9 +13,15 @@
  */
 package org.uiautomation.ios.utils;
 
+import com.dd.plist.BinaryPropertyListParser;
+import com.dd.plist.NSObject;
+
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.remote.BeanToJsonConverter;
 import org.uiautomation.ios.server.application.LanguageDictionary;
+import org.uiautomation.iosdriver.ApplicationInfo;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,44 +29,32 @@ import java.io.StringWriter;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class PlistFileUtils {
 
   private final File source;
+  private final Map<String, Object> plistContent;
 
   public PlistFileUtils(File source) {
     this.source = source;
+    this.plistContent = read(source);
+  }
+
+
+  private Map<String, Object> read(File bplist) {
+    NSObject object = null;
+    try {
+      object = BinaryPropertyListParser.parse(bplist);
+    } catch (Exception e) {
+      throw new WebDriverException("Cannot parse info.plist : " + e.getMessage(), e);
+    }
+    ApplicationInfo info = new ApplicationInfo(object);
+    return info.getProperties();
   }
 
   public JSONObject toJSON() throws Exception {
-    File tmp = File.createTempFile("tmp1234", ".tmp");
-    convertL10NFile(tmp);
-    JSONObject res = readJSONFile(tmp);
-    tmp.delete();
+    JSONObject res = new JSONObject(plistContent);
     return res;
-  }
-
-  private void convertL10NFile(File dest) {
-    List<String> c = new ArrayList<String>();
-    c.add("plutil");
-    c.add("-convert");
-    c.add("json");
-    c.add("-o");
-    c.add(dest.getAbsolutePath());
-    c.add(source.getAbsolutePath());
-    Command com = new Command(c, true);
-    com.executeAndWait();
-  }
-
-  /**
-   * load the content of the file to a JSON object
-   */
-  private JSONObject readJSONFile(File from) throws Exception {
-    FileInputStream is = new FileInputStream(from);
-    StringWriter writer = new StringWriter();
-    IOUtils.copy(is, writer, "UTF-8");
-    String content = writer.toString();
-    content = Normalizer.normalize(content, LanguageDictionary.norme);
-    return new JSONObject(content);
   }
 }
