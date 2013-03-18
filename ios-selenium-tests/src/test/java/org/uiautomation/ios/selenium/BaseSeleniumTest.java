@@ -15,7 +15,7 @@ import java.net.URL;
 public class BaseSeleniumTest {
 
   private IOSServer server;
-  private static String[] args = {"-port", "4444", "-host", "localhost"};
+  private static String[] args = {"-port", "4444", "-host", "localhost", "-beta"};
   private static IOSServerConfiguration config = IOSServerConfiguration.create(args);
   protected RemoteWebDriver driver = null;
   private String url = "http://" + config.getHost() + ":" + config.getPort() + "/wd/hub";
