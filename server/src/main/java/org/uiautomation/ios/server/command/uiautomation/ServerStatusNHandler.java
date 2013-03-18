@@ -54,7 +54,7 @@ public class ServerStatusNHandler extends BaseNativeCommandHandler {
     res.put("ios", new JSONObject().put("simulatorVersion", ClassicCommands.getDefaultSDK()));
 
     JSONArray supportedApps = new JSONArray();
-    for (APPIOSApplication a : getDriver().getSupportedApplications()) {
+    for (APPIOSApplication a : getDriver().getApplicationStore().getApplications()) {
       JSONObject app = new JSONObject();
 
       JSONObject resources = new JSONObject();

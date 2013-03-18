@@ -1,7 +1,6 @@
 @CHARSET "UTF-8";
 
 body {
-    background: #AAAAAA;
     font-family: sans-serif;
     margin: 0%;
     padding: 0%;
@@ -70,20 +69,20 @@ to have the rotate of the top left corner. */
     height: 100%;
     overflow: auto;
     background: #DFDFDF;
-   
+
 }
 
 #detailsparent {
     float: right;
     width: 17%;
     color: #444444;
-    height:100%;
+    height: 100%;
     height: 100%;
 }
 
 #xpathHelper {
-padding-top: 0.2%;
-padding-left:0.2%;
+    padding-top: 0.2%;
+    padding-left: 0.2%;
     position: absolute;
     background: #455372;;
     width: 29.8%;
@@ -95,12 +94,13 @@ padding-left:0.2%;
     font-size: 90%;
 }
 
-#xpathHelper input{
-width: 90%;
+#xpathHelper input {
+    width: 90%;
 
 }
-#xpathLog{
-margin-top 4px;
+
+#xpathLog {
+    margin-top 4px;
 }
 
 #topmenu {
@@ -113,8 +113,6 @@ margin-top 4px;
     float: right;
     z-index: -1;
 }
-
-
 
 #picture {
     float: left;
@@ -143,7 +141,7 @@ margin-top 4px;
     display: inline-block;
 }
 
-#topmenu a:visited, a:link{
+#topmenu a:visited, a:link {
     text-decoration: none;
     color: #FFFFFF;
 }
@@ -156,10 +154,10 @@ margin-top 4px;
 
 #details p {
     width: 95%;
-    float:right;
+    float: right;
     border-bottom: 1px solid #CCCCCC;
     padding-bottom: 0.3em;
-    
+
 }
 
 .highlight {
@@ -268,4 +266,23 @@ a.boxclosehtml {
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent;
     border-left: 10px solid #FFFFFF;
+}
+
+#accordion {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    max-height: 100px; /* Height of the footer */
+    background: #6cf;
+}
+
+#tabs {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    max-height: 100px;
+}
+
+.tab {
+    max-height: 90px;
 }

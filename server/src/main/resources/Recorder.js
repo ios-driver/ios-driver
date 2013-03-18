@@ -26,8 +26,16 @@ function Recorder(inspector) {
 
 Recorder.prototype.recordClick = function (locator) {
     this.index++;
-    this.log.debug("WebElement element" + this.index + " = driver.findElement(By.xpath('" + locator
-                       + "');");
+    var el = "WebElement element" + this.index + " = driver.findElement(By.xpath('" + locator
+        + "');"
+
+    var content = $("#java").html() + "\n" + el;
+    content += "\nelement" + this.index + ".click();";
+    this.log.debug(content);
+    $("#java").html(content);
+    if (prettyPrint) {
+        prettyPrint();
+    }
 }
 
 Recorder.prototype.forwardClick = function (x, y) {

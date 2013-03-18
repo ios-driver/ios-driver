@@ -40,14 +40,21 @@ public class IDEMainView implements View {
       StringBuilder b = new StringBuilder();
       b.append("<html>");
       b.append("<head>");
-
+      //github stuff.
+      //b.append(" <link rel='stylesheet' href='" + getResource("stylesheet.css") + "'  type='text/css'/>");
       b.append(" <link rel='stylesheet' href='" + getResource("ide.css") + "'  type='text/css'/>");
       b.append(
+          " <link rel='stylesheet' href='" + getResource("prettify.css") + "'  type='text/css'/>");
+      b.append(
           "<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js'></script>");
+      b.append(
+          " <link rel=\"stylesheet\" href=\"http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css\" />");
+      b.append("<script src=\"http://code.jquery.com/ui/1.10.1/jquery-ui.js\"></script>");
       b.append(
           "<script type='text/javascript' src='" + getResource("jquery.jstree.js") + "'></script>");
       b.append(
           "<script type='text/javascript' src='" + getResource("jquery.xpath.js") + "'></script>");
+      b.append("<script type='text/javascript' src='" + getResource("prettify.js") + "'></script>");
 
       DeviceType device = model.getCapabilities().getDevice();
       DeviceVariation variation = model.getCapabilities().getDeviceVariation();
@@ -63,9 +70,15 @@ public class IDEMainView implements View {
       b.append(
           "<script type='text/javascript' src='" + getResource("uiactions.js") + "'></script>");
 
+      b.append("<script>");
+      b.append(" $(function() {");
+      b.append(" $( \"#tabs\" ).tabs();");
+      b.append("});");
+      b.append("</script>");
+
       b.append("</head>");
 
-      b.append("<body>");
+      b.append("<body onload=\"prettyPrint()\">");
       b.append("<html>");
       b.append("<div id='greyout'></div>");
       b.append("<div id='simulator'>");
@@ -117,8 +130,8 @@ public class IDEMainView implements View {
       b.append("<li id=\"htmlshow\"><a href=\"#\">See HTML</a></li>");
       b.append("</ul>");
       b.append("</div>");
-      
-      
+
+      b.append(getScriptTabs());
 
       /*
        * OVERLAY Capabilities
@@ -247,4 +260,28 @@ public class IDEMainView implements View {
     return null;
   }
 
+  public String getScriptTabs() {
+    StringBuilder b = new StringBuilder();
+    b.append("<div id=\"tabs\">");
+    b.append("<ul>");
+    b.append("<li><a href=\"#tabs-java\">Java</a></li>");
+    b.append("<li><a href=\"#tabs-raw\">Raw</a></li>");
+    b.append("<li><a href=\"#tabs-logs\">Logs</a></li>");
+    b.append("</ul>");
+
+    b.append("<div id=\"tabs-java\" class='tab' >");
+    b.append("<pre id='java' class=\"prettyprint\"></pre>");
+
+    b.append("</div>");
+
+    b.append("<div id=\"tabs-raw\" class='tab'>");
+    b.append("TAB2");
+    b.append("</div>");
+
+    b.append("<div id=\"tabs-logs\" class='tab' >");
+    b.append("TAB3");
+    b.append("</div>");
+
+    return b.toString();
+  }
 }
