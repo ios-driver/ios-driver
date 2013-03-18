@@ -18,6 +18,7 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIAWebView;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
@@ -30,7 +31,6 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.context.BaseWebInspector;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.server.application.AppleLocale;
 import org.uiautomation.ios.server.application.ContentResult;
 
 import java.util.List;
@@ -40,6 +40,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
 
 
   private static final Logger log = Logger.getLogger(RemoteWebNativeBackedElement.class.getName());
+
   private final ServerSideSession session;
   private final RemoteIOSDriver nativeDriver;
 
@@ -140,7 +141,12 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     StringBuilder script = new StringBuilder();
     //script.append(getNativeElementClickOnIt());
     script.append("var keyboard = UIAutomation.cache.get('1').keyboard();");
-    script.append("keyboard.typeString('" + value + "');");
+    script.append("keyboard.typeString('");
+    // got to love java...
+    // first replacing a \ (backslash) with \\ (double backslash)
+    // and then ' (single quote) with \' (backslash, single quote)
+    script.append(value.replaceAll("\\\\","\\\\\\\\").replaceAll("'", "\\\\'"));
+    script.append("');");
     Criteria iPhone = new NameCriteria("Done");
     Criteria iPad = new NameCriteria("Hide keyboard");
 
@@ -153,9 +159,15 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
 
 
   public void setValueNative(String value) throws Exception {
-    if ("date".equals(getAttribute("type"))) {
+    String type = getAttribute("type");
+    if ("date".equalsIgnoreCase(type)) {
       setValueAtoms(value);
       return;
+    }
+    // iphone on telephone inputs only shows the keypad keyboard.
+    if ("tel".equalsIgnoreCase(type) && nativeDriver.getCapabilities().getDevice() == DeviceType.iphone) {
+      value = replaceLettersWithNumbersKeypad(value,
+          (String) nativeDriver.getCapabilities().getCapability(IOSCapabilities.LOCALE));
     }
     ((JavascriptExecutor) nativeDriver)
         .executeScript(getNativeElementClickOnIt());
@@ -165,5 +177,14 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
         .executeScript(getNativeElementClickOnItAndTypeUsingKeyboardScript(value));
   }
 
+  // TODO actually handle more locales
+  private String replaceLettersWithNumbersKeypad(String str, String locale) {
+    if (locale.toLowerCase().startsWith("en")) {
+      return str.replaceAll("[AaBbCc]", "2").replaceAll("[DdEeFf]", "3").replaceAll("[GgHhIi]", "4")
+                .replaceAll("[JjKkLl]", "5").replaceAll("[MmNnOo]", "6").replaceAll("[PpQqRrSs]", "7")
+                .replaceAll("[TtUuVv]", "8").replaceAll("[WwXxYyZz]", "9").replaceAll("-", "");
+    }
+    return str.replaceAll("-", "");
+  }
 
 }

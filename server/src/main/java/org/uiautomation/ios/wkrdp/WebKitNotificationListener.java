@@ -17,14 +17,7 @@ package org.uiautomation.ios.wkrdp;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.wkrdp.internal.WebKitSyncronizer;
-import org.uiautomation.ios.wkrdp.message.ApplicationConnectedMessage;
-import org.uiautomation.ios.wkrdp.message.ApplicationDataMessage;
-import org.uiautomation.ios.wkrdp.message.ApplicationSentListingMessage;
-import org.uiautomation.ios.wkrdp.message.IOSMessage;
-import org.uiautomation.ios.wkrdp.message.ReportConnectedApplicationsMessage;
-import org.uiautomation.ios.wkrdp.message.ReportSetupMessage;
-import org.uiautomation.ios.wkrdp.message.WebkitApplication;
-import org.uiautomation.ios.wkrdp.message.WebkitPage;
+import org.uiautomation.ios.wkrdp.message.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +27,6 @@ import java.util.logging.Logger;
 public class WebKitNotificationListener implements MessageListener {
 
   private static final Logger log = Logger.getLogger(WebKitNotificationListener.class.getName());
-
   private final RemoteIOSWebDriver driver;
   private final ServerSideSession session;
   private final WebKitSyncronizer sync;
@@ -68,47 +60,24 @@ public class WebKitNotificationListener implements MessageListener {
 
     if (message instanceof ApplicationSentListingMessage) {
       ApplicationSentListingMessage m = (ApplicationSentListingMessage) message;
-      int change = m.getPages().size() - driver.getPages().size();
-      log.fine("ApplicationSentListingMessage: message pages: " + m.getPages().size() + ", change: "
-               + change);
 
-      if (change != 0) {
-        List<WebkitPage> pages = new ArrayList<WebkitPage>();
-        pages.addAll(driver.getPages());
-        for (WebkitPage p : driver.getPages()) {
-          m.getPages().remove(p);
+      List<WebkitPage> messagePages = m.getPages();
+      List<WebkitPage> driverPages = driver.getPages();
+      boolean equals = WebkitPage.equals(messagePages, driverPages);
+      log.fine ("pages " + (equals?"equals":"CHANGED") + ": " + driverPages + " -> " + messagePages + ": " + m);
+      if (equals) return;
+
+      driver.setPages(messagePages);
+      sync.signalSimSentPages();
+
+      if (messagePages.size() > 0) {
+        if (session != null) {
+          waitForWindowSwitchingAnimation();
         }
-        if (m.getPages().size() == 0) {
-          throw new WebDriverException(m.getPages().size() + " new pages.");
-        }
-        // TODO there can be more than one 'new' UIWebView, picking the first one for now.
-        WebkitPage newOne = m.getPages().get(0);
-
-        int
-            index =
-            driver.getPages().size() == 0 ? 0
-                                          : session.getRemoteWebDriver().getWindowHandleIndex()
-                                            + 1;
-        pages.add(index, newOne);
-
-        driver.setPages(pages);
-        sync.signalSimSentPages();
-
-        if (driver.getPages().size() == 0) {
-          //log.fine("first page. Nothing to do.");
-        } else {
-          WebkitPage focus = newOne;
-
-          if (session != null) {
-            waitForWindowSwitchingAnimation();
-            driver.switchTo(focus);
-          } else {
-            driver.switchTo(focus);
-          }
-        }
-
+        WebkitPage focus = selectPage(driver.getPages());
+        if (focus != null)
+          driver.switchTo(focus);
       }
-
     }
 
     if (message instanceof ApplicationDataMessage) {
@@ -128,6 +97,16 @@ public class WebKitNotificationListener implements MessageListener {
     //System.err.println(message);
   }
 
+  private WebkitPage selectPage(List<WebkitPage> pages) {
+    for (WebkitPage page: pages)
+      if (!isITunesAd(page.getURL()))
+        return page;
+    return null;
+  }
+
+  private boolean isITunesAd(String url) {
+    return (url.contains("itunes.apple.com") && url.contains("style=banner"));
+  }
 
   private void waitForWindowSwitchingAnimation() {
     try {

@@ -27,7 +27,7 @@ import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 public class MultiWindowTest extends BaseSeleniumTest {
 
   @Test
-  public void canSwitchBetweenWindows() {
+  public void canSwitchBetweenWindows() throws Exception {
     driver.get(appServer.whereIs("click_frames.html"));
     //http://localhost:7694/common/click_frames.html
     driver.switchTo().frame("source");
@@ -35,6 +35,7 @@ public class MultiWindowTest extends BaseSeleniumTest {
     driver.findElement(By.id("new-window")).click();
 
     // native + 2 web windows.
+    Thread.sleep(2000); // wait for the new window to load
     Assert.assertEquals(driver.getWindowHandles().size(), 3);
 
     // mobile safari auto switches to a newly opened window.
