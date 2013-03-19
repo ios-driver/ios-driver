@@ -29,6 +29,9 @@ public class SetValueNHandler extends UIAScriptHandler {
 
   public SetValueNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
+
+    boolean useNativeEvents = (Boolean) getConfiguration("nativeEvents");
+    System.out.println("Native:" + useNativeEvents);
     try {
       JSONArray array = request.getPayload().getJSONArray("value");
       String value = array.getString(0);
@@ -39,7 +42,7 @@ public class SetValueNHandler extends UIAScriptHandler {
       String js = voidTemplate
           .replace(":sessionId", request.getSession())
           .replace(":reference", request.getVariableValue(":reference"))
-          .replace(":jsMethod", ".setValue('" + corrected + "')");
+          .replace(":jsMethod", ".sendKeys('" + corrected + "'," + useNativeEvents + ")");
       setJS(js);
     } catch (JSONException e) {
       e.printStackTrace();
@@ -48,7 +51,6 @@ public class SetValueNHandler extends UIAScriptHandler {
 
   @Override
   public JSONObject configurationDescription() throws JSONException {
-
     return noConfigDefined();
   }
 

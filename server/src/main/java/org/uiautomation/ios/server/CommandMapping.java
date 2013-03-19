@@ -114,7 +114,6 @@ public enum CommandMapping {
   REFRESH(NotImplementedNativeHandler.class, RefreshHandler.class),
   SUBMIT(NotImplementedNativeHandler.class, SubmitHandler.class),
   TAG_NAME(".type()", DefaultUIAScriptNHandler.class, GetTagNameHandler.class),
-  SEND_KEYS(SendKeysNHandler.class),
   EXECUTE_SCRIPT(ExecuteScriptNHandler.class, ExecuteScriptHandler.class),
   EQUAL(NotImplementedNativeHandler.class, IsEqualHandler.class),
   // UIATarget
@@ -204,6 +203,8 @@ public enum CommandMapping {
 
   // UIATextField
   SET_VALUE(SetValueNHandler.class, SetValueHandler.class),
+  SEND_KEYS(SendKeysNHandler.class),
+
   CLEAR(ClearNHandler.class, ClearHandler.class),
 
   //UIATableView
