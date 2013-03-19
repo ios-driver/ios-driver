@@ -56,7 +56,7 @@ public class ResourceController implements IDECommandController {
       }
 
     } else {
-      is = IDEServlet.class.getResourceAsStream("/" + resource);
+      is = IDEServlet.class.getResourceAsStream(resource);
     }
     String mime = getMimeType(resource);
     if (is == null) {
