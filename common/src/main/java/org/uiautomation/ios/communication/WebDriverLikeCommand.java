@@ -88,7 +88,7 @@ public enum WebDriverLikeCommand {
   // GET /session/:sessionId/element/:id/location
   // GET /session/:sessionId/element/:id/location_in_view
   // GET /session/:sessionId/element/:id/size
-  // GET /session/:sessionId/element/:id/css/:propertyName
+  CSS("GET", "/session/:sessionId/element/:reference/css/:name", String.class),
   SET_ORIENTATION("POST", "/session/:sessionId/orientation", Void.class),
   GET_ORIENTATION("GET", "/session/:sessionId/orientation", Orientation.class),
   GET_ALERT_TEXT("GET", "/session/:sessionId/alert_text", JSONObject.class),
