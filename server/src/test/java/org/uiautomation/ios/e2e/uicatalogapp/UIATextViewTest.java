@@ -14,6 +14,7 @@ import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
+import org.uiautomation.ios.communication.WebDriverLikeCommand;
 
 public class UIATextViewTest extends BaseIOSDriverTest {
 
@@ -47,28 +48,36 @@ public class UIATextViewTest extends BaseIOSDriverTest {
 
   @Test
   public void capital() {
+    driver.setConfiguration(WebDriverLikeCommand.SET_VALUE, "nativeEvents", true);
     String v = "ABC";
+    textview.clear();
     textview.setValue(v);
     Assert.assertEquals(textview.getValue(), v);
   }
 
   @Test
   public void newLinesAndTabs() {
+    driver.setConfiguration(WebDriverLikeCommand.SET_VALUE, "nativeEvents", false);
     String v = "ABC\nLine 2\t col3\nthanks,\nFrançois";
+    textview.clear();
     textview.setValue(v);
     Assert.assertEquals(textview.getValue(), v);
   }
 
   @Test
   public void slash() {
+    driver.setConfiguration(WebDriverLikeCommand.SET_VALUE, "nativeEvents", true);
     String v = "A\\B ";
+    textview.clear();
     textview.setValue(v);
     Assert.assertEquals(textview.getValue(), v);
   }
 
   @Test
   public void shalom() {
+    driver.setConfiguration(WebDriverLikeCommand.SET_VALUE, "nativeEvents", false);
     String v = "שָׁלוֹם";
+    textview.clear();
     textview.setValue(v);
     Assert.assertEquals(textview.getValue(), v);
   }

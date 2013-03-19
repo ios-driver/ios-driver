@@ -14,6 +14,7 @@ import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
+import org.uiautomation.ios.communication.WebDriverLikeCommand;
 
 public class TextFieldTest extends BaseIOSDriverTest {
 
@@ -38,6 +39,7 @@ public class TextFieldTest extends BaseIOSDriverTest {
   public void startDriver() {
     driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
     textfield = getTextField();
+
   }
 
   @AfterClass
@@ -49,42 +51,54 @@ public class TextFieldTest extends BaseIOSDriverTest {
 
   @Test
   public void capital() {
+    driver.setConfiguration(WebDriverLikeCommand.SET_VALUE, "nativeEvents", true);
     String v = "ABC";
+    textfield.clear();
     textfield.setValue(v);
     Assert.assertEquals(textfield.getValue(), v);
   }
 
   @Test
   public void lowerCase() {
+    driver.setConfiguration(WebDriverLikeCommand.SET_VALUE, "nativeEvents", true);
     String v = "abc";
+    textfield.clear();
     textfield.setValue(v);
     Assert.assertEquals(textfield.getValue(), v);
   }
 
   @Test
   public void both() {
+    driver.setConfiguration(WebDriverLikeCommand.SET_VALUE, "nativeEvents", true);
     String v = "aBc";
+    textfield.clear();
     textfield.setValue(v);
     Assert.assertEquals(textfield.getValue(), v);
   }
 
   @Test
   public void intl() {
+    driver.setConfiguration(WebDriverLikeCommand.SET_VALUE, "nativeEvents", true);
     String v = "François";
+    textfield.clear();
     textfield.setValue(v);
     Assert.assertEquals(textfield.getValue(), v);
   }
 
   @Test
   public void shalom() {
+    driver.setConfiguration(WebDriverLikeCommand.SET_VALUE, "nativeEvents", false);
     String v = "שָׁלוֹם";
+    textfield.clear();
     textfield.setValue(v);
     Assert.assertEquals(textfield.getValue(), v);
   }
 
   @Test // TODO appears the other way around on the screen. Correct ?
   public void shalom2() {
+    driver.setConfiguration(WebDriverLikeCommand.SET_VALUE, "nativeEvents", false);
     String v = "שָׁלוֹם François";
+    textfield.clear();
     textfield.setValue(v);
     Assert.assertEquals(textfield.getValue(), v);
   }
