@@ -31,6 +31,7 @@ public enum IosAtoms {
   CLICK("click_ios.js"),
   FORWARD("forward_ios.js"),
   GET_ATTRIBUTE("getAttribute_ios.js"),
+  GET_EFFECTIVE_STYLE("getEffectiveStyle_ios.js"),
   GET_FRAMED_PAGE_OFFSET("getFramedPageOffset_ios.js"),
   GET_INTERACTABLE_SIZE("getInteractableSize_ios.js"),
   GET_LOCATION_IN_VIEW("getLocationInView_ios.js"),

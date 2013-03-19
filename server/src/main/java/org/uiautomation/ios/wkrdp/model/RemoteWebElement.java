@@ -214,6 +214,20 @@ public class RemoteWebElement {
     }
   }
 
+  public String getCssValue(String propertyName) throws Exception {
+    String
+        f =
+        "(function(element,value) { var result = " + IosAtoms.GET_EFFECTIVE_STYLE + "(element,value);"
+            + "return result;})";
+
+    JSONArray args = new JSONArray();
+    args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
+    args.put(new JSONObject().put("value", propertyName));
+
+    JSONObject response = getInspectorResponse(f, args, true);
+    return (String) inspector.cast(response);
+  }
+
   public boolean isSelected() throws Exception {
 
     String

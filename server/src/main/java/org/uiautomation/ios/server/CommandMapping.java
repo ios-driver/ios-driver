@@ -18,7 +18,6 @@ import org.json.JSONObject;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.server.command.Handler;
@@ -60,6 +59,7 @@ import org.uiautomation.ios.server.command.uiautomation.TakeScreenshotNHandler;
 import org.uiautomation.ios.server.command.web.BackHandler;
 import org.uiautomation.ios.server.command.web.ClearHandler;
 import org.uiautomation.ios.server.command.web.ClickHandler;
+import org.uiautomation.ios.server.command.web.CssPropertyHandler;
 import org.uiautomation.ios.server.command.web.DeleteAllCookiesHandler;
 import org.uiautomation.ios.server.command.web.DeleteCookieByNameHandler;
 import org.uiautomation.ios.server.command.web.ExecuteScriptHandler;
@@ -173,6 +173,7 @@ public enum CommandMapping {
   //WITH_NAME(".withName(:name)"),
   //WITH_PREDICATE(".withPredicate(PredicateString predicateString)"),
   //WITH_VALUE_FOR_KEY(".withValueForKey(Object value,String key)"),
+  CSS(NotImplementedNativeHandler.class, CssPropertyHandler.class),
 
   CLICK(".tap()", ClickHandler.class),
 
