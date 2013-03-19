@@ -88,7 +88,7 @@ public class WebDriverSelectorMapping extends BaseIOSDriverTest {
     Assert.assertEquals(element.getAttribute("value"), english);
   }
 
-  @Test(expectedExceptions = InvalidSelectorException.class)
+  @Test
   public void testCannotFindById() {
     By b = By.id("someid");
     driver.findElement(b);
