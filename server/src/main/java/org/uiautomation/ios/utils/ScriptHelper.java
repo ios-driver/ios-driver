@@ -35,7 +35,8 @@ public class ScriptHelper {
   private final String main = "instruments-js/main.js";
   private final String json = "instruments-js/json2.js";
   private final String common = "instruments-js/common.js";
-  private final String lib1 = "instruments-js/UIAutomation.js";
+  private final String lib0 = "instruments-js/UIAutomation.js";
+  private final String lib1 = "instruments-js/UIAKeyboard.js";
   private final String lib2 = "instruments-js/UIAElement.js";
   private final String lib3 = "instruments-js/UIAApplication.js";
   private final String lib4 = "instruments-js/UIATarget.js";
@@ -61,13 +62,14 @@ public class ScriptHelper {
   private String generateScriptContent(int port, String aut, String opaqueKey) throws IOException {
     StringBuilder scriptContent = new StringBuilder();
 
-    String c = load(lib1);
+    String c = load(lib0);
     c = c.replace("$PORT", String.format("%d", port));
     c = c.replace("$AUT", String.format("%s", aut));
     c = c.replace("$SESSION", String.format("%s", opaqueKey));
 
     scriptContent.append(load(json));
     scriptContent.append(load(common));
+    scriptContent.append(load(lib1));
     scriptContent.append(load(lib4));
     scriptContent.append(load(lib3));
     scriptContent.append(load(lib2));

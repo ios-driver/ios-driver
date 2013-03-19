@@ -27,6 +27,33 @@ UIAElement.prototype.rect = function () {
 }
 
 /**
+ *
+ */
+UIAElement.prototype.sendKeys = function (value, opt_native) {
+
+    var nativeMode = false;
+    if (opt_native) {
+        nativeMode = true;
+    }
+
+    if (nativeMode === true) {
+        if (this.hasKeyboardFocus() !== 1) {
+            this.tap();
+            if (!this.hasKeyboardFocus()) {
+                throw new UIAutomationException("Keyboard failed to appear.", 11);
+            }
+        }
+        var app = UIATarget.localTarget().frontMostApp();
+        var keyboard = app.keyboard(0);
+        keyboard.typeString(value);
+
+    } else {
+        this.setValue(value);
+    }
+
+}
+
+/**
  * checks is the element is part of an alert.
  * @return {boolean} true is the element is a descendant of an alert.
  */

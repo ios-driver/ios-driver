@@ -13,6 +13,13 @@ function UIATarget() {
  * Not in use. Only here to have the doc generated.
  * @constructor
  */
+function UIAKeyboard() {
+}
+
+/**
+ * Not in use. Only here to have the doc generated.
+ * @constructor
+ */
 function UIAElement() {
 }
 
