@@ -23,6 +23,7 @@ public class SampleApps {
   private static final Logger log = Logger.getLogger(SampleApps.class.getName());
 
   private static final String uiCatalog = "/sampleApps/UICatalog.app";
+  private static final String uiCatalogZip = "/sampleApps/UICatalog.zip";
   private static final String uiCatalogiPad = "/sampleApps/UICatalogiPad.app";
   private static final String intlMountains = "/sampleApps/InternationalMountains.app";
   private static final String geocoder = "/sampleApps/Geocoder.app";
@@ -54,6 +55,10 @@ public class SampleApps {
 
   public static String getUICatalogFile() {
     return getFromClassPath(uiCatalog).getAbsolutePath();
+  }
+  
+  public static String getUICatalogZipURL() {
+    return "file://" + getFromClassPath(uiCatalogZip).getAbsolutePath();
   }
 
   public static String getIntlMountainsFile() {

@@ -49,7 +49,7 @@ public class IOSServerConfiguration {
       names = "-host")
   private String serverHost;
 
-  @Parameter(description = "location of the application under test.Absolute path expected.",
+  @Parameter(description = "location of the application under test. Absolute path or URL expected.",
              names = {"-app", "-aut"}, required = false)
   private List<String> supportedApps = new ArrayList<String>();
 
