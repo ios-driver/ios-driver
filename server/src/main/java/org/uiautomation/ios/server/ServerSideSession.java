@@ -28,10 +28,12 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.client.uiamodels.impl.ServerSideNativeDriver;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.device.DeviceVariation;
+import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
 import org.uiautomation.ios.server.instruments.InstrumentsManager;
+import org.uiautomation.ios.server.utils.ZipUtils;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
 import org.uiautomation.ios.wkrdp.internal.AlertDetector;
@@ -81,7 +83,20 @@ public class ServerSideSession extends Session {
     this.capabilities = desiredCapabilities;
     this.options = options;
 
-    application = driver.findAndCreateInstanceMatchingApplication(desiredCapabilities);
+    String appCapability = (String) desiredCapabilities.getCapability("app");
+    if (appCapability != null) {
+      try {
+        String pathToApp = ZipUtils.extractAppFromURL(appCapability);
+        if (pathToApp.endsWith(".app"))
+          desiredCapabilities.setCapability(IOSCapabilities.SIMULATOR, true);
+        APPIOSApplication app = APPIOSApplication.createFrom(new File(pathToApp));
+        application = app.createInstance(desiredCapabilities.getLanguage());
+      } catch (Exception ex) {
+        throw new SessionNotCreatedException("cannot create app from " + appCapability + ": " + ex);
+      }
+    } else {
+      application = driver.findAndCreateInstanceMatchingApplication(desiredCapabilities);
+    }
 
     try {
       device = driver.findAndReserveMatchingDevice(desiredCapabilities);
