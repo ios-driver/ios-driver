@@ -106,7 +106,7 @@ public abstract class BaseWebInspector implements MessageListener {
         log.fine("ready ? " + readyState);
       } catch (Exception e) {
         log.warning(
-            "The given document is corrupted, nodeId=" + element.getNodeId() + e.getMessage());
+            "The given document is corrupted, nodeId=" + ((element != null)? element.getNodeId() : "null") + ": " + e);
         throw new WebKitSeemsCorruptedException();
 
       }

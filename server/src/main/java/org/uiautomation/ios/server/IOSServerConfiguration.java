@@ -57,7 +57,12 @@ public class IOSServerConfiguration {
       description = "location of a folder to monitor where applications will be stored. Absolute path expected.",
       names = {"-folder"}, required = false)
   private String appFolderToMonitor = null;
-
+  
+  @Parameter(
+      description = "maximum session duration in seconds. Session will be forcily terminated if it takes longer.",
+      names = "-sessionTimeout")
+  private int sessionTimeoutSeconds = 30 * 60; // 30 minutes
+  
   public String getRegistrationURL() {
     return registrationURL;
   }
@@ -117,5 +122,9 @@ public class IOSServerConfiguration {
       appFolderToMonitor = folder.getAbsolutePath();
     }
     return appFolderToMonitor;
+  }
+  
+  public int getSessionTimeoutMillis() {
+	return sessionTimeoutSeconds * 1000;
   }
 }

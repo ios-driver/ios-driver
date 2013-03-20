@@ -38,7 +38,7 @@ import org.uiautomation.ios.wkrdp.internal.AlertDetector;
 
 import java.io.File;
 import java.net.URL;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class ServerSideSession extends Session {
@@ -48,6 +48,7 @@ public class ServerSideSession extends Session {
   private Device device;
   private final IOSCapabilities capabilities;
   private final InstrumentsManager instruments;
+  private final IOSServerConfiguration options;
   public final IOSServerManager driver;
 
   //private WebInspector inspector;
@@ -58,24 +59,34 @@ public class ServerSideSession extends Session {
   private WorkingMode mode = WorkingMode.Native;
 
   private final DriverConfiguration configuration;
+  
+  private Timer stopSessionTimer = new Timer(true);
+  
+  private Thread shutdownHook = new Thread() {
+      @Override
+      public void run() {
+        forceStop();
+      }
+    };
 
 
   public IOSCapabilities getCapabilities() {
     return capabilities;
   }
 
-  ServerSideSession(IOSServerManager driver, IOSCapabilities desiredCapabilities) {
+  ServerSideSession(IOSServerManager driver, IOSCapabilities desiredCapabilities, IOSServerConfiguration options) {
     super(UUID.randomUUID().toString());
 
     this.driver = driver;
     this.capabilities = desiredCapabilities;
+    this.options = options;
 
     application = driver.findAndCreateInstanceMatchingApplication(desiredCapabilities);
 
     try {
       device = driver.findAndReserveMatchingDevice(desiredCapabilities);
 
-      // update capabilities and put default values in the misisng fields.
+      // update capabilities and put default values in the missing fields.
       if (capabilities.getDeviceVariation() == null) {
         capabilities.setDeviceVariation(DeviceVariation.Regular);
       }
@@ -100,13 +111,7 @@ public class ServerSideSession extends Session {
       instruments = new InstrumentsManager(driver.getPort());
       configuration = new DriverConfigurationStore();
 
-      Runtime.getRuntime().addShutdownHook(new Thread() {
-        @Override
-        public void run() {
-          forceStop();
-        }
-      });
-
+      Runtime.getRuntime().addShutdownHook(shutdownHook);
     } catch (WebDriverException e) {
       if (device != null) {
         device.release();
@@ -135,17 +140,40 @@ public class ServerSideSession extends Session {
     return instruments.communicate();
   }
 
-  public void stop() {
-    // nativDriver should have instruments within it.
+  public void stop() {      
+    // nativeDriver should have instruments within it.
     instruments.stop();
     if (webDriver != null) {
       webDriver.stop();
+      webDriver = null;
     }
-
+    
+    stopSessionTimer.cancel();
+    stopSessionTimer = null;
+    Runtime.getRuntime().removeShutdownHook(shutdownHook);
+    shutdownHook = null;
   }
-
+  
   public void forceStop() {
     instruments.forceStop();
+  }
+
+  private void hardForceStop() {
+    try {
+      instruments.forceStop();
+    } catch (Exception ignore) {}
+    if (webDriver != null) {
+      try {
+        webDriver.stop();
+      } catch (Exception ignore) {}
+      webDriver = null;
+    }
+    if (nativeDriver != null) {
+      try {
+        nativeDriver.quit();
+      } catch (Exception ignore) {}
+      nativeDriver = null;
+    }
   }
 
   public File getOutputFolder() {
@@ -159,6 +187,16 @@ public class ServerSideSession extends Session {
 
   public void start() {
     instruments.startSession(getSessionId(), application, device, capabilities);
+    
+    // force stop session if running for too long
+    final int sessionTimeoutMillis = options.getSessionTimeoutMillis();
+    stopSessionTimer.schedule(new TimerTask() {
+      @Override
+      public void run() {
+        log.warning("forcing stop session that has been running for " + sessionTimeoutMillis/1000 + " seconds");
+        hardForceStop();
+      }
+    }, sessionTimeoutMillis);
 
     URL url = null;
     try {

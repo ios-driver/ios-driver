@@ -68,6 +68,9 @@ public class IOSCapabilities extends DesiredCapabilities {
   public static final String ELEMENT_TREE = "elementTree";
   public static final String IOS_SEARCH_CONTEXT = "iosSearchContext";
   public static final String UUID = "uuid";
+  
+  // TODO: make a parameter?
+  public static final int COMMAND_TIMEOUT_MILLIS = 10 * 60 * 1000; // 10 minutes
 
   // private final Map<String, Object> raw = new HashMap<String, Object>();
 

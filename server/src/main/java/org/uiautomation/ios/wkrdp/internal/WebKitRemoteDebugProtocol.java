@@ -217,10 +217,11 @@ public abstract class WebKitRemoteDebugProtocol {
     }
   }
 
-  private void sleepTight(int ms) {
+  private static void sleepTight(int ms) {
     try {
       Thread.sleep(ms);
     } catch (InterruptedException ignore) {
+      Thread.currentThread().interrupt();
     }
   }
 }
