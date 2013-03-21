@@ -435,7 +435,7 @@ public class FormHandlingTest extends BaseSeleniumTest {
         return !webDriver.getCurrentUrl().equals(curURL);
       }
     });
-    assertTrue(driver.getCurrentUrl().endsWith("resultPage.html"));
+    assertTrue(driver.getCurrentUrl().endsWith("something"));
   }
 
   @Test
@@ -451,6 +451,6 @@ public class FormHandlingTest extends BaseSeleniumTest {
       }
     });
     System.out.println(driver.getCurrentUrl());
-    assertTrue(driver.getCurrentUrl().endsWith("resultPage.html"));
+    assertTrue(driver.getCurrentUrl().endsWith("something"));
   }
 }
