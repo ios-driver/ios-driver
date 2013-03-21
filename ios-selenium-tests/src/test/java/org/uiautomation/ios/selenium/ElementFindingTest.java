@@ -1,7 +1,7 @@
 package org.uiautomation.ios.selenium;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.IllegalLocatorException;
+import org.openqa.selenium.InvalidSelectorException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -397,14 +397,14 @@ public class ElementFindingTest extends BaseSeleniumTest {
     try {
       driver.findElement(By.className("a b"));
       Assert.fail("Compound class names aren't allowed");
-    } catch (IllegalLocatorException e) {
+    } catch (InvalidSelectorException e) {
       // This is expected
     }
 
     try {
       driver.findElements(By.className("a b"));
       Assert.fail("Compound class names aren't allowed");
-    } catch (IllegalLocatorException e) {
+    } catch (InvalidSelectorException e) {
       // This is expected
     }
   }
