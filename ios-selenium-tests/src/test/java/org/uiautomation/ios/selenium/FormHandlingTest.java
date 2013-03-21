@@ -19,7 +19,10 @@ import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.client.uiamodels.impl.augmenter.Configurable;
@@ -424,7 +427,14 @@ public class FormHandlingTest extends BaseSeleniumTest {
   public void testCanUseEnterKeyToSubmitForm() {
     driver.get(pages.formPage);
     WebElement element = driver.findElement(By.cssSelector("#nested_form input[type='text']"));
+    final String curURL = driver.getCurrentUrl();
     element.sendKeys("something" + Keys.ENTER);
+    new WebDriverWait(driver, 3).until(new ExpectedCondition<Boolean>() {
+      @Override
+      public Boolean apply(WebDriver webDriver) {
+        return !webDriver.getCurrentUrl().equals(curURL);
+      }
+    });
     assertTrue(driver.getCurrentUrl().endsWith("resultPage.html"));
   }
 
@@ -432,7 +442,14 @@ public class FormHandlingTest extends BaseSeleniumTest {
   public void testCanUseReturnKeyToSubmitForm() {
     driver.get(pages.formPage);
     WebElement element = driver.findElement(By.cssSelector("#nested_form input[type='text']"));
+    final String curURL = driver.getCurrentUrl();
     element.sendKeys("something" + Keys.RETURN);
+    new WebDriverWait(driver, 3).until(new ExpectedCondition<Boolean>() {
+      @Override
+      public Boolean apply(WebDriver webDriver) {
+        return !webDriver.getCurrentUrl().equals(curURL);
+      }
+    });
     System.out.println(driver.getCurrentUrl());
     assertTrue(driver.getCurrentUrl().endsWith("resultPage.html"));
   }
