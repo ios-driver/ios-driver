@@ -52,8 +52,7 @@ public class IOSHtmlRenderer implements HtmlRenderer {
       TestSession session = slot.getSession();
       try {
         builder.append("<img src=\"" + proxy.getRemoteHost() + getIconUrl(slot) + "\" alt=\"" + slot.getCapabilities().get("CFBundleExecutable") + "\">");
-      } catch (JSONException e) {
-        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      } catch (JSONException ignored) {
       }
       builder.append(" [").append(slot.getCapabilities().get("supportedDevices")).append(" - ")
           .append(slot.getCapabilities().get("sdkVersion")).append("]");
