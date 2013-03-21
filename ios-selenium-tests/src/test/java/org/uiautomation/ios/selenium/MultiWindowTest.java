@@ -67,7 +67,7 @@ public class MultiWindowTest extends BaseSeleniumTest {
 
   }
 
-  @Test(enabled = false)
+  @Test
   public void canNavigateBetweenWindows() throws InterruptedException {
     driver.get(appServer.whereIs("click_frames.html"));
     //http://localhost:7694/common/click_frames.html
@@ -112,14 +112,6 @@ public class MultiWindowTest extends BaseSeleniumTest {
         // ignore
       }
     }
-  }
-
-  public static void main(String[] args) {
-
-    Criteria c = new AndCriteria(new TypeCriteria(UIAElement.class), new LocationCriteria(0, 10));
-
-    System.out.println(c.stringify());
-
   }
 
 

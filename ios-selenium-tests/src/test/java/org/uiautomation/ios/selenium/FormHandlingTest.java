@@ -1,20 +1,40 @@
+/*
+ * Copyright 2013 ios-driver committers.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License. You may obtain a copy of the Licence at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software distributed under the License
+ *  is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ *  or implied. See the License for the specific language governing permissions and limitations under
+ *  the License.
+ */
+
 package org.uiautomation.ios.selenium;
 
-import static org.openqa.selenium.TestWaiter.waitFor;
-import static org.openqa.selenium.WaitingConditions.pageTitleToBe;
-import static org.testng.Assert.*;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
 import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.*;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.client.uiamodels.impl.augmenter.Configurable;
 import org.uiautomation.ios.client.uiamodels.impl.augmenter.IOSDriverAugmenter;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import static org.openqa.selenium.TestWaiter.waitFor;
+import static org.openqa.selenium.WaitingConditions.pageTitleToBe;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 public class FormHandlingTest extends BaseSeleniumTest {
 
@@ -322,15 +342,15 @@ public class FormHandlingTest extends BaseSeleniumTest {
 
     assertEquals(value.length(), (0));
   }
-  
+
   @Test
   public void testIsSelectedShouldWorkRightAfterSelecting() {
-      driver.get(pages.formPage);
+    driver.get(pages.formPage);
 
-      WebElement checkbox = driver.findElement(By.id("checky"));
-      driver.manage().timeouts().implicitlyWait(100, TimeUnit.MILLISECONDS);
-      checkbox.click();
-      assertTrue(checkbox.isSelected());
+    WebElement checkbox = driver.findElement(By.id("checky"));
+    driver.manage().timeouts().implicitlyWait(100, TimeUnit.MILLISECONDS);
+    checkbox.click();
+    assertTrue(checkbox.isSelected());
   }
 
   @Test(enabled = false)

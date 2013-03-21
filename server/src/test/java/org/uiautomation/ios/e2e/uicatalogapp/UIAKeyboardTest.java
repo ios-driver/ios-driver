@@ -31,19 +31,7 @@ public class UIAKeyboardTest extends BaseIOSDriverTest {
     driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
     textview = getTextView();
 
-    long deadline = System.currentTimeMillis() + 5000;
-    while (keyboard == null) {
-      try {
-        Criteria fieldC = new TypeCriteria(UIATextView.class);
-        UIATextView res = (UIATextView) driver.findElement(fieldC);
-        res.tap();
-        keyboard = driver.getKeyboard();
-      } catch (NoSuchElementException e) {
-        if (System.currentTimeMillis() > deadline) {
-          throw e;
-        }
-      }
-    }
+
   }
 
   @AfterClass(alwaysRun = true)
@@ -52,6 +40,7 @@ public class UIAKeyboardTest extends BaseIOSDriverTest {
       driver.quit();
     }
   }
+
 
   private UIATextView getTextView() {
     String name = "TextView, Use of UITextField";
@@ -70,7 +59,7 @@ public class UIAKeyboardTest extends BaseIOSDriverTest {
   public void capital() {
     String v = "aBC";
     textview.clear();
-    keyboard.sendKeys(v);
+    textview.sendKeys(v);
     Assert.assertEquals(textview.getValue(), v);
   }
 
@@ -78,7 +67,7 @@ public class UIAKeyboardTest extends BaseIOSDriverTest {
   public void characterRequiresALongTapOnKey() {
     String v = "François";
     textview.clear();
-    keyboard.sendKeys(v);
+    textview.sendKeys(v);
     Assert.assertEquals(textview.getValue(), v);
   }
 
@@ -86,21 +75,21 @@ public class UIAKeyboardTest extends BaseIOSDriverTest {
   public void newLines() {
     String v = "ABC\nLine 2\nthanks,\nFrancois";
     textview.clear();
-    keyboard.sendKeys(v);
+    textview.sendKeys(v);
     Assert.assertEquals(textview.getValue(), v);
   }
 
   @Test(expectedExceptions = WebDriverException.class)
   public void tabs() {
     String v = "AB\tCD";
-    keyboard.sendKeys(v);
+    textview.sendKeys(v);
   }
 
   @Test
   public void slash() {
     String v = "A\\B ";
     textview.clear();
-    keyboard.sendKeys(v);
+    textview.sendKeys(v);
     Assert.assertEquals(textview.getValue(), v);
   }
 
@@ -108,7 +97,7 @@ public class UIAKeyboardTest extends BaseIOSDriverTest {
   public void shalom() {
     String v = "שָׁלוֹם";
     textview.clear();
-    keyboard.sendKeys(v);
+    textview.sendKeys(v);
     Assert.assertEquals(textview.getValue(), v);
   }
 }

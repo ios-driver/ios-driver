@@ -29,7 +29,6 @@ public class UIAKeyboardSmokeTest extends BaseIOSDriverTest {
   @BeforeClass
   public void startDriver() {
     IOSCapabilities caps = SampleApps.uiCatalogCap();
-    caps.setLocale("fr");
     driver = new RemoteIOSDriver(getRemoteURL(), caps);
   }
 

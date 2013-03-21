@@ -19,6 +19,7 @@
 function SafariPageNavigator() {
     this.target = UIATarget.localTarget();
     this.app = this.target.frontMostApp();
+    this.implicit_wait_sec = 2;
 }
 
 SafariPageNavigator.prototype.initSelectWebViewMode = function () {
@@ -28,6 +29,7 @@ SafariPageNavigator.prototype.getCurrentToolBar = function () {
     return  this.app.element(-1, getTypeCriteria("UIAToolbar"));
 }
 SafariPageNavigator.prototype.enter = function () {
+    UIATarget.localTarget().delay(1);
     var toolBar = this.getCurrentToolBar();
     var buttons = toolBar.elements2(-1, getTypeCriteria("UIAButton"));
 
@@ -76,12 +78,15 @@ getTypeAndNameCriteria = function (type, name) {
 }
 
 SafariPageNavigator.prototype.done = function () {
-    var done = this.getCurrentToolBar().element(-1, getTypeAndNameCriteria("UIAButton", "Done"));
+    var done = this.getCurrentToolBar().element(-1,
+                                                getTypeAndNameCriteria("UIAButton", "Done"),
+                                                this.implicit_wait_sec);
     done.tap();
 }
 SafariPageNavigator.prototype.newPage = function () {
     var newPage = this.getCurrentToolBar().element(-1,
-                                                   getTypeAndNameCriteria("UIAButton", "New Page"));
+                                                   getTypeAndNameCriteria("UIAButton", "New Page"),
+                                                   this.implicit_wait_sec);
     newPage.tap();
 }
 /**

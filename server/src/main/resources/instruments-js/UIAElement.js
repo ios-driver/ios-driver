@@ -301,12 +301,14 @@ UIAElement.prototype.element_or = function (depth, criteria) {
                                     7);
 }
 
-UIAElement.prototype.element = function (depth, criteria) {
-
+UIAElement.prototype.element = function (depth, criteria, opt_timeout_sec) {
     if (UIAutomation.getTimeout('implicit') == 0) {
         return this._element(depth, criteria);
     } else {
         var timeout = UIAutomation.getTimeout('implicit');
+        if (!(typeof opt_timeout_sec === "undefined")) {
+            timeout = opt_timeout_sec;
+        }
         var limit = new Date().getTime() + (1000 * timeout);
 
         while (new Date().getTime() < limit) {
