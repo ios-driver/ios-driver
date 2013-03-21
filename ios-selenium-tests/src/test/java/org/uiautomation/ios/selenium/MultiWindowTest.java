@@ -67,7 +67,7 @@ public class MultiWindowTest extends BaseSeleniumTest {
 
   }
 
-  @Test
+  @Test(enabled = false)
   public void canNavigateBetweenWindows() throws InterruptedException {
     driver.get(appServer.whereIs("click_frames.html"));
     //http://localhost:7694/common/click_frames.html
@@ -95,6 +95,37 @@ public class MultiWindowTest extends BaseSeleniumTest {
     switchTo("Web_3");
     switchTo("Web_1");
     switchTo("Web_2");
+
+
+  }
+
+  @Test(enabled = false)
+  public void canNavigateBetweenWindowsItuneAd() throws InterruptedException {
+    driver.get(appServer.whereIs("click_frames.html"));
+    //http://localhost:7694/common/click_frames.html
+    driver.switchTo().frame("source");
+
+    // click to create a new window.
+    driver.findElement(By.id("new-window")).click();
+    waitForWindow(driver, "Web_2");
+
+    System.out.println(driver.getWindowHandles());
+    driver.get("http://ebay.co.uk");
+    System.out.println(driver.getWindowHandles());
+
+    // native + 2 web windows.
+    Assert.assertEquals(driver.getWindowHandles().size(), 4);
+
+    // mobile safari auto switches to a newly opened window.
+    switchTo("Web_1");
+    driver.switchTo().defaultContent();
+    Assert.assertEquals(driver.getTitle(), "click frames");
+    Assert.assertTrue(driver.getCurrentUrl().endsWith("click_frames.html"));
+
+    switchTo("Web_1");
+    switchTo("Web_2");
+    switchTo("Web_1");
+    switchTo("Web_3");
 
 
   }
