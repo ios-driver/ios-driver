@@ -354,7 +354,6 @@ public class FormHandlingTest extends BaseSeleniumTest {
   }
 
   @Test(enabled = false)
-  // alert not done yet
   // @Ignore(value = { ANDROID, CHROME, HTMLUNIT, IE, IPHONE, OPERA, SAFARI,
   // SELENESE, OPERA_MOBILE }, reason =
   // "Untested on all other browsers, fails on chrome, fails on IE.", issues = {
