@@ -13,6 +13,8 @@
  */
 package org.uiautomation.ios.grid;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.openqa.grid.internal.TestSession;
 import org.openqa.grid.internal.TestSlot;
 import org.openqa.grid.internal.utils.HtmlRenderer;
@@ -48,6 +50,11 @@ public class IOSHtmlRenderer implements HtmlRenderer {
       builder.append(slot.getCapabilities().containsKey(BROWSER) ? slot.getCapabilities().get(
           BROWSER) : slot.getCapabilities().get(APP));
       TestSession session = slot.getSession();
+      try {
+        builder.append("<img src=\"" + proxy.getRemoteHost() + getIconUrl(slot) + "\" alt=\"" + slot.getCapabilities().get("CFBundleExecutable") + "\">");
+      } catch (JSONException e) {
+        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      }
       builder.append(" [").append(slot.getCapabilities().get("supportedDevices")).append(" - ")
           .append(slot.getCapabilities().get("sdkVersion")).append("]");
       builder.append(" : ").append(slot.getCapabilities().get("CFBundleExecutable"));
@@ -56,5 +63,10 @@ public class IOSHtmlRenderer implements HtmlRenderer {
     }
     builder.append("</fieldset>");
     return builder.toString();
+  }
+
+  private String getIconUrl(TestSlot slot) throws JSONException {
+    JSONObject resources = (JSONObject) slot.getCapabilities().get("resources");
+    return resources.getString("CFBundleIconFile");
   }
 }
