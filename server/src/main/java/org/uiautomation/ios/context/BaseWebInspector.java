@@ -28,9 +28,9 @@ import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.server.DOMContext;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.wkrdp.MessageListener;
+import org.uiautomation.ios.wkrdp.RemoteExceptionException;
 import org.uiautomation.ios.wkrdp.WebKitSeemsCorruptedException;
 import org.uiautomation.ios.wkrdp.command.DOM;
-import org.uiautomation.ios.wkrdp.command.Network;
 import org.uiautomation.ios.wkrdp.command.Page;
 import org.uiautomation.ios.wkrdp.events.ChildNodeRemoved;
 import org.uiautomation.ios.wkrdp.events.Event;
@@ -67,6 +67,7 @@ public abstract class BaseWebInspector implements MessageListener {
   }
 
   public abstract JSONObject sendCommand(JSONObject command);
+
 
   public abstract int getPageIdentifier();
 
@@ -106,7 +107,8 @@ public abstract class BaseWebInspector implements MessageListener {
         log.fine("ready ? " + readyState);
       } catch (Exception e) {
         log.warning(
-            "The given document is corrupted, nodeId=" + ((element != null)? element.getNodeId() : "null") + ": " + e);
+            "The given document is corrupted, nodeId=" + ((element != null) ? element.getNodeId()
+                                                                            : "null") + ": " + e);
         throw new WebKitSeemsCorruptedException();
 
       }
@@ -141,6 +143,21 @@ public abstract class BaseWebInspector implements MessageListener {
 
 
   public String getCurrentUrl() {
+    long deadline = System.currentTimeMillis() + getTimeout();
+    while (System.currentTimeMillis() < deadline) {
+      try {
+        return getCurrentUrlOnce();
+      } catch (RemoteExceptionException e) {
+        if (!e.getMessage().contains("Inspected frame has gone")) {
+          throw e;
+        }
+        log.severe("current url not ready :" + e.getMessage());
+      }
+    }
+    throw new WebDriverException("timeout waiting for the URL to be accessible.");
+  }
+
+  private String getCurrentUrlOnce() {
 
     try {
       RemoteWebElement document = getDocument();
@@ -156,7 +173,7 @@ public abstract class BaseWebInspector implements MessageListener {
 
       JSONObject response = sendCommand(cmd);
       return cast(response);
-    } catch (Exception e) {
+    } catch (JSONException e) {
       throw new WebDriverException(e);
     }
 
