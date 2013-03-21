@@ -16,6 +16,7 @@ package org.uiautomation.ios.wkrdp.model;
 
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
@@ -32,7 +33,9 @@ import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.context.BaseWebInspector;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.ContentResult;
+import org.uiautomation.ios.utils.XPath2Engine;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -43,6 +46,12 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
 
   private final ServerSideSession session;
   private final RemoteIOSDriver nativeDriver;
+  private final List<Character> specialKeys = new ArrayList<Character>() {{
+    this.add(Keys.DELETE.toString().charAt(0));
+    this.add(Keys.ENTER.toString().charAt(0));
+    this.add(Keys.RETURN.toString().charAt(0));
+    this.add(Keys.SHIFT.toString().charAt(0));
+  }};
 
   public RemoteWebNativeBackedElement(NodeId id, BaseWebInspector inspector,
                                       ServerSideSession session) {
@@ -134,26 +143,85 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
 
   }
 
-  // TODO freynaud use keyboard.js bot.Keyboard.prototype.moveCursor = function(element)
-  private String getNativeElementClickOnItAndTypeUsingKeyboardScript(String value)
-      throws Exception {
-
+  private String getKeyboardTypeStringSegement(String value) {
     StringBuilder script = new StringBuilder();
-    //script.append(getNativeElementClickOnIt());
-    script.append("var keyboard = UIAutomation.cache.get('1').keyboard();");
     script.append("keyboard.typeString('");
     // got to love java...
     // first replacing a \ (backslash) with \\ (double backslash)
     // and then ' (single quote) with \' (backslash, single quote)
     script.append(value.replaceAll("\\\\","\\\\\\\\").replaceAll("'", "\\\\'"));
     script.append("');");
-    Criteria iPhone = new NameCriteria("Done");
-    Criteria iPad = new NameCriteria("Hide keyboard");
+    return script.toString();
+  }
 
-    Criteria c3 = new OrCriteria(iPad, iPhone);
-    // TODO freynaud create keyboard.hide();
-    script.append("root.element(-1," + c3.stringify().toString() + ").tap();");
+  private String getReferenceToTapByXpath(XPath2Engine xPath2Engine, String xpath) {
+    StringBuilder script = new StringBuilder();
+    script.append("UIAutomation.cache.get(");
+    script.append((String) xPath2Engine.findElementByXpath(xpath).get("ELEMENT"));
+    script.append(", false).tap();");
+    return script.toString();
+  }
 
+  // TODO freynaud use keyboard.js bot.Keyboard.prototype.moveCursor = function(element)
+  private String getNativeElementClickOnItAndTypeUsingKeyboardScript(String value)
+      throws Exception {
+
+
+    StringBuilder script = new StringBuilder();
+    script.append("var keyboard = UIAutomation.cache.get('1').keyboard();");
+
+    Boolean keyboardResigned = false;
+
+    StringBuilder current = new StringBuilder();
+    XPath2Engine xpathEngine = null;
+    for (int i = 0; i < value.length(); i++) {
+      int idx = specialKeys.indexOf(value.charAt(i));
+      if (idx >= 0) {
+        if (xpathEngine == null) {
+          xpathEngine = XPath2Engine.getXpath2Engine(nativeDriver);
+        }
+        if (current.length() > 0) {
+          script.append(getKeyboardTypeStringSegement(current.toString()));
+          current = new StringBuilder();
+        }
+        switch (idx) {
+          case 0:
+            // DELETE
+            // TODO, i don't like this xpath... should find the key in a better way
+            // (like keyboard.shift)
+            script.append(getReferenceToTapByXpath(xpathEngine, "//UIAKeyboard/UIAKey[" +
+                ( nativeDriver.getCapabilities().getDevice() == DeviceType.ipad ?
+                    "11]" : "last()-3]")
+            ));
+            break;
+          case 1:
+          case 2:
+            // ENTER / RETURN
+            // TODO another smelly xpath.
+            script.append(getReferenceToTapByXpath(xpathEngine, "//UIAKeyboard/UIAButton[" +
+                ( nativeDriver.getCapabilities().getDevice() == DeviceType.ipad ?
+                    "1]" : "2]")
+            ));
+            keyboardResigned = true;
+            break;
+          case 3:
+            // SHIFT
+            script.append("keyboard.shift();");
+            break;
+          default:
+            throw new RuntimeException("Special key found in the list but not taken care of??");
+        }
+      } else {
+        current.append(value.charAt(i));
+      }
+    }
+    if (current.length() > 0) {
+      script.append(getKeyboardTypeStringSegement(current.toString()));
+    }
+
+    if (!keyboardResigned) {
+      script.append("keyboard.hide();");
+    }
     return script.toString();
   }
 

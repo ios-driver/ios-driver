@@ -419,4 +419,21 @@ public class FormHandlingTest extends BaseSeleniumTest {
     input.sendKeys(stringyNumber);
     assertEquals(input.getAttribute("value"), validationNumber);
   }
+
+  @Test
+  public void testCanUseEnterKeyToSubmitForm() {
+    driver.get(pages.formPage);
+    WebElement element = driver.findElement(By.cssSelector("#nested_form input[type='text']"));
+    element.sendKeys("something" + Keys.ENTER);
+    assertTrue(driver.getCurrentUrl().endsWith("resultPage.html"));
+  }
+
+  @Test
+  public void testCanUseReturnKeyToSubmitForm() {
+    driver.get(pages.formPage);
+    WebElement element = driver.findElement(By.cssSelector("#nested_form input[type='text']"));
+    element.sendKeys("something" + Keys.RETURN);
+    System.out.println(driver.getCurrentUrl());
+    assertTrue(driver.getCurrentUrl().endsWith("resultPage.html"));
+  }
 }

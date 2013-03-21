@@ -12,6 +12,7 @@ import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.UIAModels.predicate.ValueCriteria;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
@@ -47,14 +48,7 @@ public abstract class BaseFindElementNHandler extends UIAScriptHandler {
     if (!xpathMode) {
       throw new WebDriverException("Bug. parser only apply to xpath mode.");
     }
-    JSONObject logElementTree = getSession().getNativeDriver().logElementTree(null, false);
-    JSONObject tree = logElementTree.optJSONObject("tree");
-    try {
-      return new XPath2Engine(new JSONToXMLConvertor(tree).asXML());
-    } catch (Exception e) {
-      throw new WebDriverException(e);
-    }
-
+    return XPath2Engine.getXpath2Engine(getSession().getNativeDriver());
   }
 
   protected String getXpath() {

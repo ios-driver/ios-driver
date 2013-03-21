@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import org.openqa.selenium.InvalidSelectorException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
@@ -35,6 +36,16 @@ public class XPath2Engine {
   private final XPath xpath2;
   private final Node document;
   private final String xml;
+
+  public static XPath2Engine getXpath2Engine(RemoteIOSDriver driver) {
+      JSONObject logElementTree = driver.logElementTree(null, false);
+      JSONObject tree = logElementTree.optJSONObject("tree");
+      try {
+        return new XPath2Engine(new JSONToXMLConvertor(tree).asXML());
+      } catch (Exception e) {
+        throw new WebDriverException(e);
+      }
+  }
 
   public XPath2Engine(String xml) throws Exception {
     this.xml = xml;

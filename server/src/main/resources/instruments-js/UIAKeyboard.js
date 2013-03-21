@@ -16,11 +16,16 @@ UIAKeyboard.prototype.typeString_original = UIAKeyboard.prototype.typeString;
 
 UIAKeyboard.prototype.typeString = function (value) {
 
+    var regularCharacters = "";
     for (var i = 0; i < value.length; i++) {
         var letter = value[i];
         var key = this.getSpecialKey(letter);
 
         if (key.special && key.offset != 0) {
+            if (regularCharacters.length > 0) {
+                this.typeString_original(regularCharacters);
+                regularCharacters = "";
+            }
             var root = UIAutomation.cache.get('1');
             var result = null;
             var criteria = {"l10n": "none",
@@ -54,8 +59,11 @@ UIAKeyboard.prototype.typeString = function (value) {
             //}
 
         } else {
-            this.typeString_original(letter);
+            regularCharacters += letter;
         }
+    }
+    if (regularCharacters.length > 0) {
+        this.typeString_original(regularCharacters);
     }
 
 }
@@ -82,6 +90,16 @@ UIAKeyboard.prototype.shift = function () {
                                 "matching": "exact",
                                 "method": "name"});
     more.tap();
+}
+
+UIAKeyboard.prototype.hide = function() {
+    var root = UIAutomation.cache.get('1');
+    var hide = root.element(-1,
+        {"OR":[
+            {"l10n":"none","expected":"Hide keyboard","matching":"exact","method":"name"},
+            {"l10n":"none","expected":"Done","matching":"exact","method":"name"}
+        ]});
+    hide.tap();
 }
 
 function Mapping(keyboard) {
