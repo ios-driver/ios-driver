@@ -66,6 +66,10 @@ public class WebkitPage implements Comparable<WebkitPage> {
     return true;
   }
 
+  public boolean isITunesAd() {
+    return (WIRURLKey.contains("itunes.apple.com") && WIRURLKey.contains("style=banner"));
+  }
+
   @Override
   public int hashCode() {
     return WIRPageIdentifierKey;
@@ -89,12 +93,16 @@ public class WebkitPage implements Comparable<WebkitPage> {
   public int compareTo(WebkitPage webkitPage) {
     return this.getPageId() - webkitPage.getPageId();
   }
-  
+
   public static boolean equals(List<WebkitPage> listA, List<WebkitPage> listB) {
-    if (listA.size() != listB.size())
+    if (listA.size() != listB.size()) {
       return false;
-    for (WebkitPage a: listA)
-      if (!listB.contains(a)) return false;
+    }
+    for (WebkitPage a : listA) {
+      if (!listB.contains(a)) {
+        return false;
+      }
+    }
     return true;
   }
 }

@@ -341,7 +341,14 @@ public class RemoteIOSWebDriver {
     int destination = -1;
     for (WebkitPage p : pages) {
       if ((p.getPageId() + "").equals(pageId)) {
-        destination = pages.indexOf(p);
+        if (p.isITunesAd()) {
+          log.warning(
+              "Trying to switch to an ad. You will need to be on the correct page already to do "
+              + "that.If you're not, random error will occur.");
+          return 0;
+        } else {
+          destination = pages.indexOf(p);
+        }
       }
     }
     return destination - currentIndex;

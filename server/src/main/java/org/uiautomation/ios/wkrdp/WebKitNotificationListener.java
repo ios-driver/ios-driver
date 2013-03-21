@@ -106,7 +106,7 @@ public class WebKitNotificationListener implements MessageListener {
 
           if (driver.getPages().size() == 0) {
             //log.fine("first page. Nothing to do.");
-          } else if (isITunesAd(newOne.getURL())) {
+          } else if (newOne.isITunesAd()) {
             //log.fine("itunes ad - ignoring it.");
           } else {
             WebkitPage focus = newOne;
@@ -155,16 +155,13 @@ public class WebKitNotificationListener implements MessageListener {
 
   private WebkitPage selectPage(List<WebkitPage> pages) {
     for (WebkitPage page : pages) {
-      if (!isITunesAd(page.getURL())) {
+      if (!page.isITunesAd()) {
         return page;
       }
     }
     return null;
   }
 
-  private boolean isITunesAd(String url) {
-    return (url.contains("itunes.apple.com") && url.contains("style=banner"));
-  }
 
   private void waitForWindowSwitchingAnimation() {
     try {

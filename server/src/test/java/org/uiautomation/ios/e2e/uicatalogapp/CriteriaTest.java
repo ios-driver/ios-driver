@@ -24,9 +24,11 @@ public class CriteriaTest extends BaseIOSDriverTest {
   private RemoteIOSDriver driver;
 
   @BeforeClass
-  public void startDriver() {
+  public void startDriver() throws InterruptedException {
     IOSCapabilities c = SampleApps.uiCatalogCap();
     c.setSDKVersion("6.1");
+    //c.setCapability(IOSCapabilities.SIMULATOR,false);
+    //Thread.sleep(5000);
     driver = new RemoteIOSDriver(getRemoteURL(), c);
   }
 
