@@ -38,9 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import static org.uiautomation.ios.IOSCapabilities.DEVICE_FAMILLY;
-import static org.uiautomation.ios.IOSCapabilities.ICON;
-import static org.uiautomation.ios.IOSCapabilities.MAGIC_PREFIX;
+import static org.uiautomation.ios.IOSCapabilities.*;
 
 // TODO freynaud create IOSApp vs Running App that has locale + language
 public class APPIOSApplication {
@@ -208,8 +206,27 @@ public class APPIOSApplication {
    */
   public Map<String, String> getResources() {
     Map<String, String> resourceByResourceName = new HashMap<String, String>();
-    resourceByResourceName.put(ICON, getMetadata(ICON));
+    String metadata =  getMetadata(ICON);
+    if(metadata.equals("")){
+      metadata = getFirstIconFile(BUNDLE_ICONS);
+    }
+    resourceByResourceName.put(ICON, metadata);
     return resourceByResourceName;
+  }
+
+  private String getFirstIconFile(String bundleIcons){
+    if(!metadata.has(bundleIcons)){
+      return "";
+    }
+    try{
+      HashMap icons = (HashMap)metadata.get(bundleIcons);
+      HashMap primaryIcon = (HashMap)icons.get("CFBundlePrimaryIcon");
+      ArrayList iconFiles = (ArrayList)primaryIcon.get("CFBundleIconFiles");
+      return iconFiles.get(0).toString();
+    }
+    catch (JSONException e) {
+      throw new WebDriverException("property 'CFBundleIcons' can't be returned. " + e.getMessage(), e);
+    }
   }
 
   private JSONObject getFullPlist() throws Exception {

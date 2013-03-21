@@ -62,6 +62,7 @@ public class IOSCapabilities extends DesiredCapabilities {
   public static final String DEVICE_FAMILLY = "UIDeviceFamily";
   // http://developer.apple.com/library/ios/#documentation/general/Reference/InfoPlistKeyReference/Articles/iPhoneOSKeys.html
   public static final String ICON = "CFBundleIconFile";
+  public static final String BUNDLE_ICONS = "CFBundleIcons";
 
   public static final String MAGIC_PREFIX = "plist_";
   public static final String CONFIGURABLE = "configurable";
