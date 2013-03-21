@@ -23,8 +23,7 @@ import org.uiautomation.ios.wkrdp.message.ApplicationDataMessage;
 import org.uiautomation.ios.wkrdp.message.IOSMessage;
 import org.uiautomation.ios.wkrdp.message.MessageFactory;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
@@ -33,7 +32,8 @@ public class DefaultMessageHandler implements MessageHandler {
 
   private final static long timeoutInMs = 5000;
   private final List<MessageListener> listeners = new CopyOnWriteArrayList<MessageListener>();
-  private Thread t;
+  private Set<Thread> threads = new HashSet<Thread>();
+  private boolean stopped;
   private static final Logger log = Logger.getLogger(DefaultMessageHandler.class.getName());
   private List<ResponseFinder> extraFinders = new ArrayList<ResponseFinder>();
   private final MessageFactory factory = new MessageFactory();
@@ -49,16 +49,22 @@ public class DefaultMessageHandler implements MessageHandler {
       this.extraFinders.add(finder);
     }
   }
+  
+  private static int threadCount;
 
   @Override
-  public void handle(final String msg) {
-    t = new Thread(new Runnable() {
-
+  public synchronized void handle(final String msg) {
+    if (stopped)
+      throw new IllegalStateException("stopped");
+    
+    Thread t = new Thread("DefaultMessageHandler-" + ++threadCount) {
       @Override
       public void run() {
         process(msg);
+        threads.remove(this);
       }
-    });
+    };
+    threads.add(t);
     t.start();
   }
 
@@ -95,7 +101,7 @@ public class DefaultMessageHandler implements MessageHandler {
     finders.add(defaultFinder);
     finders.addAll(extraFinders);
 
-    ResponseFinderList all = new ResponseFinderList(finders);
+    ResponseFinderList all = new ResponseFinderList(finders, timeoutInMs);
     try {
       JSONObject res = all.findResponse(id);
       log.fine(
@@ -116,10 +122,10 @@ public class DefaultMessageHandler implements MessageHandler {
   }
 
   @Override
-  public void stop() {
-    if (t != null) {
+  public synchronized void stop() {
+    stopped = true;
+    for (Thread t: threads)
       t.interrupt();
-    }
   }
 
 

@@ -204,17 +204,20 @@ public class InstrumentsManager {
     }
     TimeSpeeder.getInstance().stop();
     if (simulatorProcess != null) {
-      simulatorProcess.waitFor();
+      simulatorProcess.waitFor(60 * 1000);
     }
     killSimulator();
   }
 
   public void forceStop() {
+    if (device != null) {
+      device.release();
+    }  
     TimeSpeeder.getInstance().stop();
     if (simulatorProcess != null) {
       simulatorProcess.forceStop();
     }
-
+    killSimulator();
   }
 
   private List<String> createInstrumentCommand(String script) {

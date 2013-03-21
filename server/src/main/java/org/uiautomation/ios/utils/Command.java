@@ -24,6 +24,8 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Command {
@@ -54,7 +56,7 @@ public class Command {
    */
   public void executeAndWait() {
     start();
-    int exitCode = waitFor();
+    int exitCode = waitFor(-1);
     if (exitCode != 0) {
       throw new WebDriverException(
           "execution failed. Exit code =" + exitCode + " , command was : " + args);
@@ -92,11 +94,27 @@ public class Command {
 
   }
 
-  public int waitFor() {
+  /**
+   * @param maxWaitMillis max time to wait for the command to finish, -1 for not limit
+   */
+  public int waitFor(int maxWaitMillis) {
+    Timer forceStopTimer = null; 
     try {
+      if (maxWaitMillis > 0) {
+    	forceStopTimer = new Timer(true);
+        forceStopTimer.schedule(new TimerTask() {
+          @Override
+          public void run() {
+            process.destroy();
+          }
+        }, maxWaitMillis);
+      }
       return process.waitFor();
     } catch (InterruptedException e) {
       throw new WebDriverException("error waiting for " + args + " to finish.", e);
+    } finally {
+      if (forceStopTimer != null)
+    	forceStopTimer.cancel();
     }
   }
 

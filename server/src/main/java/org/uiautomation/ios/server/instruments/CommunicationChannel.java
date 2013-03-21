@@ -13,6 +13,8 @@
  */
 package org.uiautomation.ios.server.instruments;
 
+import org.openqa.selenium.TimeoutException;
+import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.command.UIAScriptResponse;
 
@@ -73,7 +75,9 @@ public class CommunicationChannel {
   }
 
   public UIAScriptResponse waitForResponse() throws InterruptedException {
-    UIAScriptResponse res = responseQueue.take();
+    UIAScriptResponse res = responseQueue.poll(IOSCapabilities.COMMAND_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+    if (res == null)
+      throw new TimeoutException("waiting for UIAScriptResponse");
     return res;
   }
 }

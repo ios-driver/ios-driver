@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -36,9 +37,11 @@ public class ResponseFinderList {
   private final Lock lock = new ReentrantLock();
   private final Condition foundIt = lock.newCondition();
   private final List<Thread> threads = new ArrayList<Thread>();
+  private final long timeoutInMs;
 
-  public ResponseFinderList(List<ResponseFinder> finders) {
+  public ResponseFinderList(List<ResponseFinder> finders, long timeoutInMs) {
     this.finders = finders;
+    this.timeoutInMs = timeoutInMs;
   }
 
   public JSONObject findResponse(final int id) {
@@ -73,7 +76,7 @@ public class ResponseFinderList {
     try {
       try {
         lock.lock();
-        foundIt.await();
+        foundIt.await(timeoutInMs, TimeUnit.MILLISECONDS);
         log.fine("await returns " + (System.currentTimeMillis() - start) + "ms");
       } finally {
         lock.unlock();

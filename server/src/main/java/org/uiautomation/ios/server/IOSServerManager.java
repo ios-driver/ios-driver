@@ -40,19 +40,21 @@ public class IOSServerManager {
   private final ResourceCache cache = new ResourceCache();
   private DeviceManagerService deviceManager;
   private final DeviceStore devices;
+  private final IOSServerConfiguration options;
   public final ApplicationStore apps;
 
-  public IOSServerManager(int port, String folder) {
+  public IOSServerManager(IOSServerConfiguration options) {
+	this.options = options;
     try {
       LogManager.getLogManager()
           .readConfiguration(IOSServerManager.class.getResourceAsStream("/ios-logging.properties"));
     } catch (Exception e) {
       System.err.println("Cannot configure logger.");
     }
-    this.hostInfo = new HostInfo(port);
+    this.hostInfo = new HostInfo(options.getPort());
     devices = new DeviceStore();
     devices.add(new SimulatorDevice());
-    apps = new ApplicationStore(folder);
+    apps = new ApplicationStore(options.getAppFolderToMonitor());
     if (Configuration.BETA_FEATURE) {
       //LoggerService.enableDebug();
       deviceManager = DeviceManagerService.create(devices);
@@ -88,7 +90,7 @@ public class IOSServerManager {
   }
 
   public ServerSideSession createSession(IOSCapabilities cap) {
-    ServerSideSession session = new ServerSideSession(this, cap);
+    ServerSideSession session = new ServerSideSession(this, cap, options);
     sessions.add(session);
     return session;
   }

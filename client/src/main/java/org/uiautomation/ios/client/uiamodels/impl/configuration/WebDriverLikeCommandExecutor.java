@@ -4,7 +4,9 @@ import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
+import org.apache.http.params.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
@@ -13,6 +15,7 @@ import org.openqa.selenium.remote.ErrorHandler;
 import org.openqa.selenium.remote.HttpCommandExecutor;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.Response;
+import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSObject;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAElement;
 import org.uiautomation.ios.communication.Helper;
@@ -54,7 +57,7 @@ public class WebDriverLikeCommandExecutor {
     Response response = null;
     long total = 0;
     try {
-      HttpClient client = HttpClientFactory.getClient();
+      HttpClient client = newHttpClientWithTimeout();
       String url = remoteURL + request.getPath();
       BasicHttpEntityEnclosingRequest
           r =
@@ -74,6 +77,16 @@ public class WebDriverLikeCommandExecutor {
     }
     response = errorHandler.throwIfResponseFailed(response, total);
     return cast(response.getValue());
+  }
+  
+  private HttpClient newHttpClientWithTimeout() {
+    DefaultHttpClient client = HttpClientFactory.getClient();
+    int commandTimeoutMillis = IOSCapabilities.COMMAND_TIMEOUT_MILLIS;
+    HttpParams params = new BasicHttpParams();
+    HttpConnectionParams.setConnectionTimeout(params, commandTimeoutMillis);
+    HttpConnectionParams.setSoTimeout(params, commandTimeoutMillis);
+    client.setParams(params);
+    return client;
   }
 
   public WebDriverLikeRequest buildRequest(WebDriverLikeCommand command, RemoteUIAElement element,

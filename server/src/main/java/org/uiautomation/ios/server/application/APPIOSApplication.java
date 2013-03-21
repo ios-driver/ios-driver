@@ -27,10 +27,10 @@ import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
+import org.uiautomation.ios.server.utils.ZipUtils;
 import org.uiautomation.ios.utils.PlistFileUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -56,10 +56,22 @@ public class APPIOSApplication {
    * @throws WebDriverException
    */
   public APPIOSApplication(String pathToApp) {
-    this.app = new File(pathToApp);
-    if (!app.exists()) {
-      throw new WebDriverException(pathToApp + "isn't an IOS app.");
+    File appFile = new File(pathToApp);
+    // see if it is a URL and download from it
+    if (!appFile.exists()) {
+      String pathToExtractedApp = null;
+      try {
+        pathToExtractedApp = ZipUtils.extractAppFromURL(pathToApp);
+      } catch (IOException ignore) {
+        log.fine("url: " + pathToApp + ": " + ignore);
+      }
+      if (pathToExtractedApp != null)
+        appFile = new File(pathToExtractedApp);
     }
+    if (!appFile.exists()) {
+      throw new WebDriverException(pathToApp + " isn't an IOS app.");
+    }
+    app = appFile;
     loadAllContent();
     try {
       metadata = getFullPlist();

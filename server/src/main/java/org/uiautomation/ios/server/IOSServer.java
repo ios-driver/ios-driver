@@ -45,7 +45,6 @@ public class IOSServer {
   public static final boolean debugMode = true;
   private static final Logger log = Logger.getLogger(IOSServer.class.getName());
   private Server server;
-  private int port;
   private IOSServerConfiguration options;
   private IOSServerManager driver;
   private FolderMonitor folderMonitor;
@@ -93,7 +92,6 @@ public class IOSServer {
 
   private void init(IOSServerConfiguration options) {
     this.options = options;
-    this.port = options.getPort();
     Configuration.BETA_FEATURE = options.isBeta();
     server = new Server(new InetSocketAddress("0.0.0.0", options.getPort()));
 
@@ -116,7 +114,7 @@ public class IOSServer {
     handlers.setHandlers(new Handler[]{wd, statics, extra});
     server.setHandler(handlers);
 
-    driver = new IOSServerManager(port, options.getAppFolderToMonitor());
+    driver = new IOSServerManager(options);
     for (String app : this.options.getSupportedApps()) {
       driver.addSupportedApplication(new APPIOSApplication(app));
     }
