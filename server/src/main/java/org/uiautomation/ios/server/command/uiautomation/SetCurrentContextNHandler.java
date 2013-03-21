@@ -54,8 +54,12 @@ public class SetCurrentContextNHandler extends BaseNativeCommandHandler {
         // TODO freynaud. 2 windows doesnt mean 2 pages ...
         int delta = getSession().getRemoteWebDriver().getWindowHandleIndexDifference(pageId);
         if (delta != 0) {
-          getSession().getNativeDriver()
-              .executeScript("new SafariPageNavigator().enter().goToWebView(" + delta + ");");
+          if (getSession().getApplication().isSafari()) {
+            getSession().getNativeDriver()
+                .executeScript("new SafariPageNavigator().enter().goToWebView(" + delta + ");");
+          } else {
+            // TODO?
+          }
         }
         getSession().getRemoteWebDriver().switchTo(pageId);
       }

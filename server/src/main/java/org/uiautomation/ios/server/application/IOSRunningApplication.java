@@ -13,9 +13,6 @@ public class IOSRunningApplication {
 
   private final AppleLocale currentLanguage;
   private final APPIOSApplication underlyingApplication;
-  private String bundleId;
-  private String dotAppAbsolutePath;
-  private DeviceType defaultDevice;
 
   public IOSRunningApplication(String language, APPIOSApplication app) {
     this.underlyingApplication = app;
@@ -24,6 +21,10 @@ public class IOSRunningApplication {
 
   public String getBundleId() {
     return underlyingApplication.getBundleId();
+  }
+  
+  public boolean isSafari() {
+      return "com.apple.mobilesafari".equals(getBundleId());
   }
 
   public AppleLocale getAppleLocaleFromLanguageCode(String language) {
