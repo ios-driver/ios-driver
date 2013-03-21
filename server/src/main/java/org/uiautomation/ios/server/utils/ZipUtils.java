@@ -45,7 +45,7 @@ public final class ZipUtils {
 
   //
 
-  private static void unzip(File zipFile, File targetDir) throws IOException {
+  public static void unzip(File zipFile, File targetDir) throws IOException {
     String targetDirPath = targetDir.getAbsolutePath() + '/';
     if (!targetDir.exists())
       targetDir.mkdirs();

@@ -37,12 +37,12 @@ public class FolderMonitor implements Runnable {
     this.iosServerConfiguration = iosServerConfiguration;
     this.iosServerManager = iosServerManager;
     stopped = false;
-    init();
+
     folderWatcher = FileSystems.getDefault().newWatchService();
-
     watchedFolder = Paths.get(iosServerConfiguration.getAppFolderToMonitor());
-
     WatchKey key = watchedFolder.register(folderWatcher, StandardWatchEventKind.ENTRY_CREATE, StandardWatchEventKind.ENTRY_DELETE);
+
+    init();
   }
 
   private void init() {
@@ -50,6 +50,9 @@ public class FolderMonitor implements Runnable {
     for (File file : listOfFiles) {
       if (isApp(file)) {
         addApplication(file);
+      }
+      if (isZip(file)) {
+        unzipToWatchedFolder(file);
       }
     }
   }
@@ -94,12 +97,15 @@ public class FolderMonitor implements Runnable {
   }
 
   private void handleFileChange(WatchEvent.Kind kind, File filename) {
-    if (!isApp(filename)) {
-      return;
-    }
+
     if (kind.equals(StandardWatchEventKind.ENTRY_CREATE)) {
-      log.info("New app found! " + filename.getName());
-      addApplication(filename);
+      if (isApp(filename)) {
+        log.info("New app found! " + filename.getName());
+        addApplication(filename);
+      }
+      if (isZip(filename)) {
+        unzipToWatchedFolder(filename);
+      }
     } else if (kind.equals(StandardWatchEventKind.ENTRY_MODIFY)) {
       log.info("App modified - no handler implemented!");
     } else if (kind.equals(StandardWatchEventKind.ENTRY_DELETE)) {
@@ -107,9 +113,21 @@ public class FolderMonitor implements Runnable {
     }
   }
 
+  private void unzipToWatchedFolder(File filename) {
+    log.info("Unzipping... " + filename.getName());
+    try {
+      ZipUtils.unzip(filename, new File(iosServerConfiguration.getAppFolderToMonitor()));
+    } catch (IOException e) {
+      log.warning("Problem unzipping " + filename.getName() + ", " + e.toString());
+    }
+  }
+
   private void addApplication(File filename) {
-    APPIOSApplication a = APPIOSApplication.createFrom(filename);
-    iosServerManager.addSupportedApplication(a);
+    if (isApp(filename)) {
+      iosServerManager.addSupportedApplication(APPIOSApplication.createFrom(filename));
+    } else {
+      iosServerManager.addSupportedApplication(new APPIOSApplication(filename.getAbsolutePath()));
+    }
   }
 
   private boolean isApp(File file) {
@@ -118,6 +136,11 @@ public class FolderMonitor implements Runnable {
     }
     String ext = file.getName();
     return ext.endsWith(".app") || ext.endsWith(".ipa");
+  }
+
+  private boolean isZip(File file) {
+    String ext = file.getName();
+    return ext.endsWith(".zip");
   }
 
   public void stop() {
