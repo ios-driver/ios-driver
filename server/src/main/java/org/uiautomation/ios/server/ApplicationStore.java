@@ -23,7 +23,6 @@ public class ApplicationStore {
     workingDirectory = new File(folder);
     workingDirectory.mkdir();
     log.info("App archive folder:" + workingDirectory.getAbsolutePath());
-    load();
   }
 
   public void add(APPIOSApplication app) {
@@ -36,12 +35,6 @@ public class ApplicationStore {
       all.add(app);
     } else if (path.endsWith(".app")) {
       all.add(new APPIOSApplication(path));
-    }
-  }
-
-  public void load() {
-    for (File f : workingDirectory.listFiles()) {
-      add(f.getAbsolutePath());
     }
   }
 
