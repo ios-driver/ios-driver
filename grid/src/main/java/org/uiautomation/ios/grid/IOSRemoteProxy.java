@@ -14,6 +14,7 @@
 package org.uiautomation.ios.grid;
 
 import org.openqa.grid.common.RegistrationRequest;
+import org.openqa.grid.common.exception.RemoteUnregisterException;
 import org.openqa.grid.internal.Registry;
 import org.openqa.grid.internal.TestSession;
 import org.openqa.grid.internal.listeners.SelfHealingProxy;
@@ -25,6 +26,7 @@ import java.util.Map;
 public class IOSRemoteProxy extends DefaultRemoteProxy implements SelfHealingProxy {
 
   private boolean restarting;
+  private boolean available;
 
   private HtmlRenderer renderer = new IOSHtmlRenderer(this);
 
@@ -42,7 +44,7 @@ public class IOSRemoteProxy extends DefaultRemoteProxy implements SelfHealingPro
   @Override
   public TestSession getNewSession(Map<String, Object> requestedCapability) {
     synchronized (this) {
-      if (isRestarting()) {
+      if (isRestarting() || !isAvailable()) {
         return null;
       }
       return super.getNewSession(requestedCapability);
@@ -55,5 +57,17 @@ public class IOSRemoteProxy extends DefaultRemoteProxy implements SelfHealingPro
 
   public void setRestarting(boolean restarting) {
     this.restarting = restarting;
+  }
+
+  public boolean isAvailable() {
+    return available;
+  }
+
+  public void setAvailable(boolean available) {
+    this.available = available;
+  }
+
+  public void unregister(){
+    addNewEvent(new RemoteUnregisterException("Unregistering the node."));
   }
 }

@@ -43,12 +43,14 @@ public class IOSCapabilitiesMonitor implements Runnable {
   private IOSRemoteProxy proxy;
   private URL node;
   private List<DesiredCapabilities> registeredCapabilities;
+  private int noResponse;
 
   public IOSCapabilitiesMonitor(IOSRemoteProxy proxy) {
     this.proxy = proxy;
     this.node = proxy.getRemoteHost();
     registeredCapabilities = proxy.getOriginalRegistrationRequest().getCapabilities();
     active = true;
+    this.noResponse = 0;
   }
 
   private static JSONObject extractObject(HttpResponse resp) throws IOException, JSONException {
@@ -67,6 +69,17 @@ public class IOSCapabilitiesMonitor implements Runnable {
     while (active) {
       try {
         RegistrationRequest latest = createRegistrationRequest();
+        if (latest == null) {
+          noResponse++;
+          proxy.setAvailable(false);
+          if (noResponse >= 30) {
+            active = false;
+            removeNode();
+          }
+          continue;
+        }
+        noResponse = 0;
+        proxy.setAvailable(true);
         List<DesiredCapabilities> latestCapabilities = latest.getCapabilities();
         if (!registeredCapabilities.toString().equals(latestCapabilities.toString())) {
           System.out.println("New capabilities registered on " + node.toString() + ". Updating...");
@@ -83,13 +96,16 @@ public class IOSCapabilitiesMonitor implements Runnable {
     RegistrationRequest registrationRequest = new RegistrationRequest();
 
     List<DesiredCapabilities> capabilities = getNodeCapabilities();
+    if (capabilities == null) {
+      return null;
+    }
     for (DesiredCapabilities cap : capabilities) {
       registrationRequest.addDesiredCapability(cap);
     }
 
     registrationRequest.getConfiguration().put(RegistrationRequest.AUTO_REGISTER, true);
     registrationRequest.getConfiguration().put(RegistrationRequest.PROXY_CLASS,
-                                               IOSRemoteProxy.class.getCanonicalName());
+        IOSRemoteProxy.class.getCanonicalName());
 
     registrationRequest.getConfiguration()
         .put(RegistrationRequest.HUB_HOST, proxy.getRegistry().getHub().getHost());
@@ -107,6 +123,9 @@ public class IOSCapabilitiesMonitor implements Runnable {
       List<DesiredCapabilities> capabilities = new ArrayList<DesiredCapabilities>();
 
       JSONObject status = getNodeStatusJson();
+      if (status == null) {
+        return null;
+      }
 
       String ios = status.getJSONObject("value").getJSONObject("ios").optString("simulatorVersion");
       JSONArray supportedApps = status.getJSONObject("value").getJSONArray("supportedApps");
@@ -140,9 +159,8 @@ public class IOSCapabilitiesMonitor implements Runnable {
       }
       return capabilities;
     } catch (Exception e) {
-      e.printStackTrace();
+      return null;
     }
-    return null;
   }
 
   private JSONObject getNodeStatusJson() throws IOException, JSONException {
@@ -154,6 +172,11 @@ public class IOSCapabilitiesMonitor implements Runnable {
 
     HttpResponse response = client.execute(new HttpHost(node.getHost(), node.getPort()), r);
     return extractObject(response);
+  }
+
+  private void removeNode() {
+    //proxy.teardown();
+    proxy.unregister();
   }
 
   private void updateCapabilities(RegistrationRequest registrationRequest) {

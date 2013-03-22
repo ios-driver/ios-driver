@@ -51,12 +51,11 @@ public class IOSHtmlRenderer implements HtmlRenderer {
           BROWSER) : slot.getCapabilities().get(APP));
       TestSession session = slot.getSession();
       try {
-        builder.append("<img src=\"" + proxy.getRemoteHost() + getIconUrl(slot) + "\" alt=\"" + slot.getCapabilities().get("CFBundleExecutable") + "\">");
+        builder.append("<img src=\"" + proxy.getRemoteHost() + getIconUrl(slot) + "\" title=\"" + slot.getCapabilities().get("CFBundleExecutable") + "\" alt=\"" + slot.getCapabilities().get("CFBundleExecutable") + "\" height=\"30\" width=\"30\">");
       } catch (JSONException ignored) {
       }
       builder.append(" [").append(slot.getCapabilities().get("supportedDevices")).append(" - ")
           .append(slot.getCapabilities().get("sdkVersion")).append("]");
-      builder.append(" : ").append(slot.getCapabilities().get("CFBundleExecutable"));
       builder.append(session == null ? " (free)" : "(busy, session " + session + ")");
       builder.append("<br/>");
     }
