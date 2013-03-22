@@ -16,13 +16,16 @@ package org.uiautomation.ios.server.servlet;
 
 import org.apache.commons.io.IOUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-
+import javax.imageio.IIOException;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.util.Iterator;
 
 
 @SuppressWarnings("serial")
@@ -44,10 +47,53 @@ public class ResourceServlet extends DriverBasedServlet {
     File f = getDriver().getCache().getResourceForKey(resource);
 
     try {
-      IOUtils.copy(new FileInputStream(f), response.getOutputStream());
+      if (validImage(f)) {
+        FileInputStream fis = new FileInputStream(f);
+        IOUtils.copy(fis, response.getOutputStream());
+        fis.close();
+      }
+
     } finally {
       response.flushBuffer();
     }
+  }
+
+  private boolean validImage(File f) throws IOException {
+    InputStream is = new FileInputStream(f);
+    try {
+       //is = new FileInputStream(f);
+
+      final ImageInputStream imageInputStream = ImageIO
+          .createImageInputStream(is);
+      final Iterator<ImageReader> imageReaders = ImageIO
+          .getImageReaders(imageInputStream);
+      if (!imageReaders.hasNext()) {
+        // not an image
+        return false;
+      }
+      final ImageReader imageReader = imageReaders.next();
+      imageReader.setInput(imageInputStream);
+      final BufferedImage image = imageReader.read(0);
+      if (image == null) {
+        // empty
+        return false;
+      }
+      image.flush();
+      return true;
+    } catch (final IndexOutOfBoundsException e) {
+      // truncated
+      return false;
+    } catch (final IIOException e) {
+      if (e.getCause() instanceof EOFException) {
+        // truncated
+        return false;
+      }
+    } catch (Exception e) {
+      return false;
+    } finally {
+      is.close();
+    }
+    return true;
   }
 
 
