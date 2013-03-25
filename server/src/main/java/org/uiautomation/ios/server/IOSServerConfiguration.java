@@ -59,12 +59,14 @@ public class IOSServerConfiguration {
   private List<String> supportedApps = new ArrayList<String>();
 
   @Parameter(
-      description = "location of a folder to monitor where applications will be stored. Absolute path expected.",
+      description = "location of a folder to monitor where applications will be stored. Absolute path expected. " +
+          "Any apps in the folder on launch will be automatically added to the desired capabilities. " +
+          "Real device archived apps will also be backed up to this location, by default it will use the running folder /applications",
       names = {"-folder"}, required = false)
   private String appFolderToMonitor = null;
   
   @Parameter(
-      description = "maximum session duration in seconds. Session will be forcily terminated if it takes longer.",
+      description = "maximum session duration in seconds. Session will be forcefully terminated if it takes longer.",
       names = "-sessionTimeout")
   private int sessionTimeoutSeconds = 30 * 60; // 30 minutes
   
