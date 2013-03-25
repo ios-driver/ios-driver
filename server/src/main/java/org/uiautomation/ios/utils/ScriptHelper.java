@@ -17,10 +17,12 @@ package org.uiautomation.ios.utils;
 import org.apache.commons.io.IOUtils;
 import org.openqa.selenium.WebDriverException;
 
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 
@@ -32,6 +34,7 @@ import java.io.Writer;
  */
 public class ScriptHelper {
 
+  public static final String ENCODING = "UTF-8";
   private final String main = "instruments-js/main.js";
   private final String json = "instruments-js/json2.js";
   private final String common = "instruments-js/common.js";
@@ -50,14 +53,12 @@ public class ScriptHelper {
 
   private String load(String resource) throws IOException {
     InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
-    if (is == null) {
-      throw new WebDriverException("cannot load : " + resource);
-    }
     StringWriter writer = new StringWriter();
     IOUtils.copy(is, writer, "UTF-8");
     String content = writer.toString();
     return content;
   }
+
 
   private String generateScriptContent(int port, String aut, String opaqueKey) throws IOException {
     StringBuilder scriptContent = new StringBuilder();
@@ -69,7 +70,10 @@ public class ScriptHelper {
 
     scriptContent.append(load(json));
     scriptContent.append(load(common));
-    scriptContent.append(load(lib1));
+    String t = load(lib1);
+    System.out.println(t);
+    System.out.println(t.contains("ç"));
+    scriptContent.append(t);
     scriptContent.append(load(lib4));
     scriptContent.append(load(lib3));
     scriptContent.append(load(lib2));
@@ -86,9 +90,12 @@ public class ScriptHelper {
   public File createTmpScript(String content) {
     try {
       File res = File.createTempFile(FILE_NAME, ".js");
-      Writer writer = new FileWriter(res);
-      IOUtils.copy(IOUtils.toInputStream(content), writer, "UTF-8");
-      IOUtils.closeQuietly(writer);
+      res.deleteOnExit();
+      Writer
+          writer =
+          new BufferedWriter(new OutputStreamWriter(new FileOutputStream(res), "UTF-8"));
+      writer.write(content);
+      writer.close();
       return res;
     } catch (Exception e) {
       throw new WebDriverException("Cannot generate script.");
