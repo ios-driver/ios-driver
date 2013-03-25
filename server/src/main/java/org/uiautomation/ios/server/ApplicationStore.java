@@ -42,6 +42,16 @@ public class ApplicationStore {
     return all;
   }
 
+  public APPIOSApplication getApplication(String applicationPath) {
+    for (APPIOSApplication a : all) {
+      if (applicationPath.equals(a.getApplicationPath().getAbsolutePath())) {
+        return a;
+      }
+    }
+    return null;
+  }
+
+
   public List<APPIOSApplication> getSimulatorApplications() {
     List<APPIOSApplication> res = new ArrayList<APPIOSApplication>();
     for (APPIOSApplication a : all) {

@@ -18,7 +18,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.remote.BeanToJsonConverter;
 import org.openqa.selenium.remote.Response;
+import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
@@ -53,24 +55,7 @@ public class ServerStatusNHandler extends BaseNativeCommandHandler {
 
     res.put("ios", new JSONObject().put("simulatorVersion", ClassicCommands.getDefaultSDK()));
 
-    JSONArray supportedApps = new JSONArray();
-    for (APPIOSApplication a : getDriver().getApplicationStore().getApplications()) {
-      JSONObject app = new JSONObject();
-
-      JSONObject resources = new JSONObject();
-      for (String key : a.getResources().keySet()) {
-        resources.put(key, "/wd/hub/resources/" + getDriver().getCache().getKey(a, key));
-      }
-      app.put("resources", resources);
-
-      Map<String, Object> capabilities = (Map<String, Object>) a.getCapabilities().asMap();
-      for (String key : capabilities.keySet()) {
-        app.put(key, capabilities.get(key));
-      }
-      supportedApps.put(app);
-    }
-
-    res.put("supportedApps", supportedApps);
+    res.put("supportedApps", getSupportedApps());
 
     res.put(
         "build",
@@ -91,6 +76,38 @@ public class ServerStatusNHandler extends BaseNativeCommandHandler {
       throw new WebDriverException("NI multi sessions per server.");
     }
     return resp;
+  }
+
+  private JSONArray getSupportedApps() throws JSONException {
+    JSONArray supportedApps = new JSONArray();
+
+    List<IOSCapabilities> caps = getDriver().getAllCapabilities();
+    for (IOSCapabilities cap : caps) {
+      try {
+        String json = new BeanToJsonConverter().convert(cap);
+        JSONObject app = new JSONObject(json);
+        app.put("resources", getAppResources(app));
+        supportedApps.put(app);
+      } catch (JSONException e) {
+        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      }
+    }
+    return supportedApps;
+  }
+
+  private JSONObject getAppResources(JSONObject app) {
+    JSONObject resources = new JSONObject();
+    if (app.has("applicationPath")) {
+      try {
+        String applicationPath = (String) app.get("applicationPath");
+        APPIOSApplication a = getDriver().getApplicationStore().getApplication(applicationPath);
+        for (String key : a.getResources().keySet()) {
+          resources.put(key, "/wd/hub/resources/" + getDriver().getCache().getKey(a, key));
+        }
+      } catch (JSONException ignored) {
+      }
+    }
+    return resources;
   }
 
   @Override
