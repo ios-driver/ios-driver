@@ -53,7 +53,9 @@ public class RegistrationRequest {
     configuration.put("hubPort", hubURL.getPort());
     configuration.put("remoteHost", "http://" + nodeHost + ":" + config.getPort());
     configuration.put("maxSession", 1);
-    configuration.put("proxy", "org.uiautomation.ios.grid.IOSRemoteProxy");
+    if(config.getProxy() != null){
+      configuration.put("proxy", config.getProxy());
+    }
   }
 
   public void registerToHub() {

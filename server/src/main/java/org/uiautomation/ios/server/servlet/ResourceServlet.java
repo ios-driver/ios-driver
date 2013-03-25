@@ -47,11 +47,11 @@ public class ResourceServlet extends DriverBasedServlet {
     File f = getDriver().getCache().getResourceForKey(resource);
 
     try {
-      if (validImage(f)) {
+      //if (validImage(f)) {
         FileInputStream fis = new FileInputStream(f);
         IOUtils.copy(fis, response.getOutputStream());
         fis.close();
-      }
+      //}
 
     } finally {
       response.flushBuffer();
