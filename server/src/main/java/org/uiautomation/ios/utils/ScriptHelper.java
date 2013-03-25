@@ -70,10 +70,7 @@ public class ScriptHelper {
 
     scriptContent.append(load(json));
     scriptContent.append(load(common));
-    String t = load(lib1);
-    System.out.println(t);
-    System.out.println(t.contains("ç"));
-    scriptContent.append(t);
+    scriptContent.append(load(lib1));
     scriptContent.append(load(lib4));
     scriptContent.append(load(lib3));
     scriptContent.append(load(lib2));

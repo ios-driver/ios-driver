@@ -212,7 +212,7 @@ public class InstrumentsManager {
   public void forceStop() {
     if (device != null) {
       device.release();
-    }  
+    }
     TimeSpeeder.getInstance().stop();
     if (simulatorProcess != null) {
       simulatorProcess.forceStop();
@@ -243,7 +243,7 @@ public class InstrumentsManager {
       b.append(s);
       b.append(" ");
     }
-    log.warning("Starting instruments:\n" + b.toString());
+    log.fine("Starting instruments:\n" + b.toString());
     return command;
 
   }
