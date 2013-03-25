@@ -54,8 +54,8 @@ public class IOSHtmlRenderer implements HtmlRenderer {
         builder.append("<img src=\"" + proxy.getRemoteHost() + getIconUrl(slot) + "\" title=\"" + slot.getCapabilities().get("CFBundleExecutable") + "\" alt=\"" + slot.getCapabilities().get("CFBundleExecutable") + "\" height=\"30\" width=\"30\">");
       } catch (JSONException ignored) {
       }
-      builder.append(" [").append(slot.getCapabilities().get("supportedDevices")).append(" - ")
-          .append(slot.getCapabilities().get("sdkVersion")).append("]");
+      builder.append(" ").append(slot.getCapabilities().get("device_Alt")).append(" - ")
+          .append(slot.getCapabilities().get("sdkVersion_Alt")).append("");
       builder.append(session == null ? " (free)" : "(busy, session " + session + ")");
       builder.append("<br/>");
     }
