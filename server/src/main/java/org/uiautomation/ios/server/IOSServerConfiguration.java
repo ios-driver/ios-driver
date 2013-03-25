@@ -45,6 +45,11 @@ public class IOSServerConfiguration {
   private String registrationURL = null;
 
   @Parameter(
+      description = "if specified, will specify the remote proxy to use on the grid. Example : org.uiautomation.ios.grid.IOSRemoteProxy",
+      names = "-proxy")
+  private String proxy = null;
+
+  @Parameter(
       description = "host of the node.Needs to be specified, as guessing can be wrong complex ntw configs",
       names = "-host")
   private String serverHost;
@@ -126,5 +131,13 @@ public class IOSServerConfiguration {
   
   public int getSessionTimeoutMillis() {
 	return sessionTimeoutSeconds * 1000;
+  }
+
+  public String getProxy() {
+    return proxy;
+  }
+
+  public void setProxy(String proxy) {
+    this.proxy = proxy;
   }
 }
