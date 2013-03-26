@@ -71,6 +71,14 @@ public class UIAKeyboardTest extends BaseIOSDriverTest {
     Assert.assertEquals(textview.getValue(), v);
   }
 
+  @Test(enabled = false)
+  public void characterRequiresALongTapOnKeyCapital() {
+    String v = "FRanÇOIS";
+    textview.clear();
+    textview.sendKeys(v);
+    Assert.assertEquals(textview.getValue(), v);
+  }
+
   @Test
   public void newLines() {
     String v = "ABC\nLine 2\nthanks,\nFrancois";
