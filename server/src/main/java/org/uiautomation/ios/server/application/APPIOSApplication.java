@@ -54,22 +54,10 @@ public class APPIOSApplication {
    * @throws WebDriverException
    */
   public APPIOSApplication(String pathToApp) {
-    File appFile = new File(pathToApp);
-    // see if it is a URL and download from it
-    if (!appFile.exists()) {
-      String pathToExtractedApp = null;
-      try {
-        pathToExtractedApp = ZipUtils.extractAppFromURL(pathToApp);
-      } catch (IOException ignore) {
-        log.fine("url: " + pathToApp + ": " + ignore);
-      }
-      if (pathToExtractedApp != null)
-        appFile = new File(pathToExtractedApp);
+    this.app = new File(pathToApp);
+    if (!app.exists()) {
+      throw new WebDriverException(pathToApp + "isn't an IOS app.");
     }
-    if (!appFile.exists()) {
-      throw new WebDriverException(pathToApp + " isn't an IOS app.");
-    }
-    app = appFile;
     loadAllContent();
     try {
       metadata = getFullPlist();

@@ -30,6 +30,7 @@ import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
+import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
 import org.uiautomation.ios.server.instruments.InstrumentsManager;
@@ -88,12 +89,13 @@ public class ServerSideSession extends Session {
 
     String appCapability = (String) desiredCapabilities.getCapability("app");
     if (appCapability != null) {
+      if (!Configuration.BETA_FEATURE)
+        Configuration.off();
       try {
-        String pathToApp = ZipUtils.extractAppFromURL(appCapability);
-        if (pathToApp.endsWith(".app")) {
+        File appFile = ZipUtils.extractAppFromURL(appCapability);
+        if (appFile.getName().endsWith(".app"))
           desiredCapabilities.setCapability(IOSCapabilities.SIMULATOR, true);
-        }
-        APPIOSApplication app = APPIOSApplication.createFrom(new File(pathToApp));
+        APPIOSApplication app = APPIOSApplication.createFrom(appFile);
         application = app.createInstance(desiredCapabilities.getLanguage());
       } catch (Exception ex) {
         throw new SessionNotCreatedException("cannot create app from " + appCapability + ": " + ex);
