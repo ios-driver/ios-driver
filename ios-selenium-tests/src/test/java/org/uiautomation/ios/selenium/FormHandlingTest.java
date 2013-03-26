@@ -41,7 +41,7 @@ import static org.testng.Assert.fail;
 
 public class FormHandlingTest extends BaseSeleniumTest {
 
-  private static final String AUXILIARY_KEYS = "-/:;()$&@\".,?!'[]{}#%^*+=_\\|~<>£€•";
+  private static final String AUXILIARY_KEYS = "-/:;()$&@\".,?!'[]{}#%^*+=_\\|~<>£€•àáâäæãåāìįíīïîiłńñõōøœóòöôßśšūúùüûŷÿžźżÀÁÂÄÆÃÅĀÌĮÍĪÏÎŁŃÑÕŌØŒÓÒÖÔŚŠŪÚÙÜÛŶŸŽŹŻcçćčCÇĆČeèéêëēėęEÈÉÊËĒĖĘ";
 
   @Test
   public void testShouldClickOnSubmitInputElements() {
@@ -385,8 +385,6 @@ public class FormHandlingTest extends BaseSeleniumTest {
   public void testShouldBeAbleToSendKeysFromAuxiliaryKeyboard() {
     driver.get(pages.formPage);
     WebElement input = driver.findElement(By.id("working"));
-    input.sendKeys("1-800-FLOWERS");
-    assertEquals("1-800-FLOWERS", input.getAttribute("value"));
     input.clear();
     input.sendKeys(AUXILIARY_KEYS);
     assertEquals(AUXILIARY_KEYS, input.getAttribute("value"));
