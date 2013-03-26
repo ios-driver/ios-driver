@@ -5,14 +5,11 @@
     <meta charset='utf-8'/>
     <meta http-equiv="X-UA-Compatible" content="chrome=1"/>
     <meta name="description" content="ios-driver : IOS native app automation"/>
-    <link href="stylesheets/prettify.css" type="text/css" rel="stylesheet" />
-    <script type="text/javascript" src="javascripts/prettify.js"></script>
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <title>ios-driver</title>
-    
-    
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -43,13 +40,13 @@ $(document).ready(function($){
 </script>
 </head>
 
-<body onload="prettyPrint()">
+<body>
 
 <!-- HEADER -->
 <div id="header_wrap" class="outer">
     <header class="inner">
         <a id="forkme_banner" href="https://github.com/freynaud/ios-driver">View on GitHub</a>
-         <a id="download_me" href="https://s3-eu-west-1.amazonaws.com/ios-driver/ios-server-0.5.0.jar">Download 0.5.0</a>
+        <a id="download_me" href="https://s3-eu-west-1.amazonaws.com/ios-driver/ios-server-0.5.0.jar">Download 0.5.0</a>
 
         <h1 id="project_title">ios-driver</h1>
 
@@ -63,8 +60,8 @@ $(document).ready(function($){
                 <li><a href="native.html" id="native">Native</a></li>
                 <li><a href="safari.html" id="safari">Safari</a></li>
                 <li><a href="hybrid.html" id="hybrid">Hybrid</a></li>
-                <li><a href="scale.html" id="scale">Scale</a></li>
-                <li class="active"><a href="bug.html" id="bug">Report a bug</a></li>
+                <li class="active"><a href="scale.html" id="scale">Scale</a></li>
+                <li><a href="bug.html" id="bug">Report a bug</a></li>
             </ul>
         </div>
     </header>
@@ -74,38 +71,36 @@ $(document).ready(function($){
 <div id="main_content_wrap" class="outer">
 <section id="main_content" class="inner">
 
-    <h3>Reporting a bug</h3>
-    <p>First,check that the issue you're facing is not already part of the
-            <a href="https://github.com/freynaud/ios-driver/blob/master/release.notes">TODO list</a></p>
-        <p>
-            ios-driver is currently under development. Bugs are fixed and feature added quickly. When you
-            file a bug, make sure you add the version you're using. You can find the version hitting the url
-            http://localhost:4444/wd/hub/status . Copy the build part, that looks like :</p>
+<h3>Running ios-driver on the Grid</h3>
+
+<p>You can add ios-driver as a node to a running grid hub. In order to connect to a grid, you can specify the below command line parameters when running ios-driver:</p>
 
 
-<pre>
-
-"build": {
-    "revision": "b0e9250cafe9870fc3b0a0224cb6e8d242aa1374",
-    "time": "20130129-1201",
-    "version": "0.5.0-SNAPSHOT"
-},
-"ios": {"simulatorVersion": "6.1"},
-"java": {"version": "1.6.0_37"},
-"os": {
-    "arch": "x86_64",
-    "name": "Mac OS X",
-    "version": "10.8.1"
-}
+<pre  class="prettyprint">
+java -jar ios-driver.jar -hub http://127.0.0.1:4444/grid/register -host 127.0.0.1 -port 5555
 </pre>
 
-
-        <p>and file a bug on <a href="https://github.com/freynaud/ios-driver/issues">github</a> </p>
-
+<p>You can also specify a custom proxy to use on the grid, for example:</p>
 
 
+<pre  class="prettyprint">
+java -jar ios-driver.jar -hub http://127.0.0.1:4444/grid/register -proxy org.uiautomation.ios.grid.IOSRemoteProxy -host 127.0.0.1 -port 5555
+</pre>
 
+<img src="images/IOSRemoteProxy.png" alt="step2.png" width='640'>
 
+<h3>Building IOSRemoteProxy</h3>
+
+<pre class="prettyprint">
+> cd ios-driver/grid/
+
+> mvn package
+
+copy the resulting ios-grid.jar file from ios-driver/grid/target to the location where you run the hub. 
+Run hub like:
+
+> java -cp ios-grid.jar:selenium-server-standalone.jar org.openqa.grid.selenium.GridLauncher -role hub
+</pre>
 
 
 </section>
