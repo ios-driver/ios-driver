@@ -101,6 +101,9 @@ public class RemoteIOSDriver extends RemoteWebDriver
   @Override
   public IOSCapabilities getCapabilities() {
     Capabilities cap = super.getCapabilities();
+    if (cap == null) {
+      return null;
+    }
     IOSCapabilities ioscap = new IOSCapabilities(cap.asMap());
     return ioscap;
   }

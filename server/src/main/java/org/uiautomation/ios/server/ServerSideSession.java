@@ -40,7 +40,9 @@ import org.uiautomation.ios.wkrdp.internal.AlertDetector;
 
 import java.io.File;
 import java.net.URL;
-import java.util.*;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class ServerSideSession extends Session {
@@ -61,22 +63,23 @@ public class ServerSideSession extends Session {
   private WorkingMode mode = WorkingMode.Native;
 
   private final DriverConfiguration configuration;
-  
+
   private Timer stopSessionTimer = new Timer(true);
-  
+
   private Thread shutdownHook = new Thread() {
-      @Override
-      public void run() {
-        forceStop();
-      }
-    };
+    @Override
+    public void run() {
+      forceStop();
+    }
+  };
 
 
   public IOSCapabilities getCapabilities() {
     return capabilities;
   }
 
-  ServerSideSession(IOSServerManager driver, IOSCapabilities desiredCapabilities, IOSServerConfiguration options) {
+  ServerSideSession(IOSServerManager driver, IOSCapabilities desiredCapabilities,
+                    IOSServerConfiguration options) {
     super(UUID.randomUUID().toString());
 
     this.driver = driver;
@@ -87,8 +90,9 @@ public class ServerSideSession extends Session {
     if (appCapability != null) {
       try {
         String pathToApp = ZipUtils.extractAppFromURL(appCapability);
-        if (pathToApp.endsWith(".app"))
+        if (pathToApp.endsWith(".app")) {
           desiredCapabilities.setCapability(IOSCapabilities.SIMULATOR, true);
+        }
         APPIOSApplication app = APPIOSApplication.createFrom(new File(pathToApp));
         application = app.createInstance(desiredCapabilities.getLanguage());
       } catch (Exception ex) {
@@ -114,6 +118,10 @@ public class ServerSideSession extends Session {
         Float v = Float.parseFloat(version);
         if (v < 5) {
           throw new SessionNotCreatedException(v + " is too old. Only support SDK 5.0 and above.");
+        }
+        if (!driver.getHostInfo().getInstalledSDKs().contains(version)) {
+          throw new SessionNotCreatedException(
+              "SDK " + version + " not installed on this machine.");
         }
 
         if (!driver.getHostInfo().getInstalledSDKs().contains(version)) {
@@ -155,20 +163,20 @@ public class ServerSideSession extends Session {
     return instruments.communicate();
   }
 
-  public void stop() {      
+  public void stop() {
     // nativeDriver should have instruments within it.
     instruments.stop();
     if (webDriver != null) {
       webDriver.stop();
       webDriver = null;
     }
-    
+
     stopSessionTimer.cancel();
     stopSessionTimer = null;
     Runtime.getRuntime().removeShutdownHook(shutdownHook);
     shutdownHook = null;
   }
-  
+
   public void forceStop() {
     instruments.forceStop();
   }
@@ -176,17 +184,20 @@ public class ServerSideSession extends Session {
   private void hardForceStop() {
     try {
       instruments.forceStop();
-    } catch (Exception ignore) {}
+    } catch (Exception ignore) {
+    }
     if (webDriver != null) {
       try {
         webDriver.stop();
-      } catch (Exception ignore) {}
+      } catch (Exception ignore) {
+      }
       webDriver = null;
     }
     if (nativeDriver != null) {
       try {
         nativeDriver.quit();
-      } catch (Exception ignore) {}
+      } catch (Exception ignore) {
+      }
       nativeDriver = null;
     }
   }
@@ -202,13 +213,14 @@ public class ServerSideSession extends Session {
 
   public void start() {
     instruments.startSession(getSessionId(), application, device, capabilities);
-    
+
     // force stop session if running for too long
     final int sessionTimeoutMillis = options.getSessionTimeoutMillis();
     stopSessionTimer.schedule(new TimerTask() {
       @Override
       public void run() {
-        log.warning("forcing stop session that has been running for " + sessionTimeoutMillis/1000 + " seconds");
+        log.warning("forcing stop session that has been running for " + sessionTimeoutMillis / 1000
+                    + " seconds");
         hardForceStop();
       }
     }, sessionTimeoutMillis);
