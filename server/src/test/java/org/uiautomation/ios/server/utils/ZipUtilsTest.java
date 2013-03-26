@@ -13,8 +13,8 @@ public final class ZipUtilsTest {
   @Test
   public void canExtractAppFromURL() throws IOException {
     String url = SampleApps.getUICatalogZipURL();
-    String pathToExtractedApp = ZipUtils.extractAppFromURL(url);
-    Assert.assertTrue(pathToExtractedApp, pathToExtractedApp.endsWith("UICatalog.app"));
-    Assert.assertTrue(new File(pathToExtractedApp, "Info.plist").exists());
+    File appFile = ZipUtils.extractAppFromURL(url);
+    Assert.assertTrue(appFile.getAbsolutePath(), appFile.getName().endsWith("UICatalog.app"));
+    Assert.assertTrue(new File(appFile, "Info.plist").exists());
   }
 }

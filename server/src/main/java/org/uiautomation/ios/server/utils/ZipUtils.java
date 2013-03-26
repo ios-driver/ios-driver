@@ -9,6 +9,7 @@ import java.util.zip.ZipFile;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.openqa.selenium.WebDriverException;
 
 public final class ZipUtils {
 
@@ -16,31 +17,34 @@ public final class ZipUtils {
 
   /**
    * Downloads zip from from url, extracts it into tmp dir and returns path to
-   * .app directory
+   * extracted directory
    * 
    * @param url
-   *          url to zipped .app
-   * @return path to the .app directory
+   *          url to zipped .app or .ipa
+   * @return .app or .ipa file
    */
-  public static String extractAppFromURL(String url) throws IOException {
+  public static File extractAppFromURL(String url) throws IOException {
+    String fileName = url.substring(url.lastIndexOf('/') + 1);
     URL theUrl = new URL(url);
 
-    // extract app name from URL
-    if (!url.toLowerCase().endsWith(".zip"))
-      throw new IllegalArgumentException("expects: .../AppName.zip format: " + url);
-    String appName = url.substring(url.lastIndexOf('/'), url.length() - 4);
-
-    File tmpDir = createTmpDir(appName);
+    File tmpDir = createTmpDir("iosd");
     log.fine("tmpDir: " + tmpDir.getAbsolutePath());
 
-    File zipFile = new File(tmpDir, appName + ".zip");
-    FileUtils.copyURLToFile(theUrl, zipFile);
+    File downloadedFile = new File(tmpDir, fileName);
+    FileUtils.copyURLToFile(theUrl, downloadedFile);
 
-    unzip(zipFile, tmpDir);
-
-    String pathToExtractedApp = new File(tmpDir, appName + ".app").getAbsolutePath();
-    log.info("extractAppFromURL: " + url + " -> " + pathToExtractedApp);
-    return pathToExtractedApp;
+    if (fileName.endsWith(".ipa"))
+      return downloadedFile;
+    
+    unzip(downloadedFile, tmpDir);
+    
+    for (File file: tmpDir.listFiles()) {
+      if (file.getName().endsWith(".app")) {
+        return file;
+      }
+    }
+    
+    throw new WebDriverException("cannot extract .app/.ipa from " + url);
   }
 
   //

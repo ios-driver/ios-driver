@@ -20,6 +20,7 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.inspector.IDEServlet;
 import org.uiautomation.ios.server.application.APPIOSApplication;
@@ -34,7 +35,9 @@ import org.uiautomation.ios.server.servlet.ResourceServlet;
 import org.uiautomation.ios.server.servlet.StaticResourceServlet;
 import org.uiautomation.ios.server.servlet.UIAScriptServlet;
 import org.uiautomation.ios.server.utils.FolderMonitor;
+import org.uiautomation.ios.server.utils.ZipUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.logging.Logger;
@@ -116,7 +119,19 @@ public class IOSServer {
 
     driver = new IOSServerManager(options);
     for (String app : this.options.getSupportedApps()) {
-      driver.addSupportedApplication(new APPIOSApplication(app));
+      File appFile = new File(app);
+      if (Configuration.BETA_FEATURE && !appFile.exists()) {
+        // if an url download and extract it 
+        try {
+          appFile = ZipUtils.extractAppFromURL(app);
+        } catch (IOException ignore) {
+          log.fine("url: " + app + ": " + ignore);
+        }
+      }
+      if (appFile == null || !appFile.exists()) {
+        throw new WebDriverException(app + " isn't an IOS app.");
+      }
+      driver.addSupportedApplication(APPIOSApplication.createFrom(appFile));
     }
 
     startFolderMonitor();
