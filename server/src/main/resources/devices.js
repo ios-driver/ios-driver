@@ -27,12 +27,16 @@ function Archiver(container, app, device) {
     this.container = container;
     this.app = app;
     this.device = device;
+
+    console.log("Archive");
+    console.log(this);
 }
 Archiver.prototype.archive = function () {
     var me = this;
     var data = {};
-    data.bundleId=this.app;
-    data.uuid=this.device;
+    data.bundleId = this.app;
+    data.uuid = this.device;
+    console.log("archive()" + data.bundleId + "," + data.uuid);
 
     $.ajax({
                url: "/wd/hub/archive/save",
@@ -44,7 +48,7 @@ Archiver.prototype.archive = function () {
            })
         .done(function (data) {
                   console.log("success");
-                  new ProgressBar(me.container, data);
+                  new ProgressBar(me.container, me.device, data);
               })
         .fail(function () {
                   console.log("error");
@@ -54,14 +58,16 @@ Archiver.prototype.displayLink = function () {
     console.log('link!');
 }
 
-function ProgressBar(container, logId) {
+function ProgressBar(container, device, data) {
     this.container = container;
-    this.logId = logId;
+    this.device = device;
     var me = this;
     this.currentStatus = {};
     me.poller = setInterval(function () {
         me.updateStatus()
     }, 50);
+    console.log(this);
+    console.log(device);
 
     $(this.container).prepend("<div id=\"detail\"></div>");
     $(this.container).prepend("<div id=\"progressbar\"></div>");
@@ -84,8 +90,7 @@ ProgressBar.prototype.updateBar = function (progress) {
 ProgressBar.prototype.updateStatus = function () {
     var me = this;
     var data = {};
-    data.logId = this.logId;
-    console.log("update2");
+    data.logId = this.device;
     $.ajax({
                url: "/wd/hub/archive/save",
                async: false,
@@ -96,11 +101,11 @@ ProgressBar.prototype.updateStatus = function () {
 
            })
         .done(function (data) {
-                  console.log("success");
-                  console.log(data);
+                  //console.log("success");
+                  //console.log(data);
                   var status = eval(data);
                   if (status.id === me.currentStatus.id) {
-                      console.log("no update since last call.");
+                      //console.log("no update since last call.");
                   } else {
                       me.currentStatus = status;
                       me.updateBar(status.progress);

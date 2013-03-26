@@ -67,7 +67,6 @@ public class ArchiveServlet extends DriverBasedServlet {
       JSONObject json = new JSONObject(jb.toString());
       final String bundleId = json.getString("bundleId");
       final String uuid = json.getString("uuid");
-      final String logId = "uniqueLogTODO";
       final DeviceInstallerService
           service =
           new DeviceInstallerService(uuid);
@@ -75,17 +74,12 @@ public class ArchiveServlet extends DriverBasedServlet {
       new Thread(new Runnable() {
         @Override
         public void run() {
-        /*logId*/
-          //File archiveFolder = new File("/Users/freynaud/build/tmp");
-
           service.archive(bundleId, false, false, archiveFolder
               , true);
         }
       }).start();
 
-      //service.archive("com.yourcompany.UICatalog", false, false, new File("/Users/freynaud/build/archived"),true);
-
-      response.getWriter().write("uniqueLogTODO");
+      response.getWriter().write(uuid);
       response.getWriter().close();
     } catch (Exception e) {
       // crash and burn
@@ -104,14 +98,11 @@ public class ArchiveServlet extends DriverBasedServlet {
   }
 
 
-  public static void main(String[] args) {
-    System.out.println(new Message("[uniqueLogTODO]Archive - TakingInstallLock (0%)"));
-  }
-
   class ArchiveActivityListener implements JNILoggerListener {
 
     @Override
     public void onLog(int level, String message) {
+      System.out.println(message);
       if (message.contains("Archive")) {
         Message m = new Message(message);
         ArchiveStatus status = getStatus(m.getLogId());
@@ -184,36 +175,40 @@ public class ArchiveServlet extends DriverBasedServlet {
 
 class Message {
 
-  private final String logId;
-  private final String phase;
-  private final String step;
+  private String logId;
+  private String phase;
+  private String step;
   private int progress;
-  private final String raw;
+  private String raw;
 
 
   public Message(String msg) {
-    raw = msg.replaceAll("(\\r|\\n)", "");
-    logId = getLogId(raw);
-    phase = getPhase(raw);
-    step = getStep(raw);
+
     try {
+      raw = msg.replaceAll("(\\r|\\n)", "");
+      logId = getLogId(raw);
+      phase = getPhase(raw);
+      step = getStep(raw);
       progress = getProgress(raw, phase, step);
     } catch (Exception e) {
+      System.err.println(msg);
       progress = -1;
     }
   }
 
   private int getProgress(String msg, String phase, String step) {
+    //System.out.println("getProgress\n"+phase+"step:"+step+"msg:"+msg);
     if ("Error occured:".equals(step)) {
       return 100;
     }
 
     if ("Archive".equals(phase)) {
-      String s = msg.split("\\(")[1];
-      s = s.replace("%", "");
-      s = s.replace(")", "");
-      s = s.replace("(\r)", "");
-      return Integer.parseInt(s);
+      if ("Complete".equals(step)) {
+        return 93;
+      } else {
+        String s = msg.split(";")[3];
+        return Integer.parseInt(s.replace("%", ""));
+      }
     } else if ("ArchiveCopy".equals(phase)) {
       return 95;
     } else if ("RemoveArchive".equals(phase)) {
@@ -229,21 +224,15 @@ class Message {
 
 
   private String getPhase(String message) {
-    String s = message.split("]")[1];
-    s = s.split(" - ")[0];
-    return s;
+    return message.split(";")[1];
   }
 
   private String getStep(String message) {
-    String s = message.split(" - ")[1];
-    s = s.split("\\(")[0];
-    return s;
+    return message.split(";")[2];
   }
 
   private String getLogId(String message) {
-    String s = message.split("]")[0];
-    s = s.replace("[", "");
-    return s;
+    return message.split(";")[0];
   }
 
   public String getLogId() {
