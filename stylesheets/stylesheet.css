@@ -38,6 +38,7 @@ ol,ul {
 	background-color: #0090FF;
 	list-style: none;
 	padding-right: 1.5em;
+    margin-right: 2px;
 	border-top-left-radius: 2px;
 	border-top-right-radius: 2px;
 }
