@@ -5,10 +5,12 @@
     <meta charset='utf-8'/>
     <meta http-equiv="X-UA-Compatible" content="chrome=1"/>
     <meta name="description" content="ios-driver : IOS native app automation"/>
-
-
+    <link href="stylesheets/prettify.css" type="text/css" rel="stylesheet"/>
+    <script type="text/javascript" src="javascripts/prettify.js"></script>
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/properties.js"></script>
+
     <title>ios-driver</title>
 <script type="text/javascript">
 
@@ -23,21 +25,22 @@
   })();
 
 </script>
-<script type="text/javascript">
-$(document).ready(function($){
-    
-    	var nav = $('.nav-container');
-    
-    	$(window).scroll(function () {
-        	if ($(this).scrollTop() > 170) {
-            	nav.addClass("f-nav");
-        	} else {
-            	nav.removeClass("f-nav");
-        	}
-    	});
- 
-	});
-</script>
+    <script type="text/javascript">
+        $(document).ready(function($){
+            var nav = $('.nav-container');
+
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 170) {
+                    nav.addClass("f-nav");
+                } else {
+                    nav.removeClass("f-nav");
+                }
+            });
+
+            buildMenu("setup");
+        });
+    </script>
+
 </head>
 
 <body>
@@ -45,24 +48,16 @@ $(document).ready(function($){
 <!-- HEADER -->
 <div id="header_wrap" class="outer">
     <header class="inner">
-        <a id="forkme_banner" href="https://github.com/freynaud/ios-driver">View on GitHub</a>
-        <a id="download_me" href="https://s3-eu-west-1.amazonaws.com/ios-driver/ios-server-0.5.0.jar">Download 0.5.0</a>
+        <a id="forkme_banner" href="DEFAULT">View on GitHub</a>
+        <a id="download_me" href="DEFAULT">DEFAULT</a>
 
         <h1 id="project_title">ios-driver</h1>
 
         <h2 id="project_tagline">IOS automation for native, hybrid and mobile web.</h2>
 
-        <div id="menu">
-            <ul>
-                <li ><a href="index.html" id="home">Home</a></li>
-                <li class="active"><a href="setup.html" id="setup">Setup</a></li>
-                <li><a href="inspector.html" id="inspector">Inspector</a></li>
-                <li><a href="native.html" id="native">Native</a></li>
-                <li><a href="safari.html" id="safari">Safari</a></li>
-                <li><a href="hybrid.html" id="hybrid">Hybrid</a></li>
-                <li><a href="bug.html" id="bug">Report a bug</a></li>
-            </ul>
-        </div>
+        <div id="menu"/>
+
+
     </header>
 </div>
 
@@ -260,12 +255,7 @@ Applications :
 
 <!-- FOOTER  -->
 <div id="footer_wrap" class="outer">
-    <footer class="inner">
-        <p class="copyright">ios-driver maintained by <a
-                href="https://github.com/freynaud">freynaud</a></p>
 
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-    </footer>
 </div>
 </body>
 </html>

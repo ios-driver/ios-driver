@@ -9,6 +9,7 @@
     <script type="text/javascript" src="javascripts/prettify.js"></script>
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/properties.js"></script>
     <title>ios-driver</title>
 
 <script type="text/javascript">
@@ -34,7 +35,7 @@ $(document).ready(function($){
             	nav.removeClass("f-nav");
         	}
     	});
- 
+    buildMenu("safari");
 	});
 </script>
 </head>
@@ -51,17 +52,8 @@ $(document).ready(function($){
 
         <h2 id="project_tagline">IOS automation for native, hybrid and mobile web.</h2>
 
-        <div id="menu">
-            <ul>
-                <li><a href="index.html" id="home">Home</a></li>
-                <li><a href="setup.html" id="setup">Setup</a></li>
-                <li><a href="inspector.html" id="inspector">Inspector</a></li>
-                <li><a href="native.html" id="native">Native</a></li>
-                <li class="active"><a href="safari.html" id="safari">Safari</a></li>
-                <li><a href="hybrid.html" id="hybrid">Hybrid</a></li>
-                <li><a href="bug.html" id="bug">Report a bug</a></li>
-            </ul>
-        </div>
+        <div id="menu" />
+
     </header>
 </div>
 
@@ -233,13 +225,8 @@ c.setConfiguration(WebDriverLikeCommand.CLICK, "nativeEvents", true);
 </div>
 
 <!-- FOOTER  -->
-<div id="footer_wrap" class="outer">
-    <footer class="inner">
-        <p class="copyright">ios-driver maintained by <a
-                href="https://github.com/freynaud">freynaud</a></p>
+<div id="footer_wrap" class="outer"/>
 
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-    </footer>
 </div>
 </body>
 </html>

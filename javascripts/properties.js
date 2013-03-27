@@ -12,11 +12,39 @@
  * the License.
  */
 
-
 $(document).ready(function ($) {
 
+    var version = "0.6.0";
+    var downloadFile = "https://s3-eu-west-1.amazonaws.com/ios-driver/ios-server-0.6.0.jar";
+    var github = "https://github.com/ios-driver/ios-driver/";
 
-    var version = "0.6";
-    $("download_me").attr('href','pipo');
+    $("#download_me").attr('href', downloadFile);
+    $("#download_me").html("Download " + version);
+    $("#forkme_banner").attr('href', github);
+
+    buildFooter();
 
 });
+
+buildFooter = function () {
+    $("#footer_wrap").html('<footer class="inner">' +
+                           '<p class="copyright">ios-driver maintained by <a ' +
+                           'href="https://github.com/ios-driver?tab=members">ios committers</a></p>' +
+                           '<p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>'
+                               +
+                           '</footer>');
+};
+
+buildMenu = function (page) {
+    $("#menu").html('<ul>' +
+                    '<li><a href="index.html" id="home">Home</a></li>' +
+                    '<li><a href="setup.html" id="setup">Setup</a></li>' +
+                    '<li><a href="inspector.html" id="inspector">Inspector</a></li>' +
+                    '<li><a href="native.html" id="native">Native</a></li>' +
+                    '<li><a href="safari.html" id="safari">Safari</a></li>' +
+                    '<li><a href="hybrid.html" id="hybrid">Hybrid</a></li>' +
+                    '<li><a href="bug.html" id="bug">Report a bug</a></li>' +
+                    '</ul>');
+    $("#" + page).parent().addClass("active");
+};
+
