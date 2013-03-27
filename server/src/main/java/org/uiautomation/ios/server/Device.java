@@ -14,11 +14,12 @@ public abstract class Device {
   public static boolean canRun(IOSCapabilities desiredCapabilities,
                                IOSCapabilities deviceCapability) {
 
-    if (desiredCapabilities.isSimulator() != deviceCapability.isSimulator()) {
+    if (desiredCapabilities.isSimulator() != null &&
+        desiredCapabilities.isSimulator() != deviceCapability.isSimulator()) {
       return false;
     }
 
-    if (!deviceCapability.isSimulator()) {
+    if (deviceCapability.isSimulator() == false) {
       // check SDK
       if (desiredCapabilities.getSDKVersion() != null) {
         if (!deviceCapability.getSDKVersion().equals(desiredCapabilities.getSDKVersion())) {

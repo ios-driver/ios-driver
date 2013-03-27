@@ -118,11 +118,6 @@ public class IOSServerManager {
         return app.createInstance(desiredCapabilities.getLanguage());
       }
     }
-    if (!desiredCapabilities.isSimulator()) {
-      // couldn't find the application on a device, falling back to simulator.
-      desiredCapabilities.setCapability(IOSCapabilities.SIMULATOR, true);
-      return findAndCreateInstanceMatchingApplication(desiredCapabilities);
-    }
     throw new SessionNotCreatedException(
         desiredCapabilities.getRawCapabilities() + " not found on server.");
   }

@@ -112,6 +112,10 @@ public class APPIOSApplication {
     if (getSupportedLanguages().isEmpty()) {
       return AppleLocale.emptyLocale(languageCode);
     }
+    if (languageCode == null) {
+      // default to english if none specified
+      languageCode = "en";
+    }
     for (AppleLocale loc : getSupportedLanguages()) {
       if (languageCode.equals(loc.getLocale().getLanguage())) {
         return loc;
@@ -362,7 +366,8 @@ public class APPIOSApplication {
   }
 
   public static boolean canRun(IOSCapabilities desiredCapabilities, IOSCapabilities appCapability) {
-    if (desiredCapabilities.isSimulator() != appCapability.isSimulator()) {
+    if (desiredCapabilities.isSimulator() != null &&
+        desiredCapabilities.isSimulator() != appCapability.isSimulator()) {
       return false;
     }
     if (desiredCapabilities.getBundleName() == null) {
