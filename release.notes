@@ -56,7 +56,7 @@
 + remove the context switching for the alert detector
 + handle multi web windows
 + use facebook project to remove 1 sec delay on emulator.
-
++ improve UIAKeyboard, add hide()
 
 
 TODOs:
@@ -71,7 +71,7 @@ TODOs:
 - WebStorage
 - LocationContext
 - ApplicationCache
-- improve UIAKeyboard, add hide()
+
 - kill instruments before starting.
 - split handlers into native, web, and misc
 - fix the inspector ratio, mouse over is off.
