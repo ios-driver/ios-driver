@@ -38,6 +38,17 @@
         <developer>
             <id>freynaud</id>
             <name>François Reynaud</name>
+            <url>https://github.com/freynaud</url>
+        </developer>
+        <developer>
+            <id>lukeis</id>
+            <name>Luke Inman-Semerau</name>
+            <url>https://github.com/lukeis</url>
+        </developer>
+        <developer>
+            <id>nicegraham</id>
+            <name>Graham Abell</name>
+            <url>https://github.com/nicegraham</url>
         </developer>
     </developers>
 
