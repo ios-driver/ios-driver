@@ -90,7 +90,7 @@ public class WebDriverSelectorMapping extends BaseIOSDriverTest {
 
   @Test
   public void testCannotFindById() {
-    By b = By.id("someid");
+    By b = By.id(english);
     driver.findElement(b);
   }
 
