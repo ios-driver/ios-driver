@@ -6,10 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1"/>
     <meta name="description" content="ios-driver : IOS native app automation"/>
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script type="text/javascript" src="javascripts/properties.js"></script>
 
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/properties.js"></script>
     <title>ios-driver</title>
 <script type="text/javascript">
 
@@ -36,7 +36,7 @@ $(document).ready(function($){
             	nav.removeClass("f-nav");
         	}
     	});
-    buildMenu("inspector");
+ 
 	});
 </script>
 </head>
@@ -47,15 +47,13 @@ $(document).ready(function($){
 <div id="header_wrap" class="outer">
     <header class="inner">
         <a id="forkme_banner" href="https://github.com/freynaud/ios-driver">View on GitHub</a>
- 		<a id="download_me" href="https://s3-eu-west-1.amazonaws.com/ios-driver/ios-server-0.5.0.jar">Download 0.5.0</a>
+        <a id="download_me" href="https://s3-eu-west-1.amazonaws.com/ios-driver/ios-server-0.5.0.jar">Download 0.5.0</a>
 
         <h1 id="project_title">ios-driver</h1>
 
         <h2 id="project_tagline">IOS automation for native, hybrid and mobile web.</h2>
 
-
         <div id="menu"/>
-
 
     </header>
 </div>
@@ -64,26 +62,49 @@ $(document).ready(function($){
 <div id="main_content_wrap" class="outer">
 <section id="main_content" class="inner">
 
-    <h3>ios-driver Inspector</h3>
-    <p>The inspector allows you to examine the elements of a native app in the same style as you would with i.e. Firebug</p>
-<p>To access the inspector, set a breakpoint in the test code and execute it in Debug mode.</p>
+<h3>Running ios-driver on the Grid</h3>
+
+<p>You can add ios-driver as a node to a running grid hub. In order to connect to a grid, you can specify the below command line parameters when running ios-driver:</p>
 
 
-<p>When the application has stopped there, open a browser and got to  http://localhost:4444/inspector/
-<br />You will see the app and display its object tree.</p>
+<pre  class="prettyprint">
+java -jar ios-driver.jar -hub http://127.0.0.1:4444/grid/register -host 127.0.0.1 -port 5555
+</pre>
 
-        <img src="images/inspector.png" alt="inspector">
+<p>You can also specify a custom proxy to use on the grid, for example:</p>
 
-<p>Mouse over the element you're interested in. In this example the description of the mountain, and
-note the content key for that element : "sentenceFormat", as well as its type : UIAStaticText.You
-can use any kind of xpath2 selector to target exactly the element you want.</p>
+
+<pre  class="prettyprint">
+java -jar ios-driver.jar -hub http://127.0.0.1:4444/grid/register -proxy org.uiautomation.ios.grid.IOSRemoteProxy -host 127.0.0.1 -port 5555
+</pre>
+
+<img src="images/IOSRemoteProxy.png" alt="step2.png" width='640'>
+
+<h3>Building IOSRemoteProxy</h3>
+
+<pre class="prettyprint">
+> cd ios-driver/grid/
+
+> mvn package
+
+copy the resulting ios-grid.jar file from ios-driver/grid/target to the location where you run the hub. 
+Run hub like:
+
+> java -cp ios-grid.jar:selenium-server-standalone.jar org.openqa.grid.selenium.GridLauncher -role hub
+</pre>
+
 
 </section>
 </div>
 
 <!-- FOOTER  -->
-<div id="footer_wrap" class="outer"/>
+<div id="footer_wrap" class="outer">
+    <footer class="inner">
+        <p class="copyright">ios-driver maintained by <a
+                href="https://github.com/freynaud">freynaud</a></p>
 
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+    </footer>
 </div>
 </body>
 </html>
