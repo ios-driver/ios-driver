@@ -73,6 +73,7 @@ $(document).ready(function($){
 			<div class = "nav">
     			<ul >
 	            	<li><a href="#basics">Basics</a></li>
+                <li><a href="#bindings">Bindings</a></li>
 		            <li><a href="#nativeType">Native sendKeys</a></li>
 		            <li><a href="#alerts">Alerts</a></li>
 		            <li><a href="#orientation">Device Orientation</a></li>
@@ -82,64 +83,98 @@ $(document).ready(function($){
 			</div>
 		</div>
 
-        <p>You can use ios-driver to test web pages on mobile safari. Because ios-driver internally
-            uses two different
-            drivers, a native one and a web one, your tests can use native events (i.e typing text
-            using the
-            keyboard) and web based selectors.</p>
+    <p>You can use ios-driver to test web pages on mobile safari. Because ios-driver internally
+        uses two different
+        drivers, a native one and a web one, your tests can use native events (i.e typing text
+        using the
+        keyboard) and web based selectors.</p>
 
-        <p>ios-driver follows the web driver API, so you can use your favorite client bindings to
-            write your
-            test.</p>
+    <h3 id="basics">The basics</h3>
+    <pre class="prettyprint">
+    public static void main(String[] args) throws Exception {
+        DesiredCapabilities safari = IOSCapabilities.iphone("Safari");
+        RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), safari);
 
-        <h3 id="basics">The basics</h3>
-<pre class="prettyprint">
-public static void main(String[] args) throws Exception {
-    DesiredCapabilities safari = IOSCapabilities.iphone("Safari");
-    RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), safari);
+        driver.get("http://www.ebay.co.uk/");
 
-    driver.get("http://www.ebay.co.uk/");
+        System.out.println(driver.getTitle());
+        driver.quit();
+    }
+    </pre>
 
-    System.out.println(driver.getTitle());
-    driver.quit();
-}
-</pre>
+            <p>will print</p>
+    <pre>
+         eBay Mobile | Electronics, Cars, Clothing, Collectibles and Daily Deals online.
+    </pre>
 
-        <p>will print</p>
-<pre>
-     eBay Mobile | Electronics, Cars, Clothing, Collectibles and Daily Deals online.
-</pre>
+    <h3 id="bindings">Bindings</h3>
+
+    <p>ios-driver follows the web driver API, so you can use your favorite client bindings to write your test. Assuming you're running ios-driver locally and on the default port, you can create a connection as follows. </p>
+    
+  <p>Python</p>
+  <pre class="prettyprint">
+  from selenium import webdriver
+  # iphone
+  driver = webdriver.Remote("http://localhost:5555/wd/hub", webdriver.DesiredCapabilities.IPHONE)
+  # ipad
+  driver = webdriver.Remote("http://localhost:5555/wd/hub", webdriver.DesiredCapabilities.IPAD)
+  </pre>
+
+  <p>Java</p>
+  <pre class="prettyprint">
+  // iphone
+  WebDriver driver = new IPhoneDriver("http://localhost:5555/wd/hub");
+  // ipad
+  WebDriver driver = new RemoteWebDriver("http://localhost:5555/wd/hub", DesiredCapabilities.ipad());
+  </pre>
+
+  <p>C#</p>
+  <pre class="prettyprint">
+  // iphone
+  IWebDriver driver = new RemoteWebDriver("http://localhost:5555/wd/hub", DesiredCapabilities.IPhone());
+  // ipad
+  IWebDriver driver = new RemoteWebDriver("http://localhost:5555/wd/hub", DesiredCapabilities.IPad());
+  </pre>
+
+  <p>Ruby</p>
+  <pre class="prettyprint">
+  # iphone
+  driver = Selenium::WebDriver.for :remote, :url => "http://localhost:5555/wd/hub", :desired_capabilities => :iphone
+  #ipad
+  driver = Selenium::WebDriver.for :remote, :url => "http://localhost:5555/wd/hub", :desired_capabilities => :ipad
+  </pre>
 
 
-        <h3 id="nativeType">Using the underlying native driver : sendKeys</h3>
-        <iframe width="640" height="480" src="http://www.youtube.com/embed/cpYE5g4qAVw"
-                frameborder="0" allowfullscreen></iframe>
-<pre class="prettyprint">
-public static void main(String[] args) throws Exception {
+    <h3 id="nativeType">Using the underlying native driver : sendKeys</h3>
+    <iframe width="640" height="480" src="http://www.youtube.com/embed/cpYE5g4qAVw"
+            frameborder="0" allowfullscreen></iframe>
 
-    DesiredCapabilities safari = IOSCapabilities.iphone("Safari");
-    RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), safari);
+    <pre class="prettyprint">
+    public static void main(String[] args) throws Exception {
 
-    driver.get("http://hp.mobileweb.ebay.co.uk/home");
-    WebElement search = driver.findElement(By.id("srchDv"));
-    search.sendKeys("ipod");
-    search.submit();
+        DesiredCapabilities safari = IOSCapabilities.iphone("Safari");
+        RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), safari);
 
-    waitFor(pageTitleToBe(driver, "ipod | eBay Mobile Web"));
+        driver.get("http://hp.mobileweb.ebay.co.uk/home");
+        WebElement search = driver.findElement(By.id("srchDv"));
+        search.sendKeys("ipod");
+        search.submit();
 
-    driver.quit();
-}
-</pre>
+        waitFor(pageTitleToBe(driver, "ipod | eBay Mobile Web"));
+
+        driver.quit();
+    }
+    </pre>
 
 
-        <h3 id="alerts">Working with alerts</h3>
+            <h3 id="alerts">Working with alerts</h3>
 
-        <p>ios-driver can use its native part to get away from the javascript sandbox and handle
-            alerts for example :</p>
+            <p>ios-driver can use its native part to get away from the javascript sandbox and handle
+                alerts for example :</p>
 
-        <iframe width="640" height="480" src="http://www.youtube.com/embed/2qR7mGs2Gn0"
-                frameborder="0" allowfullscreen></iframe>
- <pre class="prettyprint">
+            <iframe width="640" height="480" src="http://www.youtube.com/embed/2qR7mGs2Gn0"
+                    frameborder="0" allowfullscreen></iframe>
+     <pre class="prettyprint">
 
 @Test
 public void testHandlesTwoAlertsFromOneInteraction() {
