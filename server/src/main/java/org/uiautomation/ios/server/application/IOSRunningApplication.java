@@ -48,7 +48,10 @@ public class IOSRunningApplication {
   public AppleLocale setLanguage(String lang) {
     if (underlyingApplication.getSupportedLanguages().isEmpty()) {
       return AppleLocale.emptyLocale(lang);
-
+    }
+    if (lang == null) {
+      // default to english if none specified
+      lang = "en";
     }
     for (AppleLocale loc : underlyingApplication.getSupportedLanguages()) {
       if (loc.getLocale().toString().equals(lang)) {

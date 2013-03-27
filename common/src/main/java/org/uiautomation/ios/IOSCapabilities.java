@@ -69,6 +69,9 @@ public class IOSCapabilities extends DesiredCapabilities {
   public static final String ELEMENT_TREE = "elementTree";
   public static final String IOS_SEARCH_CONTEXT = "iosSearchContext";
   public static final String UUID = "uuid";
+
+  // default selenium bindings for mobile safari
+  public static final String BROWSER_NAME = "browserName";
   
   // TODO: make a parameter?
   public static final int COMMAND_TIMEOUT_MILLIS = 10 * 60 * 1000; // 10 minutes
@@ -113,10 +116,10 @@ public class IOSCapabilities extends DesiredCapabilities {
     setCapability(SIMULATOR, true);
   }
 
-  public boolean isSimulator() {
+  public Boolean isSimulator() {
     Object o = getCapability(SIMULATOR);
     if (o == null) {
-      return false;
+      return null;
     } else if (o instanceof Boolean) {
       return (Boolean) o;
     } else {
@@ -148,7 +151,16 @@ public class IOSCapabilities extends DesiredCapabilities {
     while (iter.hasNext()) {
       String key = iter.next();
       Object value = json.get(key);
-      setCapability(key, decode(value));
+      if (BROWSER_NAME.equalsIgnoreCase(key)) {
+        setCapability(BUNDLE_NAME, "Safari");
+        if (((String) value).equalsIgnoreCase("iphone")) {
+          setCapability(DEVICE, "iphone");
+        } else if (((String) value).equalsIgnoreCase("ipad")) {
+          setCapability(DEVICE, "ipad");
+        }
+      } else {
+        setCapability(key, decode(value));
+      }
     }
   }
 
