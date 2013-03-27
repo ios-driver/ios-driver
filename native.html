@@ -69,7 +69,7 @@ $(document).ready(function($){
 	            	<li><a href="#locator">Element Locators</a></li>
 	            	<li><a href="#debugElement">Element Debug</a></li>
 	            	<li><a href="#advAlert">Alert Handling</a></li>
-	            	<li><a href="#params">Server Parameters</a></li>
+	            	<li><a href="#capabilities">Capabilities</a></li>
 	            	<li><a href="#rawJS">Raw Instruments</a></li>
 	            	<li><a href="#augment">Extensions</a></li>
         		</ul>
@@ -386,11 +386,11 @@ public void enterPasswordInAlert()  {
     alert.findElement(By.xpath("//UIAButton[@name='OK']")).click();
 }
 </pre>
-        <h3 id="params" >Starting parameters :</h3>
+        <h3 id="capabilities" >DesiredCapabilities for IOS :</h3>
 
         <p>The map of parameters ( the DesiredCapabilities object ) accept a set of parameters that
             will
-            define the configuration the simulator will start with:</p>
+            define the configuration the simulator/device will start with:</p>
 
         <lu>
             <li>device: iphone (default) | ipad</li>
@@ -405,9 +405,17 @@ public void enterPasswordInAlert()  {
             <li>variation: (Regular | Retina35 | Retina4) for iphone. (Regular | Retina) for ipad
             </li>
             <li>simulator : true</li>
-            <li>ios.switches : an array of system parameters that will be passed to the app when it
+            <li><h4>ios.switches</h4>
+                An array of system parameters that will be passed to the app when it
                 is launched. Useful if the app can be configured to point to a QA envt with system
                 variable for instance.
+                <p>Assuming you want to start your app with the following 2 system
+                    variables : A=YES and B=NO , you would write :</p>
+               <pre class="prettyprint" >
+IOSCapabilities cap = IOSCapabilities.iphone("myApp");
+cap.setCapability(SIMULATOR, true);
+cap.setCapability(IOS_SWITCHES, Arrays.asList(new String[]{"-e", "A", "YES","-e","B","NO" }));
+               </pre>
             </li>
             <li>sdkVersion : {string} 5.0 | .. | 6.1</li>
             <li> TODO doc : magic prefix plist_</li>
