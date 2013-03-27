@@ -12,6 +12,10 @@
  *  the License.
  */
 
+/**
+ * @module ios-driver
+ */
+
 UIAKeyboard.prototype.typeString_original = UIAKeyboard.prototype.typeString;
 
 /**
