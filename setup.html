@@ -248,6 +248,36 @@ Applications :
 
 </code></pre>
 
+<h3>Command line parameters</h3>
+
+<h4>-beta</h4>
+<p>Enables beta functionality, this is funcationality which is still under development and may not work in all instances. Currently a lot of the beta functionality is centered around real device support.</p>
+
+<h4>-host</h4>
+<p>IP of the node, this needs to be specified as guessing the correct IP can lead to problems - it's complicated by the host machine possibly having multiple addresses.</p>
+
+<h4>-port</h4>
+<p>Specify the port for ios-driver to run on, the default is 5555.</p>
+
+<h4>-folder</h4>
+<p>Absolute path of a folder to monitor for new applications.<br/>
+    Acceptable file formats are *.ipa, *.app & *.zip.<br/>
+    Any apps stored in the folder when ios-driver launches will be automatically added to the desired capabilities, real device archived apps will also be backed up to this location.<br/>
+    The default location is [running folder]/applications</p>
+
+<h4>-app, -aut</h4>
+<p>Location of the application under test. Absolute path or URL expected.</p>    
+
+<h4>-hub</h4>
+<p>The registration url of your Selenium grid hub, for example: http://localhost:4444/grid/register. If specified ios-driver will register as a node on your grid. It does not include the nodes capabilities on registration as we also provide a custom remote proxy which polls the node looking for updated capabilities, see <a href='./scale.html'>Scale</a>  for more details.</p>
+
+<h4>-proxy</h4>
+<p>specify a custom remote proxy to use with ios-driver nodes, see <a href='./scale.html'>Scale</a>  for more details.</p>
+
+<h4>-sessionTimeout</h4>
+<p>Specify the maximum session timeout [seconds], the default is 1800 seconds [30 minutes].</p>
+
+
 <h3>Configuring the system to support multiple SDK for the simulator</h3>
         doc todo.
 </section>
