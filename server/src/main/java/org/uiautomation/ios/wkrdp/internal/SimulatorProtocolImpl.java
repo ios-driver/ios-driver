@@ -62,9 +62,6 @@ public class SimulatorProtocolImpl extends WebKitRemoteDebugProtocol {
           e);
     }
     startListenerThread();
-    //sendCommand(PlistManager.SET_CONNECTION_KEY);
-    //sendCommand(PlistManager.CONNECT_TO_APP);
-    //sendCommand(PlistManager.SET_SENDER_KEY);
   }
 
 
@@ -72,7 +69,6 @@ public class SimulatorProtocolImpl extends WebKitRemoteDebugProtocol {
    * sends the message to the AUT.
    */
   protected void sendMessage(String xml) {
-    //System.out.println("sending " + xml);
     try {
       byte[] bytes = xml.getBytes("UTF-8");
       OutputStream os = socket.getOutputStream();
@@ -103,13 +99,9 @@ public class SimulatorProtocolImpl extends WebKitRemoteDebugProtocol {
             message =
             new PlistManager().plistBinaryToXml(Arrays.copyOfRange(bytes, 4, size + 4));
         handler.handle(message);
-        //System.out.println(message);
         buf = new ByteArrayOutputStream();
         buf.write(bytes, 4 + size, bytes.length - size - 4);
-        //return message;
       } else {
-        // System.err.println("Expecting " + size + " + 4 bytes. Buffered " +
-        // bytes.length + ".");
         break;
       }
     }

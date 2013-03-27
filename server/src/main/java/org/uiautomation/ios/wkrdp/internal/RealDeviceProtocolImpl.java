@@ -46,9 +46,7 @@ public class RealDeviceProtocolImpl extends WebKitRemoteDebugProtocol {
 
   @Override
   protected void read() throws Exception {
-    //System.out.println("about to receive");
     String msg = inspector.receiveMessage();
-    //System.out.println("received");
     if (msg != null) {
       handler.handle(msg);
     }

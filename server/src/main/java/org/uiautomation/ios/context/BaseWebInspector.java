@@ -536,18 +536,7 @@ public abstract class BaseWebInspector implements MessageListener {
   public void onMessage(IOSMessage message) {
     // a page was loaded.
     if (message instanceof ApplicationSentListingMessage) {
-      /*ApplicationSentListingMessage m = (ApplicationSentListingMessage) message;
-      // is it for this window ?
-      String flag = getLoadedFlag();
-      //System.out.println("GOT FLAG"+flag+" AT "+System.currentTimeMillis());
-      if (context.getId().equals(getLoadedFlag())) {
-        return;
-      } else {
-        //System.out.println("NEW PAGE EVENT AT "+System.currentTimeMillis());
-        newPage = true;
-        flagPageLoaded();
-        context.newContext();
-      } */
+
     }
 
     if (message instanceof ApplicationDataMessage) {

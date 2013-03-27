@@ -89,11 +89,8 @@ public class ApplicationStore {
     List<IOSCapabilities> res = new ArrayList<IOSCapabilities>();
     for (APPIOSApplication app : getApplications()) {
       if (d.canRun(app)) {
-        System.out.println(d.toString() + " can run " + app.toString());
         IOSCapabilities c = merge(d.getCapability(), app.getCapabilities());
         res.add(c);
-      } else {
-        System.err.println(d.toString() + " cannot run " + app.toString());
       }
     }
     return res;

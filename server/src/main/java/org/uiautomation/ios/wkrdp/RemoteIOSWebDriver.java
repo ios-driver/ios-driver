@@ -57,10 +57,8 @@ public class RemoteIOSWebDriver {
     driver.switchTo(driver.getPages().get(0));
     driver.get("http://ebay.co.uk/");
     RemoteWebElement body = driver.findElementByCssSelector("body");
-    System.out.println(body.getText());
     driver.get("http://google.co.uk/");
     body = driver.findElementByCssSelector("body");
-    System.out.println(body.getText());
 
     driver.stop();
 
@@ -69,25 +67,8 @@ public class RemoteIOSWebDriver {
     driver.switchTo(driver.getPages().get(0));
     driver.get("http://ebay.co.uk/");
     body = driver.findElementByCssSelector("body");
-    System.out.println(body.getText());
     driver.get("http://google.co.uk/");
     body = driver.findElementByCssSelector("body");
-    System.out.println(body.getText());
-
-
-    /*driver.get("http://ebay.co.uk/common/frameset.html");
-
-    JSONObject res = driver.currentInspector.sendCommand(Page.getResourceTree());
-    System.out.println(res.toString(2));
-    for (int i = 1; i < 10; i++) {
-      long start = System.currentTimeMillis();
-      driver.get("http://localhost:45188/common/sleep?time=" + i);
-      System.out.println(
-          "get duration for a page taking " + i + " sec " + (System.currentTimeMillis() - start)
-          + " ms.");
-      RemoteWebElement body = driver.findElementByCssSelector("body");
-      //System.out.println(body.getText());
-    } */
   }
 
   static String safari = "com.apple.mobilesafari";
@@ -186,7 +167,6 @@ public class RemoteIOSWebDriver {
         protocol.connect(bundleId);
         sync.waitForSimToSendPages();
         switchTo(getPages().get(0));
-        System.out.println("currentInspector:" + currentInspector);
         if (getPages().size() > 1) {
           log.warning("Application started, but already have " + getPages().size()
                       + " webviews. Connecting to the first one.");

@@ -85,19 +85,8 @@ public class UIAKeyboardSmokeTest extends BaseIOSDriverTest {
     textfield.clear();
     textfield.sendKeys("François !");
 
-    System.out.println(textfield.getAttribute("value"));
-    //Assert.assertEquals("ç",textfield.getAttribute("value"));
+    Assert.assertEquals("François !", textfield.getAttribute("value"));
 
-    /*WebElement c = driver.findElement(By.name("c"));
-
-    driver.setConfiguration(WebDriverLikeCommand.SET_VALUE, "nativeEvents", false);
-    el.sendKeys("B");
-*/
-
-  /*Actions builder = new Actions(driver);
-
-    builder.sendKeys("test");
-    builder.perform();*/
 
   }
 

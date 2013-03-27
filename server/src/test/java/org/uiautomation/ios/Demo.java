@@ -32,7 +32,7 @@ public class Demo {
                   "-aut", SampleApps.getUICatalogFile(),
                   "-aut", SampleApps.getUICatalogIpad(),
                   "-beta",
-                  "-folder", "archive"};
+                  "-folder", "applications"};
     IOSServerConfiguration config = IOSServerConfiguration.create(a);
 
     IOSServer server = new IOSServer(config);

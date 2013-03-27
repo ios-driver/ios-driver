@@ -34,10 +34,6 @@ public class LocationContextTest extends BaseIOSDriverTest {
   }
 
 
-  public static void main(String[] args) {
-    System.out.println(IOSCapabilities.iphone("Safari").getRawCapabilities());
-  }
-
   @Test
   public void testShouldSetAndGetLocation() {
     //driver.get(pages.html5Page);

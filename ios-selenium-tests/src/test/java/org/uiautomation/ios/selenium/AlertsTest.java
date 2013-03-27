@@ -360,7 +360,6 @@ public class AlertsTest extends BaseSeleniumTest {
     try {
       driver.get(appServer.whereIs("pageWithOnLoad.html"));
     } catch (UnhandledAlertException e) {
-      System.out.println("there was an alert.");
     }
 
     Alert alert = waitFor(alertToBePresent(driver));

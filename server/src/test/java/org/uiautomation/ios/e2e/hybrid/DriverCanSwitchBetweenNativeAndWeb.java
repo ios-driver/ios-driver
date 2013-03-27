@@ -103,15 +103,12 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
           break;
         } catch (NoSuchElementException e) {
           // ignore
-          System.out.println("Cannot find element yet.");
         }
       }
       el = driver.findElement(by);
       //el.click();
       Assert.assertEquals(el.getAttribute("href"), "http://store.apple.com/");
-      System.out.println("HREF=" + el.getAttribute("href"));
       WebElement body = driver.findElement(By.cssSelector("body"));
-      System.out.println(body.getText());
 
       driver.get("http://ebay.co.uk");
       WebElement search = driver.findElement(By.id("kw"));
@@ -119,8 +116,6 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
       search.sendKeys("ipod");
       body = driver.findElement(By.cssSelector("body"));
 
-      System.out.println(body.getText());
-      System.out.println(body.getText());
     } finally {
       driver.quit();
     }
@@ -147,23 +142,7 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
       Thread.sleep(5000);
       driver.get("http://ebay.co.uk");
       WebElement body = driver.findElement(By.cssSelector("body"));
-      System.out.println(body.getText());
 
-
-     /* final By by = By.id("v4-1");
-
-      long end = System.currentTimeMillis() + 5000;
-      WebElement el;
-      while (System.currentTimeMillis() < end) {
-        try {
-          el = driver.findElement(by);
-          break;
-        } catch (NoSuchElementException e) {
-          // ignore
-        }
-      }
-      el = driver.findElement(by);
-      System.out.println(el.getText());   */
     } finally {
       if (driver != null) {
         driver.quit();

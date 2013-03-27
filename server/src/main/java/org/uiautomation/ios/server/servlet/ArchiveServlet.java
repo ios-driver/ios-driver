@@ -102,7 +102,6 @@ public class ArchiveServlet extends DriverBasedServlet {
 
     @Override
     public void onLog(int level, String message) {
-      System.out.println(message);
       if (message.contains("Archive")) {
         Message m = new Message(message);
         ArchiveStatus status = getStatus(m.getLogId());
@@ -197,7 +196,6 @@ class Message {
   }
 
   private int getProgress(String msg, String phase, String step) {
-    //System.out.println("getProgress\n"+phase+"step:"+step+"msg:"+msg);
     if ("Error occured:".equals(step)) {
       return 100;
     }

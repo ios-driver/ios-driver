@@ -38,13 +38,13 @@ public class XPath2Engine {
   private final String xml;
 
   public static XPath2Engine getXpath2Engine(RemoteIOSDriver driver) {
-      JSONObject logElementTree = driver.logElementTree(null, false);
-      JSONObject tree = logElementTree.optJSONObject("tree");
-      try {
-        return new XPath2Engine(new JSONToXMLConvertor(tree).asXML());
-      } catch (Exception e) {
-        throw new WebDriverException(e);
-      }
+    JSONObject logElementTree = driver.logElementTree(null, false);
+    JSONObject tree = logElementTree.optJSONObject("tree");
+    try {
+      return new XPath2Engine(new JSONToXMLConvertor(tree).asXML());
+    } catch (Exception e) {
+      throw new WebDriverException(e);
+    }
   }
 
   public XPath2Engine(String xml) throws Exception {
@@ -129,7 +129,6 @@ public class XPath2Engine {
     String xpathExpression = "/UIAApplication";
     InputSource inputSource = new InputSource(is);
     String handle = xpath.evaluate(xpathExpression, inputSource);
-    System.out.println(handle);
   }
 
   private Map<String, String> findElementByXpath(String xpath, Node from)

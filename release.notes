@@ -31,10 +31,9 @@
 
 0.6.0 (current)
 -----
-- inspector should save the tmp screenshot in tmp dir
+
 + inspector cleanup
-- add selenium tests for the inspector ( update mocks ? )
-- make sendKeys type at the end of the input fields
++ make sendKeys type at the end of the input fields
 + get / delete cookies
 + JNI to detect new devices
 + record clicks on the inspector
@@ -49,13 +48,22 @@
 + investigate why safari is slow to start in unit test.
 + real device support for native and hybrid.
 + real device and application manager
++ cleanup and document setValue vs sendKeys
++ reorganize classes in server.
++ setup and teardown for device.
++ keyboard.js
++ scan folder automatically to find aut.
++ remove the context switching for the alert detector
++ handle multi web windows
++ use facebook project to remove 1 sec delay on emulator.
++ improve UIAKeyboard, add hide()
 
 
 TODOs:
 -------
+- add selenium tests for the inspector ( update mocks ? )
+- inspector should save the tmp screenshot in tmp dir
 - xpath to css convertor for web
-- cleanup and document setValue vs sendKeys
-
 - delete window
 - file upload
 - BrowserConnection
@@ -63,21 +71,16 @@ TODOs:
 - WebStorage
 - LocationContext
 - ApplicationCache
-- improve UIAKeyboard, add hide()
+
 - kill instruments before starting.
-- reorganize classes in server.
 - split handlers into native, web, and misc
 - fix the inspector ratio, mouse over is off.
 - confusion between locale and languages
 - real device for web.
-- setup and teardown for device.
 - encapsulate result of logEleemntTree.
 - nativeDriver.executeScript should return UIAElement cast to what they are rather than WebElements.
 - use implicit wait to wait for the native keyboard 
 - remove all calls to plutil
 - instruments crash from user define script. stackoverflow for method def for instance.
 - native test not to start new simulators.
-- make keyboard a static id, like alert ?
-- remove the context switching for the alert detector
-- handle multi web windows
 - DesiredCapabilities.unexpectedAlertBehaviour   unexpectedAlertBehaviour 	string 	What the browser should do with an unhandled alert before throwing out the UnhandledAlertException. Possible values are "accept", "dismiss" and "ignore"
