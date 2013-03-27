@@ -49,14 +49,15 @@ public class DefaultMessageHandler implements MessageHandler {
       this.extraFinders.add(finder);
     }
   }
-  
+
   private static int threadCount;
 
   @Override
   public synchronized void handle(final String msg) {
-    if (stopped)
+    if (stopped) {
       throw new IllegalStateException("stopped");
-    
+    }
+
     Thread t = new Thread("DefaultMessageHandler-" + ++threadCount) {
       @Override
       public void run() {
@@ -110,7 +111,6 @@ public class DefaultMessageHandler implements MessageHandler {
 
       return res;
     } catch (RuntimeException e) {
-      System.out.println("Cannot find response for " + id);
       throw e;
     }
   }
@@ -124,8 +124,9 @@ public class DefaultMessageHandler implements MessageHandler {
   @Override
   public synchronized void stop() {
     stopped = true;
-    for (Thread t: threads)
+    for (Thread t : threads) {
       t.interrupt();
+    }
   }
 
 

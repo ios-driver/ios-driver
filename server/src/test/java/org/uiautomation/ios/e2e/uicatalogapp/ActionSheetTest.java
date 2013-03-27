@@ -77,7 +77,6 @@ public class ActionSheetTest extends BaseIOSDriverTest {
     el.click();
 
     Alert alert = driver.switchTo().alert();
-    System.out.println(alert.getText());
     alert.dismiss();
     try {
       driver.switchTo().alert();

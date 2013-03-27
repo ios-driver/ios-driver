@@ -140,8 +140,6 @@ public abstract class WebKitRemoteDebugProtocol {
       xml = xml.replace(key, variables.get(key));
     }
     sendMessage(xml);
-    //byte[] bytes = plist.plistXmlToBinary(xml);
-    //sendBinaryMessage(bytes);
   }
 
 
@@ -154,7 +152,6 @@ public abstract class WebKitRemoteDebugProtocol {
       long start = System.currentTimeMillis();
 
       String xml = plist.JSONCommand(command);
-      // perf("got xml \t" + (System.currentTimeMillis() - start) + "ms.");
       Map<String, String> var = ImmutableMap.of
           (
               "$WIRConnectionIdentifierKey", connectionId,
@@ -165,16 +162,8 @@ public abstract class WebKitRemoteDebugProtocol {
       for (String key : var.keySet()) {
         xml = xml.replace(key, var.get(key));
       }
-      //System.out.println("sending "+xml);
-
-      //byte[] bytes = plist.plistXmlToBinary(xml);
-      // perf("prepared request \t" + (System.currentTimeMillis() - start) +
-      // "ms.");
-      //sendBinaryMessage(bytes);
       sendMessage(xml);
-      // perf("sent request \t\t" + (System.currentTimeMillis() - start) + "ms.");
       JSONObject response = handler.getResponse(command.getInt("id"));
-      // perf("got response\t\t" + (System.currentTimeMillis() - start) + "ms.");
       JSONObject error = response.optJSONObject("error");
       if (error != null) {
         throw new RemoteExceptionException(error, command);

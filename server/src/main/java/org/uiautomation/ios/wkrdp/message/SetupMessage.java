@@ -27,40 +27,6 @@ public class SetupMessage extends BaseIOSWebKitMessage {
   public String toString() {
     return "TODO";
   }
-
-  public void test() {
-    /*List<DefaultElement> windows = document.selectNodes("/plist/dict/dict/dict/dict");
-    try {
-      NSDictionary rootDict = (NSDictionary) XMLPropertyListParser.parse(rawMessage.getBytes());
-      String selector = rootDict.objectForKey("__selector").toString();
-
-      NSDictionary arguments = (NSDictionary) rootDict.objectForKey("__argument");
-      String app = arguments.objectForKey("WIRApplicationIdentifierKey").toString();
-      System.out.println(selector + " app " + app);
-
-      NSDictionary list = (NSDictionary) arguments.objectForKey("WIRListingKey");
-      String[] keys = list.allKeys();
-
-      for (String key : keys) {
-        NSDictionary page = (NSDictionary) list.objectForKey(key);
-        String id = page.objectForKey("WIRPageIdentifierKey").toString();
-        String url = page.objectForKey("WIRURLKey").toString();
-        String title = page.objectForKey("WIRTitleKey").toString();
-
-        NSObject cnx = page.objectForKey("WIRConnectionIdentifierKey");
-        String c = cnx == null ? null : cnx.toString();
-        //System.out.println(id + ", " + url + " , " + title + "state:" + c);
-
-      }
-
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    System.out.println(windows.size());
-    for (DefaultElement win : windows) {
-
-    } */
-  }
 }
 
 

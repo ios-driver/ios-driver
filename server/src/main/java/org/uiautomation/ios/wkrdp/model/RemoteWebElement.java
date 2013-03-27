@@ -217,8 +217,9 @@ public class RemoteWebElement {
   public String getCssValue(String propertyName) throws Exception {
     String
         f =
-        "(function(element,value) { var result = " + IosAtoms.GET_EFFECTIVE_STYLE + "(element,value);"
-            + "return result;})";
+        "(function(element,value) { var result = " + IosAtoms.GET_EFFECTIVE_STYLE
+        + "(element,value);"
+        + "return result;})";
 
     JSONArray args = new JSONArray();
     args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
@@ -393,8 +394,11 @@ public class RemoteWebElement {
 
   public RemoteWebElement getContentDocument() throws Exception {
 
-    JSONObject response = getInspectorResponse("(function(arg) { var document = this.contentDocument; return document;})",
-        null, false);
+    JSONObject
+        response =
+        getInspectorResponse(
+            "(function(arg) { var document = this.contentDocument; return document;})",
+            null, false);
     RemoteObject ro = inspector.cast(response);
     if (ro == null) {
       throw new NoSuchFrameException("Cannot find the document associated with the frame.");
@@ -410,7 +414,8 @@ public class RemoteWebElement {
     args.put(new JSONObject().put("objectId", objectId));
 
     JSONObject response = getInspectorResponse(
-        "(function(args) { var me = this; var other=args;alert(me +' -- '+other);return me === other;})", args, false);
+        "(function(args) { var me = this; var other=args;alert(me +' -- '+other);return me === other;})",
+        args, false);
     boolean equal = (Boolean) inspector.cast(response);
     return equal;
 
@@ -519,9 +524,7 @@ public class RemoteWebElement {
   }
 
   public String getTagName() {
-    long start = System.currentTimeMillis();
     String tag = getAttribute("tagName");
-    System.out.println((System.currentTimeMillis() - start) + "ms");
     return tag.toLowerCase();
   }
 

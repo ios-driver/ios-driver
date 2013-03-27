@@ -4,6 +4,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.utils.ClassicCommands;
 
+import java.util.Locale;
+
 public class RecognizeAllLanguagesInTheSafariAppTest {
 
   private APPIOSApplication app;
@@ -15,13 +17,4 @@ public class RecognizeAllLanguagesInTheSafariAppTest {
     app = APPIOSApplication.findSafariLocation(ClassicCommands.getXCodeInstall(), s);
 
   }
-
-  @Test
-  public void noVariable() {
-    //System.out.println(app.getSupportedLanguagesCodes());
-    //for (Locale l : Locale.getAvailableLocales()){
-    //  System.out.println(l.toString()+"\t"+l.getLanguage()+"\t"+l.getDisplayLanguage());
-    //}*/
-  }
-
 }

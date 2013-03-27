@@ -60,9 +60,7 @@ public class AugmenterTest extends BaseIOSDriverTest {
   public void logElementTree() {
     WebElement
         element = driver.findElement(By.linkText("name=" + buttonName));
-    System.out.println(element.getClass());
     ElementTree tree = IOSDriverAugmenter.augment(driver);
-    System.out.println(tree.logElementTree(null, false));
   }
 
   @Test

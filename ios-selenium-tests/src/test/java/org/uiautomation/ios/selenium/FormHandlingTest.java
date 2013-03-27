@@ -41,7 +41,10 @@ import static org.testng.Assert.fail;
 
 public class FormHandlingTest extends BaseSeleniumTest {
 
-  private static final String AUXILIARY_KEYS = "-/:;()$&@\".,?!'[]{}#%^*+=_\\|~<>£€•àáâäæãåāìįíīïîiłńñõōøœóòöôßśšūúùüûŷÿžźżÀÁÂÄÆÃÅĀÌĮÍĪÏÎŁŃÑÕŌØŒÓÒÖÔŚŠŪÚÙÜÛŶŸŽŹŻcçćčCÇĆČeèéêëēėęEÈÉÊËĒĖĘ";
+  private static final
+  String
+      AUXILIARY_KEYS =
+      "-/:;()$&@\".,?!'[]{}#%^*+=_\\|~<>£€•àáâäæãåāìįíīïîiłńñõōøœóòöôßśšūúùüûŷÿžźżÀÁÂÄÆÃÅĀÌĮÍĪÏÎŁŃÑÕŌØŒÓÒÖÔŚŠŪÚÙÜÛŶŸŽŹŻcçćčCÇĆČeèéêëēėęEÈÉÊËĒĖĘ";
 
   @Test
   public void testShouldClickOnSubmitInputElements() {
@@ -448,7 +451,6 @@ public class FormHandlingTest extends BaseSeleniumTest {
         return !webDriver.getCurrentUrl().equals(curURL);
       }
     });
-    System.out.println(driver.getCurrentUrl());
     assertTrue(driver.getCurrentUrl().endsWith("something"));
   }
 }

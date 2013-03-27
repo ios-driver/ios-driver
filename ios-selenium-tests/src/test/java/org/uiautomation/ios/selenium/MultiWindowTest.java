@@ -109,9 +109,7 @@ public class MultiWindowTest extends BaseSeleniumTest {
     driver.findElement(By.id("new-window")).click();
     waitForWindow(driver, "Web_2");
 
-    System.out.println(driver.getWindowHandles());
     driver.get("http://ebay.co.uk");
-    System.out.println(driver.getWindowHandles());
 
     // native + 2 web windows.
     Assert.assertEquals(driver.getWindowHandles().size(), 4);

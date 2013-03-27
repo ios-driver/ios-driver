@@ -215,15 +215,7 @@ public class DOMContext {
       reset();
       return "unknown";
     }
-    return state; ///*"interactive".equals(state)
-    /*String state = null;
-    try {
-      state = (String)session.getRemoteWebDriver().evaluate("document.readyState;");
-    } catch (Exception e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-    }
-    System.out.println("state:"+state);
-    return state; */
+    return state;
   }
 
   private boolean isReady() {

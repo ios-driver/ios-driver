@@ -31,7 +31,6 @@ public class SetValueNHandler extends UIAScriptHandler {
     super(driver, request);
 
     boolean useNativeEvents = (Boolean) getConfiguration("nativeEvents");
-    System.out.println("Native:" + useNativeEvents);
     try {
       JSONArray array = request.getPayload().getJSONArray("value");
       String value = array.getString(0);

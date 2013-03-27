@@ -70,12 +70,7 @@ public class IOSServer {
       RegistrationRequest
           request =
           new RegistrationRequest(options, driver);
-      try {
-        request.registerToHub();
-      } catch (Exception e) {
-        System.out.println(e.toString());
-      }
-
+      request.registerToHub();
     }
   }
 

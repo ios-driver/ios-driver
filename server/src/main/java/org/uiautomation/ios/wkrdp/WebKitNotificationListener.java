@@ -138,19 +138,15 @@ public class WebKitNotificationListener implements MessageListener {
 
     if (message instanceof ApplicationDataMessage) {
       //ApplicationDataMessage m = (ApplicationDataMessage)message;
-      //System.out.println(m.getMessage());
     }
 
     if (message instanceof ApplicationConnectedMessage) {
       ApplicationConnectedMessage m = (ApplicationConnectedMessage) message;
       List<WebkitApplication> apps = new ArrayList<WebkitApplication>();
-      System.out.println("message apps : " + m.getApplication());
       apps.add(m.getApplication());
       driver.setApplications(apps);
       sync.signalSimSentApps();
     }
-
-    //System.err.println(message);
   }
 
   private WebkitPage selectPage(List<WebkitPage> pages) {
