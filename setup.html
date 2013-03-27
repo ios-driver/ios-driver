@@ -65,8 +65,20 @@
 <div id="main_content_wrap" class="outer">
     <section id="main_content" class="inner">
 
+    <div class="nav-container">
+        <div class = "nav">
+            <ul >
+                <li><a href="#overview">Technical Overview</a></li>
+                <li><a href="#sysreqs">System Requirements</a></li>
+                <li><a href="#testapp">Getting a test application</a></li>
+                <li><a href="#launching">Launching ios-driver</a></li>
+                <li><a href="#cli">Command Line Parameters</a></li>
+            </ul>
+        </div>
+    </div>
 
- <h3>Technical overview</h3>
+
+ <h3 id="overview">Technical overview</h3>
         Webdriver is a great automation tool for browsers. It comes with a very clean API that describes
         how
         users can interact with a browser. The same API can be used for ios automation as well. In the
@@ -82,7 +94,7 @@
         business
         logic of your tests instead of having to learn a new API.
 
-        <h3>System requirements for OSX</h3>
+        <h3 id="sysreqs">System requirements for OSX</h3>
 
         <p>ios-driver is built upon 2 different frameworks from Apple. </p>
 
@@ -129,34 +141,34 @@
 
         <p>will return the version you're currently running, or prompt you to install it.</p>
 
-<h3>Getting a test application</h3>
+<h3 id="testapp">Getting a test application</h3>
 
-        <p>( for the doc example, I'll use the apple app <a
-                href="http://developer.apple.com/library/ios/#samplecode/InternationalMountains/Introduction/Intro.html">InternationalMountains</a>
-            You need to attach an app that will work with UIAutomation.
-            You can use xcodebuild command line ( from you CI for instance ) or use the xcode UI.
-        </p>
+<p>( for the doc example, I'll use the apple app <a
+        href="http://developer.apple.com/library/ios/#samplecode/InternationalMountains/Introduction/Intro.html">InternationalMountains</a>
+    You need to attach an app that will work with UIAutomation.
+    You can use xcodebuild command line ( from you CI for instance ) or use the xcode UI.
+</p>
 
-        <p>With the UI :
-            from the menu bar, Product &gt; Profile</p>
+<p>With the UI :
+    from the menu bar, Product &gt; Profile</p>
 
-        <p>Select Automation. That will build the app and start Instruments. You can close
-            Instruments.
-            From xcode, select Organizer &gt; Projects
-            You will have the application in the folder mentioned in Derived data.
-            It will be a folder that looks like :
-            ~/Library/Developer/Xcode/DerivedData/InternationalMountains-cjnsqcubuvgivjgopgboswocznce/</p>
+<p>Select Automation. That will build the app and start Instruments. You can close
+    Instruments.
+    From xcode, select Organizer &gt; Projects
+    You will have the application in the folder mentioned in Derived data.
+    It will be a folder that looks like :
+    ~/Library/Developer/Xcode/DerivedData/InternationalMountains-cjnsqcubuvgivjgopgboswocznce/</p>
 
-        <p>from there navigate to /Build/Products/Debug-iphonesimulator
-            and take you application. ( YourAppName.app )</p>
+<p>from there navigate to /Build/Products/Debug-iphonesimulator
+    and take you application. ( YourAppName.app )</p>
 
-        <p>Save it in a more convenient path, for instance ~/Documents/build/myapp.app</p>
+<p>Save it in a more convenient path, for instance ~/Documents/build/myapp.app</p>
 
-        <h3>Launching ios-driver</h3>
+<h3 id="launching">Launching ios-driver</h3>
 
-        <p>Download server-standalone-1.0.0-SNAPSHOT.jar</p>
+<p>Download server-standalone-1.0.0-SNAPSHOT.jar</p>
 
-        <p>cd to the folder where you downloaded the jar, and run </p>
+<p>cd to the folder where you downloaded the jar, and run </p>
 
 <pre><code>$ java -jar ios-server-0.5.0.jar -aut ~/Documents/build/myapp.app -port
     4444
@@ -248,7 +260,7 @@ Applications :
 
 </code></pre>
 
-<h3>Command line parameters</h3>
+<h3 id="cli">Command line parameters</h3>
 
 <h4>-beta</h4>
 <p>Enables beta functionality, this is funcationality which is still under development and may not work in all instances. Currently a lot of the beta functionality is centered around real device support.</p>
