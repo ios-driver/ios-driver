@@ -81,6 +81,9 @@ java -jar ios-driver.jar -hub http://127.0.0.1:4444/grid/register -proxy org.uia
 
 <img src="images/IOSRemoteProxy.png" alt="step2.png" width='640'>
 
+<h3>IOSRemoteProxy</h3>
+<p>IOSRemoteProxy is a custom remote proxy which is designed to work with ios-driver nodes. In particular it polls the node to see if the capabilities have been updated, this will allow you to use ios-driver as part of your CI process where new version of apps could be added to ios-drivers capabilities. Have a look at the -folder parameter option if you'd like to dynamically pick up new apps. If IOSRemoteProxy discovers new capabilites on the node, it will mark the node as down, wait for any running tests to complete and will then re-register the node with the updated capabilities making them available for testing.</p>
+
 <h3>Building IOSRemoteProxy</h3>
 
 <pre class="prettyprint">
