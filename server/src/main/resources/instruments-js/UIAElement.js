@@ -27,7 +27,9 @@ UIAElement.prototype.rect = function () {
 }
 
 /**
- *
+ * enter text / password in the input fields.
+ * @param value  the text to enter.
+ * @param opt_native true -> use the keyboard, otherwise calls setValue() and inject the value.
  */
 UIAElement.prototype.sendKeys = function (value, opt_native) {
 
