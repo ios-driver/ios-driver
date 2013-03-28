@@ -86,8 +86,8 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
       o.put("browserName", session.getCapabilities().getBundleName());
       o.put("browserVersion", session.getApplication().getCapabilities().getBundleVersion());
 
-      o.put("platform", "iOS");
-      o.put("platformName", "iOS");
+      o.put("platform", "IOS");
+      o.put("platformName", "IOS");
       o.put("platformVersion", session.getCapabilities().getSDKVersion());
 
 
