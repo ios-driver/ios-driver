@@ -82,6 +82,9 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
 
       o.put("rotatable", true);
       o.put("locationContextEnabled", true);
+      o.put("browserName", session.getCapabilities().getBundleName()); //CFBundleName
+      o.put("platform", "iOS");
+      o.put("javascriptEnabled", true);
       o.put(IOSCapabilities.SIMULATOR, true);
       o.put(IOSCapabilities.DEVICE, session.getCapabilities().getDevice());
       o.put(IOSCapabilities.VARIATION, session.getCapabilities().getDeviceVariation());
