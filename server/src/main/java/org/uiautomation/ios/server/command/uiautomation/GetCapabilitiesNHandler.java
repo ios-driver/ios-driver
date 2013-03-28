@@ -90,8 +90,10 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
       o.put("platformName", "IOS");
       o.put("platformVersion", session.getCapabilities().getSDKVersion());
 
-
       o.put("javascriptEnabled", true);
+      o.put("cssSelectors", true);
+      o.put("takesElementScreenshot", false);
+      
       o.put(IOSCapabilities.SIMULATOR, true);
       o.put(IOSCapabilities.DEVICE, session.getCapabilities().getDevice());
       o.put(IOSCapabilities.VARIATION, session.getCapabilities().getDeviceVariation());
