@@ -229,6 +229,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
   public void setValueNative(String value) throws Exception {
     String type = getAttribute("type");
     if ("date".equalsIgnoreCase(type)) {
+      value = normalizeDateValue(value);
       setValueAtoms(value);
       return;
     }
@@ -254,5 +255,22 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     }
     return str.replaceAll("-", "");
   }
+  
+  private static String normalizeDateValue(String value) {
+    // convert MM/DD/YYYY to YYYY-MM-DD
+    int sep1 = value.indexOf('/');
+    int sep2 = value.lastIndexOf('/');
+    if (sep1 == -1 || sep2 == -1)
+      return value;
 
+    String mm = value.substring(0, sep1);
+    String dd = value.substring(sep1 + 1, sep2);
+    String yyyy = value.substring(sep2 + 1);
+
+    return yyyy + '-' + to2CharDateDigit(mm) + '-' + to2CharDateDigit(dd);
+  }
+
+  private static String to2CharDateDigit(String text) {
+    return (text.length() == 1) ? '0' + text : text;
+  }
 }
