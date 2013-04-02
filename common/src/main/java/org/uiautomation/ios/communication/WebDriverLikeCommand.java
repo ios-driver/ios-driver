@@ -102,14 +102,14 @@ public enum WebDriverLikeCommand {
   // POST /session/:sessionId/buttonup
   // POST /session/:sessionId/doubleclick
   // POST /session/:sessionId/touch/click
-  // POST /session/:sessionId/touch/down
+  //TOUCH_DOWN("POST", "/session/:sessionId/touch/down", Void.class),
   // POST /session/:sessionId/touch/up
   // POST session/:sessionId/touch/move
   // POST session/:sessionId/touch/scroll
   // POST session/:sessionId/touch/scroll ( different params )
   // POST session/:sessionId/touch/doubleclick
   // POST session/:sessionId/touch/longclick
-  // POST session/:sessionId/touch/flick
+  FLICK("POST", "/session/:sessionId/touch/flick", Void.class),
   // POST session/:sessionId/touch/flick ( different params )
 
   GET_LOCATION("GET", "/session/:sessionId/location", Void.class),
@@ -137,7 +137,7 @@ public enum WebDriverLikeCommand {
    */
   CONFIGURE("POST", "/session/:sessionId/ios-driver/configure/command/:command", Void.class),
   GET_CONFIGURATION("GET", "/session/:sessionId/ios-driver/configure/command/:command",
-                    Object.class),
+      Object.class),
 
   GET_TIMEOUT("GET", "/session/:sessionId/timeouts", Integer.class),
   TREE("GET", "/session/:sessionId/element/:reference/tree", String.class),
@@ -150,7 +150,7 @@ public enum WebDriverLikeCommand {
   TARGET_RECT("GET", "/session/:sessionId/uiaTarget/:reference/rect", UIARect.class),
 
   ALERT_CANCEL_BUTTON("GET", "/session/:sessionId/element/:reference/cancel", UIAButton.class),
-  ALERT_DEFAULT_BUTTON("GET", "/session/:sessionId/element/:reference/default", UIAButton.class)
+  ALERT_DEFAULT_BUTTON("GET", "/session/:sessionId/element/:reference/default", UIAButton.class),
 
   // UIATarget
   /*LOCAL_TARGET("GET", "/session/:sessionId/localTarget", UIATarget.class),
@@ -207,24 +207,32 @@ public enum WebDriverLikeCommand {
   WITH_VALUE_FOR_KEY("GET", "/session/:sessionId/uiaElement/:reference/withValueForKey",
                      UIAElement.class),
 
-
+  */
   TOUCH_AND_HOLD("POST", "/session/:sessionId/uiaElement/:reference/touchAndHold", Void.class),
   DOUBLE_TAP("POST", "/session/:sessionId/uiaElement/:reference/doubleTap", Void.class),
   TWO_FINGER_TAP("POST", "/session/:sessionId/uiaElement/:reference/twoFingerTap", Void.class),
-  TAP_WITH_OPTIONS("POST", "/session/:sessionId/uiaElement/:reference/tapWithOptions", Void.class),
-  DRAG_INSIDE_WITH_OPTIONS("POST",
-                           "/session/:sessionId/uiaElement/:reference/dragInsideWithOptions",
-                           Void.class),
-  FLICK_INSIDE_WITH_OPTIONS("POST",
-                            "/session/:sessionId/uiaElement/:reference/flickInsideWithOption",
-                            Void.class),
+  //TAP_WITH_OPTIONS("POST", "/session/:sessionId/uiaElement/:reference/tapWithOptions", Void.class),
+  //DRAG_INSIDE_WITH_OPTIONS("POST",
+  //                         "/session/:sessionId/uiaElement/:reference/dragInsideWithOptions",
+  //                         Void.class),
+  //FLICK_INSIDE_WITH_OPTIONS("POST",
+  //                          "/session/:sessionId/uiaElement/:reference/flickInsideWithOption",
+  //                          Void.class),
   SCROLL_TO_VISIBLE("POST", "/session/:sessionId/uiaElement/:reference/scrollToVisible",
-                    Void.class),
-  ROTATE_WITH_OPTIONS("POST", "/session/:sessionId/uiaElement/:reference/rotateWithOptions",
-                      Void.class),
-  PINCH_CLOSE("POST", "/session/:sessionId/pinchClose", Void.class),
+      Void.class),
+  //ROTATE_WITH_OPTIONS("POST", "/session/:sessionId/uiaElement/:reference/rotateWithOptions",
+  //                    Void.class),
+  //PINCH_CLOSE("POST", "/session/:sessionId/pinchClose", Void.class),
+  SCROLL_UP("POST", "/session/:sessionId/uiaElement/:reference/scrollUp",
+      Void.class),
+  SCROLL_DOWN("POST", "/session/:sessionId/uiaElement/:reference/scrollDown",
+      Void.class),
+  SCROLL_LEFT("POST", "/session/:sessionId/uiaElement/:reference/scrollLeft",
+      Void.class),
+  SCROLL_RIGHT("POST", "/session/:sessionId/uiaElement/:reference/scrollRight",
+      Void.class),
 
-
+  /*
   // UIAElementArray
   GET("GET", "/session/:sessionId/uiaElementArray/:reference", UIAElement.class),
   FIRST_WITH_NAME("GET", "/session/:sessionId/uiaElementArray/:reference/firstWithName",

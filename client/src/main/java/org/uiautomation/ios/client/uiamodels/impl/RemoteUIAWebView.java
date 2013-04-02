@@ -22,4 +22,24 @@ public class RemoteUIAWebView extends RemoteUIAElement implements UIAWebView {
     super(driver, reference);
   }
 
+  @Override
+  public void scrollUp() {
+    //To change body of implemented methods use File | Settings | File Templates.
+  }
+
+  @Override
+  public void scrollDown() {
+    //To change body of implemented methods use File | Settings | File Templates.
+  }
+
+  @Override
+  public void scrollLeft() {
+    //To change body of implemented methods use File | Settings | File Templates.
+  }
+
+  @Override
+  public void scrollRight() {
+    //To change body of implemented methods use File | Settings | File Templates.
+  }
+
 }
