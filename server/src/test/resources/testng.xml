@@ -1,29 +1,49 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
 <suite name="ios-driver" parallel="false">
-	<test name="unit tests" preserve-order="true">
-		<packages>
-			<package name="org.uiautomation.ios.server.*" />
-		</packages>
-	</test>
-	<test name="config" preserve-order="true">
-		<packages>
-			<package name="org.uiautomation.ios.e2e.config.*" />
-		</packages>
-	</test>
-	<test name="hybrid" preserve-order="true">
-		<packages>
-			<package name="org.uiautomation.ios.e2e.hybrid.*" />
-		</packages>
-	</test>
-	<test name="intl" preserve-order="true">
-		<packages>
-			<package name="org.uiautomation.ios.e2e.intl.*" />
-		</packages>
-	</test>
-	<test name="uicatalogapp" preserve-order="true">
-		<packages>
-			<package name="org.uiautomation.ios.e2e.uicatalogapp.*" />
-		</packages>
-	</test>
+    <test name="unit tests" preserve-order="true">
+        <packages>
+            <package name="org.uiautomation.ios.server.*"/>
+        </packages>
+    </test>
+    <test name="config" preserve-order="true">
+        <groups>
+            <run>
+                <include name="travis"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="org.uiautomation.ios.e2e.config.*"/>
+        </packages>
+    </test>
+    <test name="hybrid" preserve-order="true">
+        <groups>
+            <run>
+                <include name="travis"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="org.uiautomation.ios.e2e.hybrid.*"/>
+        </packages>
+    </test>
+    <test name="intl" preserve-order="true">
+        <groups>
+            <run>
+                <include name="travis"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="org.uiautomation.ios.e2e.intl.*"/>
+        </packages>
+    </test>
+    <test name="uicatalogapp" preserve-order="true">
+        <groups>
+            <run>
+                <include name="travis"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="org.uiautomation.ios.e2e.uicatalogapp.*"/>
+        </packages>
+    </test>
 </suite>

@@ -2,9 +2,13 @@
 
 <suite name="ios-driver" parallel="false">
     <test name="web regression" preserve-order="true">
+        <groups>
+            <run>
+                <include name="travis"/>
+            </run>
+        </groups>
         <packages>
             <package name="org.uiautomation.ios.selenium"/>
         </packages>
-
     </test>
 </suite>
