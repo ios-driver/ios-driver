@@ -1,0 +1,5 @@
+language: objective-c
+script: mvn test
+branches:
+  only:
+    - travis
