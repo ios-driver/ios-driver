@@ -168,6 +168,10 @@
 
 <p>Download server-standalone-1.0.0-SNAPSHOT.jar</p>
 
+<p>Before the first run you will need to update the MobileSafari Info.plist to allow ios-driver to edit it</p>
+    <code>sudo chmod 666 /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator*.sdk/Applications/MobileSafari.app/Info.plist
+    </code>
+
 <p>cd to the folder where you downloaded the jar, and run </p>
 
 <pre><code>$ java -jar ios-server-0.5.0.jar -aut ~/Documents/build/myapp.app -port

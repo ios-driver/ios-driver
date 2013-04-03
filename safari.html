@@ -80,6 +80,10 @@ $(document).ready(function($){
         using the
         keyboard) and web based selectors.</p>
 
+    <p>Before the first run you will need to update the MobileSafari Info.plist to allow ios-driver to edit it</p>
+    <code>sudo chmod 666 /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator*.sdk/Applications/MobileSafari.app/Info.plist
+    </code>
+    
     <h3 id="basics">The basics</h3>
     <pre class="prettyprint">
     public static void main(String[] args) throws Exception {
