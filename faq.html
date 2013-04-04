@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'/>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1"/>
+    <meta name="description" content="ios-driver : IOS native app automation"/>
+    <link href="stylesheets/prettify.css" type="text/css" rel="stylesheet"/>
+    <script type="text/javascript" src="javascripts/prettify.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/properties.js"></script>
+
+    <title>ios-driver</title>
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38099992-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+<script type="text/javascript">
+$(document).ready(function($){
+    	var nav = $('.nav-container');
+
+    	$(window).scroll(function () {
+        	if ($(this).scrollTop() > 170) {
+            	nav.addClass("f-nav");
+        	} else {
+            	nav.removeClass("f-nav");
+        	}
+    });
+
+    buildMenu("faq");
+    });
+    </script>
+
+</head>
+
+<body onload="prettyPrint()">
+
+<!-- HEADER -->
+<div id="header_wrap" class="outer">
+    <header class="inner">
+        <a id="forkme_banner" href="DEFAULT">View on GitHub</a>
+        <a id="download_me" href="DEFAULT">DEFAULT</a>
+
+        <h1 id="project_title">ios-driver</h1>
+
+        <h2 id="project_tagline">IOS automation for native, hybrid and mobile web.</h2>
+
+
+        <div id="menu"/>
+
+
+
+    </header>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main_content_wrap" class="outer">
+    <section id="main_content" class="inner">
+
+
+        <h3>Overview</h3>
+        Test any IOS native, hybrid, or mobile web application using the Selenium / Webdriver API. IOS
+        automation is as easy as automation for a browser, due to reuse of the well known API. 
+        You can reuse the helper classes from your web tests to i.e. create data,
+        and follow the same design patterns you're used to (Page Object etc.).
+
+        <h3>High level features :</h3>
+        <ul>
+            <li>Implements the JSON wire protocol</li>
+            <li>Runs on emulators and devices</li>
+            <li>Can be run as a regular node in a Selenium Grid</li>
+            <li>Can be used in an existing Selenium Grid to manage device / simulator farm</li>
+            <li>First class support for localized native apps ( 1 test works for all the localized
+                versions )</li>
+            <li>No need to change the source</li>
+            <li>No need to jailbreak the device</li>
+            <li>No ios-driver app to install on the phone</li>
+        </ul>
+
+        <h3>Scaling</h3>
+
+        <p>ios-driver has been built with scaling in mind. GUI based tests are slow by nature slow and if run sequentially take too long to provide fast feedback. 
+        	By following the webdriver protocol, ios-driver can be
+            used as a Selenium grid node, and the tests can be run in parallel on the same
+            architecture as
+            the one already running the web tests.</p>
+        <img src="images/scale.png" alt="step2.png" width='640'>
+
+        <p>TODO doc : write an example capability matcher.</p>
+
+
+        <h3>Status</h3>
+
+
+    </section>
+</div>
+
+<!-- FOOTER  -->
+<div id="footer_wrap" class="outer" />
+
+</div>
+</body>
+</html>
