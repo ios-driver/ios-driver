@@ -73,6 +73,7 @@
                 <li><a href="#testapp">Getting a test application</a></li>
                 <li><a href="#launching">Launching ios-driver</a></li>
                 <li><a href="#cli">Command Line Parameters</a></li>
+                <li><a href="#real">Real Devices</a></li>
             </ul>
         </div>
     </div>
@@ -297,6 +298,31 @@ Applications :
 
 <h3>Configuring the system to support multiple SDK for the simulator</h3>
         doc todo.
+
+<h3 id="real">Real Devices</h3>
+<p>In order to run tests on real devices you need to enable beta functionality by specifying -beta when you launch ios-driver.</p>
+
+<p>When you connect a device the server will output something like:</p>
+<pre class="prettyprint">
+    39:28:021 INFO DeviceStore.onDeviceAdded  ADDED : EC-SET-iPadMini1-01,IOS 6.0.2[4ad1d9688bbc1e69727bb5123daf477517982eae]
+</pre>
+
+<p>If you have deployed an application to the device which has had automation enabled  like <a href="#testapp">so</a>, you need to archive this application before it will be added to the ios-driver capabilities and therfore be testable. In order to archive the application, navigate to the ios-driver devices page http://localhost:5555/wd/hub/devices/all. Under the application name click on ARCHIVE.<br/>
+<img src="images/realdevicearchive.png" alt="step2.png" width='640'> <br/>
+Once you've archived the application you should now see it listed on http://localhost:5555/wd/hub/capabilities/all</p>
+
+<pre class="prettyprint">
+com.yourcompany.InternationalMountains on iphone
+ 
+{ "BuildMachineOSBuild": "12D78", "CFBundleDevelopmentRegion": "en", "CFBundleExecutable": "InternationalMountains", "CFBundleIconFile": "Icon.png", "CFBundleIdentifier": "com.yourcompany.InternationalMountains", "CFBundleInfoDictionaryVersion": "6.0", "CFBundleName": "InternationalMountains", "CFBundlePackageType": "APPL", "CFBundleResourceSpecification": "ResourceRules.plist", "CFBundleSignature": "????", "CFBundleSupportedPlatforms": ["iPhoneOS"], "CFBundleVersion": "1.1", "DTCompiler": "", "DTPlatformBuild": "10B141", "DTPlatformName": "iphoneos", "DTPlatformVersion": "6.1", "DTSDKBuild": "10B141", "DTSDKName": "iphoneos6.1", "DTXcode": "0461", "DTXcodeBuild": "4H512", "LSRequiresIPhoneOS": true, "MinimumOSVersion": "6.0", "NSMainNibFile": "MainWindow", "UIDeviceFamily": [1], "applicationPath": "/Users/gabell/github/ios-driver-dev/applications/com.yourcompany.InternationalMountains.ipa.unzipped/payload/InternationalMountains.app", "device": "iphone", "deviceAlt": [ "iphone", "ipod" ], "sdkVersion": "6.0.2", "simulator": false, "supportedLanguages": [ "zh", "fr", "en" ], "timeHack": false, "uuid": "4ad1d9688bbc1e69727bb5123daf477517982eae", "variation": "Regular" }
+ 
+ 
+com.apple.mobilesafari on iphone(Simulator)
+ 
+{ "CFBundleDevelopmentRegion": "English", "CFBundleDisplayName": "Safari", "CFBundleExecutable": "MobileSafari", "CFBundleIcons": {"CFBundlePrimaryIcon": { "CFBundleIconFiles": [ "icon~iphone.png", "icon~ipad.png", "icon@2x~iphone.png", "icon@2x~ipad.png", "icon-table.png", "icon-table@2x.png", "icon-spotlight~ipad.png", "icon-spotlight@2x~ipad.png" ], "UIPrenderedIcon": true }}, "CFBundleIdentifier": "com.apple.mobilesafari", "CFBundleInfoDictionaryVersion": "6.0", "CFBundlePackageType": "APPL", "CFBundleShortVersionString": "6.0", "CFBundleSignature": "????", "CFBundleSupportedPlatforms": ["iPhoneSimulator"], "CFBundleURLTypes~ipad": [ { "CFBundleURLIsPrivate": true, "CFBundleURLName": "Web App URL", "CFBundleURLSchemes": ["webclip"] }, { "CFBundleURLName": "Web site URL", "CFBundleURLSchemes": [ "http", "https" ] }, { "CFBundleURLName": "FTP URL", "CFBundleURLSchemes": ["ftp"] }, { "CFBundleURLName": "Web Search URL", "CFBundleURLSchemes": ["x-web-search"] } ], "CFBundleURLTypes~iphone": [ { "CFBundleURLIsPrivate": true, "CFBundleURLName": "Web App URL", "CFBundleURLSchemes": ["webclip"] }, { "CFBundleURLName": "Web site URL", "CFBundleURLSchemes": [ "http", "https" ] }, { "CFBundleURLName": "Radar URL", "CFBundleURLSchemes": [ "rdar", "radar" ] }, { "CFBundleURLName": "FTP URL", "CFBundleURLSchemes": ["ftp"] }, { "CFBundleURLName": "Web Search URL", "CFBundleURLSchemes": ["x-web-search"] } ], "CFBundleURLTypes~ipod": [ { "CFBundleURLIsPrivate": true, "CFBundleURLName": "Web App URL", "CFBundleURLSchemes": ["webclip"] }, { "CFBundleURLName": "Web site URL", "CFBundleURLSchemes": [ "http", "https" ] }, { "CFBundleURLName": "Radar URL", "CFBundleURLSchemes": [ "rdar", "radar" ] }, { "CFBundleURLName": "FTP URL", "CFBundleURLSchemes": ["ftp"] }, { "CFBundleURLName": "Web Search URL", "CFBundleURLSchemes": ["x-web-search"] } ], "CFBundleVersion": "8536.25", "DTPlatformName": "iphonesimulator", "DTSDKName": "iphonesimulator6.1", "LSRequiresIPhoneOS": true, "SBMatchingApplicationGenres": [ "Productivity", "Utilities" ], "SBUsesNetwork": 3, "SafariProductVersion": "6.0", "UIApplicationDisableLegacyAutorotationKey": true, "UIBackgroundModes": [ "audio", "continuousFallback" ], "UIDeviceFamily": [ 2, 1 ], "UIHasPrefs": true, "UISupportedInterfaceOrientations": [ "UIInterfaceOrientationPortrait", "UIInterfaceOrientationLandscapeLeft", "UIInterfaceOrientationLandscapeRight" ], "UISupportedInterfaceOrientations~ipad": [ "UIInterfaceOrientationPortrait", "UIInterfaceOrientationLandscapeLeft", "UIInterfaceOrientationLandscapeRight", "UIInterfaceOrientationPortraitUpsideDown" ], "applicationPath": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk/Applications/MobileSafari.app", "device": "iphone", "deviceAlt": [ "ipad", "iphone", "ipod" ], "device_Alt": [ "iphone", "ipad" ], "sdkVersion": "6.1", "sdkVersion_Alt": [ "5.0", "5.1", "6.0", "6.1" ], "simulator": true, "supportedLanguages": [ "ko", "no", "cs", "pl", "el", "sv", "in_ID", "ja", "es", "pt_PT", "hu", "fi", "uk", "de", "ca", "ms", "pt", "ru", "en", "sk", "th", "en_GB", "zh_TW", "nl", "fr", "zh_CN", "tr", "it", "da", "iw_IL", "hr", "vi", "ar", "ro" ], "timeHack": false, "variation": "Regular" }
+</pre>
+<p>If you can see the application listed you're ready to start testing on a real device!</p>
+
 </section>
 </div>
 

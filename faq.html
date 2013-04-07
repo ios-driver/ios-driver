@@ -69,39 +69,17 @@ $(document).ready(function($){
     <section id="main_content" class="inner">
 
 
-        <h3>Overview</h3>
-        Test any IOS native, hybrid, or mobile web application using the Selenium / Webdriver API. IOS
-        automation is as easy as automation for a browser, due to reuse of the well known API. 
-        You can reuse the helper classes from your web tests to i.e. create data,
-        and follow the same design patterns you're used to (Page Object etc.).
+        <h3>Errors launching ios-driver</h3>
+        <h4>Can't load metadata</h4>
+        If you see this error
+        <pre class="prettyprint">
+  Exception in thread "main" org.openqa.selenium.WebDriverException: cannot load the metadata from the Info.plist file for /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk/Applications/MobileSafari.app
+        </pre>
 
-        <h3>High level features :</h3>
-        <ul>
-            <li>Implements the JSON wire protocol</li>
-            <li>Runs on emulators and devices</li>
-            <li>Can be run as a regular node in a Selenium Grid</li>
-            <li>Can be used in an existing Selenium Grid to manage device / simulator farm</li>
-            <li>First class support for localized native apps ( 1 test works for all the localized
-                versions )</li>
-            <li>No need to change the source</li>
-            <li>No need to jailbreak the device</li>
-            <li>No ios-driver app to install on the phone</li>
-        </ul>
-
-        <h3>Scaling</h3>
-
-        <p>ios-driver has been built with scaling in mind. GUI based tests are slow by nature slow and if run sequentially take too long to provide fast feedback. 
-        	By following the webdriver protocol, ios-driver can be
-            used as a Selenium grid node, and the tests can be run in parallel on the same
-            architecture as
-            the one already running the web tests.</p>
-        <img src="images/scale.png" alt="step2.png" width='640'>
-
-        <p>TODO doc : write an example capability matcher.</p>
-
-
-        <h3>Status</h3>
-
+        you need to give ios-driver access to write the MobileSafari info.plist
+        <pre class="prettyprint">
+  chmod 666 /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator*.sdk/Applications/MobileSafari.app/Info.plist
+        </pre>
 
     </section>
 </div>
