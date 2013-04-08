@@ -51,7 +51,6 @@ public class ApplicationStore {
     return null;
   }
 
-
   public List<APPIOSApplication> getSimulatorApplications() {
     List<APPIOSApplication> res = new ArrayList<APPIOSApplication>();
     for (APPIOSApplication a : all) {
@@ -84,7 +83,6 @@ public class ApplicationStore {
     return b.toString();
   }
 
-
   public List<IOSCapabilities> getCapabilities(Device d) {
     List<IOSCapabilities> res = new ArrayList<IOSCapabilities>();
     for (APPIOSApplication app : getApplications()) {
@@ -96,14 +94,22 @@ public class ApplicationStore {
     return res;
   }
 
-
   private IOSCapabilities merge(IOSCapabilities device, IOSCapabilities application) {
     IOSCapabilities res = new IOSCapabilities();
-    for (String key : device.asMap().keySet()) {
-      res.setCapability(key, device.getCapability(key));
-    }
-    for (String key : application.asMap().keySet()) {
-      res.setCapability(key, application.getCapability(key));
+    if (device.isSimulator()) {
+      for (String key : device.asMap().keySet()) {
+        res.setCapability(key, device.getCapability(key));
+      }
+      for (String key : application.asMap().keySet()) {
+        res.setCapability(key, application.getCapability(key));
+      }
+    } else {
+      for (String key : application.asMap().keySet()) {
+        res.setCapability(key, application.getCapability(key));
+      }
+      for (String key : device.asMap().keySet()) {
+        res.setCapability(key, device.getCapability(key));
+      }
     }
     return res;
   }
