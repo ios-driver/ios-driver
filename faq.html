@@ -81,9 +81,22 @@ $(document).ready(function($){
   chmod 666 /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator*.sdk/Applications/MobileSafari.app/Info.plist
         </pre>
 
+        
+
+        <h4>Exiled SDKs warning</h4>
+        The exiledSDKs folder is used to temporarilly store the most recent SDKs allowing us to run against an older version. If you get warnings about this folder, firstly make sure the following location exists
+<pre class="prettyprint">
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs
+</pre>
+        and ios-drvier has read write permissions to the location
+<pre class="prettyprint">
+  chmod -R +rw /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs
+</pre>
+
         <h4>Developer Tools Access needs to take control</h4>
         <img src="images/devaccess.png" width='640'><br/>
         To stop this message being displayed you need to udpate /etc/authorization. 
+
 
 <pre class="prettyprint">
   Find the rule system.privilege.taskport. 
