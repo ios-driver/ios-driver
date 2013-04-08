@@ -18,7 +18,18 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import org.json.JSONObject;
-import org.openqa.selenium.*;
+import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.HasTouchScreen;
+import org.openqa.selenium.Keyboard;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.Point;
+import org.openqa.selenium.Rotatable;
+import org.openqa.selenium.ScreenOrientation;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.TouchScreen;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.html5.Location;
 import org.openqa.selenium.html5.LocationContext;
 import org.openqa.selenium.remote.DriverCommand;
@@ -33,6 +44,7 @@ import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.client.uiamodels.impl.augmenter.Configurable;
 import org.uiautomation.ios.client.uiamodels.impl.augmenter.ElementTree;
 import org.uiautomation.ios.client.uiamodels.impl.augmenter.IOSSearchContext;
+import org.uiautomation.ios.client.uiamodels.impl.augmenter.IOSTouchScreen;
 import org.uiautomation.ios.client.uiamodels.impl.configuration.RemoteDriverConfiguration;
 import org.uiautomation.ios.client.uiamodels.impl.configuration.WebDriverLikeCommandExecutor;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
@@ -50,7 +62,7 @@ import java.util.Set;
 // TakesScreenshot, Rotatable, BrowserConnection, HasTouchScreen, WebStorage, LocationContext, ApplicationCache
 public class RemoteIOSDriver extends RemoteWebDriver
     implements TakesScreenshot, Rotatable, LocationContext, ElementTree,
-    IOSSearchContext, Configurable, HasTouchScreen {
+    IOSSearchContext, Configurable, HasTouchScreen, IOSTouchScreen {
 
   private String remoteURL;
   private Map<String, Object> requestedCapabilities;
@@ -93,6 +105,10 @@ public class RemoteIOSDriver extends RemoteWebDriver
     return RemoteIOSDriver.logElementTree(executor, screenshot, translation);
   }
 
+  @Override
+  public void dragFromToForDuration(Point from, Point to, int duration) throws WebDriverException {
+    RemoteIOSDriver.dragFromToForDuration(executor, from, to, duration);
+  }
 
   @Override
   public IOSCapabilities getCapabilities() {
@@ -179,11 +195,6 @@ public class RemoteIOSDriver extends RemoteWebDriver
   @Override
   public Keyboard getKeyboard() {
     return super.getKeyboard();
-    /*WebDriverLikeRequest
-        request =
-        executor.buildRequest(WebDriverLikeCommand.KEYBOARD, RemoteUIAElement.getFrontMostApp(this),
-                              null);
-    return executor.execute(request);  */
   }
 
   /*@Override
@@ -333,6 +344,24 @@ public class RemoteIOSDriver extends RemoteWebDriver
   public TouchScreen getTouch() {
     return touchScreen;
   }
+
+
+  public static void dragFromToForDuration(WebDriverLikeCommandExecutor executor, Point from,
+                                      Point to, int durationInSecs){
+
+    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.DRAG_FROM_TO_FOR_DURATION,
+            ImmutableMap.of("fromX", Integer.toString(from.getX()),
+                    "fromY", Integer.toString(from.getY()),
+                    "toX", Integer.toString(to.getX()),
+                    "toY", Integer.toString(to.getY()),
+                    "duration", durationInSecs));
+    executor.execute(request);
+
+
+
+  }
+
+
 
 
 }

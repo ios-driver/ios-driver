@@ -1,5 +1,6 @@
 package org.uiautomation.ios.client.uiamodels.impl;
 
+import com.google.common.collect.ImmutableMap;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.uiautomation.ios.UIAModels.UIACollectionView;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
@@ -34,4 +35,16 @@ public class RemoteUIACollectionView extends RemoteUIAElement implements UIAColl
         WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.SCROLL_RIGHT);
         commandExecutor.execute(request);
     }
+
+    @Override
+    public void scrollToElementWithName(String name) {
+        WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.SCROLL_TO_ELEMENT_WITH_NAME,
+                ImmutableMap.of("name", name));
+        commandExecutor.execute(request);
+    }
+
+  @Override
+  public void scrollToElementWithPredicate(String predicate) {
+    //To change body of implemented methods use File | Settings | File Templates.
+  }
 }

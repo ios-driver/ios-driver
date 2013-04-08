@@ -69,6 +69,7 @@ public class IOSCapabilities extends DesiredCapabilities {
   public static final String ELEMENT_TREE = "elementTree";
   public static final String IOS_SEARCH_CONTEXT = "iosSearchContext";
   public static final String UUID = "uuid";
+  public static final String IOS_TOUCH_SCREEN = "iosTouchScreen";
 
   // default selenium bindings for mobile safari
   public static final String BROWSER_NAME = "browserName";

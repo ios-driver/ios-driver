@@ -20,6 +20,7 @@ public class IOSDriverAugmenter {
     augmenter.addDriverAugmentation(IOSCapabilities.CONFIGURABLE, new AddConfigurable());
     augmenter.addDriverAugmentation(IOSCapabilities.ELEMENT_TREE, new AddLogElementTree());
     augmenter.addDriverAugmentation(IOSCapabilities.IOS_SEARCH_CONTEXT, new AddIOSSearchContext());
+    augmenter.addDriverAugmentation(IOSCapabilities.IOS_TOUCH_SCREEN, new AddIOSTouchScreen());
     return (T) augmenter.augment(driver);
   }
 

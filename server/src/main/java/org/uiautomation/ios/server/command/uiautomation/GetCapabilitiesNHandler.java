@@ -79,6 +79,7 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
       o.put(IOSCapabilities.CONFIGURABLE, true);
       o.put(IOSCapabilities.ELEMENT_TREE, true);
       o.put(IOSCapabilities.IOS_SEARCH_CONTEXT, true);
+      o.put(IOSCapabilities.IOS_TOUCH_SCREEN, true);
 
       o.put("rotatable", true);
       o.put("locationContextEnabled", true);
