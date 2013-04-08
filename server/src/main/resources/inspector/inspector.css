@@ -1,0 +1,50 @@
+div {
+    border: 1px solid red;
+}
+
+#header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 70px;
+    width: 100%;
+}
+
+#content {
+    position: fixed;
+    top: 70px;
+    left: 0px;
+    height: 100%;
+    overflow: auto;
+    width: 100%
+}
+
+#main {
+    border: 1px solid blue;
+}
+
+#device {
+    width: 500px;
+    height: 100px;
+    float: left;
+}
+
+#internals {
+    margin-left: 500px;
+}
+
+#resize {
+    width: 2px;
+    height: 100%;
+    cursor: col-resize;
+    background-color: #000000;
+    top: -20px;
+
+}
+
+#footer {
+    clear: both;
+    height: 70px;
+    width: 100%;
+
+}
