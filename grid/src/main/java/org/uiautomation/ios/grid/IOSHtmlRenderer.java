@@ -52,7 +52,7 @@ public class IOSHtmlRenderer implements HtmlRenderer {
         builder.append(slot.getCapabilities().containsKey(BROWSER) ? slot.getCapabilities().get(
             BROWSER) : slot.getCapabilities().get(APP));
       } else {
-        builder.append(slot.getCapabilities().get("device")).append(" [").append(slot.getCapabilities().get("sdkVersion")).append(")");
+        builder.append(slot.getCapabilities().get("device")).append(" [").append(slot.getCapabilities().get("sdkVersion")).append("]");
       }
       TestSession session = slot.getSession();
       try {
