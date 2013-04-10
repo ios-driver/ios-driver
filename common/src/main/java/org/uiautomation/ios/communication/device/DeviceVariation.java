@@ -6,7 +6,8 @@ public enum DeviceVariation {
   Regular, // iphone , ipad 
   Retina35,//iphone
   Retina4, // iphone
-  Retina;  // ipad
+  Retina,  // ipad
+  iPad25; // ipad mini
   
   public static DeviceVariation getDefault() {
     return Regular;
