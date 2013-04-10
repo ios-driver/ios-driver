@@ -23,4 +23,8 @@ public interface UIAScrollView extends UIAElement {
 
   public void scrollRight();
 
+  public void scrollToElementWithName(String name);
+
+  public void scrollToElementWithPredicate(String predicate);
+
 }

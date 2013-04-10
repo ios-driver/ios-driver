@@ -13,7 +13,15 @@
  */
 package org.uiautomation.ios.UIAModels;
 
+import java.util.ArrayList;
+
 public interface UIACollectionView extends UIAScrollView {
+
+  public ArrayList<UIACollectionCell> getCells();
+
+  //Apple documention wrong about getVisibleCells for UIACollectionViews - method not available
+  //http://stackoverflow.com/questions/13789905/uiacollectionview-cells-vs-visiblecells
+  //public ArrayList<UIACollectionCell> getVisibleCells();
 
 
 }

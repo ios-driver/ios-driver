@@ -96,6 +96,7 @@ public enum CommandMapping {
   TARGET_TAP(".tap({x::x,y::y})"),
   SET_ORIENTATION(SetOrientationNHandler.class),
   GET_ORIENTATION(GetOrientationNHandler.class),
+  DRAG_FROM_TO_FOR_DURATION(DragFromToForDurationNHander.class),
 
   SCREENSHOT(TakeScreenshotNHandler.class),
 
@@ -160,6 +161,8 @@ public enum CommandMapping {
   SCROLL_DOWN(".scrollDown()"),
   SCROLL_LEFT(".scrollLeft()"),
   SCROLL_RIGHT(".scrollRight()"),
+  SCROLL_TO_ELEMENT_WITH_NAME(ScrollToElementWithNameNHandler.class),
+  SCROLL_TO_ELEMENT_WITH_PREDICATE(ScrollToElementWithPredicateNHandler.class),
 
   //TouchScreen
   FLICK(FlickHandler.class),
@@ -184,9 +187,9 @@ public enum CommandMapping {
   CLEAR(ClearNHandler.class, ClearHandler.class),
 
   //UIATableView
-  //TABLE_GROUPS(".groups()"),
-  //TABLE_CELLS(".cells()"),
-  //TABLE_VISIBLE_CELLS(".visibleCells()"),
+  TABLE_GROUPS(".groups()"),
+  TABLE_CELLS(".cells()"),
+  TABLE_VISIBLE_CELLS(".visibleCells()"),
   GET_ALERT_TEXT(GetAlertTextNHandler.class),
   ACCEPT_ALERT(AcceptAlertHandler.class),
   DISMISS_ALERT(DismissAlertHandler.class),

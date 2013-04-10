@@ -42,4 +42,14 @@ public class RemoteUIAWebView extends RemoteUIAElement implements UIAWebView {
     //To change body of implemented methods use File | Settings | File Templates.
   }
 
+  @Override
+  public void scrollToElementWithName(String name) {
+    //To change body of implemented methods use File | Settings | File Templates.
+  }
+
+  @Override
+  public void scrollToElementWithPredicate(String predicate) {
+    //To change body of implemented methods use File | Settings | File Templates.
+  }
+
 }

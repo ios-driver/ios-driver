@@ -153,6 +153,7 @@ public enum WebDriverLikeCommand {
   ALERT_DEFAULT_BUTTON("GET", "/session/:sessionId/element/:reference/default", UIAButton.class),
 
   // UIATarget
+  DRAG_FROM_TO_FOR_DURATION("POST", "/session/:sessionId/uiaTarget/:reference/dragfromtoforduration", Void.class),
   /*LOCAL_TARGET("GET", "/session/:sessionId/localTarget", UIATarget.class),
 
   HOST("GET", "/session/:sessionId/uiaTarget/:reference/host", UIHost.class),
@@ -231,6 +232,10 @@ public enum WebDriverLikeCommand {
       Void.class),
   SCROLL_RIGHT("POST", "/session/:sessionId/uiaElement/:reference/scrollRight",
       Void.class),
+  SCROLL_TO_ELEMENT_WITH_NAME("POST", "/session/:sessionId/uiaElement/:reference/scrollToElementWithName",
+      Void.class),
+  SCROLL_TO_ELEMENT_WITH_PREDICATE("POST", "/session/:sessionId/uiaElement/:reference/scrollToElementWithPredicate",
+          Void.class),
 
   /*
   // UIAElementArray
@@ -254,7 +259,7 @@ public enum WebDriverLikeCommand {
   RIGHT_BUTTON("GET", "/session/:sessionId/uiaElement/:reference/rightButton", UIAButton.class),
 
   // UIATextField and UIATextView
-
+  ,*/
   //UIATableView
   TABLE_GROUPS("GET", "/session/:sessionId/uiaElement/:reference/getGroups", UIAElementArray.class),
   TABLE_CELLS("GET", "/session/:sessionId/uiaElement/:reference/getCells", UIAElementArray.class),
@@ -262,7 +267,7 @@ public enum WebDriverLikeCommand {
                       UIAElementArray.class),
 
 
-  ,*/;
+  ;
 
 
   private final String method;
