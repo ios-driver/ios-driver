@@ -52,7 +52,7 @@ public class AppleLocale {
     	corrected= "ja";
     }
     for (Locale l : Locale.getAvailableLocales()) {
-      if (l.toString().equals(corrected.replace('-','_'))) {
+      if (l.toString().equals(corrected)) {
         return l;
       }
     }
@@ -61,6 +61,7 @@ public class AppleLocale {
         return l;
       }
     }
+
     for (Locale l : Locale.getAvailableLocales()) {
       if (l.getDisplayLanguage().equals(corrected)) {
         return l;
@@ -68,16 +69,6 @@ public class AppleLocale {
     }
     if ("zh-Hant".equals(lprojname)) {
       return Locale.CHINESE;
-    }
-    if ("zh-Hans".equals(lprojname)) {
-      return Locale.CHINESE;
-    }
-    if ("nb".equals(lprojname)) {
-      for (Locale l : Locale.getAvailableLocales()) {
-        if (l.getDisplayCountry().equals("Norway")) {
-          return l;
-        }
-      }
     }
     if ("he".equals(lprojname)) {
       for (Locale l : Locale.getAvailableLocales()) {
