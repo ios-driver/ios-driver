@@ -60,7 +60,7 @@ public class RemoteUIAScrollView extends RemoteUIAElement implements UIAScrollVi
   @Override
   public void scrollToElementWithPredicate(String predicate) {
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.SCROLL_TO_ELEMENT_WITH_PREDICATE,
-            ImmutableMap.of("name", predicate));
+            ImmutableMap.of("predicateString", predicate));
     commandExecutor.execute(request);
   }
 

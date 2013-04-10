@@ -24,7 +24,7 @@ public class ScrollToElementWithNameNHandler extends UIAScriptHandler {
 
     private static final String voidTemplate =
             "var element = UIAutomation.cache.get(:reference);" +
-                    "element.scrollToElementWithName(:name);" +
+                    "element.scrollToElementWithName(':name');" +
                     "UIAutomation.createJSONResponse(':sessionId',0,'')";
 
 

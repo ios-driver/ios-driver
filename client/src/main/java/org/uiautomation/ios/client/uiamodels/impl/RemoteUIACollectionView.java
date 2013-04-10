@@ -15,9 +15,12 @@ package org.uiautomation.ios.client.uiamodels.impl;
 
 import com.google.common.collect.ImmutableMap;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.uiautomation.ios.UIAModels.UIACollectionCell;
 import org.uiautomation.ios.UIAModels.UIACollectionView;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
+
+import java.util.ArrayList;
 
 public class RemoteUIACollectionView extends RemoteUIAElement implements UIACollectionView {
 
@@ -56,10 +59,27 @@ public class RemoteUIACollectionView extends RemoteUIAElement implements UIAColl
         commandExecutor.execute(request);
     }
 
+    @Override
+    public void scrollToElementWithPredicate(String predicate) {
+        WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.SCROLL_TO_ELEMENT_WITH_PREDICATE,
+                ImmutableMap.of("predicateString", predicate));
+        commandExecutor.execute(request);
+    }
+
+
   @Override
-  public void scrollToElementWithPredicate(String predicate) {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.SCROLL_TO_ELEMENT_WITH_PREDICATE,
-            ImmutableMap.of("name", predicate));
-    commandExecutor.execute(request);
+  public ArrayList<UIACollectionCell> getCells() {
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TABLE_CELLS);
+    return commandExecutor.execute(request);
   }
+
+  /*
+  //Apple documention wrong about getVisibleCells for UIACollectionViews - method not available
+  //http://stackoverflow.com/questions/13789905/uiacollectionview-cells-vs-visiblecells
+  @Override
+  public ArrayList<UIACollectionCell> getVisibleCells() {
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TABLE_VISIBLE_CELLS);
+    return commandExecutor.execute(request);
+  }
+  */
 }

@@ -259,7 +259,7 @@ public enum WebDriverLikeCommand {
   RIGHT_BUTTON("GET", "/session/:sessionId/uiaElement/:reference/rightButton", UIAButton.class),
 
   // UIATextField and UIATextView
-
+  ,*/
   //UIATableView
   TABLE_GROUPS("GET", "/session/:sessionId/uiaElement/:reference/getGroups", UIAElementArray.class),
   TABLE_CELLS("GET", "/session/:sessionId/uiaElement/:reference/getCells", UIAElementArray.class),
@@ -267,7 +267,7 @@ public enum WebDriverLikeCommand {
                       UIAElementArray.class),
 
 
-  ,*/;
+  ;
 
 
   private final String method;

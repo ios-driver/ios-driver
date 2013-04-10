@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 ios-driver committers.
+ * Copyright 2013 ios-driver committers.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,13 +13,6 @@
  */
 package org.uiautomation.ios.UIAModels;
 
-import java.util.ArrayList;
+public interface UIACollectionCell extends UIAElement {
 
-public interface UIATableView extends UIAScrollView {
-
-  public ArrayList<UIATableGroup> getGroups();
-
-  public ArrayList<UIATableCell> getCells();
-
-  public ArrayList<UIATableCell> getVisibleCells();
 }

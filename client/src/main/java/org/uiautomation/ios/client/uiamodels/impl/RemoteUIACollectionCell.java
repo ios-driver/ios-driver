@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 ios-driver committers.
+ * Copyright 2013 ios-driver committers.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -11,15 +11,15 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.uiautomation.ios.UIAModels;
+package org.uiautomation.ios.client.uiamodels.impl;
 
-import java.util.ArrayList;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.uiautomation.ios.UIAModels.UIACollectionCell;
 
-public interface UIATableView extends UIAScrollView {
+public class RemoteUIACollectionCell extends RemoteUIAElement implements UIACollectionCell {
 
-  public ArrayList<UIATableGroup> getGroups();
+  public RemoteUIACollectionCell(RemoteWebDriver driver, String reference) {
+    super(driver, reference);
+  }
 
-  public ArrayList<UIATableCell> getCells();
-
-  public ArrayList<UIATableCell> getVisibleCells();
 }

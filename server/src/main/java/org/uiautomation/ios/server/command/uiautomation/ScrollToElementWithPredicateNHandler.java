@@ -25,7 +25,7 @@ public class ScrollToElementWithPredicateNHandler extends UIAScriptHandler {
 
   private static final String voidTemplate =
           "var element = UIAutomation.cache.get(:reference);" +
-                  "element.scrollToElementWithPredicate(:predicateString);" +
+                  "element.scrollToElementWithPredicate(\":predicateString\");" +
                   "UIAutomation.createJSONResponse(':sessionId',0,'')";
 
 

@@ -187,9 +187,9 @@ public enum CommandMapping {
   CLEAR(ClearNHandler.class, ClearHandler.class),
 
   //UIATableView
-  //TABLE_GROUPS(".groups()"),
-  //TABLE_CELLS(".cells()"),
-  //TABLE_VISIBLE_CELLS(".visibleCells()"),
+  TABLE_GROUPS(".groups()"),
+  TABLE_CELLS(".cells()"),
+  TABLE_VISIBLE_CELLS(".visibleCells()"),
   GET_ALERT_TEXT(GetAlertTextNHandler.class),
   ACCEPT_ALERT(AcceptAlertHandler.class),
   DISMISS_ALERT(DismissAlertHandler.class),
