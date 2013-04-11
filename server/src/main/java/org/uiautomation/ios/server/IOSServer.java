@@ -91,6 +91,7 @@ public class IOSServer {
   private void init(IOSServerConfiguration options) {
     this.options = options;
     Configuration.BETA_FEATURE = options.isBeta();
+    Configuration.FORCE_IPAD = options.isForceIPad();
     server = new Server(new InetSocketAddress("0.0.0.0", options.getPort()));
 
     ServletContextHandler wd = new ServletContextHandler(server, "/wd/hub", true, false);
