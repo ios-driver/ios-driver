@@ -13,7 +13,6 @@
  */
 package org.uiautomation.ios.client.uiamodels.impl;
 
-import com.google.common.collect.ImmutableMap;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.uiautomation.ios.UIAModels.UIACollectionCell;
 import org.uiautomation.ios.UIAModels.UIACollectionView;
@@ -22,50 +21,11 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 
 import java.util.ArrayList;
 
-public class RemoteUIACollectionView extends RemoteUIAElement implements UIACollectionView {
+public class RemoteUIACollectionView extends RemoteUIAScrollView implements UIACollectionView {
 
-    public RemoteUIACollectionView(RemoteWebDriver driver, String reference) {
-        super(driver, reference);
-    }
-
-    public void scrollUp() {
-        WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.SCROLL_UP);
-        commandExecutor.execute(request);
-
-    }
-
-    @Override
-    public void scrollDown() {
-        WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.SCROLL_DOWN);
-        commandExecutor.execute(request);
-    }
-
-    @Override
-    public void scrollLeft() {
-        WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.SCROLL_LEFT);
-        commandExecutor.execute(request);
-    }
-
-    @Override
-    public void scrollRight() {
-        WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.SCROLL_RIGHT);
-        commandExecutor.execute(request);
-    }
-
-    @Override
-    public void scrollToElementWithName(String name) {
-        WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.SCROLL_TO_ELEMENT_WITH_NAME,
-                ImmutableMap.of("name", name));
-        commandExecutor.execute(request);
-    }
-
-    @Override
-    public void scrollToElementWithPredicate(String predicate) {
-        WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.SCROLL_TO_ELEMENT_WITH_PREDICATE,
-                ImmutableMap.of("predicateString", predicate));
-        commandExecutor.execute(request);
-    }
-
+  public RemoteUIACollectionView(RemoteWebDriver driver, String reference) {
+    super(driver, reference);
+  }
 
   @Override
   public ArrayList<UIACollectionCell> getCells() {

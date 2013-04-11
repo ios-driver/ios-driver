@@ -14,7 +14,9 @@
 package org.uiautomation.ios.client.uiamodels.impl;
 
 import com.google.common.collect.ImmutableMap;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.uiautomation.ios.UIAModels.ScrollDirection;
 import org.uiautomation.ios.UIAModels.UIAScrollView;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
@@ -25,41 +27,48 @@ public class RemoteUIAScrollView extends RemoteUIAElement implements UIAScrollVi
     super(driver, reference);
   }
 
-  public void scrollUp() {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.SCROLL_UP);
-    commandExecutor.execute(request);
+  @Override
+  public void scroll(ScrollDirection scrollDirection) {
+
+    switch (scrollDirection) {
+
+      case UP:
+        createScrollRequest("up");
+        break;
+      case DOWN:
+        createScrollRequest("down");
+        break;
+      case LEFT:
+        createScrollRequest("left");
+        break;
+      case RIGHT:
+        createScrollRequest("right");
+        break;
+      default:
+        throw new WebDriverException("Scrolling direction : " + scrollDirection + " not recognised");
+
+    }
 
   }
 
-  @Override
-  public void scrollDown() {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.SCROLL_DOWN);
-    commandExecutor.execute(request);
-  }
+  private void createScrollRequest(String direction) {
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENT_SCROLL,
+            ImmutableMap.of("direction", direction));
 
-  @Override
-  public void scrollLeft() {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.SCROLL_LEFT);
-    commandExecutor.execute(request);
-  }
-
-  @Override
-  public void scrollRight() {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.SCROLL_RIGHT);
     commandExecutor.execute(request);
   }
 
 
   @Override
   public void scrollToElementWithName(String name) {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.SCROLL_TO_ELEMENT_WITH_NAME,
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENT_SCROLL,
             ImmutableMap.of("name", name));
     commandExecutor.execute(request);
   }
 
   @Override
   public void scrollToElementWithPredicate(String predicate) {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.SCROLL_TO_ELEMENT_WITH_PREDICATE,
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENT_SCROLL,
             ImmutableMap.of("predicateString", predicate));
     commandExecutor.execute(request);
   }

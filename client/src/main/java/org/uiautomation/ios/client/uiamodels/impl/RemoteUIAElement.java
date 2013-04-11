@@ -149,7 +149,8 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
 
   @Override
   public void scrollToVisible() {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.SCROLL_TO_VISIBLE);
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENT_SCROLL,
+            ImmutableMap.of("toVisible", "true"));
     commandExecutor.execute(request);
 
   }

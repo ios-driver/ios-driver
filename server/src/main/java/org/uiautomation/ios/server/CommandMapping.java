@@ -154,15 +154,16 @@ public enum CommandMapping {
   //TAP_WITH_OPTIONS(""),
   //DRAG_INSIDE_WITH_OPTIONS(""),
   //FLICK_INSIDE_WITH_OPTIONS(""),
-  SCROLL_TO_VISIBLE(".scrollToVisible()"),
+  //SCROLL_TO_VISIBLE(".scrollToVisible()"),          //implemented in ELEMENT_SCROLL
   //ROTATE_WITH_OPTIONS(NotImplementedNativeHandler.class, NotImplementedWebHandler.class),
   //PINCH_CLOSE(PinchCloseNHandler.class, NotImplementedWebHandler.class),
-  SCROLL_UP(".scrollUp()"),
-  SCROLL_DOWN(".scrollDown()"),
-  SCROLL_LEFT(".scrollLeft()"),
-  SCROLL_RIGHT(".scrollRight()"),
-  SCROLL_TO_ELEMENT_WITH_NAME(ScrollToElementWithNameNHandler.class),
-  SCROLL_TO_ELEMENT_WITH_PREDICATE(ScrollToElementWithPredicateNHandler.class),
+  ELEMENT_SCROLL(ElementScrollNHandler.class),
+  //SCROLL_UP(".scrollUp()"),          //implemented in ELEMENT_SCROLL
+  //SCROLL_DOWN(".scrollDown()"),      //implemented in ELEMENT_SCROLL
+  //SCROLL_LEFT(".scrollLeft()"),      //implemented in ELEMENT_SCROLL
+  //SCROLL_RIGHT(".scrollRight()"),    //implemented in ELEMENT_SCROLL
+  //SCROLL_TO_ELEMENT_WITH_NAME(""),              //implemented in ELEMENT_SCROLL
+  //SCROLL_TO_ELEMENT_WITH_PREDICATE(""),    //implemented in ELEMENT_SCROLL
 
   //TouchScreen
   FLICK(FlickHandler.class),

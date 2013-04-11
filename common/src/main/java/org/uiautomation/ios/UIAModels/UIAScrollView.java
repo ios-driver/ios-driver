@@ -15,13 +15,7 @@ package org.uiautomation.ios.UIAModels;
 
 public interface UIAScrollView extends UIAElement {
 
-  public void scrollUp();
-
-  public void scrollDown();
-
-  public void scrollLeft();
-
-  public void scrollRight();
+  public void scroll(ScrollDirection scrollDirection);
 
   public void scrollToElementWithName(String name);
 
