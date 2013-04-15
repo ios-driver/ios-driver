@@ -11,26 +11,14 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-deviceResize = function (width_in_px) {
-    $('#resize').css('left', width_in_px);
-    $('#device').css('width', width_in_px);
-    $('#internals').css('margin-left', width_in_px);
-}
 
 $(document).ready(function () {
-    $("#resize").draggable({
-                               axis: "x",
-                               drag: function (event, ui) {
 
-                                   var width = event.pageX;
-                                   console.log("pageX" + width);
-                                   deviceResize(width);
-                               }});
+    $('#main')
+        .width("100%")
+        .height(400)
+        .split({orientation: 'vertical', limit: 100, position: '30%'});
+    $('#internals').height(400)
+        .split({orientation: 'vertical', limit: 100, position: '50%'});
 
-    $('#device').resize(function () {
-        var width = $(this).width();
-        $('#internals').css('margin-left', width);
-    });
-
-    deviceResize(500);
 });

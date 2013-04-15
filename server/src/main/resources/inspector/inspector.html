@@ -5,10 +5,15 @@
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css"/>
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
-    <script src="splitter.js"></script>
-    <script type='text/javascript'
-            src='inspector.js'></script>
+
+
+    <script src="http://jquery.jcubic.pl/js/jquery.splitter-0.6.js"></script>
+    <link rel="stylesheet"
+          href="https://raw.github.com/jcubic/jquery.splitter/master/css/jquery.splitter.css"/>
+
+    <script type='text/javascript' src='inspector.js'></script>
     <link rel='stylesheet' href='inspector.css' type='text/css'/>
+
 
 </head>
 <body>
@@ -18,46 +23,24 @@
 
 <div id="content">
 
-    <div id="main">
-
-        <div id="device">
-            device
-            <div id="resize">
-
-            </div>
-        </div>
+    <div id="main" class="mainH">
 
 
-        <div id="internals">
-            <div id="tree">
-                tree
-                orem ipsum dolor sit amet, consectetur adipiscing elit. Proin pellentesque risus
-                quis diam hendrerit vel dictum nisi dictum. Sed congue porta felis, nec aliquam elit
-                congue sit amet. Aliquam lacinia tincidunt nulla, vel consectetur odio dictum id.
-                Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus
-                mus. Aliquam interdum dui sit amet mi faucibus ac blandit ipsum bibendum. Praesent
-                velit risus, porttitor quis pharetra ac, pretium ut lacus. Proin vehicula laoreet
-                enim, ac ultricies tortor lacinia at. Etiam dictum nisi eget tortor volutpat
-                tristique. Quisque quis massa tellus, sit amet laoreet leo. Nunc sed sapien lorem,
-                id cursus neque. Sed nec mi in lorem dignissim tempus eget id erat. Nullam sit amet
-                metus urna. Quisque nec turpis nunc, rhoncus tempus neque. Ut placerat ante eu nisl
-                pellentesque sed blandit nisi dictum. Aenean lobortis luctus libero, a consectetur
-                metus pharetra quis. Maecenas vel iaculis justo.
-            </div>
-            <div id="details">
-                details
-            </div>
+        <div id="device" class="mainH">Device</div>
+        <div id="internals" class="mainH">
+            <div id="tree">Tree</div>
+            <div id="details">Tree</div>
 
         </div>
+
     </div>
     <div id="log">
         log / tab
     </div>
-</div>
 
-<div id="footer">
-    footer
-</div>
+    <div id="footer">
+        footer
+    </div>
 
 
 </body>
