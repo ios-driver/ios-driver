@@ -8,6 +8,7 @@ div {
     left: 0;
     height: 70px;
     width: 100%;
+
 }
 
 #content {
@@ -43,7 +44,9 @@ div {
 }
 
 #footer {
-    clear: both;
+    position: fixed;
+    bottom: 0;
+    left: 0;
     height: 70px;
     width: 100%;
 
