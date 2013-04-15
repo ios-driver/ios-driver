@@ -1,7 +1,3 @@
-div {
-    border: 1px solid red;
-}
-
 #header {
     position: fixed;
     top: 0;
@@ -18,10 +14,6 @@ div {
     height: 100%;
     overflow: auto;
     width: 100%
-}
-
-#main {
-    border: 1px solid blue;
 }
 
 .mainH {

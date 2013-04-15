@@ -15,10 +15,12 @@
 $(document).ready(function () {
 
     $('#main')
-        .width("100%")
-        .height(400)
-        .split({orientation: 'vertical', limit: 100, position: '30%'});
-    $('#internals').height(400)
-        .split({orientation: 'vertical', limit: 100, position: '50%'});
+        //  .height(400)
+        .split({orientation: 'vertical', limit: 20, position: '30%'});
+    $('#internals')
+        // .height(400)
+        .split({orientation: 'vertical', limit: 20, position: '50%'});
 
+    $('#content')
+        .split({orientation: 'horizontal', limit: 20, position: '50%'});
 });
