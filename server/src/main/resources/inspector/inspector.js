@@ -67,17 +67,13 @@ InspectorTable.prototype.maximize = function () {
     var header = $("#header").height();
     var footer = $("#footer").height();
     var total = $("body").height();
-    this.setHeight(total - header - footer);
+    this.setHeight(total - header - footer - 100);
 
 }
 InspectorTable.prototype.setHeight = function (height) {
     this.height = height;
     var logsH = $("#logs").height();
-
-    $("#inspector").height(height);
-    $("#top").height(height - logsH);
-    $("#logs").height(logsH);
-    $("#logs2").height(logsH);
+    this.setLogHeight(logsH);
 
 }
 
