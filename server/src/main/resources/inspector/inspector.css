@@ -7,10 +7,6 @@
 
 }
 
-div {
-    border: 0px solid red;
-}
-
 #content {
     position: fixed;
     top: 70px;
@@ -35,7 +31,7 @@ div {
 }
 
 .ui-resizable-handle {
-    background-color: #d3d3d3;
+    background-color: red;
 }
 
 #internals {

@@ -66,7 +66,7 @@ InspectorTable.prototype.setTopHeight = function (height) {
 InspectorTable.prototype.maximize = function () {
     var header = $("#header").height();
     var footer = $("#footer").height();
-    var total = $("body").height();
+    var total = $(window).height();
     this.setHeight(total - header - footer);
 
 }

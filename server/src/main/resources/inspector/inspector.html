@@ -1,3 +1,4 @@
+<!doctype html>
 <html>
 <head>
     <title>IOS Inspector</title>
@@ -22,7 +23,7 @@
 </div>
 
 <div id="content">
-    <table id="inspector" style="width: 100%">
+    <table id="inspector" style="width: 100%" border="1px">
         <tr id="top" style="width: 100%">
             <td class="resizeable-se">
                 <div class="full-size">
@@ -37,10 +38,10 @@
                             <div id='mouseOver'></div>
                             <div id='rotationCenter'>
                                 <div id='frame'>
-                                    <img src='${frame}'/>
+                                    <img src2='${frame}'/>
 
                                     <div id='screen'>
-                                        <img id='screenshot' src='${screenshot}'
+                                        <img id='screenshot' src2='${screenshot}'
                                              width='${width}px'/>
                                     </div>
                                 </div>
@@ -50,12 +51,12 @@
                 </div>
             </td>
             <td class="resizeable-se">
-                <div class="full-size" style="overflow: scroll">
+                <div class="full-size">
                     <div class="ui-widget-header ui-corner-all">
                         Tree
                     </div>
-                    <div id="content-tree" class="full-size" style="overflow: scroll">
-                        <div id="tree" class="full-size" style="overflow: scroll">
+                    <div id="content-tree" class="full-size">
+                        <div id="tree" style="overflow: auto">
                         </div>
                     </div>
                 </div>
@@ -73,7 +74,7 @@
         </tr>
         <tr id="logs">
             <td colspan="3">
-                <div class="full-size" id="logs2">
+                <!--<div class="full-size" id="logs2">
 
 
                     <div id="tabs">
@@ -126,16 +127,16 @@
                                 Fusce in lacus. Vivamus a libero vitae lectus hendrerit
                                 hendrerit.</p>
                         </div>
-                    </div>
+                    </div>-->
 
-                </div>
-            </td>
-        </tr>
-    </table>
+</div>
+</td>
+</tr>
+</table>
 
 
-    <script>configure('${type}', '${variation}', '${orientation}');</script>
-    <script>resize();</script>
+<script>configure('${type}', '${variation}', '${orientation}');</script>
+<script>resize();</script>
 
 </div>
 <div id="footer">
