@@ -13,6 +13,9 @@
  */
 package org.uiautomation.ios.inspector.views;
 
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
@@ -20,6 +23,9 @@ import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.inspector.model.IDESessionModel;
 
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
@@ -34,8 +40,27 @@ public class IDEMainView implements View {
     this.servletPath = servletPath;
   }
 
+
   @Override
   public void render(HttpServletResponse response) throws Exception {
+    Configuration conf = new Configuration();
+    conf.setClassForTemplateLoading(this.getClass(), "/");
+    Template template = conf.getTemplate("/inspector/inspector.html");
+    StringWriter writer = new StringWriter();
+    Map<String, Object> map = new HashMap<String, Object>();
+    map.put("inspector_js", getResource("inspector/inspector.js"));
+    map.put("inspector_css", getResource("inspector/inspector.css"));
+    template.process(map, writer);
+    response.setContentType("text/html");
+    response.setCharacterEncoding("UTF-8");
+    response.setStatus(200);
+
+    response.getWriter().print(writer.toString());
+
+  }
+
+
+  public void render2(HttpServletResponse response) throws Exception {
     try {
       StringBuilder b = new StringBuilder();
       b.append("<html>");
@@ -149,7 +174,7 @@ public class IDEMainView implements View {
       b.append("</p>");
       b.append("</div>");
       /* END OVERLAY CAPABILITIES */
-      
+
       /*
        * OVERLAY HTML
        */
