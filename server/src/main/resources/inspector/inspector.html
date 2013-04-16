@@ -2,13 +2,18 @@
 <head>
     <title>IOS Inspector</title>
 
+    <#list cssList as css>
+        <link rel="stylesheet" href="${css}"/>
+    </#list>
+
+
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css"/>
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
 
-    <script type='text/javascript' src='${inspector_js}'></script>
-    <link rel='stylesheet' href='${inspector_css}' type='text/css'/>
-
+    <#list jsList as js>
+        <script src="${js}"></script>
+    </#list>
 
 </head>
 <body>
@@ -25,18 +30,33 @@
                         Device
                     </div>
                     <div id="content-device" class="full-size">
-                        content
-                    </div>
 
+
+                        <div id='simulator'>
+
+                            <div id='mouseOver'></div>
+                            <div id='rotationCenter'>
+                                <div id='frame'>
+                                    <img src='${frame}'/>
+
+                                    <div id='screen'>
+                                        <img id='screenshot' src='${screenshot}'
+                                             width='${width}px'/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </td>
             <td class="resizeable-se">
-                <div class="full-size">
+                <div class="full-size" style="overflow: scroll">
                     <div class="ui-widget-header ui-corner-all">
                         Tree
                     </div>
-                    <div id="content-tree" class="full-size">
-                        content
+                    <div id="content-tree" class="full-size" style="overflow: scroll">
+                        <div id="tree" class="full-size" style="overflow: scroll">
+                        </div>
                     </div>
                 </div>
             </td>
@@ -112,6 +132,11 @@
             </td>
         </tr>
     </table>
+
+
+    <script>configure('${type}', '${variation}', '${orientation}');</script>
+    <script>resize();</script>
+
 </div>
 <div id="footer">
     footer

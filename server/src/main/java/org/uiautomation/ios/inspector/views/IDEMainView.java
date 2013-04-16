@@ -19,12 +19,15 @@ import freemarker.template.Template;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.inspector.model.IDESessionModel;
 
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -49,7 +52,46 @@ public class IDEMainView implements View {
     StringWriter writer = new StringWriter();
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("inspector_js", getResource("inspector/inspector.js"));
-    map.put("inspector_css", getResource("inspector/inspector.css"));
+
+    List<String> cssList = new ArrayList<String>();
+    cssList.add(getResource("inspector/inspector.css"));
+    cssList.add(getResource("ide.css"));
+    map.put("cssList", cssList);
+
+    List<String> jsList = new ArrayList<String>();
+    jsList.add(getResource("inspector/inspector.js"));
+    jsList.add(getResource("jquery.jstree.js"));
+    jsList.add(getResource("jquery.xpath.js"));
+    jsList.add(getResource("prettify.js"));
+    jsList.add(getResource("Logger.js"));
+    jsList.add(getResource("Recorder.js"));
+    jsList.add(getResource("inspector.js"));
+    jsList.add(getResource("ide.js"));
+    jsList.add(getResource("uiactions.js"));
+
+    map.put("jsList", jsList);
+
+    DeviceType device = model.getCapabilities().getDevice();
+    DeviceVariation variation = model.getCapabilities().getDeviceVariation();
+    Orientation orientation = model.getDeviceOrientation();
+
+    map.put("frame", getFrame(device, variation));
+    int width = 320;
+    if (device == DeviceType.ipad) {
+      width = 768;
+    }
+    map.put("width", width);
+    map.put("screenshot", getScreen(device));
+
+    String type = "iphone";
+    if (model.getCapabilities().getDevice() == DeviceType.ipad) {
+      type = "ipad";
+    }
+
+    map.put("type", type);
+    map.put("variation", variation);
+    map.put("orientation", orientation);
+
     template.process(map, writer);
     response.setContentType("text/html");
     response.setCharacterEncoding("UTF-8");
