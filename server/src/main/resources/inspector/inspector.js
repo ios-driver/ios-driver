@@ -14,13 +14,70 @@
 
 $(document).ready(function () {
 
-    $('#main')
-        //  .height(400)
-        .split({orientation: 'vertical', limit: 20, position: '30%'});
-    $('#internals')
-        // .height(400)
-        .split({orientation: 'vertical', limit: 20, position: '50%'});
+    $(function () {
+        $(".resizeable-se").resizable({ handles: "e,s" });
+    });
 
-    $('#content')
-        .split({orientation: 'horizontal', limit: 20, position: '50%'});
+    $(function () {
+        $(".resizeable-s").resizable({ handles: "s" });
+    });
+
+    var table = new InspectorTable();
+    table.setLogHeight(150);
+
+    var onResize = function (event, ui) {
+        var height = ui.size.height;
+        table.setTopHeight(height);
+    }
+
+    $(".resizeable-se").resize(onResize);
+    $(".resizeable-s").resize(onResize);
+
+    $(window).resize(function () {
+        table.maximize();
+
+    });
+
+    $("#tabs").tabs({ heightStyle: "fill" });
+
 });
+
+InspectorTable = function () {
+    this.maximize();
+}
+
+InspectorTable.prototype.setLogHeight = function (height) {
+    this.setTopHeight(this.height - height);
+}
+
+InspectorTable.prototype.setTopHeight = function (height) {
+    $("#logs").height(this.height - height);
+    $("#logs2").height(this.height - height);
+    $("#top").height(height);
+    $("#top td").height(height);
+    try {
+        $("#tabs").tabs("refresh");
+    } catch (ignore) {
+
+    }
+
+}
+
+InspectorTable.prototype.maximize = function () {
+    var header = $("#header").height();
+    var footer = $("#footer").height();
+    var total = $("body").height();
+    this.setHeight(total - header - footer);
+
+}
+InspectorTable.prototype.setHeight = function (height) {
+    this.height = height;
+    var logsH = $("#logs").height();
+
+    $("#inspector").height(height);
+    $("#top").height(height - logsH);
+    $("#logs").height(logsH);
+    $("#logs2").height(logsH);
+
+}
+

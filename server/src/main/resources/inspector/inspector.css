@@ -7,6 +7,10 @@
 
 }
 
+div {
+    border: 0px solid red;
+}
+
 #content {
     position: fixed;
     top: 70px;
@@ -22,23 +26,21 @@
 
 #device {
     width: 500px;
-
     float: left;
+}
+
+.full-size {
+    height: 100%;
+    width: 100%;
+}
+
+.ui-resizable-handle {
+    background-color: #d3d3d3;
 }
 
 #internals {
     margin-left: 500px;
     height: 400px;
-}
-
-.splitter {
-    float: right;
-    width: 2px;
-    height: 500px;
-    cursor: col-resize;
-    background-color: #000000;
-    top: -20px;
-
 }
 
 .clear {
