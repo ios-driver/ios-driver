@@ -385,6 +385,8 @@ Inspector.prototype.onMouseMove = function (event) {
         //or $(this).offset(); if you really just want the current element's offset
         var x = event.pageX - parentOffset.left;
         var y = event.pageY - parentOffset.top;
+        x = x / scale;
+        y = y / scale;
         console.log(x + "," + y);
         var finder = new NodeFinder(this.root);
         var node = finder.getNodeByPosition(x, y);
@@ -503,6 +505,7 @@ Inspector.prototype.toggleXPath = function (force) {
 
     if (show) {
         this.xpathMode = true;
+        $("#xpathHelper").dialog({resizable: false });
         $("#xpathHelper").show();
         $("#xpathInput").focus();
     } else {
