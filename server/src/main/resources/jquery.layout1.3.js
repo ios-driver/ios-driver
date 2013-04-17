@@ -585,21 +585,22 @@
                     b.each(n, function (e, a) {
                         b.isPlainObject(a) && (a.containerSelector ? d.find(a.containerSelector) : g
                             || d).each(function () {
-                            var e = b(this), g = e.data("layout");
-                            if (!g) {
-                                kb({container: e, options: a}, t);
-                                if (c.includeChildren && q.stateData[m]) {
-                                    var g = (q.stateData[m].children
-                                        || {})[a.instanceKey], w = a.stateManagement
-                                        || (a.stateManagement = {autoLoad: !0});
-                                    !0 === w.autoLoad &&
-                                    g && (w.autoSave = !1, w.includeChildren = !0, w.autoLoad =
-                                                                                   b.extend(!0, {},
-                                                                                            g))
-                                }
-                                (g = e.layout(a)) && Ba(m, g)
-                            }
-                        })
+                                           var e = b(this), g = e.data("layout");
+                                           if (!g) {
+                                               kb({container: e, options: a}, t);
+                                               if (c.includeChildren && q.stateData[m]) {
+                                                   var g = (q.stateData[m].children
+                                                       || {})[a.instanceKey], w = a.stateManagement
+                                                       || (a.stateManagement = {autoLoad: !0});
+                                                   !0 === w.autoLoad &&
+                                                   g && (w.autoSave = !1, w.includeChildren =
+                                                                          !0, w.autoLoad =
+                                                                              b.extend(!0, {},
+                                                                                       g))
+                                               }
+                                               (g = e.layout(a)) && Ba(m, g)
+                                           }
+                                       })
                     })
                 }
             }, kb = function (e, b) {
@@ -779,25 +780,25 @@
                         !d.isVisible && g.slidable && j.attr("title", g.tips.Slide).css("cursor",
                                                                                         g.sliderCursor);
                         j.attr("id", c ? c + "-resizer"
-                            : "").data({parentLayout: z, layoutPane: z[a], layoutEdge: a, layoutRole: "resizer"}).css(k.resizers.cssReq).css("zIndex",
-                                                                                                                                             r.zIndexes.resizer_normal).css(g.applyDemoStyles
-                                                                                                                                                                                ? k.resizers.cssDemo
-                                                                                                                                                                                : {}).addClass(n
-                                                                                                                                                                                                   + " "
-                                                                                                                                                                                                   + n
-                                                                                                                                                                                                   + h).hover(Oa,
-                                                                                                                                                                                                              da).hover(fb,
-                                                                                                                                                                                                                        gb).appendTo(u);
+                                : "").data({parentLayout: z, layoutPane: z[a], layoutEdge: a, layoutRole: "resizer"}).css(k.resizers.cssReq).css("zIndex",
+                                                                                                                                                 r.zIndexes.resizer_normal).css(g.applyDemoStyles
+                                                                                                                                                                                    ? k.resizers.cssDemo
+                                                                                                                                                                                    : {}).addClass(n
+                                                                                                                                                                                                       + " "
+                                                                                                                                                                                                       + n
+                                                                                                                                                                                                       + h).hover(Oa,
+                                                                                                                                                                                                                  da).hover(fb,
+                                                                                                                                                                                                                            gb).appendTo(u);
                         g.resizerDblClickToggle && j.bind("dblclick." + K, na);
                         l && (l.attr("id", c ? c + "-toggler"
-                            : "").data({parentLayout: z, layoutPane: z[a], layoutEdge: a, layoutRole: "toggler"}).css(k.togglers.cssReq).css(g.applyDemoStyles
-                                                                                                                                                 ? k.togglers.cssDemo
-                                                                                                                                                 : {}).addClass(f
-                                                                                                                                                                    + " "
-                                                                                                                                                                    + f
-                                                                                                                                                                    + h).hover(Oa,
-                                                                                                                                                                               da).bind("mouseenter",
-                                                                                                                                                                                        fb).appendTo(j), g.togglerContent_open
+                                : "").data({parentLayout: z, layoutPane: z[a], layoutEdge: a, layoutRole: "toggler"}).css(k.togglers.cssReq).css(g.applyDemoStyles
+                                                                                                                                                     ? k.togglers.cssDemo
+                                                                                                                                                     : {}).addClass(f
+                                                                                                                                                                        + " "
+                                                                                                                                                                        + f
+                                                                                                                                                                        + h).hover(Oa,
+                                                                                                                                                                                   da).bind("mouseenter",
+                                                                                                                                                                                            fb).appendTo(j), g.togglerContent_open
                             && b("<span>" + g.togglerContent_open
                                      + "</span>").data({layoutEdge: a, layoutRole: "togglerContent"}).data("layoutRole",
                                                                                                            "togglerContent").data("layoutEdge",
@@ -2257,16 +2258,16 @@
     }, addOpen: function (a, d, c, f) {
         b.layout.buttons.get(a, d, c, "open").attr("title",
                                                    a.options[c].tips.Open).click(function (b) {
-            a.open(c, !!f);
-            b.stopPropagation()
-        });
+                                                                                     a.open(c, !!f);
+                                                                                     b.stopPropagation()
+                                                                                 });
         return a
     }, addClose: function (a, d, c) {
         b.layout.buttons.get(a, d, c, "close").attr("title",
                                                     a.options[c].tips.Close).click(function (b) {
-            a.close(c);
-            b.stopPropagation()
-        });
+                                                                                       a.close(c);
+                                                                                       b.stopPropagation()
+                                                                                   });
         return a
     }, addPin: function (a, d, c) {
         var f = b.layout.buttons,
