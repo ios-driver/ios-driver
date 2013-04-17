@@ -379,10 +379,12 @@ Inspector.prototype.findElementsByXpath2 = function (xpath) {
 Inspector.prototype.onMouseMove = function (event) {
 
     if (!this.lock) {
-        var x = event.pageX / scale - realOffsetX;
-        var y = event.pageY / scale - (realOffsetY + 45);
-        // x = x / scale;
-        // y = y / scale;
+        //var x = event.pageX / scale - realOffsetX;
+        //var y = event.pageY / scale - (realOffsetY + 45);
+        var parentOffset = $("#mouseOver").offset();
+        //or $(this).offset(); if you really just want the current element's offset
+        var x = event.pageX - parentOffset.left;
+        var y = event.pageY - parentOffset.top;
         console.log(x + "," + y);
         var finder = new NodeFinder(this.root);
         var node = finder.getNodeByPosition(x, y);
@@ -567,6 +569,7 @@ function NodeFinder(rootNode) {
                     if (correctOne) {
                         return correctOne;
                     }
+
                 }
             }
         }

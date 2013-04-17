@@ -114,6 +114,7 @@ resize = function () {
     if (scale > 1) {
         scale = 1;
     }
+    scale = 1;
     $('#simulator').css('-moz-transform', 'scale(' + scale + ')');
     $('#screen').css('top', to_top + 'px');
     $('#screen').css('left', to_left + 'px');

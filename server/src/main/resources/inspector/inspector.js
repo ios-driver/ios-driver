@@ -20,8 +20,9 @@ $(document).ready(function () {
                                       });
 
     layout.sizePane("south", 200);
-    layout.center.children.layout1.sizePane("west", 450);
-    console.log(layout);
+    var topLayout = layout.center.children.layout1;
+    topLayout.sizePane("west", 450);
+
     // #content to resize to size - header - footer
 
     $("#tabs").tabs();

@@ -22,8 +22,8 @@ h4 {
 
 #simulator {
     position: absolute;
-    margin-top: 45px;
     left: 0px;
+    top: 0px;
     float: left;
     margin-bottom: 6em;
     min-height: 95%;
