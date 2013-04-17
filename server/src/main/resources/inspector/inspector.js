@@ -14,66 +14,18 @@
 
 $(document).ready(function () {
 
-    $(function () {
-        $(".resizeable-se").resizable({ handles: "e,s" });
-    });
+    var layout = $('#content').layout({
+                                          center__size: .50,
+                                          center__childOptions: {}
+                                      });
 
-    $(function () {
-        $(".resizeable-s").resizable({ handles: "s" });
-    });
+    layout.sizePane("south", 200);
+    layout.center.children.layout1.sizePane("west", 450);
+    console.log(layout);
+    // #content to resize to size - header - footer
 
-    var table = new InspectorTable();
-    table.setLogHeight(150);
-
-    var onResize = function (event, ui) {
-        var height = ui.size.height;
-        table.setTopHeight(height);
-    }
-
-    $(".resizeable-se").resize(onResize);
-    $(".resizeable-s").resize(onResize);
-
-    $(window).resize(function () {
-        table.maximize();
-
-    });
-
-    $("#tabs").tabs({ heightStyle: "fill" });
+    $("#tabs").tabs();
 
 });
 
-InspectorTable = function () {
-    this.maximize();
-}
-
-InspectorTable.prototype.setLogHeight = function (height) {
-    this.setTopHeight(this.height - height);
-}
-
-InspectorTable.prototype.setTopHeight = function (height) {
-    $("#logs").height(this.height - height);
-    $("#logs2").height(this.height - height);
-    $("#top").height(height);
-    $("#top td").height(height);
-    try {
-        $("#tabs").tabs("refresh");
-    } catch (ignore) {
-
-    }
-
-}
-
-InspectorTable.prototype.maximize = function () {
-    var header = $("#header").height();
-    var footer = $("#footer").height();
-    var total = $(window).height();
-    this.setHeight(total - header - footer);
-
-}
-InspectorTable.prototype.setHeight = function (height) {
-    this.height = height;
-    var logsH = $("#logs").height();
-    this.setLogHeight(logsH);
-
-}
 

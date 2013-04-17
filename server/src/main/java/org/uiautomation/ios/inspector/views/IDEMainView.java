@@ -51,14 +51,15 @@ public class IDEMainView implements View {
     Template template = conf.getTemplate("/inspector/inspector.html");
     StringWriter writer = new StringWriter();
     Map<String, Object> map = new HashMap<String, Object>();
-    map.put("inspector_js", getResource("inspector/inspector.js"));
 
     List<String> cssList = new ArrayList<String>();
     cssList.add(getResource("inspector/inspector.css"));
     cssList.add(getResource("ide.css"));
+    cssList.add(getResource("jquery.layout.css"));
     map.put("cssList", cssList);
 
     List<String> jsList = new ArrayList<String>();
+    jsList.add(getResource("jquery-ui-1.10.2.custom/js/jquery-ui-1.10.2.custom.min.js"));
     jsList.add(getResource("inspector/inspector.js"));
     jsList.add(getResource("jquery.jstree.js"));
     jsList.add(getResource("jquery.xpath.js"));
@@ -68,6 +69,7 @@ public class IDEMainView implements View {
     jsList.add(getResource("inspector.js"));
     jsList.add(getResource("ide.js"));
     jsList.add(getResource("uiactions.js"));
+    jsList.add(getResource("jquery.layout1.3.js"));
 
     map.put("jsList", jsList);
 
