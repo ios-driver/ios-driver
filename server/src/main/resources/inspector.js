@@ -505,7 +505,11 @@ Inspector.prototype.toggleXPath = function (force) {
 
     if (show) {
         this.xpathMode = true;
-        $("#xpathHelper").dialog({resizable: false });
+
+        $("#xpathHelper").dialog({
+                                     resizable: false,
+                                     dialogClass: "no-close"
+                                 });
         $("#xpathHelper").show();
         $("#xpathInput").focus();
     } else {
