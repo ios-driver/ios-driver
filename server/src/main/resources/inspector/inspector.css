@@ -2,14 +2,14 @@
     position: fixed;
     top: 0;
     left: 0;
-    height: 70px;
+    height: 0px;
     width: 100%;
 
 }
 
 #content {
     position: fixed;
-    top: 70px;
+    top: 0px;
     left: 0px;
     height: 100%;
     overflow: auto;
@@ -47,7 +47,7 @@
     position: fixed;
     bottom: 0;
     left: 0;
-    height: 70px;
+    height: 30px;
     width: 100%;
 
 }

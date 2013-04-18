@@ -34,10 +34,15 @@ $(document).ready(function () {
     }
     //$("#tabs").tabs();
 
-    $(window).resize(function () {
+    var expandCenter = function () {
         var h = $(window).height() - $("#header").height() - $("#footer").height();
         $("#content").height(h);
+    }
+    $(window).resize(function () {
+        expandCenter();
     });
+
+    expandCenter();
 
 });
 
