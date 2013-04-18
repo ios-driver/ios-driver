@@ -49,6 +49,11 @@ to have the rotate of the top left corner. */
 
 #screen {
     position: absolute;
+    z-index: 2;
+}
+
+#screenshot {
+    z-index: 3;
 }
 
 #mouseOver {

@@ -260,7 +260,7 @@ Inspector.prototype.highlight = function (x, y, h, w, translationFound, ref) {
         var d = $("<div></div>", {
             "class": "hightlight"
         });
-        d.appendTo("#simulator");
+        d.appendTo("#rotationCenter");
 
         d.css('border', "1px solid red");
         d.css('left', x + realOffsetX + 'px');

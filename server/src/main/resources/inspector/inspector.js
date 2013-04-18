@@ -23,14 +23,10 @@ $(document).ready(function () {
     var topLayout = layout.center.children.layout1;
     topLayout.sizePane("west", 450);
 
-    // #content to resize to size - header - footer
-
     //$("#tabs").tabs();
 
     $(window).resize(function () {
-
         var h = $(window).height() - $("#header").height() - $("#footer").height();
-        console.log("resized " + h);
         $("#content").height(h);
     });
 

@@ -114,8 +114,8 @@ resize = function () {
     if (scale > 1) {
         scale = 1;
     }
-    //scale = 0.5;
-    $('#simulator').css('-moz-transform', 'scale(' + scale + ')');
+    scale = 0.5;
+    //$('#simulator').css('-moz-transform', 'scale(' + scale + ')');
     $('#screen').css('top', to_top + 'px');
     $('#screen').css('left', to_left + 'px');
 
@@ -167,6 +167,10 @@ resize = function () {
     $('#mouseOver').css('width', mouseOver_w + 'px');
 
     $('#rotationCenter').css('-moz-transform', 'rotate(' + angle + 'deg)');
+    $('#rotationCenter').css('-webkit-transform', 'rotate(' + angle + 'deg)');
+
+    $('#rotationCenter').css('-moz-transform', 'scale(' + scale + ')');
+    $('#rotationCenter').css('-webkit-transform', 'scale(' + scale + ')');
 
 };
 
