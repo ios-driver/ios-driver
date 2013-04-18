@@ -25,7 +25,14 @@ $(document).ready(function () {
 
     // #content to resize to size - header - footer
 
-    $("#tabs").tabs();
+    //$("#tabs").tabs();
+
+    $(window).resize(function () {
+
+        var h = $(window).height() - $("#header").height() - $("#footer").height();
+        console.log("resized " + h);
+        $("#content").height(h);
+    });
 
 });
 
