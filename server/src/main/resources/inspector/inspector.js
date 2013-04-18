@@ -22,7 +22,16 @@ $(document).ready(function () {
     layout.sizePane("south", 200);
     var topLayout = layout.center.children.layout1;
     topLayout.sizePane("west", 450);
+    topLayout.sizePane("east", 300);
+    resize();
 
+    console.log(topLayout);
+    topLayout.west.options.onresize_end = function () {
+
+        var w = $("#device").width();
+        console.log("resized to " + w);
+        resize();
+    }
     //$("#tabs").tabs();
 
     $(window).resize(function () {

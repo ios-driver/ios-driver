@@ -35,10 +35,11 @@ var to_left = 0;
 var margin = 0;
 var treeAndDetailInPercent = 0.48;
 findFrameSizeInPixels = function () {
-    var width = window.innerWidth;
-    var leftForFrame = width * (1 - treeAndDetailInPercent);
-    return leftForFrame;
-
+    //var width = window.innerWidth;
+    //var leftForFrame = width * (1 - treeAndDetailInPercent);
+    //return leftForFrame;
+    var w = $("#device").width();
+    return w;
 };
 
 var device;
@@ -114,7 +115,7 @@ resize = function () {
     if (scale > 1) {
         scale = 1;
     }
-    scale = 0.5;
+
     //$('#simulator').css('-moz-transform', 'scale(' + scale + ')');
     $('#screen').css('top', to_top + 'px');
     $('#screen').css('left', to_left + 'px');
