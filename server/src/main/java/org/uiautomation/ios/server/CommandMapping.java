@@ -148,7 +148,7 @@ public enum CommandMapping {
   //GET_LOCATION(GetLocationNHandler.class),
   SET_LOCATION(SetLocationNHandler.class),
 
-  TOUCH_AND_HOLD(".touchAndHold(:duration)"),
+  TOUCH_AND_HOLD(TouchAndHoldNHandler.class),
   DOUBLE_TAP(".doubleTap()"),
   TWO_FINGER_TAP(".twoFingerTap()"),
   //TAP_WITH_OPTIONS(""),

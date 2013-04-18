@@ -127,8 +127,8 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
   }
 
   @Override
-  public void touchAndHold(int duration) {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TOUCH_AND_HOLD, ImmutableMap.of("duration", duration));
+  public void touchAndHold(int durationInSecs) {
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TOUCH_AND_HOLD, ImmutableMap.of("duration", durationInSecs));
     commandExecutor.execute(request);
 
   }
