@@ -14,6 +14,13 @@
 
 $(document).ready(function () {
 
+    var expandCenter = function () {
+        var h = $(window).height() - $("#header").height() - $("#footer").height();
+        $("#content").height(h);
+    }
+
+    expandCenter();
+
     var layout = $('#content').layout({
                                           center__size: .50,
                                           center__childOptions: {}
@@ -23,26 +30,19 @@ $(document).ready(function () {
     var topLayout = layout.center.children.layout1;
     topLayout.sizePane("west", 450);
     topLayout.sizePane("east", 300);
-    resize();
 
-    console.log(topLayout);
     topLayout.west.options.onresize_end = function () {
-
         var w = $("#device").width();
         console.log("resized to " + w);
         resize();
     }
     //$("#tabs").tabs();
 
-    var expandCenter = function () {
-        var h = $(window).height() - $("#header").height() - $("#footer").height();
-        $("#content").height(h);
-    }
     $(window).resize(function () {
         expandCenter();
     });
 
-    expandCenter();
+    resize();
 
 });
 
