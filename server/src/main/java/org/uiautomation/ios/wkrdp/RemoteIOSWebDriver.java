@@ -259,7 +259,10 @@ public class RemoteIOSWebDriver {
   public String getTitle() {
     return currentInspector.getTitle();
   }
-
+  
+  public int getCurrentPageID() {
+    return currentInspector.getPageIdentifier();
+  }
 
   public List<RemoteWebElement> findElements(By by) {
     return null;  //To change body of implemented methods use File | Settings | File Templates.

@@ -531,8 +531,8 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
   public void testShouldBeAbleToCreateAPersistentValue() {
     driver.get(pages.formPage);
 
-    executeScript(" document.alerts = []");
-    executeScript(" document.alerts.push('hello world');");
+    executeScript("document.alerts = []");
+    executeScript("document.alerts.push('hello world');");
     String text = (String) executeScript("return document.alerts.shift()");
 
     assertEquals("hello world", text);
@@ -569,5 +569,20 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     Object res = ((JavascriptExecutor) driver).executeScript("return arguments[0]['foo'][1]", args);
 
     assertEquals(2, ((Number) res).intValue());
+  }
+
+  @Test
+  public void testCanAccessDocumentAndWindowObjectForFrames() {
+    driver.get(pages.framesetPage);
+    driver.switchTo().frame("third");
+
+    String actualFrameTitle = "We Leave From Here";
+
+    assertEquals(actualFrameTitle, executeScript("return document.title;"));
+    assertEquals(actualFrameTitle, executeScript("return window.document.title;"));
+    // We used to replace " document" in script - ensure we properly inject global scope, rather than performing string
+    // replacement.
+    assertEquals(actualFrameTitle, executeScript("return (document.title);"));
+    assertEquals(actualFrameTitle, executeScript("return (window.document.title);"));
   }
 }

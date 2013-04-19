@@ -297,9 +297,9 @@ public class ServerSideSession extends Session {
 
 
   public void restartWebkit() {
+    int currentPageID = webDriver.getCurrentPageID();
     webDriver.stop();
-    webDriver = null;
     webDriver = new RemoteIOSWebDriver(this, new AlertDetector(nativeDriver));
-    webDriver.switchTo(webDriver.getPages().get(0));
+    webDriver.switchTo(String.valueOf(currentPageID));
   }
 }
