@@ -53,7 +53,7 @@ public class TouchDoubleTapTest extends BaseSeleniumTest {
     driver.get(pages.longContentPage);
 
     WebElement image = driver.findElement(By.id("imagestart"));
-    int y = image.getLocation().y;
+    int y = image.getLocation().getY();
     // The element is located at a certain point, after double tapping,
     // the y coordinate must change.
     assertTrue(y > 100);

@@ -136,6 +136,24 @@ public class RemoteWebElement {
     return inspector.cast(response);
   }
 
+
+  public Point getLocation() throws Exception {
+    String
+            f =
+            "(function(arg) { " + "var loc = " + IosAtoms.GET_LOCATION_IN_VIEW + "(arg);"
+                    + "return " + IosAtoms.STRINGIFY + "(loc);})";
+
+
+    JSONArray args = new JSONArray();
+    args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
+
+    JSONObject response = getInspectorResponse(f, args, true);
+    String s = inspector.cast(response);
+    JSONObject o = new JSONObject(s);
+    return new Point(o.getInt("x"), o.getInt("y"));
+
+  }
+
   public void highlight() {
     inspector.highlightNode(nodeId);
   }

@@ -85,6 +85,7 @@ public enum WebDriverLikeCommand {
   ATTRIBUTE("GET", "/session/:sessionId/element/:reference/attribute/:name", String.class),
   EQUAL("GET", "/session/:sessionId/element/:reference/equals/:other", Boolean.class),
   DISPLAYED("GET", "/session/:sessionId/element/:reference/displayed", Boolean.class),
+  LOCATION("GET", "/session/:sessionId/element/:reference/location", String.class),
   // GET /session/:sessionId/element/:id/location
   // GET /session/:sessionId/element/:id/location_in_view
   // GET /session/:sessionId/element/:id/size

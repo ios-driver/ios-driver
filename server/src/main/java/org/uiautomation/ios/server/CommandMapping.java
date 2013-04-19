@@ -37,6 +37,7 @@ import org.uiautomation.ios.server.command.web.ForwardHandler;
 import org.uiautomation.ios.server.command.web.GetAttributeHandler;
 import org.uiautomation.ios.server.command.web.GetCookiesHandler;
 import org.uiautomation.ios.server.command.web.GetHandler;
+import org.uiautomation.ios.server.command.web.GetLocationHandler;
 import org.uiautomation.ios.server.command.web.GetPageSourceHandler;
 import org.uiautomation.ios.server.command.web.GetTagNameHandler;
 import org.uiautomation.ios.server.command.web.GetTextHandler;
@@ -131,6 +132,7 @@ public enum CommandMapping {
 
   DISPLAYED(IsVisibleNHandler.class, IsDisplayedHanlder.class),
   ENABLED(IsEnabledNHandler.class, IsEnabledHandler.class),
+  LOCATION(null, null, GetLocationHandler.class),
   //IS_STALE(".isStale()"),
 
   //LABEL(".label()"),
