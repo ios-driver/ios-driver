@@ -7,6 +7,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.uiautomation.ios.IOSCapabilities;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
 
@@ -17,7 +18,7 @@ public class BaseSeleniumTest {
   private IOSServer server;
   private static String[] args = {"-port", "4444", "-host", "localhost", "-beta"};
   private static IOSServerConfiguration config = IOSServerConfiguration.create(args);
-  protected RemoteWebDriver driver = null;
+  protected RemoteIOSDriver driver = null;
   private String url = "http://" + config.getHost() + ":" + config.getPort() + "/wd/hub";
   protected Pages pages;
   protected AppServer appServer;
@@ -28,7 +29,7 @@ public class BaseSeleniumTest {
     startTestServer();
     IOSCapabilities safari = IOSCapabilities.iphone("Safari");
     // safari.setLanguage("fr");
-    driver = new RemoteWebDriver(new URL(url), safari);
+    driver = new RemoteIOSDriver(new URL(url), safari);
 
   }
 

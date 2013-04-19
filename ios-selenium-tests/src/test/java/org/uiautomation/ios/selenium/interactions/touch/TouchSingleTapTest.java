@@ -16,10 +16,10 @@ limitations under the License.
 
 package org.uiautomation.ios.selenium.interactions.touch;
 
-import org.junit.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.touch.TouchActions;
+import org.testng.annotations.Test;
 import org.uiautomation.ios.selenium.BaseSeleniumTest;
 
 import static org.junit.Assert.assertTrue;
