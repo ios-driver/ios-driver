@@ -16,11 +16,7 @@ package org.uiautomation.ios.wkrdp.model;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.NoSuchFrameException;
-import org.openqa.selenium.Point;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.*;
 import org.uiautomation.ios.context.BaseWebInspector;
 import org.uiautomation.ios.wkrdp.RemoteExceptionException;
 import org.uiautomation.ios.wkrdp.command.DOM;
@@ -151,6 +147,22 @@ public class RemoteWebElement {
     String s = inspector.cast(response);
     JSONObject o = new JSONObject(s);
     return new Point(o.getInt("x"), o.getInt("y"));
+
+  }
+
+  public Dimension getSize() throws Exception {
+    String
+        f =
+        "(function(arg) { " + "var size = " + IosAtoms.GET_SIZE + "(arg);"
+            + "return " + IosAtoms.STRINGIFY + "(size);})";
+
+    JSONArray args = new JSONArray();
+    args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
+
+    JSONObject response = getInspectorResponse(f, args, true);
+    String s = inspector.cast(response);
+    JSONObject o = new JSONObject(s);
+    return new Dimension(o.getInt("width"), o.getInt("height"));
 
   }
 
