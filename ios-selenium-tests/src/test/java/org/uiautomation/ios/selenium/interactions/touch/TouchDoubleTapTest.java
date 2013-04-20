@@ -16,22 +16,15 @@ limitations under the License.
 
 package org.uiautomation.ios.selenium.interactions.touch;
 
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.touch.TouchActions;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.selenium.BaseSeleniumTest;
 
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
-import static org.openqa.selenium.TestWaiter.waitFor;
-import static org.openqa.selenium.WaitingConditions.alertToBePresent;
-import static org.openqa.selenium.WaitingConditions.elementTextToEqual;
-import static org.openqa.selenium.WaitingConditions.windowHandleCountToBe;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Tests the basic double tap operations.

@@ -24,35 +24,7 @@ import org.uiautomation.ios.server.command.Handler;
 import org.uiautomation.ios.server.command.NotImplementedNativeHandler;
 import org.uiautomation.ios.server.command.NotImplementedWebHandler;
 import org.uiautomation.ios.server.command.uiautomation.*;
-import org.uiautomation.ios.server.command.web.BackHandler;
-import org.uiautomation.ios.server.command.web.ClearHandler;
-import org.uiautomation.ios.server.command.web.ClickHandler;
-import org.uiautomation.ios.server.command.web.CssPropertyHandler;
-import org.uiautomation.ios.server.command.web.DeleteAllCookiesHandler;
-import org.uiautomation.ios.server.command.web.DeleteCookieByNameHandler;
-import org.uiautomation.ios.server.command.web.ExecuteScriptHandler;
-import org.uiautomation.ios.server.command.web.FindElementHandler;
-import org.uiautomation.ios.server.command.web.FindElementsHandler;
-import org.uiautomation.ios.server.command.web.ForwardHandler;
-import org.uiautomation.ios.server.command.web.GetAttributeHandler;
-import org.uiautomation.ios.server.command.web.GetCookiesHandler;
-import org.uiautomation.ios.server.command.web.GetHandler;
-import org.uiautomation.ios.server.command.web.GetLocationHandler;
-import org.uiautomation.ios.server.command.web.GetPageSourceHandler;
-import org.uiautomation.ios.server.command.web.GetTagNameHandler;
-import org.uiautomation.ios.server.command.web.GetTextHandler;
-import org.uiautomation.ios.server.command.web.GetTitleHandler;
-import org.uiautomation.ios.server.command.web.GetURL;
-import org.uiautomation.ios.server.command.web.IsDisplayedHanlder;
-import org.uiautomation.ios.server.command.web.IsEnabledHandler;
-import org.uiautomation.ios.server.command.web.IsEqualHandler;
-import org.uiautomation.ios.server.command.web.IsSelectedHandler;
-import org.uiautomation.ios.server.command.web.RefreshHandler;
-import org.uiautomation.ios.server.command.web.SetFrameHandler;
-import org.uiautomation.ios.server.command.web.SetImplicitWaitTimeoutHandler;
-import org.uiautomation.ios.server.command.web.SetTimeoutHandler;
-import org.uiautomation.ios.server.command.web.SetValueHandler;
-import org.uiautomation.ios.server.command.web.SubmitHandler;
+import org.uiautomation.ios.server.command.web.*;
 
 import java.lang.reflect.Constructor;
 import java.util.Iterator;
@@ -135,6 +107,17 @@ public enum CommandMapping {
   LOCATION(null, null, GetLocationHandler.class),
   //IS_STALE(".isStale()"),
 
+
+  // POST session/:sessionId/touch/scroll
+  // POST session/:sessionId/touch/scroll ( different params )
+  SCROLL(ScrollHandler.class),
+
+  LONG_TAP(LongTapHandler.class),
+  TAP(TapHandler.class),
+  DOUBLE_TAP(DoubleTapHandler.class),
+
+
+
   //LABEL(".label()"),
   //NAME(".name()"),
   //VALUE(".value()"),
@@ -150,8 +133,8 @@ public enum CommandMapping {
   //GET_LOCATION(GetLocationNHandler.class),
   SET_LOCATION(SetLocationNHandler.class),
 
-  TOUCH_AND_HOLD(TouchAndHoldNHandler.class),
-  DOUBLE_TAP(".doubleTap()"),
+  NATIVE_TOUCH_AND_HOLD(TouchAndHoldNHandler.class),
+  NATIVE_DOUBLE_TAP(".doubleTap()"),
   TWO_FINGER_TAP(".twoFingerTap()"),
   //TAP_WITH_OPTIONS(""),
   //DRAG_INSIDE_WITH_OPTIONS(""),
@@ -169,6 +152,9 @@ public enum CommandMapping {
 
   //TouchScreen
   FLICK(FlickHandler.class),
+  TOUCH_DOWN(TouchDownHandler.class),
+  TOUCH_UP(TouchUpHandler.class),
+  TOUCH_MOVE(TouchMoveHandler.class),
 
   // UIAElementArray
   //GET(".toArray()[:index]"),

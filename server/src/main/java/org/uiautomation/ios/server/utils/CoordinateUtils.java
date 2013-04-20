@@ -13,8 +13,10 @@
  */
 package org.uiautomation.ios.server.utils;
 
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.remote.Response;
+import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
 
 import java.util.Map;
 
@@ -39,5 +41,11 @@ public class CoordinateUtils {
     int width = Integer.parseInt(size.get("width").toString());
 
     return getCenterPoint(x, y, height, width);
+  }
+
+  public static Point getCenterPointFromElement(RemoteWebElement element) throws Exception {
+    Point location = element.getLocation();
+    Dimension size = element.getSize();
+    return getCenterPoint(location.getX(), location.getY(), size.getWidth(), size.getHeight());
   }
 }
