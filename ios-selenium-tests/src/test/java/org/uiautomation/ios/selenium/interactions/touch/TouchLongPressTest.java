@@ -16,8 +16,6 @@ limitations under the License.
 
 package org.uiautomation.ios.selenium.interactions.touch;
 
-import org.junit.Before;
-import org.junit.Test;
 import org.openqa.selenium.StubRenderedWebElement;
 import org.openqa.selenium.TouchScreen;
 import org.openqa.selenium.interactions.internal.Coordinates;

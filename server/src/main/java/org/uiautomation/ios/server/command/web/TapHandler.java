@@ -15,6 +15,7 @@ package org.uiautomation.ios.server.command.web;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
@@ -25,9 +26,10 @@ import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
 public class TapHandler extends UIAScriptHandler {
 
   private static final String tapTemplate =
-      "UIATarget.localTarget().tap({x:tapX, y:tapY});" +
+      "UIATarget.localTarget().tap({x:tapX, y:tapY, width:tapWidth, height:tapHeight});" +
           "UIAutomation.createJSONResponse(':sessionId',0,'')";
 
+  // CGRectMake(yourPoint.x, yourPoint.y, yourSize.width, yourSize.height);
 
   public TapHandler(IOSServerManager driver, WebDriverLikeRequest request) throws Exception {
     super(driver, request);
@@ -39,10 +41,15 @@ public class TapHandler extends UIAScriptHandler {
     RemoteWebElement element = getSession().getRemoteWebDriver().createElement(elementId);
     Point center = CoordinateUtils.getCenterPointFromElement(element);
 
+    Point location = element.getLocation();
+    Dimension size = element.getSize();
+
     String js = tapTemplate
         .replace(":sessionId", request.getSession())
-        .replace("tapX", Integer.toString(center.getY()))
-        .replace("tapY", Integer.toString(center.getY()));
+        .replace("tapX", Integer.toString(location.getX()))
+        .replace("tapY", Integer.toString(location.getY() + 115))
+        .replace("tapWidth", Integer.toString(size.getWidth()))
+        .replace("tapHeight", Integer.toString(size.getHeight()));
 
     setJS(js);
   }

@@ -41,9 +41,10 @@ public class TouchSingleTapTest extends BaseSeleniumTest {
   }
 
   @Test
-  public void testCanSingleTapOnALinkAndFollowIt() {
+  public void testCanSingleTapOnALinkAndFollowIt() throws InterruptedException {
     driver.get(pages.clicksPage);
     singleTapOnElement("normal");
+    Thread.sleep(2000);
     waitFor(WaitingConditions.pageTitleToBe(driver, "XHTML Test Page"));
   }
 

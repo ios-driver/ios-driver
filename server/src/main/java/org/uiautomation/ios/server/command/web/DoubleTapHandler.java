@@ -41,7 +41,7 @@ public class DoubleTapHandler extends UIAScriptHandler {
 
     String js = doubleTapTemplate
         .replace(":sessionId", request.getSession())
-        .replace("tapX", Integer.toString(center.getY()))
+        .replace("tapX", Integer.toString(center.getX()))
         .replace("tapY", Integer.toString(center.getY()));
 
     setJS(js);

@@ -23,9 +23,9 @@ import org.uiautomation.ios.server.utils.CoordinateUtils;
 import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
 
 public class LongTapHandler extends UIAScriptHandler {
-
+  //tapWithOptions({x:hitPointX, y:hitPointY}, {touchCount:1, tapCount:1, duration:0});
   private static final String longTapTemplate =
-      "UIATarget.localTarget().tap({x:tapX, y:tapY});" +
+      "UIATarget.localTarget().tapWithOptions({x:tapX, y:tapY}, {touchCount:1, tapCount:1, duration:3});" +
           "UIAutomation.createJSONResponse(':sessionId',0,'')";
 
 
@@ -41,7 +41,7 @@ public class LongTapHandler extends UIAScriptHandler {
 
     String js = longTapTemplate
         .replace(":sessionId", request.getSession())
-        .replace("tapX", Integer.toString(center.getY()))
+        .replace("tapX", Integer.toString(center.getX()))
         .replace("tapY", Integer.toString(center.getY()));
 
     setJS(js);

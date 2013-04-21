@@ -17,13 +17,13 @@ limitations under the License.
 
 package org.uiautomation.ios.selenium.interactions.touch;
 
-import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NeedsFreshDriver;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.touch.TouchActions;
+import org.testng.annotations.Test;
 import org.uiautomation.ios.selenium.BaseSeleniumTest;
 
 import static org.junit.Assert.assertTrue;
@@ -69,7 +69,7 @@ public class TouchScrollTest extends BaseSeleniumTest {
     assertTrue("Expected x > 1500, but got x = " + x, x > 1500);
 
     WebElement toScroll = driver.findElement(By.id("imagestart"));
-    Action scroll = getBuilder(driver).scroll(toScroll, -1000, 0).build();
+    Action scroll = getBuilder(driver).scroll(toScroll, -100, 0).build();
     scroll.perform();
 
     x = link.getLocation().x;
