@@ -8,6 +8,7 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
+import org.uiautomation.ios.wkrdp.model.RemoteWebNativeBackedElement;
 
 public class GetLocationHandler extends BaseWebCommandHandler {
 
@@ -24,7 +25,7 @@ public class GetLocationHandler extends BaseWebCommandHandler {
   @Override
   public Response handle() throws Exception {
     String ref = getRequest().getVariableValue(":reference");
-    RemoteWebElement element = getSession().getRemoteWebDriver().createElement(ref);
+    RemoteWebNativeBackedElement element = (RemoteWebNativeBackedElement) getSession().getRemoteWebDriver().createElement(ref);
     Point location = element.getLocation();
     Response res = new Response();
     res.setSessionId(getSession().getSessionId());

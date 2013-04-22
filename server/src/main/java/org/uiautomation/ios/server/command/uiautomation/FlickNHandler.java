@@ -23,10 +23,10 @@ import org.uiautomation.ios.server.command.UIAScriptHandler;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.utils.CoordinateUtils;
 
-public class FlickHandler extends UIAScriptHandler {
+public class FlickNHandler extends UIAScriptHandler {
 
     private static final String voidTemplate =
-            "UIATarget.localTarget().flickFromTo({x:fromX, y:fromY}, {x:toX, y:toY});" +
+            "UIATarget.localTarget().flickFromToForDuration({x:fromX, y:fromY}, {x:toX, y:toY}, duration);" +
                     "UIAutomation.createJSONResponse(':sessionId',0,'')";
 
     private static final String getElementTemplate =
@@ -34,7 +34,7 @@ public class FlickHandler extends UIAScriptHandler {
                     "UIAutomation.createJSONResponse(':sessionId',0,result);";
 
 
-    public FlickHandler(IOSServerManager driver, WebDriverLikeRequest request) throws Exception {
+    public FlickNHandler(IOSServerManager driver, WebDriverLikeRequest request) throws Exception {
         super(driver, request);
 
         JSONObject payload = request.getPayload();
@@ -50,13 +50,10 @@ public class FlickHandler extends UIAScriptHandler {
                 .replace(":sessionId", request.getSession())
                 .replace("fromX", Integer.toString(fromCoords.getX()))
                 .replace("fromY", Integer.toString(fromCoords.getY()))
-                .replace("toX", xOffset)
-                .replace("toY", yOffset);
-
-
-
+                .replace("toX", Integer.toString((fromCoords.getX() + Integer.valueOf(xOffset))))
+                .replace("toY", Integer.toString((fromCoords.getY() + Integer.valueOf(yOffset))))
+                .replace("duration", speed);
         setJS(js);
-
     }
 
     public Point getStartCoordinatesCentered(WebDriverLikeRequest request, String elementId) throws InterruptedException {

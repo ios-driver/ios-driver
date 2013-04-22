@@ -151,7 +151,7 @@ public enum CommandMapping {
   //SCROLL_TO_ELEMENT_WITH_PREDICATE(""),    //implemented in ELEMENT_SCROLL
 
   //TouchScreen
-  FLICK(FlickHandler.class),
+  FLICK(FlickNHandler.class),
   TOUCH_DOWN(TouchDownHandler.class),
   TOUCH_UP(TouchUpHandler.class),
   TOUCH_MOVE(TouchMoveHandler.class),

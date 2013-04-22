@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 public class RemoteWebElement {
 
   private static final Logger log = Logger.getLogger(RemoteWebElement.class.getName());
-  protected final BaseWebInspector inspector;
+  private final BaseWebInspector inspector;
   private final NodeId nodeId;
   private RemoteObject remoteObject;
 
@@ -578,5 +578,9 @@ public class RemoteWebElement {
     } catch (JSONException e) {
       throw new WebDriverException(e);
     }
+  }
+
+  public BaseWebInspector getInspector() {
+    return inspector;
   }
 }
