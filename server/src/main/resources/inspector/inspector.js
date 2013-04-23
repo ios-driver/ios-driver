@@ -13,6 +13,7 @@
  */
 
 $(document).ready(function () {
+    $(".ui-layout-south").tabs();
 
     var expandCenter = function () {
         var h = $(window).height() - $("#header").height() - $("#footer").height();
@@ -26,7 +27,9 @@ $(document).ready(function () {
                                           center__childOptions: {}
                                       });
 
-    layout.sizePane("south", 200);
+    var southH = 200;
+    layout.sizePane("south", southH);
+
     var topLayout = layout.center.children.layout1;
     topLayout.sizePane("west", 450);
     topLayout.sizePane("east", 300);
@@ -36,7 +39,6 @@ $(document).ready(function () {
         console.log("resized to " + w);
         resize();
     }
-    //$("#tabs").tabs();
 
     $(window).resize(function () {
         expandCenter();

@@ -47,11 +47,23 @@
     position: fixed;
     bottom: 0;
     left: 0;
-    height: 30px;
-    width: 100%;
+
+}
+
+.ui-tabs-panel {
 
 }
 
 .no-close .ui-dialog-titlebar-close {
     display: none;
+}
+
+.ui-layout-south .ui-tabs-nav {
+    /* don't need border or rounded corners - tabs 'fill' the pane */
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    padding-bottom: 0 !important;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
 }

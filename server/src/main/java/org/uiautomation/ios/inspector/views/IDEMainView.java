@@ -56,6 +56,7 @@ public class IDEMainView implements View {
     cssList.add(getResource("inspector/inspector.css"));
     cssList.add(getResource("ide.css"));
     cssList.add(getResource("jquery.layout.css"));
+
     map.put("cssList", cssList);
 
     List<String> jsList = new ArrayList<String>();
