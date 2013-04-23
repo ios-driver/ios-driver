@@ -71,6 +71,8 @@ public enum CommandMapping {
   GET_ORIENTATION(GetOrientationNHandler.class),
   DRAG_FROM_TO_FOR_DURATION(DragFromToForDurationNHander.class),
 
+  GET_SCREENRECT(GetScreenSizeNHandler.class),
+
   SCREENSHOT(TakeScreenshotNHandler.class),
 
   //FONT_MOST_APP(".frontMostApp()"),

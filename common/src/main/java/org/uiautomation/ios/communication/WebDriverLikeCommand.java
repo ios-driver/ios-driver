@@ -16,6 +16,7 @@ package org.uiautomation.ios.communication;
 import org.apache.http.cookie.CookieIdentityComparator;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.html5.Location;
 import org.uiautomation.ios.UIAModels.Orientation;
@@ -97,6 +98,8 @@ public enum WebDriverLikeCommand {
   SET_ALERT_TEXT("POST", "/session/:sessionId/alert_text", Void.class),
   ACCEPT_ALERT("POST", "/session/:sessionId/accept_alert", Void.class),
   DISMISS_ALERT("POST", "/session/:sessionId/dismiss_alert", Void.class),
+
+  GET_SCREENRECT("GET", "/session/:sessionId/screensize", Dimension.class),
 
   // POST /session/:sessionId/moveto
   // POST /session/:sessionId/click

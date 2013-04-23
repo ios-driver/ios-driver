@@ -18,18 +18,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import org.json.JSONObject;
-import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.HasTouchScreen;
-import org.openqa.selenium.Keyboard;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.Point;
-import org.openqa.selenium.Rotatable;
-import org.openqa.selenium.ScreenOrientation;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.TouchScreen;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.html5.Location;
 import org.openqa.selenium.html5.LocationContext;
 import org.openqa.selenium.remote.DriverCommand;
@@ -262,6 +251,20 @@ public class RemoteIOSDriver extends RemoteWebDriver
     return Orientation.valueOf(res);
   }
 
+  public Dimension getScreenSize(){
+    WebDriverLikeRequest
+        request =
+        executor.buildRequest(WebDriverLikeCommand.GET_SCREENRECT);
+    Map<String, Object> rect = executor.execute(request);
+
+    Map<String, Long> size = (Map<String, Long>) rect.get("size");
+
+    Long height = new Long(size.get("height"));
+    Long width = new Long(size.get("width"));
+
+    return new Dimension(height.intValue(), width.intValue());
+  }
+
   @Override
   public void setConfiguration(WebDriverLikeCommand command, String key, Object value) {
     RemoteIOSDriver.setConfiguration(executor, command, key, value);
@@ -360,8 +363,4 @@ public class RemoteIOSDriver extends RemoteWebDriver
 
 
   }
-
-
-
-
 }

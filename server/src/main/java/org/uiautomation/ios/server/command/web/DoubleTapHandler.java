@@ -15,12 +15,14 @@ package org.uiautomation.ios.server.command.web;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 import org.uiautomation.ios.server.utils.CoordinateUtils;
 import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
+import org.uiautomation.ios.wkrdp.model.RemoteWebNativeBackedElement;
 
 public class DoubleTapHandler extends UIAScriptHandler {
 
@@ -35,14 +37,16 @@ public class DoubleTapHandler extends UIAScriptHandler {
     JSONObject payload = request.getPayload();
     String elementId = payload.optString("element");
 
-    //String ref = request.getVariableValue(":reference");
-    RemoteWebElement element = getSession().getRemoteWebDriver().createElement(elementId);
-    Point center = CoordinateUtils.getCenterPointFromElement(element);
+    Dimension screenSize = driver.getSession(request.getSession()).getNativeDriver().getScreenSize();
+    RemoteWebNativeBackedElement element = (RemoteWebNativeBackedElement) getSession().getRemoteWebDriver().createElement(elementId);
+    Point tapPoint = element.getLocationForInstruments();
+    tapPoint = CoordinateUtils.forcePointOnScreen(tapPoint, screenSize);
+
 
     String js = doubleTapTemplate
         .replace(":sessionId", request.getSession())
-        .replace("tapX", Integer.toString(center.getX()))
-        .replace("tapY", Integer.toString(center.getY()));
+        .replace("tapX", Integer.toString(tapPoint.getX()))
+        .replace("tapY", Integer.toString(tapPoint.getY()));
 
     setJS(js);
   }

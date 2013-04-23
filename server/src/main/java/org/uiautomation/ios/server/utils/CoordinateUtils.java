@@ -21,6 +21,37 @@ import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
 import java.util.Map;
 
 public class CoordinateUtils {
+
+  public static Point forcePointOnScreen(Point point, Dimension screenSize) {
+
+    int x;
+    int y;
+
+    if (point.getX() < 0) {
+      x = 0;
+    } else if (point.getX() > screenSize.getWidth()) {
+      x = screenSize.getWidth();
+    } else {
+      x = point.getX();
+    }
+
+    if (point.getY() < 0) {
+      y = 0;
+    } else if (point.getY() > screenSize.getHeight()) {
+      y = screenSize.getHeight();
+    } else {
+      y = point.getY();
+    }
+
+    return new Point(x, y);
+
+  }
+
+  public static Point getCenterPoint(Point topLeft, Dimension size){
+    return getCenterPoint(topLeft.getX(), topLeft.getY(), size.getWidth(), size.getHeight());
+
+  }
+
   private static Point getCenterPoint(int xCoord, int yCoord, int width, int height) {
     int centerX = xCoord + (width / 2);
     int centerY = yCoord - (height / 2);

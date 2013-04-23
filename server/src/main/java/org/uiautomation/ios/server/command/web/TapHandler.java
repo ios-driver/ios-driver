@@ -22,11 +22,12 @@ import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 import org.uiautomation.ios.server.utils.CoordinateUtils;
 import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
+import org.uiautomation.ios.wkrdp.model.RemoteWebNativeBackedElement;
 
 public class TapHandler extends UIAScriptHandler {
 
   private static final String tapTemplate =
-      "UIATarget.localTarget().tap({x:tapX, y:tapY, width:tapWidth, height:tapHeight});" +
+      "UIATarget.localTarget().tap({x:tapX, y:tapY});" +
           "UIAutomation.createJSONResponse(':sessionId',0,'')";
 
   // CGRectMake(yourPoint.x, yourPoint.y, yourSize.width, yourSize.height);
@@ -38,18 +39,15 @@ public class TapHandler extends UIAScriptHandler {
     String elementId = payload.optString("element");
 
     //String ref = request.getVariableValue(":reference");
-    RemoteWebElement element = getSession().getRemoteWebDriver().createElement(elementId);
-    Point center = CoordinateUtils.getCenterPointFromElement(element);
-
-    Point location = element.getLocation();
-    Dimension size = element.getSize();
+    Dimension screenSize = driver.getSession(request.getSession()).getNativeDriver().getScreenSize();
+    RemoteWebNativeBackedElement element = (RemoteWebNativeBackedElement) getSession().getRemoteWebDriver().createElement(elementId);
+    Point tapPoint = element.getLocationForInstruments();
+    tapPoint = CoordinateUtils.forcePointOnScreen(tapPoint, screenSize);
 
     String js = tapTemplate
         .replace(":sessionId", request.getSession())
-        .replace("tapX", Integer.toString(location.getX()))
-        .replace("tapY", Integer.toString(location.getY() + 115))
-        .replace("tapWidth", Integer.toString(size.getWidth()))
-        .replace("tapHeight", Integer.toString(size.getHeight()));
+        .replace("tapX", Integer.toString(tapPoint.getX()))
+        .replace("tapY", Integer.toString(tapPoint.getY()));
 
     setJS(js);
   }
