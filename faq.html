@@ -78,7 +78,7 @@ $(document).ready(function($){
 
         you need to give ios-driver access to write the MobileSafari info.plist
         <pre class="prettyprint">
-  chmod 666 /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator*.sdk/Applications/MobileSafari.app/Info.plist
+  sudo chmod 666 /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator*.sdk/Applications/MobileSafari.app/Info.plist
         </pre>
 
         
@@ -86,11 +86,11 @@ $(document).ready(function($){
         <h4>Exiled SDKs warning</h4>
         The exiledSDKs folder is used to temporarilly store the most recent SDKs allowing us to run against an older version. If you get warnings about this folder, firstly make sure the following location exists
 <pre class="prettyprint">
-  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs
+  sudo mkdir /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs
 </pre>
         and ios-drvier has read write permissions to the location
 <pre class="prettyprint">
-  chmod -R +rw /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs
+  sudo chmod -R +rw /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs
 </pre>
 
         <h4>Developer Tools Access needs to take control</h4>
