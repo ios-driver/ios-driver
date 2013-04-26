@@ -29,7 +29,7 @@
 + avoid switching between native and web for internal command.
 
 
-0.6.0 (current)
+0.6.0
 -----
 
 + inspector cleanup
@@ -57,6 +57,9 @@
 + handle multi web windows
 + use facebook project to remove 1 sec delay on emulator.
 + improve UIAKeyboard, add hide()
+
+0.7.0 (current)
+-----
 
 
 TODOs:

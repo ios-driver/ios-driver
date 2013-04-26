@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 ios-driver committers.
+ * Copyright 2013 ios-driver committers.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -14,7 +14,13 @@
 package org.uiautomation.ios.client.uiamodels.impl;
 
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.uiautomation.ios.UIAModels.UIATableCell;
+import org.uiautomation.ios.UIAModels.UIATableGroup;
 import org.uiautomation.ios.UIAModels.UIATableView;
+import org.uiautomation.ios.communication.WebDriverLikeCommand;
+import org.uiautomation.ios.communication.WebDriverLikeRequest;
+
+import java.util.ArrayList;
 
 public class RemoteUIATableView extends RemoteUIAScrollView implements UIATableView {
 
@@ -22,5 +28,21 @@ public class RemoteUIATableView extends RemoteUIAScrollView implements UIATableV
     super(driver, reference);
   }
 
+  @Override
+  public ArrayList<UIATableGroup> getGroups() {
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TABLE_GROUPS);
+    return commandExecutor.execute(request);
+  }
 
+  @Override
+  public ArrayList<UIATableCell> getCells() {
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TABLE_CELLS);
+    return commandExecutor.execute(request);
+  }
+
+  @Override
+  public ArrayList<UIATableCell> getVisibleCells() {
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TABLE_VISIBLE_CELLS);
+    return commandExecutor.execute(request);
+  }
 }

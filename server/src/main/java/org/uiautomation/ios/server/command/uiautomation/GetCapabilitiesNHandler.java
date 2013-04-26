@@ -79,9 +79,22 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
       o.put(IOSCapabilities.CONFIGURABLE, true);
       o.put(IOSCapabilities.ELEMENT_TREE, true);
       o.put(IOSCapabilities.IOS_SEARCH_CONTEXT, true);
+      o.put(IOSCapabilities.IOS_TOUCH_SCREEN, true);
 
       o.put("rotatable", true);
       o.put("locationContextEnabled", true);
+
+      o.put("browserName", session.getCapabilities().getBundleName());
+      o.put("browserVersion", session.getApplication().getCapabilities().getBundleVersion());
+
+      o.put("platform", "IOS");
+      o.put("platformName", "IOS");
+      o.put("platformVersion", session.getCapabilities().getSDKVersion());
+
+      o.put("javascriptEnabled", true);
+      o.put("cssSelectors", true);
+      o.put("takesElementScreenshot", false);
+      
       o.put(IOSCapabilities.SIMULATOR, true);
       o.put(IOSCapabilities.DEVICE, session.getCapabilities().getDevice());
       o.put(IOSCapabilities.VARIATION, session.getCapabilities().getDeviceVariation());

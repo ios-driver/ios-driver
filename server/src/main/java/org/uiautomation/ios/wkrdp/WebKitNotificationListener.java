@@ -102,7 +102,6 @@ public class WebKitNotificationListener implements MessageListener {
           pages.add(index, newOne);
 
           driver.setPages(pages);
-          sync.signalSimSentPages();
 
           if (driver.getPages().size() == 0) {
             //log.fine("first page. Nothing to do.");
@@ -119,9 +118,10 @@ public class WebKitNotificationListener implements MessageListener {
             }
           }
         }
+
+        sync.signalSimSentPages();
       } else {
         driver.setPages(messagePages);
-        sync.signalSimSentPages();
         if (messagePages.size() > 0) {
           if (session != null) {
             waitForWindowSwitchingAnimation();
@@ -131,9 +131,8 @@ public class WebKitNotificationListener implements MessageListener {
             driver.switchTo(focus);
           }
         }
+        sync.signalSimSentPages();
       }
-
-
     }
 
     if (message instanceof ApplicationDataMessage) {

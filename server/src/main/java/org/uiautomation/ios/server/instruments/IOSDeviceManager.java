@@ -34,4 +34,6 @@ public interface IOSDeviceManager {
   void setVariation(DeviceType device, DeviceVariation variation);
 
   String getInstrumentsClient();
+
+  void setMobileSafariOptions();
 }

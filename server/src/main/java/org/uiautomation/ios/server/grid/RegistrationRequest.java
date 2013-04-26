@@ -27,6 +27,7 @@ import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.server.IOSServerConfiguration;
 import org.uiautomation.ios.server.IOSServerManager;
+import org.uiautomation.ios.server.application.APPIOSApplication;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -48,6 +49,13 @@ public class RegistrationRequest {
       throws MalformedURLException {
     this.hubURL = new URL(config.getRegistrationURL());
     this.nodeHost = config.getHost();
+
+    List<APPIOSApplication> apps = driver.getSupportedApplications();
+    for (APPIOSApplication app : apps) {
+      IOSCapabilities cap = IOSCapabilities.iphone(app.getApplicationName());
+      cap.setCapability("browserName", "IOS Simulator");
+      capabilities.add(cap.getRawCapabilities());
+    }
 
     configuration.put("hubHost", hubURL.getHost());
     configuration.put("hubPort", hubURL.getPort());

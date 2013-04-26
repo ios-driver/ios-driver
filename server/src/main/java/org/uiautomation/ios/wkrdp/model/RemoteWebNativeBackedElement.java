@@ -14,20 +14,11 @@
 
 package org.uiautomation.ios.wkrdp.model;
 
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.Point;
-import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.*;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIAWebView;
-import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
-import org.uiautomation.ios.UIAModels.predicate.Criteria;
-import org.uiautomation.ios.UIAModels.predicate.LabelCriteria;
-import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
-import org.uiautomation.ios.UIAModels.predicate.OrCriteria;
-import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
+import org.uiautomation.ios.UIAModels.predicate.*;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.context.BaseWebInspector;
@@ -43,7 +34,6 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
 
 
   private static final Logger log = Logger.getLogger(RemoteWebNativeBackedElement.class.getName());
-
   private final ServerSideSession session;
   private final RemoteIOSDriver nativeDriver;
   private final List<Character> specialKeys = new ArrayList<Character>() {{
@@ -60,6 +50,24 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     this.nativeDriver = session.getNativeDriver();
   }
 
+  private static String normalizeDateValue(String value) {
+    // convert MM/DD/YYYY to YYYY-MM-DD
+    int sep1 = value.indexOf('/');
+    int sep2 = value.lastIndexOf('/');
+    if (sep1 == -1 || sep2 == -1)
+      return value;
+
+    String mm = value.substring(0, sep1);
+    String dd = value.substring(sep1 + 1, sep2);
+    String yyyy = value.substring(sep2 + 1);
+
+    return yyyy + '-' + to2CharDateDigit(mm) + '-' + to2CharDateDigit(dd);
+  }
+
+  private static String to2CharDateDigit(String text) {
+    return (text.length() == 1) ? '0' + text : text;
+  }
+
   private boolean isSafari() {
     return session.getApplication().isSafari();
   }
@@ -72,7 +80,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     } else {
       try {
         ((JavascriptExecutor) nativeDriver).executeScript(getNativeElementClickOnIt());
-        inspector.checkForPageLoad();
+        getInspector().checkForPageLoad();
       } catch (Exception e) {
         throw new WebDriverException(e);
       }
@@ -80,13 +88,15 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
 
   }
 
-  private String getNativeElementClickOnIt() throws Exception {
+  @Override
+  public Point getLocation()
+      throws Exception {
     // web stuff.
-    scrollIntoViewIfNeeded();
+    //scrollIntoViewIfNeeded();
     Point po = findPosition();
 
-    Dimension dim = inspector.getSize();
-    int webPageWidth = inspector.getInnerWidth();
+    Dimension dim = getInspector().getSize();
+    int webPageWidth = getInspector().getInnerWidth();
     if (dim.getWidth() != webPageWidth) {
       log.fine("BUG : dim.getWidth()!=webPageWidth");
     }
@@ -123,7 +133,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
         Criteria
             c2 =
             new AndCriteria(new TypeCriteria(UIAElement.class), new NameCriteria(addressL10ned),
-                            new LabelCriteria(addressL10ned));
+                new LabelCriteria(addressL10ned));
         script.append("var addressBar = root.element(-1," + c2.stringify().toString() + ");");
         script.append("var addressBarSize = addressBar.rect();");
         script.append("var delta = addressBarSize.origin.y +39;");
@@ -138,9 +148,24 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
       // UIAWebView.y
       script.append("var y = top+offsetY;");
     }
-    script.append("UIATarget.localTarget().tap({'x':x,'y':y});");
-    return script.toString();
+    script.append("return new Array(parseInt(x), parseInt(y));");
 
+    Object response = ((JavascriptExecutor) nativeDriver).executeScript(String.valueOf(script));
+
+    int x = ((ArrayList<Long>) response).get(0).intValue();
+    int y = ((ArrayList<Long>) response).get(1).intValue();
+
+    return new Point(x, y);
+  }
+
+  private String getNativeElementClickOnIt() throws Exception {
+    // web stuff.
+    scrollIntoViewIfNeeded();
+    Point location = getLocation();
+    String script = "UIATarget.localTarget().tap({'x':x_coord,'y':y_coord});";
+    script = script.replace("x_coord", String.valueOf(location.getX()))
+        .replace("y_coord", String.valueOf(location.getY()));
+    return script;
   }
 
   private String getKeyboardTypeStringSegement(String value) {
@@ -149,7 +174,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     // got to love java...
     // first replacing a \ (backslash) with \\ (double backslash)
     // and then ' (single quote) with \' (backslash, single quote)
-    script.append(value.replaceAll("\\\\","\\\\\\\\").replaceAll("'", "\\\\'"));
+    script.append(value.replaceAll("\\\\", "\\\\\\\\").replaceAll("'", "\\\\'"));
     script.append("');");
     return script.toString();
   }
@@ -190,7 +215,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
             // TODO, i don't like this xpath... should find the key in a better way
             // (like keyboard.shift)
             script.append(getReferenceToTapByXpath(xpathEngine, "//UIAKeyboard/UIAKey[" +
-                ( nativeDriver.getCapabilities().getDevice() == DeviceType.ipad ?
+                (nativeDriver.getCapabilities().getDevice() == DeviceType.ipad ?
                     "11]" : "last()-3]")
             ));
             break;
@@ -199,7 +224,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
             // ENTER / RETURN
             // TODO another smelly xpath.
             script.append(getReferenceToTapByXpath(xpathEngine, "//UIAKeyboard/UIAButton[" +
-                ( nativeDriver.getCapabilities().getDevice() == DeviceType.ipad ?
+                (nativeDriver.getCapabilities().getDevice() == DeviceType.ipad ?
                     "1]" : "2]")
             ));
             keyboardResigned = true;
@@ -225,10 +250,10 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     return script.toString();
   }
 
-
   public void setValueNative(String value) throws Exception {
     String type = getAttribute("type");
     if ("date".equalsIgnoreCase(type)) {
+      value = normalizeDateValue(value);
       setValueAtoms(value);
       return;
     }
@@ -249,10 +274,9 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
   private String replaceLettersWithNumbersKeypad(String str, String locale) {
     if (locale.toLowerCase().startsWith("en")) {
       return str.replaceAll("[AaBbCc]", "2").replaceAll("[DdEeFf]", "3").replaceAll("[GgHhIi]", "4")
-                .replaceAll("[JjKkLl]", "5").replaceAll("[MmNnOo]", "6").replaceAll("[PpQqRrSs]", "7")
-                .replaceAll("[TtUuVv]", "8").replaceAll("[WwXxYyZz]", "9").replaceAll("-", "");
+          .replaceAll("[JjKkLl]", "5").replaceAll("[MmNnOo]", "6").replaceAll("[PpQqRrSs]", "7")
+          .replaceAll("[TtUuVv]", "8").replaceAll("[WwXxYyZz]", "9").replaceAll("-", "");
     }
     return str.replaceAll("-", "");
   }
-
 }

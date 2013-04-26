@@ -23,67 +23,8 @@ import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.server.command.Handler;
 import org.uiautomation.ios.server.command.NotImplementedNativeHandler;
 import org.uiautomation.ios.server.command.NotImplementedWebHandler;
-import org.uiautomation.ios.server.command.uiautomation.AcceptAlertHandler;
-import org.uiautomation.ios.server.command.uiautomation.ClearNHandler;
-import org.uiautomation.ios.server.command.uiautomation.DefaultUIAScriptNHandler;
-import org.uiautomation.ios.server.command.uiautomation.DismissAlertHandler;
-import org.uiautomation.ios.server.command.uiautomation.ExecuteScriptNHandler;
-import org.uiautomation.ios.server.command.uiautomation.FindElementNHandler;
-import org.uiautomation.ios.server.command.uiautomation.FindElementsRoot;
-import org.uiautomation.ios.server.command.uiautomation.GetAlertTextNHandler;
-import org.uiautomation.ios.server.command.uiautomation.GetAttributeNHandler;
-import org.uiautomation.ios.server.command.uiautomation.GetCapabilitiesNHandler;
-import org.uiautomation.ios.server.command.uiautomation.GetConfigurationNHandler;
-import org.uiautomation.ios.server.command.uiautomation.GetCurrentContextNHandler;
-import org.uiautomation.ios.server.command.uiautomation.GetElementSizeNHandler;
-import org.uiautomation.ios.server.command.uiautomation.GetOrientationNHandler;
-import org.uiautomation.ios.server.command.uiautomation.GetSessionsNHandler;
-import org.uiautomation.ios.server.command.uiautomation.GetTimeoutNHandler;
-import org.uiautomation.ios.server.command.uiautomation.GetWindowHandlesNHandler;
-import org.uiautomation.ios.server.command.uiautomation.IsEnabledNHandler;
-import org.uiautomation.ios.server.command.uiautomation.IsVisibleNHandler;
-import org.uiautomation.ios.server.command.uiautomation.LogElementTreeNHandler;
-import org.uiautomation.ios.server.command.uiautomation.NewSessionNHandler;
-import org.uiautomation.ios.server.command.uiautomation.SendKeysNHandler;
-import org.uiautomation.ios.server.command.uiautomation.ServerStatusNHandler;
-import org.uiautomation.ios.server.command.uiautomation.SetAlertTextHandler;
-import org.uiautomation.ios.server.command.uiautomation.SetConfigurationNHandler;
-import org.uiautomation.ios.server.command.uiautomation.SetCurrentContextNHandler;
-import org.uiautomation.ios.server.command.uiautomation.SetImplicitWaitTimeoutNHandler;
-import org.uiautomation.ios.server.command.uiautomation.SetLocationNHandler;
-import org.uiautomation.ios.server.command.uiautomation.SetOrientationNHandler;
-import org.uiautomation.ios.server.command.uiautomation.SetTimeoutNHandler;
-import org.uiautomation.ios.server.command.uiautomation.SetValueNHandler;
-import org.uiautomation.ios.server.command.uiautomation.StopSessionNHandler;
-import org.uiautomation.ios.server.command.uiautomation.TakeScreenshotNHandler;
-import org.uiautomation.ios.server.command.web.BackHandler;
-import org.uiautomation.ios.server.command.web.ClearHandler;
-import org.uiautomation.ios.server.command.web.ClickHandler;
-import org.uiautomation.ios.server.command.web.CssPropertyHandler;
-import org.uiautomation.ios.server.command.web.DeleteAllCookiesHandler;
-import org.uiautomation.ios.server.command.web.DeleteCookieByNameHandler;
-import org.uiautomation.ios.server.command.web.ExecuteScriptHandler;
-import org.uiautomation.ios.server.command.web.FindElementHandler;
-import org.uiautomation.ios.server.command.web.FindElementsHandler;
-import org.uiautomation.ios.server.command.web.ForwardHandler;
-import org.uiautomation.ios.server.command.web.GetAttributeHandler;
-import org.uiautomation.ios.server.command.web.GetCookiesHandler;
-import org.uiautomation.ios.server.command.web.GetHandler;
-import org.uiautomation.ios.server.command.web.GetPageSourceHandler;
-import org.uiautomation.ios.server.command.web.GetTagNameHandler;
-import org.uiautomation.ios.server.command.web.GetTextHandler;
-import org.uiautomation.ios.server.command.web.GetTitleHandler;
-import org.uiautomation.ios.server.command.web.GetURL;
-import org.uiautomation.ios.server.command.web.IsDisplayedHanlder;
-import org.uiautomation.ios.server.command.web.IsEnabledHandler;
-import org.uiautomation.ios.server.command.web.IsEqualHandler;
-import org.uiautomation.ios.server.command.web.IsSelectedHandler;
-import org.uiautomation.ios.server.command.web.RefreshHandler;
-import org.uiautomation.ios.server.command.web.SetFrameHandler;
-import org.uiautomation.ios.server.command.web.SetImplicitWaitTimeoutHandler;
-import org.uiautomation.ios.server.command.web.SetTimeoutHandler;
-import org.uiautomation.ios.server.command.web.SetValueHandler;
-import org.uiautomation.ios.server.command.web.SubmitHandler;
+import org.uiautomation.ios.server.command.uiautomation.*;
+import org.uiautomation.ios.server.command.web.*;
 
 import java.lang.reflect.Constructor;
 import java.util.Iterator;
@@ -128,6 +69,9 @@ public enum CommandMapping {
   TARGET_TAP(".tap({x::x,y::y})"),
   SET_ORIENTATION(SetOrientationNHandler.class),
   GET_ORIENTATION(GetOrientationNHandler.class),
+  DRAG_FROM_TO_FOR_DURATION(DragFromToForDurationNHander.class),
+
+  GET_SCREENRECT(GetScreenSizeNHandler.class),
 
   SCREENSHOT(TakeScreenshotNHandler.class),
 
@@ -162,7 +106,19 @@ public enum CommandMapping {
 
   DISPLAYED(IsVisibleNHandler.class, IsDisplayedHanlder.class),
   ENABLED(IsEnabledNHandler.class, IsEnabledHandler.class),
+  LOCATION(null, null, GetLocationHandler.class),
   //IS_STALE(".isStale()"),
+
+
+  // POST session/:sessionId/touch/scroll
+  // POST session/:sessionId/touch/scroll ( different params )
+  SCROLL(ScrollHandler.class),
+
+  LONG_TAP(LongTapHandler.class),
+  TAP(TapHandler.class),
+  DOUBLE_TAP(DoubleTapHandler.class),
+
+
 
   //LABEL(".label()"),
   //NAME(".name()"),
@@ -179,15 +135,28 @@ public enum CommandMapping {
   //GET_LOCATION(GetLocationNHandler.class),
   SET_LOCATION(SetLocationNHandler.class),
 
-  //TOUCH_AND_HOLD(".touchAndHold(:duration)"),
-  //DOUBLE_TAP(".doubleTap()"),
-  //TWO_FINGER_TAP(".twoFingerTap()"),
+  NATIVE_TOUCH_AND_HOLD(TouchAndHoldNHandler.class),
+  NATIVE_DOUBLE_TAP(".doubleTap()"),
+  TWO_FINGER_TAP(".twoFingerTap()"),
   //TAP_WITH_OPTIONS(""),
   //DRAG_INSIDE_WITH_OPTIONS(""),
   //FLICK_INSIDE_WITH_OPTIONS(""),
-  //SCROLL_TO_VISIBLE(".scrollToVisible()"),
+  //SCROLL_TO_VISIBLE(".scrollToVisible()"),          //implemented in ELEMENT_SCROLL
   //ROTATE_WITH_OPTIONS(NotImplementedNativeHandler.class, NotImplementedWebHandler.class),
   //PINCH_CLOSE(PinchCloseNHandler.class, NotImplementedWebHandler.class),
+  ELEMENT_SCROLL(ElementScrollNHandler.class),
+  //SCROLL_UP(".scrollUp()"),          //implemented in ELEMENT_SCROLL
+  //SCROLL_DOWN(".scrollDown()"),      //implemented in ELEMENT_SCROLL
+  //SCROLL_LEFT(".scrollLeft()"),      //implemented in ELEMENT_SCROLL
+  //SCROLL_RIGHT(".scrollRight()"),    //implemented in ELEMENT_SCROLL
+  //SCROLL_TO_ELEMENT_WITH_NAME(""),              //implemented in ELEMENT_SCROLL
+  //SCROLL_TO_ELEMENT_WITH_PREDICATE(""),    //implemented in ELEMENT_SCROLL
+
+  //TouchScreen
+  FLICK(FlickNHandler.class),
+  TOUCH_DOWN(TouchDownHandler.class),
+  TOUCH_UP(TouchUpHandler.class),
+  TOUCH_MOVE(TouchMoveHandler.class),
 
   // UIAElementArray
   //GET(".toArray()[:index]"),
@@ -209,9 +178,9 @@ public enum CommandMapping {
   CLEAR(ClearNHandler.class, ClearHandler.class),
 
   //UIATableView
-  //TABLE_GROUPS(".groups()"),
-  //TABLE_CELLS(".cells()"),
-  //TABLE_VISIBLE_CELLS(".visibleCells()"),
+  TABLE_GROUPS(".groups()"),
+  TABLE_CELLS(".cells()"),
+  TABLE_VISIBLE_CELLS(".visibleCells()"),
   GET_ALERT_TEXT(GetAlertTextNHandler.class),
   ACCEPT_ALERT(AcceptAlertHandler.class),
   DISMISS_ALERT(DismissAlertHandler.class),

@@ -13,22 +13,14 @@
  */
 package org.uiautomation.ios.utils;
 
+import com.dd.plist.ASCIIPropertyListParser;
 import com.dd.plist.BinaryPropertyListParser;
 import com.dd.plist.NSObject;
-
-import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.remote.BeanToJsonConverter;
-import org.uiautomation.ios.server.application.LanguageDictionary;
 import org.uiautomation.iosdriver.ApplicationInfo;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.StringWriter;
-import java.text.Normalizer;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class PlistFileUtils {
@@ -47,7 +39,11 @@ public class PlistFileUtils {
     try {
       object = BinaryPropertyListParser.parse(bplist);
     } catch (Exception e) {
-      throw new WebDriverException("Cannot parse info.plist : " + e.getMessage(), e);
+      try {
+        object = ASCIIPropertyListParser.parse(bplist);
+      } catch (Exception ex) {
+        throw new WebDriverException("Cannot parse info.plist : " + ex.getMessage(), ex);
+      }
     }
     ApplicationInfo info = new ApplicationInfo(object);
     return info.getProperties();

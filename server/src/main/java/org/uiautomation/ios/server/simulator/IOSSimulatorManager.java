@@ -154,6 +154,11 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   }
 
   @Override
+  public void setMobileSafariOptions() {
+    simulatorSettings.setMobileSafariOptions();
+  }
+
+  @Override
   public void setLocationPreference(boolean authorized) {
     simulatorSettings.setLocationPreference(authorized, bundleId);
   }

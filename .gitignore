@@ -7,7 +7,7 @@ target/
 .idea/*
 *.iml
 test-output/
-
+applications/
 # apple likes to make these, we don't care about them
 .DS_Store
 

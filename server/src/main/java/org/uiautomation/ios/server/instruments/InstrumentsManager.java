@@ -195,6 +195,7 @@ public class InstrumentsManager {
     deviceManager.setKeyboardOptions();
     deviceManager.setVariation(deviceType, variation);
     deviceManager.setLocationPreference(true);
+    deviceManager.setMobileSafariOptions();
     return deviceManager;
   }
 

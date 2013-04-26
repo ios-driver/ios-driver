@@ -13,11 +13,13 @@
  */
 package org.uiautomation.ios.UIAModels;
 
+import java.util.ArrayList;
+
 public interface UIATableView extends UIAScrollView {
 
-  /*public UIAElementArray<UIATableGroup> getGroups();
+  public ArrayList<UIATableGroup> getGroups();
 
-  public UIAElementArray<UIATableCell> getCells();
+  public ArrayList<UIATableCell> getCells();
 
-  public UIAElementArray<UIATableCell> getVisibleCells();*/
+  public ArrayList<UIATableCell> getVisibleCells();
 }

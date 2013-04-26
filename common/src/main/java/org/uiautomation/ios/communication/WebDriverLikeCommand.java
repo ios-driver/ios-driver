@@ -13,8 +13,10 @@
  */
 package org.uiautomation.ios.communication;
 
+import org.apache.http.cookie.CookieIdentityComparator;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.html5.Location;
 import org.uiautomation.ios.UIAModels.Orientation;
@@ -85,6 +87,7 @@ public enum WebDriverLikeCommand {
   ATTRIBUTE("GET", "/session/:sessionId/element/:reference/attribute/:name", String.class),
   EQUAL("GET", "/session/:sessionId/element/:reference/equals/:other", Boolean.class),
   DISPLAYED("GET", "/session/:sessionId/element/:reference/displayed", Boolean.class),
+  LOCATION("GET", "/session/:sessionId/element/:reference/location", String.class),
   // GET /session/:sessionId/element/:id/location
   // GET /session/:sessionId/element/:id/location_in_view
   // GET /session/:sessionId/element/:id/size
@@ -96,21 +99,26 @@ public enum WebDriverLikeCommand {
   ACCEPT_ALERT("POST", "/session/:sessionId/accept_alert", Void.class),
   DISMISS_ALERT("POST", "/session/:sessionId/dismiss_alert", Void.class),
 
+  GET_SCREENRECT("GET", "/session/:sessionId/screensize", Dimension.class),
+
   // POST /session/:sessionId/moveto
   // POST /session/:sessionId/click
   // POST /session/:sessionId/buttondown
   // POST /session/:sessionId/buttonup
   // POST /session/:sessionId/doubleclick
-  // POST /session/:sessionId/touch/click
-  // POST /session/:sessionId/touch/down
-  // POST /session/:sessionId/touch/up
-  // POST session/:sessionId/touch/move
+
+
+  TOUCH_DOWN("POST", "/session/:sessionId/touch/down", Void.class),
+  TOUCH_UP("POST", "/session/:sessionId/touch/up", Void.class),
+  TOUCH_MOVE("POST", "/session/:sessionId/touch/move", Void.class),
   // POST session/:sessionId/touch/scroll
   // POST session/:sessionId/touch/scroll ( different params )
-  // POST session/:sessionId/touch/doubleclick
-  // POST session/:sessionId/touch/longclick
-  // POST session/:sessionId/touch/flick
-  // POST session/:sessionId/touch/flick ( different params )
+  SCROLL("POST", "/session/:sessionId/touch/scroll", Void.class),
+
+  LONG_TAP("POST", "/session/:sessionId/touch/longclick", Void.class),
+  TAP("POST", "/session/:sessionId/touch/click", Void.class),
+  DOUBLE_TAP("POST", "/session/:sessionId/touch/doubleclick", Void.class),
+  FLICK("POST", "/session/:sessionId/touch/flick", Void.class),
 
   GET_LOCATION("GET", "/session/:sessionId/location", Void.class),
   SET_LOCATION("POST", "/session/:sessionId/location", Location.class),
@@ -137,7 +145,7 @@ public enum WebDriverLikeCommand {
    */
   CONFIGURE("POST", "/session/:sessionId/ios-driver/configure/command/:command", Void.class),
   GET_CONFIGURATION("GET", "/session/:sessionId/ios-driver/configure/command/:command",
-                    Object.class),
+      Object.class),
 
   GET_TIMEOUT("GET", "/session/:sessionId/timeouts", Integer.class),
   TREE("GET", "/session/:sessionId/element/:reference/tree", String.class),
@@ -150,9 +158,10 @@ public enum WebDriverLikeCommand {
   TARGET_RECT("GET", "/session/:sessionId/uiaTarget/:reference/rect", UIARect.class),
 
   ALERT_CANCEL_BUTTON("GET", "/session/:sessionId/element/:reference/cancel", UIAButton.class),
-  ALERT_DEFAULT_BUTTON("GET", "/session/:sessionId/element/:reference/default", UIAButton.class)
+  ALERT_DEFAULT_BUTTON("GET", "/session/:sessionId/element/:reference/default", UIAButton.class),
 
   // UIATarget
+  DRAG_FROM_TO_FOR_DURATION("POST", "/session/:sessionId/uiaTarget/:reference/dragfromtoforduration", Void.class),
   /*LOCAL_TARGET("GET", "/session/:sessionId/localTarget", UIATarget.class),
 
   HOST("GET", "/session/:sessionId/uiaTarget/:reference/host", UIHost.class),
@@ -207,24 +216,26 @@ public enum WebDriverLikeCommand {
   WITH_VALUE_FOR_KEY("GET", "/session/:sessionId/uiaElement/:reference/withValueForKey",
                      UIAElement.class),
 
-
-  TOUCH_AND_HOLD("POST", "/session/:sessionId/uiaElement/:reference/touchAndHold", Void.class),
-  DOUBLE_TAP("POST", "/session/:sessionId/uiaElement/:reference/doubleTap", Void.class),
+  */
+  NATIVE_TOUCH_AND_HOLD("POST", "/session/:sessionId/uiaElement/:reference/touchAndHold", Void.class),
+  NATIVE_DOUBLE_TAP("POST", "/session/:sessionId/uiaElement/:reference/doubleTap", Void.class),
   TWO_FINGER_TAP("POST", "/session/:sessionId/uiaElement/:reference/twoFingerTap", Void.class),
-  TAP_WITH_OPTIONS("POST", "/session/:sessionId/uiaElement/:reference/tapWithOptions", Void.class),
-  DRAG_INSIDE_WITH_OPTIONS("POST",
-                           "/session/:sessionId/uiaElement/:reference/dragInsideWithOptions",
-                           Void.class),
-  FLICK_INSIDE_WITH_OPTIONS("POST",
-                            "/session/:sessionId/uiaElement/:reference/flickInsideWithOption",
-                            Void.class),
-  SCROLL_TO_VISIBLE("POST", "/session/:sessionId/uiaElement/:reference/scrollToVisible",
-                    Void.class),
-  ROTATE_WITH_OPTIONS("POST", "/session/:sessionId/uiaElement/:reference/rotateWithOptions",
-                      Void.class),
-  PINCH_CLOSE("POST", "/session/:sessionId/pinchClose", Void.class),
+  //TAP_WITH_OPTIONS("POST", "/session/:sessionId/uiaElement/:reference/tapWithOptions", Void.class),
+  //DRAG_INSIDE_WITH_OPTIONS("POST",
+  //                         "/session/:sessionId/uiaElement/:reference/dragInsideWithOptions",
+  //                         Void.class),
+  //FLICK_INSIDE_WITH_OPTIONS("POST",
+  //                          "/session/:sessionId/uiaElement/:reference/flickInsideWithOption",
+  //                          Void.class),
+  //SCROLL_TO_VISIBLE("POST", "/session/:sessionId/uiaElement/:reference/scroll",
+  //    Void.class),
+  //ROTATE_WITH_OPTIONS("POST", "/session/:sessionId/uiaElement/:reference/rotateWithOptions",
+  //                    Void.class),
+  //PINCH_CLOSE("POST", "/session/:sessionId/pinchClose", Void.class),
+  ELEMENT_SCROLL("POST", "/session/:sessionId/uiaElement/:reference/scroll", Void.class),
 
 
+  /*
   // UIAElementArray
   GET("GET", "/session/:sessionId/uiaElementArray/:reference", UIAElement.class),
   FIRST_WITH_NAME("GET", "/session/:sessionId/uiaElementArray/:reference/firstWithName",
@@ -246,7 +257,7 @@ public enum WebDriverLikeCommand {
   RIGHT_BUTTON("GET", "/session/:sessionId/uiaElement/:reference/rightButton", UIAButton.class),
 
   // UIATextField and UIATextView
-
+  ,*/
   //UIATableView
   TABLE_GROUPS("GET", "/session/:sessionId/uiaElement/:reference/getGroups", UIAElementArray.class),
   TABLE_CELLS("GET", "/session/:sessionId/uiaElement/:reference/getCells", UIAElementArray.class),
@@ -254,7 +265,7 @@ public enum WebDriverLikeCommand {
                       UIAElementArray.class),
 
 
-  ,*/;
+  ;
 
 
   private final String method;
