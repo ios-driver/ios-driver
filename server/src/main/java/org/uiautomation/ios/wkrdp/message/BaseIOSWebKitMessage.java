@@ -14,7 +14,8 @@ public class BaseIOSWebKitMessage implements IOSMessage {
   public BaseIOSWebKitMessage(String rawMessage) throws Exception {
     this.rawMessage = rawMessage;
 
-    rootDict = (NSDictionary) XMLPropertyListParser.parse(rawMessage.getBytes());
+    byte[] bytes = rawMessage.getBytes();
+    rootDict = (NSDictionary) XMLPropertyListParser.parse(bytes);
     selector = rootDict.objectForKey("__selector").toString();
     arguments = (NSDictionary) rootDict.objectForKey("__argument");
 
