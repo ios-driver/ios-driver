@@ -43,6 +43,11 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
   }
 
   @Override
+  public void setMobileSafariOptions() {
+    // no-op
+  }
+
+  @Override
   public void setLocationPreference(boolean authorized) {
     // no-op
   }
