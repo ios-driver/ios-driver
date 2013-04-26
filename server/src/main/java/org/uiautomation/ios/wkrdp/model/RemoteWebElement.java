@@ -17,7 +17,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.*;
+import org.uiautomation.ios.UIAModels.UIAElement;
+import org.uiautomation.ios.UIAModels.UIAWebView;
+import org.uiautomation.ios.UIAModels.predicate.*;
+import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.context.BaseWebInspector;
+import org.uiautomation.ios.server.application.ContentResult;
 import org.uiautomation.ios.wkrdp.RemoteExceptionException;
 import org.uiautomation.ios.wkrdp.command.DOM;
 import org.uiautomation.ios.wkrdp.internal.IosAtoms;
@@ -147,7 +152,6 @@ public class RemoteWebElement {
     String s = inspector.cast(response);
     JSONObject o = new JSONObject(s);
     return new Point(o.getInt("x"), o.getInt("y"));
-
   }
 
   public Dimension getSize() throws Exception {

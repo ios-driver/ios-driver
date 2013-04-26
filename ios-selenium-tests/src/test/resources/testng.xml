@@ -4,6 +4,7 @@
     <test name="web regression" preserve-order="true">
         <packages>
             <package name="org.uiautomation.ios.selenium"/>
+            <package name="org.uiautomation.ios.selenium.interactions.touch"/>
         </packages>
 
     </test>

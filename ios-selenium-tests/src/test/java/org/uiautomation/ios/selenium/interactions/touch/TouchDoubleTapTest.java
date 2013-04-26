@@ -49,12 +49,14 @@ public class TouchDoubleTapTest extends BaseSeleniumTest {
     int y = image.getLocation().getY();
     // The element is located at a certain point, after double tapping,
     // the y coordinate must change.
-    assertTrue(y > 100);
+    assertTrue(y < 150);
 
     doubleTapOnElement("imagestart");
 
+    //doubleTapOnElement("imagestart");
+
     y = image.getLocation().y;
-    assertTrue(y < 50);
+    assertTrue(y > 150);
   }
 
 }

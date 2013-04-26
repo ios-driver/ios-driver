@@ -88,7 +88,8 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
 
   }
 
-  public Point getLocationForInstruments()
+  @Override
+  public Point getLocation()
       throws Exception {
     // web stuff.
     //scrollIntoViewIfNeeded();
@@ -160,7 +161,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
   private String getNativeElementClickOnIt() throws Exception {
     // web stuff.
     scrollIntoViewIfNeeded();
-    Point location = getLocationForInstruments();
+    Point location = getLocation();
     String script = "UIATarget.localTarget().tap({'x':x_coord,'y':y_coord});";
     script = script.replace("x_coord", String.valueOf(location.getX()))
         .replace("y_coord", String.valueOf(location.getY()));

@@ -47,7 +47,7 @@ public class FlickNHandler extends UIAScriptHandler {
     if (!elementId.equals("")) {
       try {
         RemoteWebNativeBackedElement element = (RemoteWebNativeBackedElement) getSession().getRemoteWebDriver().createElement(elementId);
-        fromPoint = element.getLocationForInstruments();
+        fromPoint = element.getLocation();
       } catch (Exception e) {
         fromPoint = getStartCoordinatesCentered(request, elementId);
       }
@@ -63,7 +63,11 @@ public class FlickNHandler extends UIAScriptHandler {
     if (yOffset.equals("")) {
       yOffset = payload.optString("yspeed");
     }
-    String speed = payload.optString("speed").equals("") ? payload.optString("speed") : "0.5";
+
+    String speed = payload.optString("speed").equals("") ? "1" : payload.optString("speed");
+    if(Integer.valueOf(speed) < .5){
+      speed = "0.5";
+    }
 
     Point toPoint = new Point(fromPoint.getX() + Integer.valueOf(xOffset), fromPoint.getY() + Integer.valueOf(yOffset));
     Dimension size = driver.getSession(request.getSession()).getNativeDriver().getScreenSize();

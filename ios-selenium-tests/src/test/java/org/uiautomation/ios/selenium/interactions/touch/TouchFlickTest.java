@@ -48,7 +48,7 @@ public class TouchFlickTest extends BaseSeleniumTest {
     int x = link.getLocation().x;
     // The element is located at the right of the page,
     // so it is not initially visible on the screen.
-    assertTrue("Expected x > 1500, but got x = " + x, x > 1500);
+    assertTrue("Expected x < 500, but got x = " + x, x < 500);
 
     Action flick = getBuilder(driver).flick(toFlick, -1000, 0, FlickAction.SPEED_NORMAL)
         .build();
@@ -56,7 +56,7 @@ public class TouchFlickTest extends BaseSeleniumTest {
 
     x = link.getLocation().x;
     // After flicking, the element should now be visible on the screen.
-    assertTrue("Expected x < 1500, but got x = " + x, x < 1500);
+    assertTrue("Expected x < 1500, but got x = " + x, x < 470);
   }
 
   @NeedsFreshDriver
@@ -69,7 +69,7 @@ public class TouchFlickTest extends BaseSeleniumTest {
     int x = link.getLocation().x;
     // The element is located at the right of the page,
     // so it is not initially visible on the screen.
-    assertTrue(x > 3500);
+    assertTrue(x < 1000);
 
     Action flick = getBuilder(driver).flick(toFlick, -400, 0, FlickAction.SPEED_FAST)
         .build();
@@ -89,7 +89,7 @@ public class TouchFlickTest extends BaseSeleniumTest {
     int x = link.getLocation().x;
     // The element is located at the right of the page,
     // so it is not initially visible on the screen.
-    assertTrue("Expected x > 2000, but got x = " + x, x > 1500);
+    assertTrue("Expected x < 500, but got x = " + x, x < 500);
 
     Action flick = getBuilder(driver).flick(1000, 0).build();
     flick.perform();
@@ -125,7 +125,7 @@ public class TouchFlickTest extends BaseSeleniumTest {
     int y = link.getLocation().y;
     // The element is located at the bottom of the page,
     // so it is not initially visible on the screen.
-    assertTrue(y > 4200);
+    assertTrue(y < 1500);
 
     WebElement toFlick = driver.findElement(By.id("imagestart"));
     Action flick = getBuilder(driver).flick(toFlick, 0, -600, FlickAction.SPEED_NORMAL)
@@ -145,7 +145,7 @@ public class TouchFlickTest extends BaseSeleniumTest {
     int y = link.getLocation().y;
     // The element is located at the bottom of the page,
     // so it is not initially visible on the screen.
-    assertTrue(y > 8700);
+    assertTrue(y < 2500);
 
     WebElement toFlick = driver.findElement(By.id("imagestart"));
     Action flick = getBuilder(driver).flick(toFlick, 0, -600, FlickAction.SPEED_FAST)
@@ -165,7 +165,7 @@ public class TouchFlickTest extends BaseSeleniumTest {
     int y = link.getLocation().y;
     // The element is located at the bottom of the page,
     // so it is not initially visible on the screen.
-    assertTrue(y > 4200);
+    assertTrue(y < 1250);
 
     Action flick = getBuilder(driver).flick(0, 750).build();
     flick.perform();
@@ -184,7 +184,7 @@ public class TouchFlickTest extends BaseSeleniumTest {
     int y = link.getLocation().y;
     // The element is located at the bottom of the page,
     // so it is not initially visible on the screen.
-    assertTrue(y > 8700);
+    assertTrue(y < 2500);
 
     Action flick = getBuilder(driver).flick(0, 1500).build();
     flick.perform();

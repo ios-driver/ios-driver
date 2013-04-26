@@ -41,7 +41,7 @@ public class TapHandler extends UIAScriptHandler {
     //String ref = request.getVariableValue(":reference");
     Dimension screenSize = driver.getSession(request.getSession()).getNativeDriver().getScreenSize();
     RemoteWebNativeBackedElement element = (RemoteWebNativeBackedElement) getSession().getRemoteWebDriver().createElement(elementId);
-    Point tapPoint = element.getLocationForInstruments();
+    Point tapPoint = element.getLocation();
     tapPoint = CoordinateUtils.forcePointOnScreen(tapPoint, screenSize);
 
     String js = tapTemplate
