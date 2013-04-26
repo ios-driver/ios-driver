@@ -32,12 +32,19 @@ public class SendKeysNHandler extends UIAScriptHandler {
     super(driver, request);
     try {
       JSONArray array = request.getPayload().getJSONArray("value");
-      String value = array.getString(0);
+      StringBuilder b = new StringBuilder();
 
-      String corrected = value.replaceAll("\\\\", "\\\\\\\\");
+      if (array != null) {
+        int len = array.length();
+        for (int i = 0; i < len; i++) {
+          b.append(array.get(i).toString());
+        }
+      }
+
+      String corrected = b.toString().replaceAll("\\\\", "\\\\\\\\");
       corrected = corrected.replaceAll("\\n", "\\\\n");
 
-      if (value.contains("\\t")) {
+      if (corrected.contains("\\t")) {
         throw new WebDriverException("cannot tab on the ios keyboard.");
       }
 

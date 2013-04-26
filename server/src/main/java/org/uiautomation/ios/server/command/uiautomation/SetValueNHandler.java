@@ -33,8 +33,16 @@ public class SetValueNHandler extends UIAScriptHandler {
     boolean useNativeEvents = (Boolean) getConfiguration("nativeEvents");
     try {
       JSONArray array = request.getPayload().getJSONArray("value");
-      String value = array.getString(0);
-      String corrected = value.replaceAll("\\\\", "\\\\\\\\");
+      StringBuilder b = new StringBuilder();
+
+      if (array != null) {
+        int len = array.length();
+        for (int i = 0; i < len; i++) {
+          b.append(array.get(i).toString());
+        }
+      }
+
+      String corrected = b.toString().replaceAll("\\\\", "\\\\\\\\");
       corrected = corrected.replaceAll("\\n", "\\\\n");
       corrected = corrected.replaceAll("\\t", "\\\\t");
 
