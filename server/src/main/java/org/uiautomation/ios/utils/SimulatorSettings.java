@@ -83,6 +83,19 @@ public class SimulatorSettings {
     }
   }
 
+  public void setMobileSafariOptions() {
+    File folder = new File(contentAndSettingsFolder + "/Library/Preferences/");
+    File preferenceFile = new File(folder, "com.apple.mobilesafari.plist");
+
+    try {
+      JSONObject preferences = new JSONObject();
+      preferences.put("WarnAboutFraudulentWebsites", false);
+      writeOnDisk(preferences, preferenceFile);
+    } catch (Exception e) {
+      throw new WebDriverException("cannot set options in " + preferenceFile.getAbsolutePath());
+    }
+  }
+
   /**
    * set the emulator to the given locale.Required a clean context (can only be done after "reset
    * content and settings" )
@@ -242,6 +255,10 @@ public class SimulatorSettings {
       // anyway.
       throw new WebDriverException(globalPreferencePlist + "already exists.Cannot create it.");
     }
+
+    System.out.println("Writing to: " + destination);
+    System.out.println(plistJSON);
+
     // make sure the folder is ready for the plist file
     destination.getParentFile().mkdirs();
 
@@ -286,5 +303,4 @@ public class SimulatorSettings {
     }
 
   }
-
 }
