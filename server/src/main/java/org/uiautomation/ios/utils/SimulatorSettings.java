@@ -256,9 +256,6 @@ public class SimulatorSettings {
       throw new WebDriverException(globalPreferencePlist + "already exists.Cannot create it.");
     }
 
-    System.out.println("Writing to: " + destination);
-    System.out.println(plistJSON);
-
     // make sure the folder is ready for the plist file
     destination.getParentFile().mkdirs();
 
