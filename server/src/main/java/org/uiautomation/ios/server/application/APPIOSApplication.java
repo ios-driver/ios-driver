@@ -427,7 +427,7 @@ public class APPIOSApplication {
   public String getApplicationName() {
     String name = getMetadata(IOSCapabilities.BUNDLE_NAME);
     String displayName = getMetadata(IOSCapabilities.BUNDLE_DISPLAY_NAME);
-    return name != null ? name : displayName;
+    return (name != null) && ! name.trim().isEmpty() ? name : displayName;
 
   }
 
