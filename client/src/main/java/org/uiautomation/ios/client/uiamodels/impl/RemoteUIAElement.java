@@ -222,11 +222,11 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
     Map<String, Long> origin = (Map<String, Long>) rect.get("origin");
     Map<String, Long> size = (Map<String, Long>) rect.get("size");
 
-    Long x = new Long(origin.get("x"));
-    Long y = new Long(origin.get("y"));
+    Long x = origin.get("x");
+    Long y = origin.get("y");
 
-    Long height = new Long(size.get("height"));
-    Long width = new Long(size.get("width"));
+    Long height = size.get("height");
+    Long width = size.get("width");
 
     UIARect res = new UIARect(x.intValue(), y.intValue(), height.intValue(), width.intValue());
     return res;
@@ -268,8 +268,8 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
     Map<String, Long> origin = (Map<String, Long>) rect.get("origin");
 
 
-    Long x = new Long(origin.get("x"));
-    Long y = new Long(origin.get("y"));
+    Long x = origin.get("x");
+    Long y = origin.get("y");
 
     Point res = new Point(x.intValue(), y.intValue());
     return res;

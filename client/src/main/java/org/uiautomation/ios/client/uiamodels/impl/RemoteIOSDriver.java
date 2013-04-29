@@ -259,8 +259,8 @@ public class RemoteIOSDriver extends RemoteWebDriver
 
     Map<String, Long> size = (Map<String, Long>) rect.get("size");
 
-    Long height = new Long(size.get("height"));
-    Long width = new Long(size.get("width"));
+    Long height = size.get("height");
+    Long width = size.get("width");
 
     return new Dimension(height.intValue(), width.intValue());
   }
