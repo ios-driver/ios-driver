@@ -45,9 +45,7 @@ public class DefaultMessageHandler implements MessageHandler {
   public DefaultMessageHandler(MessageListener listener, ResponseFinder... finders) {
     listeners.add(listener);
 
-    for (ResponseFinder finder : finders) {
-      this.extraFinders.add(finder);
-    }
+    Collections.addAll(this.extraFinders, finders);
   }
 
   private static int threadCount;
