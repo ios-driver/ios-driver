@@ -44,7 +44,7 @@ public class FlickNHandler extends UIAScriptHandler {
     Point fromPoint;
     Dimension screenSize = driver.getSession(request.getSession()).getNativeDriver().getScreenSize();
 
-    if (!elementId.equals("") && !elementId.equals("null")) {
+    if (!payload.isNull("element") && !elementId.equals("")) {
       try {
         RemoteWebNativeBackedElement element = (RemoteWebNativeBackedElement) getSession().getRemoteWebDriver().createElement(elementId);
         fromPoint = element.getLocation();
