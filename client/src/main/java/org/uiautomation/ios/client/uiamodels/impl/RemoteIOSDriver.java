@@ -255,12 +255,10 @@ public class RemoteIOSDriver extends RemoteWebDriver
     WebDriverLikeRequest
         request =
         executor.buildRequest(WebDriverLikeCommand.GET_SCREENRECT);
-    Map<String, Object> rect = executor.execute(request);
+    Map<String, Object> size = executor.execute(request);
 
-    Map<String, Long> size = (Map<String, Long>) rect.get("size");
-
-    Long height = size.get("height");
-    Long width = size.get("width");
+    Long height = (Long) size.get("height");
+    Long width = (Long) size.get("width");
 
     return new Dimension(height.intValue(), width.intValue());
   }
