@@ -39,7 +39,7 @@ public class ScrollHandler extends UIAScriptHandler {
     Dimension screenSize = driver.getSession(request.getSession()).getNativeDriver().getScreenSize();
 
     Point fromPoint;
-    if (!elementId.equals("")) {
+    if (!elementId.equals("") && !elementId.equals("null")) {
       RemoteWebNativeBackedElement element = (RemoteWebNativeBackedElement) getSession().getRemoteWebDriver().createElement(elementId);
       fromPoint = element.getLocation();
     } else {
