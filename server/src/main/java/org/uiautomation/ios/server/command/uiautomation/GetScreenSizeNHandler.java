@@ -21,12 +21,11 @@ import org.uiautomation.ios.server.command.UIAScriptHandler;
 
 public class GetScreenSizeNHandler  extends UIAScriptHandler {
 
-  private static final String template = "var res = UIATarget.localTarget().rect();"
+  private static final String template = "var res = UIATarget.localTarget().rect().size;"
       + "UIAutomation.createJSONResponse(':sessionId',0,res)";
 
   public GetScreenSizeNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
-
     JSONObject payload = request.getPayload();
 
     String js = template.replace(":sessionId", request.getSession());
