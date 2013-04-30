@@ -125,7 +125,7 @@ public class SimulatorProtocolImpl extends WebKitRemoteDebugProtocol {
       int read = is.read(bytes);
       byte[] actuallyRead = new byte[read];
       System.arraycopy(bytes, 0, actuallyRead, 0, read);
-      System.err.println("Received " + read + " bytes.");
+      //System.err.println("Received " + read + " bytes.");
       pushInput(actuallyRead);
     }
   }
