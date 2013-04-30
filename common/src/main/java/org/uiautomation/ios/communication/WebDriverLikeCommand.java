@@ -56,9 +56,11 @@ public enum WebDriverLikeCommand {
   //POST /session/:sessionId/ime/activate
   FRAME("POST", "/session/:sessionId/frame", Void.class),
   WINDOW("POST", "/session/:sessionId/window", Void.class),
+
+
   // DELETE  /session/:sessionId/window
   // POST /session/:sessionId/window/:windowHandle/size
-  // GET /session/:sessionId/window/:windowHandle/size
+  WINDOW_SIZE("GET", "/session/:sessionId/window/:windowHandle/size", Dimension.class),
   // POST /session/:sessionId/window/:windowHandle/position
   // GET /session/:sessionId/window/:windowHandle/position
   // POST /session/:sessionId/window/:windowHandle/maximize
