@@ -164,6 +164,8 @@ public enum WebDriverLikeCommand {
 
   // UIATarget
   DRAG_FROM_TO_FOR_DURATION("POST", "/session/:sessionId/uiaTarget/:reference/dragfromtoforduration", Void.class),
+  PINCH_CLOSE_FROM_TO_FOR_DURATION("POST", "/session/:sessionId/uiaTarget/:reference/pinchclosefromtoforduration", Void.class),
+  PINCH_OPEN_FROM_TO_FOR_DURATION("POST", "/session/:sessionId/uiaTarget/:reference/pinchopenfromtoforduration", Void.class),
   /*LOCAL_TARGET("GET", "/session/:sessionId/localTarget", UIATarget.class),
 
   HOST("GET", "/session/:sessionId/uiaTarget/:reference/host", UIHost.class),

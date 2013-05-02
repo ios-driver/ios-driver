@@ -100,6 +100,16 @@ public class RemoteIOSDriver extends RemoteWebDriver
   }
 
   @Override
+  public void pinchOpenFromToForDuration(Point from, Point to, int durationInSecs) {
+    RemoteIOSDriver.pinchOpenFromToForDuration(executor, from, to, durationInSecs);
+  }
+
+  @Override
+  public void pinchCloseFromToForDuration(Point from, Point to, int durationInSecs) {
+    RemoteIOSDriver.pinchCloseFromToForDuration(executor, from, to, durationInSecs);
+  }
+
+  @Override
   public IOSCapabilities getCapabilities() {
     Capabilities cap = super.getCapabilities();
     if (cap == null) {
@@ -357,8 +367,29 @@ public class RemoteIOSDriver extends RemoteWebDriver
                     "toY", Integer.toString(to.getY()),
                     "duration", durationInSecs));
     executor.execute(request);
+  }
 
+  public static void pinchCloseFromToForDuration(WebDriverLikeCommandExecutor executor, Point from,
+                                           Point to, int durationInSecs){
 
+    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.PINCH_CLOSE_FROM_TO_FOR_DURATION,
+            ImmutableMap.of("fromX", Integer.toString(from.getX()),
+                    "fromY", Integer.toString(from.getY()),
+                    "toX", Integer.toString(to.getX()),
+                    "toY", Integer.toString(to.getY()),
+                    "duration", durationInSecs));
+    executor.execute(request);
+  }
 
+  public static void pinchOpenFromToForDuration(WebDriverLikeCommandExecutor executor, Point from,
+                                                 Point to, int durationInSecs){
+
+    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.PINCH_OPEN_FROM_TO_FOR_DURATION,
+            ImmutableMap.of("fromX", Integer.toString(from.getX()),
+                    "fromY", Integer.toString(from.getY()),
+                    "toX", Integer.toString(to.getX()),
+                    "toY", Integer.toString(to.getY()),
+                    "duration", durationInSecs));
+    executor.execute(request);
   }
 }
