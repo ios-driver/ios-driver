@@ -22,6 +22,7 @@ public abstract class BaseIOSDriverTest {
                      "-aut", SampleApps.getGeocoderFile(),
                      "-aut", SampleApps.getIntlMountainsFile(),
                      "-aut", SampleApps.gettestNoContentFile(),
+                     "-aut", SampleApps.getPPNQASampleApp(),
                      "-beta", "-folder", "applications"
     };
     config = IOSServerConfiguration.create(args);

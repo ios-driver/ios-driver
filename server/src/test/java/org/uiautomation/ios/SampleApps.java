@@ -28,6 +28,7 @@ public class SampleApps {
   private static final String intlMountains = "/sampleApps/InternationalMountains.app";
   private static final String geocoder = "/sampleApps/Geocoder.app";
   private static final String noContent = "/sampleApps/testNoContent.app";
+  private static final String ppNQASampleApp = "/sampleApps/PPNQASampleApp.app";
 
   private static final String sdkVersion = System.getProperty("SDK", null);
 
@@ -69,6 +70,10 @@ public class SampleApps {
     return getFromClassPath(uiCatalogiPad).getAbsolutePath();
   }
 
+  public static String getPPNQASampleApp() {
+    return getFromClassPath(ppNQASampleApp).getAbsolutePath();
+  }
+
   public static IOSCapabilities geoCoderCap() {
     IOSCapabilities c = IOSCapabilities.iphone("Geocoder");
     c.setCapability(IOSCapabilities.LOCALE, "en");
@@ -82,6 +87,15 @@ public class SampleApps {
 
   public static IOSCapabilities uiCatalogCap() {
     IOSCapabilities c = IOSCapabilities.iphone("UICatalog", "2.10");
+    if (sdkVersion != null) {
+      log.info("SET SDK to " + sdkVersion);
+      c.setSDKVersion(sdkVersion);
+    }
+    return c;
+  }
+
+  public static IOSCapabilities ppNQASampleAppCap() {
+    IOSCapabilities c = IOSCapabilities.ipad("PPNQASampleApp");
     if (sdkVersion != null) {
       log.info("SET SDK to " + sdkVersion);
       c.setSDKVersion(sdkVersion);
