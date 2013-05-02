@@ -13,6 +13,10 @@
  */
 package org.uiautomation.ios.UIAModels;
 
+import java.util.ArrayList;
+
 public interface UIAPicker extends UIAElement {
+
+    public ArrayList<UIAElement> getWheels();
 
 }

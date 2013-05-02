@@ -265,6 +265,12 @@ public enum WebDriverLikeCommand {
   TABLE_CELLS("GET", "/session/:sessionId/uiaElement/:reference/getCells", UIAElementArray.class),
   TABLE_VISIBLE_CELLS("GET", "/session/:sessionId/uiaElement/:reference/getVisibleCells",
                       UIAElementArray.class),
+  //UIAPicker
+  PICKER_WHEELS ("GET", "/session/:sessionId/uiaElement/:reference/getWheels", UIAElementArray.class),
+
+  //UIAPickerWheels
+  PICKER_WHEEL_VALUES ("GET", "/session/:sessionId/uiaElement/:reference/getWheelValue", UIAElementArray.class),
+  PICKER_WHEEL_SET_VALUE ("POST", "/session/:sessionId/uiaElement/:reference/value", Void.class),
 
 
   ;
