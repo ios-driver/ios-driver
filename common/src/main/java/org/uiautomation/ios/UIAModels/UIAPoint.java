@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 ios-driver committers.
+ * Copyright 2013 ios-driver committers.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -15,5 +15,21 @@ package org.uiautomation.ios.UIAModels;
 
 // TODO freynaud use that for tap at least.
 public class UIAPoint {
+
+  public double x;
+  public double y;
+
+  public UIAPoint(double x, double y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  public double getX() {
+    return x;
+  }
+
+  public double getY() {
+    return y;
+  }
 
 }

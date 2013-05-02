@@ -56,6 +56,11 @@ public class RemoteUIAScrollView extends RemoteUIAElement implements UIAScrollVi
             ImmutableMap.of("direction", direction));
 
     commandExecutor.execute(request);
+    try {
+      Thread.sleep(1000);                 //Need a delay after scroll
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
   }
 
 

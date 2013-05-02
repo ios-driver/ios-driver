@@ -243,11 +243,12 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
     return builder.toString();
   }
 
-  @Override
+
   public void flickInsideWithOptions(int touchCount, UIAPoint startOffset, UIAPoint endOffset) {
-    /*WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.FLICK_INSIDE_WITH_OPTIONS,
-        ImmutableMap.of("touchCount", touchCount, "touchCount", touchCount, "endOffset", endOffset));
-    getDriver().execute(request);    */
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.FLICK_INSIDE_WITH_OPTIONS,
+            ImmutableMap.of("touchCount", touchCount, "xstart", startOffset.getX(), "ystart", startOffset.getY(),
+                    "xend", endOffset.getX(), "yend", endOffset.getY()));
+    commandExecutor.execute(request);
   }
 
   public static RemoteUIAElement getFrontMostApp(RemoteIOSDriver driver) {

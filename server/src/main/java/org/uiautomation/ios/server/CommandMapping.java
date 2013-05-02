@@ -142,7 +142,7 @@ public enum CommandMapping {
   TWO_FINGER_TAP(".twoFingerTap()"),
   //TAP_WITH_OPTIONS(""),
   //DRAG_INSIDE_WITH_OPTIONS(""),
-  //FLICK_INSIDE_WITH_OPTIONS(""),
+  FLICK_INSIDE_WITH_OPTIONS(FlickInsideWithOptionsNHandler.class),
   //SCROLL_TO_VISIBLE(".scrollToVisible()"),          //implemented in ELEMENT_SCROLL
   //ROTATE_WITH_OPTIONS(NotImplementedNativeHandler.class, NotImplementedWebHandler.class),
   //PINCH_CLOSE(PinchCloseNHandler.class, NotImplementedWebHandler.class),

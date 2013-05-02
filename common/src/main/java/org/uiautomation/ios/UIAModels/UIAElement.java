@@ -40,7 +40,7 @@ public interface UIAElement extends WebElement{
 
   public void twoFingerTap();
 
-  public void flickInsideWithOptions(int fingersNumber, UIAPoint startOffset, UIAPoint endOffset);
+  public void flickInsideWithOptions(int touchCount, UIAPoint startOffset, UIAPoint endOffset);
 
   public void scrollToVisible();
 
