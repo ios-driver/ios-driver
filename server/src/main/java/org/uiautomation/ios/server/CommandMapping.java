@@ -188,7 +188,15 @@ public enum CommandMapping {
   DISMISS_ALERT(DismissAlertHandler.class),
   SET_ALERT_TEXT(SetAlertTextHandler.class),
   ALERT_CANCEL_BUTTON(".cancelButton()"),
-  ALERT_DEFAULT_BUTTON(".defaultButton()"),;
+  ALERT_DEFAULT_BUTTON(".defaultButton()"),
+
+  //UIAPicker
+  PICKER_WHEELS(".wheels()"),
+
+  //UIAPickerWheels
+  PICKER_WHEEL_VALUES(".values()"),
+  PICKER_WHEEL_SET_VALUE(SetPickerWheelValueNHandler.class),
+  ;
 
 
   private WebDriverLikeCommand command;

@@ -13,6 +13,14 @@
  */
 package org.uiautomation.ios.UIAModels;
 
+import java.util.ArrayList;
+
 public interface UIAPickerWheel extends UIAElement {
+
+    public ArrayList<UIAElement> getValues();
+
+    public void select(String option);
+
+
 
 }
