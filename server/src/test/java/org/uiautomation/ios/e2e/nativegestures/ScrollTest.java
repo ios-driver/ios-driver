@@ -22,9 +22,7 @@ public class ScrollTest extends BaseIOSDriverTest {
   @BeforeClass
   public void startDriver() {
     driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.ppNQASampleAppCap());
-
-
-  }
+}
 
   @AfterClass
   public void stopDriver() {
@@ -33,11 +31,7 @@ public class ScrollTest extends BaseIOSDriverTest {
     }
   }
 
-  public void waitForElement(org.openqa.selenium.By by, long timeOut) {
 
-    WebElement element = (new WebDriverWait(driver, timeOut)).until(ExpectedConditions.visibilityOfElementLocated(by));
-
-  }
 
 
   @Test
@@ -49,7 +43,7 @@ public class ScrollTest extends BaseIOSDriverTest {
 
     ((RemoteUIAScrollView) driver.findElementsByTagName("UIAScrollView").get(2)).scroll(ScrollDirection.DOWN);
 
-    waitForElement(By.xpath("(//UIAStaticText[contains(@name, 'View 2')])[1]"), 6);
+    waitForElement(driver, By.xpath("(//UIAStaticText[contains(@name, 'View 2')])[1]"), 6);
     Assert.assertTrue(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 2')])[1]").isDisplayed());
     Assert.assertFalse(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 1')])[1]").isDisplayed());
     Assert.assertFalse(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 3')])[1]").isDisplayed());
@@ -71,7 +65,7 @@ public class ScrollTest extends BaseIOSDriverTest {
 
     ((RemoteUIAScrollView) driver.findElementsByTagName("UIAScrollView").get(1)).scroll(ScrollDirection.UP);
 
-    waitForElement(By.xpath("(//UIAStaticText[contains(@name, 'View 2')])[1]"), 6);
+    waitForElement(driver, By.xpath("(//UIAStaticText[contains(@name, 'View 2')])[1]"), 6);
     Assert.assertTrue(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 2')])[1]").isDisplayed());
     Assert.assertFalse(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 3')])[1]").isDisplayed());
     Assert.assertFalse(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 1')])[1]").isDisplayed());
@@ -89,7 +83,7 @@ public class ScrollTest extends BaseIOSDriverTest {
 
     ((RemoteUIAScrollView) driver.findElementsByTagName("UIAScrollView").get(1)).scroll(ScrollDirection.RIGHT);
 
-    waitForElement(By.xpath("(//UIAStaticText[contains(@name, 'View 2')])[2]"), 6);
+    waitForElement(driver, By.xpath("(//UIAStaticText[contains(@name, 'View 2')])[2]"), 6);
 
     Assert.assertTrue(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 2')])[2]").isDisplayed());
     Assert.assertFalse(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 1')])[2]").isDisplayed());
@@ -112,7 +106,7 @@ public class ScrollTest extends BaseIOSDriverTest {
 
     ((RemoteUIAScrollView) driver.findElementsByTagName("UIAScrollView").get(3)).scroll(ScrollDirection.LEFT);
 
-    waitForElement(By.xpath("(//UIAStaticText[contains(@name, 'View 2')])[2]"), 6);
+    waitForElement(driver, By.xpath("(//UIAStaticText[contains(@name, 'View 2')])[2]"), 6);
     Assert.assertTrue(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 2')])[2]").isDisplayed());
     Assert.assertFalse(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 3')])[2]").isDisplayed());
     Assert.assertFalse(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 1')])[2]").isDisplayed());
