@@ -86,7 +86,7 @@ public class TouchScrollTest extends BaseSeleniumTest {
     int y = link.getLocation().y;
     // The element is located at the right of the page,
     // so it is not initially visible on the screen.
-    assertTrue(y > 4200);
+    assertTrue(y > 1200);
 
     Action scrollDown = getBuilder(driver).scroll(0, 800).build();
     scrollDown.perform();

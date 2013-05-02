@@ -72,7 +72,7 @@ public enum CommandMapping {
   DRAG_FROM_TO_FOR_DURATION(DragFromToForDurationNHander.class),
 
 
-  WINDOW_SIZE(GetScreenSizeNHandler.class),
+  WINDOW_SIZE(GetScreenSizeNHandler.class, GetPageSizeHandler.class),
   GET_SCREENRECT(GetScreenSizeNHandler.class),
 
   SCREENSHOT(TakeScreenshotNHandler.class),

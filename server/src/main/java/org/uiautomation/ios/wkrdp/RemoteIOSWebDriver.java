@@ -18,11 +18,7 @@ import com.google.common.collect.ImmutableList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Cookie;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.*;
 import org.uiautomation.ios.context.BaseWebInspector;
 import org.uiautomation.ios.context.WebInspector;
 import org.uiautomation.ios.server.DOMContext;
@@ -284,6 +280,10 @@ public class RemoteIOSWebDriver {
 
   public String getPageSource() {
     return currentInspector.getPageSource();
+  }
+
+  public Dimension getSize() throws Exception {
+    return currentInspector.getViewPortSize();
   }
 
   public void close() {
