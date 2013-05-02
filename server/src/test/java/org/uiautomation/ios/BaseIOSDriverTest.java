@@ -3,6 +3,10 @@ package org.uiautomation.ios;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.uiautomation.ios.server.IOSServer;
@@ -44,6 +48,12 @@ public abstract class BaseIOSDriverTest {
     } catch (MalformedURLException e) {
       throw new RuntimeException(e);
     }
+
+  }
+
+  public void waitForElement(WebDriver driver, org.openqa.selenium.By by, long timeOut) {
+
+    WebElement element = (new WebDriverWait(driver, timeOut)).until(ExpectedConditions.visibilityOfElementLocated(by));
 
   }
 }
