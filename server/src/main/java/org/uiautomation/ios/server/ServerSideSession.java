@@ -27,7 +27,6 @@ import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.client.uiamodels.impl.ServerSideNativeDriver;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
-import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
@@ -87,10 +86,6 @@ public class ServerSideSession extends Session {
     this.driver = driver;
     this.capabilities = desiredCapabilities;
     this.options = options;
-
-    if (Configuration.FORCE_IPAD) {
-      capabilities.setCapability(IOSCapabilities.DEVICE, DeviceType.ipad);
-    }
 
     String appCapability = (String) desiredCapabilities.getCapability("app");
     if (appCapability != null) {
