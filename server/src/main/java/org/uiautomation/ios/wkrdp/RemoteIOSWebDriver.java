@@ -283,7 +283,7 @@ public class RemoteIOSWebDriver {
   }
 
   public Dimension getSize() throws Exception {
-    return currentInspector.getViewPortSize();
+    return currentInspector.getSize();
   }
 
   public void close() {

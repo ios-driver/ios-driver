@@ -423,34 +423,6 @@ public abstract class BaseWebInspector implements MessageListener {
 
   }
 
-  public Dimension getViewPortSize() throws Exception {
-    String
-        f =
-        "(function(arg) { " + "var size = " + IosAtoms.GET_VIEW_PORT_SIZE + "(arg);"
-            + "return " + IosAtoms.STRINGIFY + "(size);})";
-//        "(function(element) { var result = " + IosAtoms.GET_VIEW_PORT_SIZE + "(window.top);"
-//            + "var res = " + IosAtoms.STRINGIFY + "(result);"
-//            + "return  res;  })";
-
-
-    JSONObject cmd = new JSONObject();
-
-    cmd.put("method", "Runtime.callFunctionOn");
-
-    cmd.put("params",
-        new JSONObject()
-            .put("objectId", getDocument().getRemoteObject().getId())
-            .put("functionDeclaration", f)
-            .put("returnByValue", false));
-
-    JSONObject response = sendCommand(cmd);
-    String s = cast(response);
-    JSONObject o = new JSONObject(s);
-    Dimension dim = new Dimension(o.getInt("width"), o.getInt("height"));
-    return dim;
-
-  }
-
   public RemoteWebElement findElementByCSSSelector(String cssSelector) {
     RemoteWebElement document = getDocument();
     return document.findElementByCSSSelector(cssSelector);
