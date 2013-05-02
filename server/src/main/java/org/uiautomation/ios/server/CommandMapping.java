@@ -70,6 +70,8 @@ public enum CommandMapping {
   SET_ORIENTATION(SetOrientationNHandler.class),
   GET_ORIENTATION(GetOrientationNHandler.class),
   DRAG_FROM_TO_FOR_DURATION(DragFromToForDurationNHander.class),
+  PINCH_CLOSE_FROM_TO_FOR_DURATION(PinchCloseNHandler.class, NotImplementedWebHandler.class),
+  PINCH_OPEN_FROM_TO_FOR_DURATION(PinchOpenNHandler.class, NotImplementedWebHandler.class),
 
 
   WINDOW_SIZE(GetScreenSizeNHandler.class, GetPageSizeHandler.class),
@@ -145,7 +147,6 @@ public enum CommandMapping {
   FLICK_INSIDE_WITH_OPTIONS(FlickInsideWithOptionsNHandler.class),
   //SCROLL_TO_VISIBLE(".scrollToVisible()"),          //implemented in ELEMENT_SCROLL
   //ROTATE_WITH_OPTIONS(NotImplementedNativeHandler.class, NotImplementedWebHandler.class),
-  //PINCH_CLOSE(PinchCloseNHandler.class, NotImplementedWebHandler.class),
   ELEMENT_SCROLL(ElementScrollNHandler.class),
   //SCROLL_UP(".scrollUp()"),          //implemented in ELEMENT_SCROLL
   //SCROLL_DOWN(".scrollDown()"),      //implemented in ELEMENT_SCROLL

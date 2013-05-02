@@ -18,4 +18,8 @@ import org.openqa.selenium.Point;
 public interface IOSTouchScreen {
 
   public void dragFromToForDuration(Point from, Point to, int durationInSecs);
+
+  public void pinchOpenFromToForDuration(Point from, Point to, int durationInSecs);
+
+  public void pinchCloseFromToForDuration(Point from, Point to, int durationInSecs);
 }
