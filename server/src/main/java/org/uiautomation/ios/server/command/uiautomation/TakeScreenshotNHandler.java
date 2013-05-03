@@ -81,7 +81,20 @@ public class TakeScreenshotNHandler extends UIAScriptHandler {
 
       if (rotateDegrees != 0) {
         try {
-          final BufferedImage originalImage = ImageIO.read(new File(path));
+          final File source = new File(path);
+
+          // It's possible the screenshot hasn't saved to disk yet, so we'll wait up to 5 seconds for that to happen.
+          int waitTimeInMs = 5000;
+          while (! source.exists() && (waitTimeInMs >= 0)) {
+            try {
+              Thread.sleep(100);
+            } catch (InterruptedException e) {
+              throw new RuntimeException(e);
+            }
+            waitTimeInMs -= 100;
+          }
+
+          final BufferedImage originalImage = ImageIO.read(source);
 
           final BufferedImage rotated;
           if (rotateDegrees == 90 || rotateDegrees == 270) {
