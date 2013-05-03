@@ -17,6 +17,7 @@ import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
+import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.instruments.IOSDeviceManager;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.SimulatorSettings;
@@ -161,6 +162,11 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   @Override
   public void setLocationPreference(boolean authorized) {
     simulatorSettings.setLocationPreference(authorized, bundleId);
+  }
+
+  @Override
+  public void install(APPIOSApplication aut) {
+    //no-op instruments installs automatically for simualtor.
   }
 
   @Override
