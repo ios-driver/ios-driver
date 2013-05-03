@@ -66,10 +66,7 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
   @Override
   public void resetContentAndSettings() {
     // cannot access device while detecting.
-    DeviceManagerService.getInstance().stopDetection();
     service.emptyApplicationCache("com.ebay.iphone");
-    DeviceManagerService.getInstance().startDetection();
-
   }
 
   @Override
