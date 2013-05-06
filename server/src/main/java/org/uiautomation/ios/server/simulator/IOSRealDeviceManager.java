@@ -59,16 +59,11 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
 
       // TODO upgrade ?
       // needs to re-install
-      System.out.println("uninstall");
+      log.fine("uninstalling " + bundleId + " for " + service.getDeviceId());
       service.uninstall(bundleId);
-      try {
-        Thread.sleep(1000);
-      } catch (InterruptedException e) {
-
-      }
-      System.out.println("install");
+      log.fine("installing " + bundleId + " for " + service.getDeviceId());
       service.install(((IPAApplication) aut).getIPAFile());
-      System.out.println("installed");
+      log.fine(bundleId + " for " + service.getDeviceId() + " installed.");
     } else {
       throw new WebDriverException("only IPA apps can be used on a real device.");
     }
