@@ -27,7 +27,7 @@ public class BaseSeleniumTest {
   public void setup() throws Throwable {
     startIOSServer();
     startTestServer();
-    IOSCapabilities safari = IOSCapabilities.ipad("Safari");
+    IOSCapabilities safari = IOSCapabilities.iphone("Safari");
     // safari.setLanguage("fr");
     driver = new RemoteIOSDriver(new URL(url), safari);
 
