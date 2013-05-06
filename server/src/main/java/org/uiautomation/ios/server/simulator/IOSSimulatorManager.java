@@ -48,7 +48,6 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   /**
    * manages a single instance of the instruments process. Only 1 process can run at a given time.
    *
-   * @param desiredSDKVersion the SDK version. For instance 5.0 or 4.3
    */
   public IOSSimulatorManager(IOSCapabilities capabilities) {
     if (isSimulatorRunning() && !isWarmupRequired()) {
