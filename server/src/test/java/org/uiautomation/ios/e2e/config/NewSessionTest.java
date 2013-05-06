@@ -340,8 +340,8 @@ public class NewSessionTest extends BaseIOSDriverTest {
       File f = driver.getScreenshotAs(OutputType.FILE);
 
       BufferedImage bimg = ImageIO.read(f);
-      Assert.assertEquals(bimg.getWidth(), expectedW);
-      Assert.assertEquals(bimg.getHeight(), expectedH);
+      Assert.assertTrue(bimg.getWidth() ==  expectedW || bimg.getHeight() == expectedW);
+      Assert.assertTrue(bimg.getWidth() ==  expectedH || bimg.getHeight() == expectedH);
 
     } finally {
       if (driver != null) {
