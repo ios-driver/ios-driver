@@ -115,6 +115,8 @@ public class AlertTest extends BaseIOSDriverTest {
     }
     WebElement alert = driver.findElement(By.xpath("//UIAAlert"));
     System.out.println("name : " + alert.getAttribute("name"));
+    driver.switchTo().alert().dismiss();
+
   }
 
   @Test
