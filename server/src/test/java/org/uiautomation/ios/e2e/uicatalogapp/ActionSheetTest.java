@@ -69,7 +69,7 @@ public class ActionSheetTest extends BaseIOSDriverTest {
     alert.dismiss();
   }
 
-  @Test(enabled = false)
+  @Test
   public void okCancel() throws Exception {
     RemoteWebDriver d = (RemoteWebDriver) driver;
     By b = By.xpath(actionOKCancel);
@@ -86,7 +86,7 @@ public class ActionSheetTest extends BaseIOSDriverTest {
     }
   }
 
-  @Test(enabled = false)
+  @Test
   public void findWhenAlertAreGone() throws Exception {
     RemoteWebDriver d = (RemoteWebDriver) driver;
     By b = By.xpath(actionOKCancel);
