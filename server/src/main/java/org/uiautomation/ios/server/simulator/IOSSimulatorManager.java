@@ -19,6 +19,7 @@ import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.instruments.IOSDeviceManager;
+import org.uiautomation.ios.server.utils.IOSVersion;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.SimulatorSettings;
 
@@ -47,7 +48,6 @@ public class IOSSimulatorManager implements IOSDeviceManager {
 
   /**
    * manages a single instance of the instruments process. Only 1 process can run at a given time.
-   *
    */
   public IOSSimulatorManager(IOSCapabilities capabilities) {
     if (isSimulatorRunning() && !isWarmupRequired()) {
@@ -68,20 +68,19 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   }
 
   public void forceDefaultSDK() {
-    Float desiredVersion = Float.parseFloat(desiredSDKVersion);
-    for (String v : sdks) {
 
-      Float version = Float.parseFloat(v);
-      if (version > desiredVersion) {
+    for (String version : sdks) {
+
+      if (new IOSVersion(version).isGreaterThan(desiredSDKVersion)) {
         File f = new File(xcodeInstall,
                           "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator"
-                          + v + ".sdk");
+                          + version + ".sdk");
         if (!f.exists()) {
           System.err.println("doesn't exist " + f);
         } else {
           File renamed = new File(xcodeInstall,
                                   "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs/iPhoneSimulator"
-                                  + v
+                                  + version
                                   + ".sdk");
           boolean ok = f.renameTo(renamed);
           if (!ok) {

@@ -34,6 +34,7 @@ import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
 import org.uiautomation.ios.server.instruments.InstrumentsManager;
+import org.uiautomation.ios.server.utils.IOSVersion;
 import org.uiautomation.ios.server.utils.ZipUtils;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
@@ -117,9 +118,9 @@ public class ServerSideSession extends Session {
         capabilities.setSDKVersion(ClassicCommands.getDefaultSDK());
       } else {
         String version = capabilities.getSDKVersion();
-        Float v = Float.parseFloat(version);
-        if (v < 5) {
-          throw new SessionNotCreatedException(v + " is too old. Only support SDK 5.0 and above.");
+
+        if (!new IOSVersion(version).isGreaterOrEqualTo("5.0")) {
+          throw new SessionNotCreatedException(version + " is too old. Only support SDK 5.0 and above.");
         }
         if (!driver.getHostInfo().getInstalledSDKs().contains(version)) {
           throw new SessionNotCreatedException(
@@ -246,11 +247,10 @@ public class ServerSideSession extends Session {
   public synchronized RemoteIOSWebDriver getRemoteWebDriver() {
     if (webDriver == null) {
       String version = capabilities.getSDKVersion();
-      Float v = Float.parseFloat(version);
-      if (v >= 6) {
+      if (new IOSVersion(version).isGreaterOrEqualTo("6.0")) {
         webDriver = new RemoteIOSWebDriver(this, new AlertDetector(nativeDriver));
       } else {
-        log.warning("Cannot create a driver. Version too old " + v);
+        log.warning("Cannot create a driver. Version too old " + version);
       }
     }
     return webDriver;
