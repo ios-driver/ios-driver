@@ -44,7 +44,6 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
   @Override
   public void install(APPIOSApplication aut) {
     if (aut instanceof IPAApplication) {
-      String bundleId = capabilities.getBundleId();
       ApplicationInfo app = service.getApplication(bundleId);
       // not installed ? install the app.
       if (app == null) {
@@ -59,9 +58,9 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
 
       // TODO upgrade ?
       // needs to re-install
-      log.fine("uninstalling " + bundleId + " for " + service.getDeviceId());
+      log.fine("uninstalling " + bundleId + " for " + device.getUuid());
       service.uninstall(bundleId);
-      log.fine("installing " + bundleId + " for " + service.getDeviceId());
+      log.fine("installing " + bundleId + " for " + device.getUuid());
       service.install(((IPAApplication) aut).getIPAFile());
       log.fine(bundleId + " for " + service.getDeviceId() + " installed.");
     } else {
