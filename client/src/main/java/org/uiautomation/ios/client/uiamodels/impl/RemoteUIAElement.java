@@ -75,8 +75,8 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
   @Override
   public <T extends UIAElement> T findElement(Criteria c) throws NoSuchElementException {
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENT,
-        ImmutableMap
-            .of("depth", -1, "criteria", c.stringify()));
+                                                ImmutableMap
+                                                    .of("depth", -1, "criteria", c.stringify()));
     return commandExecutor.execute(request);
   }
 
@@ -84,8 +84,8 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
   @SuppressWarnings("unchecked")
   public List<UIAElement> findElements(Criteria c) {
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENTS,
-        ImmutableMap
-            .of("depth", -1, "criteria", c.stringify()));
+                                                ImmutableMap
+                                                    .of("depth", -1, "criteria", c.stringify()));
     return commandExecutor.execute(request);
   }
 
@@ -96,7 +96,7 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
     }
 
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENT,
-        ImmutableMap.of("using", by, "value", using));
+                                                ImmutableMap.of("using", by, "value", using));
     return commandExecutor.execute(request);
 
   }
@@ -108,7 +108,7 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
     }
 
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENTS,
-        ImmutableMap.of("using", by, "value", using));
+                                                ImmutableMap.of("using", by, "value", using));
     return commandExecutor.execute(request);
   }
 
@@ -128,7 +128,10 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
 
   @Override
   public void touchAndHold(int durationInSecs) {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.NATIVE_TOUCH_AND_HOLD, ImmutableMap.of("duration", durationInSecs));
+    WebDriverLikeRequest
+        request =
+        buildRequest(WebDriverLikeCommand.NATIVE_TOUCH_AND_HOLD,
+                     ImmutableMap.of("duration", durationInSecs));
     commandExecutor.execute(request);
 
   }
@@ -149,7 +152,7 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
   @Override
   public void scrollToVisible() {
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENT_SCROLL,
-            ImmutableMap.of("toVisible", "true"));
+                                                ImmutableMap.of("toVisible", "true"));
     commandExecutor.execute(request);
 
   }
@@ -168,9 +171,9 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
                                    RemoteWebDriver driver) {
 
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.TREE,
-        ImmutableMap
-            .of("attachScreenshot", screenshot != null,
-                "translation", translation));
+                                                ImmutableMap
+                                                    .of("attachScreenshot", screenshot != null,
+                                                        "translation", translation));
     JSONObject log = commandExecutor.execute(request);
     if (screenshot != null) {
       JSONObject screen = log.optJSONObject("screenshot");
@@ -210,9 +213,8 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
     WebDriverLikeRequest
         request =
         commandExecutor.buildRequest(WebDriverLikeCommand.ATTRIBUTE, this, null,
-            ImmutableMap.of("name", name));
-    return commandExecutor.execute(request).toString();
-
+                                     ImmutableMap.of("name", name));
+    return (String)commandExecutor.execute(request);
   }
 
   @Override
@@ -246,8 +248,11 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
 
   public void flickInsideWithOptions(int touchCount, UIAPoint startOffset, UIAPoint endOffset) {
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.FLICK_INSIDE_WITH_OPTIONS,
-            ImmutableMap.of("touchCount", touchCount, "xstart", startOffset.getX(), "ystart", startOffset.getY(),
-                    "xend", endOffset.getX(), "yend", endOffset.getY()));
+                                                ImmutableMap.of("touchCount", touchCount, "xstart",
+                                                                startOffset.getX(), "ystart",
+                                                                startOffset.getY(),
+                                                                "xend", endOffset.getX(), "yend",
+                                                                endOffset.getY()));
     commandExecutor.execute(request);
   }
 
@@ -261,13 +266,12 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
   }
 
   @Override
-  public Point getLocation(){
+  public Point getLocation() {
     System.out.println("getLocation in RemoteUIAElement");
 
     WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.RECT);
     Map<String, Object> rect = commandExecutor.execute(request);
     Map<String, Long> origin = (Map<String, Long>) rect.get("origin");
-
 
     Long x = origin.get("x");
     Long y = origin.get("y");
