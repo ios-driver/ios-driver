@@ -28,8 +28,10 @@ import org.openqa.selenium.remote.internal.WebElementToJsonConverter;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.UIAModels.UIAElement;
+import org.uiautomation.ios.UIAModels.UIAKeyboard;
 import org.uiautomation.ios.UIAModels.configuration.DriverConfiguration;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
+import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.augmenter.Configurable;
 import org.uiautomation.ios.client.uiamodels.impl.augmenter.ElementTree;
 import org.uiautomation.ios.client.uiamodels.impl.augmenter.IOSSearchContext;
@@ -193,7 +195,7 @@ public class RemoteIOSDriver extends RemoteWebDriver
 
   @Override
   public Keyboard getKeyboard() {
-    return super.getKeyboard();
+    return (RemoteUIAKeyboard)findElement(new TypeCriteria(UIAKeyboard.class));
   }
 
   /*@Override
