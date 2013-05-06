@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
 
@@ -16,6 +17,7 @@ public abstract class BaseIOSDriverTest {
 
   private IOSServer server;
   private IOSServerConfiguration config;
+  private RemoteIOSDriver driver;
 
 
   @BeforeClass
@@ -30,9 +32,15 @@ public abstract class BaseIOSDriverTest {
                      "-beta", "-folder", "applications"
     };
     config = IOSServerConfiguration.create(args);
-
     server = new IOSServer(config);
     server.start();
+  }
+
+  protected RemoteIOSDriver getDriver(IOSCapabilities cap){
+    boolean simulator = true;
+    cap.setCapability(IOSCapabilities.SIMULATOR,simulator);
+    driver = new RemoteIOSDriver(getRemoteURL(), cap);
+    return driver;
   }
 
   @AfterClass

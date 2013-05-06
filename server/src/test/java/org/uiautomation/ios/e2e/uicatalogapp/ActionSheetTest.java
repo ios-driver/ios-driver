@@ -33,7 +33,7 @@ public class ActionSheetTest extends BaseIOSDriverTest {
 
   @BeforeClass
   public void startDriver() {
-    driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
+    driver = getDriver(SampleApps.uiCatalogCap());
     goToAlertScreen();
   }
 
@@ -69,7 +69,7 @@ public class ActionSheetTest extends BaseIOSDriverTest {
     alert.dismiss();
   }
 
-  @Test
+  @Test(enabled = false)
   public void okCancel() throws Exception {
     RemoteWebDriver d = (RemoteWebDriver) driver;
     By b = By.xpath(actionOKCancel);
@@ -86,7 +86,7 @@ public class ActionSheetTest extends BaseIOSDriverTest {
     }
   }
 
-  @Test
+  @Test(enabled = false)
   public void findWhenAlertAreGone() throws Exception {
     RemoteWebDriver d = (RemoteWebDriver) driver;
     By b = By.xpath(actionOKCancel);

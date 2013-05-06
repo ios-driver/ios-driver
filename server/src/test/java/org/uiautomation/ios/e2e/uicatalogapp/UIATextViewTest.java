@@ -23,7 +23,7 @@ public class UIATextViewTest extends BaseIOSDriverTest {
 
   @BeforeClass
   public void startDriver() {
-    driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
+    driver = getDriver(SampleApps.uiCatalogCap());
     textview = getTextView();
   }
 

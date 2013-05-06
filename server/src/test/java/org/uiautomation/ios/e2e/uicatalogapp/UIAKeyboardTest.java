@@ -17,21 +17,16 @@ import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
-import java.util.NoSuchElementException;
-
 
 public class UIAKeyboardTest extends BaseIOSDriverTest {
 
   private RemoteIOSDriver driver;
   private UIATextView textview;
-  private Keyboard keyboard;
 
   @BeforeClass
   public void startDriver() throws InterruptedException {
-    driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
+    driver = getDriver(SampleApps.uiCatalogCap());
     textview = getTextView();
-
-
   }
 
   @AfterClass(alwaysRun = true)

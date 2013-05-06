@@ -16,23 +16,13 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 public class TimeoutTest extends BaseIOSDriverTest {
 
-  /*
-   * @Test public void getSetTimeout() throws InterruptedException {
-   * RemoteIOSDriver driver = null; try {
-   * 
-   * driver = getDriver(); driver.manage().timeouts().
-   * Assert.assertEquals(driver.getTimeout("implicit"), 0);
-   * driver.setTimeout("implicit",17);
-   * Assert.assertEquals(driver.getTimeout("implicit"), 17);
-   * 
-   * } finally { if (driver != null) { driver.quit(); } } }
-   */
+
 
   @Test
   public void getElement() throws InterruptedException {
     RemoteIOSDriver driver = null;
     try {
-      driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
+      driver = getDriver(SampleApps.uiCatalogCap());
       String name = "Buttons, Various uses of UIButton2";
 
       Criteria c1 = new TypeCriteria(UIATableCell.class);

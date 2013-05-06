@@ -28,8 +28,7 @@ public class UIAKeyboardSmokeTest extends BaseIOSDriverTest {
 
   @BeforeClass
   public void startDriver() {
-    IOSCapabilities caps = SampleApps.uiCatalogCap();
-    driver = new RemoteIOSDriver(getRemoteURL(), caps);
+    driver = getDriver(SampleApps.uiCatalogCap());
   }
 
   @AfterClass
