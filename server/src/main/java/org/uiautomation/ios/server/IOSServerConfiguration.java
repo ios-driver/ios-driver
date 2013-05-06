@@ -69,12 +69,6 @@ public class IOSServerConfiguration {
       description = "maximum session duration in seconds. Session will be forcefully terminated if it takes longer.",
       names = "-sessionTimeout")
   private int sessionTimeoutSeconds = 30 * 60; // 30 minutes
-
-  @Parameter(
-      description = "force choice of device to iPad, ignoring capabilities passed in",
-      names="--force-ipad"
-  )
-  private boolean forceIPad;
   
   public String getRegistrationURL() {
     return registrationURL;
@@ -127,14 +121,6 @@ public class IOSServerConfiguration {
 
   public void setBeta(boolean beta) {
     this.beta = beta;
-  }
-
-  public boolean isForceIPad() {
-    return forceIPad;
-  }
-
-  public void setForceIPad(boolean forceIPad) {
-    this.forceIPad = forceIPad;
   }
 
   public String getAppFolderToMonitor() {

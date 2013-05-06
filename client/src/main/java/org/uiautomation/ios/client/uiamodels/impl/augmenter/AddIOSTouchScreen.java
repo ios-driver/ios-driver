@@ -44,6 +44,18 @@ public class AddIOSTouchScreen implements AugmenterProvider {
           int duration = (Integer) args[2];
           RemoteIOSDriver.dragFromToForDuration(executor, from, to, duration);
           return null;
+        } else if ("pinchCloseFromToForDuration".equals(method.getName())) {
+          Point from = (Point) args[0];
+          Point to = (Point) args[1];
+          int duration = (Integer) args[2];
+          RemoteIOSDriver.pinchCloseFromToForDuration(executor, from, to, duration);
+          return null;
+        } else if ("pinchOpenFromToForDuration".equals(method.getName())) {
+          Point from = (Point) args[0];
+          Point to = (Point) args[1];
+          int duration = (Integer) args[2];
+          RemoteIOSDriver.pinchOpenFromToForDuration(executor, from, to, duration);
+          return null;
         } else {
           throw new WebDriverException(method.getName() + " isn't recognized for IOSTouchScreen");
         }
