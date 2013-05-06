@@ -13,9 +13,9 @@
  */
 package org.uiautomation.ios.utils;
 
-import com.dd.plist.ASCIIPropertyListParser;
-import com.dd.plist.BinaryPropertyListParser;
 import com.dd.plist.NSObject;
+import com.dd.plist.PropertyListParser;
+
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.iosdriver.ApplicationInfo;
@@ -34,19 +34,15 @@ public class PlistFileUtils {
   }
 
 
-  private Map<String, Object> read(File bplist) {
-    NSObject object = null;
+  private Map<String, Object> read(File plist) {
     try {
-      object = BinaryPropertyListParser.parse(bplist);
-    } catch (Exception e) {
-      try {
-        object = ASCIIPropertyListParser.parse(bplist);
-      } catch (Exception ex) {
-        throw new WebDriverException("Cannot parse info.plist : " + ex.getMessage(), ex);
-      }
+      NSObject object = PropertyListParser.parse(plist);
+      ApplicationInfo info = new ApplicationInfo(object);
+      return info.getProperties();
+    } catch (Exception ex) {
+      throw new WebDriverException(
+          "Cannot parse " + plist.getAbsolutePath() + ": " + ex.getMessage(), ex);
     }
-    ApplicationInfo info = new ApplicationInfo(object);
-    return info.getProperties();
   }
 
   public JSONObject toJSON() throws Exception {
