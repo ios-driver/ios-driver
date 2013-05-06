@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.InvalidSelectorException;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.w3c.dom.Element;
@@ -138,9 +139,30 @@ public class XPath2Engine {
     if (el == null) {
       throw new NoSuchElementException("No element for xpath " + xpath);
     }
+
+    checkIfElementIsAccessible(el);
     String reference = el.getAttribute("ref");
     String type = el.getNodeName();
     return ImmutableMap.of("ELEMENT", reference, "type", type);
+  }
+
+  private void checkIfElementIsAccessible(Element el) throws XPathExpressionException {
+    XPathExpression expr = xpath2.compile("//UIAAlert | //UIAActionSheet ");
+    Element alert = (Element) expr.evaluate(document, XPathConstants.NODE);
+    if (alert == null) {
+      // no alert, no problem
+      return;
+    }
+    // alert detected. The xpath should only return what's in the alert.
+    Node parent = el;
+    while (parent != null) {
+      if (parent.getNodeName().equals("UIAAlert") || parent.getNodeName()
+          .equals("UIAActionSheet")) {
+        return;
+      }
+      parent = parent.getParentNode();
+    }
+    throw new UnhandledAlertException("cannot select this element. There is an alert.");
   }
 
   private Node getNode(String reference) throws XPathExpressionException {
