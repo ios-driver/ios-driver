@@ -65,6 +65,11 @@ public class IOSServerManager {
       deviceManager = DeviceManagerService.create(devices);
       deviceManager.startDetection();
     }
+
+    if (devices ==null){
+      devices = new DeviceStore();
+      devices.add(new SimulatorDevice());
+    }
     apps = new ApplicationStore(options.getAppFolderToMonitor());
 
   }
