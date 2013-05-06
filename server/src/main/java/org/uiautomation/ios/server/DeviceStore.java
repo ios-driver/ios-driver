@@ -1,5 +1,7 @@
 package org.uiautomation.ios.server;
 
+import com.google.common.collect.ImmutableList;
+
 import org.uiautomation.iosdriver.DeviceDetector;
 import org.uiautomation.iosdriver.DeviceInfo;
 
@@ -14,6 +16,7 @@ public class DeviceStore implements DeviceDetector {
   private static final Logger log = Logger.getLogger(DeviceStore.class.getName());
   private final List<RealDevice> reals = new CopyOnWriteArrayList<RealDevice>();
   private final List<SimulatorDevice> sims = new CopyOnWriteArrayList<SimulatorDevice>();
+
 
   @Override
   public void onDeviceAdded(DeviceInfo deviceInfo) {
@@ -30,11 +33,15 @@ public class DeviceStore implements DeviceDetector {
     reals.remove(new RealDevice(deviceInfo));
   }
 
+  /**
+   *
+   * @return immutable copy of the currently available devices.
+   */
   public List<Device> getDevices() {
     List<Device> all = new ArrayList<Device>();
     all.addAll(reals);
     all.addAll(sims);
-    return all;
+    return ImmutableList.copyOf(all);
   }
 
   public List<RealDevice> getRealDevices() {

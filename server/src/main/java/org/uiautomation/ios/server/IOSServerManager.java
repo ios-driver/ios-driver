@@ -20,13 +20,12 @@ import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.application.ResourceCache;
 import org.uiautomation.ios.server.configuration.Configuration;
+import org.uiautomation.iosdriver.DeviceDetector;
 import org.uiautomation.iosdriver.services.DeviceManagerService;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
@@ -39,12 +38,13 @@ public class IOSServerManager {
   private final HostInfo hostInfo;
   private final ResourceCache cache = new ResourceCache();
   private DeviceManagerService deviceManager;
-  private final DeviceStore devices;
+  private DeviceStore devices;
   private final IOSServerConfiguration options;
   public final ApplicationStore apps;
 
+  // TODO freynaud cleanup
   public IOSServerManager(IOSServerConfiguration options) {
-	this.options = options;
+    this.options = options;
     try {
       LogManager.getLogManager()
           .readConfiguration(IOSServerManager.class.getResourceAsStream("/ios-logging.properties"));
@@ -52,14 +52,21 @@ public class IOSServerManager {
       System.err.println("Cannot configure logger.");
     }
     this.hostInfo = new HostInfo(options.getPort());
-    devices = new DeviceStore();
-    devices.add(new SimulatorDevice());
-    apps = new ApplicationStore(options.getAppFolderToMonitor());
+
     if (Configuration.BETA_FEATURE) {
       //LoggerService.enableDebug();
+      DeviceDetector d = DeviceManagerService.getDetector();
+      if (d == null) {
+        devices = new DeviceStore();
+        devices.add(new SimulatorDevice());
+      } else {
+        devices = (DeviceStore) d;
+      }
       deviceManager = DeviceManagerService.create(devices);
       deviceManager.startDetection();
     }
+    apps = new ApplicationStore(options.getAppFolderToMonitor());
+
   }
 
   public void stop() {
@@ -123,7 +130,8 @@ public class IOSServerManager {
   }
 
   public Device findAndReserveMatchingDevice(IOSCapabilities desiredCapabilities) {
-    for (Device device : getDeviceStore().getDevices()) {
+    List<Device> devices = getDeviceStore().getDevices();
+    for (Device device : devices) {
       IOSCapabilities deviceCapabilities = device.getCapability();
       if (Device.canRun(desiredCapabilities, deviceCapabilities)) {
         Device d = device.reserve();
@@ -133,7 +141,7 @@ public class IOSServerManager {
       }
     }
     throw new SessionNotCreatedException(
-        desiredCapabilities.getRawCapabilities() + "not available.");
+        desiredCapabilities.getRawCapabilities() + "not available. Available are " + devices);
   }
 
   public static boolean matches(Map<String, Object> appCapabilities,

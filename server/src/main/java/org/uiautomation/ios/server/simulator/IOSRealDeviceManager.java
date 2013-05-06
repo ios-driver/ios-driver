@@ -60,12 +60,12 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
 
   @Override
   public void setL10N(String locale, String language) {
-    // no-op
+    service.setLanguage("fr");
+    service.setLocale(locale);
   }
 
   @Override
   public void resetContentAndSettings() {
-    // cannot access device while detecting.
     service.emptyApplicationCache("com.ebay.iphone");
   }
 
