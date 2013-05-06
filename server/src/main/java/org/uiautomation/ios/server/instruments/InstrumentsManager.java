@@ -189,7 +189,7 @@ public class InstrumentsManager {
     } else {
       deviceManager = new IOSSimulatorManager(capabilities);
     }
-
+    deviceManager.install(application.getUnderlyingApplication());
     deviceManager.resetContentAndSettings();
     deviceManager.setL10N(locale, language);
     deviceManager.setKeyboardOptions();
