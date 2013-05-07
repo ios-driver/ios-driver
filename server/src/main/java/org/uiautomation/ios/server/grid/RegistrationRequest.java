@@ -77,6 +77,7 @@ public class RegistrationRequest {
 
         if (cap != null) {
           cap.setCapability("platform", "MAC");
+          cap.setCapability("maxInstances", 1);
 
           capabilities.add(cap.getRawCapabilities());
         }
