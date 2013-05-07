@@ -78,37 +78,43 @@ public class IOSServlet extends DriverBasedServlet {
 
     response.setContentType("application/json;charset=UTF-8");
     response.setCharacterEncoding("UTF-8");
-    response.setStatus(200);
-    Response resp = getResponse(req);
 
-    // TODO implement the json protocol properly.
-    if (req.getGenericCommand() == WebDriverLikeCommand.NEW_SESSION && resp.getStatus() == 0) {
-      response.setStatus(301);
-      String session = resp.getSessionId();
+    try {
+      response.setStatus(200);
+      Response resp = getResponse(req);
 
-      String scheme = request.getScheme(); // http
-      String serverName = request.getServerName(); // hostname.com
-      int serverPort = request.getServerPort(); // 80
-      String contextPath = request.getContextPath(); // /mywebapp
+      // TODO implement the json protocol properly.
+      if (req.getGenericCommand() == WebDriverLikeCommand.NEW_SESSION && resp.getStatus() == 0) {
+        response.setStatus(301);
+        String session = resp.getSessionId();
 
-      // Reconstruct original requesting URL
-      String url = scheme + "://" + serverName + ":" + serverPort + contextPath;
-      response.setHeader("location", url + "/session/" + session);
+        String scheme = request.getScheme(); // http
+        String serverName = request.getServerName(); // hostname.com
+        int serverPort = request.getServerPort(); // 80
+        String contextPath = request.getContextPath(); // /mywebapp
+
+        // Reconstruct original requesting URL
+        String url = scheme + "://" + serverName + ":" + serverPort + contextPath;
+        response.setHeader("location", url + "/session/" + session);
+      }
+      // String s = toString(resp);
+      BeanToJsonConverter convertor = new BeanToJsonConverter();
+      String s = convertor.convert(resp);
+
+      // status is also used for debugging, it's worth formatting it nice.
+      if (req.getGenericCommand() == WebDriverLikeCommand.STATUS) {
+        JSONObject o = new JSONObject(s);
+        response.getWriter().print(o.toString(2));
+      } else {
+        response.getWriter().print(s);
+      }
     }
-    // String s = toString(resp);
-    BeanToJsonConverter convertor = new BeanToJsonConverter();
-    String s = convertor.convert(resp);
-
-    // status is also used for debugging, it's worth formatting it nice.
-    if (req.getGenericCommand() == WebDriverLikeCommand.STATUS) {
-      JSONObject o = new JSONObject(s);
-      response.getWriter().print(o.toString(2));
-    } else {
-      response.getWriter().print(s);
+    catch (WebDriverException e) {
+      response.setStatus(500);
+      response.getWriter().print(serializeException(e));
     }
 
     response.getWriter().close();
-
   }
 
   private String toString(Response r) throws Exception {
