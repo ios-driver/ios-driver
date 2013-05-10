@@ -100,16 +100,13 @@ $(document).ready(function($){
 
 <pre class="prettyprint">
   Find the rule system.privilege.taskport. 
-  Under the line &lt;key&gt;class&lt;/key>, change &lt;string>rule&lt;/string> to &lt;string>allow&lt;/string>. 
+  Under the line &lt;key&gt;allow-root&lt;/key>, change &lt;false/> to &lt;true/>. 
 
   It should look something like:
   &lt;key>system.privilege.taskport&lt;/key>
     &lt;dict>
         &lt;key>allow-root&lt;/key>
-        &lt;false/>
-        &lt;key>class&lt;/key>
-        &lt;string>allow&lt;/string>
-        &lt;key>comment&lt;/key>
+        &lt;true/>
 
 </pre>
         <h3>Real Devices</h3>    
