@@ -20,6 +20,7 @@ $(document).ready(function ($) {
 
     $("#download_me").attr('href', downloadFile);
     $("#download_me").html("Download " + version);
+    $(".version").html(version);
     $("#forkme_banner").attr('href', github);
 
     buildFooter();
