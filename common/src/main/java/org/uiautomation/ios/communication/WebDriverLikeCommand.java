@@ -274,8 +274,8 @@ public enum WebDriverLikeCommand {
   PICKER_WHEEL_VALUES ("GET", "/session/:sessionId/uiaElement/:reference/getWheelValue", UIAElementArray.class),
   PICKER_WHEEL_SET_VALUE ("POST", "/session/:sessionId/uiaElement/:reference/value", Void.class),
 
-
-  ;
+  //UIASwitch
+  NATIVE_SWITCH_SET_VALUE("POST", "/session/:sessionId/uiaElement/:reference/setSwitchValue", Void.class);
 
 
   private final String method;
