@@ -84,10 +84,10 @@ public class FolderMonitor implements Runnable {
     if (key != null) {
       for (WatchEvent<?> watchEvent : key.pollEvents()) {
         final WatchEvent<Path> ev = (WatchEvent<Path>) watchEvent;
-        final Path filename = ev.context();
+        final Path filePath = ev.context();
         final WatchEvent.Kind<?> kind = watchEvent.kind();
-        log.fine(kind + " : " + filename);
-        handleFileChange(kind, filename.toFile());
+        log.fine(kind + " : " + filePath);
+        handleFileChange(kind, new File(iosServerConfiguration.getAppFolderToMonitor() + File.separator + filePath.getFileName()));
       }
 
       boolean valid = key.reset();
@@ -98,15 +98,15 @@ public class FolderMonitor implements Runnable {
     }
   }
 
-  private void handleFileChange(WatchEvent.Kind kind, File filename) {
+  private void handleFileChange(WatchEvent.Kind kind, File file) {
 
     if (kind.equals(StandardWatchEventKinds.ENTRY_CREATE)) {
-      if (isApp(filename)) {
-        log.info("New app found! " + filename.getName());
-        addApplication(filename);
+      if (isApp(file)) {
+        log.info("New app found! " + file.getName());
+        addApplication(file);
       }
-      if (isZip(filename)) {
-        unzipToWatchedFolder(filename);
+      if (isZip(file)) {
+        unzipToWatchedFolder(file);
       }
     } else if (kind.equals(StandardWatchEventKinds.ENTRY_MODIFY)) {
       log.info("App modified - no handler implemented!");
@@ -115,20 +115,20 @@ public class FolderMonitor implements Runnable {
     }
   }
 
-  private void unzipToWatchedFolder(File filename) {
-    log.info("Unzipping... " + filename.getName());
+  private void unzipToWatchedFolder(File file) {
+    log.info("Unzipping... " + file.getName());
     try {
-      ZipUtils.unzip(filename, new File(iosServerConfiguration.getAppFolderToMonitor()));
+      ZipUtils.unzip(file, new File(iosServerConfiguration.getAppFolderToMonitor()));
     } catch (IOException e) {
-      log.warning("Problem unzipping " + filename.getName() + ", " + e.toString());
+      log.warning("Problem unzipping " + file.getName() + ", " + e.toString());
     }
   }
 
-  private void addApplication(File filename) {
-    if (isApp(filename)) {
-      iosServerManager.addSupportedApplication(APPIOSApplication.createFrom(filename));
+  private void addApplication(File file) {
+    if (isApp(file)) {
+      iosServerManager.addSupportedApplication(APPIOSApplication.createFrom(file));
     } else {
-      iosServerManager.addSupportedApplication(new APPIOSApplication(filename.getAbsolutePath()));
+      iosServerManager.addSupportedApplication(new APPIOSApplication(file.getAbsolutePath()));
     }
   }
 
