@@ -11,17 +11,22 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package org.uiautomation.ios.server.utils;
 
-import name.pachler.nio.file.*;
 import org.uiautomation.ios.server.IOSServerConfiguration;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.application.APPIOSApplication;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.nio.file.FileSystems;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 import java.util.logging.Logger;
 
 
@@ -30,19 +35,23 @@ public class FolderMonitor implements Runnable {
   private IOSServerManager iosServerManager;
   private IOSServerConfiguration iosServerConfiguration;
   private WatchService folderWatcher;
-  private Path watchedFolder;
   private boolean stopped;
 
   public FolderMonitor(IOSServerConfiguration iosServerConfiguration, IOSServerManager iosServerManager) throws IOException {
     this.iosServerConfiguration = iosServerConfiguration;
     this.iosServerManager = iosServerManager;
     stopped = false;
-
-    folderWatcher = FileSystems.getDefault().newWatchService();
-    watchedFolder = Paths.get(iosServerConfiguration.getAppFolderToMonitor());
-    WatchKey key = watchedFolder.register(folderWatcher, StandardWatchEventKind.ENTRY_CREATE, StandardWatchEventKind.ENTRY_DELETE);
-
     init();
+    folderWatcher = FileSystems.getDefault().newWatchService();
+    Path watchedFolder = Paths.get(iosServerConfiguration.getAppFolderToMonitor());
+    try {
+      watchedFolder.register(folderWatcher, StandardWatchEventKinds.ENTRY_CREATE,
+          StandardWatchEventKinds.ENTRY_MODIFY,
+          StandardWatchEventKinds.ENTRY_DELETE);
+    } catch (NoSuchFileException e) {
+      stop();
+      log.warning("invalid location: " + iosServerConfiguration.getAppFolderToMonitor());
+    }
   }
 
   private void init() {
@@ -70,22 +79,15 @@ public class FolderMonitor implements Runnable {
   }
 
   private void checkForChanges() {
-    WatchKey key = null;
-    try {
-      key = folderWatcher.poll();
-    } catch (InterruptedException e) {
-      log.warning("problem monitoring the folder, " + e.toString());
-    }
+    final WatchKey key = folderWatcher.poll();
 
     if (key != null) {
-      List<WatchEvent<?>> list = key.pollEvents();
-      key.reset();
-      for (WatchEvent watchEvent : list) {
+      for (WatchEvent<?> watchEvent : key.pollEvents()) {
+        final WatchEvent<Path> ev = (WatchEvent<Path>) watchEvent;
+        final Path filename = ev.context();
         final WatchEvent.Kind<?> kind = watchEvent.kind();
-        final Path filename = (Path) watchEvent.context();
-
-        log.fine(kind + " : " + filename.toString());
-        handleFileChange(kind, new File(watchedFolder.toString() + "/" + filename.toString()));
+        log.fine(kind + " : " + filename);
+        handleFileChange(kind, filename.toFile());
       }
 
       boolean valid = key.reset();
@@ -98,7 +100,7 @@ public class FolderMonitor implements Runnable {
 
   private void handleFileChange(WatchEvent.Kind kind, File filename) {
 
-    if (kind.equals(StandardWatchEventKind.ENTRY_CREATE)) {
+    if (kind.equals(StandardWatchEventKinds.ENTRY_CREATE)) {
       if (isApp(filename)) {
         log.info("New app found! " + filename.getName());
         addApplication(filename);
@@ -106,9 +108,9 @@ public class FolderMonitor implements Runnable {
       if (isZip(filename)) {
         unzipToWatchedFolder(filename);
       }
-    } else if (kind.equals(StandardWatchEventKind.ENTRY_MODIFY)) {
+    } else if (kind.equals(StandardWatchEventKinds.ENTRY_MODIFY)) {
       log.info("App modified - no handler implemented!");
-    } else if (kind.equals(StandardWatchEventKind.ENTRY_DELETE)) {
+    } else if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE)) {
       log.info("App deleted - no handler implemented!");
     }
   }
