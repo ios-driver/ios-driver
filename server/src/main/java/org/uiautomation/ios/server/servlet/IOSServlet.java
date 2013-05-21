@@ -26,6 +26,7 @@ import org.uiautomation.ios.server.CommandMapping;
 import org.uiautomation.ios.server.command.Handler;
 
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
@@ -75,28 +76,53 @@ public class IOSServlet extends DriverBasedServlet {
   private void process(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     WebDriverLikeRequest req = new WebDriverLikeRequest(request);
+    //System.out.println("*** Processing request for WebDriverLikeRequest -> " + req.getGenericCommand().toString());
 
     response.setContentType("application/json;charset=UTF-8");
     response.setCharacterEncoding("UTF-8");
+
+    boolean wasThereException = false;
 
     try {
       response.setStatus(200);
       Response resp = getResponse(req);
 
       // TODO implement the json protocol properly.
+      System.out.println("*** req.getGenericCommand() = " + req.getGenericCommand().toString() + " |||||| resp.getStatus() = " + resp.getStatus());
       if (req.getGenericCommand() == WebDriverLikeCommand.NEW_SESSION && resp.getStatus() == 0) {
-        response.setStatus(301);
+
         String session = resp.getSessionId();
+        System.out.println("*** session = " + session);
 
-        String scheme = request.getScheme(); // http
-        String serverName = request.getServerName(); // hostname.com
-        int serverPort = request.getServerPort(); // 80
-        String contextPath = request.getContextPath(); // /mywebapp
+        if (session == null || session.isEmpty()){
+          System.out.println("*** Setting response to 500");
+          response.setStatus(500);
+        } else {
+          System.out.println("*** New Session - Setting response to 301");
+          response.setStatus(301);
 
-        // Reconstruct original requesting URL
-        String url = scheme + "://" + serverName + ":" + serverPort + contextPath;
-        response.setHeader("location", url + "/session/" + session);
+
+          String scheme = request.getScheme(); // http
+          String serverName = request.getServerName(); // hostname.com
+          int serverPort = request.getServerPort(); // 80
+          String contextPath = request.getContextPath(); // /mywebapp
+
+          // Reconstruct original requesting URL
+
+          String url = scheme + "://" + serverName + ":" + serverPort + contextPath;
+          System.out.println("*** (NEW_SESSION) :: Setting header of response to : " + url + "/session/" + session);
+          response.setHeader("location", url + "/session/" + session);
+
+        }
+
+
       }
+      else if (req.getGenericCommand() == WebDriverLikeCommand.NEW_SESSION && resp.getStatus() == 33) {
+        System.out.println(" NEW_SESSION request and status = 33");
+        //response.setStatus(500);
+
+      }
+
       // String s = toString(resp);
       BeanToJsonConverter convertor = new BeanToJsonConverter();
       String s = convertor.convert(resp);
@@ -110,11 +136,23 @@ public class IOSServlet extends DriverBasedServlet {
       }
     }
     catch (WebDriverException e) {
+      wasThereException = true;
+      System.out.println("*** Caught Exception : " + e.toString());
+      System.out.println("*** WebDriverLikeRequest = -> " + req.getGenericCommand().toString());
+
+      System.out.println("*** Setting response to 500");
       response.setStatus(500);
       response.getWriter().print(serializeException(e));
     }
+    if (wasThereException){
+      System.out.println("*** Closing writer after exception");
 
+    }
     response.getWriter().close();
+    if (wasThereException){
+      System.out.println("*** Writer closed after exception");
+
+    }
   }
 
   private String toString(Response r) throws Exception {

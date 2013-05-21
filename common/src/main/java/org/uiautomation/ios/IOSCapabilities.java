@@ -152,7 +152,8 @@ public class IOSCapabilities extends DesiredCapabilities {
     while (iter.hasNext()) {
       String key = iter.next();
       Object value = json.get(key);
-      if (BROWSER_NAME.equalsIgnoreCase(key)) {
+      if (BROWSER_NAME.equalsIgnoreCase(key) && value.toString().equalsIgnoreCase("Safari")) {
+        System.out.println(" ***** IOSCapabilities, setting Browser_Name to Safari!!");
         setCapability(BUNDLE_NAME, "Safari");
         if (((String) value).equalsIgnoreCase("iphone")) {
           setCapability(DEVICE, "iphone");
@@ -160,6 +161,7 @@ public class IOSCapabilities extends DesiredCapabilities {
           setCapability(DEVICE, "ipad");
         }
       } else {
+        System.out.println(" ***** IOSCapabilities, setting key :: " + key + " :: to " + decode(value));
         setCapability(key, decode(value));
       }
     }
