@@ -26,6 +26,7 @@ import org.uiautomation.ios.inspector.IDEServlet;
 import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.server.grid.RegistrationRequest;
+import org.uiautomation.ios.server.grid.SelfRegisteringRemote;
 import org.uiautomation.ios.server.servlet.ApplicationsServlet;
 import org.uiautomation.ios.server.servlet.ArchiveServlet;
 import org.uiautomation.ios.server.servlet.CapabilitiesServlet;
@@ -67,10 +68,12 @@ public class IOSServer {
     IOSServerConfiguration options = server.getOptions();
     IOSServerManager driver = server.getDriver();
     if (options.getRegistrationURL() != null) {
-      RegistrationRequest
-          request =
-          new RegistrationRequest(options, driver);
-      request.registerToHub();
+      SelfRegisteringRemote selfRegisteringRemote = new SelfRegisteringRemote(options, driver);
+      selfRegisteringRemote.startRegistrationProcess();
+//      RegistrationRequest
+//          request =
+//          new RegistrationRequest(options, driver);
+//      request.registerToHub();
     }
   }
 
