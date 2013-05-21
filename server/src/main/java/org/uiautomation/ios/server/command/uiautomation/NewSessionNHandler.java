@@ -36,11 +36,9 @@ public class NewSessionNHandler extends BaseNativeCommandHandler {
     try {
       GetCapabilitiesNHandler.reset();
       JSONObject payload = getRequest().getPayload();
-      System.out.println("******* NewSessionHandler *************");
       IOSCapabilities
           capabilities =
           new IOSCapabilities(payload.getJSONObject("desiredCapabilities"));
-      System.out.println("******* NewSessionHandler, capabilities = " + capabilities.getBundleName());
       session = getDriver().createSession(capabilities);
       session.start();
 

@@ -74,7 +74,6 @@ public class InstrumentsManager {
                            Device device,
                            IOSCapabilities capabilities) throws WebDriverException {
 
-    System.out.println(" +++ InstrumentsManager -- IOSRunningApp = " + application.toString());
     this.device = device;
     caps = capabilities;
 
@@ -87,62 +86,46 @@ public class InstrumentsManager {
     boolean timeHack = caps.isTimeHack();
     List<String> envtParams = caps.getExtraSwitches();
 
-    System.out.println(" +++ Starting Instruments session");
     log.fine("starting session");
 
     try {
       this.sessionId = sessionId;
       this.extraEnvtParams = envtParams;
 
-      System.out.println(" +++ Creating temp output folder");
       output = createTmpOutputFolder();
 
-      System.out.println(" +++ this.application.setDefaultDevice()");
-      System.out.println(" +++ application bundleid = " + application.getBundleId() );
-      System.out.println(" +++ application apppath = " + application.getDotAppAbsolutePath());
       this.application = application;
       this.application.setDefaultDevice(deviceType);
 
-      System.out.println(" +++ Preparing Simulator");
       deviceManager = prepareSimulator(capabilities);
       if (isWarmupRequired(sdkVersion)) {
-        System.out.println(" +++ Warmup required");
         warmup();
       }
-      System.out.println(" +++ prepare simulator1");
       log.fine("prepare simulator");
 
       if (deviceManager instanceof IOSSimulatorManager) {
-        System.out.println(" +++ forcing SDK");
         log.fine("forcing SDK");
         ((IOSSimulatorManager) deviceManager).forceDefaultSDK();
         log.fine("creating script");
       }
-      System.out.println(" +++ Preparing script");
       File
           uiscript =
           new ScriptHelper()
               .getScript(port, application.getDotAppAbsolutePath(), sessionId);
-      System.out.println(" +++ starting instruments");
       log.fine("starting instruments");
       List<String> instruments = createInstrumentCommand(uiscript.getAbsolutePath());
-      System.out.println(" +++  instruments started ");
       communicationChannel = new CommunicationChannel();
 
-      System.out.println(" +++  new Command(instruments, true)");
       simulatorProcess = new Command(instruments, true);
       simulatorProcess.setWorkingDirectory(output);
-      System.out.println(" +++  simulatorProcess.start();");
       simulatorProcess.start();
 
-      System.out.println(" +++  waiting for registration request");
       log.fine("waiting for registration request");
       boolean success = communicationChannel.waitForUIScriptToBeStarted();
       // appears only in ios6. : Automation Instrument ran into an exception
       // while trying to run the
       // script. UIAScriptAgentSignaledException
       if (!success) {
-        System.out.println(" +++ problem with instruments.. stopping and killing ");
         simulatorProcess.forceStop();
         killSimulator();
         throw new WebDriverException("Instruments crashed.");
@@ -156,7 +139,6 @@ public class InstrumentsManager {
       }
 
     } catch (Exception e) {
-      System.out.println("caught an exception. Exception = " + e.getMessage());
       if (simulatorProcess != null) {
         simulatorProcess.forceStop();
       }

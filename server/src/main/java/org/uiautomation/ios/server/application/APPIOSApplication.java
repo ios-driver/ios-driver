@@ -20,7 +20,6 @@ import com.dd.plist.NSArray;
 import com.dd.plist.NSDictionary;
 import com.dd.plist.NSNumber;
 
-import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,9 +31,6 @@ import org.uiautomation.ios.server.utils.ZipUtils;
 import org.uiautomation.ios.utils.PlistFileUtils;
 
 import java.io.*;
-import java.nio.channels.FileChannel;
-import java.nio.channels.FileLock;
-import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -289,92 +285,22 @@ public class APPIOSApplication {
   }
 
   public static APPIOSApplication findSafariLocation(File xcodeInstall, String sdkVersion) {
-
- File app = new File(xcodeInstall,
+    File app = new File(xcodeInstall,
                         "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator"
                         + sdkVersion
                         + ".sdk/Applications/MobileSafari.app");
-
-    File plist = new File(app, "Info.plist");
-
-    String safariLocation;
     if (!app.exists()) {
       throw new WebDriverException(app + " should be the safari app, but doesn't exist.");
     }
-    /*
-    FileChannel channel = null;
-    try {
-      if (plist.exists()){
-        System.out.println("&*(&*(&*( plist exists");
-      }
-      channel = new RandomAccessFile(plist, "r").getChannel();
-    } catch (Exception e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-    }
-    boolean isLocked = false;
-    FileLock fileLock = null;
-    try{
-      fileLock = channel.tryLock();
-    } catch (Exception e) {
-      e.printStackTrace();
-      System.out.println("&*(&*(&*( could not lock plist");
-
-    }
-    if (fileLock == null){
-      isLocked = true;
-    } else {
-      try {
-        fileLock.release();
-      } catch (IOException e) {
-        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-      }
-    }
-
-
-    */
-    //if (!isLocked){
-      safariLocation = app.getAbsolutePath();
-    //} else {
-    //  System.out.println(" ******* MobileSafari File is locked, copy to tmp location. SDKVersion = " + sdkVersion);
-    //  safariLocation = copySafariToTempLocation(xcodeInstall, sdkVersion);
-
-    //}
-   return new APPIOSApplication(safariLocation);
-  }
-
-  public static String copySafariToTempLocation(File xcodeInstall, String sdkVersion)  {
-    File app = new File(xcodeInstall,
-            "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator"
-                    + sdkVersion
-                    + ".sdk/Applications/MobileSafari.app");
-
-    File tempFolder = null;
-    File tmpSafariApp = null;
-    try {
-      tempFolder = File.createTempFile("tmpSafari", null);
-      tempFolder.delete();
-      tempFolder.mkdir();
-      tempFolder.deleteOnExit();
-
-      tmpSafariApp = new File(tempFolder + "/" + sdkVersion + "/MobileSafari.app");
-
-      FileUtils.copyDirectory(app, tmpSafariApp);
-    } catch (IOException e) {
-      System.out.println("******* Caught an exception copying mobile safari");
-      return app.getAbsolutePath();
-    }
-    return tmpSafariApp.getAbsolutePath();
-
+    return new APPIOSApplication(app.getAbsolutePath());
   }
 
   public void setDefaultDevice(DeviceType device) {
 
     try {
       File plist = new File(app, "Info.plist");
-      System.out.println(" +++ APPIOSApplication -- plist = " + plist.getAbsolutePath().toString());
       NSDictionary root = (NSDictionary) BinaryPropertyListParser.parse(new FileInputStream(plist));
 
-      System.out.println(" +++ APPIOSApplication : got past the BinaryPropertyListParser");
       NSArray devices = (NSArray) root.objectForKey("UIDeviceFamily");
       int length = devices.getArray().length;
       if (length == 1) {
@@ -399,11 +325,8 @@ public class APPIOSApplication {
       }
       rearrangedArray.setValue(index, last);
       root.put("UIDeviceFamily", rearrangedArray);
-      System.out.println(" +++ APPIOSApplication : about to write with BinaryPropertyListParser");
-      System.out.println(" +++ APPIOSApplication : plist path = " + plist.getAbsolutePath().toString());
       BinaryPropertyListWriter.write(plist, root);
     } catch (Exception e) {
-      System.out.println(" +++ APPIOSApplication : caught exception in APPIOSApplication. Exception = " + e.getMessage());
       throw new WebDriverException("Cannot change the default device for the app." + e.getMessage(),
                                    e);
     }
