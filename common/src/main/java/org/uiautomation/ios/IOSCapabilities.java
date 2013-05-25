@@ -152,7 +152,7 @@ public class IOSCapabilities extends DesiredCapabilities {
     while (iter.hasNext()) {
       String key = iter.next();
       Object value = json.get(key);
-      if (BROWSER_NAME.equalsIgnoreCase(key) && value.toString().equalsIgnoreCase("Safari")) {
+      if (BROWSER_NAME.equalsIgnoreCase(key) && json.isNull(BUNDLE_NAME)) {
         setCapability(BUNDLE_NAME, "Safari");
         if (((String) value).equalsIgnoreCase("iphone")) {
           setCapability(DEVICE, "iphone");
