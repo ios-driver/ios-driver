@@ -103,12 +103,12 @@ public class SelfRegisteringRemote {
 
       HttpResponse response = client.execute(host, r);
       if (response.getStatusLine().getStatusCode() != 200) {
-        throw new WebDriverException("hub down or not responding.");
+        throw new WebDriverException("hub down or not responding. Reason : " + response.getStatusLine().getReasonPhrase());
       }
       JSONObject o = extractObject(response);
       return (Boolean) o.get("success");
     } catch (Exception e) {
-      throw new WebDriverException("hub down or not responding.");
+      throw new WebDriverException("Problem registering with hub", e);
     }
   }
 }

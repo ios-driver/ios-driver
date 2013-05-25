@@ -118,9 +118,10 @@ public class IOSServlet extends DriverBasedServlet {
     catch (WebDriverException e) {
       response.setStatus(500);
       response.getWriter().print(serializeException(e));
+      throw new WebDriverException("Error processing response." + e.getMessage(), e);
+    } finally {
+      response.getWriter().close();
     }
-
-    response.getWriter().close();
   }
 
   private String toString(Response r) throws Exception {
