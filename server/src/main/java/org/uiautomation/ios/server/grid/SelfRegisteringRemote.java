@@ -19,22 +19,24 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.message.BasicHttpRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.internal.HttpClientFactory;
 import org.uiautomation.ios.server.IOSServerConfiguration;
 import org.uiautomation.ios.server.IOSServerManager;
+import org.uiautomation.ios.server.grid.exception.GridException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Logger;
 
 public class SelfRegisteringRemote {
 
   private final HttpClientFactory httpClientFactory;
   private IOSServerConfiguration nodeConfig;
   private IOSServerManager driver;
+  private static final Logger log = Logger.getLogger(SelfRegisteringRemote.class.getName());
 
   public SelfRegisteringRemote(IOSServerConfiguration config, IOSServerManager driver) {
     this.nodeConfig = config;
@@ -66,7 +68,10 @@ public class SelfRegisteringRemote {
               checkForPresence = false;
             }
             registerToHub(checkForPresence);
+          } catch (GridException e) {
+            log.info("Problem registering the node : " + e.getMessage());
           } catch (MalformedURLException e) {
+            e.printStackTrace();
           }
           try {
             Thread.sleep(5000);
@@ -103,12 +108,12 @@ public class SelfRegisteringRemote {
 
       HttpResponse response = client.execute(host, r);
       if (response.getStatusLine().getStatusCode() != 200) {
-        throw new WebDriverException("hub down or not responding. Reason : " + response.getStatusLine().getReasonPhrase());
+        throw new GridException("hub down or not responding. Reason : " + response.getStatusLine().getReasonPhrase());
       }
       JSONObject o = extractObject(response);
       return (Boolean) o.get("success");
     } catch (Exception e) {
-      throw new WebDriverException("Problem registering with hub", e);
+      throw new GridException("Problem registering with hub", e);
     }
   }
 }

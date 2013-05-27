@@ -56,11 +56,15 @@ public class IOSHtmlRenderer implements HtmlRenderer {
       }
       TestSession session = slot.getSession();
       try {
-        if (!slot.getCapabilities().get("CFBundleExecutable").toString().equalsIgnoreCase("MobileSafari")){
-          builder.append("<img src=\"" + proxy.getRemoteHost() + getIconUrl(slot) + "\" title=\"" + slot.getCapabilities().get("CFBundleExecutable") + "\" alt=\"" + slot.getCapabilities().get("CFBundleExecutable") + "\" height=\"30\" width=\"30\">");
-        } else {
-          builder.append("<b> *safari* </b>");
+        if (slot.getCapabilities().containsKey("CFBundleExecutable")){
+          if (!slot.getCapabilities().get("CFBundleExecutable").toString().equalsIgnoreCase("MobileSafari")){
+            builder.append("<img src=\"" + proxy.getRemoteHost() + getIconUrl(slot) + "\" title=\"" + slot.getCapabilities().get("CFBundleExecutable") + "\" alt=\"" + slot.getCapabilities().get("CFBundleExecutable") + "\" height=\"30\" width=\"30\">");
+          } else {
+            builder.append("<b> *safari* </b>");
+          }
+
         }
+
       } catch (JSONException ignored) {
       }
       if (simulator) {
