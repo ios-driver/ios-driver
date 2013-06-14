@@ -113,8 +113,6 @@ public enum WebDriverLikeCommand {
   TOUCH_DOWN("POST", "/session/:sessionId/touch/down", Void.class),
   TOUCH_UP("POST", "/session/:sessionId/touch/up", Void.class),
   TOUCH_MOVE("POST", "/session/:sessionId/touch/move", Void.class),
-  // POST session/:sessionId/touch/scroll
-  // POST session/:sessionId/touch/scroll ( different params )
   SCROLL("POST", "/session/:sessionId/touch/scroll", Void.class),
 
   LONG_TAP("POST", "/session/:sessionId/touch/longclick", Void.class),
@@ -139,8 +137,8 @@ public enum WebDriverLikeCommand {
   // DELETE /session/:sessionId/session_storage/key/:key
   // GET /session/:sessionId/session_storage/size
 
-  // POST /session/:sessionId/log
-  // GET /session/:sessionId/log
+  LOG("POST", "/session/:sessionId/log", Void.class),
+  LOG_TYPES("GET", "/session/:sessionId/log/types", Void.class),
 
   /*
   * Additional command, not part of the JSON Wire Protocol.

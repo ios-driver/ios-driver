@@ -57,8 +57,6 @@ public enum CommandMapping {
   TAG_NAME(".type()", DefaultUIAScriptNHandler.class, GetTagNameHandler.class),
   EXECUTE_SCRIPT(ExecuteScriptNHandler.class, ExecuteScriptHandler.class),
   EQUAL(NotImplementedNativeHandler.class, IsEqualHandler.class),
-  // UIATarget
-
   SOURCE(LogElementTreeNHandler.class, GetPageSourceHandler.class),
   TREE(LogElementTreeNHandler.class),
   TREE_ROOT(LogElementTreeNHandler.class),
@@ -72,6 +70,7 @@ public enum CommandMapping {
   DRAG_FROM_TO_FOR_DURATION(DragFromToForDurationNHander.class),
   PINCH_CLOSE_FROM_TO_FOR_DURATION(PinchCloseNHandler.class, NotImplementedWebHandler.class),
   PINCH_OPEN_FROM_TO_FOR_DURATION(PinchOpenNHandler.class, NotImplementedWebHandler.class),
+
 
 
   WINDOW_SIZE(GetScreenSizeNHandler.class, GetPageSizeHandler.class),
@@ -111,27 +110,16 @@ public enum CommandMapping {
   DISPLAYED(IsVisibleNHandler.class, IsDisplayedHanlder.class),
   ENABLED(IsEnabledNHandler.class, IsEnabledHandler.class),
   LOCATION(null, null, GetLocationHandler.class),
-  //IS_STALE(".isStale()"),
 
+  LOG(NotImplementedNativeHandler.class, LogHandler.class),
+  LOG_TYPES(NotImplementedNativeHandler.class, LogTypesHandler.class),
 
-  // POST session/:sessionId/touch/scroll
-  // POST session/:sessionId/touch/scroll ( different params )
   SCROLL(ScrollHandler.class),
-
   LONG_TAP(LongTapHandler.class),
   TAP(TapHandler.class),
   DOUBLE_TAP(DoubleTapHandler.class),
-
-
-
-  //LABEL(".label()"),
-  //NAME(".name()"),
-  //VALUE(".value()"),
   ATTRIBUTE(GetAttributeNHandler.class, GetAttributeHandler.class),
   TEXT(null, null, GetTextHandler.class),
-  //WITH_NAME(".withName(:name)"),
-  //WITH_PREDICATE(".withPredicate(PredicateString predicateString)"),
-  //WITH_VALUE_FOR_KEY(".withValueForKey(Object value,String key)"),
   CSS(NotImplementedNativeHandler.class, CssPropertyHandler.class),
 
   CLICK(".tap()", ClickHandler.class),
@@ -142,18 +130,8 @@ public enum CommandMapping {
   NATIVE_TOUCH_AND_HOLD(TouchAndHoldNHandler.class),
   NATIVE_DOUBLE_TAP(".doubleTap()"),
   TWO_FINGER_TAP(".twoFingerTap()"),
-  //TAP_WITH_OPTIONS(""),
-  //DRAG_INSIDE_WITH_OPTIONS(""),
   FLICK_INSIDE_WITH_OPTIONS(FlickInsideWithOptionsNHandler.class),
-  //SCROLL_TO_VISIBLE(".scrollToVisible()"),          //implemented in ELEMENT_SCROLL
-  //ROTATE_WITH_OPTIONS(NotImplementedNativeHandler.class, NotImplementedWebHandler.class),
   ELEMENT_SCROLL(ElementScrollNHandler.class),
-  //SCROLL_UP(".scrollUp()"),          //implemented in ELEMENT_SCROLL
-  //SCROLL_DOWN(".scrollDown()"),      //implemented in ELEMENT_SCROLL
-  //SCROLL_LEFT(".scrollLeft()"),      //implemented in ELEMENT_SCROLL
-  //SCROLL_RIGHT(".scrollRight()"),    //implemented in ELEMENT_SCROLL
-  //SCROLL_TO_ELEMENT_WITH_NAME(""),              //implemented in ELEMENT_SCROLL
-  //SCROLL_TO_ELEMENT_WITH_PREDICATE(""),    //implemented in ELEMENT_SCROLL
 
   //TouchScreen
   FLICK(FlickNHandler.class),

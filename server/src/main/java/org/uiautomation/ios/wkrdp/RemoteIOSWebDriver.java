@@ -25,6 +25,7 @@ import org.uiautomation.ios.server.DOMContext;
 import org.uiautomation.ios.server.RealDevice;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.configuration.Configuration;
+import org.uiautomation.ios.wkrdp.command.Network;
 import org.uiautomation.ios.wkrdp.command.Page;
 import org.uiautomation.ios.wkrdp.internal.RealDeviceProtocolImpl;
 import org.uiautomation.ios.wkrdp.internal.SimulatorProtocolImpl;
@@ -208,6 +209,7 @@ public class RemoteIOSWebDriver {
 
         protocol.attachToPage(page.getPageId());
         inspector.sendCommand(Page.enablePageEvent());
+        inspector.sendCommand(Network.enable());
         boolean ok = created.add(inspector);
         if (ok) {
           protocol.addListener(inspector);
