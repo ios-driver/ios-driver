@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 ios-driver committers.
+ * Copyright 2013 ios-driver committers.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the Licence at
@@ -17,26 +17,25 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 
-public class Runtime {
+public class Timeline {
 
-
-  public static JSONObject evaluate(String js) {
+  public static JSONObject start() {
     try {
       JSONObject cmd = new JSONObject();
-      cmd.put("method", "Runtime.evaluate")
-          .put("params",
-               new JSONObject()
-                   .put("expression", js)
-                   .put("objectGroup", "console")
-                   .put("includeCommandLineAPI", true)
-                   .put("doNotPauseOnExceptionsAndMuteConsole", true)
-                   .put("returnByValue", false));
-
+      cmd.put("method", "Timeline.start");
       return cmd;
     } catch (JSONException e) {
-      throw new WebDriverException("json encoding", e);
+      throw new WebDriverException(e);
     }
-
   }
-  // {"method":"Runtime.evaluate","params":{"expression":"alert('tt123')","objectGroup":"console","includeCommandLineAPI":true,"doNotPauseOnExceptionsAndMuteConsole":true,"returnByValue":false},"id":57}
+
+  public static JSONObject stop() {
+    try {
+      JSONObject cmd = new JSONObject();
+      cmd.put("method", "Timeline.stop");
+      return cmd;
+    } catch (JSONException e) {
+      throw new WebDriverException(e);
+    }
+  }
 }
