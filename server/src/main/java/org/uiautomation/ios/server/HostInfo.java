@@ -18,6 +18,7 @@ import org.uiautomation.ios.utils.BuildInfo;
 import org.uiautomation.ios.utils.ClassicCommands;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HostInfo {
@@ -25,28 +26,31 @@ public class HostInfo {
   private final String osName;
   private final String osArch;
   private final String osVersion;
-
   private final String javaVersion;
-
   private final String simulatorVersion;
   private final List<String> installedSimulators;
   private final File xCodeInstall;
-
   private final BuildInfo info = new BuildInfo();
   private final int port;
 
-  public HostInfo(int port) {
+  public HostInfo(IOSServerConfiguration config) {
+    this.port = config.getPort();
     osName = System.getProperty("os.name");
     osArch = System.getProperty("os.arch");
     osVersion = System.getProperty("os.version");
 
     javaVersion = System.getProperty("java.version");
 
-    String sdk = ClassicCommands.getDefaultSDK();
-    simulatorVersion = sdk;
-    installedSimulators = ClassicCommands.getInstalledSDKs();
-    this.port = port;
-    xCodeInstall = ClassicCommands.getXCodeInstall();
+    if (config.hasSimulators()) {
+      String sdk = ClassicCommands.getDefaultSDK();
+      simulatorVersion = sdk;
+      installedSimulators = ClassicCommands.getInstalledSDKs();
+      xCodeInstall = ClassicCommands.getXCodeInstall();
+    } else {
+      simulatorVersion = "";
+      installedSimulators = new ArrayList<>();
+      xCodeInstall = null;
+    }
   }
 
   public String getSDK() {

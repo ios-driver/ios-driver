@@ -51,7 +51,10 @@ public class IOSServerManager {
     } catch (Exception e) {
       System.err.println("Cannot configure logger.");
     }
-    this.hostInfo = new HostInfo(options.getPort());
+    this.hostInfo = new HostInfo(options);
+
+
+    devices = new DeviceStore();
 
     if (Configuration.BETA_FEATURE) {
       //LoggerService.enableDebug();
@@ -66,10 +69,10 @@ public class IOSServerManager {
       deviceManager.startDetection();
     }
 
-    if (devices ==null){
-      devices = new DeviceStore();
+    if (Configuration.SIMULATORS_ENABLED){
       devices.add(new SimulatorDevice());
     }
+
     apps = new ApplicationStore(options.getAppFolderToMonitor());
 
   }
