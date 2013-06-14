@@ -29,7 +29,8 @@ public abstract class BaseIOSDriverTest {
                      "-aut", SampleApps.getIntlMountainsFile(),
                      "-aut", SampleApps.gettestNoContentFile(),
                      "-aut", SampleApps.getPPNQASampleApp(),
-                     "-beta", "-folder", "applications"
+                     "-beta", "-folder", "applications",
+                     "-simulators"
     };
     config = IOSServerConfiguration.create(args);
     server = new IOSServer(config);
