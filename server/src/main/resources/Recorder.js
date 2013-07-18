@@ -24,18 +24,26 @@ function Recorder(inspector) {
     this.on = document.URL.indexOf("mode=record") !== -1;
 }
 
+Recorder.prototype.active = function (state) {
+    this.on = state;
+}
 Recorder.prototype.recordClick = function (locator) {
     this.index++;
     var el = "WebElement element" + this.index + " = driver.findElement(By.xpath('" + locator
         + "');"
 
-    var content = $("#java").html() + "\n" + el;
+    var base = $("#java").html();
+    if (base !== "") {
+        base += "\n";
+    }
+    var content = base + el;
     content += "\nelement" + this.index + ".click();";
     this.log.debug(content);
     $("#java").html(content);
     if (prettyPrint) {
         prettyPrint();
     }
+    console.log("click : " + el);
 }
 
 Recorder.prototype.forwardClick = function (x, y) {

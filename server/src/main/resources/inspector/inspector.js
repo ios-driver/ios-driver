@@ -14,6 +14,18 @@
 
 $(document).ready(function () {
     $(".ui-layout-south").tabs();
+    $("#record").button({ icons: { primary: "ui-icon-gear" } });
+    $("#record").click(function () {
+        var recorderOn = $(this).prop('checked');
+        console.log("recorder on: " + recorderOn);
+        inspector.recorder.active(recorderOn);
+    });
+
+    /*var i = 0;
+     $("#record").click(function () {
+     i++;
+     $("#record_text").html("clicked " + i);
+     });*/
 
     var expandCenter = function () {
         var h = $(window).height() - $("#header").height() - $("#footer").height();

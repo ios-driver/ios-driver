@@ -2,14 +2,14 @@
     position: fixed;
     top: 0;
     left: 0;
-    height: 0px;
+    height: 70px;
     width: 100%;
 
 }
 
 #content {
     position: fixed;
-    top: 0px;
+    top: 70px;
     left: 0px;
     height: 100%;
     overflow: auto;

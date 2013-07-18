@@ -14,8 +14,7 @@
 
 $(document).ready(function () {
 
-    var inspector = new Inspector("#tree");
-
+    inspector = new Inspector("#tree");
 });
 
 var realOffsetX = 0;
