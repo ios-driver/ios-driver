@@ -74,7 +74,11 @@ public class TreeController implements IDECommandController {
     metadata.put("label", from.getString("label"));
     metadata.put("name", from.getString("name"));
     metadata.put("value", from.getString("value"));
-    metadata.put("l10n", from.getJSONObject("l10n"));
+    if (from.has("l10n")) {
+      metadata.put("l10n", from.getJSONObject("l10n"));
+    } else {
+      metadata.put("l10n", new JSONObject().put("matches", 0));
+    }
     if (from.has("source")) {
       metadata.put("source", from.getString("source"));
     }
@@ -99,8 +103,30 @@ public class TreeController implements IDECommandController {
       }
     }
 
+    boolean keyBoardVisible = hasKeyBoard(node);
+    metadata.put("keyboard", keyBoardVisible);
     return node;
   }
+
+  private boolean hasKeyBoard(JSONObject node) {
+    String type = node.optJSONObject("metadata").optString("type");
+    if ("UIAKeyboard".equals(type)) {
+      return true;
+    } else {
+      if (node.has("children")) {
+        JSONArray children = node.optJSONArray("children");
+        for (int i = 0; i < children.length(); i++) {
+          JSONObject child = children.optJSONObject(i);
+          boolean res = hasKeyBoard(child);
+          if (res) {
+            return res;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
 
   private String getNodeTitle(JSONObject node) throws JSONException {
     StringBuilder b = new StringBuilder();
