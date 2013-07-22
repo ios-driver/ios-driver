@@ -236,7 +236,11 @@ public class RemoteWebElement {
   }
 
   public <T> T getAttribute(String attributeName) {
-    T res = getRemoteObject().call("." + attributeName);
+    T res;
+    if (attributeName.indexOf('-') != -1 || attributeName.indexOf(':') != -1 || attributeName.indexOf('.') != -1)
+      res = getRemoteObject().call(".getAttribute('" + attributeName + "')");
+    else
+      res = getRemoteObject().call("." + attributeName);
     if (res == null || "class".equals(attributeName)) {
       // textarea.value != testarea.getAttribute("value");
       res = getRemoteObject().call(".getAttribute('" + attributeName + "')");
