@@ -19,6 +19,7 @@ import com.dd.plist.BinaryPropertyListWriter;
 import com.dd.plist.NSArray;
 import com.dd.plist.NSDictionary;
 import com.dd.plist.NSNumber;
+import com.dd.plist.PropertyListParser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -299,7 +300,7 @@ public class APPIOSApplication {
 
     try {
       File plist = new File(app, "Info.plist");
-      NSDictionary root = (NSDictionary) BinaryPropertyListParser.parse(new FileInputStream(plist));
+      NSDictionary root = (NSDictionary) PropertyListParser.parse(new FileInputStream(plist));
 
       NSArray devices = (NSArray) root.objectForKey("UIDeviceFamily");
       int length = devices.getArray().length;
@@ -325,6 +326,7 @@ public class APPIOSApplication {
       }
       rearrangedArray.setValue(index, last);
       root.put("UIDeviceFamily", rearrangedArray);
+      // TODO freynaud is it safe ?
       BinaryPropertyListWriter.write(plist, root);
     } catch (Exception e) {
       throw new WebDriverException("Cannot change the default device for the app." + e.getMessage(),
