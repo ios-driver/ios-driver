@@ -54,6 +54,7 @@
 
     <licenses>
         <license>
+            <name>The Apache Software License, Version 2.0</name>
             <url>http://www.apache.org/licenses/LICENSE-2.0</url>
         </license>
     </licenses>
@@ -62,6 +63,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <scm>
+        <connection>scm:git:https://github.com/ios-driver/ios-driver</connection>
+        <developerConnection>scm:git:git://github.com/ios-driver/ios-driver</developerConnection>
+        <url>https://github.com/ios-driver/ios-driver</url>
+    </scm>
 
 </project>
 
