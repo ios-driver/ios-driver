@@ -14,12 +14,15 @@
 
 package org.uiautomation.ios.server.application;
 
+import com.dd.plist.ASCIIPropertyListParser;
 import com.dd.plist.BinaryPropertyListParser;
 import com.dd.plist.BinaryPropertyListWriter;
 import com.dd.plist.NSArray;
 import com.dd.plist.NSDictionary;
 import com.dd.plist.NSNumber;
+import com.dd.plist.NSObject;
 import com.dd.plist.PropertyListParser;
+import com.dd.plist.XMLPropertyListParser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -300,6 +303,8 @@ public class APPIOSApplication {
 
     try {
       File plist = new File(app, "Info.plist");
+
+      PListFormat format = getFormat(plist);
       NSDictionary root = (NSDictionary) PropertyListParser.parse(new FileInputStream(plist));
 
       NSArray devices = (NSArray) root.objectForKey("UIDeviceFamily");
@@ -326,13 +331,44 @@ public class APPIOSApplication {
       }
       rearrangedArray.setValue(index, last);
       root.put("UIDeviceFamily", rearrangedArray);
-      // TODO freynaud is it safe ?
-      BinaryPropertyListWriter.write(plist, root);
+
+
+      write(plist,root,format);
     } catch (Exception e) {
       throw new WebDriverException("Cannot change the default device for the app." + e.getMessage(),
                                    e);
     }
 
+  }
+
+  enum PListFormat{
+    binary,text,xml;
+  }
+
+  private void write(File dest,NSDictionary content,PListFormat format) throws IOException {
+    switch (format){
+      case binary:
+        BinaryPropertyListWriter.write(dest,content);
+      case xml:
+        PropertyListParser.saveAsXML(content,dest);
+      case text:
+        PropertyListParser.saveAsASCII(content,dest);
+    }
+  }
+
+  private PListFormat getFormat(File f) throws IOException {
+      FileInputStream fis = new FileInputStream(f);
+      byte b[] = new byte[8];
+      fis.read(b,0,8);
+      String magicString = new String(b);
+      fis.close();
+      if (magicString.startsWith("bplist")) {
+        return PListFormat.binary;
+      } else if (magicString.trim().startsWith("(") || magicString.trim().startsWith("{") || magicString.trim().startsWith("/")) {
+        return PListFormat.text;
+      } else {
+        return PListFormat.xml;
+      }
   }
 
   public IOSCapabilities getCapabilities() {
