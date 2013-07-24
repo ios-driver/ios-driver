@@ -67,7 +67,6 @@ public class WebKitNotificationListener implements MessageListener {
 
     if (message instanceof ApplicationSentListingMessage) {
       ApplicationSentListingMessage m = (ApplicationSentListingMessage) message;
-      System.out.println(m);
 
       List<WebkitPage> messagePages = m.getPages();
       List<WebkitPage> driverPages = driver.getPages();
@@ -81,7 +80,7 @@ public class WebKitNotificationListener implements MessageListener {
 
       if (session.getApplication().isSafari()) {
         int change = m.getPages().size() - driver.getPages().size();
-        log.warning(
+        log.fine(
             "ApplicationSentListingMessage: message pages: " + m.getPages().size() + ", change: "
             + change);
 
