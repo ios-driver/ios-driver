@@ -70,8 +70,6 @@ public class FlickNHandler extends UIAScriptHandler {
     }
 
     Point toPoint = new Point(fromPoint.getX() + Integer.valueOf(xOffset), fromPoint.getY() + Integer.valueOf(yOffset));
-    Dimension size = driver.getSession(request.getSession()).getNativeDriver().getScreenSize();
-    toPoint = CoordinateUtils.forcePointOnScreen(toPoint, size);
 
     fromPoint = CoordinateUtils.forcePointOnScreen(fromPoint, screenSize);
     toPoint = CoordinateUtils.forcePointOnScreen(toPoint, screenSize);

@@ -272,7 +272,7 @@ public class RemoteIOSDriver extends RemoteWebDriver
     Long height = (Long) size.get("height");
     Long width = (Long) size.get("width");
 
-    return new Dimension(height.intValue(), width.intValue());
+    return new Dimension(width.intValue(), height.intValue());
   }
 
   @Override
