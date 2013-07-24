@@ -77,7 +77,7 @@
         <dependency>
             <groupId>org.uiautomation</groupId>
             <artifactId>ios-driver-jni</artifactId>
-            <version>0.6-SNAPSHOT</version>
+            <version>0.6</version>
         </dependency>
 
 
