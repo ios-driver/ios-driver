@@ -133,6 +133,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
     }
   }
 
+  // TODO freynaud should load english instead ?
   @Test(expectedExceptions = SessionNotCreatedException.class)
   public void recognizeUnsupportedLanguageLocale() {
     RemoteIOSDriver driver = null;
