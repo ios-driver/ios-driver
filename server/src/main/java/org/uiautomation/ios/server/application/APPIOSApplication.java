@@ -83,10 +83,10 @@ public class APPIOSApplication {
   }
 
   public List<String> getSupportedLanguagesCodes() {
-    List<AppleLocale> list = getSupportedLanguages();
+    List<AppleLanguage> list = getSupportedLanguages();
     List<String> res = new ArrayList<String>();
-    for (AppleLocale app : list) {
-      res.add(app.getLocale().toString());
+    for (AppleLanguage lang : list) {
+      res.add(lang.getIsoCode());
     }
     return res;
   }
@@ -94,7 +94,7 @@ public class APPIOSApplication {
   /**
    * get the list of languages the application if localized to.
    */
-  List<AppleLocale> getSupportedLanguages() {
+  List<AppleLanguage> getSupportedLanguages() {
     if (dictionaries.isEmpty()) {
       loadAllContent();
     }
@@ -105,23 +105,23 @@ public class APPIOSApplication {
      * LanguageDictionary(name).getLanguage()); } return new
      * ArrayList<Localizable>(res);
      */
-    List<AppleLocale> res = new ArrayList<AppleLocale>();
+    List<AppleLanguage> res = new ArrayList<AppleLanguage>();
     for (LanguageDictionary dict : dictionaries) {
       res.add(dict.getLanguage());
     }
     return res;
   }
 
-  public AppleLocale getAppleLocaleFromLanguageCode(String languageCode) {
+  public AppleLanguage getLanguage(String languageCode) {
     if (getSupportedLanguages().isEmpty()) {
-      return AppleLocale.emptyLocale(languageCode);
+      return AppleLanguage.emptyLocale(languageCode);
     }
     if (languageCode == null) {
       // default to english if none specified
       languageCode = "en";
     }
-    for (AppleLocale loc : getSupportedLanguages()) {
-      if (languageCode.equals(loc.getLocale().getLanguage())) {
+    for (AppleLanguage loc : getSupportedLanguages()) {
+      if (languageCode.equals(loc.getIsoCode())) {
         return loc;
       }
     }
@@ -129,12 +129,12 @@ public class APPIOSApplication {
   }
 
   public LanguageDictionary getDictionary(String languageCode) throws WebDriverException {
-    return getDictionary(getAppleLocaleFromLanguageCode(languageCode));
+    return getDictionary(AppleLanguage.valueOf(languageCode));
 
   }
 
-  public LanguageDictionary getDictionary(AppleLocale language) throws WebDriverException {
-    if (!language.exist()) {
+  public LanguageDictionary getDictionary(AppleLanguage language) throws WebDriverException {
+    if (!language.exists()) {
       throw new WebDriverException("The application doesn't have any content files.The l10n "
                                    + "features cannot be used.");
     }
@@ -177,7 +177,7 @@ public class APPIOSApplication {
 
   }
 
-  public String translate(ContentResult res, AppleLocale language) throws WebDriverException {
+  public String translate(ContentResult res, AppleLanguage language) throws WebDriverException {
     LanguageDictionary destinationLanguage = getDictionary(language);
     return destinationLanguage.translate(res);
 
@@ -495,7 +495,7 @@ public class APPIOSApplication {
     return "iphonesimulator".equals(getMetadata("DTPlatformName"));
   }
 
-  public IOSRunningApplication createInstance(String language) {
+  public IOSRunningApplication createInstance(AppleLanguage language) {
     return new IOSRunningApplication(language, this);
   }
 

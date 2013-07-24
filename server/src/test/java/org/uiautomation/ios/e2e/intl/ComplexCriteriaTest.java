@@ -24,7 +24,7 @@ public class ComplexCriteriaTest extends BaseIOSDriverTest {
         {"en", "Mountain 1 was first climbed on 29 May 1953 and has a height of 8,848 meters"},
         {"fr",
          "Bien que 8,848 mètres de haut, Montagne 1 aient été montés la première fois 29 May 1953."},
-        {"zh", "山 1 是8,848米高。它第一次攀登了在29 May 1953。"}
+        {"zh-Hant", "山 1 是8,848米高。它第一次攀登了在29 May 1953。"}
     };
   }
 

@@ -20,6 +20,7 @@ import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.Device;
 import org.uiautomation.ios.server.RealDevice;
+import org.uiautomation.ios.server.application.AppleLanguage;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.application.IPAApplication;
 import org.uiautomation.ios.server.simulator.IOSRealDeviceManager;
@@ -81,8 +82,9 @@ public class InstrumentsManager {
     variation = caps.getDeviceVariation();
     sdkVersion = caps.getSDKVersion();
     locale = caps.getLocale();
-    language = application.getAppleLocaleFromLanguageCode(caps.getLanguage())
-        .getAppleLanguagesForPreferencePlist();
+    language = caps.getLanguage();
+    //language = application.getAppleLocaleFromLanguageCode(caps.getLanguage())
+    //    .getAppleLanguagesForPreferencePlist();
     boolean timeHack = caps.isTimeHack();
     List<String> envtParams = caps.getExtraSwitches();
 

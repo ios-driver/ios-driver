@@ -17,6 +17,7 @@ import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.server.application.APPIOSApplication;
+import org.uiautomation.ios.server.application.AppleLanguage;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.application.ResourceCache;
 import org.uiautomation.ios.server.configuration.Configuration;
@@ -130,7 +131,8 @@ public class IOSServerManager {
     for (APPIOSApplication app : getApplicationStore().getApplications()) {
       IOSCapabilities appCapabilities = app.getCapabilities();
       if (APPIOSApplication.canRun(desiredCapabilities, appCapabilities)) {
-        return app.createInstance(desiredCapabilities.getLanguage());
+        AppleLanguage lang = AppleLanguage.create(desiredCapabilities.getLanguage());
+        return app.createInstance(lang);
       }
     }
     throw new SessionNotCreatedException(

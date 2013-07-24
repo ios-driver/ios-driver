@@ -39,7 +39,8 @@ public class LanguageDictionary {
 
   // TODO freynaud
   public static final Form norme = Form.NFKC;
-  private final AppleLocale language;
+  private final AppleLanguage language;
+  private final String folder;
   private final Map<String, String> content = new HashMap<String, String>();
   private static final Logger log = Logger.getLogger(LanguageDictionary.class.getName());
 
@@ -49,8 +50,9 @@ public class LanguageDictionary {
    *
    * @throws WebDriverException if the language isn't recognized.
    */
-  public LanguageDictionary(String lrojName) throws WebDriverException {
-    language = new AppleLocale(lrojName);
+  public LanguageDictionary(String lprojName) throws WebDriverException {
+    folder = lprojName;
+    language = AppleLanguage.create(lprojName);
   }
 
   public List<ContentResult> getPotentialMatches(String string) throws WebDriverException {
@@ -210,7 +212,7 @@ public class LanguageDictionary {
   /**
    * the language this dictionary is for.
    */
-  public AppleLocale getLanguage() {
+  public AppleLanguage getLanguage() {
     return language;
   }
 

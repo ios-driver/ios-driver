@@ -24,7 +24,7 @@ import java.util.List;
 public class ContentResult {
 
   // German
-  private AppleLocale language;
+  private AppleLanguage language;
   // "Shipping from: %@"
   private String key;
 
@@ -35,7 +35,7 @@ public class ContentResult {
 
   private List<String> args = new ArrayList<String>();
 
-  public ContentResult(AppleLocale language, String key, String l10ned, String l10nFormatted) {
+  public ContentResult(AppleLanguage language, String key, String l10ned, String l10nFormatted) {
     this.language = language;
     this.key = key;
     this.l10ned = l10ned;
@@ -91,7 +91,7 @@ public class ContentResult {
     return args;
   }
 
-  public AppleLocale getLanguage() {
+  public AppleLanguage getLanguage() {
     return language;
   }
 

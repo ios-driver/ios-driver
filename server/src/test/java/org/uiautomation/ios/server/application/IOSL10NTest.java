@@ -16,7 +16,7 @@ public class IOSL10NTest {
   public void setup() throws Exception {
 
     APPIOSApplication arch = new APPIOSApplication(SampleApps.getIntlMountainsFile());
-    app = arch.createInstance("en");
+    app = arch.createInstance(AppleLanguage.en);
   }
 
   @Test
@@ -30,7 +30,7 @@ public class IOSL10NTest {
     ContentResult res = results.get(0);
     Assert.assertEquals(res.getArgs().size(), 0);
 
-    String french = app.translate(res, app.getAppleLocaleFromLanguageCode("fr"));
+    String french = app.translate(res, AppleLanguage.fr);
     Assert.assertEquals(french, "Détail de Montagne");
 
   }
@@ -63,7 +63,7 @@ public class IOSL10NTest {
     List<ContentResult> results = app.getDictionary("en").getPotentialMatches(content);
     Assert.assertEquals(results.size(), 1);
 
-    app.translate(results.get(0), app.getAppleLocaleFromLanguageCode("es"));
+    app.translate(results.get(0), AppleLanguage.es);
   }
 
   @Test

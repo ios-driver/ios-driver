@@ -15,14 +15,14 @@ public class LanguageDictionaryTest {
   public void canGuessLegacyNaming() {
     String name = "French";
     LanguageDictionary dict = new LanguageDictionary(name);
-    Assert.assertEquals(dict.getLanguage().getLocale().toString(), "fr");
+    Assert.assertEquals(dict.getLanguage().getIsoCode(), "fr");
   }
 
   @Test
   public void canGuessCurrentNaming() {
     String name = "fr";
     LanguageDictionary dict = new LanguageDictionary(name);
-    Assert.assertEquals(dict.getLanguage().getLocale().toString(), "fr");
+    Assert.assertEquals(dict.getLanguage().getIsoCode(), "fr");
   }
 
 

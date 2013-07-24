@@ -29,6 +29,7 @@ import org.uiautomation.ios.client.uiamodels.impl.ServerSideNativeDriver;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.application.APPIOSApplication;
+import org.uiautomation.ios.server.application.AppleLanguage;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
@@ -97,7 +98,8 @@ public class ServerSideSession extends Session {
         if (appFile.getName().endsWith(".app"))
           desiredCapabilities.setCapability(IOSCapabilities.SIMULATOR, true);
         APPIOSApplication app = APPIOSApplication.createFrom(appFile);
-        application = app.createInstance(desiredCapabilities.getLanguage());
+        AppleLanguage lang = AppleLanguage.valueOf(desiredCapabilities.getLanguage());
+        application = app.createInstance(lang);
       } catch (Exception ex) {
         throw new SessionNotCreatedException("cannot create app from " + appCapability + ": " + ex);
       }
