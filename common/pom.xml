@@ -5,16 +5,16 @@
     <parent>
         <groupId>org.uiautomation</groupId>
         <artifactId>ios-driver</artifactId>
-        <version>0.7.0-SNAPSHOT</version>
+        <version>0.6.1</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>ios-common</artifactId>
 
     <dependencies>
         <dependency>
-            <version>2.31.0</version>
             <artifactId>selenium-remote-driver</artifactId>
             <groupId>org.seleniumhq.selenium</groupId>
+            <version>2.33.0</version>
         </dependency>
         <dependency>
             <groupId>org.webbitserver</groupId>
