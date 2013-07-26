@@ -181,9 +181,6 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
-                    <finalName>ios-server-${project.version}</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
-                    <outputDirectory>../</outputDirectory>
                 </configuration>
             </plugin>
 
