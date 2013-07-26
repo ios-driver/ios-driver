@@ -14,8 +14,7 @@
 
 $(document).ready(function () {
 
-    var inspector = new Inspector("#tree");
-
+    inspector = new Inspector("#tree");
 });
 
 var realOffsetX = 0;
@@ -35,10 +34,11 @@ var to_left = 0;
 var margin = 0;
 var treeAndDetailInPercent = 0.48;
 findFrameSizeInPixels = function () {
-    var width = window.innerWidth;
-    var leftForFrame = width * (1 - treeAndDetailInPercent);
-    return leftForFrame;
-
+    //var width = window.innerWidth;
+    //var leftForFrame = width * (1 - treeAndDetailInPercent);
+    //return leftForFrame;
+    var w = $("#device").width();
+    return w;
 };
 
 var device;
@@ -115,7 +115,7 @@ resize = function () {
         scale = 1;
     }
 
-    $('#simulator').css('-moz-transform', 'scale(' + scale + ')');
+    //$('#simulator').css('-moz-transform', 'scale(' + scale + ')');
     $('#screen').css('top', to_top + 'px');
     $('#screen').css('left', to_left + 'px');
 
@@ -138,7 +138,8 @@ resize = function () {
         realOffsetY = margin + to_left;
         width = frame_h;
 
-    } else if (orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPELEFT' || orientation ==='LANDSCAPE' ) {
+    } else if (orientation === 'UIA_DEVICE_ORIENTATION_LANDSCAPELEFT' || orientation
+        === 'LANDSCAPE') {
         angle = -90;
         $('#rotationCenter').css('left', margin + 'px');
         $('#rotationCenter').css('top', (frame_w + margin) + 'px');
@@ -148,7 +149,7 @@ resize = function () {
         realOffsetY = margin + to_left;
         width = frame_h;
 
-    } else if (orientation === 'UIA_DEVICE_ORIENTATION_PORTRAIT' || orientation ==='PORTRAIT') {
+    } else if (orientation === 'UIA_DEVICE_ORIENTATION_PORTRAIT' || orientation === 'PORTRAIT') {
         angle = 0;
         $('#rotationCenter').css('left', margin + 'px');
         $('#rotationCenter').css('top', margin + 'px');
@@ -166,6 +167,10 @@ resize = function () {
     $('#mouseOver').css('width', mouseOver_w + 'px');
 
     $('#rotationCenter').css('-moz-transform', 'rotate(' + angle + 'deg)');
+    $('#rotationCenter').css('-webkit-transform', 'rotate(' + angle + 'deg)');
+
+    $('#rotationCenter').css('-moz-transform', 'scale(' + scale + ')');
+    $('#rotationCenter').css('-webkit-transform', 'scale(' + scale + ')');
 
 };
 

@@ -127,7 +127,7 @@ public class WebKitNotificationListener implements MessageListener {
           }
         // a page disappeared, the driver needs to know.
         }else if (change <0){
-          List<WebkitPage> old = new ArrayList<>();
+          List<WebkitPage> old = new ArrayList<WebkitPage>();
           old.addAll(driver.getPages());
 
           for (WebkitPage p : m.getPages()){

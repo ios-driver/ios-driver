@@ -273,7 +273,10 @@ public enum WebDriverLikeCommand {
   PICKER_WHEEL_SET_VALUE ("POST", "/session/:sessionId/uiaElement/:reference/value", Void.class),
 
   //UIASwitch
-  NATIVE_SWITCH_SET_VALUE("POST", "/session/:sessionId/uiaElement/:reference/setSwitchValue", Void.class);
+  NATIVE_SWITCH_SET_VALUE("POST", "/session/:sessionId/uiaElement/:reference/setSwitchValue", Void.class),
+
+  //UIASlider
+  SLIDER_DRAG_TO_VALUE("POST", "/session/:sessionId/uiaElement/:reference/dragToValue", Void.class);
 
 
   private final String method;

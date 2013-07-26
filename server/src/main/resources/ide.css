@@ -22,8 +22,8 @@ h4 {
 
 #simulator {
     position: absolute;
-    margin-top: 45px;
     left: 0px;
+    top: 0px;
     float: left;
     margin-bottom: 6em;
     min-height: 95%;
@@ -49,19 +49,16 @@ to have the rotate of the top left corner. */
 
 #screen {
     position: absolute;
+    z-index: 2;
+}
+
+#screenshot {
+    z-index: 3;
 }
 
 #mouseOver {
     position: absolute;
     z-index: 4;
-}
-
-#tree {
-    height: 100%;
-    float: right;
-    width: 23%;
-    overflow: auto;
-    margin-top: 0px;
 }
 
 #details {
@@ -80,27 +77,8 @@ to have the rotate of the top left corner. */
     height: 100%;
 }
 
-#xpathHelper {
-    padding-top: 0.2%;
-    padding-left: 0.2%;
-    position: absolute;
-    background: #455372;;
-    width: 29.8%;
-    height: 55px;
-    top: 40px;
-    left: 30%;
-    z-index: 0;
-    color: #FFFFFF;
-    font-size: 90%;
-}
-
-#xpathHelper input {
-    width: 90%;
-
-}
-
 #xpathLog {
-    margin-top 4px;
+    margin-top: 4px;
 }
 
 #topmenu {
@@ -274,13 +252,6 @@ a.boxclosehtml {
     width: 100%;
     max-height: 100px; /* Height of the footer */
     background: #6cf;
-}
-
-#tabs {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    max-height: 100px;
 }
 
 .tab {

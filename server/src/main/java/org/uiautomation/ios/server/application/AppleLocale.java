@@ -534,7 +534,6 @@ public enum AppleLocale {
   mn("Mongolian"),
   bo("Tibetan"),
   vai_Latn_LR("Vai (Latin, Liberia)");
-
   private final String desc;
 
   private AppleLocale(String desc) {

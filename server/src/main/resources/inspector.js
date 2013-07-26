@@ -71,6 +71,11 @@ Inspector.prototype.init = function () {
     });
 
     $(document).keydown(function (e) {
+
+        console.log("keyboardDisplayed" + me.keyboardDisplayed);
+        if (me.keyboardDisplayed) {
+            // console.log("keyboardDisplayed");
+        }
         var ESC_KEY = 27;
         if (e.ctrlKey) {
             me.toggleLock();
@@ -133,7 +138,7 @@ Inspector.prototype.onNodeMouseOver = function (e, data) {
 Inspector.prototype.onTreeLoaded = function (event, data) {
     this.root = this.jstree.jstree('get_json')[0];
     this.xml = this.root.metadata.xml;
-
+    this.keyboardDisplayed = this.root.metadata.keyboard;
     var webView = this.extractWebView(this.getRootNode());
     if (webView != null) {
         setHTMLSource(webView.metadata.source);
@@ -260,7 +265,7 @@ Inspector.prototype.highlight = function (x, y, h, w, translationFound, ref) {
         var d = $("<div></div>", {
             "class": "hightlight"
         });
-        d.appendTo("#simulator");
+        d.appendTo("#rotationCenter");
 
         d.css('border', "1px solid red");
         d.css('left', x + realOffsetX + 'px');
@@ -379,10 +384,14 @@ Inspector.prototype.findElementsByXpath2 = function (xpath) {
 Inspector.prototype.onMouseMove = function (event) {
 
     if (!this.lock) {
-        var x = event.pageX / scale - realOffsetX;
-        var y = event.pageY / scale - (realOffsetY + 45);
-        // x = x / scale;
-        // y = y / scale;
+        //var x = event.pageX / scale - realOffsetX;
+        //var y = event.pageY / scale - (realOffsetY + 45);
+        var parentOffset = $("#mouseOver").offset();
+        //or $(this).offset(); if you really just want the current element's offset
+        var x = event.pageX - parentOffset.left;
+        var y = event.pageY - parentOffset.top;
+        x = x / scale;
+        y = y / scale;
         console.log(x + "," + y);
         var finder = new NodeFinder(this.root);
         var node = finder.getNodeByPosition(x, y);
@@ -401,14 +410,15 @@ Inspector.prototype.onMouseMove = function (event) {
  */
 Inspector.prototype.onMouseClick = function (event) {
 
-    console.log("Is busy " + this.busy);
     if (this.recorder.on && !this.busy) {
         this.busy = true;
-        console.log("Record click");
-        var x = event.pageX / scale - realOffsetX;
-        var y = event.pageY / scale - (realOffsetY + 45);
-        // x = x / scale;
-        // y = y / scale;
+        var parentOffset = $("#mouseOver").offset();
+        //or $(this).offset(); if you really just want the current element's offset
+        var x = event.pageX - parentOffset.left;
+        var y = event.pageY - parentOffset.top;
+        x = x / scale;
+        y = y / scale;
+        console.log(x + "," + y);
         var finder = new NodeFinder(this.root);
         var node = finder.getNodeByPosition(x, y);
         if (node) {
@@ -501,6 +511,11 @@ Inspector.prototype.toggleXPath = function (force) {
 
     if (show) {
         this.xpathMode = true;
+
+        $("#xpathHelper").dialog({
+                                     resizable: false,
+                                     dialogClass: "no-close"
+                                 });
         $("#xpathHelper").show();
         $("#xpathInput").focus();
     } else {
@@ -567,6 +582,7 @@ function NodeFinder(rootNode) {
                     if (correctOne) {
                         return correctOne;
                     }
+
                 }
             }
         }

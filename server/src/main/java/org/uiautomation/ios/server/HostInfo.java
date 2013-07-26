@@ -48,7 +48,7 @@ public class HostInfo {
       xCodeInstall = ClassicCommands.getXCodeInstall();
     } else {
       simulatorVersion = "";
-      installedSimulators = new ArrayList<>();
+      installedSimulators = new ArrayList<String>();
       xCodeInstall = null;
     }
   }
