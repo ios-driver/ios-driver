@@ -1,1 +1,3 @@
-language: java
+language: 
+  - java
+  - objective-c
