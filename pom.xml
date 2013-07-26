@@ -15,6 +15,7 @@
         <module>common</module>
         <module>client</module>
         <module>server</module>
+        <module>libimobile-java</module>
         <module>ios-selenium-tests</module>
         <module>grid</module>
     </modules>
