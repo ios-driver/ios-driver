@@ -1,3 +1,2 @@
-language: 
-  - objective-c
-  - java
+language: objective-c
+script: mvn test
