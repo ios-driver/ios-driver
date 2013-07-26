@@ -28,26 +28,27 @@ public class Demo {
 
 
   public static void main(String[] args) throws Exception {
-    String[] a = {"-port", "4444", "-host", "localhost",
-                  "-aut", SampleApps.getUICatalogFile(),
-                  "-aut", SampleApps.getUICatalogIpad(),
-                  "-beta",
-                  "-folder", "applications", "-simulators"};
+    String[] a = {"-port", "5555", "-host", "127.0.0.1",
+                  //"-aut", SampleApps.getUICatalogFile(),
+                  //"-aut", SampleApps.getUICatalogIpad(),
+                  //"-beta",
+                  "-folder", "applications", "-simulators",
+        "-hub", "http://127.0.0.1:4444/grid/register"};
     IOSServerConfiguration config = IOSServerConfiguration.create(a);
 
     IOSServer server = new IOSServer(config);
     server.start();
 
-    /*IOSCapabilities cap = IOSCapabilities.iphone("Chrome");
-    cap.setCapability(IOSCapabilities.SIMULATOR, false);
-
-    RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), cap);
-    driver.findElement(By.xpath("//UIAWindow"));
-    driver.quit();
-
-    driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), cap);
-    driver.findElement(By.xpath("//UIAWindow"));
-    driver.quit(); */
+//    IOSCapabilities cap = IOSCapabilities.iphone("Safari");
+//    cap.setCapability(IOSCapabilities.SIMULATOR, true);
+//
+//    RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), cap);
+//    driver.findElement(By.xpath("//UIAWindow"));
+//    driver.quit();
+//
+//    driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), cap);
+//    driver.findElement(By.xpath("//UIAWindow"));
+//    driver.quit();
 
   }
 
