@@ -50,7 +50,7 @@ import java.util.Set;
 // TakesScreenshot, Rotatable, BrowserConnection, HasTouchScreen, WebStorage, LocationContext, ApplicationCache
 public class RemoteIOSDriver extends RemoteWebDriver
     implements TakesScreenshot, Rotatable, LocationContext, ElementTree,
-    IOSSearchContext, Configurable, HasTouchScreen {
+               IOSSearchContext, Configurable, HasTouchScreen {
 
   private String remoteURL;
   private Map<String, Object> requestedCapabilities;
@@ -111,8 +111,8 @@ public class RemoteIOSDriver extends RemoteWebDriver
     }
 
     WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.ELEMENT_ROOT,
-        ImmutableMap
-            .of("using", by, "value", using));
+                                                         ImmutableMap
+                                                             .of("using", by, "value", using));
     return executor.execute(request);
 
   }
@@ -124,8 +124,8 @@ public class RemoteIOSDriver extends RemoteWebDriver
     }
 
     WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.ELEMENTS_ROOT,
-        ImmutableMap
-            .of("using", by, "value", using));
+                                                         ImmutableMap
+                                                             .of("using", by, "value", using));
     return executor.execute(request);
   }
 
@@ -178,12 +178,12 @@ public class RemoteIOSDriver extends RemoteWebDriver
 
   @Override
   public Keyboard getKeyboard() {
-    return super.getKeyboard();
-    /*WebDriverLikeRequest
+    //return super.getKeyboard();
+    WebDriverLikeRequest
         request =
         executor.buildRequest(WebDriverLikeCommand.KEYBOARD, RemoteUIAElement.getFrontMostApp(this),
                               null);
-    return executor.execute(request);  */
+    return executor.execute(request);
   }
 
   /*@Override
@@ -222,7 +222,7 @@ public class RemoteIOSDriver extends RemoteWebDriver
     WebDriverLikeRequest
         request =
         executor.buildRequest(WebDriverLikeCommand.SET_ORIENTATION,
-            ImmutableMap.of("orientation", orientation));
+                              ImmutableMap.of("orientation", orientation));
     executor.execute(request);
   }
 
@@ -230,7 +230,7 @@ public class RemoteIOSDriver extends RemoteWebDriver
     WebDriverLikeRequest
         request =
         executor.buildRequest(WebDriverLikeCommand.SET_ORIENTATION,
-            ImmutableMap.of("orientation", orientation));
+                              ImmutableMap.of("orientation", orientation));
     executor.execute(request);
   }
 
@@ -276,10 +276,10 @@ public class RemoteIOSDriver extends RemoteWebDriver
   public static JSONObject logElementTree(WebDriverLikeCommandExecutor executor, File screenshot,
                                           boolean translation) {
     WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.TREE_ROOT,
-        ImmutableMap
-            .of("attachScreenshot",
-                screenshot != null,
-                "translation", translation));
+                                                         ImmutableMap
+                                                             .of("attachScreenshot",
+                                                                 screenshot != null,
+                                                                 "translation", translation));
     JSONObject log = executor.execute(request);
     if (screenshot != null) {
       JSONObject screen = log.optJSONObject("screenshot");
@@ -292,18 +292,18 @@ public class RemoteIOSDriver extends RemoteWebDriver
 
   public static List<UIAElement> findElements(WebDriverLikeCommandExecutor executor, Criteria c) {
     WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.ELEMENTS_ROOT,
-        ImmutableMap
-            .of("depth", -1, "criteria",
-                c.stringify()));
+                                                         ImmutableMap
+                                                             .of("depth", -1, "criteria",
+                                                                 c.stringify()));
     return executor.execute(request);
   }
 
   public static <T extends UIAElement> T findElement(WebDriverLikeCommandExecutor executor,
                                                      Criteria c) {
     WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.ELEMENT_ROOT,
-        ImmutableMap
-            .of("depth", -1, "criteria",
-                c.stringify()));
+                                                         ImmutableMap
+                                                             .of("depth", -1, "criteria",
+                                                                 c.stringify()));
     return executor.execute(request);
   }
 
@@ -326,7 +326,7 @@ public class RemoteIOSDriver extends RemoteWebDriver
         request =
         executor
             .buildRequest(WebDriverLikeCommand.CONFIGURE, null, ImmutableMap.of(key, value),
-                ImmutableMap.of("command", command.toString()));
+                          ImmutableMap.of("command", command.toString()));
     executor.execute(request);
   }
 
