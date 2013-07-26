@@ -282,8 +282,8 @@ public abstract class BaseWebInspector implements MessageListener {
         arguments.put(new JSONObject().put("objectId", document.getRemoteObject().getId()));
         arguments.put(new JSONObject().put("objectId", window.getRemoteObject().getId()));
 
-        script = script.replace(" document", " arguments[" + nbParam + "]");
-        script = script.replace(" window", "  arguments[" + (nbParam + 1) + "]");
+        String contextObject = "{'document': arguments[" + nbParam + "], 'window': arguments[" + (nbParam + 1) + "]}";
+        script = "with (" + contextObject + ") {" + script + "}";
 
       }
 
@@ -422,7 +422,6 @@ public abstract class BaseWebInspector implements MessageListener {
     return dim;
 
   }
-
 
   public RemoteWebElement findElementByCSSSelector(String cssSelector) {
     RemoteWebElement document = getDocument();
@@ -595,7 +594,6 @@ public abstract class BaseWebInspector implements MessageListener {
       throw new WebDriverException(e);
     }
   }
-
 
   public void highlightNode(NodeId nodeId) {
     sendCommand(DOM.highlightNode(nodeId));

@@ -33,7 +33,7 @@ public class ActionSheetTest extends BaseIOSDriverTest {
 
   @BeforeClass
   public void startDriver() {
-    driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
+    driver = getDriver(SampleApps.uiCatalogCap());
     goToAlertScreen();
   }
 

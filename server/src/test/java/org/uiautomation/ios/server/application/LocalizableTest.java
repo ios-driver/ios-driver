@@ -1,6 +1,5 @@
 package org.uiautomation.ios.server.application;
 
-import org.openqa.selenium.WebDriverException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -8,14 +7,14 @@ public class LocalizableTest {
 
   @Test
   public void mappingOK() {
-    AppleLocale fr = new AppleLocale("fr");
-    AppleLocale fr2 = new AppleLocale("French");
+    AppleLanguage fr = AppleLanguage.create("fr");
+    AppleLanguage fr2 = AppleLanguage.create("French");
     Assert.assertEquals(fr2, fr);
   }
 
   @Test
   public void doesntExistThrowsException() {
-    AppleLocale kg = new AppleLocale("Klingon");
+    AppleLanguage kg = AppleLanguage.create("Klingon");
     Assert.assertNotNull(kg);
   }
 

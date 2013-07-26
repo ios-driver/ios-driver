@@ -83,12 +83,20 @@ public class WebKitNotificationListener implements MessageListener {
         log.fine(
             "ApplicationSentListingMessage: message pages: " + m.getPages().size() + ", change: "
             + change);
-        if (change != 0) {
+
+
+        // a new page appeared. The driver needs to know.
+        if (change >0) {
           List<WebkitPage> pages = new ArrayList<WebkitPage>();
+          // keep all the pages currently known to the driver
           pages.addAll(driver.getPages());
+
+          // remove all the pages we already know of from the message
           for (WebkitPage p : driver.getPages()) {
             m.getPages().remove(p);
           }
+
+
           if (m.getPages().size() == 0) {
             throw new WebDriverException(m.getPages().size() + " new pages.");
           }
@@ -102,7 +110,6 @@ public class WebKitNotificationListener implements MessageListener {
           pages.add(index, newOne);
 
           driver.setPages(pages);
-          sync.signalSimSentPages();
 
           if (driver.getPages().size() == 0) {
             //log.fine("first page. Nothing to do.");
@@ -118,10 +125,35 @@ public class WebKitNotificationListener implements MessageListener {
               driver.switchTo(focus);
             }
           }
+        // a page disappeared, the driver needs to know.
+        }else if (change <0){
+          List<WebkitPage> old = new ArrayList<WebkitPage>();
+          old.addAll(driver.getPages());
+
+          for (WebkitPage p : m.getPages()){
+            old.remove(p);
+          }
+
+          // TODO freynaud problem here.How to handle a window disappearing without loosing the state
+          // of the currently selected page. driver.getPages() may need to become mutable again.
+          // in the normal case, this is the page with the focus that is closed, so loosing the state
+          // is ok. But for the extra window automatically closed ( ie the "there is an app for that
+          // page, downlaod it on itune" page header, the header disappears when driver.get navigates
+          // to a new page. The header disapeearing shouldn't impact the current state.
+          for( WebkitPage p : old){
+            log.fine("the page "+p +" has been deleted and must be removed from the driver cache");
+            int currentFocus = driver.getCurrentPageID();
+            if (p.getPageId() == currentFocus){
+              log.fine("the page deleted is the one with the focus.");
+            }else{
+              driver.setPages(m.getPages());
+            }
+          }
         }
+
+        sync.signalSimSentPages();
       } else {
         driver.setPages(messagePages);
-        sync.signalSimSentPages();
         if (messagePages.size() > 0) {
           if (session != null) {
             waitForWindowSwitchingAnimation();
@@ -131,9 +163,8 @@ public class WebKitNotificationListener implements MessageListener {
             driver.switchTo(focus);
           }
         }
+        sync.signalSimSentPages();
       }
-
-
     }
 
     if (message instanceof ApplicationDataMessage) {

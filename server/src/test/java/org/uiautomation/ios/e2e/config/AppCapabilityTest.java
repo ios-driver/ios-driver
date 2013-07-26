@@ -24,7 +24,7 @@ public final class AppCapabilityTest {
 
   @BeforeClass
   public void startServer() throws Exception {
-    String[] args = {"-beta", "-port", "4444", "-host", "localhost" };
+    String[] args = {"-beta", "-port", "4444", "-host", "localhost", "-simulators"};
     config = IOSServerConfiguration.create(args);
 
     server = new IOSServer(config);

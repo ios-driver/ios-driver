@@ -69,6 +69,7 @@ public class IOSCapabilities extends DesiredCapabilities {
   public static final String ELEMENT_TREE = "elementTree";
   public static final String IOS_SEARCH_CONTEXT = "iosSearchContext";
   public static final String UUID = "uuid";
+  public static final String IOS_TOUCH_SCREEN = "iosTouchScreen";
 
   // default selenium bindings for mobile safari
   public static final String BROWSER_NAME = "browserName";
@@ -151,7 +152,7 @@ public class IOSCapabilities extends DesiredCapabilities {
     while (iter.hasNext()) {
       String key = iter.next();
       Object value = json.get(key);
-      if (BROWSER_NAME.equalsIgnoreCase(key)) {
+      if (BROWSER_NAME.equalsIgnoreCase(key) && json.isNull(BUNDLE_NAME)) {
         setCapability(BUNDLE_NAME, "Safari");
         if (((String) value).equalsIgnoreCase("iphone")) {
           setCapability(DEVICE, "iphone");

@@ -29,11 +29,13 @@ import org.uiautomation.ios.client.uiamodels.impl.ServerSideNativeDriver;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.application.APPIOSApplication;
+import org.uiautomation.ios.server.application.AppleLanguage;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
 import org.uiautomation.ios.server.instruments.InstrumentsManager;
+import org.uiautomation.ios.server.utils.IOSVersion;
 import org.uiautomation.ios.server.utils.ZipUtils;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
@@ -96,7 +98,8 @@ public class ServerSideSession extends Session {
         if (appFile.getName().endsWith(".app"))
           desiredCapabilities.setCapability(IOSCapabilities.SIMULATOR, true);
         APPIOSApplication app = APPIOSApplication.createFrom(appFile);
-        application = app.createInstance(desiredCapabilities.getLanguage());
+        AppleLanguage lang = AppleLanguage.valueOf(desiredCapabilities.getLanguage());
+        application = app.createInstance(lang);
       } catch (Exception ex) {
         throw new SessionNotCreatedException("cannot create app from " + appCapability + ": " + ex);
       }
@@ -117,9 +120,9 @@ public class ServerSideSession extends Session {
         capabilities.setSDKVersion(ClassicCommands.getDefaultSDK());
       } else {
         String version = capabilities.getSDKVersion();
-        Float v = Float.parseFloat(version);
-        if (v < 5) {
-          throw new SessionNotCreatedException(v + " is too old. Only support SDK 5.0 and above.");
+
+        if (!new IOSVersion(version).isGreaterOrEqualTo("5.0")) {
+          throw new SessionNotCreatedException(version + " is too old. Only support SDK 5.0 and above.");
         }
         if (!driver.getHostInfo().getInstalledSDKs().contains(version)) {
           throw new SessionNotCreatedException(
@@ -246,11 +249,10 @@ public class ServerSideSession extends Session {
   public synchronized RemoteIOSWebDriver getRemoteWebDriver() {
     if (webDriver == null) {
       String version = capabilities.getSDKVersion();
-      Float v = Float.parseFloat(version);
-      if (v >= 6) {
+      if (new IOSVersion(version).isGreaterOrEqualTo("6.0")) {
         webDriver = new RemoteIOSWebDriver(this, new AlertDetector(nativeDriver));
       } else {
-        log.warning("Cannot create a driver. Version too old " + v);
+        log.warning("Cannot create a driver. Version too old " + version);
       }
     }
     return webDriver;
@@ -292,9 +294,9 @@ public class ServerSideSession extends Session {
 
 
   public void restartWebkit() {
+    int currentPageID = webDriver.getCurrentPageID();
     webDriver.stop();
-    webDriver = null;
     webDriver = new RemoteIOSWebDriver(this, new AlertDetector(nativeDriver));
-    webDriver.switchTo(webDriver.getPages().get(0));
+    webDriver.switchTo(String.valueOf(currentPageID));
   }
 }

@@ -53,7 +53,9 @@ public enum IosAtoms {
   SUBMIT("submit_ios.js"),
   TYPE("type_ios.js"),
   XPATH("xpath_ios.js"),
-  XPATHS("xpaths_ios.js"),;
+  XPATHS("xpaths_ios.js"),
+  GET_SIZE("getElementSize_ios.js"),
+  ;
 
   private final String value;
 

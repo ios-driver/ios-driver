@@ -26,6 +26,7 @@ import org.uiautomation.ios.inspector.IDEServlet;
 import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.server.grid.RegistrationRequest;
+import org.uiautomation.ios.server.grid.SelfRegisteringRemote;
 import org.uiautomation.ios.server.servlet.ApplicationsServlet;
 import org.uiautomation.ios.server.servlet.ArchiveServlet;
 import org.uiautomation.ios.server.servlet.CapabilitiesServlet;
@@ -67,10 +68,8 @@ public class IOSServer {
     IOSServerConfiguration options = server.getOptions();
     IOSServerManager driver = server.getDriver();
     if (options.getRegistrationURL() != null) {
-      RegistrationRequest
-          request =
-          new RegistrationRequest(options, driver);
-      request.registerToHub();
+      SelfRegisteringRemote selfRegisteringRemote = new SelfRegisteringRemote(options, driver);
+      selfRegisteringRemote.startRegistrationProcess();
     }
   }
 
@@ -91,6 +90,7 @@ public class IOSServer {
   private void init(IOSServerConfiguration options) {
     this.options = options;
     Configuration.BETA_FEATURE = options.isBeta();
+    Configuration.SIMULATORS_ENABLED = options.hasSimulators();
     server = new Server(new InetSocketAddress("0.0.0.0", options.getPort()));
 
     ServletContextHandler wd = new ServletContextHandler(server, "/wd/hub", true, false);
@@ -133,6 +133,7 @@ public class IOSServer {
 
     StringBuilder b = new StringBuilder();
     b.append("\nBeta features enabled ( enabled by -beta flag ): " + Configuration.BETA_FEATURE);
+    b.append("\nSimulator enabled ( enabled by -simulators flag): " + Configuration.SIMULATORS_ENABLED);
     b.append("\nInspector: http://0.0.0.0:" + options.getPort() + "/inspector/");
     b.append("\ntests can access the server at http://0.0.0.0:" + options.getPort() + "/wd/hub");
     b.append("\nserver status: http://0.0.0.0:" + options.getPort() + "/wd/hub/status");
@@ -140,31 +141,17 @@ public class IOSServer {
     b.append("\nApplications: http://0.0.0.0:" + options.getPort() + "/wd/hub/applications/all");
     b.append("\nCapabilities: http://0.0.0.0:" + options.getPort() + "/wd/hub/capabilities/all");
     b.append("\nMonitoring '" + options.getAppFolderToMonitor() + "' for new applications");
-    b.append("\nusing xcode install : " + driver.getHostInfo().getXCodeInstall());
-    b.append("\nusing IOS version " + driver.getHostInfo().getSDK());
     b.append("\nArchived apps " + driver.getApplicationStore().getFolder().getAbsolutePath());
 
-    boolean safari = false;
-    // automatically add safari for SDK 6.0 and above.
-    for (String s : driver.getHostInfo().getInstalledSDKs()) {
-      Float version = Float.parseFloat(s);
-      if (version >= 6L) {
-        safari = true;
-        driver.addSupportedApplication(
-            APPIOSApplication.findSafariLocation(driver.getHostInfo().getXCodeInstall(), s));
-      }
-    }
-    if (safari) {
-      b.append("\nios >= 6.0. Safari and hybrid apps are supported.");
-    } else {
-      b.append("\nios < 6.0. Safari and hybrid apps are NOT supported.");
+    if (Configuration.SIMULATORS_ENABLED) {
+      addSimulatorDetails(b);
     }
 
     b.append("\n\nApplications :\n--------------- \n");
     for (APPIOSApplication app : driver.getSupportedApplications()) {
       b.append("\tCFBundleName=" + (app.getMetadata(IOSCapabilities.BUNDLE_NAME).isEmpty() ? app
           .getMetadata(IOSCapabilities.BUNDLE_DISPLAY_NAME) : app
-                                        .getMetadata(IOSCapabilities.BUNDLE_NAME)));
+          .getMetadata(IOSCapabilities.BUNDLE_NAME)));
       String version = app.getMetadata(IOSCapabilities.BUNDLE_VERSION);
       if (version != null && !version.isEmpty()) {
         b.append(",CFBundleVersion=" + version);
@@ -186,6 +173,27 @@ public class IOSServer {
       }
     });
 
+  }
+
+  private void addSimulatorDetails(StringBuilder b) {
+    b.append("\nusing xcode install : " + driver.getHostInfo().getXCodeInstall());
+    b.append("\nusing IOS version " + driver.getHostInfo().getSDK());
+
+    boolean safari = false;
+    // automatically add safari for SDK 6.0 and above.
+    for (String s : driver.getHostInfo().getInstalledSDKs()) {
+      Float version = Float.parseFloat(s);
+      if (version >= 6L) {
+        safari = true;
+        driver.addSupportedApplication(
+            APPIOSApplication.findSafariLocation(driver.getHostInfo().getXCodeInstall(), s));
+      }
+    }
+    if (safari) {
+      b.append("\nios >= 6.0. Safari and hybrid apps are supported.");
+    } else {
+      b.append("\nios < 6.0. Safari and hybrid apps are NOT supported.");
+    }
   }
 
   private void startFolderMonitor() {

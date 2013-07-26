@@ -33,14 +33,15 @@ public class PinchCloseNHandler extends UIAScriptHandler {
   public PinchCloseNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
 
-    Object payload = request.getPayload();
+    JSONObject payload = request.getPayload();
+
     String js = template
         .replace(":sessionId", request.getSession())
-        .replace(":x1", "310")
-        .replace(":y1", "410")
-        .replace(":x2", "10")
-        .replace(":y2", "25")
-        .replace(":duration", "1");
+        .replace(":x1", payload.optString("fromX"))
+        .replace(":y1", payload.optString("fromY"))
+        .replace(":x2", payload.optString("toX"))
+        .replace(":y2", payload.optString("toY"))
+        .replace(":duration", payload.optString("duration"));
     setJS(js);
   }
 

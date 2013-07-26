@@ -24,34 +24,7 @@ import org.uiautomation.ios.server.command.Handler;
 import org.uiautomation.ios.server.command.NotImplementedNativeHandler;
 import org.uiautomation.ios.server.command.NotImplementedWebHandler;
 import org.uiautomation.ios.server.command.uiautomation.*;
-import org.uiautomation.ios.server.command.web.BackHandler;
-import org.uiautomation.ios.server.command.web.ClearHandler;
-import org.uiautomation.ios.server.command.web.ClickHandler;
-import org.uiautomation.ios.server.command.web.CssPropertyHandler;
-import org.uiautomation.ios.server.command.web.DeleteAllCookiesHandler;
-import org.uiautomation.ios.server.command.web.DeleteCookieByNameHandler;
-import org.uiautomation.ios.server.command.web.ExecuteScriptHandler;
-import org.uiautomation.ios.server.command.web.FindElementHandler;
-import org.uiautomation.ios.server.command.web.FindElementsHandler;
-import org.uiautomation.ios.server.command.web.ForwardHandler;
-import org.uiautomation.ios.server.command.web.GetAttributeHandler;
-import org.uiautomation.ios.server.command.web.GetCookiesHandler;
-import org.uiautomation.ios.server.command.web.GetHandler;
-import org.uiautomation.ios.server.command.web.GetPageSourceHandler;
-import org.uiautomation.ios.server.command.web.GetTagNameHandler;
-import org.uiautomation.ios.server.command.web.GetTextHandler;
-import org.uiautomation.ios.server.command.web.GetTitleHandler;
-import org.uiautomation.ios.server.command.web.GetURL;
-import org.uiautomation.ios.server.command.web.IsDisplayedHanlder;
-import org.uiautomation.ios.server.command.web.IsEnabledHandler;
-import org.uiautomation.ios.server.command.web.IsEqualHandler;
-import org.uiautomation.ios.server.command.web.IsSelectedHandler;
-import org.uiautomation.ios.server.command.web.RefreshHandler;
-import org.uiautomation.ios.server.command.web.SetFrameHandler;
-import org.uiautomation.ios.server.command.web.SetImplicitWaitTimeoutHandler;
-import org.uiautomation.ios.server.command.web.SetTimeoutHandler;
-import org.uiautomation.ios.server.command.web.SetValueHandler;
-import org.uiautomation.ios.server.command.web.SubmitHandler;
+import org.uiautomation.ios.server.command.web.*;
 
 import java.lang.reflect.Constructor;
 import java.util.Iterator;
@@ -84,8 +57,6 @@ public enum CommandMapping {
   TAG_NAME(".type()", DefaultUIAScriptNHandler.class, GetTagNameHandler.class),
   EXECUTE_SCRIPT(ExecuteScriptNHandler.class, ExecuteScriptHandler.class),
   EQUAL(NotImplementedNativeHandler.class, IsEqualHandler.class),
-  // UIATarget
-
   SOURCE(LogElementTreeNHandler.class, GetPageSourceHandler.class),
   TREE(LogElementTreeNHandler.class),
   TREE_ROOT(LogElementTreeNHandler.class),
@@ -96,6 +67,14 @@ public enum CommandMapping {
   TARGET_TAP(".tap({x::x,y::y})"),
   SET_ORIENTATION(SetOrientationNHandler.class),
   GET_ORIENTATION(GetOrientationNHandler.class),
+  DRAG_FROM_TO_FOR_DURATION(DragFromToForDurationNHander.class),
+  PINCH_CLOSE_FROM_TO_FOR_DURATION(PinchCloseNHandler.class, NotImplementedWebHandler.class),
+  PINCH_OPEN_FROM_TO_FOR_DURATION(PinchOpenNHandler.class, NotImplementedWebHandler.class),
+
+
+
+  WINDOW_SIZE(GetScreenSizeNHandler.class, GetPageSizeHandler.class),
+  GET_SCREENRECT(GetScreenSizeNHandler.class),
 
   SCREENSHOT(TakeScreenshotNHandler.class),
 
@@ -130,16 +109,17 @@ public enum CommandMapping {
 
   DISPLAYED(IsVisibleNHandler.class, IsDisplayedHanlder.class),
   ENABLED(IsEnabledNHandler.class, IsEnabledHandler.class),
-  //IS_STALE(".isStale()"),
+  LOCATION(null, null, GetLocationHandler.class),
 
-  //LABEL(".label()"),
-  //NAME(".name()"),
-  //VALUE(".value()"),
+  LOG(NotImplementedNativeHandler.class, LogHandler.class),
+  LOG_TYPES(NotImplementedNativeHandler.class, LogTypesHandler.class),
+
+  SCROLL(ScrollHandler.class),
+  LONG_TAP(LongTapHandler.class),
+  TAP(TapHandler.class),
+  DOUBLE_TAP(DoubleTapHandler.class),
   ATTRIBUTE(GetAttributeNHandler.class, GetAttributeHandler.class),
   TEXT(null, null, GetTextHandler.class),
-  //WITH_NAME(".withName(:name)"),
-  //WITH_PREDICATE(".withPredicate(PredicateString predicateString)"),
-  //WITH_VALUE_FOR_KEY(".withValueForKey(Object value,String key)"),
   CSS(NotImplementedNativeHandler.class, CssPropertyHandler.class),
 
   CLICK(".tap()", ClickHandler.class),
@@ -147,22 +127,17 @@ public enum CommandMapping {
   //GET_LOCATION(GetLocationNHandler.class),
   SET_LOCATION(SetLocationNHandler.class),
 
-  TOUCH_AND_HOLD(".touchAndHold(:duration)"),
-  DOUBLE_TAP(".doubleTap()"),
+  NATIVE_TOUCH_AND_HOLD(TouchAndHoldNHandler.class),
+  NATIVE_DOUBLE_TAP(".doubleTap()"),
   TWO_FINGER_TAP(".twoFingerTap()"),
-  //TAP_WITH_OPTIONS(""),
-  //DRAG_INSIDE_WITH_OPTIONS(""),
-  //FLICK_INSIDE_WITH_OPTIONS(""),
-  SCROLL_TO_VISIBLE(".scrollToVisible()"),
-  //ROTATE_WITH_OPTIONS(NotImplementedNativeHandler.class, NotImplementedWebHandler.class),
-  //PINCH_CLOSE(PinchCloseNHandler.class, NotImplementedWebHandler.class),
-  SCROLL_UP(".scrollUp()"),
-  SCROLL_DOWN(".scrollDown()"),
-  SCROLL_LEFT(".scrollLeft()"),
-  SCROLL_RIGHT(".scrollRight()"),
+  FLICK_INSIDE_WITH_OPTIONS(FlickInsideWithOptionsNHandler.class),
+  ELEMENT_SCROLL(ElementScrollNHandler.class),
 
   //TouchScreen
-  FLICK(FlickHandler.class),
+  FLICK(FlickNHandler.class),
+  TOUCH_DOWN(TouchDownHandler.class),
+  TOUCH_UP(TouchUpHandler.class),
+  TOUCH_MOVE(TouchMoveHandler.class),
 
   // UIAElementArray
   //GET(".toArray()[:index]"),
@@ -184,15 +159,28 @@ public enum CommandMapping {
   CLEAR(ClearNHandler.class, ClearHandler.class),
 
   //UIATableView
-  //TABLE_GROUPS(".groups()"),
-  //TABLE_CELLS(".cells()"),
-  //TABLE_VISIBLE_CELLS(".visibleCells()"),
+  TABLE_GROUPS(".groups()"),
+  TABLE_CELLS(".cells()"),
+  TABLE_VISIBLE_CELLS(".visibleCells()"),
   GET_ALERT_TEXT(GetAlertTextNHandler.class),
   ACCEPT_ALERT(AcceptAlertHandler.class),
   DISMISS_ALERT(DismissAlertHandler.class),
   SET_ALERT_TEXT(SetAlertTextHandler.class),
   ALERT_CANCEL_BUTTON(".cancelButton()"),
-  ALERT_DEFAULT_BUTTON(".defaultButton()"),;
+  ALERT_DEFAULT_BUTTON(".defaultButton()"),
+
+  //UIAPicker
+  PICKER_WHEELS(".wheels()"),
+
+  //UIAPickerWheels
+  PICKER_WHEEL_VALUES(".values()"),
+  PICKER_WHEEL_SET_VALUE(SetPickerWheelValueNHandler.class),
+
+  //UIASwitch
+  NATIVE_SWITCH_SET_VALUE(SetSwitchValueNHandler.class),
+
+  //UIASlider
+  SLIDER_DRAG_TO_VALUE(SetSliderPosNHandler.class);
 
 
   private WebDriverLikeCommand command;

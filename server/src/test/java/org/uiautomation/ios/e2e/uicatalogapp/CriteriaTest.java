@@ -25,8 +25,7 @@ public class CriteriaTest extends BaseIOSDriverTest {
 
   @BeforeClass
   public void startDriver() throws InterruptedException {
-    IOSCapabilities c = SampleApps.uiCatalogCap();
-    driver = new RemoteIOSDriver(getRemoteURL(), c);
+    driver = getDriver(SampleApps.uiCatalogCap());
   }
 
   @AfterClass

@@ -25,7 +25,8 @@ public final class AutAsUrlTest {
 
   @BeforeClass
   public void startServer() throws Exception {
-    String[] args = { "-beta", "-port", "4444", "-host", "localhost", "-app", SampleApps.getUICatalogZipURL() };
+    String[] args = { "-beta", "-port", "4444", "-host", "localhost",
+                      "-app", SampleApps.getUICatalogZipURL(), "-simulators" };
     config = IOSServerConfiguration.create(args);
 
     server = new IOSServer(config);

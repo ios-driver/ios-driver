@@ -1,7 +1,6 @@
 package org.uiautomation.ios.e2e.uicatalogapp;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.InvalidSelectorException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
@@ -17,11 +16,9 @@ public class WebDriverSelectorMapping extends BaseIOSDriverTest {
 
   @BeforeClass
   public void startDriver() {
-    driver = new RemoteWebDriver(getRemoteURL(), SampleApps.intlMountainsCap("en"));
+    driver = getDriver(SampleApps.intlMountainsCap("en"));
     WebElement element = driver.findElement(By.className("UIATableCell"));
     element.click();
-
-
   }
 
   @AfterClass

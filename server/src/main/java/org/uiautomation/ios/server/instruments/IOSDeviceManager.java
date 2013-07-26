@@ -16,10 +16,11 @@ package org.uiautomation.ios.server.instruments;
 
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
-
-import java.io.File;
+import org.uiautomation.ios.server.application.APPIOSApplication;
 
 public interface IOSDeviceManager {
+
+  public void install(APPIOSApplication aut);
 
   public void setL10N(String locale, String language);
 
@@ -34,4 +35,6 @@ public interface IOSDeviceManager {
   void setVariation(DeviceType device, DeviceVariation variation);
 
   String getInstrumentsClient();
+
+  void setMobileSafariOptions();
 }

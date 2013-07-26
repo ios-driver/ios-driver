@@ -11,12 +11,12 @@ import java.util.List;
 
 public class IOSRunningApplication {
 
-  private final AppleLocale currentLanguage;
+  private final AppleLanguage currentLanguage;
   private final APPIOSApplication underlyingApplication;
 
-  public IOSRunningApplication(String language, APPIOSApplication app) {
+  public IOSRunningApplication(AppleLanguage language, APPIOSApplication app) {
     this.underlyingApplication = app;
-    this.currentLanguage = setLanguage(language);
+    this.currentLanguage = language;
   }
 
   public String getBundleId() {
@@ -27,9 +27,6 @@ public class IOSRunningApplication {
       return "com.apple.mobilesafari".equals(getBundleId());
   }
 
-  public AppleLocale getAppleLocaleFromLanguageCode(String language) {
-    return underlyingApplication.getAppleLocaleFromLanguageCode(language);
-  }
 
   public String getDotAppAbsolutePath() {
     return underlyingApplication.getApplicationPath().getAbsolutePath();
@@ -41,26 +38,27 @@ public class IOSRunningApplication {
   }
 
 
-  public AppleLocale getCurrentLanguage() {
+  public AppleLanguage getCurrentLanguage() {
     return currentLanguage;
   }
 
-  public AppleLocale setLanguage(String lang) {
-    if (underlyingApplication.getSupportedLanguages().isEmpty()) {
-      return AppleLocale.emptyLocale(lang);
+  //public AppleLanguage setLanguage(String lang) {
+
+    /*if (underlyingApplication.getSupportedLanguages().isEmpty()) {
+      return AppleLanguage.emptyLocale(lang);
     }
     if (lang == null) {
       // default to english if none specified
       lang = "en";
     }
-    for (AppleLocale loc : underlyingApplication.getSupportedLanguages()) {
-      if (loc.getLocale().toString().equals(lang)) {
+    for (AppleLanguage loc : underlyingApplication.getSupportedLanguages()) {
+      if (loc.getIsoCode().equals(lang)) {
         return loc;
       }
     }
     throw new WebDriverException(
-        "Cannot find " + lang + " in the supported languages for the app.");
-  }
+        "Cannot find " + lang + " in the supported languages for the app.");*/
+  //}
 
 
   private List<ContentResult> getPotentialMatches(String name) throws WebDriverException {
@@ -84,7 +82,7 @@ public class IOSRunningApplication {
         }
 
         JSONArray langs = new JSONArray();
-        for (AppleLocale language : underlyingApplication.getSupportedLanguages()) {
+        for (AppleLanguage language : underlyingApplication.getSupportedLanguages()) {
           JSONArray possibleMatches = new JSONArray();
 
           for (ContentResult res : results) {
@@ -118,11 +116,11 @@ public class IOSRunningApplication {
 
   public IOSCapabilities getCapabilities() {
     IOSCapabilities caps = underlyingApplication.getCapabilities();
-    caps.setLanguage(currentLanguage.getAppleLanguagesForPreferencePlist());
+    caps.setLanguage(currentLanguage.getIsoCode());
     return caps;
   }
 
-  public String translate(ContentResult contentResult, AppleLocale loc) {
+  public String translate(ContentResult contentResult, AppleLanguage loc) {
     return underlyingApplication.translate(contentResult, loc);
   }
 

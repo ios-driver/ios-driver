@@ -16,12 +16,13 @@ package org.uiautomation.ios.wkrdp.model;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.NoSuchFrameException;
-import org.openqa.selenium.Point;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.*;
+import org.uiautomation.ios.UIAModels.UIAElement;
+import org.uiautomation.ios.UIAModels.UIAWebView;
+import org.uiautomation.ios.UIAModels.predicate.*;
+import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.context.BaseWebInspector;
+import org.uiautomation.ios.server.application.ContentResult;
 import org.uiautomation.ios.wkrdp.RemoteExceptionException;
 import org.uiautomation.ios.wkrdp.command.DOM;
 import org.uiautomation.ios.wkrdp.internal.IosAtoms;
@@ -33,7 +34,7 @@ import java.util.logging.Logger;
 public class RemoteWebElement {
 
   private static final Logger log = Logger.getLogger(RemoteWebElement.class.getName());
-  protected final BaseWebInspector inspector;
+  private final BaseWebInspector inspector;
   private final NodeId nodeId;
   private RemoteObject remoteObject;
 
@@ -136,6 +137,39 @@ public class RemoteWebElement {
     return inspector.cast(response);
   }
 
+
+  public Point getLocation() throws Exception {
+    String
+            f =
+            "(function(arg) { " + "var loc = " + IosAtoms.GET_LOCATION_IN_VIEW + "(arg);"
+                    + "return " + IosAtoms.STRINGIFY + "(loc);})";
+
+
+    JSONArray args = new JSONArray();
+    args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
+
+    JSONObject response = getInspectorResponse(f, args, true);
+    String s = inspector.cast(response);
+    JSONObject o = new JSONObject(s);
+    return new Point(o.getInt("x"), o.getInt("y"));
+  }
+
+  public Dimension getSize() throws Exception {
+    String
+        f =
+        "(function(arg) { " + "var size = " + IosAtoms.GET_SIZE + "(arg);"
+            + "return " + IosAtoms.STRINGIFY + "(size);})";
+
+    JSONArray args = new JSONArray();
+    args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
+
+    JSONObject response = getInspectorResponse(f, args, true);
+    String s = inspector.cast(response);
+    JSONObject o = new JSONObject(s);
+    return new Dimension(o.getInt("width"), o.getInt("height"));
+
+  }
+
   public void highlight() {
     inspector.highlightNode(nodeId);
   }
@@ -202,7 +236,11 @@ public class RemoteWebElement {
   }
 
   public <T> T getAttribute(String attributeName) {
-    T res = getRemoteObject().call("." + attributeName);
+    T res;
+    if (attributeName.indexOf('-') != -1 || attributeName.indexOf(':') != -1 || attributeName.indexOf('.') != -1)
+      res = getRemoteObject().call(".getAttribute('" + attributeName + "')");
+    else
+      res = getRemoteObject().call("." + attributeName);
     if (res == null || "class".equals(attributeName)) {
       // textarea.value != testarea.getAttribute("value");
       res = getRemoteObject().call(".getAttribute('" + attributeName + "')");
@@ -548,5 +586,9 @@ public class RemoteWebElement {
     } catch (JSONException e) {
       throw new WebDriverException(e);
     }
+  }
+
+  public BaseWebInspector getInspector() {
+    return inspector;
   }
 }

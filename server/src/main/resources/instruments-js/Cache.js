@@ -25,21 +25,23 @@ var Cache = function () {
      * @return {number} the id of the element in the cache.
      */
     this.store = function (element) {
+        var res;
         if (element && element.type && element.type() === "UIAApplication") {
             var id = 1;
             element.id = id;
-            return id;
+            res = id;
         } else if (element && element.type && element.type() === "UIAAlert") {
             var id = 3;
             element.id = id;
             this.storage[id] = element;
-            return id;
+            res = id;
         } else {
             this.lastReference++;
             element.id = this.lastReference;
             this.storage[this.lastReference] = element;
-            return element.id;
+            res = element.id;
         }
+        return res;
 
     };
 

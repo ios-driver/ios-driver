@@ -29,4 +29,8 @@ public class SimulatorDevice extends Device {
     }
     return true;
   }
+  @Override
+  public String toString(){
+    return "Simulator";
+  }
 }

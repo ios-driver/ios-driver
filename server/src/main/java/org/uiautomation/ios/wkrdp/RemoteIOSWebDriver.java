@@ -18,17 +18,14 @@ import com.google.common.collect.ImmutableList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Cookie;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.*;
 import org.uiautomation.ios.context.BaseWebInspector;
 import org.uiautomation.ios.context.WebInspector;
 import org.uiautomation.ios.server.DOMContext;
 import org.uiautomation.ios.server.RealDevice;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.configuration.Configuration;
+import org.uiautomation.ios.wkrdp.command.Network;
 import org.uiautomation.ios.wkrdp.command.Page;
 import org.uiautomation.ios.wkrdp.internal.RealDeviceProtocolImpl;
 import org.uiautomation.ios.wkrdp.internal.SimulatorProtocolImpl;
@@ -212,6 +209,7 @@ public class RemoteIOSWebDriver {
 
         protocol.attachToPage(page.getPageId());
         inspector.sendCommand(Page.enablePageEvent());
+        inspector.sendCommand(Network.enable());
         boolean ok = created.add(inspector);
         if (ok) {
           protocol.addListener(inspector);
@@ -259,7 +257,10 @@ public class RemoteIOSWebDriver {
   public String getTitle() {
     return currentInspector.getTitle();
   }
-
+  
+  public int getCurrentPageID() {
+    return currentInspector.getPageIdentifier();
+  }
 
   public List<RemoteWebElement> findElements(By by) {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
@@ -281,6 +282,10 @@ public class RemoteIOSWebDriver {
 
   public String getPageSource() {
     return currentInspector.getPageSource();
+  }
+
+  public Dimension getSize() throws Exception {
+    return currentInspector.getSize();
   }
 
   public void close() {

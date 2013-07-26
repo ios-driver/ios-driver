@@ -14,12 +14,15 @@
 
 package org.uiautomation.ios.server.application;
 
+import com.dd.plist.ASCIIPropertyListParser;
 import com.dd.plist.BinaryPropertyListParser;
 import com.dd.plist.BinaryPropertyListWriter;
 import com.dd.plist.NSArray;
 import com.dd.plist.NSDictionary;
 import com.dd.plist.NSNumber;
+import com.dd.plist.NSObject;
 import com.dd.plist.PropertyListParser;
+import com.dd.plist.XMLPropertyListParser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,7 +66,6 @@ public class APPIOSApplication {
     try {
       metadata = getFullPlist();
     } catch (Exception e) {
-      e.printStackTrace();
       throw new WebDriverException(
           "cannot load the metadata from the Info.plist file for " + pathToApp);
     }
@@ -81,10 +83,10 @@ public class APPIOSApplication {
   }
 
   public List<String> getSupportedLanguagesCodes() {
-    List<AppleLocale> list = getSupportedLanguages();
+    List<AppleLanguage> list = getSupportedLanguages();
     List<String> res = new ArrayList<String>();
-    for (AppleLocale app : list) {
-      res.add(app.getLocale().toString());
+    for (AppleLanguage lang : list) {
+      res.add(lang.getIsoCode());
     }
     return res;
   }
@@ -92,7 +94,7 @@ public class APPIOSApplication {
   /**
    * get the list of languages the application if localized to.
    */
-  List<AppleLocale> getSupportedLanguages() {
+  List<AppleLanguage> getSupportedLanguages() {
     if (dictionaries.isEmpty()) {
       loadAllContent();
     }
@@ -103,23 +105,23 @@ public class APPIOSApplication {
      * LanguageDictionary(name).getLanguage()); } return new
      * ArrayList<Localizable>(res);
      */
-    List<AppleLocale> res = new ArrayList<AppleLocale>();
+    List<AppleLanguage> res = new ArrayList<AppleLanguage>();
     for (LanguageDictionary dict : dictionaries) {
       res.add(dict.getLanguage());
     }
     return res;
   }
 
-  public AppleLocale getAppleLocaleFromLanguageCode(String languageCode) {
+  public AppleLanguage getLanguage(String languageCode) {
     if (getSupportedLanguages().isEmpty()) {
-      return AppleLocale.emptyLocale(languageCode);
+      return AppleLanguage.emptyLocale(languageCode);
     }
     if (languageCode == null) {
       // default to english if none specified
       languageCode = "en";
     }
-    for (AppleLocale loc : getSupportedLanguages()) {
-      if (languageCode.equals(loc.getLocale().getLanguage())) {
+    for (AppleLanguage loc : getSupportedLanguages()) {
+      if (languageCode.equals(loc.getIsoCode())) {
         return loc;
       }
     }
@@ -127,12 +129,12 @@ public class APPIOSApplication {
   }
 
   public LanguageDictionary getDictionary(String languageCode) throws WebDriverException {
-    return getDictionary(getAppleLocaleFromLanguageCode(languageCode));
+    return getDictionary(AppleLanguage.valueOf(languageCode));
 
   }
 
-  public LanguageDictionary getDictionary(AppleLocale language) throws WebDriverException {
-    if (!language.exist()) {
+  public LanguageDictionary getDictionary(AppleLanguage language) throws WebDriverException {
+    if (!language.exists()) {
       throw new WebDriverException("The application doesn't have any content files.The l10n "
                                    + "features cannot be used.");
     }
@@ -175,7 +177,7 @@ public class APPIOSApplication {
 
   }
 
-  public String translate(ContentResult res, AppleLocale language) throws WebDriverException {
+  public String translate(ContentResult res, AppleLanguage language) throws WebDriverException {
     LanguageDictionary destinationLanguage = getDictionary(language);
     return destinationLanguage.translate(res);
 
@@ -200,26 +202,26 @@ public class APPIOSApplication {
    */
   public Map<String, String> getResources() {
     Map<String, String> resourceByResourceName = new HashMap<String, String>();
-    String metadata = getMetadata(ICON);
-    if (metadata.equals("")) {
+    String metadata =  getMetadata(ICON);
+    if(metadata.equals("")){
       metadata = getFirstIconFile(BUNDLE_ICONS);
     }
     resourceByResourceName.put(ICON, metadata);
     return resourceByResourceName;
   }
 
-  private String getFirstIconFile(String bundleIcons) {
-    if (!metadata.has(bundleIcons)) {
+  private String getFirstIconFile(String bundleIcons){
+    if(!metadata.has(bundleIcons)){
       return "";
     }
-    try {
-      HashMap icons = (HashMap) metadata.get(bundleIcons);
-      HashMap primaryIcon = (HashMap) icons.get("CFBundlePrimaryIcon");
-      ArrayList iconFiles = (ArrayList) primaryIcon.get("CFBundleIconFiles");
+    try{
+      HashMap icons = (HashMap)metadata.get(bundleIcons);
+      HashMap primaryIcon = (HashMap)icons.get("CFBundlePrimaryIcon");
+      ArrayList iconFiles = (ArrayList)primaryIcon.get("CFBundleIconFiles");
       return iconFiles.get(0).toString();
-    } catch (JSONException e) {
-      throw new WebDriverException("property 'CFBundleIcons' can't be returned. " + e.getMessage(),
-                                   e);
+    }
+    catch (JSONException e) {
+      throw new WebDriverException("property 'CFBundleIcons' can't be returned. " + e.getMessage(), e);
     }
   }
 
@@ -301,6 +303,8 @@ public class APPIOSApplication {
 
     try {
       File plist = new File(app, "Info.plist");
+
+      PListFormat format = getFormat(plist);
       NSDictionary root = (NSDictionary) PropertyListParser.parse(new FileInputStream(plist));
 
       NSArray devices = (NSArray) root.objectForKey("UIDeviceFamily");
@@ -327,12 +331,44 @@ public class APPIOSApplication {
       }
       rearrangedArray.setValue(index, last);
       root.put("UIDeviceFamily", rearrangedArray);
-      BinaryPropertyListWriter.write(plist, root);
+
+
+      write(plist,root,format);
     } catch (Exception e) {
       throw new WebDriverException("Cannot change the default device for the app." + e.getMessage(),
                                    e);
     }
 
+  }
+
+  enum PListFormat{
+    binary,text,xml;
+  }
+
+  private void write(File dest,NSDictionary content,PListFormat format) throws IOException {
+    switch (format){
+      case binary:
+        BinaryPropertyListWriter.write(dest,content);
+      case xml:
+        PropertyListParser.saveAsXML(content,dest);
+      case text:
+        PropertyListParser.saveAsASCII(content,dest);
+    }
+  }
+
+  private PListFormat getFormat(File f) throws IOException {
+      FileInputStream fis = new FileInputStream(f);
+      byte b[] = new byte[8];
+      fis.read(b,0,8);
+      String magicString = new String(b);
+      fis.close();
+      if (magicString.startsWith("bplist")) {
+        return PListFormat.binary;
+      } else if (magicString.trim().startsWith("(") || magicString.trim().startsWith("{") || magicString.trim().startsWith("/")) {
+        return PListFormat.text;
+      } else {
+        return PListFormat.xml;
+      }
   }
 
   public IOSCapabilities getCapabilities() {
@@ -429,7 +465,7 @@ public class APPIOSApplication {
   public String getApplicationName() {
     String name = getMetadata(IOSCapabilities.BUNDLE_NAME);
     String displayName = getMetadata(IOSCapabilities.BUNDLE_DISPLAY_NAME);
-    return name != null ? name : displayName;
+    return (name != null) && ! name.trim().isEmpty() ? name : displayName;
 
   }
 
@@ -459,7 +495,7 @@ public class APPIOSApplication {
     return "iphonesimulator".equals(getMetadata("DTPlatformName"));
   }
 
-  public IOSRunningApplication createInstance(String language) {
+  public IOSRunningApplication createInstance(AppleLanguage language) {
     return new IOSRunningApplication(language, this);
   }
 

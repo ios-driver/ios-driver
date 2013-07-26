@@ -13,15 +13,48 @@
  */
 package org.uiautomation.ios.server.utils;
 
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.remote.Response;
+import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
 
 import java.util.Map;
 
 public class CoordinateUtils {
+
+  public static Point forcePointOnScreen(Point point, Dimension screenSize) {
+
+    int x;
+    int y;
+
+    if (point.getX() < 0) {
+      x = 0;
+    } else if (point.getX() > screenSize.getWidth()) {
+      x = screenSize.getWidth();
+    } else {
+      x = point.getX();
+    }
+
+    if (point.getY() < 0) {
+      y = 0;
+    } else if (point.getY() > screenSize.getHeight()) {
+      y = screenSize.getHeight();
+    } else {
+      y = point.getY();
+    }
+
+    return new Point(x, y);
+
+  }
+
+  public static Point getCenterPoint(Point topLeft, Dimension size) {
+    return getCenterPoint(topLeft.getX(), topLeft.getY(), size.getWidth(), size.getHeight());
+
+  }
+
   private static Point getCenterPoint(int xCoord, int yCoord, int width, int height) {
     int centerX = xCoord + (width / 2);
-    int centerY = yCoord - (height / 2);
+    int centerY = yCoord + (height / 2);
 
     Point center = new Point(centerX, centerY);
     return center;
@@ -35,9 +68,15 @@ public class CoordinateUtils {
     int y = Integer.parseInt(origin.get("y").toString());
 
     Map<String, Object> size = (Map<String, Object>) o.get("size");
-    int height = Integer.parseInt(size.get("height").toString());
     int width = Integer.parseInt(size.get("width").toString());
+    int height = Integer.parseInt(size.get("height").toString());
 
-    return getCenterPoint(x, y, height, width);
+    return getCenterPoint(x, y, width, height);
+  }
+
+  public static Point getCenterPointFromElement(RemoteWebElement element) throws Exception {
+    Point location = element.getLocation();
+    Dimension size = element.getSize();
+    return getCenterPoint(location.getX(), location.getY(), size.getWidth(), size.getHeight());
   }
 }

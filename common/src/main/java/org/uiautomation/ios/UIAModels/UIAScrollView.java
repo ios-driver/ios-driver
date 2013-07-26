@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 ios-driver committers.
+ * Copyright 2013 ios-driver committers.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -15,12 +15,10 @@ package org.uiautomation.ios.UIAModels;
 
 public interface UIAScrollView extends UIAElement {
 
-  public void scrollUp();
+  public void scroll(ScrollDirection scrollDirection);
 
-  public void scrollDown();
+  public void scrollToElementWithName(String name);
 
-  public void scrollLeft();
-
-  public void scrollRight();
+  public void scrollToElementWithPredicate(String predicate);
 
 }

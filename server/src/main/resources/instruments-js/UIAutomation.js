@@ -63,13 +63,22 @@ var UIAutomation = {
                 }
                 res = all;
             } else if (value && value.type) {
-                res.ELEMENT = "" + value.reference();
-                res.type = value.type();
+                // check if the element is in an alert to throw the unexpected alert exception if needed
+                try {
+                    this.cache.get(value.reference());
+                    res.ELEMENT = "" + value.reference();
+                    res.type = value.type();
+                } catch (err) {
+                    res = err;
+                    result.status = err.status || 13;
+                }
+
             } else {
                 res = value;
             }
             result.value = res;
         } catch (err) {
+            result.status = 13;
             result.value = err;
         }
 

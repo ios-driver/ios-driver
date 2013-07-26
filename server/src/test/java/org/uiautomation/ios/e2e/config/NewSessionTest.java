@@ -15,6 +15,7 @@ import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
+import org.uiautomation.ios.server.utils.IOSVersion;
 import org.uiautomation.ios.utils.ClassicCommands;
 
 import java.awt.image.BufferedImage;
@@ -132,6 +133,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
     }
   }
 
+  // TODO freynaud should load english instead ?
   @Test(expectedExceptions = SessionNotCreatedException.class)
   public void recognizeUnsupportedLanguageLocale() {
     RemoteIOSDriver driver = null;
@@ -219,13 +221,13 @@ public class NewSessionTest extends BaseIOSDriverTest {
     }
   }
 
-  @Test(enabled = false) // FB might find something better.
+  @Test
   public void supportAllInstalledSDKs() {
     RemoteIOSDriver driver = null;
     List<String> sdks = ClassicCommands.getInstalledSDKs();
     for (String sdk : sdks) {
-      Float version = Float.parseFloat(sdk);
-      if (version >= 5L) {
+
+      if (new IOSVersion(sdk).isGreaterOrEqualTo("5.0")) {
 
         try {
           IOSCapabilities cap = IOSCapabilities.iphone("InternationalMountains");
@@ -339,8 +341,8 @@ public class NewSessionTest extends BaseIOSDriverTest {
       File f = driver.getScreenshotAs(OutputType.FILE);
 
       BufferedImage bimg = ImageIO.read(f);
-      Assert.assertEquals(bimg.getWidth(), expectedW);
-      Assert.assertEquals(bimg.getHeight(), expectedH);
+      Assert.assertTrue(bimg.getWidth() ==  expectedW || bimg.getHeight() == expectedW);
+      Assert.assertTrue(bimg.getWidth() ==  expectedH || bimg.getHeight() == expectedH);
 
     } finally {
       if (driver != null) {

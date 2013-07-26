@@ -1,15 +1,12 @@
 package org.uiautomation.ios.e2e.uicatalogapp;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.Keyboard;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
-import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIATableCell;
@@ -19,7 +16,6 @@ import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
-import org.uiautomation.ios.communication.WebDriverLikeCommand;
 
 public class UIAKeyboardSmokeTest extends BaseIOSDriverTest {
 
@@ -28,8 +24,7 @@ public class UIAKeyboardSmokeTest extends BaseIOSDriverTest {
 
   @BeforeClass
   public void startDriver() {
-    IOSCapabilities caps = SampleApps.uiCatalogCap();
-    driver = new RemoteIOSDriver(getRemoteURL(), caps);
+    driver = getDriver(SampleApps.uiCatalogCap());
   }
 
   @AfterClass

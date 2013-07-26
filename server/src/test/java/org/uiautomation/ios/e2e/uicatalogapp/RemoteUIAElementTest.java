@@ -27,11 +27,14 @@ import java.util.List;
 public class RemoteUIAElementTest extends BaseIOSDriverTest {
 
   private RemoteIOSDriver driver;
-  private UIAElement element;
+  private String buttonsName = "Buttons, Various uses of UIButton";
+  private Criteria c1 = new TypeCriteria(UIATableCell.class);
+  private Criteria c2 = new NameCriteria(buttonsName);
+  private Criteria c = new AndCriteria(c1, c2);
 
   @BeforeClass
   public void startDriver() {
-    driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
+    driver = getDriver(SampleApps.uiCatalogCap());
   }
 
   @AfterClass
@@ -41,21 +44,19 @@ public class RemoteUIAElementTest extends BaseIOSDriverTest {
     }
   }
 
-  private String buttonsName = "Buttons, Various uses of UIButton";
+
 
   @Test
   public void findElement() {
-    Criteria c1 = new TypeCriteria(UIATableCell.class);
-    Criteria c2 = new NameCriteria(buttonsName);
-    Criteria c = new AndCriteria(c1, c2);
-    element = driver.findElement(c);
+    UIAElement element = driver.findElement(c);
     Assert.assertEquals(element.getName(), buttonsName);
     Assert.assertNull(element.getLabel());
     Assert.assertNull(element.getValue());
   }
 
-  @Test(dependsOnMethods = {"findElement"})
+  @Test
   public void logElementTreeNoScreenshot() throws Exception {
+    UIAElement element = driver.findElement(c);
     JSONObject tree = element.logElementTree(null, false);
     Assert.assertTrue(tree.has("tree"));
   }
@@ -66,8 +67,9 @@ public class RemoteUIAElementTest extends BaseIOSDriverTest {
     Assert.assertTrue(tree.has("tree"));
   }
 
-  @Test(dependsOnMethods = {"findElement"})
+  @Test
   public void logElementTreeWithScreenshot() throws Exception {
+    UIAElement element = driver.findElement(c);
     File f = new File("logElementTreeWithScreenshotTmp");
     f.delete();
     JSONObject tree = element.logElementTree(f, true);

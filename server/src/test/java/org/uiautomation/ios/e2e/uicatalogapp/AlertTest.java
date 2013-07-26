@@ -29,8 +29,6 @@ import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
-import java.net.URL;
-
 
 public class AlertTest extends BaseIOSDriverTest {
 
@@ -43,24 +41,9 @@ public class AlertTest extends BaseIOSDriverTest {
 
   private RemoteIOSDriver driver;
 
-  public static void main(String[] args) throws Exception {
-    AlertTest t = new AlertTest();
-    t.startServer();
-    RemoteWebDriver
-        driver =
-        new RemoteIOSDriver(new URL("http://localhost:4444/wd/hub"), SampleApps.uiCatalogCap());
-
-    WebElement alert = driver.findElement(By.className("UIAAlert"));
-    alert.findElement(By.className("UIASecureTextField")).sendKeys("password");
-    alert.findElement(By.xpath("//UIAButton[@name='OK']")).click();
-
-    driver.quit();
-    t.stopServer();
-  }
-
   @BeforeClass
   public void startDriver() {
-    driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
+    driver = getDriver(SampleApps.uiCatalogCap());
     goToAlertScreen();
   }
 
@@ -106,6 +89,34 @@ public class AlertTest extends BaseIOSDriverTest {
     } finally {
       driver.switchTo().alert().dismiss();
     }
+  }
+
+  @Test
+  public void canFindElementInAlertIfAlertOpened() throws Exception {
+    Criteria
+        c =
+        new AndCriteria(new TypeCriteria(UIAStaticText.class), new NameCriteria("Show Simple"));
+    UIAElement el = driver.findElements(c).get(1);
+    // opens an alert.
+    el.tap();
+
+    try {
+      driver.findElement(By.name("Back"));
+      Assert.fail("cannot select when alert opened");
+    } catch (UnhandledAlertException e) {
+      // expected
+    }
+    // also check for xpath, as xpath logic is not done by instruments, but by the server.
+    try {
+      driver.findElement(By.xpath("//*[@name='Back']"));
+      Assert.fail("cannot select when alert opened");
+    } catch (UnhandledAlertException e) {
+      // expected
+    }
+    WebElement alert = driver.findElement(By.xpath("//UIAAlert"));
+    System.out.println("name : " + alert.getAttribute("name"));
+    driver.switchTo().alert().dismiss();
+
   }
 
   @Test

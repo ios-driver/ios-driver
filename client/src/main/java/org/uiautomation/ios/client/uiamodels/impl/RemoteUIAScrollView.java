@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 ios-driver committers.
+ * Copyright 2013 ios-driver committers.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,7 +13,10 @@
  */
 package org.uiautomation.ios.client.uiamodels.impl;
 
+import com.google.common.collect.ImmutableMap;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.uiautomation.ios.UIAModels.ScrollDirection;
 import org.uiautomation.ios.UIAModels.UIAScrollView;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
@@ -24,30 +27,58 @@ public class RemoteUIAScrollView extends RemoteUIAElement implements UIAScrollVi
     super(driver, reference);
   }
 
-  public void scrollUp() {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.SCROLL_UP);
+  @Override
+  public void scroll(ScrollDirection scrollDirection) {
+
+    switch (scrollDirection) {
+
+      case UP:
+        createScrollRequest("up");
+        break;
+      case DOWN:
+        createScrollRequest("down");
+        break;
+      case LEFT:
+        createScrollRequest("left");
+        break;
+      case RIGHT:
+        createScrollRequest("right");
+        break;
+      default:
+        throw new WebDriverException("Scrolling direction : " + scrollDirection + " not recognised");
+
+    }
+
+  }
+
+  private void createScrollRequest(String direction) {
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENT_SCROLL,
+            ImmutableMap.of("direction", direction));
+
     commandExecutor.execute(request);
 
+    //TODO: dynamically check for scrolling to be complete
+    try {
+      Thread.sleep(1000);                 //Need a delay after scroll
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+  }
+
+
+  @Override
+  public void scrollToElementWithName(String name) {
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENT_SCROLL,
+            ImmutableMap.of("name", name));
+    commandExecutor.execute(request);
   }
 
   @Override
-  public void scrollDown() {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.SCROLL_DOWN);
+  public void scrollToElementWithPredicate(String predicate) {
+    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.ELEMENT_SCROLL,
+            ImmutableMap.of("predicateString", predicate));
     commandExecutor.execute(request);
   }
-
-  @Override
-  public void scrollLeft() {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.SCROLL_LEFT);
-    commandExecutor.execute(request);
-  }
-
-  @Override
-  public void scrollRight() {
-    WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.SCROLL_RIGHT);
-    commandExecutor.execute(request);
-  }
-
 
 
 }

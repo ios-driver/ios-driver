@@ -8,7 +8,7 @@
  */
 UIATarget.prototype.language = function () {
     var app = UIATarget.localTarget().frontMostApp();
-    return app.preferencesValueForKey("AppleLanguages")[0];
+    return app.preferencesValueForKey("AppleLanguage")[0];
 }
 
 /**

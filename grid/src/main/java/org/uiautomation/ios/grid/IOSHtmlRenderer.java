@@ -47,15 +47,30 @@ public class IOSHtmlRenderer implements HtmlRenderer {
         .append("</b> concurrent tests from : </u><br>");
 
     for (TestSlot slot : proxy.getTestSlots()) {
-      builder.append(slot.getCapabilities().containsKey(BROWSER) ? slot.getCapabilities().get(
-          BROWSER) : slot.getCapabilities().get(APP));
+      boolean simulator = Boolean.parseBoolean(slot.getCapabilities().get("simulator").toString());
+      if (simulator) {
+        builder.append(slot.getCapabilities().containsKey(BROWSER) ? slot.getCapabilities().get(
+            BROWSER) : slot.getCapabilities().get(APP));
+      } else {
+        builder.append(slot.getCapabilities().get("device")).append(" [").append(slot.getCapabilities().get("sdkVersion")).append("]");
+      }
       TestSession session = slot.getSession();
       try {
-        builder.append("<img src=\"" + proxy.getRemoteHost() + getIconUrl(slot) + "\" title=\"" + slot.getCapabilities().get("CFBundleExecutable") + "\" alt=\"" + slot.getCapabilities().get("CFBundleExecutable") + "\" height=\"30\" width=\"30\">");
+        if (slot.getCapabilities().containsKey("CFBundleExecutable")){
+          if (!slot.getCapabilities().get("CFBundleExecutable").toString().equalsIgnoreCase("MobileSafari")){
+            builder.append("<img src=\"" + proxy.getRemoteHost() + getIconUrl(slot) + "\" title=\"" + slot.getCapabilities().get("CFBundleExecutable") + "\" alt=\"" + slot.getCapabilities().get("CFBundleExecutable") + "\" height=\"30\" width=\"30\">");
+          } else {
+            builder.append("<b> *safari* </b>");
+          }
+
+        }
+
       } catch (JSONException ignored) {
       }
-      builder.append(" ").append(slot.getCapabilities().get("device_Alt")).append(" - ")
-          .append(slot.getCapabilities().get("sdkVersion_Alt")).append("");
+      if (simulator) {
+        builder.append(" ").append(slot.getCapabilities().get("device_Alt")).append(" - ")
+            .append(slot.getCapabilities().get("sdkVersion_Alt")).append("");
+      }
       builder.append(session == null ? " (free)" : "(busy, session " + session + ")");
       builder.append("<br/>");
     }

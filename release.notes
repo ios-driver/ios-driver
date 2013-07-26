@@ -60,7 +60,10 @@
 
 0.7.0 (current)
 -----
-
+- HasTouchScreen
+- Native actions for native apps
+- Native actions for safari
+- Screenshot returns image in correct orientation
 
 TODOs:
 -------
@@ -70,10 +73,11 @@ TODOs:
 - delete window
 - file upload
 - BrowserConnection
-- HasTouchScreen
 - WebStorage
 - LocationContext
 - ApplicationCache
+- Grid heartbeat/reconnect
+- Grid empty location header
 
 - kill instruments before starting.
 - split handlers into native, web, and misc

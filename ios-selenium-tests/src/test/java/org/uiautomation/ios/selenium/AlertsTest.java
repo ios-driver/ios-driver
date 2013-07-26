@@ -446,9 +446,9 @@ public class AlertsTest extends BaseSeleniumTest {
       driver.getTitle();
       fail("Expected UnhandledAlertException");
     } catch (UnhandledAlertException e) {
-      Alert alert = e.getAlert();
+      String alert = e.getAlertText();
       assertNotNull(alert);
-      assertEquals("cheese", alert.getText());
+      assertEquals("cheese", alert);
     }
   }
 

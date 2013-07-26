@@ -22,8 +22,7 @@ public class LocationContextTest extends BaseIOSDriverTest {
 
   @BeforeClass
   public void startDriver() {
-
-    driver = new RemoteWebDriver(getRemoteURL(), SampleApps.geoCoderCap());
+    driver = getDriver(SampleApps.geoCoderCap());
   }
 
   @AfterClass
@@ -34,7 +33,7 @@ public class LocationContextTest extends BaseIOSDriverTest {
   }
 
 
-  @Test
+  @Test(enabled = false)
   public void testShouldSetAndGetLocation() {
     //driver.get(pages.html5Page);
 

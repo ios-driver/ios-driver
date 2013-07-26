@@ -25,8 +25,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
+import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.server.IOSServerConfiguration;
 import org.uiautomation.ios.server.IOSServerManager;
+import org.uiautomation.ios.server.application.APPIOSApplication;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -49,12 +51,48 @@ public class RegistrationRequest {
     this.hubURL = new URL(config.getRegistrationURL());
     this.nodeHost = config.getHost();
 
+    List<APPIOSApplication> apps = driver.getSupportedApplications();
+    for (APPIOSApplication app : apps) {
+      for (DeviceType deviceType : app.getSupportedDevices()) {
+        IOSCapabilities cap = null;
+
+        if (deviceType == DeviceType.iphone) {
+          cap = IOSCapabilities.iphone(app.getApplicationName());
+
+          if (app.getApplicationName().equals("Safari")) {
+            cap.setCapability("browserName", "iPhone");
+          } else {
+            cap.setCapability("browserName", "IOS Simulator");
+          }
+        }
+        else if (deviceType == DeviceType.ipad) {
+          cap = IOSCapabilities.ipad(app.getApplicationName());
+
+          if (app.getApplicationName().equals("Safari")) {
+            cap.setCapability("browserName", "iPad");
+          } else {
+            cap.setCapability("browserName", "IOS Simulator");
+          }
+        }
+
+        if (cap != null) {
+          cap.setCapability("platform", "MAC");
+          cap.setCapability("maxInstances", 1);
+
+          capabilities.add(cap.getRawCapabilities());
+        }
+      }
+    }
+
     configuration.put("hubHost", hubURL.getHost());
     configuration.put("hubPort", hubURL.getPort());
     configuration.put("remoteHost", "http://" + nodeHost + ":" + config.getPort());
     configuration.put("maxSession", 1);
-    if(config.getProxy() != null){
+
+    if (config.getProxy() != null) {
       configuration.put("proxy", config.getProxy());
+    } else {
+      configuration.put("proxy", "org.openqa.grid.selenium.proxy.DefaultRemoteProxy");
     }
   }
 

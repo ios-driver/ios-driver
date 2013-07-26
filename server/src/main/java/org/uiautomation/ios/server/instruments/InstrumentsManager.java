@@ -20,10 +20,12 @@ import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.Device;
 import org.uiautomation.ios.server.RealDevice;
+import org.uiautomation.ios.server.application.AppleLanguage;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.application.IPAApplication;
 import org.uiautomation.ios.server.simulator.IOSRealDeviceManager;
 import org.uiautomation.ios.server.simulator.IOSSimulatorManager;
+import org.uiautomation.ios.server.utils.IOSVersion;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.Command;
 import org.uiautomation.ios.utils.ScriptHelper;
@@ -80,8 +82,9 @@ public class InstrumentsManager {
     variation = caps.getDeviceVariation();
     sdkVersion = caps.getSDKVersion();
     locale = caps.getLocale();
-    language = application.getAppleLocaleFromLanguageCode(caps.getLanguage())
-        .getAppleLanguagesForPreferencePlist();
+    language = caps.getLanguage();
+    //language = application.getAppleLocaleFromLanguageCode(caps.getLanguage())
+    //    .getAppleLanguagesForPreferencePlist();
     boolean timeHack = caps.isTimeHack();
     List<String> envtParams = caps.getExtraSwitches();
 
@@ -96,11 +99,11 @@ public class InstrumentsManager {
       this.application = application;
       this.application.setDefaultDevice(deviceType);
 
+      deviceManager = prepareSimulator(capabilities);
       if (isWarmupRequired(sdkVersion)) {
         warmup();
       }
       log.fine("prepare simulator");
-      deviceManager = prepareSimulator(capabilities);
 
       if (deviceManager instanceof IOSSimulatorManager) {
         log.fine("forcing SDK");
@@ -164,9 +167,8 @@ public class InstrumentsManager {
   }
 
   private boolean isWarmupRequired(String sdkVersion) {
-    List<String> sdks = ClassicCommands.getInstalledSDKs();
-    // TODO freynaud not rely on order.
-    if (sdks.get(sdks.size() - 1).equals(sdkVersion)) {
+    String defaultSDK = ClassicCommands.getDefaultSDK();
+    if (new IOSVersion(defaultSDK).equals(sdkVersion)) {
       return false;
     }
     return true;
@@ -189,12 +191,13 @@ public class InstrumentsManager {
     } else {
       deviceManager = new IOSSimulatorManager(capabilities);
     }
-
+    deviceManager.install(application.getUnderlyingApplication());
     deviceManager.resetContentAndSettings();
     deviceManager.setL10N(locale, language);
     deviceManager.setKeyboardOptions();
     deviceManager.setVariation(deviceType, variation);
     deviceManager.setLocationPreference(true);
+    deviceManager.setMobileSafariOptions();
     return deviceManager;
   }
 

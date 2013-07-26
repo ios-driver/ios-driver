@@ -13,33 +13,19 @@
  */
 package org.uiautomation.ios.client.uiamodels.impl;
 
+import com.google.common.collect.ImmutableMap;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.uiautomation.ios.UIAModels.ScrollDirection;
 import org.uiautomation.ios.UIAModels.UIAWebView;
+import org.uiautomation.ios.communication.WebDriverLikeCommand;
+import org.uiautomation.ios.communication.WebDriverLikeRequest;
 
-public class RemoteUIAWebView extends RemoteUIAElement implements UIAWebView {
+public class RemoteUIAWebView extends RemoteUIAScrollView implements UIAWebView {
 
   public RemoteUIAWebView(RemoteWebDriver driver, String reference) {
     super(driver, reference);
   }
 
-  @Override
-  public void scrollUp() {
-    //To change body of implemented methods use File | Settings | File Templates.
-  }
-
-  @Override
-  public void scrollDown() {
-    //To change body of implemented methods use File | Settings | File Templates.
-  }
-
-  @Override
-  public void scrollLeft() {
-    //To change body of implemented methods use File | Settings | File Templates.
-  }
-
-  @Override
-  public void scrollRight() {
-    //To change body of implemented methods use File | Settings | File Templates.
-  }
 
 }

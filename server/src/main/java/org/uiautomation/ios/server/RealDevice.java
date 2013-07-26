@@ -2,6 +2,7 @@ package org.uiautomation.ios.server;
 
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
+import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.application.IPAApplication;
 import org.uiautomation.iosdriver.ApplicationInfo;
@@ -88,6 +89,7 @@ public class RealDevice extends Device {
     res.setCapability(IOSCapabilities.SIMULATOR, false);
     res.setCapability(IOSCapabilities.UI_SDK_VERSION, iosVersion);
     res.setCapability(IOSCapabilities.DEVICE, type);
+    //res.setCapability(IOSCapabilities.VARIATION, DeviceVariation.valueOf(this.productType.replace(",", "")));
     res.setCapability(IOSCapabilities.UUID, uuid);
     return res;
   }
@@ -98,6 +100,11 @@ public class RealDevice extends Device {
       return false;
     }
     return true;
+  }
+
+  @Override
+  public String toString(){
+    return this.uuid+", name:"+this.name;
   }
 }
 
