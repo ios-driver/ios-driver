@@ -19,6 +19,7 @@ import com.dd.plist.BinaryPropertyListWriter;
 import com.dd.plist.NSArray;
 import com.dd.plist.NSDictionary;
 import com.dd.plist.NSNumber;
+import com.dd.plist.PropertyListParser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,6 +63,7 @@ public class APPIOSApplication {
     try {
       metadata = getFullPlist();
     } catch (Exception e) {
+      e.printStackTrace();
       throw new WebDriverException(
           "cannot load the metadata from the Info.plist file for " + pathToApp);
     }
@@ -198,26 +200,26 @@ public class APPIOSApplication {
    */
   public Map<String, String> getResources() {
     Map<String, String> resourceByResourceName = new HashMap<String, String>();
-    String metadata =  getMetadata(ICON);
-    if(metadata.equals("")){
+    String metadata = getMetadata(ICON);
+    if (metadata.equals("")) {
       metadata = getFirstIconFile(BUNDLE_ICONS);
     }
     resourceByResourceName.put(ICON, metadata);
     return resourceByResourceName;
   }
 
-  private String getFirstIconFile(String bundleIcons){
-    if(!metadata.has(bundleIcons)){
+  private String getFirstIconFile(String bundleIcons) {
+    if (!metadata.has(bundleIcons)) {
       return "";
     }
-    try{
-      HashMap icons = (HashMap)metadata.get(bundleIcons);
-      HashMap primaryIcon = (HashMap)icons.get("CFBundlePrimaryIcon");
-      ArrayList iconFiles = (ArrayList)primaryIcon.get("CFBundleIconFiles");
+    try {
+      HashMap icons = (HashMap) metadata.get(bundleIcons);
+      HashMap primaryIcon = (HashMap) icons.get("CFBundlePrimaryIcon");
+      ArrayList iconFiles = (ArrayList) primaryIcon.get("CFBundleIconFiles");
       return iconFiles.get(0).toString();
-    }
-    catch (JSONException e) {
-      throw new WebDriverException("property 'CFBundleIcons' can't be returned. " + e.getMessage(), e);
+    } catch (JSONException e) {
+      throw new WebDriverException("property 'CFBundleIcons' can't be returned. " + e.getMessage(),
+                                   e);
     }
   }
 
@@ -299,7 +301,7 @@ public class APPIOSApplication {
 
     try {
       File plist = new File(app, "Info.plist");
-      NSDictionary root = (NSDictionary) BinaryPropertyListParser.parse(new FileInputStream(plist));
+      NSDictionary root = (NSDictionary) PropertyListParser.parse(new FileInputStream(plist));
 
       NSArray devices = (NSArray) root.objectForKey("UIDeviceFamily");
       int length = devices.getArray().length;
