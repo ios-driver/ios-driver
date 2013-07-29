@@ -3,4 +3,5 @@ before_script:
 - sudo chmod -R 666 /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator*.sdk/Applications/MobileSafari.app/Info.plist
 - sudo /usr/sbin/DevToolsSecurity --enable
 - sudo dscl . append /Groups/_developer GroupMembership travis
+- id -a
 script: mvn test
