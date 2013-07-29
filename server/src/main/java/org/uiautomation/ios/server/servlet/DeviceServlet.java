@@ -1,7 +1,6 @@
 package org.uiautomation.ios.server.servlet;
 
 import org.uiautomation.ios.server.RealDevice;
-import org.uiautomation.iosdriver.ApplicationInfo;
 
 import java.io.IOException;
 
@@ -87,7 +86,7 @@ public class DeviceServlet extends DriverBasedServlet {
 
     b.append("<h3>Applications:</h3>");
 
-    for (ApplicationInfo app : device.getApplications()) {
+    /*for (ApplicationInfo app : device.getApplications()) {
       b.append(
           app.getApplicationId() + " <div class='archive' deviceId='" + device.getUuid() + "' app='"
           + app.getApplicationId() + "'>ARCHIVE</div>");
@@ -96,7 +95,7 @@ public class DeviceServlet extends DriverBasedServlet {
         b.append("<li>" + key + ": " + app.getProperty(key) + "</li>");
       }
       b.append("</ul>");
-    }
+    }*/
 
     b.append("</div>");
 

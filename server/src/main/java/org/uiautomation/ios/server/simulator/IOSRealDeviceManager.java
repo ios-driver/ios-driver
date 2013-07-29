@@ -1,5 +1,7 @@
 package org.uiautomation.ios.server.simulator;
 
+import org.libimobiledevice.binding.raw.IMobileDeviceFactory;
+import org.libimobiledevice.binding.raw.IOSDevice;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
@@ -8,8 +10,7 @@ import org.uiautomation.ios.server.RealDevice;
 import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.application.IPAApplication;
 import org.uiautomation.ios.server.instruments.IOSDeviceManager;
-import org.uiautomation.iosdriver.ApplicationInfo;
-import org.uiautomation.iosdriver.services.DeviceInstallerService;
+import org.libimobiledevice.binding.raw.ApplicationInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +19,12 @@ import java.util.logging.Logger;
 public class IOSRealDeviceManager implements IOSDeviceManager {
 
   private static final Logger log = Logger.getLogger(IOSRealDeviceManager.class.getName());
-  private final RealDevice device;
+  //private final RealDevice device;
   private final IOSCapabilities capabilities;
   private final IPAApplication app;
-  private final DeviceInstallerService service;
+  //private final DeviceInstallerService service;
+  private IMobileDeviceFactory factory = IMobileDeviceFactory.INSTANCE;
+  private final IOSDevice device;
   private final String bundleId;
   private final List<String> keysToConsiderInThePlistToHaveEquality;
 
@@ -31,11 +34,10 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
    * @param app          the app that will be ran.
    */
   public IOSRealDeviceManager(IOSCapabilities capabilities, RealDevice device, IPAApplication app) {
-    this.device = device;
+   this.device = factory.get(device.getUuid());
     bundleId = capabilities.getBundleId();
     this.capabilities = capabilities;
     this.app = app;
-    this.service = new DeviceInstallerService(device.getUuid());
 
     keysToConsiderInThePlistToHaveEquality = new ArrayList<String>();
     keysToConsiderInThePlistToHaveEquality.add("CFBundleVersion");
@@ -44,10 +46,10 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
   @Override
   public void install(APPIOSApplication aut) {
     if (aut instanceof IPAApplication) {
-      ApplicationInfo app = service.getApplication(bundleId);
+      ApplicationInfo app = device.getApplication(bundleId);
       // not installed ? install the app.
       if (app == null) {
-        service.install(((IPAApplication) aut).getIPAFile());
+        device.install(((IPAApplication) aut).getIPAFile());
         return;
       }
 
@@ -58,11 +60,11 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
 
       // TODO upgrade ?
       // needs to re-install
-      log.fine("uninstalling " + bundleId + " for " + device.getUuid());
-      service.uninstall(bundleId);
-      log.fine("installing " + bundleId + " for " + device.getUuid());
-      service.install(((IPAApplication) aut).getIPAFile());
-      log.fine(bundleId + " for " + service.getDeviceId() + " installed.");
+      log.fine("uninstalling " + bundleId );
+      device.uninstall(bundleId);
+      log.fine("installing " + bundleId );
+      device.install(((IPAApplication) aut).getIPAFile());
+      log.fine(bundleId + " installed.");
     } else {
       throw new WebDriverException("only IPA apps can be used on a real device.");
     }
@@ -92,13 +94,13 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
 
   @Override
   public void setL10N(String locale, String language) {
-    service.setLanguage("fr");
-    service.setLocale(locale);
+    device.setLockDownValue("com.apple.international", "Language", language);
+    device.setLockDownValue("com.apple.international", "Locale", locale);
   }
 
   @Override
   public void resetContentAndSettings() {
-    service.emptyApplicationCache("com.ebay.iphone");
+    device.emptyApplicationCache("com.ebay.iphone");
   }
 
   @Override
