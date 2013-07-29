@@ -34,7 +34,7 @@ public class GetHandler extends BaseWebCommandHandler {
 
   // TODO freynaud cached by session.
   private WebElement addressBar;
-  private static final boolean nativeEvents = true;
+  private static final boolean nativeEvents = false;
 
   public GetHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
