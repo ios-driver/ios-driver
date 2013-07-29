@@ -152,12 +152,13 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
         script.append("var y = top+delta;");
       }
     } else {
-      Criteria wv = new TypeCriteria(UIAWebView.class);
+      Criteria wv = new TypeCriteria(UIAScrollView.class);
       script.append("var webview = root.element(-1," + wv.stringify().toString() + ");");
       script.append("var size = webview.rect();");
       script.append("var offsetY = size.origin.y;");
       // UIAWebView.y
       script.append("var y = top+offsetY;");
+      //script.append("var y = top+64;");
     }
     script.append("return new Array(parseInt(x), parseInt(y));");
 
