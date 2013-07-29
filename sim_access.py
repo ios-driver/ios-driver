@@ -6,9 +6,9 @@ import difflib
 # read the contents of /etc/authorization
 with open('/etc/authorization','r') as file:
   content = file.read()
-match = re.search('<key>system.privilege.taskport</key>\s*\n\s*<dict>\n\s*<key>allow-root</key>\n\s*(<[^>]+>)',content)
+match = re.search('<key>system.privilege.taskport.debug</key>\s*\n\s*<dict>\n\s*<key>allow-root</key>\n\s*(<[^>]+>)',content)
 if match is None:
-	raise Exception('Could not find the system.privilege.taskport key in /etc/authorization')
+	raise Exception('Could not find the system.privilege.taskport.debug key in /etc/authorization')
 elif re.search('<false/>', match.group(0)) is None:
 	print '/etc/authorization has already been modified'
 	exit(0)
