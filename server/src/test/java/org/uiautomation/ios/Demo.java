@@ -68,10 +68,14 @@ public class Demo {
 
 
   public static void main(String[] args) throws Exception {
-    String[] a = {"-port", "4444", "-host", "localhost",
-                  "-aut", SampleApps.getUICatalogFile(),
-                  "-aut", SampleApps.getUICatalogIpad(),
-                  "-aut", "/Users/freynaud/eBay3.1_19.app"};
+
+
+    String[] a = {"-port", "5555", "-host", "127.0.0.1",
+                  //"-aut", SampleApps.getUICatalogFile(),
+                  //"-aut", SampleApps.getUICatalogIpad(),
+                  //"-beta",
+                  "-folder", "applications", "-simulators",
+                  "-hub", "http://127.0.0.1:4444/grid/register"};
 
     IOSServerConfiguration config = IOSServerConfiguration.create(a);
 
@@ -172,6 +176,8 @@ public class Demo {
       driver.quit();
       server.stop();
     }
+
+
 
   }
 

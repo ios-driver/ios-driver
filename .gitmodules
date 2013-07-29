@@ -1,3 +1,3 @@
 [submodule "libimobile-java"]
 	path = libimobile-java
-	url = git@github.com:ios-driver/libimobile-java.git 
+	url = https://github.com/ios-driver/libimobile-java.git

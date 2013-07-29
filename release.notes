@@ -58,12 +58,16 @@
 + use facebook project to remove 1 sec delay on emulator.
 + improve UIAKeyboard, add hide()
 
-0.7.0 (current)
+0.6.1
 -----
 - HasTouchScreen
 - Native actions for native apps
 - Native actions for safari
 - Screenshot returns image in correct orientation
+- Grid heartbeat/reconnect
+
+0.7.0 (current)
+-----
 
 TODOs:
 -------
@@ -76,7 +80,6 @@ TODOs:
 - WebStorage
 - LocationContext
 - ApplicationCache
-- Grid heartbeat/reconnect
 - Grid empty location header
 
 - kill instruments before starting.
