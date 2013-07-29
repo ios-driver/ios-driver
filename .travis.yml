@@ -4,5 +4,6 @@ before_script:
 - sudo /usr/sbin/DevToolsSecurity --enable
 - sudo dscl . append /Groups/_developer GroupMembership travis
 - sudo python ./sim_access.py
+- sudo security authorize -l -c system.privilege.taskport
 - grep -A 10 system.privilege.taskport /etc/authorization
 script: mvn test
