@@ -68,19 +68,11 @@ public class InstrumentsGeneratedImage implements JSONWireImage {
   }
 
   private BufferedImage rotate() {
-    int rotateDegrees = 0;
-    switch (orientation) {
-      case LANDSCAPE:
-        rotateDegrees = 270;
-        break;
-      case UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT:
-        rotateDegrees = 90;
-        break;
-      case UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN:
-        rotateDegrees = 180;
-        break;
-    }
-
+    int rotateDegrees = orientation.getRotationInDegree();
+    boolean
+        flip =
+        orientation == Orientation.LANDSCAPE
+        || orientation == Orientation.UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT;
     try {
       final BufferedImage originalImage = ImageIO.read(source);
 
@@ -93,7 +85,7 @@ public class InstrumentsGeneratedImage implements JSONWireImage {
       final BufferedImage rotated;
       int width;
       int height;
-      if (rotateDegrees == 90 || rotateDegrees == 270) {
+      if (flip) {
         width = originalImage.getHeight();
         height = originalImage.getWidth();
       } else {
