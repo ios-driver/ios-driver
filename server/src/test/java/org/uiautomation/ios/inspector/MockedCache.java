@@ -66,8 +66,7 @@ public class MockedCache implements Cache {
     JSONObject t = new JSONObject(tree.toString());
     IOSCapabilities c = new IOSCapabilities(new JSONObject(cap.toString()));
 
-    System.out.println(status);
-    IDESessionModel
+     IDESessionModel
         model =
         new MockedModel(session, screenshot, t, c, new JSONObject(s.toString()));
     cache.put(session, model);

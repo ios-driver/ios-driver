@@ -78,7 +78,7 @@ public class IDEMainView implements View {
     DeviceVariation variation = model.getCapabilities().getDeviceVariation();
     Orientation orientation = model.getDeviceOrientation();
 
-    map.put("frame", getFrame(device, variation));
+    map.put("frame", getFrame(device, variation,orientation));
     int width = 320;
     if (device == DeviceType.ipad) {
       width = 768;
@@ -157,7 +157,7 @@ public class IDEMainView implements View {
       b.append(" <div id='rotationCenter'>");
 
       b.append("<div id='frame'>");
-      b.append("<img src='" + getFrame(device, variation) + "' />");
+      b.append("<img src='" + getFrame(device, variation,Orientation.LANDSCAPE) + "' />");
       b.append("        <div id='screen'>");
 
       int width = 320;
@@ -265,16 +265,16 @@ public class IDEMainView implements View {
     return getResource("session/" + model.getSession().getSessionId() + "/screenshot.png");
   }
 
-  private String getFrame(DeviceType device, DeviceVariation variation) {
+  private String getFrame(DeviceType device, DeviceVariation variation,Orientation o) {
 
     if (device == DeviceType.iphone) {
       if (variation == DeviceVariation.Retina4) {
-        return getResource("frame_iphone5.png");
+        return getResource("images/frames/frame_iphone5_"+o.instrumentsValue()+".png");
       } else {
-        return getResource("frame_iphone.png");
+        return getResource("images/frames/frame_iphone_"+o.instrumentsValue()+".png");
       }
     } else {
-      return getResource("frame_ipad.png");
+      return getResource("images/frames/frame_ipad_"+o.instrumentsValue()+".jpg");
     }
   }
 
