@@ -115,13 +115,15 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
       boolean screenshot;
 
       screenshot = (Boolean) value.get("screenshot");
+      Long orientationCode = Long.parseLong(value.get("deviceOrientation").toString());
+
+      Orientation o = Orientation.fromInterfaceOrientation(orientationCode.intValue());
 
       if (screenshot) {
         String path = getDriver().getSession(response.getSessionId()).getOutputFolder() + "/Run 1/"
                       + TakeScreenshotNHandler.SCREEN_NAME + ".png";
         File source = new File(path);
-        System.out.println(response.getValue());
-        JSONWireImage image = new InstrumentsGeneratedImage(source, Orientation.LANDSCAPE);
+        JSONWireImage image = new InstrumentsGeneratedImage(source, o);
         try {
           String content64 = image.getAsBase64String();
           value.put("screenshot", ImmutableMap.of("64encoded", content64));
