@@ -1,7 +1,8 @@
 {
   "class": "org.openqa.selenium.remote.Response",
-  "hCode": 1201252431,
-  "sessionId": null,
+  "hCode": 1858736754,
+  "sessionId": "8633e4fe-2904-45bf-aeb3-cf00c2350190",
+  "state": null,
   "status": 0,
   "value": {
     "build": {
@@ -10,42 +11,13 @@
       "version": "unknown"
     },
     "ios": {"simulatorVersion": "6.1"},
-    "java": {"version": "1.6.0_35"},
+    "java": {"version": "1.7.0_21"},
     "os": {
       "arch": "x86_64",
       "name": "Mac OS X",
-      "version": "10.7.4"
+      "version": "10.8.3"
     },
     "supportedApps": [
-      {
-        "CFBundleDevelopmentRegion": "en",
-        "CFBundleExecutable": "InternationalMountains",
-        "CFBundleIconFile": "Icon.png",
-        "CFBundleIdentifier": "com.yourcompany.InternationalMountains",
-        "CFBundleInfoDictionaryVersion": "6.0",
-        "CFBundleName": "InternationalMountains",
-        "CFBundlePackageType": "APPL",
-        "CFBundleSignature": "????",
-        "CFBundleSupportedPlatforms": ["iPhoneSimulator"],
-        "CFBundleVersion": "1.1",
-        "DTPlatformName": "iphonesimulator",
-        "DTSDKName": "iphonesimulator5.1",
-        "LSRequiresIPhoneOS": true,
-        "NSMainNibFile": "MainWindow",
-        "UIDeviceFamily": [1],
-        "applicationPath": "/Users/freynaud/Documents/workspace/ios-driver/server/target/test-classes/sampleApps/InternationalMountains.app",
-        "resources": {"CFBundleIconFile": "/wd/hub/resources/hash=-674408620"},
-        "sdkVersion": "6.1",
-        "simulator": true,
-        "supportedDevices": ["iphone"],
-        "supportedLanguages": [
-          "zh-Hant",
-          "fr",
-          "en"
-        ],
-        "timeHack": false,
-        "variation": "Regular"
-      },
       {
         "CFBundleDevelopmentRegion": "English",
         "CFBundleDisplayName": "Safari",
@@ -165,8 +137,8 @@
           "continuousFallback"
         ],
         "UIDeviceFamily": [
-          1,
-          2
+          2,
+          1
         ],
         "UIHasPrefs": true,
         "UISupportedInterfaceOrientations": [
@@ -180,90 +152,62 @@
           "UIInterfaceOrientationLandscapeRight",
           "UIInterfaceOrientationPortraitUpsideDown"
         ],
-        "applicationPath": "/Applications/Xcode46-DP2.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.0.sdk/Applications/MobileSafari.app",
-        "resources": {"CFBundleIconFile": "/wd/hub/resources/hash=0"},
-        "sdkVersion": "6.1",
-        "simulator": true,
-        "supportedDevices": [
+        "applicationPath": "/Applications/Xcode46-DP4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.0.sdk/Applications/MobileSafari.app",
+        "device": "iphone",
+        "deviceAlt": [
+          "ipad",
+          "iphone",
+          "ipod"
+        ],
+        "device_Alt": [
           "iphone",
           "ipad"
         ],
+        "resources": {"CFBundleIconFile": "/wd/hub/resources/hash=707870789"},
+        "sdkVersion": "6.1",
+        "sdkVersion_Alt": [
+          "5.0",
+          "5.1",
+          "6.0",
+          "6.1"
+        ],
+        "simulator": true,
         "supportedLanguages": [
-          "es",
-          "it",
-          "de",
+          "hr",
+          "ro",
+          "ca",
+          "vi",
+          "tr",
           "fr",
-          "en"
+          "unknown",
+          "hu",
+          "unknown",
+          "th",
+          "id",
+          "pt-PT",
+          "en-GB",
+          "fi",
+          "unknown",
+          "sv",
+          "it",
+          "sk",
+          "ja",
+          "uk",
+          "es",
+          "da",
+          "ms",
+          "ko",
+          "ar",
+          "he",
+          "en",
+          "nl",
+          "cs",
+          "el",
+          "pl",
+          "pt",
+          "ru",
+          "de"
         ],
-        "timeHack": false,
-        "variation": "Regular"
-      },
-      {
-        "CFBundleDevelopmentRegion": "en",
-        "CFBundleDisplayName": "UICatalog",
-        "CFBundleExecutable": "UICatalog",
-        "CFBundleIconFile": "Icon.png",
-        "CFBundleIconFiles": [
-          "Icon.png",
-          "Icon@2x.png",
-          "Icon-72.png",
-          "Icon-Small.png",
-          "Icon-Small-50.png",
-          "Icon-Small@2x.png"
-        ],
-        "CFBundleIdentifier": "com.yourcompany.UICatalog",
-        "CFBundleInfoDictionaryVersion": "6.0",
-        "CFBundleName": "UICatalog",
-        "CFBundlePackageType": "APPL",
-        "CFBundleSignature": "????",
-        "CFBundleSupportedPlatforms": ["iPhoneSimulator"],
-        "CFBundleVersion": "2.10",
-        "DTPlatformName": "iphonesimulator",
-        "DTSDKName": "iphonesimulator5.1",
-        "LSRequiresIPhoneOS": true,
-        "NSMainNibFile": "MainWindow",
-        "NSMainNibFile~ipad": "MainWindow-iPad",
-        "UIDeviceFamily": [2],
-        "applicationPath": "/Users/freynaud/Documents/workspace/ios-driver/server/target/test-classes/sampleApps/UICatalogiPad.app",
-        "resources": {"CFBundleIconFile": "/wd/hub/resources/hash=-674408620"},
-        "sdkVersion": "6.1",
-        "simulator": true,
-        "supportedDevices": ["ipad"],
-        "supportedLanguages": ["en"],
-        "timeHack": false,
-        "variation": "Regular"
-      },
-      {
-        "CFBundleDevelopmentRegion": "en",
-        "CFBundleDisplayName": "UICatalog",
-        "CFBundleExecutable": "UICatalog",
-        "CFBundleIconFile": "Icon.png",
-        "CFBundleIconFiles": [
-          "Icon.png",
-          "Icon@2x.png",
-          "Icon-72.png",
-          "Icon-Small.png",
-          "Icon-Small-50.png",
-          "Icon-Small@2x.png"
-        ],
-        "CFBundleIdentifier": "com.yourcompany.UICatalog",
-        "CFBundleInfoDictionaryVersion": "6.0",
-        "CFBundleName": "UICatalog",
-        "CFBundlePackageType": "APPL",
-        "CFBundleSignature": "????",
-        "CFBundleSupportedPlatforms": ["iPhoneSimulator"],
-        "CFBundleVersion": "2.10",
-        "DTPlatformName": "iphonesimulator",
-        "DTSDKName": "iphonesimulator5.1",
-        "LSRequiresIPhoneOS": true,
-        "NSMainNibFile": "MainWindow",
-        "UIDeviceFamily": [1],
-        "applicationPath": "/Users/freynaud/Documents/workspace/ios-driver/server/target/test-classes/sampleApps/UICatalog.app",
-        "resources": {"CFBundleIconFile": "/wd/hub/resources/hash=-674408620"},
-        "sdkVersion": "6.1",
-        "simulator": true,
-        "supportedDevices": ["iphone"],
-        "supportedLanguages": ["en"],
         "timeHack": false,
         "variation": "Regular"
       },
@@ -401,20 +345,61 @@
           "UIInterfaceOrientationLandscapeRight",
           "UIInterfaceOrientationPortraitUpsideDown"
         ],
-        "applicationPath": "/Applications/Xcode46-DP2.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk/Applications/MobileSafari.app",
-        "resources": {"CFBundleIconFile": "/wd/hub/resources/hash=0"},
-        "sdkVersion": "6.1",
-        "simulator": true,
-        "supportedDevices": [
+        "applicationPath": "/Applications/Xcode46-DP4.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk/Applications/MobileSafari.app",
+        "device": "iphone",
+        "deviceAlt": [
+          "iphone",
+          "ipod",
+          "ipad"
+        ],
+        "device_Alt": [
           "iphone",
           "ipad"
         ],
+        "resources": {"CFBundleIconFile": "/wd/hub/resources/hash=707870789"},
+        "sdkVersion": "6.1",
+        "sdkVersion_Alt": [
+          "5.0",
+          "5.1",
+          "6.0",
+          "6.1"
+        ],
+        "simulator": true,
         "supportedLanguages": [
-          "es",
-          "it",
-          "de",
+          "hr",
+          "ro",
+          "ca",
+          "vi",
+          "tr",
           "fr",
-          "en"
+          "unknown",
+          "hu",
+          "unknown",
+          "th",
+          "id",
+          "pt-PT",
+          "en-GB",
+          "fi",
+          "unknown",
+          "sv",
+          "it",
+          "sk",
+          "ja",
+          "uk",
+          "es",
+          "da",
+          "ms",
+          "ko",
+          "ar",
+          "he",
+          "en",
+          "nl",
+          "cs",
+          "el",
+          "pl",
+          "pt",
+          "ru",
+          "de"
         ],
         "timeHack": false,
         "variation": "Regular"
