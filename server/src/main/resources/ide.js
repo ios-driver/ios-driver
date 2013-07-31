@@ -188,8 +188,10 @@ resize = function () {
 
     $('#mouseOver').css('top', realOffsetY + 'px');
     $('#mouseOver').css('left', realOffsetX + 'px');
-    //$('#mouseOver').css('height', mouseOver_h + 'px');
-    //$('#mouseOver').css('width', mouseOver_w + 'px');
+    $('#mouseOver').css('left', realOffsetX + 'px');
+
+    $('#mouseOver').css('height', mouseOver_h + 'px');
+    $('#mouseOver').css('width', mouseOver_w + 'px');
 
     //$('#rotationCenter').css('-moz-transform', 'rotate(' + angle + 'deg)');
     //$('#rotationCenter').css('-webkit-transform', 'rotate(' + angle + 'deg)');
