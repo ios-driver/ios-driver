@@ -2,15 +2,11 @@
 <html>
 <head>
     <title>IOS Inspector</title>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css"/>
 
     <#list cssList as css>
         <link rel="stylesheet" href="${css}"/>
     </#list>
-
-
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css"/>
-
-    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 
     <#list jsList as js>
         <script src="${js}"></script>
@@ -35,7 +31,7 @@
                         <img src='${frame}'/>
 
                         <div id='screen'>
-                            <img id='screenshot' src='${screenshot}' />
+                            <img id='screenshot' src='${screenshot}'/>
                         </div>
                     </div>
                 </div>
