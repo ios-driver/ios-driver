@@ -17,7 +17,7 @@ import org.uiautomation.ios.server.IOSServerConfiguration;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class AppCrashHandling {
+public class CrashHandling {
 
   private IOSServer server;
   private IOSServerConfiguration config;
@@ -59,7 +59,7 @@ public class AppCrashHandling {
   }
 
   @Test
-  public void isCrashDetected() throws InterruptedException {
+  public void isAppCrashDetected() throws InterruptedException {
     IOSCapabilities cap = SampleApps.ppNQASampleAppCap();
     cap.setCapability(IOSCapabilities.SIMULATOR, true);
 
@@ -68,6 +68,32 @@ public class AppCrashHandling {
     crashButton.click();
     Thread.sleep(2000);
     Assert.assertTrue("App crash detected.", false);
+
+  }
+
+  @Test
+  public void isSimulatorCrashDetected() throws InterruptedException {
+    IOSCapabilities cap = SampleApps.ppNQASampleAppCap();
+    cap.setCapability(IOSCapabilities.SIMULATOR, true);
+
+    RemoteWebDriver driver = new RemoteWebDriver(getRemoteURL(), cap);
+
+    // kill simulator
+
+    Assert.assertTrue("Sim crash detected.", false);
+
+  }
+
+  @Test
+  public void isInstrumentsCrashDetected() throws InterruptedException {
+    IOSCapabilities cap = SampleApps.ppNQASampleAppCap();
+    cap.setCapability(IOSCapabilities.SIMULATOR, true);
+
+    RemoteWebDriver driver = new RemoteWebDriver(getRemoteURL(), cap);
+
+    // kill instruments
+
+    Assert.assertTrue("Instruments crash detected.", false);
 
   }
 

@@ -25,6 +25,9 @@ public class IOSApplicationCrashException extends RuntimeException {
         sb.append("\n" + f.getAbsoluteFile());
       }
     }
+    if(sb.toString().isEmpty()){
+      sb.append("It appears like the Simulator process has crashed.");
+    }
     return sb.toString();
   }
 }
