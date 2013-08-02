@@ -19,6 +19,7 @@ var UIAutomation = {
         "implicit": 0
     },
     SESSION: "$SESSION",
+    COMMUNICATION_MODE: "$MODE",
     CAPABILITIES: -1,
 
     /**
@@ -92,7 +93,7 @@ var UIAutomation = {
      * @return {string} the next command.The command is a javascript snipet, that will be executed
      * using eval().
      */
-    postResponseAndGetNextCommand: function (jsonResponse) {
+    postResponseWithCURLAndGetNextCommand: function (jsonResponse) {
         log("posting response : " + jsonResponse);
         var nextCommand = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.COMMAND,
                                                                                     "--data-binary",
@@ -106,6 +107,21 @@ var UIAutomation = {
         return nextCommand.stdout;
 
     },
+
+    postResponseMultiAndGetNextCommand: function (jsonResponse) {
+        response(jsonResponse);
+        while (true) {
+            UIATarget.localTarget().delay(1);
+            var cmd = UIATarget.localTarget().frontMostApp().preferencesValueForKey('cmd');
+            log("the command in memory is : " + cmd);
+            if (cmd) {
+                UIATarget.localTarget().frontMostApp().setPreferencesValueForKey(null, 'cmd');
+                log("new command received : " + cmd);
+                return cmd;
+            }
+        }
+    },
+
     /**
      * Initialises the capabilities for this session. Capabilities should be immutable.
      * @return {Object} the capabilities for the current session. Part of the capabilities a client
@@ -187,12 +203,21 @@ var UIAutomation = {
     commandLoop: function () {
         // first command after registration sends the capabilities.
         var init = {};
+        if (this.COMMUNICATION_MODE === "MULTI") {
+            UIATarget.localTarget().frontMostApp().setPreferencesValueForKey(null, 'cmd');
+        }
         init.firstResponse = UIAutomation.getCapabilities();
         var response = this.createJSONResponse(this.SESSION, 0, init);
         var ok = true;
         while (ok) {
             try {
-                var request = this.postResponseAndGetNextCommand(response);
+                var request;
+                if (this.COMMUNICATION_MODE === "CURL") {
+                    request = this.postResponseWithCURLAndGetNextCommand(response);
+                } else {
+                    request = this.postResponseMultiAndGetNextCommand(response);
+                }
+                log("request = " + request);
                 if (request === "stop") {
                     ok = false;
                     log("end of the command loop.");
@@ -201,6 +226,7 @@ var UIAutomation = {
                 } else {
                     try {
                         response = eval(request);
+                        log("response = " + response);
                     } catch (err) {
                         if (err.status) {
                             response =

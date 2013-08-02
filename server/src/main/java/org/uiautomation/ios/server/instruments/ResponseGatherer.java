@@ -14,20 +14,10 @@
 
 package org.uiautomation.ios.server.instruments;
 
-import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.command.UIAScriptResponse;
 
-public interface CommunicationChannel {
-
-  boolean waitForUIScriptToBeStarted() throws InterruptedException;
-
-  void registerUIAScript();
-
-  void sendNextCommand(UIAScriptRequest r);
-
-  UIAScriptRequest getNextCommand() throws InterruptedException;
-
-  void setNextResponse(UIAScriptResponse r);
+public interface ResponseGatherer {
 
   UIAScriptResponse waitForResponse() throws InterruptedException;
+
 }

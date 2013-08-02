@@ -20,7 +20,6 @@ import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.Device;
 import org.uiautomation.ios.server.RealDevice;
-import org.uiautomation.ios.server.application.AppleLanguage;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.application.IPAApplication;
 import org.uiautomation.ios.server.simulator.IOSRealDeviceManager;
@@ -57,7 +56,7 @@ public class InstrumentsManager {
   private DeviceVariation variation;
   private IOSCapabilities caps;
   private List<String> extraEnvtParams;
-  private CommunicationChannel communicationChannel;
+  private CommunicationChannel channel;
   private Command simulatorProcess;
 
   /**
@@ -110,35 +109,56 @@ public class InstrumentsManager {
         ((IOSSimulatorManager) deviceManager).forceDefaultSDK();
         log.fine("creating script");
       }
-      File
-          uiscript =
-          new ScriptHelper()
-              .getScript(port, application.getDotAppAbsolutePath(), sessionId);
-      log.fine("starting instruments");
-      List<String> instruments = createInstrumentCommand(uiscript.getAbsolutePath());
-      communicationChannel = new CommunicationChannel();
 
-      simulatorProcess = new Command(instruments, true);
-      simulatorProcess.setWorkingDirectory(output);
-      simulatorProcess.start();
-
-      log.fine("waiting for registration request");
-      boolean success = communicationChannel.waitForUIScriptToBeStarted();
-      // appears only in ios6. : Automation Instrument ran into an exception
-      // while trying to run the
-      // script. UIAScriptAgentSignaledException
-      if (!success) {
-        simulatorProcess.forceStop();
-        killSimulator();
-        throw new WebDriverException("Instruments crashed.");
-      }
-
-      if (timeHack) {
-        TimeSpeeder.getInstance().activate();
-        TimeSpeeder.getInstance().start();
+      CommunicationMode mode;
+      if (device instanceof RealDevice) {
+        mode = CommunicationMode.MULTI;
       } else {
-        TimeSpeeder.getInstance().desactivate();
+        mode = CommunicationMode.CURL;
       }
+
+      log.fine("starting instruments");
+
+      if (device instanceof RealDevice) {
+        RealDevice d = (RealDevice) device;
+        MultiInstrumentsBasedCommunicationChannel channel =
+            new MultiInstrumentsBasedCommunicationChannel(d, port,
+                                                          application.getDotAppAbsolutePath(),
+                                                          sessionId);
+        channel.start();
+        this.channel = channel;
+
+      } else {
+        File
+            uiscript =
+            new ScriptHelper()
+                .getScript(port, application.getDotAppAbsolutePath(), sessionId, mode);
+        List<String> instruments = createInstrumentCommand(uiscript.getAbsolutePath());
+        channel = new CURLBasedCommunicationChannel();
+
+        simulatorProcess = new Command(instruments, true);
+        simulatorProcess.setWorkingDirectory(output);
+        simulatorProcess.start();
+
+        log.fine("waiting for registration request");
+        boolean success = channel.waitForUIScriptToBeStarted();
+        // appears only in ios6. : Automation Instrument ran into an exception
+        // while trying to run the
+        // script. UIAScriptAgentSignaledException
+        if (!success) {
+          simulatorProcess.forceStop();
+          killSimulator();
+          throw new WebDriverException("Instruments crashed.");
+        }
+
+        if (timeHack) {
+          TimeSpeeder.getInstance().activate();
+          TimeSpeeder.getInstance().start();
+        } else {
+          TimeSpeeder.getInstance().desactivate();
+        }
+      }
+
 
     } catch (Exception e) {
       if (simulatorProcess != null) {
@@ -210,6 +230,9 @@ public class InstrumentsManager {
       simulatorProcess.waitFor(60 * 1000);
     }
     killSimulator();
+    if (channel instanceof MultiInstrumentsBasedCommunicationChannel){
+      ((MultiInstrumentsBasedCommunicationChannel)channel).stop();
+    }
   }
 
   public void forceStop() {
@@ -274,6 +297,6 @@ public class InstrumentsManager {
   }
 
   public CommunicationChannel communicate() {
-    return communicationChannel;
+    return channel;
   }
 }

@@ -16,6 +16,7 @@ package org.uiautomation.ios.utils;
 
 import org.apache.commons.io.IOUtils;
 import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.server.instruments.CommunicationMode;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -60,12 +61,15 @@ public class ScriptHelper {
   }
 
 
-  private String generateScriptContent(int port, String aut, String opaqueKey) throws IOException {
+  // TODO freynaud AUT is only used for the capabilies. It should be a response decorator of getCaps
+  public String generateScriptContent(int port, String aut, String opaqueKey,
+                                      CommunicationMode mode) throws IOException {
     StringBuilder scriptContent = new StringBuilder();
 
     String c = load(lib0);
     c = c.replace("$PORT", String.format("%d", port));
     c = c.replace("$AUT", String.format("%s", aut));
+    c = c.replace("$MODE", String.format("%s", mode));
     c = c.replace("$SESSION", String.format("%s", opaqueKey));
 
     scriptContent.append(load(json));
@@ -100,9 +104,9 @@ public class ScriptHelper {
 
   }
 
-  public File getScript(int port, String aut, String opaqueKey) {
+  public File getScript(int port, String aut, String opaqueKey, CommunicationMode mode) {
     try {
-      String content = generateScriptContent(port, aut, opaqueKey);
+      String content = generateScriptContent(port, aut, opaqueKey, mode);
       return createTmpScript(content);
     } catch (Exception e) {
       throw new WebDriverException("cannot generate the script for instrument.", e);

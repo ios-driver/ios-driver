@@ -20,6 +20,7 @@ import org.uiautomation.ios.server.application.LanguageDictionary;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.command.UIAScriptResponse;
 import org.uiautomation.ios.server.command.uiautomation.GetCapabilitiesNHandler;
+import org.uiautomation.ios.server.instruments.CURLBasedCommunicationChannel;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
 
 import java.io.IOException;

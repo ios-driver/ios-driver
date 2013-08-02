@@ -33,6 +33,7 @@ import org.uiautomation.ios.server.application.AppleLanguage;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
+import org.uiautomation.ios.server.instruments.CURLBasedCommunicationChannel;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
 import org.uiautomation.ios.server.instruments.InstrumentsManager;
 import org.uiautomation.ios.server.utils.IOSVersion;

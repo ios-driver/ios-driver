@@ -26,3 +26,7 @@ function UIAutomationException(message, status) {
 function log(msg) {
     UIALogger.logMessage("log:" + msg);
 }
+
+function response(msg) {
+    UIALogger.logMessage("IOS_DRIVER_RESPONSE:" + msg);
+}
