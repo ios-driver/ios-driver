@@ -119,10 +119,7 @@ public class IOSServerConfiguration {
   }
 
   public boolean isBeta() {
-    if(beta == true){
-      System.out.println("Beta [Real Devices] is not supported in the current release");
-    }
-    return false;
+    return beta;
   }
 
   public void setBeta(boolean beta) {
