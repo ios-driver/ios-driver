@@ -4,7 +4,6 @@ import junit.framework.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.remote.RemoteWebElement;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -13,6 +12,7 @@ import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
+import org.uiautomation.ios.utils.ClassicCommands;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -79,6 +79,8 @@ public class CrashHandling {
     RemoteWebDriver driver = new RemoteWebDriver(getRemoteURL(), cap);
 
     // kill simulator
+    ClassicCommands.killall("iPhone Simulator");
+    Thread.sleep(3000);
 
     Assert.assertTrue("Sim crash detected.", false);
 
@@ -92,6 +94,8 @@ public class CrashHandling {
     RemoteWebDriver driver = new RemoteWebDriver(getRemoteURL(), cap);
 
     // kill instruments
+    ClassicCommands.killall("instruments");
+    Thread.sleep(3000);
 
     Assert.assertTrue("Instruments crash detected.", false);
 
