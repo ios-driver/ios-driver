@@ -31,15 +31,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Command {
 
   private final List<String> args;
-  private volatile Process process;
   private final List<String> out = new CopyOnWriteArrayList<String>();
   private final List<String> err = new CopyOnWriteArrayList<String>();
   private final
   List<CommandOutputListener>
       listeners =
       new CopyOnWriteArrayList<CommandOutputListener>();
+  private volatile Process process;
   private List<Thread> threads = new ArrayList<Thread>();
-
   private File workingDir = null;
 
   public Command(List<String> args, boolean logToConsole) {
@@ -98,10 +97,10 @@ public class Command {
    * @param maxWaitMillis max time to wait for the command to finish, -1 for not limit
    */
   public int waitFor(int maxWaitMillis) {
-    Timer forceStopTimer = null; 
+    Timer forceStopTimer = null;
     try {
       if (maxWaitMillis > 0) {
-    	forceStopTimer = new Timer(true);
+        forceStopTimer = new Timer(true);
         forceStopTimer.schedule(new TimerTask() {
           @Override
           public void run() {
@@ -114,7 +113,7 @@ public class Command {
       throw new WebDriverException("error waiting for " + args + " to finish.", e);
     } finally {
       if (forceStopTimer != null)
-    	forceStopTimer.cancel();
+        forceStopTimer.cancel();
     }
   }
 
@@ -145,6 +144,9 @@ public class Command {
   }
 
   private void add(String line, boolean normal) {
+    if (line.contains("The target application appears to have died")) {
+      normal = false;
+    }
     if (normal) {
       out.add(line);
     } else {

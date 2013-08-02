@@ -97,6 +97,7 @@ public class IOSServer {
     wd.addServlet(ApplicationsServlet.class, "/applications/*");
     wd.addServlet(CapabilitiesServlet.class, "/capabilities/*");
     wd.addServlet(ArchiveServlet.class, "/archive/*");
+    wd.getServletContext().getContextHandler().setMaxFormContentSize(500000);
 
     ServletContextHandler statics = new ServletContextHandler(server, "/static", true, false);
     statics.addServlet(StaticResourceServlet.class, "/*");

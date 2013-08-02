@@ -28,6 +28,9 @@ public class DefaultCommandListener implements CommandOutputListener {
   @Override
   public void stderr(String log) {
     this.log.warning(log);
+    if(log.contains("The target application appears to have died")){
+      throw new IOSApplicationCrashException("the app has died");
+    }
   }
 
 }
