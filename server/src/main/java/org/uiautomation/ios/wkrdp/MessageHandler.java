@@ -17,8 +17,6 @@ package org.uiautomation.ios.wkrdp;
 import org.json.JSONObject;
 import org.openqa.selenium.TimeoutException;
 
-import java.util.List;
-
 public interface MessageHandler {
 
   public void handle(String msg);

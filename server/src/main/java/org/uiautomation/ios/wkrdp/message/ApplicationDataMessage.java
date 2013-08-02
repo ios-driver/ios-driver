@@ -43,7 +43,7 @@ public class ApplicationDataMessage extends BaseIOSWebKitMessage {
   public JSONObject getMessage() {
     return message;
   }
-   
+
   public String getDestinationKey() {
     return destinationKey;
   }

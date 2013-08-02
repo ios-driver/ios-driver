@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*
- * Stores an Array of LogEntry from Webdriver Logging API.  LogEntries are of a specific 
+ * Stores an Array of LogEntry from Webdriver Logging API.  LogEntries are of a specific
  * type and have a minimum level.
  */
 public class WebDriverLog implements Log {
@@ -30,9 +30,9 @@ public class WebDriverLog implements Log {
   private final Level minLogLevel;
   private final String type;
 
-  public WebDriverLog(String typeArg, Level levelArg) {
-    type = typeArg;
-    minLogLevel = levelArg;
+  public WebDriverLog(String type, Level minLogLevel) {
+    this.type = type;
+    this.minLogLevel = minLogLevel;
   }
 
   public String getType() {

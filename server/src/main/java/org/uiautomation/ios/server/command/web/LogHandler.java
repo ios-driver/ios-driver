@@ -39,7 +39,7 @@ public class LogHandler extends BaseWebCommandHandler {
   public Response handle() throws Exception {
     ServerSideSession session = getDriver().getSession(getRequest().getSession());
     JSONObject payload = getRequest().getPayload();
-    String type = payload.getString("type");	
+    String type = payload.getString("type");
     List<LogEntry> entries = session.getLogManager().getLog(type);
     return createResponse(entries);
   }

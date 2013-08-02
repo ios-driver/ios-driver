@@ -45,11 +45,11 @@ import org.uiautomation.ios.wkrdp.internal.AlertDetector;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 import java.util.logging.Logger;
-import java.util.ArrayList;
 
 public class ServerSideSession extends Session {
 
@@ -75,7 +75,7 @@ public class ServerSideSession extends Session {
   private Timer stopSessionTimer = new Timer(true);
 
   private final IOSLogManager logManager;
-  
+
   private Thread shutdownHook = new Thread() {
     @Override
     public void run() {
@@ -91,13 +91,13 @@ public class ServerSideSession extends Session {
   ServerSideSession(IOSServerManager driver, IOSCapabilities desiredCapabilities,
                     IOSServerConfiguration options) {
     super(UUID.randomUUID().toString());
- 
+
     this.driver = driver;
     this.capabilities = desiredCapabilities;
     this.options = options;
- 
+
     try {
-	    logManager = new IOSLogManager(capabilities.getLoggingPreferences());
+      logManager = new IOSLogManager(capabilities.getLoggingPreferences());
     } catch (Exception ex) {
       ex.printStackTrace();
       throw new SessionNotCreatedException("Cannot create logManager", ex);
@@ -334,6 +334,6 @@ public class ServerSideSession extends Session {
   }
 
   public IOSLogManager getLogManager() {
-	  return logManager;
+    return logManager;
   }
 }

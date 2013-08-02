@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
+import com.google.common.collect.ImmutableList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -339,23 +340,15 @@ public class IOSCapabilities extends DesiredCapabilities {
   }
 
   public LoggingPreferences getLoggingPreferences() throws JSONException {
-    LoggingPreferences loggingPrefs = null;
-    Object loggingPrefsJson = getCapability(CapabilityType.LOGGING_PREFS);
-    if (loggingPrefsJson != null) {
-      loggingPrefs = new LoggingPreferences();
-      //if (loggingPrefsJson instanceof JSONObject){
-        JSONObject json = (JSONObject) loggingPrefsJson;
-        Iterator<String> iter = json.keys();
-        while(iter.hasNext()) {
-          String logType = iter.next();
-          Level level = Level.parse((String) json.get(logType));
-          loggingPrefs.enable(logType, level);
-        }
-      //}
+    LoggingPreferences ret = new LoggingPreferences();
+    JSONObject json = (JSONObject) getCapability(CapabilityType.LOGGING_PREFS);
+    if (json != null) {
+      for (Object key : ImmutableList.copyOf(json.keys())) {
+        String logType = (String) key;
+        Level level = Level.parse((String) json.get(logType));
+        ret.enable(logType, level);
+      }
     }
-    if (loggingPrefs == null) {
-      return new LoggingPreferences();
-    }
-    return loggingPrefs;
+    return ret;
   }
 }

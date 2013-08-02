@@ -39,14 +39,14 @@ public class IOSLogManager {
       logs.put(LogType.PERFORMANCE, new WebDriverLog(LogType.PERFORMANCE, perfLevel));
     }
   }
-  
+
   public void onProtocolCreated(WebKitRemoteDebugProtocol protocol) {
     Log log = logs.get(LogType.PERFORMANCE);
     if (log != null) {
       protocol.addListener(new PerformanceListener(log));
     }
   }
-  
+
   public Set<String> getTypes() {
     return logs.keySet();
   }

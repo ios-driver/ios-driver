@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 ios-driver committers.
+ * Copyright 2012 ios-driver committers.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the Licence at
@@ -26,7 +26,6 @@ import org.uiautomation.ios.wkrdp.RemoteExceptionException;
 import org.uiautomation.ios.wkrdp.ResponseFinder;
 
 import java.util.Map;
-import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
