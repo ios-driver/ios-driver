@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 ios-driver committers.
+ * Copyright 2013 ios-driver committers.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -35,6 +35,7 @@ import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
 import org.uiautomation.ios.server.instruments.CommunicationChannel;
 import org.uiautomation.ios.server.instruments.InstrumentsManager;
+import org.uiautomation.ios.server.logging.IOSLogManager;
 import org.uiautomation.ios.server.utils.IOSVersion;
 import org.uiautomation.ios.server.utils.ZipUtils;
 import org.uiautomation.ios.utils.ApplicationCrashDetails;
@@ -48,6 +49,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.ArrayList;
 
 public class ServerSideSession extends Session {
 
@@ -72,6 +74,8 @@ public class ServerSideSession extends Session {
 
   private Timer stopSessionTimer = new Timer(true);
 
+  private final IOSLogManager logManager;
+  
   private Thread shutdownHook = new Thread() {
     @Override
     public void run() {
@@ -87,10 +91,17 @@ public class ServerSideSession extends Session {
   ServerSideSession(IOSServerManager driver, IOSCapabilities desiredCapabilities,
                     IOSServerConfiguration options) {
     super(UUID.randomUUID().toString());
-
+ 
     this.driver = driver;
     this.capabilities = desiredCapabilities;
     this.options = options;
+ 
+    try {
+	    logManager = new IOSLogManager(capabilities.getLoggingPreferences());
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      throw new SessionNotCreatedException("Cannot create logManager", ex);
+    }
 
     this.sessionCrashed = false;
     this.applicationCrashDetails = null;
@@ -298,16 +309,16 @@ public class ServerSideSession extends Session {
 
   }
 
-  public boolean  hasCrashed(){
+  public boolean  hasCrashed() {
     return sessionCrashed;
   }
 
-  public void sessionHasCrashed(String log){
+  public void sessionHasCrashed(String log) {
     sessionCrashed = true;
     applicationCrashDetails = new ApplicationCrashDetails(log);
   }
 
-  public ApplicationCrashDetails getCrashDetails(){
+  public ApplicationCrashDetails getCrashDetails() {
     return applicationCrashDetails;
   }
 
@@ -318,7 +329,11 @@ public class ServerSideSession extends Session {
     webDriver.switchTo(String.valueOf(currentPageID));
   }
 
-  public IOSServerManager getIOSServerManager(){
+  public IOSServerManager getIOSServerManager() {
     return driver;
+  }
+
+  public IOSLogManager getLogManager() {
+	  return logManager;
   }
 }

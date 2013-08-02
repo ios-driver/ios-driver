@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 ios-driver committers.
+ * Copyright 2013 ios-driver committers.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -15,6 +15,8 @@ package org.uiautomation.ios.wkrdp.internal;
 
 import org.json.JSONObject;
 import org.openqa.selenium.TimeoutException;
+import org.uiautomation.ios.context.WebInspector;
+import org.uiautomation.ios.wkrdp.ConnectListener;
 import org.uiautomation.ios.wkrdp.MessageHandler;
 import org.uiautomation.ios.wkrdp.MessageListener;
 import org.uiautomation.ios.wkrdp.ResponseFinder;
@@ -25,6 +27,7 @@ import org.uiautomation.ios.wkrdp.message.MessageFactory;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -82,7 +85,6 @@ public class DefaultMessageHandler implements MessageHandler {
     }
   }
 
-
   @Override
   public JSONObject getResponse(int id) throws TimeoutException {
     // there can be 2 things happening here.
@@ -117,6 +119,18 @@ public class DefaultMessageHandler implements MessageHandler {
   @Override
   public void addListener(MessageListener listener) {
     listeners.add(listener);
+    log.log(Level.INFO,
+        "DefaultMessageHandler addListener type: " + listener.getClass().getName(),
+        new Exception("log the stack"));
+    // Let all interested listeners know if this is a new WebInspector.
+    if (listener instanceof WebInspector) {
+      WebInspector inspector = (WebInspector) listener;
+      for (MessageListener curListener : listeners) {
+        if (curListener instanceof ConnectListener) {
+          ((ConnectListener) curListener).onConnect(inspector);
+        }
+      }
+    }
   }
 
   @Override

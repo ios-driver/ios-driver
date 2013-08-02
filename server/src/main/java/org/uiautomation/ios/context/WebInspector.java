@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 ios-driver committers.
+ * Copyright 2013 ios-driver committers.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the Licence at
@@ -16,7 +16,10 @@ package org.uiautomation.ios.context;
 
 
 import org.json.JSONObject;
+import org.uiautomation.ios.context.WebInspector;
 import org.uiautomation.ios.server.ServerSideSession;
+import org.uiautomation.ios.wkrdp.command.Network;
+import org.uiautomation.ios.wkrdp.command.Page;
 import org.uiautomation.ios.wkrdp.internal.WebKitRemoteDebugProtocol;
 
 import java.util.logging.Logger;
@@ -45,7 +48,7 @@ public class WebInspector extends BaseWebInspector {
     this.senderKey = generateSenderString(pageIdentifierKey);
   }
 
-
+  @Override
   public JSONObject sendCommand(JSONObject command) {
     JSONObject
         res =
@@ -53,10 +56,7 @@ public class WebInspector extends BaseWebInspector {
     return res;
   }
 
-  public String getSenderKey() {
-    return senderKey;
-  }
-
+  @Override
   public int getPageIdentifier() {
     return pageIdentifierKey;
   }
