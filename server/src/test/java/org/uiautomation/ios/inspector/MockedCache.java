@@ -42,7 +42,7 @@ public class MockedCache implements Cache {
     String name = device + "_" + variation + "_" + v;
 
     String capability = "mock/" + device + "_" + variation + ".json";
-    String screenshot = "mock/" + name + ".jpg";
+    String screenshot = "mock/" + name + ".png";
     String logElementTree = "mock/" + name + ".json";
     String status = "mock/status.json";
 
@@ -66,7 +66,7 @@ public class MockedCache implements Cache {
     JSONObject t = new JSONObject(tree.toString());
     IOSCapabilities c = new IOSCapabilities(new JSONObject(cap.toString()));
 
-    IDESessionModel
+     IDESessionModel
         model =
         new MockedModel(session, screenshot, t, c, new JSONObject(s.toString()));
     cache.put(session, model);

@@ -10,6 +10,8 @@ import java.util.logging.Logger;
  * -into-en-lproj-but-instead-into- a-new-english-lproj Understanding
  * http://developer.apple.com/library/ios/#referencelibrary/GettingStarted/RoadMapiOS/chapters/InternationalizeYourApp/InternationalizeYourApp/InternationalizeYourApp.html
  * and how en-CA or en-JP should be handled would be nice too.
+ * http://stackoverflow.com/questions/3308519/iphone-app-localization-english-problems/5974927#5974927
+ *
  */
 public enum AppleLanguage {
 

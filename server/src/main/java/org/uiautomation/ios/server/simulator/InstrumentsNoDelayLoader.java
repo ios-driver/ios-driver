@@ -1,7 +1,7 @@
 package org.uiautomation.ios.server.simulator;
 
 import org.apache.commons.io.IOUtils;
-import org.uiautomation.iosdriver.IOSDriverServiceException;
+import org.openqa.selenium.WebDriverException;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -46,7 +46,7 @@ public class InstrumentsNoDelayLoader {
 
     if (is == null) {
       String msg = "Cannot find " + resource + ".";
-      throw new IOSDriverServiceException(msg);
+      throw new WebDriverException(msg);
     }
     File f = null;
     try {

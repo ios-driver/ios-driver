@@ -1,0 +1,4375 @@
+{
+  "deviceOrientation": 3,
+  "tree": {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "l10n": {
+                  "langs": [
+                    {"hr": []},
+                    {"ro": []},
+                    {"ca": []},
+                    {"vi": []},
+                    {"tr": []},
+                    {"fr": []},
+                    {"unknown": []},
+                    {"hu": []},
+                    {"unknown": []},
+                    {"th": []},
+                    {"id": []},
+                    {"pt_PT": []},
+                    {"en_GB": []},
+                    {"fi": []},
+                    {"unknown": []},
+                    {"sv": []},
+                    {"it": []},
+                    {"sk": []},
+                    {"ja": []},
+                    {"uk": []},
+                    {"es": []},
+                    {"da": []},
+                    {"ms": []},
+                    {"ko": []},
+                    {"ar": []},
+                    {"he": []},
+                    {"en": []},
+                    {"nl": []},
+                    {"cs": []},
+                    {"el": []},
+                    {"pl": []},
+                    {"pt": []},
+                    {"ru": []},
+                    {"de": []}
+                  ],
+                  "matches": 0
+                },
+                "label": "URL",
+                "name": "URL",
+                "rect": {
+                  "origin": {
+                    "x": 6,
+                    "y": 41
+                  },
+                  "size": {
+                    "height": 31,
+                    "width": 363
+                  }
+                },
+                "ref": 100,
+                "type": "UIAImage",
+                "value": null
+              },
+              {
+                "l10n": {
+                  "langs": [
+                    {"hr": []},
+                    {"ro": []},
+                    {"ca": []},
+                    {"vi": []},
+                    {"tr": []},
+                    {"fr": []},
+                    {"unknown": []},
+                    {"hu": []},
+                    {"unknown": []},
+                    {"th": []},
+                    {"id": []},
+                    {"pt_PT": []},
+                    {"en_GB": []},
+                    {"fi": []},
+                    {"unknown": []},
+                    {"sv": []},
+                    {"it": []},
+                    {"sk": []},
+                    {"ja": []},
+                    {"uk": []},
+                    {"es": []},
+                    {"da": []},
+                    {"ms": []},
+                    {"ko": []},
+                    {"ar": []},
+                    {"he": []},
+                    {"en": []},
+                    {"nl": []},
+                    {"cs": []},
+                    {"el": []},
+                    {"pl": []},
+                    {"pt": []},
+                    {"ru": []},
+                    {"de": []}
+                  ],
+                  "matches": 0
+                },
+                "label": "URLProgress",
+                "name": "URLProgress",
+                "rect": {
+                  "origin": {
+                    "x": 6,
+                    "y": 41
+                  },
+                  "size": {
+                    "height": 31,
+                    "width": 0
+                  }
+                },
+                "ref": 101,
+                "type": "UIAImage",
+                "value": null
+              },
+              {
+                "l10n": {
+                  "key": "Address",
+                  "langs": [
+                    {"hr": ["Adresa"]},
+                    {"ro": ["Adresă"]},
+                    {"ca": ["Adreça"]},
+                    {"vi": ["Địa chỉ"]},
+                    {"tr": ["Adres"]},
+                    {"fr": ["Adresse"]},
+                    {"unknown": ["Adresse"]},
+                    {"hu": ["Cím"]},
+                    {"unknown": ["Adresse"]},
+                    {"th": ["ที่อยู่"]},
+                    {"id": ["Alamat "]},
+                    {"pt_PT": ["Endereço"]},
+                    {"en_GB": ["Address"]},
+                    {"fi": ["Osoite"]},
+                    {"unknown": ["Adresse"]},
+                    {"sv": ["Adress"]},
+                    {"it": ["Indirizzo"]},
+                    {"sk": ["Adresa"]},
+                    {"ja": ["アドレス"]},
+                    {"uk": ["Адреса"]},
+                    {"es": ["Dirección"]},
+                    {"da": ["Adresse"]},
+                    {"ms": ["Alamat"]},
+                    {"ko": ["주소"]},
+                    {"ar": ["العنوان"]},
+                    {"he": ["כתובת"]},
+                    {"en": ["Address"]},
+                    {"nl": ["Adres"]},
+                    {"cs": ["Adresa"]},
+                    {"el": ["Διεύθυνση"]},
+                    {"pl": ["Adres"]},
+                    {"pt": ["Endereço"]},
+                    {"ru": ["Адрес"]},
+                    {"de": ["Adressen"]}
+                  ],
+                  "matches": 1
+                },
+                "label": "Address",
+                "name": "Address",
+                "rect": {
+                  "origin": {
+                    "x": 15,
+                    "y": 41
+                  },
+                  "size": {
+                    "height": 31,
+                    "width": 278
+                  }
+                },
+                "ref": 102,
+                "type": "UIAElement",
+                "value": "http://hp.mobileweb.ebay.ch/home"
+              },
+              {
+                "l10n": {
+                  "key": "Address",
+                  "langs": [
+                    {"hr": ["Adresa"]},
+                    {"ro": ["Adresă"]},
+                    {"ca": ["Adreça"]},
+                    {"vi": ["Địa chỉ"]},
+                    {"tr": ["Adres"]},
+                    {"fr": ["Adresse"]},
+                    {"unknown": ["Adresse"]},
+                    {"hu": ["Cím"]},
+                    {"unknown": ["Adresse"]},
+                    {"th": ["ที่อยู่"]},
+                    {"id": ["Alamat "]},
+                    {"pt_PT": ["Endereço"]},
+                    {"en_GB": ["Address"]},
+                    {"fi": ["Osoite"]},
+                    {"unknown": ["Adresse"]},
+                    {"sv": ["Adress"]},
+                    {"it": ["Indirizzo"]},
+                    {"sk": ["Adresa"]},
+                    {"ja": ["アドレス"]},
+                    {"uk": ["Адреса"]},
+                    {"es": ["Dirección"]},
+                    {"da": ["Adresse"]},
+                    {"ms": ["Alamat"]},
+                    {"ko": ["주소"]},
+                    {"ar": ["العنوان"]},
+                    {"he": ["כתובת"]},
+                    {"en": ["Address"]},
+                    {"nl": ["Adres"]},
+                    {"cs": ["Adresa"]},
+                    {"el": ["Διεύθυνση"]},
+                    {"pl": ["Adres"]},
+                    {"pt": ["Endereço"]},
+                    {"ru": ["Адрес"]},
+                    {"de": ["Adressen"]}
+                  ],
+                  "matches": 1
+                },
+                "label": "Address",
+                "name": "Address",
+                "rect": {
+                  "origin": {
+                    "x": 7,
+                    "y": 41
+                  },
+                  "size": {
+                    "height": 31,
+                    "width": 361
+                  }
+                },
+                "ref": 103,
+                "type": "UIATextField",
+                "value": "Go to this address"
+              },
+              {
+                "children": [
+                  {
+                    "l10n": {"matches": 0},
+                    "label": null,
+                    "name": null,
+                    "rect": {
+                      "origin": {
+                        "x": 293,
+                        "y": 43
+                      },
+                      "size": {
+                        "height": 27,
+                        "width": 51
+                      }
+                    },
+                    "ref": 105,
+                    "type": "UIAImage",
+                    "value": null
+                  },
+                  {
+                    "l10n": {
+                      "key": "Reader",
+                      "langs": [
+                        {"hr": ["Čitač"]},
+                        {"ro": ["Cititor"]},
+                        {"ca": ["Lector"]},
+                        {"vi": ["Trình đọc"]},
+                        {"tr": ["Okuyucu"]},
+                        {"fr": ["Lecteur"]},
+                        {"unknown": ["Leser"]},
+                        {"hu": ["Olvasó"]},
+                        {"unknown": ["Leser"]},
+                        {"th": ["ตัวอ่าน"]},
+                        {"id": ["Pembaca"]},
+                        {"pt_PT": ["Leitor"]},
+                        {"en_GB": ["Reader"]},
+                        {"fi": ["Lukija"]},
+                        {"unknown": ["Leser"]},
+                        {"sv": ["Läsare"]},
+                        {"it": ["Reader"]},
+                        {"sk": ["Čítačka"]},
+                        {"ja": ["リーダー"]},
+                        {"uk": ["Читач"]},
+                        {"es": ["Lector"]},
+                        {"da": ["Læser"]},
+                        {"ms": ["Pembaca"]},
+                        {"ko": ["읽기 도구"]},
+                        {"ar": ["القارئ"]},
+                        {"he": ["הקורא"]},
+                        {"en": ["Reader"]},
+                        {"nl": ["Reader"]},
+                        {"cs": ["Čtečka"]},
+                        {"el": ["Ανάγνωση"]},
+                        {"pl": ["Reader"]},
+                        {"pt": ["Leitor"]},
+                        {"ru": ["Reader"]},
+                        {"de": ["Reader"]}
+                      ],
+                      "matches": 1
+                    },
+                    "label": "Reader",
+                    "name": "Reader",
+                    "rect": {
+                      "origin": {
+                        "x": 301,
+                        "y": 50
+                      },
+                      "size": {
+                        "height": 14,
+                        "width": 37
+                      }
+                    },
+                    "ref": 106,
+                    "type": "UIAStaticText",
+                    "value": "Reader"
+                  }
+                ],
+                "l10n": {
+                  "key": "Reader",
+                  "langs": [
+                    {"hr": ["Čitač"]},
+                    {"ro": ["Cititor"]},
+                    {"ca": ["Lector"]},
+                    {"vi": ["Trình đọc"]},
+                    {"tr": ["Okuyucu"]},
+                    {"fr": ["Lecteur"]},
+                    {"unknown": ["Leser"]},
+                    {"hu": ["Olvasó"]},
+                    {"unknown": ["Leser"]},
+                    {"th": ["ตัวอ่าน"]},
+                    {"id": ["Pembaca"]},
+                    {"pt_PT": ["Leitor"]},
+                    {"en_GB": ["Reader"]},
+                    {"fi": ["Lukija"]},
+                    {"unknown": ["Leser"]},
+                    {"sv": ["Läsare"]},
+                    {"it": ["Reader"]},
+                    {"sk": ["Čítačka"]},
+                    {"ja": ["リーダー"]},
+                    {"uk": ["Читач"]},
+                    {"es": ["Lector"]},
+                    {"da": ["Læser"]},
+                    {"ms": ["Pembaca"]},
+                    {"ko": ["읽기 도구"]},
+                    {"ar": ["القارئ"]},
+                    {"he": ["הקורא"]},
+                    {"en": ["Reader"]},
+                    {"nl": ["Reader"]},
+                    {"cs": ["Čtečka"]},
+                    {"el": ["Ανάγνωση"]},
+                    {"pl": ["Reader"]},
+                    {"pt": ["Leitor"]},
+                    {"ru": ["Reader"]},
+                    {"de": ["Reader"]}
+                  ],
+                  "matches": 1
+                },
+                "label": "Reader",
+                "name": "Reader",
+                "rect": {
+                  "origin": {
+                    "x": 293,
+                    "y": 41
+                  },
+                  "size": {
+                    "height": 31,
+                    "width": 51
+                  }
+                },
+                "ref": 104,
+                "type": "UIAButton",
+                "value": null
+              },
+              {
+                "l10n": {
+                  "langs": [
+                    {"hr": []},
+                    {"ro": []},
+                    {"ca": []},
+                    {"vi": []},
+                    {"tr": []},
+                    {"fr": []},
+                    {"unknown": []},
+                    {"hu": []},
+                    {"unknown": []},
+                    {"th": []},
+                    {"id": []},
+                    {"pt_PT": []},
+                    {"en_GB": []},
+                    {"fi": []},
+                    {"unknown": []},
+                    {"sv": []},
+                    {"it": []},
+                    {"sk": []},
+                    {"ja": []},
+                    {"uk": []},
+                    {"es": []},
+                    {"da": []},
+                    {"ms": []},
+                    {"ko": []},
+                    {"ar": []},
+                    {"he": []},
+                    {"en": []},
+                    {"nl": []},
+                    {"cs": []},
+                    {"el": []},
+                    {"pl": []},
+                    {"pt": []},
+                    {"ru": []},
+                    {"de": []}
+                  ],
+                  "matches": 0
+                },
+                "label": "reload",
+                "name": "reload",
+                "rect": {
+                  "origin": {
+                    "x": 338,
+                    "y": 49
+                  },
+                  "size": {
+                    "height": 15,
+                    "width": 33
+                  }
+                },
+                "ref": 107,
+                "type": "UIAButton",
+                "value": null
+              },
+              {
+                "l10n": {"matches": 0},
+                "label": "",
+                "name": null,
+                "rect": {
+                  "origin": {
+                    "x": 375,
+                    "y": 41
+                  },
+                  "size": {
+                    "height": 31,
+                    "width": 187
+                  }
+                },
+                "ref": 108,
+                "type": "UIASearchBar",
+                "value": "Search"
+              },
+              {
+                "l10n": {
+                  "key": "Cancel (bookmarks)",
+                  "langs": [
+                    {"hr": [
+                      "Poništi",
+                      "Poništi",
+                      "Poništi",
+                      "Poništi",
+                      "Poništi"
+                    ]},
+                    {"ro": [
+                      "Anulați",
+                      "Anulați",
+                      "Anulați",
+                      "Anulați",
+                      "Anulați"
+                    ]},
+                    {"ca": [
+                      "Cancel·lar",
+                      "Cancel·lar",
+                      "Cancel·lar",
+                      "Cancel·lar",
+                      "Cancel·lar"
+                    ]},
+                    {"vi": [
+                      "Hủy",
+                      "Hủy",
+                      "Hủy",
+                      "Hủy",
+                      "Hủy"
+                    ]},
+                    {"tr": [
+                      "Vazgeç",
+                      "Vazgeç",
+                      "Vazgeç",
+                      "Vazgeç",
+                      "Vazgeç"
+                    ]},
+                    {"fr": [
+                      "Annuler",
+                      "Annuler",
+                      "Annuler",
+                      "Annuler",
+                      "Annuler"
+                    ]},
+                    {"unknown": [
+                      "Avbryt",
+                      "Avbryt",
+                      "Avbryt",
+                      "Avbryt",
+                      "Avbryt"
+                    ]},
+                    {"hu": [
+                      "Mégsem",
+                      "Mégsem",
+                      "Mégsem",
+                      "Mégsem",
+                      "Mégsem"
+                    ]},
+                    {"unknown": [
+                      "Avbryt",
+                      "Avbryt",
+                      "Avbryt",
+                      "Avbryt",
+                      "Avbryt"
+                    ]},
+                    {"th": [
+                      "ยกเลิก",
+                      "ยกเลิก",
+                      "ยกเลิก",
+                      "ยกเลิก",
+                      "ยกเลิก"
+                    ]},
+                    {"id": [
+                      "Batal",
+                      "Batal",
+                      "Batal",
+                      "Batal",
+                      "Batal"
+                    ]},
+                    {"pt_PT": [
+                      "Cancelar",
+                      "Cancelar",
+                      "Cancelar",
+                      "Cancelar",
+                      "Cancelar"
+                    ]},
+                    {"en_GB": [
+                      "Cancel",
+                      "Cancel",
+                      "Cancel",
+                      "Cancel",
+                      "Cancel"
+                    ]},
+                    {"fi": [
+                      "Kumoa",
+                      "Kumoa",
+                      "Kumoa",
+                      "Kumoa",
+                      "Kumoa"
+                    ]},
+                    {"unknown": [
+                      "Avbryt",
+                      "Avbryt",
+                      "Avbryt",
+                      "Avbryt",
+                      "Avbryt"
+                    ]},
+                    {"sv": [
+                      "Avbryt",
+                      "Avbryt",
+                      "Avbryt",
+                      "Avbryt",
+                      "Avbryt"
+                    ]},
+                    {"it": [
+                      "Annulla",
+                      "Annulla",
+                      "Annulla",
+                      "Annulla",
+                      "Annulla"
+                    ]},
+                    {"sk": [
+                      "Zrušiť",
+                      "Zrušiť",
+                      "Zrušiť",
+                      "Zrušiť",
+                      "Zrušiť"
+                    ]},
+                    {"ja": [
+                      "キャンセル",
+                      "キャンセル",
+                      "キャンセル",
+                      "キャンセル",
+                      "キャンセル"
+                    ]},
+                    {"uk": [
+                      "Скасувати",
+                      "Скасувати",
+                      "Скасувати",
+                      "Скасувати",
+                      "Скасувати"
+                    ]},
+                    {"es": [
+                      "Cancelar",
+                      "Cancelar",
+                      "Cancelar",
+                      "Cancelar",
+                      "Cancelar"
+                    ]},
+                    {"da": [
+                      "Annuller",
+                      "Annuller",
+                      "Annuller",
+                      "Annuller",
+                      "Annuller"
+                    ]},
+                    {"ms": [
+                      "Batal",
+                      "Batal",
+                      "Batal",
+                      "Batal",
+                      "Batal"
+                    ]},
+                    {"ko": [
+                      "취소",
+                      "취소",
+                      "취소",
+                      "취소",
+                      "취소"
+                    ]},
+                    {"ar": [
+                      "إلغاء",
+                      "إلغاء",
+                      "إلغاء",
+                      "إلغاء",
+                      "إلغاء"
+                    ]},
+                    {"he": [
+                      "ביטול",
+                      "ביטול",
+                      "ביטול",
+                      "ביטול",
+                      "ביטול"
+                    ]},
+                    {"en": [
+                      "Cancel",
+                      "Cancel",
+                      "Cancel",
+                      "Cancel",
+                      "Cancel"
+                    ]},
+                    {"nl": [
+                      "Annuleer",
+                      "Annuleer",
+                      "Annuleer",
+                      "Annuleer",
+                      "Annuleer"
+                    ]},
+                    {"cs": [
+                      "Zrušit",
+                      "Zrušit",
+                      "Zrušit",
+                      "Zrušit",
+                      "Zrušit"
+                    ]},
+                    {"el": [
+                      "Ακύρωση",
+                      "Ακύρωση",
+                      "Ακύρωση",
+                      "Ακύρωση",
+                      "Ακύρωση"
+                    ]},
+                    {"pl": [
+                      "Anuluj",
+                      "Anuluj",
+                      "Anuluj",
+                      "Anuluj",
+                      "Anuluj"
+                    ]},
+                    {"pt": [
+                      "Cancelar",
+                      "Cancelar",
+                      "Cancelar",
+                      "Cancelar",
+                      "Cancelar"
+                    ]},
+                    {"ru": [
+                      "Отменить",
+                      "Отменить",
+                      "Отменить",
+                      "Отменить",
+                      "Отменить"
+                    ]},
+                    {"de": [
+                      "Abbrechen",
+                      "Abbrechen",
+                      "Abbrechen",
+                      "Abbrechen",
+                      "Abbrechen"
+                    ]}
+                  ],
+                  "matches": 5
+                },
+                "label": "Cancel",
+                "name": "Cancel",
+                "rect": {
+                  "origin": {
+                    "x": 568,
+                    "y": 42
+                  },
+                  "size": {
+                    "height": 30,
+                    "width": 60
+                  }
+                },
+                "ref": 109,
+                "type": "UIAButton",
+                "value": null
+              }
+            ],
+            "l10n": {"matches": 0},
+            "label": null,
+            "name": null,
+            "rect": {
+              "origin": {
+                "x": 0,
+                "y": 20
+              },
+              "size": {
+                "height": 60,
+                "width": 568
+              }
+            },
+            "ref": 99,
+            "type": "UIAImage",
+            "value": null
+          },
+          {
+            "l10n": {
+              "langs": [
+                {"hr": []},
+                {"ro": []},
+                {"ca": []},
+                {"vi": []},
+                {"tr": []},
+                {"fr": []},
+                {"unknown": []},
+                {"hu": []},
+                {"unknown": []},
+                {"th": []},
+                {"id": []},
+                {"pt_PT": []},
+                {"en_GB": []},
+                {"fi": []},
+                {"unknown": []},
+                {"sv": []},
+                {"it": []},
+                {"sk": []},
+                {"ja": []},
+                {"uk": []},
+                {"es": []},
+                {"da": []},
+                {"ms": []},
+                {"ko": []},
+                {"ar": []},
+                {"he": []},
+                {"en": []},
+                {"nl": []},
+                {"cs": []},
+                {"el": []},
+                {"pl": []},
+                {"pt": []},
+                {"ru": []},
+                {"de": []}
+              ],
+              "matches": 0
+            },
+            "label": "eBay für Mobilgeräte | Elektronik, Autos, Kleidung, Sammeln Seltenes und WOW! Angebote online.",
+            "name": "eBay für Mobilgeräte | Elektronik, Autos, Kleidung, Sammeln Seltenes und WOW! Angebote online.",
+            "rect": {
+              "origin": {
+                "x": 6,
+                "y": 22
+              },
+              "size": {
+                "height": 16,
+                "width": 556
+              }
+            },
+            "ref": 110,
+            "type": "UIAElement",
+            "value": null
+          },
+          {
+            "l10n": {"matches": 0},
+            "label": null,
+            "name": null,
+            "rect": {
+              "origin": {
+                "x": 0,
+                "y": 80
+              },
+              "size": {
+                "height": 3,
+                "width": 568
+              }
+            },
+            "ref": 111,
+            "type": "UIAImage",
+            "value": null
+          },
+          {
+            "l10n": {
+              "langs": [
+                {"hr": []},
+                {"ro": []},
+                {"ca": []},
+                {"vi": []},
+                {"tr": []},
+                {"fr": []},
+                {"unknown": []},
+                {"hu": []},
+                {"unknown": []},
+                {"th": []},
+                {"id": []},
+                {"pt_PT": []},
+                {"en_GB": []},
+                {"fi": []},
+                {"unknown": []},
+                {"sv": []},
+                {"it": []},
+                {"sk": []},
+                {"ja": []},
+                {"uk": []},
+                {"es": []},
+                {"da": []},
+                {"ms": []},
+                {"ko": []},
+                {"ar": []},
+                {"he": []},
+                {"en": []},
+                {"nl": []},
+                {"cs": []},
+                {"el": []},
+                {"pl": []},
+                {"pt": []},
+                {"ru": []},
+                {"de": []}
+              ],
+              "matches": 0
+            },
+            "label": "Return to web page",
+            "name": "Return to web page",
+            "rect": {
+              "origin": {
+                "x": 0,
+                "y": 20
+              },
+              "size": {
+                "height": 60,
+                "width": 0
+              }
+            },
+            "ref": 112,
+            "type": "UIAButton",
+            "value": null
+          },
+          {
+            "children": [
+              {
+                "l10n": {"matches": 0},
+                "label": null,
+                "name": null,
+                "rect": {
+                  "origin": {
+                    "x": 0,
+                    "y": -10
+                  },
+                  "size": {
+                    "height": 30,
+                    "width": 0
+                  }
+                },
+                "ref": 114,
+                "type": "UIAImage",
+                "value": null
+              },
+              {
+                "l10n": {"matches": 0},
+                "label": null,
+                "name": null,
+                "rect": {
+                  "origin": {
+                    "x": 0,
+                    "y": 20
+                  },
+                  "size": {
+                    "height": 30,
+                    "width": 0
+                  }
+                },
+                "ref": 115,
+                "type": "UIAImage",
+                "value": null
+              },
+              {
+                "l10n": {"matches": 0},
+                "label": null,
+                "name": null,
+                "rect": {
+                  "origin": {
+                    "x": 0,
+                    "y": 20
+                  },
+                  "size": {
+                    "height": 30,
+                    "width": 1
+                  }
+                },
+                "ref": 116,
+                "type": "UIAImage",
+                "value": null
+              },
+              {
+                "l10n": {"matches": 0},
+                "label": null,
+                "name": null,
+                "rect": {
+                  "origin": {
+                    "x": 0,
+                    "y": 20
+                  },
+                  "size": {
+                    "height": 30,
+                    "width": 1
+                  }
+                },
+                "ref": 117,
+                "type": "UIAImage",
+                "value": null
+              },
+              {
+                "l10n": {"matches": 0},
+                "label": null,
+                "name": null,
+                "rect": {
+                  "origin": {
+                    "x": 0,
+                    "y": 20
+                  },
+                  "size": {
+                    "height": 54,
+                    "width": 54
+                  }
+                },
+                "ref": 118,
+                "type": "UIAImage",
+                "value": null
+              },
+              {
+                "l10n": {"matches": 0},
+                "label": null,
+                "name": null,
+                "rect": {
+                  "origin": {
+                    "x": 0,
+                    "y": 20
+                  },
+                  "size": {
+                    "height": 54,
+                    "width": 54
+                  }
+                },
+                "ref": 119,
+                "type": "UIAImage",
+                "value": null
+              },
+              {
+                "l10n": {"matches": 0},
+                "label": null,
+                "name": null,
+                "rect": {
+                  "origin": {
+                    "x": 0,
+                    "y": 20
+                  },
+                  "size": {
+                    "height": 54,
+                    "width": 54
+                  }
+                },
+                "ref": 120,
+                "type": "UIAImage",
+                "value": null
+              },
+              {
+                "l10n": {"matches": 0},
+                "label": null,
+                "name": null,
+                "rect": {
+                  "origin": {
+                    "x": 0,
+                    "y": 20
+                  },
+                  "size": {
+                    "height": 54,
+                    "width": 54
+                  }
+                },
+                "ref": 121,
+                "type": "UIAImage",
+                "value": null
+              },
+              {
+                "l10n": {"matches": 0},
+                "label": null,
+                "name": null,
+                "rect": {
+                  "origin": {
+                    "x": 561,
+                    "y": 20
+                  },
+                  "size": {
+                    "height": 504,
+                    "width": 7
+                  }
+                },
+                "ref": 122,
+                "type": "UIAImage",
+                "value": null
+              },
+              {
+                "l10n": {"matches": 0},
+                "label": null,
+                "name": null,
+                "rect": {
+                  "origin": {
+                    "x": -15,
+                    "y": 34
+                  },
+                  "size": {
+                    "height": 1,
+                    "width": 30
+                  }
+                },
+                "ref": 123,
+                "type": "UIAImage",
+                "value": null
+              },
+              {
+                "l10n": {"matches": 0},
+                "label": null,
+                "name": null,
+                "rect": {
+                  "origin": {
+                    "x": -15,
+                    "y": 34
+                  },
+                  "size": {
+                    "height": 1,
+                    "width": 30
+                  }
+                },
+                "ref": 124,
+                "type": "UIAImage",
+                "value": null
+              },
+              {
+                "children": [{
+                  "children": [
+                    {
+                      "l10n": {
+                        "langs": [
+                          {"hr": []},
+                          {"ro": []},
+                          {"ca": []},
+                          {"vi": []},
+                          {"tr": []},
+                          {"fr": []},
+                          {"unknown": []},
+                          {"hu": []},
+                          {"unknown": []},
+                          {"th": []},
+                          {"id": []},
+                          {"pt_PT": []},
+                          {"en_GB": []},
+                          {"fi": []},
+                          {"unknown": []},
+                          {"sv": []},
+                          {"it": []},
+                          {"sk": []},
+                          {"ja": []},
+                          {"uk": []},
+                          {"es": []},
+                          {"da": []},
+                          {"ms": []},
+                          {"ko": []},
+                          {"ar": []},
+                          {"he": []},
+                          {"en": []},
+                          {"nl": []},
+                          {"cs": []},
+                          {"el": []},
+                          {"pl": []},
+                          {"pt": []},
+                          {"ru": []},
+                          {"de": []}
+                        ],
+                        "matches": 0
+                      },
+                      "label": "X",
+                      "name": "X",
+                      "rect": {
+                        "origin": {
+                          "x": -4990,
+                          "y": 84
+                        },
+                        "size": {
+                          "height": 15,
+                          "width": 8
+                        }
+                      },
+                      "ref": 127,
+                      "type": "UIAStaticText",
+                      "value": ""
+                    },
+                    {
+                      "l10n": {
+                        "langs": [
+                          {"hr": []},
+                          {"ro": []},
+                          {"ca": []},
+                          {"vi": []},
+                          {"tr": []},
+                          {"fr": []},
+                          {"unknown": []},
+                          {"hu": []},
+                          {"unknown": []},
+                          {"th": []},
+                          {"id": []},
+                          {"pt_PT": []},
+                          {"en_GB": []},
+                          {"fi": []},
+                          {"unknown": []},
+                          {"sv": []},
+                          {"it": []},
+                          {"sk": []},
+                          {"ja": []},
+                          {"uk": []},
+                          {"es": []},
+                          {"da": []},
+                          {"ms": []},
+                          {"ko": []},
+                          {"ar": []},
+                          {"he": []},
+                          {"en": []},
+                          {"nl": []},
+                          {"cs": []},
+                          {"el": []},
+                          {"pl": []},
+                          {"pt": []},
+                          {"ru": []},
+                          {"de": []}
+                        ],
+                        "matches": 0
+                      },
+                      "label": "eBay",
+                      "name": "eBay",
+                      "rect": {
+                        "origin": {
+                          "x": 220,
+                          "y": 92
+                        },
+                        "size": {
+                          "height": 15,
+                          "width": 29
+                        }
+                      },
+                      "ref": 128,
+                      "type": "UIAStaticText",
+                      "value": ""
+                    },
+                    {
+                      "l10n": {
+                        "langs": [
+                          {"hr": []},
+                          {"ro": []},
+                          {"ca": []},
+                          {"vi": []},
+                          {"tr": []},
+                          {"fr": []},
+                          {"unknown": []},
+                          {"hu": []},
+                          {"unknown": []},
+                          {"th": []},
+                          {"id": []},
+                          {"pt_PT": []},
+                          {"en_GB": []},
+                          {"fi": []},
+                          {"unknown": []},
+                          {"sv": []},
+                          {"it": []},
+                          {"sk": []},
+                          {"ja": []},
+                          {"uk": []},
+                          {"es": []},
+                          {"da": []},
+                          {"ms": []},
+                          {"ko": []},
+                          {"ar": []},
+                          {"he": []},
+                          {"en": []},
+                          {"nl": []},
+                          {"cs": []},
+                          {"el": []},
+                          {"pl": []},
+                          {"pt": []},
+                          {"ru": []},
+                          {"de": []}
+                        ],
+                        "matches": 0
+                      },
+                      "label": "eBay Inc.",
+                      "name": "eBay Inc.",
+                      "rect": {
+                        "origin": {
+                          "x": 220,
+                          "y": 107
+                        },
+                        "size": {
+                          "height": 13,
+                          "width": 44
+                        }
+                      },
+                      "ref": 129,
+                      "type": "UIAStaticText",
+                      "value": ""
+                    },
+                    {
+                      "l10n": {
+                        "langs": [
+                          {"hr": []},
+                          {"ro": []},
+                          {"ca": []},
+                          {"vi": []},
+                          {"tr": []},
+                          {"fr": []},
+                          {"unknown": []},
+                          {"hu": []},
+                          {"unknown": []},
+                          {"th": []},
+                          {"id": []},
+                          {"pt_PT": []},
+                          {"en_GB": []},
+                          {"fi": []},
+                          {"unknown": []},
+                          {"sv": []},
+                          {"it": []},
+                          {"sk": []},
+                          {"ja": []},
+                          {"uk": []},
+                          {"es": []},
+                          {"da": []},
+                          {"ms": []},
+                          {"ko": []},
+                          {"ar": []},
+                          {"he": []},
+                          {"en": []},
+                          {"nl": []},
+                          {"cs": []},
+                          {"el": []},
+                          {"pl": []},
+                          {"pt": []},
+                          {"ru": []},
+                          {"de": []}
+                        ],
+                        "matches": 0
+                      },
+                      "label": "(26)",
+                      "name": "(26)",
+                      "rect": {
+                        "origin": {
+                          "x": 269,
+                          "y": 119
+                        },
+                        "size": {
+                          "height": 13,
+                          "width": 18
+                        }
+                      },
+                      "ref": 130,
+                      "type": "UIAStaticText",
+                      "value": ""
+                    },
+                    {
+                      "l10n": {
+                        "langs": [
+                          {"hr": []},
+                          {"ro": []},
+                          {"ca": []},
+                          {"vi": []},
+                          {"tr": []},
+                          {"fr": []},
+                          {"unknown": []},
+                          {"hu": []},
+                          {"unknown": []},
+                          {"th": []},
+                          {"id": []},
+                          {"pt_PT": []},
+                          {"en_GB": []},
+                          {"fi": []},
+                          {"unknown": []},
+                          {"sv": []},
+                          {"it": []},
+                          {"sk": []},
+                          {"ja": []},
+                          {"uk": []},
+                          {"es": []},
+                          {"da": []},
+                          {"ms": []},
+                          {"ko": []},
+                          {"ar": []},
+                          {"he": []},
+                          {"en": []},
+                          {"nl": []},
+                          {"cs": []},
+                          {"el": []},
+                          {"pl": []},
+                          {"pt": []},
+                          {"ru": []},
+                          {"de": []}
+                        ],
+                        "matches": 0
+                      },
+                      "label": "FREE - On the App Store",
+                      "name": "FREE - On the App Store",
+                      "rect": {
+                        "origin": {
+                          "x": 220,
+                          "y": 132
+                        },
+                        "size": {
+                          "height": 13,
+                          "width": 118
+                        }
+                      },
+                      "ref": 131,
+                      "type": "UIAStaticText",
+                      "value": ""
+                    },
+                    {
+                      "l10n": {
+                        "langs": [
+                          {"hr": []},
+                          {"ro": []},
+                          {"ca": []},
+                          {"vi": []},
+                          {"tr": []},
+                          {"fr": []},
+                          {"unknown": []},
+                          {"hu": []},
+                          {"unknown": []},
+                          {"th": []},
+                          {"id": []},
+                          {"pt_PT": []},
+                          {"en_GB": []},
+                          {"fi": []},
+                          {"unknown": []},
+                          {"sv": []},
+                          {"it": []},
+                          {"sk": []},
+                          {"ja": []},
+                          {"uk": []},
+                          {"es": []},
+                          {"da": []},
+                          {"ms": []},
+                          {"ko": []},
+                          {"ar": []},
+                          {"he": []},
+                          {"en": []},
+                          {"nl": []},
+                          {"cs": []},
+                          {"el": []},
+                          {"pl": []},
+                          {"pt": []},
+                          {"ru": []},
+                          {"de": []}
+                        ],
+                        "matches": 0
+                      },
+                      "label": "VIEW",
+                      "name": "VIEW",
+                      "rect": {
+                        "origin": {
+                          "x": 394,
+                          "y": 109
+                        },
+                        "size": {
+                          "height": 16,
+                          "width": 33
+                        }
+                      },
+                      "ref": 132,
+                      "type": "UIAStaticText",
+                      "value": ""
+                    }
+                  ],
+                  "l10n": {"matches": 0},
+                  "label": null,
+                  "name": null,
+                  "rect": {
+                    "origin": {
+                      "x": 0,
+                      "y": 60
+                    },
+                    "size": {
+                      "height": 78,
+                      "width": 568
+                    }
+                  },
+                  "ref": 126,
+                  "source": "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\"><html><head><meta name=\"apple-itunes-app\" content=\"app-id=282614216,app-argument=ebay://launch?trackingEvent=LaunchFromMobileWeb_HP\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"><meta name=\"apple-mobile-web-app-status-bar-style\" content=\"black-translucent\"><meta name=\"format-detection\" content=\"telephone=no\"><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"><meta http-equiv=\"expires\" content=\"0\"><meta http-equiv=\"cache-control\" content=\"no-cache\"><meta http-equiv=\"pragma\" content=\"no-cache\"><link rel=\"apple-touch-icon-precomposed\" type=\"image/x-icon\" href=\"http://q.ebaystatic.com/aw/pics/mobile/inspector.images/apple-touch-icon.png\"><meta name=\"keywords\" content=\"Mode, Schuhe, Accessoires, Motors, Sport, Schmuck, Uhren\"><meta name=\"description\" content=\"Kaufen und verkaufen Sie Elektronik, Autos, Digitalkameras und vieles mehr bei eBay - jetzt auch als mobile Website.\"><link rel=\"canonical\" href=\"http://hp.mobileweb.ebay.ch/home\"><title>eBay für Mobilgeräte | Elektronik, Autos, Kleidung, Sammeln Seltenes und WOW! Angebote online.<\/title><link rel=\"stylesheet\" type=\"text/css\" href=\"http://include.ebaystatic.com/eboxapps/ebaymobi/css/de_CH/E819/MobiAppSpec_MobiDsfShared_E81916215544_de_CH.css\"><link rel=\"stylesheet\" type=\"text/css\" href=\"http://include.ebaystatic.com/eboxapps/ebaymobi/css/de_CH/E819/MobiAppSpec_HomeDsf_E81916215544_de_CH.css\"><\/head><body id=\"body\"><script type=\"text/javascript\" src=\"http://include.ebaystatic.com/eboxapps/ebaymobi/js/de_CH/E819/SYS-MOBI_dsfSysJs_E81916215543_1_de_CH.js\"><\/script><script type=\"text/javascript\" src=\"http://include.ebaystatic.com/eboxapps/ebaymobi/js/de_CH/E819/SYS-MOBI_dsfSysJs_E81916215543_2_de_CH.js\"><\/script><header id=\"mw-hdr\" class=\"mwHdr\"><section id=\"tbdHdr\"><div class=\"cl lgoCl\"><a href=\"http://hp.mobileweb.ebay.ch/home?mfs=hdrL\"><img src=\"http://q.ebaystatic.com/aw/pics/mobile/inspector.images/logo_new_d_v2.png\" alt=\"eBay\" class=\"headerLogo\"><\/a><a class=\"homeicon\" href=\"http://hp.mobileweb.ebay.ch/home?mfs=hdrI\"><span class=\"hdSpt\"><\/span><\/a><\/div><div class=\"cl srchCl actv\"><span id=\"tglSrchAncr\"><span class=\"hdSpt\"><\/span><\/span><\/div><div class=\"cl myBCl\"><a href=\"http://my.mobileweb.ebay.ch/myebay?mfs=hdr\"><span class=\"hdSpt\"><\/span><\/a><\/div><\/section><form id=\"srchFrm\" method=\"get\" action=\"http://shop.mobileweb.ebay.ch/searchresults\"><span><div id=\"srchDv\"><div id=\"ghostText\" class=\"gtx\"><div id=\"gohstText\" class=\"gtxi\"><\/div><\/div><div class=\"inputDiv\" id=\"srcinp\" style=\"border-top: 1px solid #c1c1c1;border-bottom: 1px solid #c1c1c1;border-left: 1px solid #c1c1c1;border-right:none\"><input type=\"text\" name=\"kw\" id=\"kw\" placeholder=\"Ich suche ...\" onkeypress=\"return AutoSuggestion.onKeyPress(event);\" data-sid=\"193\" autocomplete=\"off\" autocorrect=\"off\" value=\"\"><input type=\"hidden\" name=\"cmd\" value=\"SREF\"><input type=\"hidden\" id=\"itemId\"><input type=\"hidden\" name=\"fads\" id=\"fads\" value=\"All\"><input type=\"hidden\" name=\"call\" id=\"call\" value=\"All\"><input type=\"hidden\" name=\"sort\" id=\"sort\" value=\"BestMatch\"><input type=\"hidden\" name=\"catid\" id=\"categoryId\"><input type=\"hidden\" name=\"catnm\" id=\"categoryName\"><input type=\"hidden\" name=\"mfs\" id=\"trackingUserAction\"><input type=\"hidden\" name=\"acimp\" id=\"arrowBtnClk\"><\/div><\/div><input type=\"hidden\" name=\"isNewKw\" id=\"isNewKw\" value=\"true\"><span id=\"rmvTxt\" class=\"inputIconStyle\"><a id=\"clearSearchX\" href=\"javascript:void(0)\" class=\"inputIconLink\" style=\"visibility: hidden;\"><img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAMAAAC7IEhfAAAAjVBMVEWysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLU1NTLy8vd3d3////9/f3Y2NjX19fT09Pu7u7W1tbs7Ozt7e3Z2dnb29u2trb+/v7G51f7AAAAHnRSTlMA+c/tA3IMzB5vxnU86hgtV5nnqNX88GY/OdghaWy9ycldAAABJElEQVR4Xp3U146DMBCGUTA2piQQ0rf9QLK9vf/jrVFWjM3ERPDdIR0ZMTITzKw4VJne7XRWHQq/ilUGq0zFV5lMIwyKUsldIsCDSIZuscbV1gvXrUJ4Cle2uyPHpXVmssRIy6T/Xo3RtPyHKW6UXlzcz69ubfDa9POM3QPr08lIejo37pFbgiTdh23nSvS9k3QcUA4+5fkimYMycAOrrw5wh42BAnbfHWEOwsAITq1BzCEyMASTzCH0wN+GQc+rzw1/tWDu5Y1JQeMhV+OHpDUexRy4VAaW3HFZ0qUgd5GftrwPunKCnSNJQ8oHF7c1juSHe3HpSH/5tJ/r9u/6YC2U0QUwZaVQR9+SOk5de5RU+yHb53LmaqaKx0oLQOjqqQjm9QdNMIOaVGDi+AAAAABJRU5ErkJggg==\" alt=\"X\"><\/a><\/span><span id=\"historySearch\" class=\"inputIconStyle\"><a id=\"historySearchArrow\" href=\"#\" class=\"inputIconLink\" style=\"visibility: hidden;\"><\/a><\/span><\/span><div id=\"autoDiv\"><div><div id=\"v4-0\" class=\"afl\"><p class=\"ghAC_title hidden\" id=\"ghAC\"><em class=\"ghAC_titletxt\">Aktuelle Suchanfragen<\/em><\/p><div id=\"suggestionList\"><\/div><div id=\"cntntFrmt\" class=\"hidden\"><span><\/span> in <span><\/span><\/div><\/div><\/div><\/div><a id=\"searchBtn\" href=\"#\" onclick=\"return AutoSuggestion.triggerSearch('kw');\" class=\"btnWdth\"><span class=\"srchBtnLg\"><\/span><\/a><\/form><div id=\"dynamicScripts\"><\/div><section style=\"border: none\"><article id=\"cMsg\" class=\"msg rdbg rdtxt\" style=\"padding:3px 5px;color:#ff0000;background: none repeat scroll 0 0 #FFF1F1;display:none\">Cookies wurden in Ihrem Browser deaktiviert. Ihre Verwendung ist jedoch erforderlich. Bitte passen Sie die Einstellungen Ihres Browsers an, bevor Sie fortfahren.<\/article><\/section><style>@-webkit-keyframes infinite-spin {0% {-webkit-transform: rotate(0deg);} 10% {-webkit-transform: rotate(-36deg);} 20% {-webkit-transform: rotate(-72deg);} 30% {-webkit-transform: rotate(-108deg);} 40% {-webkit-transform: rotate(-144deg);} 50% {-webkit-transform: rotate(-180deg);} 60% {-webkit-transform: rotate(-216deg);} 70% {-webkit-transform: rotate(-252deg);} 80% {-webkit-transform: rotate(-288deg);} 90% {-webkit-transform: rotate(-324deg);}}<\/style><div id=\"gCvr\" class=\"hidden\"><\/div><\/header><div><section class=\"popCat\"><header class=\"secHeaderPop\"><h2 class=\"h2off\">Beliebte Kategorien<\/h2><\/header><ul class=\"edge\"><li><h3 class=\"h2off inl\"><a href=\"http://shop.mobileweb.ebay.ch/categories?parentId=11450&amp;title=Kategorien&amp;siteId=193\">Kleidung &amp; Accessoires<\/a><\/h3><\/li><li><h3 class=\"h2off inl\"><a href=\"http://shop.mobileweb.ebay.ch/categories?parentId=11116&amp;title=Kategorien&amp;siteId=193\">Münzen<\/a><\/h3><\/li><li><h3 class=\"h2off inl\"><a href=\"http://shop.mobileweb.ebay.ch/categories?parentId=20710&amp;title=Kategorien&amp;siteId=193\">TV, Video &amp; Audio<\/a><\/h3><\/li><li><h3 class=\"h2off inl\"><a href=\"http://shop.mobileweb.ebay.ch/categories?parentId=9800&amp;title=Kategorien&amp;siteId=193\">Auto &amp; Motorrad<\/a><\/h3><\/li><\/ul><\/section><\/div><header class=\"secHeaderBro\"><span class=\"logoSpan brsCat\"><\/span><h2 class=\"h2off secHeaderH2\"><a class=\"linkblock\" href=\"http://shop.mobileweb.ebay.ch/categories?title=Kategorien\">In Kategorien suchen<span class=\"arrowSprite blright\"><\/span><\/a><\/h2><\/header><script>window.addEventListener('load', function() {preVIRes();}, false);<\/script><footer id=\"mw-ftr\" data-domain=\"ch\"><section id=\"footerLvl1Section\"><div id=\"\" class=\"footerLvl1Entries\"><span class=\"footerL1Logo lvl1_1\"><\/span><a href=\"http://hp.mobileweb.ebay.ch/home?mfs=ftr\">Startseite<\/a><\/div><div id=\"f_m\" class=\"footerLvl1Entries\"><span class=\"footerL1Logo lvl1_2\"><\/span><a href=\"http://my.mobileweb.ebay.ch/myebay?mfs=ftr\">Mein eBay<\/a> <\/div><span class=\"sout hidden\" id=\"sgnOut\"><a href=\"https://signin.mobileweb.ebay.ch/logout?showPage=1\">Ausloggen<\/a><\/span><div class=\"footerLvl1Entries\" id=\"sgnIn\"><span class=\"footerL1Logo lvl1_3_2\"><\/span><a href=\"https://signin.mobileweb.ebay.ch/login?mfs=ftr\">Einloggen/Anmelden<\/a><\/div><div class=\"footerLvl1Entries\"><span class=\"footerL1Logo lvl1_4\"><\/span><a href=\"http://pages.mobileweb.ebay.ch/help?type=help\">Kundenservice<\/a><\/div><div class=\"footerLvl1Entries\"><a href=\"http://itunes.apple.com/ch/app/ebay-mobile/id282614216?mt=8\" onclick=\"fireTrackingTag('iOSeBayCoreappdownload', '193', '5366', 'footer')\"><span class=\"appLogo apple\"><\/span>Kostenlose eBay-App herunterladen<\/a><\/div><\/section><section id=\"br\"><div style=\"border:1px solid #d9d9d9\"><\/div><\/section><section id=\"footerLvl3Section\" class=\"hidden\"><div><span class=\"sout\"><a href=\"https://signin.mobileweb.ebay.ch/logout?showPage=1\">Ausloggen<\/a><\/span><\/div><\/section><section id=\"footerLvl2Section\"><a href=\"http://pages.mobileweb.ebay.ch/help?type=about\">Über eBay<\/a><span class=\"lnkPipB\">|<\/span><a href=\"http://pages.mobileweb.ebay.ch/help?type=policy\">Grundsätze<\/a><span class=\"lnkPipB\">|<\/span><a href=\"http://adfarm.mediaplex.com/ad/ck/9656-122528-2357-0?src=eBay Mobile&amp;mpre=http%3A%2F%2Fwww.ebay.ch%3Fredirect%3Dmobile&amp;device=Apple|iPhone\">Hauptseite<\/a><\/section><div class=\"copy\">© 1995 - 2013 eBay Inc.<\/div><section id=\"mwver\">14.4<\/section><div id=\"visit_count\">User Visit # 0<\/div><\/footer><!--RcmdId home,RlogId p4ndvwpfiuf%3F%3Cwk%7D1e34e*f%3C2%3F-14030ee9869-0xba--><script type=\"text/javascript\" src=\"http://include.ebaystatic.com/eboxapps/ebaymobi/js/de_CH/E819/MobiAppSpec_HomeDsf_E81916215543_3_de_CH.js\"><\/script><script type=\"text/javascript\">(function(){\nvar _d=vjo.dsf.EventDispatcher;\nvar _r=vjo.Registry;\n_d.add('body','load',function(event) { this.showMessage(\"cMsg\"); },vjo.ebay.cmp.cookie.CookieCheck);})();\n<\/script><script type=\"text/javascript\">\nvjo.ctype(\"vjo.dsf.FirePageLoad\").endType();if(typeof(oGaugeInfo)!=\"undefined\"){oGaugeInfo.iLoadST=(new Date()).getTime();}\nvjo.dsf.EventDispatcher.load(document.body);\n\n<\/script><script src=\"http://include.ebaystatic.com/eboxapps/ebaymobi/js/de_CH/E819/MobiAppSpec_ViewItemDsf_E81916215543_3_de_CH.js\" type=\"text/javascript\"><\/script><\/body><\/html>",
+                  "type": "UIAWebView",
+                  "value": null
+                }],
+                "l10n": {"matches": 0},
+                "label": null,
+                "name": null,
+                "rect": {
+                  "origin": {
+                    "x": 0,
+                    "y": 80
+                  },
+                  "size": {
+                    "height": 78,
+                    "width": 568
+                  }
+                },
+                "ref": 125,
+                "type": "UIAScrollView",
+                "value": null
+              },
+              {
+                "l10n": {
+                  "langs": [
+                    {"hr": []},
+                    {"ro": []},
+                    {"ca": []},
+                    {"vi": []},
+                    {"tr": []},
+                    {"fr": []},
+                    {"unknown": []},
+                    {"hu": []},
+                    {"unknown": []},
+                    {"th": []},
+                    {"id": []},
+                    {"pt_PT": []},
+                    {"en_GB": []},
+                    {"fi": []},
+                    {"unknown": []},
+                    {"sv": []},
+                    {"it": []},
+                    {"sk": []},
+                    {"ja": []},
+                    {"uk": []},
+                    {"es": []},
+                    {"da": []},
+                    {"ms": []},
+                    {"ko": []},
+                    {"ar": []},
+                    {"he": []},
+                    {"en": []},
+                    {"nl": []},
+                    {"cs": []},
+                    {"el": []},
+                    {"pl": []},
+                    {"pt": []},
+                    {"ru": []},
+                    {"de": []}
+                  ],
+                  "matches": 0
+                },
+                "label": "PlaceholderBackground",
+                "name": "PlaceholderBackground",
+                "rect": {
+                  "origin": {
+                    "x": 0,
+                    "y": 80
+                  },
+                  "size": {
+                    "height": 78,
+                    "width": 568
+                  }
+                },
+                "ref": 133,
+                "type": "UIAImage",
+                "value": null
+              },
+              {
+                "l10n": {
+                  "langs": [
+                    {"hr": []},
+                    {"ro": []},
+                    {"ca": []},
+                    {"vi": []},
+                    {"tr": []},
+                    {"fr": []},
+                    {"unknown": []},
+                    {"hu": []},
+                    {"unknown": []},
+                    {"th": []},
+                    {"id": []},
+                    {"pt_PT": []},
+                    {"en_GB": []},
+                    {"fi": []},
+                    {"unknown": []},
+                    {"sv": []},
+                    {"it": []},
+                    {"sk": []},
+                    {"ja": []},
+                    {"uk": []},
+                    {"es": []},
+                    {"da": []},
+                    {"ms": []},
+                    {"ko": []},
+                    {"ar": []},
+                    {"he": []},
+                    {"en": []},
+                    {"nl": []},
+                    {"cs": []},
+                    {"el": []},
+                    {"pl": []},
+                    {"pt": []},
+                    {"ru": []},
+                    {"de": []}
+                  ],
+                  "matches": 0
+                },
+                "label": "StoreBannerShadow",
+                "name": "StoreBannerShadow",
+                "rect": {
+                  "origin": {
+                    "x": 0,
+                    "y": 158
+                  },
+                  "size": {
+                    "height": 5,
+                    "width": 568
+                  }
+                },
+                "ref": 134,
+                "type": "UIAImage",
+                "value": null
+              },
+              {
+                "children": [
+                  {
+                    "children": [{
+                      "l10n": {
+                        "langs": [
+                          {"hr": []},
+                          {"ro": []},
+                          {"ca": []},
+                          {"vi": []},
+                          {"tr": []},
+                          {"fr": []},
+                          {"unknown": []},
+                          {"hu": []},
+                          {"unknown": []},
+                          {"th": []},
+                          {"id": []},
+                          {"pt_PT": []},
+                          {"en_GB": []},
+                          {"fi": []},
+                          {"unknown": []},
+                          {"sv": []},
+                          {"it": []},
+                          {"sk": []},
+                          {"ja": []},
+                          {"uk": []},
+                          {"es": []},
+                          {"da": []},
+                          {"ms": []},
+                          {"ko": []},
+                          {"ar": []},
+                          {"he": []},
+                          {"en": []},
+                          {"nl": []},
+                          {"cs": []},
+                          {"el": []},
+                          {"pl": []},
+                          {"pt": []},
+                          {"ru": []},
+                          {"de": []}
+                        ],
+                        "matches": 0
+                      },
+                      "label": "eBay",
+                      "name": "eBay",
+                      "rect": {
+                        "origin": {
+                          "x": 10,
+                          "y": 169
+                        },
+                        "size": {
+                          "height": 35,
+                          "width": 73
+                        }
+                      },
+                      "ref": 137,
+                      "type": "UIAImage",
+                      "value": ""
+                    }],
+                    "l10n": {
+                      "langs": [
+                        {"hr": []},
+                        {"ro": []},
+                        {"ca": []},
+                        {"vi": []},
+                        {"tr": []},
+                        {"fr": []},
+                        {"unknown": []},
+                        {"hu": []},
+                        {"unknown": []},
+                        {"th": []},
+                        {"id": []},
+                        {"pt_PT": []},
+                        {"en_GB": []},
+                        {"fi": []},
+                        {"unknown": []},
+                        {"sv": []},
+                        {"it": []},
+                        {"sk": []},
+                        {"ja": []},
+                        {"uk": []},
+                        {"es": []},
+                        {"da": []},
+                        {"ms": []},
+                        {"ko": []},
+                        {"ar": []},
+                        {"he": []},
+                        {"en": []},
+                        {"nl": []},
+                        {"cs": []},
+                        {"el": []},
+                        {"pl": []},
+                        {"pt": []},
+                        {"ru": []},
+                        {"de": []}
+                      ],
+                      "matches": 0
+                    },
+                    "label": "eBay",
+                    "name": "eBay",
+                    "rect": {
+                      "origin": {
+                        "x": 10,
+                        "y": 169
+                      },
+                      "size": {
+                        "height": 35,
+                        "width": 73
+                      }
+                    },
+                    "ref": 136,
+                    "type": "UIALink",
+                    "value": ""
+                  },
+                  {
+                    "l10n": {"matches": 0},
+                    "label": "",
+                    "name": null,
+                    "rect": {
+                      "origin": {
+                        "x": 403,
+                        "y": 170
+                      },
+                      "size": {
+                        "height": 32,
+                        "width": 55
+                      }
+                    },
+                    "ref": 138,
+                    "type": "UIALink",
+                    "value": ""
+                  },
+                  {
+                    "l10n": {"matches": 0},
+                    "label": "",
+                    "name": null,
+                    "rect": {
+                      "origin": {
+                        "x": 513,
+                        "y": 169
+                      },
+                      "size": {
+                        "height": 32,
+                        "width": 45
+                      }
+                    },
+                    "ref": 139,
+                    "type": "UIALink",
+                    "value": ""
+                  },
+                  {
+                    "l10n": {"matches": 0},
+                    "label": "",
+                    "name": null,
+                    "rect": {
+                      "origin": {
+                        "x": 13,
+                        "y": 212
+                      },
+                      "size": {
+                        "height": 36,
+                        "width": 464
+                      }
+                    },
+                    "ref": 140,
+                    "type": "UIATextField",
+                    "value": "Ich suche ..."
+                  },
+                  {
+                    "children": [{
+                      "l10n": {"matches": 0},
+                      "label": "",
+                      "name": null,
+                      "rect": {
+                        "origin": {
+                          "x": 512,
+                          "y": 218
+                        },
+                        "size": {
+                          "height": 23,
+                          "width": 34
+                        }
+                      },
+                      "ref": 142,
+                      "type": "UIALink",
+                      "value": ""
+                    }],
+                    "l10n": {"matches": 0},
+                    "label": null,
+                    "name": null,
+                    "rect": {
+                      "origin": {
+                        "x": 505,
+                        "y": 211
+                      },
+                      "size": {
+                        "height": 38,
+                        "width": 53
+                      }
+                    },
+                    "ref": 141,
+                    "type": "UIALink",
+                    "value": ""
+                  },
+                  {
+                    "l10n": {
+                      "langs": [
+                        {"hr": []},
+                        {"ro": []},
+                        {"ca": []},
+                        {"vi": []},
+                        {"tr": []},
+                        {"fr": []},
+                        {"unknown": []},
+                        {"hu": []},
+                        {"unknown": []},
+                        {"th": []},
+                        {"id": []},
+                        {"pt_PT": []},
+                        {"en_GB": []},
+                        {"fi": []},
+                        {"unknown": []},
+                        {"sv": []},
+                        {"it": []},
+                        {"sk": []},
+                        {"ja": []},
+                        {"uk": []},
+                        {"es": []},
+                        {"da": []},
+                        {"ms": []},
+                        {"ko": []},
+                        {"ar": []},
+                        {"he": []},
+                        {"en": []},
+                        {"nl": []},
+                        {"cs": []},
+                        {"el": []},
+                        {"pl": []},
+                        {"pt": []},
+                        {"ru": []},
+                        {"de": []}
+                      ],
+                      "matches": 0
+                    },
+                    "label": "Beliebte Kategorien",
+                    "name": "Beliebte Kategorien",
+                    "rect": {
+                      "origin": {
+                        "x": 15,
+                        "y": 268
+                      },
+                      "size": {
+                        "height": 20,
+                        "width": 151
+                      }
+                    },
+                    "ref": 143,
+                    "type": "UIAStaticText",
+                    "value": "2"
+                  },
+                  {
+                    "children": [{
+                      "l10n": {
+                        "langs": [
+                          {"hr": []},
+                          {"ro": []},
+                          {"ca": []},
+                          {"vi": []},
+                          {"tr": []},
+                          {"fr": []},
+                          {"unknown": []},
+                          {"hu": []},
+                          {"unknown": []},
+                          {"th": []},
+                          {"id": []},
+                          {"pt_PT": []},
+                          {"en_GB": []},
+                          {"fi": []},
+                          {"unknown": []},
+                          {"sv": []},
+                          {"it": []},
+                          {"sk": []},
+                          {"ja": []},
+                          {"uk": []},
+                          {"es": []},
+                          {"da": []},
+                          {"ms": []},
+                          {"ko": []},
+                          {"ar": []},
+                          {"he": []},
+                          {"en": []},
+                          {"nl": []},
+                          {"cs": []},
+                          {"el": []},
+                          {"pl": []},
+                          {"pt": []},
+                          {"ru": []},
+                          {"de": []}
+                        ],
+                        "matches": 0
+                      },
+                      "label": "Kleidung & Accessoires",
+                      "name": "Kleidung & Accessoires",
+                      "rect": {
+                        "origin": {
+                          "x": 35,
+                          "y": 307
+                        },
+                        "size": {
+                          "height": 20,
+                          "width": 169
+                        }
+                      },
+                      "ref": 145,
+                      "type": "UIAStaticText",
+                      "value": "3"
+                    }],
+                    "l10n": {
+                      "langs": [
+                        {"hr": []},
+                        {"ro": []},
+                        {"ca": []},
+                        {"vi": []},
+                        {"tr": []},
+                        {"fr": []},
+                        {"unknown": []},
+                        {"hu": []},
+                        {"unknown": []},
+                        {"th": []},
+                        {"id": []},
+                        {"pt_PT": []},
+                        {"en_GB": []},
+                        {"fi": []},
+                        {"unknown": []},
+                        {"sv": []},
+                        {"it": []},
+                        {"sk": []},
+                        {"ja": []},
+                        {"uk": []},
+                        {"es": []},
+                        {"da": []},
+                        {"ms": []},
+                        {"ko": []},
+                        {"ar": []},
+                        {"he": []},
+                        {"en": []},
+                        {"nl": []},
+                        {"cs": []},
+                        {"el": []},
+                        {"pl": []},
+                        {"pt": []},
+                        {"ru": []},
+                        {"de": []}
+                      ],
+                      "matches": 0
+                    },
+                    "label": "Kleidung & Accessoires",
+                    "name": "Kleidung & Accessoires",
+                    "rect": {
+                      "origin": {
+                        "x": 35,
+                        "y": 300
+                      },
+                      "size": {
+                        "height": 35,
+                        "width": 518
+                      }
+                    },
+                    "ref": 144,
+                    "type": "UIALink",
+                    "value": "3"
+                  },
+                  {
+                    "children": [{
+                      "l10n": {
+                        "langs": [
+                          {"hr": []},
+                          {"ro": []},
+                          {"ca": []},
+                          {"vi": []},
+                          {"tr": []},
+                          {"fr": []},
+                          {"unknown": []},
+                          {"hu": []},
+                          {"unknown": []},
+                          {"th": []},
+                          {"id": []},
+                          {"pt_PT": []},
+                          {"en_GB": []},
+                          {"fi": []},
+                          {"unknown": []},
+                          {"sv": []},
+                          {"it": []},
+                          {"sk": []},
+                          {"ja": []},
+                          {"uk": []},
+                          {"es": []},
+                          {"da": []},
+                          {"ms": []},
+                          {"ko": []},
+                          {"ar": []},
+                          {"he": []},
+                          {"en": []},
+                          {"nl": []},
+                          {"cs": []},
+                          {"el": []},
+                          {"pl": []},
+                          {"pt": []},
+                          {"ru": []},
+                          {"de": []}
+                        ],
+                        "matches": 0
+                      },
+                      "label": "Münzen",
+                      "name": "Münzen",
+                      "rect": {
+                        "origin": {
+                          "x": 35,
+                          "y": 343
+                        },
+                        "size": {
+                          "height": 20,
+                          "width": 57
+                        }
+                      },
+                      "ref": 147,
+                      "type": "UIAStaticText",
+                      "value": "3"
+                    }],
+                    "l10n": {
+                      "langs": [
+                        {"hr": []},
+                        {"ro": []},
+                        {"ca": []},
+                        {"vi": []},
+                        {"tr": []},
+                        {"fr": []},
+                        {"unknown": []},
+                        {"hu": []},
+                        {"unknown": []},
+                        {"th": []},
+                        {"id": []},
+                        {"pt_PT": []},
+                        {"en_GB": []},
+                        {"fi": []},
+                        {"unknown": []},
+                        {"sv": []},
+                        {"it": []},
+                        {"sk": []},
+                        {"ja": []},
+                        {"uk": []},
+                        {"es": []},
+                        {"da": []},
+                        {"ms": []},
+                        {"ko": []},
+                        {"ar": []},
+                        {"he": []},
+                        {"en": []},
+                        {"nl": []},
+                        {"cs": []},
+                        {"el": []},
+                        {"pl": []},
+                        {"pt": []},
+                        {"ru": []},
+                        {"de": []}
+                      ],
+                      "matches": 0
+                    },
+                    "label": "Münzen",
+                    "name": "Münzen",
+                    "rect": {
+                      "origin": {
+                        "x": 35,
+                        "y": 336
+                      },
+                      "size": {
+                        "height": 35,
+                        "width": 518
+                      }
+                    },
+                    "ref": 146,
+                    "type": "UIALink",
+                    "value": "3"
+                  },
+                  {
+                    "children": [{
+                      "l10n": {
+                        "langs": [
+                          {"hr": []},
+                          {"ro": []},
+                          {"ca": []},
+                          {"vi": []},
+                          {"tr": []},
+                          {"fr": []},
+                          {"unknown": []},
+                          {"hu": []},
+                          {"unknown": []},
+                          {"th": []},
+                          {"id": []},
+                          {"pt_PT": []},
+                          {"en_GB": []},
+                          {"fi": []},
+                          {"unknown": []},
+                          {"sv": []},
+                          {"it": []},
+                          {"sk": []},
+                          {"ja": []},
+                          {"uk": []},
+                          {"es": []},
+                          {"da": []},
+                          {"ms": []},
+                          {"ko": []},
+                          {"ar": []},
+                          {"he": []},
+                          {"en": []},
+                          {"nl": []},
+                          {"cs": []},
+                          {"el": []},
+                          {"pl": []},
+                          {"pt": []},
+                          {"ru": []},
+                          {"de": []}
+                        ],
+                        "matches": 0
+                      },
+                      "label": "TV, Video & Audio",
+                      "name": "TV, Video & Audio",
+                      "rect": {
+                        "origin": {
+                          "x": 35,
+                          "y": 379
+                        },
+                        "size": {
+                          "height": 20,
+                          "width": 131
+                        }
+                      },
+                      "ref": 149,
+                      "type": "UIAStaticText",
+                      "value": "3"
+                    }],
+                    "l10n": {
+                      "langs": [
+                        {"hr": []},
+                        {"ro": []},
+                        {"ca": []},
+                        {"vi": []},
+                        {"tr": []},
+                        {"fr": []},
+                        {"unknown": []},
+                        {"hu": []},
+                        {"unknown": []},
+                        {"th": []},
+                        {"id": []},
+                        {"pt_PT": []},
+                        {"en_GB": []},
+                        {"fi": []},
+                        {"unknown": []},
+                        {"sv": []},
+                        {"it": []},
+                        {"sk": []},
+                        {"ja": []},
+                        {"uk": []},
+                        {"es": []},
+                        {"da": []},
+                        {"ms": []},
+                        {"ko": []},
+                        {"ar": []},
+                        {"he": []},
+                        {"en": []},
+                        {"nl": []},
+                        {"cs": []},
+                        {"el": []},
+                        {"pl": []},
+                        {"pt": []},
+                        {"ru": []},
+                        {"de": []}
+                      ],
+                      "matches": 0
+                    },
+                    "label": "TV, Video & Audio",
+                    "name": "TV, Video & Audio",
+                    "rect": {
+                      "origin": {
+                        "x": 35,
+                        "y": 372
+                      },
+                      "size": {
+                        "height": 35,
+                        "width": 518
+                      }
+                    },
+                    "ref": 148,
+                    "type": "UIALink",
+                    "value": "3"
+                  },
+                  {
+                    "children": [{
+                      "l10n": {
+                        "langs": [
+                          {"hr": []},
+                          {"ro": []},
+                          {"ca": []},
+                          {"vi": []},
+                          {"tr": []},
+                          {"fr": []},
+                          {"unknown": []},
+                          {"hu": []},
+                          {"unknown": []},
+                          {"th": []},
+                          {"id": []},
+                          {"pt_PT": []},
+                          {"en_GB": []},
+                          {"fi": []},
+                          {"unknown": []},
+                          {"sv": []},
+                          {"it": []},
+                          {"sk": []},
+                          {"ja": []},
+                          {"uk": []},
+                          {"es": []},
+                          {"da": []},
+                          {"ms": []},
+                          {"ko": []},
+                          {"ar": []},
+                          {"he": []},
+                          {"en": []},
+                          {"nl": []},
+                          {"cs": []},
+                          {"el": []},
+                          {"pl": []},
+                          {"pt": []},
+                          {"ru": []},
+                          {"de": []}
+                        ],
+                        "matches": 0
+                      },
+                      "label": "Auto & Motorrad",
+                      "name": "Auto & Motorrad",
+                      "rect": {
+                        "origin": {
+                          "x": 35,
+                          "y": 415
+                        },
+                        "size": {
+                          "height": 20,
+                          "width": 117
+                        }
+                      },
+                      "ref": 151,
+                      "type": "UIAStaticText",
+                      "value": "3"
+                    }],
+                    "l10n": {
+                      "langs": [
+                        {"hr": []},
+                        {"ro": []},
+                        {"ca": []},
+                        {"vi": []},
+                        {"tr": []},
+                        {"fr": []},
+                        {"unknown": []},
+                        {"hu": []},
+                        {"unknown": []},
+                        {"th": []},
+                        {"id": []},
+                        {"pt_PT": []},
+                        {"en_GB": []},
+                        {"fi": []},
+                        {"unknown": []},
+                        {"sv": []},
+                        {"it": []},
+                        {"sk": []},
+                        {"ja": []},
+                        {"uk": []},
+                        {"es": []},
+                        {"da": []},
+                        {"ms": []},
+                        {"ko": []},
+                        {"ar": []},
+                        {"he": []},
+                        {"en": []},
+                        {"nl": []},
+                        {"cs": []},
+                        {"el": []},
+                        {"pl": []},
+                        {"pt": []},
+                        {"ru": []},
+                        {"de": []}
+                      ],
+                      "matches": 0
+                    },
+                    "label": "Auto & Motorrad",
+                    "name": "Auto & Motorrad",
+                    "rect": {
+                      "origin": {
+                        "x": 35,
+                        "y": 408
+                      },
+                      "size": {
+                        "height": 35,
+                        "width": 518
+                      }
+                    },
+                    "ref": 150,
+                    "type": "UIALink",
+                    "value": "3"
+                  },
+                  {
+                    "children": [{
+                      "l10n": {
+                        "langs": [
+                          {"hr": []},
+                          {"ro": []},
+                          {"ca": []},
+                          {"vi": []},
+                          {"tr": []},
+                          {"fr": []},
+                          {"unknown": []},
+                          {"hu": []},
+                          {"unknown": []},
+                          {"th": []},
+                          {"id": []},
+                          {"pt_PT": []},
+                          {"en_GB": []},
+                          {"fi": []},
+                          {"unknown": []},
+                          {"sv": []},
+                          {"it": []},
+                          {"sk": []},
+                          {"ja": []},
+                          {"uk": []},
+                          {"es": []},
+                          {"da": []},
+                          {"ms": []},
+                          {"ko": []},
+                          {"ar": []},
+                          {"he": []},
+                          {"en": []},
+                          {"nl": []},
+                          {"cs": []},
+                          {"el": []},
+                          {"pl": []},
+                          {"pt": []},
+                          {"ru": []},
+                          {"de": []}
+                        ],
+                        "matches": 0
+                      },
+                      "label": "In Kategorien suchen",
+                      "name": "In Kategorien suchen",
+                      "rect": {
+                        "origin": {
+                          "x": 35,
+                          "y": 468
+                        },
+                        "size": {
+                          "height": 20,
+                          "width": 163
+                        }
+                      },
+                      "ref": 153,
+                      "type": "UIAStaticText",
+                      "value": "2"
+                    }],
+                    "l10n": {
+                      "langs": [
+                        {"hr": []},
+                        {"ro": []},
+                        {"ca": []},
+                        {"vi": []},
+                        {"tr": []},
+                        {"fr": []},
+                        {"unknown": []},
+                        {"hu": []},
+                        {"unknown": []},
+                        {"th": []},
+                        {"id": []},
+                        {"pt_PT": []},
+                        {"en_GB": []},
+                        {"fi": []},
+                        {"unknown": []},
+                        {"sv": []},
+                        {"it": []},
+                        {"sk": []},
+                        {"ja": []},
+                        {"uk": []},
+                        {"es": []},
+                        {"da": []},
+                        {"ms": []},
+                        {"ko": []},
+                        {"ar": []},
+                        {"he": []},
+                        {"en": []},
+                        {"nl": []},
+                        {"cs": []},
+                        {"el": []},
+                        {"pl": []},
+                        {"pt": []},
+                        {"ru": []},
+                        {"de": []}
+                      ],
+                      "matches": 0
+                    },
+                    "label": "In Kategorien suchen",
+                    "name": "In Kategorien suchen",
+                    "rect": {
+                      "origin": {
+                        "x": 35,
+                        "y": 462
+                      },
+                      "size": {
+                        "height": 32,
+                        "width": 521
+                      }
+                    },
+                    "ref": 152,
+                    "type": "UIALink",
+                    "value": "2"
+                  },
+                  {
+                    "children": [{
+                      "l10n": {
+                        "langs": [
+                          {"hr": []},
+                          {"ro": []},
+                          {"ca": []},
+                          {"vi": []},
+                          {"tr": []},
+                          {"fr": []},
+                          {"unknown": []},
+                          {"hu": []},
+                          {"unknown": []},
+                          {"th": []},
+                          {"id": []},
+                          {"pt_PT": []},
+                          {"en_GB": []},
+                          {"fi": []},
+                          {"unknown": []},
+                          {"sv": []},
+                          {"it": []},
+                          {"sk": []},
+                          {"ja": []},
+                          {"uk": []},
+                          {"es": []},
+                          {"da": []},
+                          {"ms": []},
+                          {"ko": []},
+                          {"ar": []},
+                          {"he": []},
+                          {"en": []},
+                          {"nl": []},
+                          {"cs": []},
+                          {"el": []},
+                          {"pl": []},
+                          {"pt": []},
+                          {"ru": []},
+                          {"de": []}
+                        ],
+                        "matches": 0
+                      },
+                      "label": "Startseite",
+                      "name": "Startseite",
+                      "rect": {
+                        "origin": {
+                          "x": 63,
+                          "y": 521
+                        },
+                        "size": {
+                          "height": 16,
+                          "width": 56
+                        }
+                      },
+                      "ref": 155,
+                      "type": "UIAStaticText",
+                      "value": ""
+                    }],
+                    "l10n": {
+                      "langs": [
+                        {"hr": []},
+                        {"ro": []},
+                        {"ca": []},
+                        {"vi": []},
+                        {"tr": []},
+                        {"fr": []},
+                        {"unknown": []},
+                        {"hu": []},
+                        {"unknown": []},
+                        {"th": []},
+                        {"id": []},
+                        {"pt_PT": []},
+                        {"en_GB": []},
+                        {"fi": []},
+                        {"unknown": []},
+                        {"sv": []},
+                        {"it": []},
+                        {"sk": []},
+                        {"ja": []},
+                        {"uk": []},
+                        {"es": []},
+                        {"da": []},
+                        {"ms": []},
+                        {"ko": []},
+                        {"ar": []},
+                        {"he": []},
+                        {"en": []},
+                        {"nl": []},
+                        {"cs": []},
+                        {"el": []},
+                        {"pl": []},
+                        {"pt": []},
+                        {"ru": []},
+                        {"de": []}
+                      ],
+                      "matches": 0
+                    },
+                    "label": "Startseite",
+                    "name": "Startseite",
+                    "rect": {
+                      "origin": {
+                        "x": 10,
+                        "y": 507
+                      },
+                      "size": {
+                        "height": 44,
+                        "width": 548
+                      }
+                    },
+                    "ref": 154,
+                    "type": "UIALink",
+                    "value": ""
+                  },
+                  {
+                    "children": [{
+                      "l10n": {
+                        "langs": [
+                          {"hr": []},
+                          {"ro": []},
+                          {"ca": []},
+                          {"vi": []},
+                          {"tr": []},
+                          {"fr": []},
+                          {"unknown": []},
+                          {"hu": []},
+                          {"unknown": []},
+                          {"th": []},
+                          {"id": []},
+                          {"pt_PT": []},
+                          {"en_GB": []},
+                          {"fi": []},
+                          {"unknown": []},
+                          {"sv": []},
+                          {"it": []},
+                          {"sk": []},
+                          {"ja": []},
+                          {"uk": []},
+                          {"es": []},
+                          {"da": []},
+                          {"ms": []},
+                          {"ko": []},
+                          {"ar": []},
+                          {"he": []},
+                          {"en": []},
+                          {"nl": []},
+                          {"cs": []},
+                          {"el": []},
+                          {"pl": []},
+                          {"pt": []},
+                          {"ru": []},
+                          {"de": []}
+                        ],
+                        "matches": 0
+                      },
+                      "label": "Mein eBay",
+                      "name": "Mein eBay",
+                      "rect": {
+                        "origin": {
+                          "x": 63,
+                          "y": 565
+                        },
+                        "size": {
+                          "height": 16,
+                          "width": 62
+                        }
+                      },
+                      "ref": 157,
+                      "type": "UIAStaticText",
+                      "value": ""
+                    }],
+                    "l10n": {
+                      "langs": [
+                        {"hr": []},
+                        {"ro": []},
+                        {"ca": []},
+                        {"vi": []},
+                        {"tr": []},
+                        {"fr": []},
+                        {"unknown": []},
+                        {"hu": []},
+                        {"unknown": []},
+                        {"th": []},
+                        {"id": []},
+                        {"pt_PT": []},
+                        {"en_GB": []},
+                        {"fi": []},
+                        {"unknown": []},
+                        {"sv": []},
+                        {"it": []},
+                        {"sk": []},
+                        {"ja": []},
+                        {"uk": []},
+                        {"es": []},
+                        {"da": []},
+                        {"ms": []},
+                        {"ko": []},
+                        {"ar": []},
+                        {"he": []},
+                        {"en": []},
+                        {"nl": []},
+                        {"cs": []},
+                        {"el": []},
+                        {"pl": []},
+                        {"pt": []},
+                        {"ru": []},
+                        {"de": []}
+                      ],
+                      "matches": 0
+                    },
+                    "label": "Mein eBay",
+                    "name": "Mein eBay",
+                    "rect": {
+                      "origin": {
+                        "x": 10,
+                        "y": 551
+                      },
+                      "size": {
+                        "height": 44,
+                        "width": 548
+                      }
+                    },
+                    "ref": 156,
+                    "type": "UIALink",
+                    "value": ""
+                  },
+                  {
+                    "children": [{
+                      "l10n": {
+                        "langs": [
+                          {"hr": []},
+                          {"ro": []},
+                          {"ca": []},
+                          {"vi": []},
+                          {"tr": []},
+                          {"fr": []},
+                          {"unknown": []},
+                          {"hu": []},
+                          {"unknown": []},
+                          {"th": []},
+                          {"id": []},
+                          {"pt_PT": []},
+                          {"en_GB": []},
+                          {"fi": []},
+                          {"unknown": []},
+                          {"sv": []},
+                          {"it": []},
+                          {"sk": []},
+                          {"ja": []},
+                          {"uk": []},
+                          {"es": []},
+                          {"da": []},
+                          {"ms": []},
+                          {"ko": []},
+                          {"ar": []},
+                          {"he": []},
+                          {"en": []},
+                          {"nl": []},
+                          {"cs": []},
+                          {"el": []},
+                          {"pl": []},
+                          {"pt": []},
+                          {"ru": []},
+                          {"de": []}
+                        ],
+                        "matches": 0
+                      },
+                      "label": "Einloggen/Anmelden",
+                      "name": "Einloggen/Anmelden",
+                      "rect": {
+                        "origin": {
+                          "x": 63,
+                          "y": 609
+                        },
+                        "size": {
+                          "height": 16,
+                          "width": 121
+                        }
+                      },
+                      "ref": 159,
+                      "type": "UIAStaticText",
+                      "value": ""
+                    }],
+                    "l10n": {
+                      "langs": [
+                        {"hr": []},
+                        {"ro": []},
+                        {"ca": []},
+                        {"vi": []},
+                        {"tr": []},
+                        {"fr": []},
+                        {"unknown": []},
+                        {"hu": []},
+                        {"unknown": []},
+                        {"th": []},
+                        {"id": []},
+                        {"pt_PT": []},
+                        {"en_GB": []},
+                        {"fi": []},
+                        {"unknown": []},
+                        {"sv": []},
+                        {"it": []},
+                        {"sk": []},
+                        {"ja": []},
+                        {"uk": []},
+                        {"es": []},
+                        {"da": []},
+                        {"ms": []},
+                        {"ko": []},
+                        {"ar": []},
+                        {"he": []},
+                        {"en": []},
+                        {"nl": []},
+                        {"cs": []},
+                        {"el": []},
+                        {"pl": []},
+                        {"pt": []},
+                        {"ru": []},
+                        {"de": []}
+                      ],
+                      "matches": 0
+                    },
+                    "label": "Einloggen/Anmelden",
+                    "name": "Einloggen/Anmelden",
+                    "rect": {
+                      "origin": {
+                        "x": 10,
+                        "y": 595
+                      },
+                      "size": {
+                        "height": 44,
+                        "width": 548
+                      }
+                    },
+                    "ref": 158,
+                    "type": "UIALink",
+                    "value": ""
+                  },
+                  {
+                    "children": [{
+                      "l10n": {
+                        "langs": [
+                          {"hr": []},
+                          {"ro": []},
+                          {"ca": []},
+                          {"vi": []},
+                          {"tr": []},
+                          {"fr": []},
+                          {"unknown": []},
+                          {"hu": []},
+                          {"unknown": []},
+                          {"th": []},
+                          {"id": []},
+                          {"pt_PT": []},
+                          {"en_GB": []},
+                          {"fi": []},
+                          {"unknown": []},
+                          {"sv": []},
+                          {"it": []},
+                          {"sk": []},
+                          {"ja": []},
+                          {"uk": []},
+                          {"es": []},
+                          {"da": []},
+                          {"ms": []},
+                          {"ko": []},
+                          {"ar": []},
+                          {"he": []},
+                          {"en": []},
+                          {"nl": []},
+                          {"cs": []},
+                          {"el": []},
+                          {"pl": []},
+                          {"pt": []},
+                          {"ru": []},
+                          {"de": []}
+                        ],
+                        "matches": 0
+                      },
+                      "label": "Kundenservice",
+                      "name": "Kundenservice",
+                      "rect": {
+                        "origin": {
+                          "x": 63,
+                          "y": 653
+                        },
+                        "size": {
+                          "height": 16,
+                          "width": 87
+                        }
+                      },
+                      "ref": 161,
+                      "type": "UIAStaticText",
+                      "value": ""
+                    }],
+                    "l10n": {
+                      "langs": [
+                        {"hr": []},
+                        {"ro": []},
+                        {"ca": []},
+                        {"vi": []},
+                        {"tr": []},
+                        {"fr": []},
+                        {"unknown": []},
+                        {"hu": []},
+                        {"unknown": []},
+                        {"th": []},
+                        {"id": []},
+                        {"pt_PT": []},
+                        {"en_GB": []},
+                        {"fi": []},
+                        {"unknown": []},
+                        {"sv": []},
+                        {"it": []},
+                        {"sk": []},
+                        {"ja": []},
+                        {"uk": []},
+                        {"es": []},
+                        {"da": []},
+                        {"ms": []},
+                        {"ko": []},
+                        {"ar": []},
+                        {"he": []},
+                        {"en": []},
+                        {"nl": []},
+                        {"cs": []},
+                        {"el": []},
+                        {"pl": []},
+                        {"pt": []},
+                        {"ru": []},
+                        {"de": []}
+                      ],
+                      "matches": 0
+                    },
+                    "label": "Kundenservice",
+                    "name": "Kundenservice",
+                    "rect": {
+                      "origin": {
+                        "x": 10,
+                        "y": 639
+                      },
+                      "size": {
+                        "height": 44,
+                        "width": 548
+                      }
+                    },
+                    "ref": 160,
+                    "type": "UIALink",
+                    "value": ""
+                  },
+                  {
+                    "l10n": {
+                      "langs": [
+                        {"hr": []},
+                        {"ro": []},
+                        {"ca": []},
+                        {"vi": []},
+                        {"tr": []},
+                        {"fr": []},
+                        {"unknown": []},
+                        {"hu": []},
+                        {"unknown": []},
+                        {"th": []},
+                        {"id": []},
+                        {"pt_PT": []},
+                        {"en_GB": []},
+                        {"fi": []},
+                        {"unknown": []},
+                        {"sv": []},
+                        {"it": []},
+                        {"sk": []},
+                        {"ja": []},
+                        {"uk": []},
+                        {"es": []},
+                        {"da": []},
+                        {"ms": []},
+                        {"ko": []},
+                        {"ar": []},
+                        {"he": []},
+                        {"en": []},
+                        {"nl": []},
+                        {"cs": []},
+                        {"el": []},
+                        {"pl": []},
+                        {"pt": []},
+                        {"ru": []},
+                        {"de": []}
+                      ],
+                      "matches": 0
+                    },
+                    "label": "Kostenlose eBay-App herunterladen",
+                    "name": "Kostenlose eBay-App herunterladen",
+                    "rect": {
+                      "origin": {
+                        "x": 10,
+                        "y": 683
+                      },
+                      "size": {
+                        "height": 48,
+                        "width": 548
+                      }
+                    },
+                    "ref": 162,
+                    "type": "UIALink",
+                    "value": ""
+                  },
+                  {
+                    "children": [{
+                      "l10n": {
+                        "langs": [
+                          {"hr": []},
+                          {"ro": []},
+                          {"ca": []},
+                          {"vi": []},
+                          {"tr": []},
+                          {"fr": []},
+                          {"unknown": []},
+                          {"hu": []},
+                          {"unknown": []},
+                          {"th": []},
+                          {"id": []},
+                          {"pt_PT": []},
+                          {"en_GB": []},
+                          {"fi": []},
+                          {"unknown": []},
+                          {"sv": []},
+                          {"it": []},
+                          {"sk": []},
+                          {"ja": []},
+                          {"uk": []},
+                          {"es": []},
+                          {"da": []},
+                          {"ms": []},
+                          {"ko": []},
+                          {"ar": []},
+                          {"he": []},
+                          {"en": []},
+                          {"nl": []},
+                          {"cs": []},
+                          {"el": []},
+                          {"pl": []},
+                          {"pt": []},
+                          {"ru": []},
+                          {"de": []}
+                        ],
+                        "matches": 0
+                      },
+                      "label": "Über eBay",
+                      "name": "Über eBay",
+                      "rect": {
+                        "origin": {
+                          "x": 163,
+                          "y": 757
+                        },
+                        "size": {
+                          "height": 16,
+                          "width": 62
+                        }
+                      },
+                      "ref": 164,
+                      "type": "UIAStaticText",
+                      "value": ""
+                    }],
+                    "l10n": {
+                      "langs": [
+                        {"hr": []},
+                        {"ro": []},
+                        {"ca": []},
+                        {"vi": []},
+                        {"tr": []},
+                        {"fr": []},
+                        {"unknown": []},
+                        {"hu": []},
+                        {"unknown": []},
+                        {"th": []},
+                        {"id": []},
+                        {"pt_PT": []},
+                        {"en_GB": []},
+                        {"fi": []},
+                        {"unknown": []},
+                        {"sv": []},
+                        {"it": []},
+                        {"sk": []},
+                        {"ja": []},
+                        {"uk": []},
+                        {"es": []},
+                        {"da": []},
+                        {"ms": []},
+                        {"ko": []},
+                        {"ar": []},
+                        {"he": []},
+                        {"en": []},
+                        {"nl": []},
+                        {"cs": []},
+                        {"el": []},
+                        {"pl": []},
+                        {"pt": []},
+                        {"ru": []},
+                        {"de": []}
+                      ],
+                      "matches": 0
+                    },
+                    "label": "Über eBay",
+                    "name": "Über eBay",
+                    "rect": {
+                      "origin": {
+                        "x": 158,
+                        "y": 757
+                      },
+                      "size": {
+                        "height": 17,
+                        "width": 72
+                      }
+                    },
+                    "ref": 163,
+                    "type": "UIALink",
+                    "value": ""
+                  },
+                  {
+                    "l10n": {
+                      "langs": [
+                        {"hr": []},
+                        {"ro": []},
+                        {"ca": []},
+                        {"vi": []},
+                        {"tr": []},
+                        {"fr": []},
+                        {"unknown": []},
+                        {"hu": []},
+                        {"unknown": []},
+                        {"th": []},
+                        {"id": []},
+                        {"pt_PT": []},
+                        {"en_GB": []},
+                        {"fi": []},
+                        {"unknown": []},
+                        {"sv": []},
+                        {"it": []},
+                        {"sk": []},
+                        {"ja": []},
+                        {"uk": []},
+                        {"es": []},
+                        {"da": []},
+                        {"ms": []},
+                        {"ko": []},
+                        {"ar": []},
+                        {"he": []},
+                        {"en": []},
+                        {"nl": []},
+                        {"cs": []},
+                        {"el": []},
+                        {"pl": []},
+                        {"pt": []},
+                        {"ru": []},
+                        {"de": []}
+                      ],
+                      "matches": 0
+                    },
+                    "label": "|",
+                    "name": "|",
+                    "rect": {
+                      "origin": {
+                        "x": 235,
+                        "y": 754
+                      },
+                      "size": {
+                        "height": 20,
+                        "width": 5
+                      }
+                    },
+                    "ref": 165,
+                    "type": "UIAStaticText",
+                    "value": ""
+                  },
+                  {
+                    "children": [{
+                      "l10n": {
+                        "langs": [
+                          {"hr": []},
+                          {"ro": []},
+                          {"ca": []},
+                          {"vi": []},
+                          {"tr": []},
+                          {"fr": []},
+                          {"unknown": []},
+                          {"hu": []},
+                          {"unknown": []},
+                          {"th": []},
+                          {"id": []},
+                          {"pt_PT": []},
+                          {"en_GB": []},
+                          {"fi": []},
+                          {"unknown": []},
+                          {"sv": []},
+                          {"it": []},
+                          {"sk": []},
+                          {"ja": []},
+                          {"uk": []},
+                          {"es": []},
+                          {"da": []},
+                          {"ms": []},
+                          {"ko": []},
+                          {"ar": []},
+                          {"he": []},
+                          {"en": []},
+                          {"nl": []},
+                          {"cs": []},
+                          {"el": []},
+                          {"pl": []},
+                          {"pt": []},
+                          {"ru": []},
+                          {"de": []}
+                        ],
+                        "matches": 0
+                      },
+                      "label": "Grundsätze",
+                      "name": "Grundsätze",
+                      "rect": {
+                        "origin": {
+                          "x": 250,
+                          "y": 757
+                        },
+                        "size": {
+                          "height": 16,
+                          "width": 68
+                        }
+                      },
+                      "ref": 167,
+                      "type": "UIAStaticText",
+                      "value": ""
+                    }],
+                    "l10n": {
+                      "langs": [
+                        {"hr": []},
+                        {"ro": []},
+                        {"ca": []},
+                        {"vi": []},
+                        {"tr": []},
+                        {"fr": []},
+                        {"unknown": []},
+                        {"hu": []},
+                        {"unknown": []},
+                        {"th": []},
+                        {"id": []},
+                        {"pt_PT": []},
+                        {"en_GB": []},
+                        {"fi": []},
+                        {"unknown": []},
+                        {"sv": []},
+                        {"it": []},
+                        {"sk": []},
+                        {"ja": []},
+                        {"uk": []},
+                        {"es": []},
+                        {"da": []},
+                        {"ms": []},
+                        {"ko": []},
+                        {"ar": []},
+                        {"he": []},
+                        {"en": []},
+                        {"nl": []},
+                        {"cs": []},
+                        {"el": []},
+                        {"pl": []},
+                        {"pt": []},
+                        {"ru": []},
+                        {"de": []}
+                      ],
+                      "matches": 0
+                    },
+                    "label": "Grundsätze",
+                    "name": "Grundsätze",
+                    "rect": {
+                      "origin": {
+                        "x": 245,
+                        "y": 757
+                      },
+                      "size": {
+                        "height": 17,
+                        "width": 78
+                      }
+                    },
+                    "ref": 166,
+                    "type": "UIALink",
+                    "value": ""
+                  },
+                  {
+                    "l10n": {
+                      "langs": [
+                        {"hr": []},
+                        {"ro": []},
+                        {"ca": []},
+                        {"vi": []},
+                        {"tr": []},
+                        {"fr": []},
+                        {"unknown": []},
+                        {"hu": []},
+                        {"unknown": []},
+                        {"th": []},
+                        {"id": []},
+                        {"pt_PT": []},
+                        {"en_GB": []},
+                        {"fi": []},
+                        {"unknown": []},
+                        {"sv": []},
+                        {"it": []},
+                        {"sk": []},
+                        {"ja": []},
+                        {"uk": []},
+                        {"es": []},
+                        {"da": []},
+                        {"ms": []},
+                        {"ko": []},
+                        {"ar": []},
+                        {"he": []},
+                        {"en": []},
+                        {"nl": []},
+                        {"cs": []},
+                        {"el": []},
+                        {"pl": []},
+                        {"pt": []},
+                        {"ru": []},
+                        {"de": []}
+                      ],
+                      "matches": 0
+                    },
+                    "label": "|",
+                    "name": "|",
+                    "rect": {
+                      "origin": {
+                        "x": 328,
+                        "y": 754
+                      },
+                      "size": {
+                        "height": 20,
+                        "width": 5
+                      }
+                    },
+                    "ref": 168,
+                    "type": "UIAStaticText",
+                    "value": ""
+                  },
+                  {
+                    "children": [{
+                      "l10n": {
+                        "langs": [
+                          {"hr": []},
+                          {"ro": []},
+                          {"ca": []},
+                          {"vi": []},
+                          {"tr": []},
+                          {"fr": []},
+                          {"unknown": []},
+                          {"hu": []},
+                          {"unknown": []},
+                          {"th": []},
+                          {"id": []},
+                          {"pt_PT": []},
+                          {"en_GB": []},
+                          {"fi": []},
+                          {"unknown": []},
+                          {"sv": []},
+                          {"it": []},
+                          {"sk": []},
+                          {"ja": []},
+                          {"uk": []},
+                          {"es": []},
+                          {"da": []},
+                          {"ms": []},
+                          {"ko": []},
+                          {"ar": []},
+                          {"he": []},
+                          {"en": []},
+                          {"nl": []},
+                          {"cs": []},
+                          {"el": []},
+                          {"pl": []},
+                          {"pt": []},
+                          {"ru": []},
+                          {"de": []}
+                        ],
+                        "matches": 0
+                      },
+                      "label": "Hauptseite",
+                      "name": "Hauptseite",
+                      "rect": {
+                        "origin": {
+                          "x": 343,
+                          "y": 757
+                        },
+                        "size": {
+                          "height": 16,
+                          "width": 63
+                        }
+                      },
+                      "ref": 170,
+                      "type": "UIAStaticText",
+                      "value": ""
+                    }],
+                    "l10n": {
+                      "langs": [
+                        {"hr": []},
+                        {"ro": []},
+                        {"ca": []},
+                        {"vi": []},
+                        {"tr": []},
+                        {"fr": []},
+                        {"unknown": []},
+                        {"hu": []},
+                        {"unknown": []},
+                        {"th": []},
+                        {"id": []},
+                        {"pt_PT": []},
+                        {"en_GB": []},
+                        {"fi": []},
+                        {"unknown": []},
+                        {"sv": []},
+                        {"it": []},
+                        {"sk": []},
+                        {"ja": []},
+                        {"uk": []},
+                        {"es": []},
+                        {"da": []},
+                        {"ms": []},
+                        {"ko": []},
+                        {"ar": []},
+                        {"he": []},
+                        {"en": []},
+                        {"nl": []},
+                        {"cs": []},
+                        {"el": []},
+                        {"pl": []},
+                        {"pt": []},
+                        {"ru": []},
+                        {"de": []}
+                      ],
+                      "matches": 0
+                    },
+                    "label": "Hauptseite",
+                    "name": "Hauptseite",
+                    "rect": {
+                      "origin": {
+                        "x": 338,
+                        "y": 757
+                      },
+                      "size": {
+                        "height": 17,
+                        "width": 73
+                      }
+                    },
+                    "ref": 169,
+                    "type": "UIALink",
+                    "value": ""
+                  },
+                  {
+                    "l10n": {
+                      "langs": [
+                        {"hr": []},
+                        {"ro": []},
+                        {"ca": []},
+                        {"vi": []},
+                        {"tr": []},
+                        {"fr": []},
+                        {"unknown": []},
+                        {"hu": []},
+                        {"unknown": []},
+                        {"th": []},
+                        {"id": []},
+                        {"pt_PT": []},
+                        {"en_GB": []},
+                        {"fi": []},
+                        {"unknown": []},
+                        {"sv": []},
+                        {"it": []},
+                        {"sk": []},
+                        {"ja": []},
+                        {"uk": []},
+                        {"es": []},
+                        {"da": []},
+                        {"ms": []},
+                        {"ko": []},
+                        {"ar": []},
+                        {"he": []},
+                        {"en": []},
+                        {"nl": []},
+                        {"cs": []},
+                        {"el": []},
+                        {"pl": []},
+                        {"pt": []},
+                        {"ru": []},
+                        {"de": []}
+                      ],
+                      "matches": 0
+                    },
+                    "label": "© 1995 - 2013 eBay Inc.",
+                    "name": "© 1995 - 2013 eBay Inc.",
+                    "rect": {
+                      "origin": {
+                        "x": 223,
+                        "y": 798
+                      },
+                      "size": {
+                        "height": 14,
+                        "width": 122
+                      }
+                    },
+                    "ref": 171,
+                    "type": "UIAStaticText",
+                    "value": ""
+                  }
+                ],
+                "l10n": {"matches": 0},
+                "label": null,
+                "name": null,
+                "rect": {
+                  "origin": {
+                    "x": 0,
+                    "y": 138
+                  },
+                  "size": {
+                    "height": 662,
+                    "width": 568
+                  }
+                },
+                "ref": 135,
+                "type": "UIAWebView",
+                "value": null
+              },
+              {
+                "l10n": {"matches": 0},
+                "label": null,
+                "name": null,
+                "rect": {
+                  "origin": {
+                    "x": 0,
+                    "y": 281
+                  },
+                  "size": {
+                    "height": 7,
+                    "width": 320
+                  }
+                },
+                "ref": 172,
+                "type": "UIAImage",
+                "value": null
+              }
+            ],
+            "l10n": {"matches": 0},
+            "label": null,
+            "name": null,
+            "rect": {
+              "origin": {
+                "x": 0,
+                "y": 20
+              },
+              "size": {
+                "height": 268,
+                "width": 568
+              }
+            },
+            "ref": 113,
+            "type": "UIAScrollView",
+            "value": null
+          },
+          {
+            "children": [
+              {
+                "l10n": {"matches": 0},
+                "label": null,
+                "name": null,
+                "rect": {
+                  "origin": {
+                    "x": 0,
+                    "y": 285
+                  },
+                  "size": {
+                    "height": 3,
+                    "width": 568
+                  }
+                },
+                "ref": 174,
+                "type": "UIAImage",
+                "value": null
+              },
+              {
+                "l10n": {"matches": 0},
+                "label": null,
+                "name": null,
+                "rect": {
+                  "origin": {
+                    "x": 0,
+                    "y": 288
+                  },
+                  "size": {
+                    "height": 32,
+                    "width": 568
+                  }
+                },
+                "ref": 175,
+                "type": "UIAImage",
+                "value": null
+              },
+              {
+                "l10n": {
+                  "langs": [
+                    {"hr": []},
+                    {"ro": []},
+                    {"ca": []},
+                    {"vi": []},
+                    {"tr": []},
+                    {"fr": []},
+                    {"unknown": []},
+                    {"hu": []},
+                    {"unknown": []},
+                    {"th": []},
+                    {"id": []},
+                    {"pt_PT": []},
+                    {"en_GB": []},
+                    {"fi": []},
+                    {"unknown": []},
+                    {"sv": []},
+                    {"it": []},
+                    {"sk": []},
+                    {"ja": []},
+                    {"uk": []},
+                    {"es": []},
+                    {"da": []},
+                    {"ms": []},
+                    {"ko": []},
+                    {"ar": []},
+                    {"he": []},
+                    {"en": []},
+                    {"nl": []},
+                    {"cs": []},
+                    {"el": []},
+                    {"pl": []},
+                    {"pt": []},
+                    {"ru": []},
+                    {"de": []}
+                  ],
+                  "matches": 0
+                },
+                "label": "Back",
+                "name": "Back",
+                "rect": {
+                  "origin": {
+                    "x": 37,
+                    "y": 292
+                  },
+                  "size": {
+                    "height": 24,
+                    "width": 23
+                  }
+                },
+                "ref": 176,
+                "type": "UIAButton",
+                "value": null
+              },
+              {
+                "l10n": {
+                  "langs": [
+                    {"hr": []},
+                    {"ro": []},
+                    {"ca": []},
+                    {"vi": []},
+                    {"tr": []},
+                    {"fr": []},
+                    {"unknown": []},
+                    {"hu": []},
+                    {"unknown": []},
+                    {"th": []},
+                    {"id": []},
+                    {"pt_PT": []},
+                    {"en_GB": []},
+                    {"fi": []},
+                    {"unknown": []},
+                    {"sv": []},
+                    {"it": []},
+                    {"sk": []},
+                    {"ja": []},
+                    {"uk": []},
+                    {"es": []},
+                    {"da": []},
+                    {"ms": []},
+                    {"ko": []},
+                    {"ar": []},
+                    {"he": []},
+                    {"en": []},
+                    {"nl": []},
+                    {"cs": []},
+                    {"el": []},
+                    {"pl": []},
+                    {"pt": []},
+                    {"ru": []},
+                    {"de": []}
+                  ],
+                  "matches": 0
+                },
+                "label": "Forward",
+                "name": "Forward",
+                "rect": {
+                  "origin": {
+                    "x": 138,
+                    "y": 292
+                  },
+                  "size": {
+                    "height": 24,
+                    "width": 23
+                  }
+                },
+                "ref": 177,
+                "type": "UIAButton",
+                "value": null
+              },
+              {
+                "l10n": {
+                  "langs": [
+                    {"hr": []},
+                    {"ro": []},
+                    {"ca": []},
+                    {"vi": []},
+                    {"tr": []},
+                    {"fr": []},
+                    {"unknown": []},
+                    {"hu": []},
+                    {"unknown": []},
+                    {"th": []},
+                    {"id": []},
+                    {"pt_PT": []},
+                    {"en_GB": []},
+                    {"fi": []},
+                    {"unknown": []},
+                    {"sv": []},
+                    {"it": []},
+                    {"sk": []},
+                    {"ja": []},
+                    {"uk": []},
+                    {"es": []},
+                    {"da": []},
+                    {"ms": []},
+                    {"ko": []},
+                    {"ar": []},
+                    {"he": []},
+                    {"en": []},
+                    {"nl": []},
+                    {"cs": []},
+                    {"el": []},
+                    {"pl": []},
+                    {"pt": []},
+                    {"ru": []},
+                    {"de": []}
+                  ],
+                  "matches": 0
+                },
+                "label": "Utilities",
+                "name": "Utilities",
+                "rect": {
+                  "origin": {
+                    "x": 227,
+                    "y": 289
+                  },
+                  "size": {
+                    "height": 32,
+                    "width": 36
+                  }
+                },
+                "ref": 178,
+                "type": "UIAButton",
+                "value": null
+              },
+              {
+                "l10n": {
+                  "langs": [
+                    {"hr": []},
+                    {"ro": []},
+                    {"ca": []},
+                    {"vi": []},
+                    {"tr": []},
+                    {"fr": []},
+                    {"unknown": []},
+                    {"hu": []},
+                    {"unknown": []},
+                    {"th": []},
+                    {"id": []},
+                    {"pt_PT": []},
+                    {"en_GB": []},
+                    {"fi": []},
+                    {"unknown": []},
+                    {"sv": []},
+                    {"it": []},
+                    {"sk": []},
+                    {"ja": []},
+                    {"uk": []},
+                    {"es": []},
+                    {"da": []},
+                    {"ms": []},
+                    {"ko": []},
+                    {"ar": []},
+                    {"he": []},
+                    {"en": []},
+                    {"nl": []},
+                    {"cs": []},
+                    {"el": []},
+                    {"pl": []},
+                    {"pt": []},
+                    {"ru": []},
+                    {"de": []}
+                  ],
+                  "matches": 0
+                },
+                "label": "Bookmarks",
+                "name": "Bookmarks",
+                "rect": {
+                  "origin": {
+                    "x": 331,
+                    "y": 296
+                  },
+                  "size": {
+                    "height": 17,
+                    "width": 20
+                  }
+                },
+                "ref": 179,
+                "type": "UIAButton",
+                "value": null
+              },
+              {
+                "l10n": {
+                  "langs": [
+                    {"hr": []},
+                    {"ro": []},
+                    {"ca": []},
+                    {"vi": []},
+                    {"tr": []},
+                    {"fr": []},
+                    {"unknown": []},
+                    {"hu": []},
+                    {"unknown": []},
+                    {"th": []},
+                    {"id": []},
+                    {"pt_PT": []},
+                    {"en_GB": []},
+                    {"fi": []},
+                    {"unknown": []},
+                    {"sv": []},
+                    {"it": []},
+                    {"sk": []},
+                    {"ja": []},
+                    {"uk": []},
+                    {"es": []},
+                    {"da": []},
+                    {"ms": []},
+                    {"ko": []},
+                    {"ar": []},
+                    {"he": []},
+                    {"en": []},
+                    {"nl": []},
+                    {"cs": []},
+                    {"el": []},
+                    {"pl": []},
+                    {"pt": []},
+                    {"ru": []},
+                    {"de": []}
+                  ],
+                  "matches": 0
+                },
+                "label": "Pages",
+                "name": "Pages",
+                "rect": {
+                  "origin": {
+                    "x": 427,
+                    "y": 297
+                  },
+                  "size": {
+                    "height": 15,
+                    "width": 20
+                  }
+                },
+                "ref": 180,
+                "type": "UIAButton",
+                "value": null
+              },
+              {
+                "l10n": {
+                  "langs": [
+                    {"hr": []},
+                    {"ro": []},
+                    {"ca": []},
+                    {"vi": []},
+                    {"tr": []},
+                    {"fr": []},
+                    {"unknown": []},
+                    {"hu": []},
+                    {"unknown": []},
+                    {"th": []},
+                    {"id": []},
+                    {"pt_PT": []},
+                    {"en_GB": []},
+                    {"fi": []},
+                    {"unknown": []},
+                    {"sv": []},
+                    {"it": []},
+                    {"sk": []},
+                    {"ja": []},
+                    {"uk": []},
+                    {"es": []},
+                    {"da": []},
+                    {"ms": []},
+                    {"ko": []},
+                    {"ar": []},
+                    {"he": []},
+                    {"en": []},
+                    {"nl": []},
+                    {"cs": []},
+                    {"el": []},
+                    {"pl": []},
+                    {"pt": []},
+                    {"ru": []},
+                    {"de": []}
+                  ],
+                  "matches": 0
+                },
+                "label": "Full-screen",
+                "name": "Full-screen",
+                "rect": {
+                  "origin": {
+                    "x": 506,
+                    "y": 292
+                  },
+                  "size": {
+                    "height": 26,
+                    "width": 25
+                  }
+                },
+                "ref": 181,
+                "type": "UIAButton",
+                "value": null
+              }
+            ],
+            "l10n": {"matches": 0},
+            "label": null,
+            "name": null,
+            "rect": {
+              "origin": {
+                "x": 0,
+                "y": 288
+              },
+              "size": {
+                "height": 32,
+                "width": 568
+              }
+            },
+            "ref": 173,
+            "type": "UIAToolbar",
+            "value": null
+          }
+        ],
+        "l10n": {"matches": 0},
+        "label": null,
+        "name": null,
+        "rect": {
+          "origin": {
+            "x": 0,
+            "y": 0
+          },
+          "size": {
+            "height": 320,
+            "width": 568
+          }
+        },
+        "ref": 98,
+        "type": "UIAWindow",
+        "value": null
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "l10n": {
+                  "langs": [
+                    {"hr": []},
+                    {"ro": []},
+                    {"ca": []},
+                    {"vi": []},
+                    {"tr": []},
+                    {"fr": []},
+                    {"unknown": []},
+                    {"hu": []},
+                    {"unknown": []},
+                    {"th": []},
+                    {"id": []},
+                    {"pt_PT": []},
+                    {"en_GB": []},
+                    {"fi": []},
+                    {"unknown": []},
+                    {"sv": []},
+                    {"it": []},
+                    {"sk": []},
+                    {"ja": []},
+                    {"uk": []},
+                    {"es": []},
+                    {"da": []},
+                    {"ms": []},
+                    {"ko": []},
+                    {"ar": []},
+                    {"he": []},
+                    {"en": []},
+                    {"nl": []},
+                    {"cs": []},
+                    {"el": []},
+                    {"pl": []},
+                    {"pt": []},
+                    {"ru": []},
+                    {"de": []}
+                  ],
+                  "matches": 0
+                },
+                "label": null,
+                "name": "Swipe down with three fingers to reveal the notification center., Double-tap to scroll to top",
+                "rect": {
+                  "origin": {
+                    "x": 4,
+                    "y": 0
+                  },
+                  "size": {
+                    "height": 20,
+                    "width": 44
+                  }
+                },
+                "ref": 184,
+                "type": "UIAElement",
+                "value": null
+              },
+              {
+                "l10n": {
+                  "langs": [
+                    {"hr": []},
+                    {"ro": []},
+                    {"ca": []},
+                    {"vi": []},
+                    {"tr": []},
+                    {"fr": []},
+                    {"unknown": []},
+                    {"hu": []},
+                    {"unknown": []},
+                    {"th": []},
+                    {"id": []},
+                    {"pt_PT": []},
+                    {"en_GB": []},
+                    {"fi": []},
+                    {"unknown": []},
+                    {"sv": []},
+                    {"it": []},
+                    {"sk": []},
+                    {"ja": []},
+                    {"uk": []},
+                    {"es": []},
+                    {"da": []},
+                    {"ms": []},
+                    {"ko": []},
+                    {"ar": []},
+                    {"he": []},
+                    {"en": []},
+                    {"nl": []},
+                    {"cs": []},
+                    {"el": []},
+                    {"pl": []},
+                    {"pt": []},
+                    {"ru": []},
+                    {"de": []}
+                  ],
+                  "matches": 0
+                },
+                "label": "3 of 3 bars, Wi-Fi signal strength",
+                "name": "3 of 3 bars, Wi-Fi signal strength",
+                "rect": {
+                  "origin": {
+                    "x": 53,
+                    "y": 0
+                  },
+                  "size": {
+                    "height": 20,
+                    "width": 20
+                  }
+                },
+                "ref": 185,
+                "type": "UIAElement",
+                "value": null
+              },
+              {
+                "l10n": {
+                  "langs": [
+                    {"hr": []},
+                    {"ro": []},
+                    {"ca": []},
+                    {"vi": []},
+                    {"tr": []},
+                    {"fr": []},
+                    {"unknown": []},
+                    {"hu": []},
+                    {"unknown": []},
+                    {"th": []},
+                    {"id": []},
+                    {"pt_PT": []},
+                    {"en_GB": []},
+                    {"fi": []},
+                    {"unknown": []},
+                    {"sv": []},
+                    {"it": []},
+                    {"sk": []},
+                    {"ja": []},
+                    {"uk": []},
+                    {"es": []},
+                    {"da": []},
+                    {"ms": []},
+                    {"ko": []},
+                    {"ar": []},
+                    {"he": []},
+                    {"en": []},
+                    {"nl": []},
+                    {"cs": []},
+                    {"el": []},
+                    {"pl": []},
+                    {"pt": []},
+                    {"ru": []},
+                    {"de": []}
+                  ],
+                  "matches": 0
+                },
+                "label": "20:54",
+                "name": "20:54",
+                "rect": {
+                  "origin": {
+                    "x": 266,
+                    "y": 0
+                  },
+                  "size": {
+                    "height": 20,
+                    "width": 36
+                  }
+                },
+                "ref": 186,
+                "type": "UIAElement",
+                "value": null
+              },
+              {
+                "l10n": {
+                  "langs": [
+                    {"hr": []},
+                    {"ro": []},
+                    {"ca": []},
+                    {"vi": []},
+                    {"tr": []},
+                    {"fr": []},
+                    {"unknown": []},
+                    {"hu": []},
+                    {"unknown": []},
+                    {"th": []},
+                    {"id": []},
+                    {"pt_PT": []},
+                    {"en_GB": []},
+                    {"fi": []},
+                    {"unknown": []},
+                    {"sv": []},
+                    {"it": []},
+                    {"sk": []},
+                    {"ja": []},
+                    {"uk": []},
+                    {"es": []},
+                    {"da": []},
+                    {"ms": []},
+                    {"ko": []},
+                    {"ar": []},
+                    {"he": []},
+                    {"en": []},
+                    {"nl": []},
+                    {"cs": []},
+                    {"el": []},
+                    {"pl": []},
+                    {"pt": []},
+                    {"ru": []},
+                    {"de": []}
+                  ],
+                  "matches": 0
+                },
+                "label": "100% battery power",
+                "name": "100% battery power",
+                "rect": {
+                  "origin": {
+                    "x": 544,
+                    "y": 0
+                  },
+                  "size": {
+                    "height": 20,
+                    "width": 21
+                  }
+                },
+                "ref": 187,
+                "type": "UIAElement",
+                "value": null
+              }
+            ],
+            "l10n": {"matches": 0},
+            "label": null,
+            "name": null,
+            "rect": {
+              "origin": {
+                "x": 0,
+                "y": 0
+              },
+              "size": {
+                "height": 20,
+                "width": 568
+              }
+            },
+            "ref": 183,
+            "type": "UIAStatusBar",
+            "value": null
+          },
+          {
+            "l10n": {
+              "langs": [
+                {"hr": []},
+                {"ro": []},
+                {"ca": []},
+                {"vi": []},
+                {"tr": []},
+                {"fr": []},
+                {"unknown": []},
+                {"hu": []},
+                {"unknown": []},
+                {"th": []},
+                {"id": []},
+                {"pt_PT": []},
+                {"en_GB": []},
+                {"fi": []},
+                {"unknown": []},
+                {"sv": []},
+                {"it": []},
+                {"sk": []},
+                {"ja": []},
+                {"uk": []},
+                {"es": []},
+                {"da": []},
+                {"ms": []},
+                {"ko": []},
+                {"ar": []},
+                {"he": []},
+                {"en": []},
+                {"nl": []},
+                {"cs": []},
+                {"el": []},
+                {"pl": []},
+                {"pt": []},
+                {"ru": []},
+                {"de": []}
+              ],
+              "matches": 0
+            },
+            "label": "Corners_Black.png",
+            "name": "Corners_Black.png",
+            "rect": {
+              "origin": {
+                "x": 0,
+                "y": 20
+              },
+              "size": {
+                "height": 2,
+                "width": 2
+              }
+            },
+            "ref": 188,
+            "type": "UIAImage",
+            "value": null
+          },
+          {
+            "l10n": {
+              "langs": [
+                {"hr": []},
+                {"ro": []},
+                {"ca": []},
+                {"vi": []},
+                {"tr": []},
+                {"fr": []},
+                {"unknown": []},
+                {"hu": []},
+                {"unknown": []},
+                {"th": []},
+                {"id": []},
+                {"pt_PT": []},
+                {"en_GB": []},
+                {"fi": []},
+                {"unknown": []},
+                {"sv": []},
+                {"it": []},
+                {"sk": []},
+                {"ja": []},
+                {"uk": []},
+                {"es": []},
+                {"da": []},
+                {"ms": []},
+                {"ko": []},
+                {"ar": []},
+                {"he": []},
+                {"en": []},
+                {"nl": []},
+                {"cs": []},
+                {"el": []},
+                {"pl": []},
+                {"pt": []},
+                {"ru": []},
+                {"de": []}
+              ],
+              "matches": 0
+            },
+            "label": "Corners_Black.png",
+            "name": "Corners_Black.png",
+            "rect": {
+              "origin": {
+                "x": 565,
+                "y": 20
+              },
+              "size": {
+                "height": 2,
+                "width": 2
+              }
+            },
+            "ref": 189,
+            "type": "UIAImage",
+            "value": null
+          },
+          {
+            "l10n": {
+              "langs": [
+                {"hr": []},
+                {"ro": []},
+                {"ca": []},
+                {"vi": []},
+                {"tr": []},
+                {"fr": []},
+                {"unknown": []},
+                {"hu": []},
+                {"unknown": []},
+                {"th": []},
+                {"id": []},
+                {"pt_PT": []},
+                {"en_GB": []},
+                {"fi": []},
+                {"unknown": []},
+                {"sv": []},
+                {"it": []},
+                {"sk": []},
+                {"ja": []},
+                {"uk": []},
+                {"es": []},
+                {"da": []},
+                {"ms": []},
+                {"ko": []},
+                {"ar": []},
+                {"he": []},
+                {"en": []},
+                {"nl": []},
+                {"cs": []},
+                {"el": []},
+                {"pl": []},
+                {"pt": []},
+                {"ru": []},
+                {"de": []}
+              ],
+              "matches": 0
+            },
+            "label": "Corners_Black.png",
+            "name": "Corners_Black.png",
+            "rect": {
+              "origin": {
+                "x": 0,
+                "y": 317
+              },
+              "size": {
+                "height": 2,
+                "width": 2
+              }
+            },
+            "ref": 190,
+            "type": "UIAImage",
+            "value": null
+          },
+          {
+            "l10n": {
+              "langs": [
+                {"hr": []},
+                {"ro": []},
+                {"ca": []},
+                {"vi": []},
+                {"tr": []},
+                {"fr": []},
+                {"unknown": []},
+                {"hu": []},
+                {"unknown": []},
+                {"th": []},
+                {"id": []},
+                {"pt_PT": []},
+                {"en_GB": []},
+                {"fi": []},
+                {"unknown": []},
+                {"sv": []},
+                {"it": []},
+                {"sk": []},
+                {"ja": []},
+                {"uk": []},
+                {"es": []},
+                {"da": []},
+                {"ms": []},
+                {"ko": []},
+                {"ar": []},
+                {"he": []},
+                {"en": []},
+                {"nl": []},
+                {"cs": []},
+                {"el": []},
+                {"pl": []},
+                {"pt": []},
+                {"ru": []},
+                {"de": []}
+              ],
+              "matches": 0
+            },
+            "label": "Corners_Black.png",
+            "name": "Corners_Black.png",
+            "rect": {
+              "origin": {
+                "x": 565,
+                "y": 317
+              },
+              "size": {
+                "height": 2,
+                "width": 2
+              }
+            },
+            "ref": 191,
+            "type": "UIAImage",
+            "value": null
+          }
+        ],
+        "l10n": {"matches": 0},
+        "label": null,
+        "name": null,
+        "rect": {
+          "origin": {
+            "x": 0,
+            "y": -248
+          },
+          "size": {
+            "height": 568,
+            "width": 320
+          }
+        },
+        "ref": 182,
+        "type": "UIAWindow",
+        "value": null
+      }
+    ],
+    "l10n": {
+      "langs": [
+        {"hr": []},
+        {"ro": []},
+        {"ca": []},
+        {"vi": []},
+        {"tr": []},
+        {"fr": []},
+        {"unknown": []},
+        {"hu": []},
+        {"unknown": []},
+        {"th": []},
+        {"id": []},
+        {"pt_PT": []},
+        {"en_GB": []},
+        {"fi": []},
+        {"unknown": []},
+        {"sv": []},
+        {"it": []},
+        {"sk": []},
+        {"ja": []},
+        {"uk": []},
+        {"es": []},
+        {"da": []},
+        {"ms": []},
+        {"ko": []},
+        {"ar": []},
+        {"he": []},
+        {"en": []},
+        {"nl": []},
+        {"cs": []},
+        {"el": []},
+        {"pl": []},
+        {"pt": []},
+        {"ru": []},
+        {"de": []}
+      ],
+      "matches": 0
+    },
+    "label": "Safari",
+    "name": "Safari",
+    "rect": {
+      "origin": {
+        "x": 0,
+        "y": 20
+      },
+      "size": {
+        "height": 300,
+        "width": 568
+      }
+    },
+    "ref": 1,
+    "type": "UIAApplication",
+    "value": null
+  }
+}

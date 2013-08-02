@@ -19,14 +19,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
+import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
-import org.uiautomation.ios.utils.FileTo64EncodedStringUtils;
+import org.uiautomation.ios.utils.InstrumentsGeneratedImage;
+import org.uiautomation.ios.utils.JSONWireImage;
 import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
 
 import java.io.File;
@@ -114,14 +115,17 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
       boolean screenshot;
 
       screenshot = (Boolean) value.get("screenshot");
+      Long orientationCode = Long.parseLong(value.get("deviceOrientation").toString());
+
+      Orientation o = Orientation.fromInterfaceOrientation(orientationCode.intValue());
 
       if (screenshot) {
         String path = getDriver().getSession(response.getSessionId()).getOutputFolder() + "/Run 1/"
                       + TakeScreenshotNHandler.SCREEN_NAME + ".png";
         File source = new File(path);
-        FileTo64EncodedStringUtils encoder = new FileTo64EncodedStringUtils(source);
+        JSONWireImage image = new InstrumentsGeneratedImage(source, o);
         try {
-          String content64 = encoder.encode();
+          String content64 = image.getAsBase64String();
           value.put("screenshot", ImmutableMap.of("64encoded", content64));
         } catch (Exception e) {
           throw new WebDriverException(

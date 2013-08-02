@@ -22,6 +22,11 @@
             <version>1.27</version>
         </dependency>
         <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.19</version>
+        </dependency>
+        <dependency>
             <groupId>org.uiautomation</groupId>
             <artifactId>ios-client</artifactId>
             <version>${project.parent.version}</version>
@@ -42,6 +47,11 @@
             <version>9.4.0.6</version>
         </dependency>
         <dependency>
+        <groupId>libimobiledevice-java</groupId>
+            <artifactId>libimobiledevice-java</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
 
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
@@ -60,11 +70,6 @@
                     <artifactId>clover</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.uiautomation</groupId>
-            <artifactId>ios-driver-jni</artifactId>
-            <version>0.6.2-SNAPSHOT</version>
         </dependency>
 
 

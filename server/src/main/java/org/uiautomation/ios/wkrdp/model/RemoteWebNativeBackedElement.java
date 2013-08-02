@@ -14,11 +14,21 @@
 
 package org.uiautomation.ios.wkrdp.model;
 
-import org.openqa.selenium.*;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.Point;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.UIAElement;
+import org.uiautomation.ios.UIAModels.UIAScrollView;
 import org.uiautomation.ios.UIAModels.UIAWebView;
-import org.uiautomation.ios.UIAModels.predicate.*;
+import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
+import org.uiautomation.ios.UIAModels.predicate.Criteria;
+import org.uiautomation.ios.UIAModels.predicate.LabelCriteria;
+import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
+import org.uiautomation.ios.UIAModels.predicate.OrCriteria;
+import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.context.BaseWebInspector;
@@ -34,6 +44,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
 
 
   private static final Logger log = Logger.getLogger(RemoteWebNativeBackedElement.class.getName());
+
   private final ServerSideSession session;
   private final RemoteIOSDriver nativeDriver;
   private final List<Character> specialKeys = new ArrayList<Character>() {{
@@ -141,12 +152,13 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
         script.append("var y = top+delta;");
       }
     } else {
-      Criteria wv = new TypeCriteria(UIAWebView.class);
+      Criteria wv = new TypeCriteria(UIAScrollView.class);
       script.append("var webview = root.element(-1," + wv.stringify().toString() + ");");
       script.append("var size = webview.rect();");
       script.append("var offsetY = size.origin.y;");
       // UIAWebView.y
       script.append("var y = top+offsetY;");
+      //script.append("var y = top+64;");
     }
     script.append("return new Array(parseInt(x), parseInt(y));");
 
@@ -215,7 +227,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
             // TODO, i don't like this xpath... should find the key in a better way
             // (like keyboard.shift)
             script.append(getReferenceToTapByXpath(xpathEngine, "//UIAKeyboard/UIAKey[" +
-                (nativeDriver.getCapabilities().getDevice() == DeviceType.ipad ?
+                ( nativeDriver.getCapabilities().getDevice() == DeviceType.ipad ?
                     "11]" : "last()-3]")
             ));
             break;
@@ -224,7 +236,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
             // ENTER / RETURN
             // TODO another smelly xpath.
             script.append(getReferenceToTapByXpath(xpathEngine, "//UIAKeyboard/UIAButton[" +
-                (nativeDriver.getCapabilities().getDevice() == DeviceType.ipad ?
+                ( nativeDriver.getCapabilities().getDevice() == DeviceType.ipad ?
                     "1]" : "2]")
             ));
             keyboardResigned = true;
@@ -250,6 +262,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     return script.toString();
   }
 
+
   public void setValueNative(String value) throws Exception {
     String type = getAttribute("type");
     if ("date".equalsIgnoreCase(type)) {
@@ -260,7 +273,8 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     // iphone on telephone inputs only shows the keypad keyboard.
     if ("tel".equalsIgnoreCase(type) && nativeDriver.getCapabilities().getDevice() == DeviceType.iphone) {
       value = replaceLettersWithNumbersKeypad(value,
-          (String) nativeDriver.getCapabilities().getCapability(IOSCapabilities.LOCALE));
+                                              (String) nativeDriver.getCapabilities()
+                                                  .getCapability(IOSCapabilities.LOCALE));
     }
     ((JavascriptExecutor) nativeDriver)
         .executeScript(getNativeElementClickOnIt());
@@ -276,7 +290,9 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
       return str.replaceAll("[AaBbCc]", "2").replaceAll("[DdEeFf]", "3").replaceAll("[GgHhIi]", "4")
           .replaceAll("[JjKkLl]", "5").replaceAll("[MmNnOo]", "6").replaceAll("[PpQqRrSs]", "7")
           .replaceAll("[TtUuVv]", "8").replaceAll("[WwXxYyZz]", "9").replaceAll("-", "");
-    }
+       }
     return str.replaceAll("-", "");
   }
+
+  
 }

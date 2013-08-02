@@ -15,8 +15,11 @@ package org.uiautomation.ios.server.command.web;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.UIAModels.UIAElement;
+import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
@@ -30,7 +33,7 @@ import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 public class GetHandler extends BaseWebCommandHandler {
 
   // TODO freynaud cached by session.
-  private UIAElement addressBar;
+  private WebElement addressBar;
   private static final boolean nativeEvents = false;
 
   public GetHandler(IOSServerManager driver, WebDriverLikeRequest request) {
@@ -90,19 +93,24 @@ public class GetHandler extends BaseWebCommandHandler {
     return res;
   }
 
-  private UIAElement getAddressBar() {
+  private WebElement getAddressBar() {
 
     Criteria urlAddressBar = new AndCriteria(new TypeCriteria(UIAElement.class), new ValueCriteria(
         "Go to this address"));
-    addressBar = getSession().getNativeDriver().findElement(urlAddressBar);
+    By b = By.xpath("//UIAElement[@name=l10n('Address')]");
+    addressBar = getSession().getNativeDriver().findElement(b);
     return addressBar;
   }
 
   private void typeURLNative(String url) {
-    getAddressBar().tap();
+    getSession().setMode(WorkingMode.Native);
+    getAddressBar().click();
     RemoteUIAKeyboard keyboard = (RemoteUIAKeyboard) getSession().getNativeDriver().getKeyboard();
     keyboard.sendKeys(url);
-    keyboard.findElement(new NameCriteria("Go")).tap();
+    UIAElement go = keyboard.findElement(new NameCriteria("Go"));
+    go.tap();
+    getSession().setMode(WorkingMode.Web);
+
   }
 
   private void fakeTypeURL(String url) {

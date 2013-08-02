@@ -3,12 +3,8 @@ package org.uiautomation.ios.server.servlet;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.iosdriver.services.DeviceInstallerService;
-import org.uiautomation.iosdriver.services.LoggerService;
-import org.uiautomation.iosdriver.services.jnitools.JNILoggerListener;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -50,7 +46,7 @@ public class ArchiveServlet extends DriverBasedServlet {
     response.setContentType("text/html");
     response.setCharacterEncoding("UTF-8");
     response.setStatus(200);
-    LoggerService.registerListener(new ArchiveActivityListener());
+    //LoggerService.registerListener(new ArchiveActivityListener());
 
     statuses.clear();
 
@@ -67,7 +63,7 @@ public class ArchiveServlet extends DriverBasedServlet {
       JSONObject json = new JSONObject(jb.toString());
       final String bundleId = json.getString("bundleId");
       final String uuid = json.getString("uuid");
-      final DeviceInstallerService
+      /*final DeviceInstallerService
           service =
           new DeviceInstallerService(uuid);
       final File archiveFolder = getDriver().getApplicationStore().getArchiveFolder();
@@ -77,7 +73,7 @@ public class ArchiveServlet extends DriverBasedServlet {
           service.archive(bundleId, false, false, archiveFolder
               , true);
         }
-      }).start();
+      }).start();*/
 
       response.getWriter().write(uuid);
       response.getWriter().close();
@@ -90,7 +86,8 @@ public class ArchiveServlet extends DriverBasedServlet {
   }
 
   private String status(String logId) {
-    return getStatus(logId).getStatus().toString();
+    //return getStatus(logId).getStatus().toString();
+    return null;
   }
 
   private String page() throws JSONException {
@@ -98,7 +95,7 @@ public class ArchiveServlet extends DriverBasedServlet {
   }
 
 
-  class ArchiveActivityListener implements JNILoggerListener {
+  /*class ArchiveActivityListener implements JNILoggerListener {
 
     @Override
     public void onLog(int level, String message) {
@@ -119,7 +116,7 @@ public class ArchiveServlet extends DriverBasedServlet {
       statuses.put(logId, res);
     }
     return res;
-  }
+  }*/
 
   class ArchiveStatus {
 

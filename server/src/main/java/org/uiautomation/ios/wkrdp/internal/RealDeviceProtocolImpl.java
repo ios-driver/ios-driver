@@ -14,9 +14,11 @@
 
 package org.uiautomation.ios.wkrdp.internal;
 
+import org.libimobiledevice.binding.raw.IMobileDeviceFactory;
+import org.libimobiledevice.binding.raw.IOSDevice;
+import org.libimobiledevice.binding.raw.WebInspectorService;
 import org.uiautomation.ios.wkrdp.MessageListener;
 import org.uiautomation.ios.wkrdp.ResponseFinder;
-import org.uiautomation.iosdriver.services.WebInspectorService;
 
 /**
  * WKRDP implementation for real device using a USB connection.
@@ -28,20 +30,22 @@ public class RealDeviceProtocolImpl extends WebKitRemoteDebugProtocol {
   public RealDeviceProtocolImpl(MessageListener listener,
                                 ResponseFinder... finders) {
     super(listener, finders);
-    inspector = new WebInspectorService("d1ce6333af579e27d166349dc8a1989503ba5b4f");
+    String uuid = "d1ce6333af579e27d166349dc8a1989503ba5b4f";
+    IOSDevice device = IMobileDeviceFactory.INSTANCE.get(uuid);
+    inspector = new WebInspectorService(device);
     start();
   }
 
   @Override
   public void start() {
-    inspector.start();
+    inspector.startWebInspector();
     startListenerThread();
   }
 
   @Override
   public void stop() {
     stopListenerThread();
-    inspector.stop();
+    inspector.stopWebInspector();
   }
 
   @Override

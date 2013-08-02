@@ -21,8 +21,6 @@ import org.uiautomation.ios.server.application.AppleLanguage;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.application.ResourceCache;
 import org.uiautomation.ios.server.configuration.Configuration;
-import org.uiautomation.iosdriver.DeviceDetector;
-import org.uiautomation.iosdriver.services.DeviceManagerService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +36,6 @@ public class IOSServerManager {
 
   private final HostInfo hostInfo;
   private final ResourceCache cache = new ResourceCache();
-  private DeviceManagerService deviceManager;
   private DeviceStore devices;
   private final IOSServerConfiguration options;
   public final ApplicationStore apps;
@@ -54,23 +51,22 @@ public class IOSServerManager {
     }
     this.hostInfo = new HostInfo(options);
 
-
     devices = new DeviceStore();
 
     if (Configuration.BETA_FEATURE) {
       //LoggerService.enableDebug();
-      DeviceDetector d = DeviceManagerService.getDetector();
-      if (d == null) {
-        devices = new DeviceStore();
-        devices.add(new SimulatorDevice());
-      } else {
-        devices = (DeviceStore) d;
-      }
-      deviceManager = DeviceManagerService.create(devices);
-      deviceManager.startDetection();
+      //DeviceDetector d = DeviceManagerService.getDetector();
+      //if (d == null) {
+      //  devices = new DeviceStore();
+      //  devices.add(new SimulatorDevice());
+      //} else {
+      //devices = (DeviceStore) d;
+      //}
+      //deviceManager = DeviceManagerService.create(devices);
+      // deviceManager.startDetection();
     }
 
-    if (Configuration.SIMULATORS_ENABLED){
+    if (Configuration.SIMULATORS_ENABLED) {
       devices.add(new SimulatorDevice());
     }
 
@@ -80,7 +76,7 @@ public class IOSServerManager {
 
   public void stop() {
     if (Configuration.BETA_FEATURE) {
-      deviceManager.stopDetection();
+      //deviceManager.stopDetection();
     }
   }
 
