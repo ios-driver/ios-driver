@@ -1,6 +1,8 @@
 ios-driver
 ==========
 
+[![Build Status](https://api.travis-ci.org/ios-driver/ios-driver.png?branch=dev)](https://travis-ci.org/ios-driver/ios-driver)
+
 IOS native, hybrid and web automation
 
 doc : http://ios-driver.github.com/ios-driver/

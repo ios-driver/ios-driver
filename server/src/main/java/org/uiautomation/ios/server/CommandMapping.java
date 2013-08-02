@@ -177,7 +177,10 @@ public enum CommandMapping {
   PICKER_WHEEL_SET_VALUE(SetPickerWheelValueNHandler.class),
 
   //UIASwitch
-  NATIVE_SWITCH_SET_VALUE(SetSwitchValueNHandler.class);
+  NATIVE_SWITCH_SET_VALUE(SetSwitchValueNHandler.class),
+
+  //UIASlider
+  SLIDER_DRAG_TO_VALUE(SetSliderPosNHandler.class);
 
 
   private WebDriverLikeCommand command;

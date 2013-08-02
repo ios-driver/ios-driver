@@ -67,10 +67,6 @@ public class IOSServer {
     server.start();
     IOSServerConfiguration options = server.getOptions();
     IOSServerManager driver = server.getDriver();
-    if (options.getRegistrationURL() != null) {
-      SelfRegisteringRemote selfRegisteringRemote = new SelfRegisteringRemote(options, driver);
-      selfRegisteringRemote.startRegistrationProcess();
-    }
   }
 
   public IOSServerConfiguration getOptions() {
@@ -101,6 +97,7 @@ public class IOSServer {
     wd.addServlet(ApplicationsServlet.class, "/applications/*");
     wd.addServlet(CapabilitiesServlet.class, "/capabilities/*");
     wd.addServlet(ArchiveServlet.class, "/archive/*");
+    wd.getServletContext().getContextHandler().setMaxFormContentSize(500000);
 
     ServletContextHandler statics = new ServletContextHandler(server, "/static", true, false);
     statics.addServlet(StaticResourceServlet.class, "/*");
@@ -160,6 +157,8 @@ public class IOSServer {
     }
     log.info(b.toString());
 
+    startHubRegistration();
+
     wd.setAttribute(DRIVER, driver);
     extra.setAttribute(DRIVER, driver);
 
@@ -207,10 +206,18 @@ public class IOSServer {
     }
   }
 
+  private void startHubRegistration(){
+    if (options.getRegistrationURL() != null) {
+      SelfRegisteringRemote selfRegisteringRemote = new SelfRegisteringRemote(options, driver);
+      selfRegisteringRemote.startRegistrationProcess();
+    }
+  }
+
   public void start() throws Exception {
     if (!server.isRunning()) {
       server.start();
     }
+
   }
 
   public void stop() throws Exception {
