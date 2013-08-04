@@ -11,7 +11,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.uiautomation.ios.server.servlet;
+package org.uiautomation.ios.server.instruments.communication.curl;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
@@ -20,8 +20,8 @@ import org.uiautomation.ios.server.application.LanguageDictionary;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.command.UIAScriptResponse;
 import org.uiautomation.ios.server.command.uiautomation.GetCapabilitiesNHandler;
-import org.uiautomation.ios.server.instruments.CURLBasedCommunicationChannel;
-import org.uiautomation.ios.server.instruments.CommunicationChannel;
+import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
+import org.uiautomation.ios.server.servlet.DriverBasedServlet;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -36,6 +36,9 @@ public class UIAScriptServlet extends DriverBasedServlet {
 
   private static final Logger log = Logger.getLogger(UIAScriptServlet.class.getName());
   private static final long serialVersionUID = 41227429706998662L;
+
+
+
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -63,7 +66,7 @@ public class UIAScriptServlet extends DriverBasedServlet {
   private void sendNextCommand(HttpServletRequest request, HttpServletResponse response)
       throws Exception {
 
-    UIAScriptRequest nextCommand = communication(request).getNextCommand();
+    UIAScriptRequest nextCommand = getCommunicationChannel(request).getNextCommand();
     String script = nextCommand.getScript();
 
     response.setContentType("text/html");
@@ -74,7 +77,7 @@ public class UIAScriptServlet extends DriverBasedServlet {
   }
 
   private void getResponse(HttpServletRequest request, HttpServletResponse response)
-      throws Exception, JSONException {
+      throws Exception {
 
     if (request.getInputStream() != null) {
       StringWriter writer = new StringWriter();
@@ -89,10 +92,10 @@ public class UIAScriptServlet extends DriverBasedServlet {
         GetCapabilitiesNHandler.setCachedResponse(resp);
         getDriver().getSession(resp.getSessionId()).communication().registerUIAScript();
       } else {
-        communication(request).setNextResponse(r);
+        getCommunicationChannel(request).addResponse(r);
       }
       log.fine("wait for next command");
-      UIAScriptRequest nextCommand = communication(request).getNextCommand();
+      UIAScriptRequest nextCommand = getCommunicationChannel(request).getNextCommand();
       String script = nextCommand.getScript();
       log.fine("got " + script);
 
@@ -104,9 +107,16 @@ public class UIAScriptServlet extends DriverBasedServlet {
     }
   }
 
-  private CommunicationChannel communication(HttpServletRequest request) throws Exception {
+  private CURLBasedCommunicationChannel getCommunicationChannel(HttpServletRequest request) throws Exception {
     String opaqueKey = request.getParameter("sessionId");
-    return getDriver().getSession(opaqueKey).communication();
+    CommunicationChannel channel = getDriver().getSession(opaqueKey).communication();
+    if (channel instanceof CURLBasedCommunicationChannel) {
+       return (CURLBasedCommunicationChannel)channel;
+    } else {
+      throw new RuntimeException("Bug.Using a servlet to communicate with instruments only "
+                                 + "makes sense in the case of a CURL based communication.For "
+                                 + channel.getClass() + " the servlet shouldn't be called.");
+    }
   }
 
 }

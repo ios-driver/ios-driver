@@ -12,8 +12,18 @@
  *  the License.
  */
 
-package org.uiautomation.ios.server.instruments;
+package org.uiautomation.ios.server.instruments.communication;
 
-public enum CommunicationMode {
-  CURL, MULTI
+import org.uiautomation.ios.server.command.UIAScriptRequest;
+import org.uiautomation.ios.server.command.UIAScriptResponse;
+
+
+// TODO freynaud should send Request and Reponse directly, not UIRequest UIResponse
+public interface CommunicationChannel {
+
+  boolean waitForUIScriptToBeStarted() throws InterruptedException;
+
+  void registerUIAScript();
+
+  UIAScriptResponse executeCommand(UIAScriptRequest request);
 }

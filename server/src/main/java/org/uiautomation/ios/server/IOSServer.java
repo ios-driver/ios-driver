@@ -25,7 +25,6 @@ import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.inspector.IDEServlet;
 import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.configuration.Configuration;
-import org.uiautomation.ios.server.grid.RegistrationRequest;
 import org.uiautomation.ios.server.grid.SelfRegisteringRemote;
 import org.uiautomation.ios.server.servlet.ApplicationsServlet;
 import org.uiautomation.ios.server.servlet.ArchiveServlet;
@@ -34,7 +33,7 @@ import org.uiautomation.ios.server.servlet.DeviceServlet;
 import org.uiautomation.ios.server.servlet.IOSServlet;
 import org.uiautomation.ios.server.servlet.ResourceServlet;
 import org.uiautomation.ios.server.servlet.StaticResourceServlet;
-import org.uiautomation.ios.server.servlet.UIAScriptServlet;
+import org.uiautomation.ios.server.instruments.communication.curl.UIAScriptServlet;
 import org.uiautomation.ios.server.utils.FolderMonitor;
 import org.uiautomation.ios.server.utils.ZipUtils;
 

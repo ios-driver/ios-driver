@@ -16,7 +16,7 @@ package org.uiautomation.ios.utils;
 
 import org.apache.commons.io.IOUtils;
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.server.instruments.CommunicationMode;
+import org.uiautomation.ios.server.instruments.communication.CommunicationMode;
 
 import java.io.BufferedWriter;
 import java.io.File;

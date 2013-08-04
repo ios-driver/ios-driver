@@ -12,9 +12,8 @@
  *  the License.
  */
 
-package org.uiautomation.ios.server.instruments;
+package org.uiautomation.ios.server.instruments.communication;
 
-public interface Logger {
-
-  public void log(String message);
+public enum CommunicationMode {
+  CURL, MULTI
 }

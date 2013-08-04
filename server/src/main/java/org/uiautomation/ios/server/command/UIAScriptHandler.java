@@ -39,20 +39,8 @@ public abstract class UIAScriptHandler extends BaseNativeCommandHandler {
       throw new RuntimeException("need to specify the JS to run");
     }
     UIAScriptRequest r = new UIAScriptRequest(js);
-    communication().sendNextCommand(r);
+    return communication().executeCommand(r).getResponse();
 
-    Response response;
-    // Stop is a fire and forget response. It will kill the instruments script,
-    // so the script cannot
-    // send a response.
-    if ("stop".equals(js)) {
-      response = new Response();
-      response.setSessionId(getRequest().getSession());
-      response.setStatus(0);
-      response.setValue("ok");
-    } else {
-      response = communication().waitForResponse().getResponse();
-    }
-    return response;
   }
+
 }

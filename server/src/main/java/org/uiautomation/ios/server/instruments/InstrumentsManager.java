@@ -22,6 +22,10 @@ import org.uiautomation.ios.server.Device;
 import org.uiautomation.ios.server.RealDevice;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.application.IPAApplication;
+import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
+import org.uiautomation.ios.server.instruments.communication.CommunicationMode;
+import org.uiautomation.ios.server.instruments.communication.curl.CURLBasedCommunicationChannel;
+import org.uiautomation.ios.server.instruments.communication.multi.MultiInstrumentsBasedCommunicationChannel;
 import org.uiautomation.ios.server.simulator.IOSRealDeviceManager;
 import org.uiautomation.ios.server.simulator.IOSSimulatorManager;
 import org.uiautomation.ios.server.utils.IOSVersion;
@@ -134,7 +138,7 @@ public class InstrumentsManager {
             new ScriptHelper()
                 .getScript(port, application.getDotAppAbsolutePath(), sessionId, mode);
         List<String> instruments = createInstrumentCommand(uiscript.getAbsolutePath());
-        channel = new CURLBasedCommunicationChannel();
+        channel = new CURLBasedCommunicationChannel(sessionId);
 
         simulatorProcess = new Command(instruments, true);
         simulatorProcess.setWorkingDirectory(output);
