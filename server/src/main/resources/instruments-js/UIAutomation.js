@@ -111,12 +111,10 @@ var UIAutomation = {
     postResponseMultiAndGetNextCommand: function (jsonResponse) {
         response(jsonResponse);
         while (true) {
-            UIATarget.localTarget().delay(1);
+            UIATarget.localTarget().delay(0.05);
             var cmd = UIATarget.localTarget().frontMostApp().preferencesValueForKey('cmd');
-            log("the command in memory is : " + cmd);
             if (cmd) {
                 UIATarget.localTarget().frontMostApp().setPreferencesValueForKey(null, 'cmd');
-                log("new command received : " + cmd);
                 return cmd;
             }
         }
@@ -217,7 +215,6 @@ var UIAutomation = {
                 } else {
                     request = this.postResponseMultiAndGetNextCommand(response);
                 }
-                log("request = " + request);
                 if (request === "stop") {
                     ok = false;
                     log("end of the command loop.");
@@ -226,7 +223,6 @@ var UIAutomation = {
                 } else {
                     try {
                         response = eval(request);
-                        log("response = " + response);
                     } catch (err) {
                         if (err.status) {
                             response =
@@ -234,7 +230,6 @@ var UIAutomation = {
                         } else {
                             response = this.createJSONResponse(this.SESSION, 17, err.message);
                         }
-
                     }
                 }
             } catch (err) {
