@@ -119,6 +119,11 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
   }
 
   @Override
+  public void setSDKVersion() {
+    // no-op
+  }
+
+  @Override
   public void setLocationPreference(boolean authorized) {
     // no-op
   }
@@ -128,8 +133,5 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
     // no-op
   }
 
-  @Override
-  public String getInstrumentsClient() {
-    return "instruments";
-  }
+
 }

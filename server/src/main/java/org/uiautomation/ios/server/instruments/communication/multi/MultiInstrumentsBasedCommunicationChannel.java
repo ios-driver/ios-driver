@@ -14,44 +14,31 @@
 
 package org.uiautomation.ios.server.instruments.communication.multi;
 
-import org.libimobiledevice.binding.raw.IMobileDeviceFactory;
-import org.libimobiledevice.binding.raw.IOSDevice;
 import org.libimobiledevice.binding.raw.instruments.Instruments;
 import org.libimobiledevice.binding.raw.instruments.ScriptMessageHandler;
-import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.server.RealDevice;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.command.UIAScriptResponse;
-import org.uiautomation.ios.server.instruments.InstrumentManager;
 import org.uiautomation.ios.server.instruments.communication.BaseCommunicationChannel;
 import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
-import org.uiautomation.ios.server.instruments.communication.CommunicationMode;
-import org.uiautomation.ios.utils.ScriptHelper;
 
-import java.io.IOException;
+import java.util.logging.Logger;
 
 public class MultiInstrumentsBasedCommunicationChannel extends BaseCommunicationChannel
-    implements CommunicationChannel, ScriptMessageHandler, InstrumentManager {
+    implements CommunicationChannel, ScriptMessageHandler {
 
-  private final RealDevice device;
-  private final Instruments instruments;
-  // TODO freynaud remove that from memory.It's too big.
-  private final String script;
-  private final String bundleId = "com.yourcompany.UICatalog";
+  private static final
+  Logger
+      log =
+      Logger.getLogger(MultiInstrumentsBasedCommunicationChannel.class.getName());
+
   private final String sessionId;
+  private final Instruments instruments;
 
-  public MultiInstrumentsBasedCommunicationChannel(RealDevice device, int port, String aut,
-                                                   String sessionId)
-      throws IOException {
+  public MultiInstrumentsBasedCommunicationChannel(int port, String aut,
+                                                   String sessionId, Instruments instruments) {
     super(sessionId);
-    this.device = device;
     this.sessionId = sessionId;
-    script = new ScriptHelper()
-        .generateScriptContent(port, aut, sessionId, CommunicationMode.MULTI);
-    final IOSDevice iphone = IMobileDeviceFactory.INSTANCE.get(((RealDevice) device).getUuid());
-    iphone.connect();
-
-    instruments = new Instruments(iphone, this);
+    this.instruments = instruments;
   }
 
 
@@ -60,6 +47,11 @@ public class MultiInstrumentsBasedCommunicationChannel extends BaseCommunication
     handleLastCommand(request);
     sendNextCommand(request);
     return waitForResponse();
+  }
+
+  @Override
+  public void stop() {
+
   }
 
 
@@ -98,25 +90,6 @@ public class MultiInstrumentsBasedCommunicationChannel extends BaseCommunication
 
   public void log(String message) {
     System.out.println(message);
-  }
-
-  @Override
-  public void start() {
-    instruments.startApp(bundleId);
-    //System.out.println("started app");
-    instruments.executeScriptNonManaged(script);
-    //System.out.println("started script ");
-    try {
-      waitForUIScriptToBeStarted();
-      //System.out.println("script said hello");
-    } catch (InterruptedException e) {
-      throw new WebDriverException("Error starting script " + e.getMessage(), e);
-    }
-  }
-
-  @Override
-  public void stop() {
-    instruments.stopApp();
   }
 
 

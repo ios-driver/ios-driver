@@ -164,7 +164,7 @@ public class IOSServlet extends DriverBasedServlet {
       throw new WebDriverException("bug." + e.getMessage(), e);
     } finally {
       String message = ((System.currentTimeMillis() - start) + "ms.\t" + command);
-      log.info(message);
+      log.warning(message);
     }
   }
 

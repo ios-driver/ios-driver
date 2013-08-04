@@ -35,8 +35,7 @@ import static org.uiautomation.ios.IOSCapabilities.COMMAND_TIMEOUT_MILLIS;
 public abstract class BaseCommunicationChannel implements CommunicationChannel {
 
 
-  private final BlockingQueue<UIAScriptResponse> responseQueue =
-      new ArrayBlockingQueue<UIAScriptResponse>(1);
+  private final BlockingQueue<UIAScriptResponse> responseQueue = new ArrayBlockingQueue<>(1);
 
   private final Lock lock = new ReentrantLock();
   private final Condition condition = lock.newCondition();
@@ -47,9 +46,10 @@ public abstract class BaseCommunicationChannel implements CommunicationChannel {
     this.sessionId = sessionId;
   }
 
-  protected String getSessionId(){
+  protected String getSessionId() {
     return sessionId;
   }
+
   @Override
   public boolean waitForUIScriptToBeStarted() throws InterruptedException {
     try {
@@ -74,7 +74,7 @@ public abstract class BaseCommunicationChannel implements CommunicationChannel {
     }
   }
 
-  protected void handleLastCommand(UIAScriptRequest request){
+  protected void handleLastCommand(UIAScriptRequest request) {
     // Stop is a fire and forget response. It will kill the instruments script,
     // so the script cannot
     // send a response.
@@ -91,7 +91,7 @@ public abstract class BaseCommunicationChannel implements CommunicationChannel {
 
   }
 
-  protected void setNextResponse(UIAScriptResponse r) {
+  public void setNextResponse(UIAScriptResponse r) {
     responseQueue.add(r);
   }
 

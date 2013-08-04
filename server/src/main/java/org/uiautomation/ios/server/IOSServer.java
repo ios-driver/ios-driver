@@ -26,6 +26,7 @@ import org.uiautomation.ios.inspector.IDEServlet;
 import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.server.grid.SelfRegisteringRemote;
+import org.uiautomation.ios.server.instruments.communication.curl.CURLBasedCommunicationChannel;
 import org.uiautomation.ios.server.servlet.ApplicationsServlet;
 import org.uiautomation.ios.server.servlet.ArchiveServlet;
 import org.uiautomation.ios.server.servlet.CapabilitiesServlet;
@@ -33,7 +34,6 @@ import org.uiautomation.ios.server.servlet.DeviceServlet;
 import org.uiautomation.ios.server.servlet.IOSServlet;
 import org.uiautomation.ios.server.servlet.ResourceServlet;
 import org.uiautomation.ios.server.servlet.StaticResourceServlet;
-import org.uiautomation.ios.server.instruments.communication.curl.UIAScriptServlet;
 import org.uiautomation.ios.server.utils.FolderMonitor;
 import org.uiautomation.ios.server.utils.ZipUtils;
 
@@ -89,7 +89,7 @@ public class IOSServer {
     server = new Server(new InetSocketAddress("0.0.0.0", options.getPort()));
 
     ServletContextHandler wd = new ServletContextHandler(server, "/wd/hub", true, false);
-    wd.addServlet(UIAScriptServlet.class, "/uiascriptproxy/*");
+    wd.addServlet(CURLBasedCommunicationChannel.UIAScriptServlet.class, "/uiascriptproxy/*");
     wd.addServlet(IOSServlet.class, "/*");
     wd.addServlet(ResourceServlet.class, "/resources/*");
     wd.addServlet(DeviceServlet.class, "/devices/*");

@@ -45,14 +45,12 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   private final File xcodeInstall;
   private final String desiredSDKVersion;
   private final SimulatorSettings simulatorSettings;
+  private final Instruments instruments;
 
   /**
    * manages a single instance of the instruments process. Only 1 process can run at a given time.
    */
-  public IOSSimulatorManager(IOSCapabilities capabilities) {
-    if (isSimulatorRunning() && !isWarmupRequired()) {
-      throw new WebDriverException("another instance of the simulator is already running.");
-    }
+  public IOSSimulatorManager(IOSCapabilities capabilities, Instruments instruments) {
 
     this.sdks = ClassicCommands.getInstalledSDKs();
     this.desiredSDKVersion = validateSDK(capabilities.getSDKVersion());
@@ -60,14 +58,35 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     xcodeInstall = ClassicCommands.getXCodeInstall();
     simulatorSettings = new SimulatorSettings(desiredSDKVersion);
     bundleId = capabilities.getBundleId();
+    this.instruments = instruments;
+
   }
 
-  private boolean isWarmupRequired() {
-    // TODO freynaud implement. Refactor.
-    return true;
+  @Override
+  public void setSDKVersion() {
+    if (!isDefaultSDK()) {
+      warmup();
+      forceDefaultSDK();
+    }
   }
 
-  public void forceDefaultSDK() {
+  private boolean isDefaultSDK() {
+    String defaultSDK = ClassicCommands.getDefaultSDK();
+    if (new IOSVersion(defaultSDK).equals(desiredSDKVersion)) {
+      return true;
+    }
+    return false;
+  }
+
+  private void warmup() {
+    if (instruments instanceof InstrumentsApple) {
+      ((InstrumentsApple) instruments).startWithDummyScript();
+    } else {
+      throw new RuntimeException("NI");
+    }
+  }
+
+  private void forceDefaultSDK() {
 
     for (String version : sdks) {
 
@@ -177,10 +196,6 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     simulatorSettings.setVariation(device, variation);
   }
 
-  @Override
-  public String getInstrumentsClient() {
-    return InstrumentsNoDelayLoader.getInstance().getInstruments().getAbsolutePath();
-  }
 
   @Override
   public void resetContentAndSettings() {

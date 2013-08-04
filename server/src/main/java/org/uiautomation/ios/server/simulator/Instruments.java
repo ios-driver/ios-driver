@@ -12,20 +12,18 @@
  *  the License.
  */
 
-package org.uiautomation.ios.server.instruments.communication;
+package org.uiautomation.ios.server.simulator;
 
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
-import org.uiautomation.ios.server.command.UIAScriptResponse;
+import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
 
+public interface Instruments {
 
-// TODO freynaud should send Request and Reponse directly, not UIRequest UIResponse
-public interface CommunicationChannel {
+  public void start() throws InstrumentsFailedToStartException;
+  public void stop();
 
-  boolean waitForUIScriptToBeStarted() throws InterruptedException;
+  public Response executeCommand(UIAScriptRequest request);
 
-  void registerUIAScript();
-
-  UIAScriptResponse executeCommand(UIAScriptRequest request);
-
-  void stop();
+  CommunicationChannel getChannel();
 }

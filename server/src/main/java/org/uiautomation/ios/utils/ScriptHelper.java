@@ -52,10 +52,14 @@ public class ScriptHelper {
 
   private static final String FILE_NAME = "uiamasterscript";
 
-  private String load(String resource) throws IOException {
+  private String load(String resource) {
     InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
     StringWriter writer = new StringWriter();
-    IOUtils.copy(is, writer, "UTF-8");
+    try {
+      IOUtils.copy(is, writer, "UTF-8");
+    } catch (IOException e) {
+      throw new WebDriverException("Cannot load script :" + resource, e);
+    }
     String content = writer.toString();
     return content;
   }
@@ -63,7 +67,7 @@ public class ScriptHelper {
 
   // TODO freynaud AUT is only used for the capabilies. It should be a response decorator of getCaps
   public String generateScriptContent(int port, String aut, String opaqueKey,
-                                      CommunicationMode mode) throws IOException {
+                                      CommunicationMode mode) {
     StringBuilder scriptContent = new StringBuilder();
 
     String c = load(lib0);

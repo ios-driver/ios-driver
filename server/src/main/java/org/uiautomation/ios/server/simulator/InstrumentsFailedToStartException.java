@@ -12,20 +12,15 @@
  *  the License.
  */
 
-package org.uiautomation.ios.server.instruments.communication;
+package org.uiautomation.ios.server.simulator;
 
-import org.uiautomation.ios.server.command.UIAScriptRequest;
-import org.uiautomation.ios.server.command.UIAScriptResponse;
+public class InstrumentsFailedToStartException extends Exception {
 
+  public InstrumentsFailedToStartException(String message) {
+    super(message);
+  }
 
-// TODO freynaud should send Request and Reponse directly, not UIRequest UIResponse
-public interface CommunicationChannel {
-
-  boolean waitForUIScriptToBeStarted() throws InterruptedException;
-
-  void registerUIAScript();
-
-  UIAScriptResponse executeCommand(UIAScriptRequest request);
-
-  void stop();
+  public InstrumentsFailedToStartException(String message, InterruptedException cause) {
+    super(message, cause);
+  }
 }
