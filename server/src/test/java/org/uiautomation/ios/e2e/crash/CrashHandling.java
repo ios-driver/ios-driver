@@ -4,9 +4,8 @@ import junit.framework.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
@@ -22,30 +21,47 @@ public class CrashHandling {
   private IOSServer server;
   private IOSServerConfiguration config;
   private RemoteWebDriver driver;
+  private IOSCapabilities cap;
 
-  @BeforeClass
+  @BeforeMethod
   public void startServer() throws Exception {
     String[] args = {"-port", "4444", "-host", "localhost",
-        "-app", SampleApps.getPPNQASampleApp(), "-simulators" };
+        "-app", SampleApps.getPPNQASampleApp(), "-simulators"};
     config = IOSServerConfiguration.create(args);
 
     server = new IOSServer(config);
     server.start();
+
+    Thread.sleep(1000);
+
+    cap = SampleApps.ppNQASampleAppCap();
+    cap.setCapability(IOSCapabilities.SIMULATOR, true);
+
+    driver = new RemoteWebDriver(getRemoteURL(), cap);
+
   }
 
-  @AfterClass
-  public void stopServer() throws Exception {
-    if (server != null) {
-      server.stop();
-      server = null;
-    }
-  }
+//  @AfterClass
+//  public void stopServer() throws Exception {
+//
+//  }
 
   @AfterMethod
-  public void closeDriver() {
-    if (driver != null) {
-      driver.quit();
-      driver = null;
+  public void closeDriver() throws Exception {
+    try {
+      if (driver != null) {
+        driver.quit();
+        driver = null;
+      }
+    } catch (Exception ignored) {
+    }
+
+    try {
+      if (server != null) {
+        server.stop();
+        server = null;
+      }
+    } catch (Exception ignored) {
     }
   }
 
@@ -60,45 +76,102 @@ public class CrashHandling {
 
   @Test
   public void isAppCrashDetected() throws InterruptedException {
-    IOSCapabilities cap = SampleApps.ppNQASampleAppCap();
-    cap.setCapability(IOSCapabilities.SIMULATOR, true);
 
-    RemoteWebDriver driver = new RemoteWebDriver(getRemoteURL(), cap);
     WebElement crashButton = driver.findElement(By.name("Crash me!"));
-    crashButton.click();
-    Thread.sleep(2000);
-    Assert.assertTrue("App crash detected.", false);
 
+    boolean crashExceptionThrown = false;
+    try {
+      crashButton.click();
+      // give instruments some time to realise there has been a crash and report it
+      Thread.sleep(1000);
+      // the application has crashed - we should be notified on the next client request
+      crashButton.click();
+    } catch (Exception e) {
+      crashExceptionThrown = true;
+      Assert.assertTrue("Crash error contains the crash trace file details. " + e.getMessage(), e.getMessage().contains("The crash report can be found"));
+    }
+    Assert.assertTrue("App crash detected.", crashExceptionThrown);
+
+  }
+
+  @Test
+  public void canStartANewSessionAfterAppCrash() throws InterruptedException {
+
+    WebElement crashButton = driver.findElement(By.name("Crash me!"));
+    try {
+      crashButton.click();
+      // give instruments some time to realise there has been a crash and report it
+      Thread.sleep(1000);
+      // the application has crashed - we should be notified on the next client request
+      crashButton.click();
+    } catch (Exception ignored) {
+      // this is expected since we crashed the app
+    }
+
+    driver = new RemoteWebDriver(getRemoteURL(), cap);
+
+    Assert.assertTrue("We can start a new test session", driver != null);
   }
 
   @Test
   public void isSimulatorCrashDetected() throws InterruptedException {
-    IOSCapabilities cap = SampleApps.ppNQASampleAppCap();
-    cap.setCapability(IOSCapabilities.SIMULATOR, true);
 
-    RemoteWebDriver driver = new RemoteWebDriver(getRemoteURL(), cap);
+    WebElement crashButton = driver.findElement(By.name("Crash me!"));
 
-    // kill simulator
-    ClassicCommands.killall("iPhone Simulator");
-    Thread.sleep(3000);
-
-    Assert.assertTrue("Sim crash detected.", false);
+    boolean crashExceptionThrown = false;
+    try {
+      // kill simulator
+      ClassicCommands.killall("iPhone Simulator");
+      Thread.sleep(1000);
+      // should throw an exception
+      crashButton.click();
+    } catch (Exception e) {
+      crashExceptionThrown = true;
+      Assert.assertTrue("Crash error contains Simulator as likely cause of problem. " + e.getMessage(), e.getMessage().contains("It appears like the Simulator process has crashed"));
+    }
+    Assert.assertTrue("Simulator crash detected.", crashExceptionThrown);
 
   }
 
   @Test
-  public void isInstrumentsCrashDetected() throws InterruptedException {
-    IOSCapabilities cap = SampleApps.ppNQASampleAppCap();
-    cap.setCapability(IOSCapabilities.SIMULATOR, true);
+  public void canStartANewSessionAfterSimulatorCrash() throws InterruptedException {
 
-    RemoteWebDriver driver = new RemoteWebDriver(getRemoteURL(), cap);
+    WebElement crashButton = driver.findElement(By.name("Crash me!"));
+    try {
+      // kill simulator
+      ClassicCommands.killall("iPhone Simulator");
+      Thread.sleep(1000);
+      // should throw an exception
+      crashButton.click();
+    } catch (Exception ignored) {
+      // this is expected since we crashed the simulator
+    }
 
-    // kill instruments
-    ClassicCommands.killall("instruments");
-    Thread.sleep(3000);
+    driver = new RemoteWebDriver(getRemoteURL(), cap);
 
-    Assert.assertTrue("Instruments crash detected.", false);
-
+    Assert.assertTrue("We can start a new test session", driver != null);
   }
+
+//  @Test
+//  public void isInstrumentsCrashDetected() throws InterruptedException {
+//    IOSCapabilities cap = SampleApps.ppNQASampleAppCap();
+//    cap.setCapability(IOSCapabilities.SIMULATOR, true);
+//
+//    driver = new RemoteWebDriver(getRemoteURL(), cap);
+//    WebElement crashButton = driver.findElement(By.name("Crash me!"));
+//
+//    boolean crashExceptionThrown = false;
+//    try {
+//      // kill instruments
+//      ClassicCommands.killall("instruments");
+//      Thread.sleep(1000);
+//      // should throw an exception
+//      crashButton.click();
+//    } catch (Exception e) {
+//      crashExceptionThrown = true;
+//    }
+//    Assert.assertTrue("Instruments crash detected.", crashExceptionThrown);
+//
+//  }
 
 }
