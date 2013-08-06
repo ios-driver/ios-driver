@@ -25,7 +25,7 @@ public class ApplicationCrashListener implements CommandOutputListener {
   }
 
   private void hasApplicationCrashed(String log){
-    if(log.contains("The target application appears to have died")){
+    if(log.contains("The target application appears to have died") || log.contains("Script was stopped by the user")){
       instrumentsManager.handleAppCrash(log);
     }
   }
