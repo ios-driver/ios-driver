@@ -180,8 +180,6 @@ public class IOSServerManager {
     for (ServerSideSession session : sessions) {
       if (session.getSessionId().equals(opaqueKey)) {
         if (session.hasCrashed()) {
-          session.stop();
-          sessions.remove(session);
           throw new WebDriverException(session.getCrashDetails().toString());
         }
         return session;

@@ -41,11 +41,6 @@ public class CrashHandling {
 
   }
 
-//  @AfterClass
-//  public void stopServer() throws Exception {
-//
-//  }
-
   @AfterMethod
   public void closeDriver() throws Exception {
     try {
@@ -95,6 +90,32 @@ public class CrashHandling {
   }
 
   @Test
+  public void isExceptionThrownOnEveryActionAfterCrash() throws InterruptedException {
+
+    WebElement crashButton = driver.findElement(By.name("Crash me!"));
+    crashButton.click();
+    // give instruments some time to realise there has been a crash and report it
+    Thread.sleep(1000);
+
+    catchCrashException(crashButton);
+    catchCrashException(crashButton);
+    catchCrashException(crashButton);
+
+  }
+
+  private boolean catchCrashException(WebElement button) {
+    boolean crashExceptionThrown = false;
+    try {
+      // the application has crashed - we should be notified on the next client request
+      button.click();
+    } catch (Exception e) {
+      crashExceptionThrown = true;
+      Assert.assertTrue("Crash error contains the crash trace file details. " + e.getMessage(), e.getMessage().contains("The crash report can be found"));
+    }
+    return crashExceptionThrown;
+  }
+
+  @Test
   public void canStartANewSessionAfterAppCrash() throws InterruptedException {
 
     WebElement crashButton = driver.findElement(By.name("Crash me!"));
@@ -104,7 +125,7 @@ public class CrashHandling {
       Thread.sleep(1000);
       // the application has crashed - we should be notified on the next client request
       crashButton.click();
-    } catch (Exception ignored) {
+    } catch (Exception e) {
       // this is expected since we crashed the app
     }
 
