@@ -181,10 +181,14 @@ public class IOSServerManager {
   public ServerSideSession getSession(String opaqueKey) {
     for (ServerSideSession session : sessions) {
       if (session.getSessionId().equals(opaqueKey)) {
+        if(session.hasCrashed())
+        {
+          throw new WebDriverException(session.getCrashDetails().toString());
+        }
         return session;
       }
     }
-    throw new WebDriverException("Cannot find session " + opaqueKey + " on the sesver.");
+    throw new WebDriverException("Cannot find session " + opaqueKey + " on the server.");
   }
 
   public List<APPIOSApplication> getSupportedApplications() {

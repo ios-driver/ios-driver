@@ -7,10 +7,14 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Date;
 
-public class IOSApplicationCrashException extends RuntimeException {
+public class ApplicationCrashDetails {
 
-  public IOSApplicationCrashException(String msg) {
-    super(msg + "\n" + mostRecentCrashReport());
+  private final String log;
+  private String crashReport;
+
+  public ApplicationCrashDetails(String log){
+    this.log = log;
+    crashReport = mostRecentCrashReport();
   }
 
   public static String mostRecentCrashReport() {
@@ -30,4 +34,9 @@ public class IOSApplicationCrashException extends RuntimeException {
     }
     return sb.toString();
   }
+
+  public String toString(){
+    return log + "\n" + crashReport;
+  }
+
 }

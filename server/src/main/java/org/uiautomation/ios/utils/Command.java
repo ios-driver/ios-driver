@@ -15,6 +15,7 @@
 package org.uiautomation.ios.utils;
 
 import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.server.instruments.InstrumentsManager;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -40,11 +41,20 @@ public class Command {
   private volatile Process process;
   private List<Thread> threads = new ArrayList<Thread>();
   private File workingDir = null;
+  private InstrumentsManager instrumentsManager;
 
   public Command(List<String> args, boolean logToConsole) {
+    this(args, logToConsole, null);
+  }
+
+  public Command(List<String> args, boolean logToConsole, InstrumentsManager im) {
     this.args = args;
+    this.instrumentsManager = im;
     if (logToConsole) {
       listeners.add(new DefaultCommandListener());
+    }
+    if(instrumentsManager != null){
+      listeners.add(new ApplicationCrashListener(instrumentsManager)) ;
     }
 
   }
@@ -144,9 +154,6 @@ public class Command {
   }
 
   private void add(String line, boolean normal) {
-    if (line.contains("The target application appears to have died")) {
-      normal = false;
-    }
     if (normal) {
       out.add(line);
     } else {

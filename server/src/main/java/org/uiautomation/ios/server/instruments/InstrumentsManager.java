@@ -20,6 +20,7 @@ import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.Device;
 import org.uiautomation.ios.server.RealDevice;
+import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.AppleLanguage;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.application.IPAApplication;
@@ -59,15 +60,17 @@ public class InstrumentsManager {
   private List<String> extraEnvtParams;
   private CommunicationChannel communicationChannel;
   private Command simulatorProcess;
+  private ServerSideSession serverSideSession;
 
   /**
    * constructor that will create an instrument process linked to the server.
    *
-   * @param serverPort the port the server lives on
+   * @param serverSideSession the ServerSideSession which created the manager
    */
-  public InstrumentsManager(int serverPort) {
+  public InstrumentsManager(ServerSideSession serverSideSession) {
     template = ClassicCommands.getAutomationTemplate();
-    this.port = serverPort;
+    this.serverSideSession = serverSideSession;
+    this.port = serverSideSession.getIOSServerManager().getPort();
   }
 
   public void startSession(String sessionId,
@@ -118,7 +121,7 @@ public class InstrumentsManager {
       List<String> instruments = createInstrumentCommand(uiscript.getAbsolutePath());
       communicationChannel = new CommunicationChannel();
 
-      simulatorProcess = new Command(instruments, true);
+      simulatorProcess = new Command(instruments, true, this);
       simulatorProcess.setWorkingDirectory(output);
       simulatorProcess.start();
 
@@ -275,5 +278,10 @@ public class InstrumentsManager {
 
   public CommunicationChannel communicate() {
     return communicationChannel;
+  }
+
+  public void handleAppCrash(String log) {
+    stop();
+    serverSideSession.sessionHasCrashed(log);
   }
 }
