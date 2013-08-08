@@ -5,7 +5,7 @@
     <parent>
         <artifactId>ios-driver</artifactId>
         <groupId>org.uiautomation</groupId>
-        <version>0.6.2-SNAPSHOT</version>
+        <version>0.6.3-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>ios-grid</artifactId>

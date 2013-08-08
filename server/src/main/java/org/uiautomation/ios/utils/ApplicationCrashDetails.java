@@ -7,13 +7,17 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Date;
 
-public class IOSApplicationCrashException extends RuntimeException {
+public class ApplicationCrashDetails {
 
-  public IOSApplicationCrashException(String msg) {
-    super(msg + "\n" + mostRecentCrashReport());
+  private final String log;
+  private String crashReport;
+
+  public ApplicationCrashDetails(String log) {
+    this.log = log;
+    crashReport = mostRecentCrashReport();
   }
 
-  public static String mostRecentCrashReport() {
+  private String mostRecentCrashReport() {
     File crashFolder = new File(System.getProperty("user.home") + "/Library/Logs/DiagnosticReports/");
     Date now = new Date();
     Date cutoffDate = new Date(now.getTime() - 10000);
@@ -25,6 +29,18 @@ public class IOSApplicationCrashException extends RuntimeException {
         sb.append("\n" + f.getAbsoluteFile());
       }
     }
+    if (sb.toString().isEmpty()) {
+      if (log.contains("Script was stopped by the user")) {
+        sb.append("It appears like the Instruments process has crashed.");
+      } else {
+        sb.append("It appears like the Simulator process has crashed.");
+      }
+    }
     return sb.toString();
   }
+
+  public String toString() {
+    return log + "\n" + crashReport;
+  }
+
 }

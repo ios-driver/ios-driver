@@ -449,7 +449,7 @@ public class APPIOSApplication {
     if (appCapability.getSupportedLanguages().isEmpty()) {
       log.info(
           "The application doesn't have any content files."
-          + "The localization related features won't be availabled.");
+          + " Localization related features won't be available.");
     } else if (l != null && !appCapability.getSupportedLanguages().contains(l)) {
       throw new SessionNotCreatedException(
           "Language requested, " + l + " ,isn't supported.Supported are : "
