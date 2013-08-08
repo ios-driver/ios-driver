@@ -33,10 +33,11 @@ public class Demo {
 
   private final static boolean useQA = true;
 
-  public static void main2(String[] args) throws Exception {
+  public static void main(String[] args) throws Exception {
     String[] a = {"-port", "4445", "-host", "localhost",
                   "-aut", SampleApps.getUICatalogFile(),
                   "-aut", SampleApps.getUICatalogIpad(),
+                  "-simulators",
                   "-aut", "/Users/freynaud/eBay3.1_19.app"};
 
     IOSServerConfiguration config = IOSServerConfiguration.create(a);
@@ -53,7 +54,7 @@ public class Demo {
     }
 
     RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4445/wd/hub"), cap);
-    WebElement agree = driver.findElement(By.name("Agree"));
+    WebElement agree = driver.findElement(By.name("l10n('Agree')"));
     agree.click();
     WebElement searchField = driver.findElement(By.linkText("value=Search eBay"));
     searchField.sendKeys("ihpone5");
@@ -67,7 +68,7 @@ public class Demo {
   }
 
 
-  public static void main(String[] args) throws Exception {
+  public static void main2(String[] args) throws Exception {
 
 
     String[] a = {"-port", "5555", "-host", "127.0.0.1",
