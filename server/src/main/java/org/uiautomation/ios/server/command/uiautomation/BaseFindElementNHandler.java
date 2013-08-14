@@ -71,6 +71,12 @@ public abstract class BaseFindElementNHandler extends UIAScriptHandler {
     for (String key : l10ned.getKeysToL10N()) {
       LanguageDictionary dict = app.getCurrentDictionary();
       String value = dict.getContentForKey(key);
+      if (value == null) {
+        throw new WebDriverException("One of the key requested for localization :" + key
+                                     + " isn't available in the l10n files.Most likely the key "
+                                     + "provided is wrong.You can use the inspector to find the "
+                                     + "correct keys.");
+      }
       value = LanguageDictionary.getRegexPattern(value);
       l10ned.setTranslation(key, value);
     }

@@ -73,7 +73,7 @@ public class IDESessionModelImpl implements IDESessionModel {
   public void refresh() {
     screenshot.delete();
     System.out.println("element tree");
-    elementTree = driver.logElementTree(screenshot, false);
+    elementTree = driver.logElementTree(screenshot, true);
     System.out.println("element tree done");
   }
 
