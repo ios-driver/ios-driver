@@ -14,8 +14,7 @@
 
 package org.uiautomation.ios.server.instruments.communication.multi;
 
-import org.libimobiledevice.binding.raw.instruments.Instruments;
-import org.libimobiledevice.binding.raw.instruments.ScriptMessageHandler;
+import org.libimobiledevice.ios.driver.sdk.InstrumentsService;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.command.UIAScriptResponse;
 import org.uiautomation.ios.server.instruments.communication.BaseCommunicationChannel;
@@ -24,7 +23,7 @@ import org.uiautomation.ios.server.instruments.communication.CommunicationChanne
 import java.util.logging.Logger;
 
 public class MultiInstrumentsBasedCommunicationChannel extends BaseCommunicationChannel
-    implements CommunicationChannel, ScriptMessageHandler {
+    implements CommunicationChannel {
 
   private static final
   Logger
@@ -32,10 +31,10 @@ public class MultiInstrumentsBasedCommunicationChannel extends BaseCommunication
       Logger.getLogger(MultiInstrumentsBasedCommunicationChannel.class.getName());
 
   private final String sessionId;
-  private final Instruments instruments;
+  private final InstrumentsService instruments;
 
-  public MultiInstrumentsBasedCommunicationChannel(int port, String aut,
-                                                   String sessionId, Instruments instruments) {
+  public MultiInstrumentsBasedCommunicationChannel(int port, String aut, String sessionId,
+                                                   InstrumentsService instruments) {
     super(sessionId);
     this.sessionId = sessionId;
     this.instruments = instruments;
@@ -44,14 +43,16 @@ public class MultiInstrumentsBasedCommunicationChannel extends BaseCommunication
 
   @Override
   public UIAScriptResponse executeCommand(UIAScriptRequest request) {
+    StringBuilder b = new StringBuilder();
     handleLastCommand(request);
     sendNextCommand(request);
-    return waitForResponse();
+    UIAScriptResponse response = waitForResponse();
+    return response;
   }
 
   @Override
   public void stop() {
-
+    //instruments.stopApp();
   }
 
 
@@ -70,7 +71,6 @@ public class MultiInstrumentsBasedCommunicationChannel extends BaseCommunication
   }
 
 
-  @Override
   public void handle(String message) {
     //System.out.println("MESSAGE : " + message);
     if (message.startsWith("IOS_DRIVER_RESPONSE:")) {
@@ -80,8 +80,9 @@ public class MultiInstrumentsBasedCommunicationChannel extends BaseCommunication
       UIAScriptResponse response = new UIAScriptResponse(raw);
       if (response.isFirstResponse()) {
         registerUIAScript();
+      } else {
+        setNextResponse(response);
       }
-      setNextResponse(response);
     } else {
       log(message);
     }

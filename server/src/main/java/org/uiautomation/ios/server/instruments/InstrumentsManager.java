@@ -146,6 +146,7 @@ public class InstrumentsManager {
 
 
   public void stop() {
+    instruments.stop();
     if (device != null) {
       device.release();
     }

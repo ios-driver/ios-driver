@@ -92,7 +92,18 @@ public abstract class BaseCommunicationChannel implements CommunicationChannel {
   }
 
   public void setNextResponse(UIAScriptResponse r) {
-    responseQueue.add(r);
+    try {
+      responseQueue.add(r);
+
+    } catch (IllegalStateException e) {
+      try {
+        System.out.println("ALREADY PRESENT:"+responseQueue.take().getRaw());
+        System.out.println("TRY TO ADD:"+r.getRaw());
+      } catch (InterruptedException e1) {
+        e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      }
+      e.printStackTrace();
+    }
   }
 
 

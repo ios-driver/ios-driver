@@ -14,22 +14,27 @@
 
 package org.uiautomation.ios.server.simulator;
 
-import org.libimobiledevice.binding.raw.IMobileDeviceFactory;
-import org.libimobiledevice.binding.raw.IOSDevice;
-import org.libimobiledevice.binding.raw.instruments.ScriptMessageHandler;
-import org.openqa.selenium.WebDriverException;
+import com.dd.plist.NSDictionary;
+import com.dd.plist.NSObject;
+import com.dd.plist.NSString;
+import com.dd.plist.XMLPropertyListParser;
+
+import org.libimobiledevice.ios.driver.binding.PlistLibrary;
+import org.libimobiledevice.ios.driver.sdk.IDeviceSDK;
+import org.libimobiledevice.ios.driver.sdk.InstrumentsService;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.command.UIAScriptResponse;
 import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
 import org.uiautomation.ios.server.instruments.communication.multi.MultiInstrumentsBasedCommunicationChannel;
 import org.uiautomation.ios.utils.ScriptHelper;
+import org.libimobiledevice.ios.driver.sdk.MessageHandler;
 
 import java.util.logging.Logger;
 
 import static org.uiautomation.ios.server.instruments.communication.CommunicationMode.MULTI;
 
-public class InstrumentsLibImobile implements Instruments, ScriptMessageHandler {
+public class InstrumentsLibImobile implements Instruments,MessageHandler {
 
   private static final Logger log = Logger.getLogger(InstrumentsLibImobile.class.getName());
 
@@ -38,8 +43,7 @@ public class InstrumentsLibImobile implements Instruments, ScriptMessageHandler 
   private final String aut;
   private final String uuid;
   private final int port;
-  private final IOSDevice iphone;
-  private final org.libimobiledevice.binding.raw.instruments.Instruments instruments;
+  private final InstrumentsService instruments;
   private final MultiInstrumentsBasedCommunicationChannel channel;
 
   public InstrumentsLibImobile(String uuid, int port, String aut,
@@ -50,13 +54,9 @@ public class InstrumentsLibImobile implements Instruments, ScriptMessageHandler 
     this.sessionId = sessionId;
     this.bundleId = bundleId;
     if (uuid != null) {
-      iphone = IMobileDeviceFactory.INSTANCE.get(uuid);
-      iphone.connect();
-      this.instruments = new org.libimobiledevice.binding.raw.instruments.Instruments(iphone, this);
-      channel = new MultiInstrumentsBasedCommunicationChannel(port, aut, sessionId,instruments);
-
+      this.instruments = new InstrumentsService(new IDeviceSDK(uuid), bundleId,this);
+      channel = new MultiInstrumentsBasedCommunicationChannel(port, aut, sessionId, instruments);
     } else {
-      iphone = null;
       this.instruments = null;
       throw new RuntimeException("NI");
     }
@@ -66,8 +66,16 @@ public class InstrumentsLibImobile implements Instruments, ScriptMessageHandler 
 
   @Override
   public void handle(String message) {
-    System.out.println(message);
-    channel.handle(message);
+    //System.out.println(message);
+
+    try {
+      NSDictionary o = (NSDictionary)XMLPropertyListParser.parse(message.getBytes("UTF-8"));
+      String msg = ((NSString)o.get("Message")).getContent();
+      channel.handle(msg);
+    } catch (Exception e) {
+      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+    }
+
   }
 
 
@@ -75,7 +83,7 @@ public class InstrumentsLibImobile implements Instruments, ScriptMessageHandler 
   public void start() throws InstrumentsFailedToStartException {
 
     String script = new ScriptHelper().generateScriptContent(port, aut, sessionId, MULTI);
-    instruments.startApp(bundleId);
+    //instruments.startApp(bundleId);
     //System.out.println("started app");
     instruments.executeScriptNonManaged(script);
     //System.out.println("started script ");

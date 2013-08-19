@@ -14,9 +14,9 @@
     <modules>
         <module>common</module>
         <module>client</module>
-        <module>libimobiledevice-java</module>
         <module>server</module>
         <module>ios-selenium-tests</module>
+        <module>libimobiledevice-wrapper</module>
         <module>grid</module>
     </modules>
 

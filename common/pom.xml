@@ -15,6 +15,12 @@
             <artifactId>selenium-remote-driver</artifactId>
             <groupId>org.seleniumhq.selenium</groupId>
             <version>2.33.0</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>jna</artifactId>
+                    <groupId>net.java.dev.jna</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.webbitserver</groupId>

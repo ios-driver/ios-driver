@@ -2,7 +2,7 @@ package org.uiautomation.ios.server;
 
 import com.google.common.collect.ImmutableList;
 
-import org.libimobiledevice.binding.raw.DeviceDetectionCallback;
+import org.libimobiledevice.DeviceDetectionCallback;
 import org.libimobiledevice.binding.raw.DeviceInfo;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ public class DeviceStore implements DeviceDetectionCallback {
 
 
   @Override
-  public void onDeviceAdded(String uuid) {
+  public void onAdded(String uuid) {
     DeviceInfo info = new DeviceInfo(uuid);
     RealDevice d = new RealDevice(info);
     log.info("new device detected (" + uuid + ")" + info.getDeviceName());
@@ -26,7 +26,7 @@ public class DeviceStore implements DeviceDetectionCallback {
   }
 
   @Override
-  public void onDeviceRemoved(String uuid) {
+  public void onRemoved(String uuid) {
     for (RealDevice d : reals) {
       if (d.getUuid().equals(uuid)) {
         log.info("Removing " + uuid + " for the devices pool");
