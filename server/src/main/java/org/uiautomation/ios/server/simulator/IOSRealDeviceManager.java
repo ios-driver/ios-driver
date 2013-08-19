@@ -45,29 +45,29 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
 
   @Override
   public void install(APPIOSApplication aut) {
-    if (aut instanceof IPAApplication) {
-      ApplicationInfo app = device.getApplication(bundleId);
-      // not installed ? install the app.
-      if (app == null) {
-        device.install(((IPAApplication) aut).getIPAFile());
-        return;
-      }
-
-      // already there and correct version
-      if (isCorrectVersion(app)) {
-        return;
-      }
-
-      // TODO upgrade ?
-      // needs to re-install
-      log.fine("uninstalling " + bundleId );
-      device.uninstall(bundleId);
-      log.fine("installing " + bundleId );
-      device.install(((IPAApplication) aut).getIPAFile());
-      log.fine(bundleId + " installed.");
-    } else {
-      throw new WebDriverException("only IPA apps can be used on a real device.");
-    }
+//    if (aut instanceof IPAApplication) {
+//      ApplicationInfo app = device.getApplication(bundleId);
+//      // not installed ? install the app.
+//      if (app == null) {
+//        device.install(((IPAApplication) aut).getIPAFile());
+//        return;
+//      }
+//
+//      // already there and correct version
+//      if (isCorrectVersion(app)) {
+//        return;
+//      }
+//
+//      // TODO upgrade ?
+//      // needs to re-install
+//      log.fine("uninstalling " + bundleId );
+//      device.uninstall(bundleId);
+//      log.fine("installing " + bundleId );
+//      device.install(((IPAApplication) aut).getIPAFile());
+//      log.fine(bundleId + " installed.");
+//    } else {
+//      throw new WebDriverException("only IPA apps can be used on a real device.");
+//    }
   }
 
   /**
@@ -94,13 +94,13 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
 
   @Override
   public void setL10N(String locale, String language) {
-    device.setLockDownValue("com.apple.international", "Language", language);
-    device.setLockDownValue("com.apple.international", "Locale", locale);
+//    device.setLockDownValue("com.apple.international", "Language", language);
+//    device.setLockDownValue("com.apple.international", "Locale", locale);
   }
 
   @Override
   public void resetContentAndSettings() {
-    device.emptyApplicationCache(bundleId);
+    //device.emptyApplicationCache(bundleId);
   }
 
   @Override
