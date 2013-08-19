@@ -24,7 +24,7 @@ import org.uiautomation.ios.wkrdp.ResponseFinder;
  */
 public class RealDeviceProtocolImpl extends WebKitRemoteDebugProtocol {
 
-  private WebInspectorService inspector;
+  private final WebInspectorService inspector;
 
   public RealDeviceProtocolImpl(MessageListener listener,
                                 ResponseFinder... finders) {
