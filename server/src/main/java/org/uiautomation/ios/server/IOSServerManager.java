@@ -32,14 +32,13 @@ import java.util.logging.Logger;
 
 public class IOSServerManager {
 
-  private final List<ServerSideSession> sessions = new ArrayList<ServerSideSession>();
   private static final Logger log = Logger.getLogger(IOSServerManager.class.getName());
-
+  public final ApplicationStore apps;
+  private final List<ServerSideSession> sessions = new ArrayList<ServerSideSession>();
   private final HostInfo hostInfo;
   private final ResourceCache cache = new ResourceCache();
-  private DeviceStore devices;
   private final IOSServerConfiguration options;
-  public final ApplicationStore apps;
+  private DeviceStore devices;
 
   // TODO freynaud cleanup
   public IOSServerManager(IOSServerConfiguration options) {
@@ -65,6 +64,26 @@ public class IOSServerManager {
 
     apps = new ApplicationStore(options.getAppFolderToMonitor());
 
+  }
+
+  public static boolean matches(Map<String, Object> appCapabilities,
+                                Map<String, Object> desiredCapabilities) {
+    IOSCapabilities a = new IOSCapabilities(appCapabilities);
+    IOSCapabilities d = new IOSCapabilities(desiredCapabilities);
+    return matches(a, d);
+
+  }
+
+  private static boolean matches(IOSCapabilities applicationCapabilities,
+                                 IOSCapabilities desiredCapabilities) {
+
+    if (!APPIOSApplication.canRun(desiredCapabilities, applicationCapabilities)) {
+      return false;
+    }
+    if (!Device.canRun(desiredCapabilities, applicationCapabilities)) {
+      return false;
+    }
+    return true;
   }
 
   public void stop() {
@@ -114,7 +133,6 @@ public class IOSServerManager {
     return res;
   }
 
-
   public IOSRunningApplication findAndCreateInstanceMatchingApplication(
       IOSCapabilities desiredCapabilities) {
     for (APPIOSApplication app : getApplicationStore().getApplications()) {
@@ -143,26 +161,6 @@ public class IOSServerManager {
         desiredCapabilities.getRawCapabilities() + "not available. Available are " + devices);
   }
 
-  public static boolean matches(Map<String, Object> appCapabilities,
-                                Map<String, Object> desiredCapabilities) {
-    IOSCapabilities a = new IOSCapabilities(appCapabilities);
-    IOSCapabilities d = new IOSCapabilities(desiredCapabilities);
-    return matches(a, d);
-
-  }
-
-  private static boolean matches(IOSCapabilities applicationCapabilities,
-                                 IOSCapabilities desiredCapabilities) {
-
-    if (!APPIOSApplication.canRun(desiredCapabilities, applicationCapabilities)) {
-      return false;
-    }
-    if (!Device.canRun(desiredCapabilities, applicationCapabilities)) {
-      return false;
-    }
-    return true;
-  }
-
   public ApplicationStore getApplicationStore() {
     return apps;
   }
@@ -174,10 +172,13 @@ public class IOSServerManager {
   public ServerSideSession getSession(String opaqueKey) {
     for (ServerSideSession session : sessions) {
       if (session.getSessionId().equals(opaqueKey)) {
+        if (session.hasCrashed()) {
+          throw new WebDriverException(session.getCrashDetails().toString());
+        }
         return session;
       }
     }
-    throw new WebDriverException("Cannot find session " + opaqueKey + " on the sesver.");
+    throw new WebDriverException("Cannot find session " + opaqueKey + " on the server.");
   }
 
   public List<APPIOSApplication> getSupportedApplications() {

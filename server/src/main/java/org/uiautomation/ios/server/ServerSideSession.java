@@ -37,6 +37,7 @@ import org.uiautomation.ios.server.instruments.communication.CommunicationChanne
 import org.uiautomation.ios.server.instruments.InstrumentsManager;
 import org.uiautomation.ios.server.utils.IOSVersion;
 import org.uiautomation.ios.server.utils.ZipUtils;
+import org.uiautomation.ios.utils.ApplicationCrashDetails;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
 import org.uiautomation.ios.wkrdp.internal.AlertDetector;
@@ -57,6 +58,8 @@ public class ServerSideSession extends Session {
   private final InstrumentsManager instruments;
   private final IOSServerConfiguration options;
   public final IOSServerManager driver;
+  private boolean sessionCrashed;
+  private ApplicationCrashDetails  applicationCrashDetails;
 
   //private WebInspector inspector;
 
@@ -88,6 +91,9 @@ public class ServerSideSession extends Session {
     this.driver = driver;
     this.capabilities = desiredCapabilities;
     this.options = options;
+
+    this.sessionCrashed = false;
+    this.applicationCrashDetails = null;
 
     String appCapability = (String) desiredCapabilities.getCapability("app");
     if (appCapability != null) {
@@ -136,7 +142,7 @@ public class ServerSideSession extends Session {
         }
       }
 
-      instruments = new InstrumentsManager(driver.getPort());
+      instruments = new InstrumentsManager(this);
       configuration = new DriverConfigurationStore();
 
       Runtime.getRuntime().addShutdownHook(shutdownHook);
@@ -292,11 +298,27 @@ public class ServerSideSession extends Session {
 
   }
 
+  public boolean  hasCrashed(){
+    return sessionCrashed;
+  }
+
+  public void sessionHasCrashed(String log){
+    sessionCrashed = true;
+    applicationCrashDetails = new ApplicationCrashDetails(log);
+  }
+
+  public ApplicationCrashDetails getCrashDetails(){
+    return applicationCrashDetails;
+  }
 
   public void restartWebkit() {
     int currentPageID = webDriver.getCurrentPageID();
     webDriver.stop();
     webDriver = new RemoteIOSWebDriver(this, new AlertDetector(nativeDriver));
     webDriver.switchTo(String.valueOf(currentPageID));
+  }
+
+  public IOSServerManager getIOSServerManager(){
+    return driver;
   }
 }

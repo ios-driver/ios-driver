@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.uiautomation</groupId>
     <artifactId>ios-driver</artifactId>
-    <version>0.6.2-SNAPSHOT</version>
+    <version>0.6.3-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>IOS automation</name>
     <description>bridge over the apple JS UIAutomation and the webkit remote debug protocol
@@ -18,6 +18,7 @@
         <module>ios-selenium-tests</module>
         <module>libimobiledevice-wrapper</module>
         <module>grid</module>
+        <module>libimobiledevice-java</module>
     </modules>
 
     <scm>
