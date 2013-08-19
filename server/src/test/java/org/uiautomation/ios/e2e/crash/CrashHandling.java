@@ -1,6 +1,7 @@
 package org.uiautomation.ios.e2e.crash;
 
 import junit.framework.Assert;
+import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -9,6 +10,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
+import org.uiautomation.ios.client.uiamodels.impl.augmenter.ElementTree;
+import org.uiautomation.ios.client.uiamodels.impl.augmenter.IOSDriverAugmenter;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
 import org.uiautomation.ios.utils.ClassicCommands;
@@ -208,5 +211,27 @@ public class CrashHandling {
 
     Assert.assertTrue("We can start a new test session", driver != null);
   }
+
+
+    @Test(enabled = false)
+    public void canHandleVeryLargeAmountsOfDataInTableViewWithoutCrashing() throws InterruptedException {
+
+        WebElement largeTableViewButton = driver.findElement(By.name("TableView 10000"));
+        try {
+            largeTableViewButton.click();
+
+            ElementTree tree = IOSDriverAugmenter.augment(driver);
+
+            JSONObject json = tree.logElementTree(null, false);
+
+            Assert.assertNotNull("We can get the page source for a large tableview", json);
+
+
+        } catch (Exception e) {
+            Assert.fail("Exception caught while performing logElementTree on page with large TreeView. App crashed");
+        }
+
+
+    }
 
 }

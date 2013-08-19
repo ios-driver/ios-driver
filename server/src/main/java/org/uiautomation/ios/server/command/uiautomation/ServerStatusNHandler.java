@@ -47,6 +47,8 @@ public class ServerStatusNHandler extends BaseNativeCommandHandler {
   public Response handle() throws Exception {
     JSONObject res = new JSONObject();
 
+    res.put("state", "success");
+
     res.put("os", new JSONObject().put("name", System.getProperty("os.name"))
         .put("arch", System.getProperty("os.arch"))
         .put("version", System.getProperty("os.version")));
