@@ -26,10 +26,9 @@ public class RealDeviceProtocolImpl extends WebKitRemoteDebugProtocol {
 
   private final WebInspectorService inspector;
 
-  public RealDeviceProtocolImpl(MessageListener listener,
+  public RealDeviceProtocolImpl(String uuid,MessageListener listener,
                                 ResponseFinder... finders) {
     super(listener, finders);
-    String uuid = "ff4827346ed6b54a98f51e69a261a140ae2bf6b3";
     IDeviceSDK device = new IDeviceSDK(uuid);
     inspector = new WebInspectorService(device);
     start();
