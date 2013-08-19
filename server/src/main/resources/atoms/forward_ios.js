@@ -1,3 +1,17 @@
+/*
+ * Copyright 2012-2013 eBay Software Foundation and ios-driver committers
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 function(){return function(){var f=!0,g=!1,h=this;function k(a,b){function c(){}c.prototype=b.prototype;a.b=b.prototype;a.prototype=new c};var l=window;function m(a,b){this.code=a;this.message=b||"";this.name=n[a]||n[13];var c=Error(this.message);c.name=this.name;this.stack=c.stack||""}k(m,Error);
 var n={7:"NoSuchElementError",8:"NoSuchFrameError",9:"UnknownCommandError",10:"StaleElementReferenceError",11:"ElementNotVisibleError",12:"InvalidElementStateError",13:"UnknownError",15:"ElementNotSelectableError",19:"XPathLookupError",23:"NoSuchWindowError",24:"InvalidCookieDomainError",25:"UnableToSetCookieError",26:"ModalDialogOpenedError",27:"NoModalDialogOpenError",28:"ScriptTimeoutError",32:"InvalidSelectorError",35:"SqlDatabaseError",34:"MoveTargetOutOfBoundsError"};
 m.prototype.toString=function(){return this.name+": "+this.message};function p(a,b){for(var c=1;c<arguments.length;c++){var r=String(arguments[c]).replace(/\$/g,"$$$$");a=a.replace(/\%s/,r)}return a}
