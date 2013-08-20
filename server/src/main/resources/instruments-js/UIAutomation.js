@@ -13,20 +13,21 @@
 var UIAutomation = {
     cache: new Cache(),
     CURL: "/usr/bin/curl",
-    COMMAND: "http://localhost:$PORT/wd/hub/uiascriptproxy?sessionId=$SESSION",
+    COMMAND: "http://localhost:" + CONFIG_PORT + "/wd/hub/uiascriptproxy?sessionId=" + CONFIG_SESSION,
     HOST: UIATarget.localTarget().host(),
     TIMEOUT_IN_SEC: {
         "implicit": 0
     },
-    SESSION: "$SESSION",
-    COMMUNICATION_MODE: "$MODE",
+    SESSION: CONFIG_SESSION,
+    AUT: CONFIG_AUT,
+    COMMUNICATION_MODE: CONFIG_MODE,
     CAPABILITIES: -1,
 
     /**
      * Create a webdriver response for ios-driver. The response won't be sent to the client directly,
      * but to the ios-server first, and then potentially forwarded, and modified.
      * @param {string} sessionId the session currently controlling instruments.
-     * @param {number} status the reponse status. 0 for ok.
+     * @param {number} status the response status. 0 for ok.
      * @param {Object} value the response value
      * @return {string} the response value, stringified.
      */
@@ -141,14 +142,14 @@ var UIAutomation = {
         result.name = target.name();
         result.systemName = target.systemName();
         result.sdkVersion = target.systemVersion();
-        result.aut = "$AUT";
+        result.aut = this.AUT;
         result.rect = target.rect();
         return result;
     },
 
     /**
      * Return the capabilities of the session. Hack inside to have the dimension of the target.
-     * Capabilities should be immutable, and dimensions shoudln't be stored here.
+     * Capabilities should be immutable, and dimensions shouldn't be stored here.
      * @return {Object} the capabilities of the session.
      */
     getCapabilities: function () {
@@ -196,7 +197,7 @@ var UIAutomation = {
     },
 
     /**
-     * keep executing commands and sending the responses untils the stop command is received.
+     * Keep executing commands and sending the responses until the stop command is received.
      */
     commandLoop: function () {
         // first command after registration sends the capabilities.
