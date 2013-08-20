@@ -20,10 +20,10 @@ import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.Device;
 import org.uiautomation.ios.server.RealDevice;
+import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.application.IPAApplication;
 import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
-import org.uiautomation.ios.server.instruments.communication.multi.MultiInstrumentsBasedCommunicationChannel;
 import org.uiautomation.ios.server.simulator.IOSRealDeviceManager;
 import org.uiautomation.ios.server.simulator.IOSSimulatorManager;
 import org.uiautomation.ios.server.simulator.Instruments;
@@ -35,8 +35,6 @@ import org.uiautomation.ios.utils.Command;
 import org.uiautomation.ios.utils.hack.TimeSpeeder;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -61,18 +59,18 @@ public class InstrumentsManager {
   private IOSCapabilities caps;
   private List<String> extraEnvtParams;
   private Command simulatorProcess;
+  private final ServerSideSession session;
 
 
   private Instruments instruments;
 
   /**
    * constructor that will create an instrument process linked to the server.
-   *
-   * @param serverPort the port the server lives on
    */
-  public InstrumentsManager(int serverPort) {
+  public InstrumentsManager(ServerSideSession session) {
+    this.session = session;
     template = ClassicCommands.getAutomationTemplate();
-    this.port = serverPort;
+    this.port = session.getIOSServerManager().getPort();
   }
 
   public void startSession(String sessionId,
@@ -98,8 +96,6 @@ public class InstrumentsManager {
     try {
       this.sessionId = sessionId;
       this.extraEnvtParams = envtParams;
-
-
 
       this.application = application;
       this.application.setDefaultDevice(deviceType);
@@ -143,8 +139,6 @@ public class InstrumentsManager {
   }
 
 
-
-
   public void stop() {
     instruments.stop();
     if (device != null) {
@@ -170,9 +164,6 @@ public class InstrumentsManager {
   }
 
 
-
-
-
   private void killSimulator() {
     if (deviceManager != null) {
       deviceManager.cleanupDevice();
@@ -189,5 +180,11 @@ public class InstrumentsManager {
 
   public CommunicationChannel communicate() {
     return instruments.getChannel();
+  }
+
+
+  public void handleAppCrash(String log) {
+    stop();
+    session.sessionHasCrashed(log);
   }
 }
