@@ -18,7 +18,13 @@ import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
+import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 public class LogTypesHandler extends BaseWebCommandHandler{
   public LogTypesHandler(IOSServerManager driver, WebDriverLikeRequest request) {
@@ -27,11 +33,13 @@ public class LogTypesHandler extends BaseWebCommandHandler{
 
   @Override
   public JSONObject configurationDescription() throws JSONException {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+    return noConfigDefined();
   }
 
   @Override
   public Response handle() throws Exception {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+    ServerSideSession session = getDriver().getSession(getRequest().getSession());
+    Set<String> types = session.getLogManager().getTypes();
+    return createResponse(types);
   }
 }

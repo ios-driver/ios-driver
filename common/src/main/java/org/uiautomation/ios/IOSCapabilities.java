@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 ios-driver committers.
+ * Copyright 2013 ios-driver committers.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -17,12 +17,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.logging.LoggingPreferences;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 
@@ -333,5 +336,26 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   public void setDeviceUUID(String deviceUUID) {
     setCapability(UUID, deviceUUID);
+  }
+
+  public LoggingPreferences getLoggingPreferences() throws JSONException {
+    LoggingPreferences loggingPrefs = null;
+    Object loggingPrefsJson = getCapability(CapabilityType.LOGGING_PREFS);
+    if (loggingPrefsJson != null) {
+      loggingPrefs = new LoggingPreferences();
+      //if (loggingPrefsJson instanceof JSONObject){
+        JSONObject json = (JSONObject) loggingPrefsJson;
+        Iterator<String> iter = json.keys();
+        while(iter.hasNext()) {
+          String logType = iter.next();
+          Level level = Level.parse((String) json.get(logType));
+          loggingPrefs.enable(logType, level);
+        }
+      //}
+    }
+    if (loggingPrefs == null) {
+      return new LoggingPreferences();
+    }
+    return loggingPrefs;
   }
 }

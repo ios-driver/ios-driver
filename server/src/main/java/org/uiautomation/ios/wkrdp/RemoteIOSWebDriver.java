@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 ios-driver committers.
+ * Copyright 2013 ios-driver committers.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the Licence at
@@ -22,6 +22,8 @@ import org.openqa.selenium.*;
 import org.uiautomation.ios.context.BaseWebInspector;
 import org.uiautomation.ios.context.WebInspector;
 import org.uiautomation.ios.server.DOMContext;
+import org.uiautomation.ios.server.logging.IOSLogManager;
+import org.uiautomation.ios.server.logging.Log;
 import org.uiautomation.ios.server.RealDevice;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.configuration.Configuration;
@@ -84,9 +86,7 @@ public class RemoteIOSWebDriver {
   private Map<Integer, BaseWebInspector> inspectors = new HashMap<Integer, BaseWebInspector>();
   private static final Logger log = Logger.getLogger(RemoteIOSWebDriver.class.getName());
   private List<WebkitPage> pages = new ArrayList<WebkitPage>();
-  private final List<WebInspector> created = new ArrayList<WebInspector>();
   private final WebKitSyncronizer sync;
-
 
   public RemoteIOSWebDriver(ServerSideSession session, ResponseFinder... finders) {
     this.session = session;
@@ -103,6 +103,9 @@ public class RemoteIOSWebDriver {
       protocol = new SimulatorProtocolImpl(notification, finders);
 
     }
+
+    session.getLogManager().onProtocolCreated(protocol);
+
     protocol.register();
     sync.waitForSimToRegister();
     sync.waitForSimToSendApps();
@@ -202,18 +205,11 @@ public class RemoteIOSWebDriver {
   private BaseWebInspector connect(WebkitPage webkitPage) {
     for (WebkitPage page : getPages()) {
       if (page.equals(webkitPage)) {
-        WebInspector
-            inspector =
-            new WebInspector(null, webkitPage.getPageId(), protocol, bundleId,
-                             connectionKey, session);
-
         protocol.attachToPage(page.getPageId());
-        inspector.sendCommand(Page.enablePageEvent());
-        inspector.sendCommand(Network.enable());
-        boolean ok = created.add(inspector);
-        if (ok) {
-          protocol.addListener(inspector);
-        }
+
+        WebInspector inspector = new WebInspector(
+            null, webkitPage.getPageId(), protocol, bundleId, connectionKey, session);
+        protocol.addListener(inspector);
         return inspector;
       }
     }

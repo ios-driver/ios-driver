@@ -11,21 +11,17 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.uiautomation.ios.wkrdp;
+package org.uiautomation.ios.server.logging;
 
+import java.util.logging.Level;
 
-import org.json.JSONObject;
-import org.openqa.selenium.TimeoutException;
+/*
+ *  Log Interface
+ */
+public interface Log {
 
-import java.util.List;
+  public void addEntry(Level level, String message);
 
-public interface MessageHandler {
+  public void addEntryTimestamped(long timestamp, Level level, String message);
 
-  public void handle(String msg);
-
-  public JSONObject getResponse(int id) throws TimeoutException;
-
-  public void stop();
-
-  void addListener(MessageListener listener);
 }
