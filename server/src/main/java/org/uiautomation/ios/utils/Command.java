@@ -44,20 +44,10 @@ public class Command {
   private InstrumentsManager instrumentsManager;
 
   public Command(List<String> args, boolean logToConsole) {
-    this(args, logToConsole, null);
-  }
-
-  public Command(List<String> args, boolean logToConsole, InstrumentsManager im) {
     this.args = args;
-    this.instrumentsManager = im;
-    if (logToConsole) {
-      listeners.add(new DefaultCommandListener());
-    }
-    if(instrumentsManager != null){
-      listeners.add(new ApplicationCrashListener(instrumentsManager)) ;
-    }
-
+    listeners.add(new DefaultCommandListener());
   }
+
 
   /**
    * execute the command, and wait for it to finish. Also wait for stdout and std err listener to
@@ -122,8 +112,9 @@ public class Command {
     } catch (InterruptedException e) {
       throw new WebDriverException("error waiting for " + args + " to finish.", e);
     } finally {
-      if (forceStopTimer != null)
+      if (forceStopTimer != null) {
         forceStopTimer.cancel();
+      }
     }
   }
 
