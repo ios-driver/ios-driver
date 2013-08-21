@@ -1,1 +1,4 @@
 
+[submodule "libimobiledevice-wrapper"]
+	path = libimobiledevice-wrapper
+	url = git@github.com:ios-driver/libimobiledevice-wrapper.git
