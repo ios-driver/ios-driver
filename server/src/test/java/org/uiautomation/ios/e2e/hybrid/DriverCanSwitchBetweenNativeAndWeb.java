@@ -25,7 +25,7 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
   @Test
   public void canSwitchToWebView() throws Exception {
     IOSCapabilities safari = IOSCapabilities.iphone("UICatalog");
-    safari.setCapability(IOSCapabilities.SIMULATOR,false);
+    safari.setCapability(IOSCapabilities.SIMULATOR,true);
 
     RemoteIOSDriver driver = null;
     try {
