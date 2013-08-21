@@ -1,17 +1,20 @@
 package org.uiautomation.ios.e2e.config;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+import org.uiautomation.ios.IOSCapabilities;
+import org.uiautomation.ios.server.IOSServer;
+import org.uiautomation.ios.server.IOSServerConfiguration;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
-
-import junit.framework.Assert;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.testng.annotations.*;
-import org.uiautomation.ios.*;
-import org.uiautomation.ios.server.IOSServer;
-import org.uiautomation.ios.server.IOSServerConfiguration;
 
 public final class SessionTimeoutTest {
 
@@ -21,7 +24,7 @@ public final class SessionTimeoutTest {
 
   @BeforeClass
   public void startServer() throws Exception {
-    String[] args = { "-port", "4444", "-host", "localhost", "-sessionTimeout", "5", "-simulators" };
+    String[] args = {"-port", "4444", "-host", "localhost", "-sessionTimeout", "5", "-simulators"};
     config = IOSServerConfiguration.create(args);
 
     server = new IOSServer(config);
@@ -58,13 +61,14 @@ public final class SessionTimeoutTest {
     long startTime = System.currentTimeMillis();
     RemoteWebDriver driver = new RemoteWebDriver(getRemoteURL(), IOSCapabilities.iphone("Safari"));
     driver.manage().timeouts().implicitlyWait(40, TimeUnit.SECONDS);
+    WebElement element = null;
     try {
-      driver.findElement(By.id("no_such_element"));
-      Assert.fail("shouldn't find the element");
+      element = driver.findElement(By.id("no_such_element"));
     } catch (Exception ignore) {
       // can throw anything depending on where the force stop happens
     }
+    Assert.assertNull(element);
     long elapsedSeconds = (System.currentTimeMillis() - startTime) / 1000;
-    Assert.assertTrue("Elapsed: " + elapsedSeconds, elapsedSeconds > 5 && elapsedSeconds < 30);
+    Assert.assertTrue(elapsedSeconds > 5 && elapsedSeconds < 30, "Elapsed: " + elapsedSeconds);
   }
 }
