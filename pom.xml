@@ -18,7 +18,6 @@
         <module>ios-selenium-tests</module>
         <module>libimobiledevice-wrapper</module>
         <module>grid</module>
-        <module>libimobiledevice-java</module>
     </modules>
 
     <scm>
