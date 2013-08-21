@@ -1,8 +1,8 @@
 package org.uiautomation.ios.server.simulator;
 
-import org.libimobiledevice.binding.raw.IMobileDeviceFactory;
-import org.libimobiledevice.binding.raw.IOSDevice;
-import org.openqa.selenium.WebDriverException;
+import org.libimobiledevice.ios.driver.binding.ApplicationInfo;
+import org.libimobiledevice.ios.driver.binding.IMobileDeviceFactory;
+import org.libimobiledevice.ios.driver.binding.IOSDevice;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
@@ -10,7 +10,6 @@ import org.uiautomation.ios.server.RealDevice;
 import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.application.IPAApplication;
 import org.uiautomation.ios.server.instruments.IOSDeviceManager;
-import org.libimobiledevice.binding.raw.ApplicationInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +33,7 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
    * @param app          the app that will be ran.
    */
   public IOSRealDeviceManager(IOSCapabilities capabilities, RealDevice device, IPAApplication app) {
-   this.device = factory.get(device.getUuid());
+    this.device = factory.get(device.getUuid());
     bundleId = capabilities.getBundleId();
     this.capabilities = capabilities;
     this.app = app;

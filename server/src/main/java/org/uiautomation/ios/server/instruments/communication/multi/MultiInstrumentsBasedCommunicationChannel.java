@@ -14,7 +14,7 @@
 
 package org.uiautomation.ios.server.instruments.communication.multi;
 
-import org.libimobiledevice.ios.driver.sdk.InstrumentsService;
+import org.libimobiledevice.ios.driver.binding.sdk.InstrumentsService;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.command.UIAScriptResponse;
 import org.uiautomation.ios.server.instruments.communication.BaseCommunicationChannel;

@@ -2,8 +2,8 @@ package org.uiautomation.ios.server;
 
 import com.google.common.collect.ImmutableList;
 
-import org.libimobiledevice.DeviceDetectionCallback;
-import org.libimobiledevice.binding.raw.DeviceInfo;
+import org.libimobiledevice.ios.driver.binding.DeviceDetectionCallback;
+import org.libimobiledevice.ios.driver.binding.DeviceInfo;
 
 import java.util.ArrayList;
 import java.util.List;

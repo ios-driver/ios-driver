@@ -15,26 +15,24 @@
 package org.uiautomation.ios.server.simulator;
 
 import com.dd.plist.NSDictionary;
-import com.dd.plist.NSObject;
 import com.dd.plist.NSString;
 import com.dd.plist.XMLPropertyListParser;
 
-import org.libimobiledevice.ios.driver.binding.PlistLibrary;
-import org.libimobiledevice.ios.driver.sdk.IDeviceSDK;
-import org.libimobiledevice.ios.driver.sdk.InstrumentsService;
+import org.libimobiledevice.ios.driver.binding.sdk.IDeviceSDK;
+import org.libimobiledevice.ios.driver.binding.sdk.InstrumentsService;
+import org.libimobiledevice.ios.driver.binding.sdk.MessageHandler;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.command.UIAScriptResponse;
 import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
 import org.uiautomation.ios.server.instruments.communication.multi.MultiInstrumentsBasedCommunicationChannel;
 import org.uiautomation.ios.utils.ScriptHelper;
-import org.libimobiledevice.ios.driver.sdk.MessageHandler;
 
 import java.util.logging.Logger;
 
 import static org.uiautomation.ios.server.instruments.communication.CommunicationMode.MULTI;
 
-public class InstrumentsLibImobile implements Instruments,MessageHandler {
+public class InstrumentsLibImobile implements Instruments, MessageHandler {
 
   private static final Logger log = Logger.getLogger(InstrumentsLibImobile.class.getName());
 
@@ -54,7 +52,7 @@ public class InstrumentsLibImobile implements Instruments,MessageHandler {
     this.sessionId = sessionId;
     this.bundleId = bundleId;
     if (uuid != null) {
-      this.instruments = new InstrumentsService(new IDeviceSDK(uuid), bundleId,this);
+      this.instruments = new InstrumentsService(new IDeviceSDK(uuid), bundleId, this);
       channel = new MultiInstrumentsBasedCommunicationChannel(port, aut, sessionId, instruments);
     } else {
       this.instruments = null;
@@ -69,8 +67,8 @@ public class InstrumentsLibImobile implements Instruments,MessageHandler {
     //System.out.println(message);
 
     try {
-      NSDictionary o = (NSDictionary)XMLPropertyListParser.parse(message.getBytes("UTF-8"));
-      String msg = ((NSString)o.get("Message")).getContent();
+      NSDictionary o = (NSDictionary) XMLPropertyListParser.parse(message.getBytes("UTF-8"));
+      String msg = ((NSString) o.get("Message")).getContent();
       channel.handle(msg);
     } catch (Exception e) {
       e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.

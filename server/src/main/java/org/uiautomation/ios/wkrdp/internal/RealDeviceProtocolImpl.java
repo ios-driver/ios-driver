@@ -14,8 +14,8 @@
 
 package org.uiautomation.ios.wkrdp.internal;
 
-import org.libimobiledevice.ios.driver.sdk.IDeviceSDK;
-import org.libimobiledevice.ios.driver.sdk.WebInspectorService;
+import org.libimobiledevice.ios.driver.binding.sdk.IDeviceSDK;
+import org.libimobiledevice.ios.driver.binding.sdk.WebInspectorService;
 import org.uiautomation.ios.wkrdp.MessageListener;
 import org.uiautomation.ios.wkrdp.ResponseFinder;
 
@@ -26,7 +26,7 @@ public class RealDeviceProtocolImpl extends WebKitRemoteDebugProtocol {
 
   private final WebInspectorService inspector;
 
-  public RealDeviceProtocolImpl(String uuid,MessageListener listener,
+  public RealDeviceProtocolImpl(String uuid, MessageListener listener,
                                 ResponseFinder... finders) {
     super(listener, finders);
     IDeviceSDK device = new IDeviceSDK(uuid);

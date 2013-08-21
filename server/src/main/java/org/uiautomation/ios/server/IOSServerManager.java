@@ -13,7 +13,7 @@
  */
 package org.uiautomation.ios.server;
 
-import org.libimobiledevice.binding.raw.IMobileDeviceFactory;
+import org.libimobiledevice.ios.driver.binding.IMobileDeviceFactory;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
