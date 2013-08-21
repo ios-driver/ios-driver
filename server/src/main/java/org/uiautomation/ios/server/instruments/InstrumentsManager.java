@@ -188,6 +188,7 @@ public class InstrumentsManager {
 
   public void handleAppCrash(String log) {
     stop();
+    forceStop();
     session.sessionHasCrashed(log);
   }
 }
