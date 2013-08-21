@@ -20,6 +20,7 @@ import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.command.UIAScriptResponse;
 import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
 import org.uiautomation.ios.server.instruments.communication.curl.CURLBasedCommunicationChannel;
+import org.uiautomation.ios.utils.ApplicationCrashListener;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.Command;
 import org.uiautomation.ios.utils.ScriptHelper;
@@ -46,14 +47,9 @@ public class InstrumentsApple implements Instruments {
   private final CURLBasedCommunicationChannel channel;
   private final String desiredSDKVersion;
 
-  public InstrumentsApple(String sessionId, int port, File application, List<String> envtParams,
-                          String desiredSDKVersion) {
-    this(null, port, sessionId, application, envtParams, desiredSDKVersion);
-
-  }
 
   public InstrumentsApple(String uuid, int port, String sessionId, File application,
-                          List<String> envtParams, String desiredSDKVersion) {
+                          List<String> envtParams, String desiredSDKVersion,ApplicationCrashListener list) {
     this.uuid = uuid;
     this.sessionId = sessionId;
     this.desiredSDKVersion = desiredSDKVersion;
@@ -66,6 +62,7 @@ public class InstrumentsApple implements Instruments {
     output = createTmpOutputFolder();
 
     instruments = new Command(createInstrumentCommand(scriptPath), true);
+    instruments.registerListener(list);
     instruments.setWorkingDirectory(output);
 
     channel = new CURLBasedCommunicationChannel(sessionId);

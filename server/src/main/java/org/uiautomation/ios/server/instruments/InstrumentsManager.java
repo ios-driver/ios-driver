@@ -30,6 +30,7 @@ import org.uiautomation.ios.server.simulator.Instruments;
 import org.uiautomation.ios.server.simulator.InstrumentsApple;
 import org.uiautomation.ios.server.simulator.InstrumentsFailedToStartException;
 import org.uiautomation.ios.server.simulator.InstrumentsLibImobile;
+import org.uiautomation.ios.utils.ApplicationCrashListener;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.Command;
 import org.uiautomation.ios.utils.hack.TimeSpeeder;
@@ -111,10 +112,12 @@ public class InstrumentsManager {
                                                      .getUnderlyingApplication());
 
       } else {
+        ApplicationCrashListener list = new ApplicationCrashListener(this);
         instruments =
             new InstrumentsApple(null, port, sessionId,
                                  new File(application.getDotAppAbsolutePath()), envtParams,
-                                 sdkVersion);
+                                 sdkVersion,list);
+
 
         deviceManager = new IOSSimulatorManager(capabilities, instruments);
 

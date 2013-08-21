@@ -15,7 +15,6 @@
 package org.uiautomation.ios.utils;
 
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.server.instruments.InstrumentsManager;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -28,8 +27,11 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Logger;
 
 public class Command {
+
+  private static final Logger log = Logger.getLogger(Command.class.getName());
 
   private final List<String> args;
   private final List<String> out = new CopyOnWriteArrayList<String>();
@@ -41,11 +43,12 @@ public class Command {
   private volatile Process process;
   private List<Thread> threads = new ArrayList<Thread>();
   private File workingDir = null;
-  private InstrumentsManager instrumentsManager;
 
   public Command(List<String> args, boolean logToConsole) {
     this.args = args;
-    listeners.add(new DefaultCommandListener());
+    if (logToConsole) {
+      listeners.add(new DefaultCommandListener());
+    }
   }
 
 
@@ -136,7 +139,8 @@ public class Command {
             add(line, normal);
           }
         } catch (IOException e) {
-          e.printStackTrace();
+          log.warning("Error reading the output of the process :"+e.getMessage());
+          return;
         }
       }
     });
