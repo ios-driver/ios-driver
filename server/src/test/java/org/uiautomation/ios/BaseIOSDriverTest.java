@@ -29,7 +29,7 @@ public abstract class BaseIOSDriverTest {
                      "-aut", SampleApps.getIntlMountainsFile(),
                      "-aut", SampleApps.gettestNoContentFile(),
                      "-aut", SampleApps.getPPNQASampleApp(),
-                     "-beta", "-folder", "applications",
+                     /*"-beta",*/ "-folder", "applications",
                      "-simulators"
     };
     config = IOSServerConfiguration.create(args);
@@ -57,7 +57,6 @@ public abstract class BaseIOSDriverTest {
     } catch (MalformedURLException e) {
       throw new RuntimeException(e);
     }
-
   }
 
   public void waitForElement(WebDriver driver, org.openqa.selenium.By by, long timeOut) {
