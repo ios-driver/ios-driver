@@ -48,6 +48,7 @@ public class InstrumentsApple implements Instruments {
   private final String desiredSDKVersion;
 
 
+
   public InstrumentsApple(String uuid, int port, String sessionId, File application,
                           List<String> envtParams, String desiredSDKVersion,ApplicationCrashListener list) {
     this.uuid = uuid;
@@ -158,5 +159,9 @@ public class InstrumentsApple implements Instruments {
   @Override
   public CommunicationChannel getChannel() {
     return channel;
+  }
+
+  public File getOuput() {
+    return output;
   }
 }

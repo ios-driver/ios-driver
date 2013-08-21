@@ -116,10 +116,12 @@ public class InstrumentsManager {
         instruments =
             new InstrumentsApple(null, port, sessionId,
                                  new File(application.getDotAppAbsolutePath()), envtParams,
-                                 sdkVersion,list);
-
+                                 sdkVersion, list);
 
         deviceManager = new IOSSimulatorManager(capabilities, instruments);
+        // TODO freynaud part of AppleInstruments' logic
+        output = ((InstrumentsApple)instruments).getOuput();
+
 
       }
       deviceManager.setSDKVersion();
@@ -137,13 +139,15 @@ public class InstrumentsManager {
         instruments.stop();
       }
     } catch (Exception e) {
-      throw new WebDriverException("error", e);
+      throw new WebDriverException("error starting the session:"+e.getMessage(), e);
     }
   }
 
 
   public void stop() {
-    instruments.stop();
+    if (instruments != null) {
+      instruments.stop();
+    }
     if (device != null) {
       device.release();
     }
