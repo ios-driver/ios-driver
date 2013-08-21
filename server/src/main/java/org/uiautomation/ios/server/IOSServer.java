@@ -16,6 +16,7 @@ package org.uiautomation.ios.server;
 
 import com.beust.jcommander.JCommander;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
@@ -129,7 +130,8 @@ public class IOSServer {
 
     StringBuilder b = new StringBuilder();
     b.append("\nBeta features enabled ( enabled by -beta flag ): " + Configuration.BETA_FEATURE);
-    b.append("\nSimulator enabled ( enabled by -simulators flag): " + Configuration.SIMULATORS_ENABLED);
+    b.append(
+        "\nSimulator enabled ( enabled by -simulators flag): " + Configuration.SIMULATORS_ENABLED);
     b.append("\nInspector: http://0.0.0.0:" + options.getPort() + "/inspector/");
     b.append("\ntests can access the server at http://0.0.0.0:" + options.getPort() + "/wd/hub");
     b.append("\nserver status: http://0.0.0.0:" + options.getPort() + "/wd/hub/status");
@@ -147,7 +149,7 @@ public class IOSServer {
     for (APPIOSApplication app : driver.getSupportedApplications()) {
       b.append("\tCFBundleName=" + (app.getMetadata(IOSCapabilities.BUNDLE_NAME).isEmpty() ? app
           .getMetadata(IOSCapabilities.BUNDLE_DISPLAY_NAME) : app
-          .getMetadata(IOSCapabilities.BUNDLE_NAME)));
+                                        .getMetadata(IOSCapabilities.BUNDLE_NAME)));
       String version = app.getMetadata(IOSCapabilities.BUNDLE_VERSION);
       if (version != null && !version.isEmpty()) {
         b.append(",CFBundleVersion=" + version);
@@ -174,6 +176,7 @@ public class IOSServer {
   }
 
   private void addSimulatorDetails(StringBuilder b) {
+    File xcodeInstall = driver.getHostInfo().getXCodeInstall();
     b.append("\nusing xcode install : " + driver.getHostInfo().getXCodeInstall());
     b.append("\nusing IOS version " + driver.getHostInfo().getSDK());
 
@@ -183,8 +186,8 @@ public class IOSServer {
       Float version = Float.parseFloat(s);
       if (version >= 6L) {
         safari = true;
-        driver.addSupportedApplication(
-            APPIOSApplication.findSafariLocation(driver.getHostInfo().getXCodeInstall(), s));
+//        driver.addSupportedApplication(copyOfSafari());APPIOSApplication.findSafariLocation(driver.getHostInfo().getXCodeInstall(), s));
+        driver.addSupportedApplication(copyOfSafari(xcodeInstall, s));
       }
     }
     if (safari) {
@@ -192,6 +195,26 @@ public class IOSServer {
     } else {
       b.append("\nios < 6.0. Safari and hybrid apps are NOT supported.");
     }
+  }
+
+  // TODO freynaud - if xcode change, the safari copy should be wiped out.
+  private APPIOSApplication copyOfSafari(File xcodeInstall, String sdk) {
+    File copy = new File(System.getProperty("user.home")+"/.ios-driver/safariCopies", "safari-"+sdk+".app");
+    if (!copy.exists()) {
+      APPIOSApplication safari = APPIOSApplication.findSafariLocation(xcodeInstall, sdk);
+      File folderToCopy = safari.getApplicationPath();
+      copy.mkdirs();
+      try {
+        FileUtils.copyDirectory(folderToCopy, copy);
+      } catch (IOException e) {
+        log.warning("Cannot create the copy of safari : " + e.getMessage());
+      }
+    }
+    return new APPIOSApplication(copy.getAbsolutePath());
+  }
+
+  private boolean safariCopyExist(String sdk) {
+    return false;
   }
 
   private void startFolderMonitor() {
@@ -205,7 +228,7 @@ public class IOSServer {
     }
   }
 
-  private void startHubRegistration(){
+  private void startHubRegistration() {
     if (options.getRegistrationURL() != null) {
       SelfRegisteringRemote selfRegisteringRemote = new SelfRegisteringRemote(options, driver);
       selfRegisteringRemote.startRegistrationProcess();
