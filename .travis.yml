@@ -5,4 +5,6 @@ before_script:
 - sudo dscl . append /Groups/_developer GroupMembership travis
 - sudo python ./sim_access.py
 - grep -A 10 system.privilege.taskport /etc/authorization
+- sudo mkdir /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs 
+- sudo chmod -R +RW /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs 
 script: mvn test
