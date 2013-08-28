@@ -6,7 +6,7 @@
         <groupId>org.uiautomation</groupId>
         <artifactId>ios-driver</artifactId>
         <relativePath>..</relativePath>
-        <version>0.6.3</version>
+        <version>0.6.4</version>
     </parent>
     <artifactId>ios-client</artifactId>
 
