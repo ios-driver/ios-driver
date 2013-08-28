@@ -21,20 +21,21 @@ import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.Device;
 import org.uiautomation.ios.server.RealDevice;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.server.application.AppleLanguage;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.application.IPAApplication;
+import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
 import org.uiautomation.ios.server.simulator.IOSRealDeviceManager;
 import org.uiautomation.ios.server.simulator.IOSSimulatorManager;
-import org.uiautomation.ios.server.utils.IOSVersion;
+import org.uiautomation.ios.server.simulator.Instruments;
+import org.uiautomation.ios.server.simulator.InstrumentsApple;
+import org.uiautomation.ios.server.simulator.InstrumentsFailedToStartException;
+import org.uiautomation.ios.server.simulator.InstrumentsLibImobile;
+import org.uiautomation.ios.utils.ApplicationCrashListener;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.Command;
-import org.uiautomation.ios.utils.ScriptHelper;
 import org.uiautomation.ios.utils.hack.TimeSpeeder;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -58,19 +59,19 @@ public class InstrumentsManager {
   private DeviceVariation variation;
   private IOSCapabilities caps;
   private List<String> extraEnvtParams;
-  private CommunicationChannel communicationChannel;
   private Command simulatorProcess;
-  private ServerSideSession serverSideSession;
+  private final ServerSideSession session;
+
+
+  private Instruments instruments;
 
   /**
    * constructor that will create an instrument process linked to the server.
-   *
-   * @param serverSideSession the ServerSideSession which created the manager
    */
-  public InstrumentsManager(ServerSideSession serverSideSession) {
+  public InstrumentsManager(ServerSideSession session) {
+    this.session = session;
     template = ClassicCommands.getAutomationTemplate();
-    this.serverSideSession = serverSideSession;
-    this.port = serverSideSession.getIOSServerManager().getPort();
+    this.port = session.getIOSServerManager().getPort();
   }
 
   public void startSession(String sessionId,
@@ -97,114 +98,56 @@ public class InstrumentsManager {
       this.sessionId = sessionId;
       this.extraEnvtParams = envtParams;
 
-      output = createTmpOutputFolder();
-
       this.application = application;
       this.application.setDefaultDevice(deviceType);
 
-      deviceManager = prepareSimulator(capabilities);
-      if (isWarmupRequired(sdkVersion)) {
-        warmup();
-      }
-      log.fine("prepare simulator");
+      if (device instanceof RealDevice) {
+        RealDevice d = (RealDevice) device;
+        instruments =
+            new InstrumentsLibImobile(d.getUuid(), port, application.getDotAppAbsolutePath(),
+                                      sessionId, application.getBundleId());
+        deviceManager = new IOSRealDeviceManager(capabilities,
+                                                 (RealDevice) device,
+                                                 (IPAApplication) application
+                                                     .getUnderlyingApplication());
 
-      if (deviceManager instanceof IOSSimulatorManager) {
-        log.fine("forcing SDK");
-        ((IOSSimulatorManager) deviceManager).forceDefaultSDK();
-        log.fine("creating script");
-      }
-      File
-          uiscript =
-          new ScriptHelper()
-              .getScript(port, application.getDotAppAbsolutePath(), sessionId);
-      log.fine("starting instruments");
-      List<String> instruments = createInstrumentCommand(uiscript.getAbsolutePath());
-      communicationChannel = new CommunicationChannel();
-
-      simulatorProcess = new Command(instruments, true, this);
-      simulatorProcess.setWorkingDirectory(output);
-      simulatorProcess.start();
-
-      log.fine("waiting for registration request");
-      boolean success = communicationChannel.waitForUIScriptToBeStarted();
-      // appears only in ios6. : Automation Instrument ran into an exception
-      // while trying to run the
-      // script. UIAScriptAgentSignaledException
-      if (!success) {
-        simulatorProcess.forceStop();
-        killSimulator();
-        throw new WebDriverException("Instruments crashed.");
-      }
-
-      if (timeHack) {
-        TimeSpeeder.getInstance().activate();
-        TimeSpeeder.getInstance().start();
       } else {
-        TimeSpeeder.getInstance().desactivate();
-      }
+        ApplicationCrashListener list = new ApplicationCrashListener(this);
+        instruments =
+            new InstrumentsApple(null, port, sessionId,
+                                 new File(application.getDotAppAbsolutePath()), envtParams,
+                                 sdkVersion, list);
 
+        deviceManager = new IOSSimulatorManager(capabilities, instruments);
+        // TODO freynaud part of AppleInstruments' logic
+        output = ((InstrumentsApple)instruments).getOuput();
+
+
+      }
+      deviceManager.setSDKVersion();
+      deviceManager.install(application.getUnderlyingApplication());
+      deviceManager.resetContentAndSettings();
+      deviceManager.setL10N(locale, language);
+      deviceManager.setKeyboardOptions();
+      deviceManager.setVariation(deviceType, variation);
+      deviceManager.setLocationPreference(true);
+      deviceManager.setMobileSafariOptions();
+
+      try {
+        instruments.start();
+      } catch (InstrumentsFailedToStartException e) {
+        instruments.stop();
+      }
     } catch (Exception e) {
-      if (simulatorProcess != null) {
-        simulatorProcess.forceStop();
-      }
-      killSimulator();
-      throw new WebDriverException(
-          "error starting instrument for session " + sessionId + ", " + e.getMessage(), e);
-    } finally {
-      log.fine("start session done");
-
-      if (deviceManager instanceof IOSSimulatorManager) {
-        log.fine("forcing SDK");
-        ((IOSSimulatorManager) deviceManager).restoreExiledSDKs();
-        log.fine("creating script");
-      }
+      throw new WebDriverException("error starting the session:"+e.getMessage(), e);
     }
-
   }
 
-  private void warmup() {
-    File script = new ScriptHelper().createTmpScript("UIALogger.logMessage('warming up');");
-    List<String> cmd = createInstrumentCommand(script.getAbsolutePath());
-    Command c = new Command(cmd, true);
-    c.executeAndWait();
-  }
-
-  private boolean isWarmupRequired(String sdkVersion) {
-    String defaultSDK = ClassicCommands.getDefaultSDK();
-    if (new IOSVersion(defaultSDK).equals(sdkVersion)) {
-      return false;
-    }
-    return true;
-
-    /*
-     * if (sdkVersion.equals("5.0") || sdkVersion.equals("5.1")||
-     * sdkVersion.equals("6.0")) { if (sdks.contains("6.1")) { return true; } }
-     * return false;
-     */
-  }
-
-  private IOSDeviceManager prepareSimulator(IOSCapabilities capabilities) {
-    IOSDeviceManager deviceManager;
-
-    if (device instanceof RealDevice) {
-      deviceManager = new IOSRealDeviceManager(capabilities,
-                                               (RealDevice) device,
-                                               (IPAApplication) application
-                                                   .getUnderlyingApplication());
-    } else {
-      deviceManager = new IOSSimulatorManager(capabilities);
-    }
-    deviceManager.install(application.getUnderlyingApplication());
-    deviceManager.resetContentAndSettings();
-    deviceManager.setL10N(locale, language);
-    deviceManager.setKeyboardOptions();
-    deviceManager.setVariation(deviceType, variation);
-    deviceManager.setLocationPreference(true);
-    deviceManager.setMobileSafariOptions();
-    return deviceManager;
-  }
 
   public void stop() {
+    if (instruments != null) {
+      instruments.stop();
+    }
     if (device != null) {
       device.release();
     }
@@ -213,6 +156,7 @@ public class InstrumentsManager {
       simulatorProcess.waitFor(60 * 1000);
     }
     killSimulator();
+
   }
 
   public void forceStop() {
@@ -226,41 +170,6 @@ public class InstrumentsManager {
     killSimulator();
   }
 
-  private List<String> createInstrumentCommand(String script) {
-    List<String> command = new ArrayList<String>();
-
-    command.add(deviceManager.getInstrumentsClient());
-    if (device instanceof RealDevice) {
-      command.add("-w");
-      command.add(((RealDevice) device).getUuid());
-    }
-    command.add("-t");
-    command.add(template.getAbsolutePath());
-    command.add(application.getDotAppAbsolutePath());
-    command.add("-e");
-    command.add("UIASCRIPT");
-    command.add(script);
-    command.add("-e");
-    command.add("UIARESULTSPATH");
-    command.add(output.getAbsolutePath());
-    command.addAll(extraEnvtParams);
-    StringBuilder b = new StringBuilder();
-    for (String s : command) {
-      b.append(s);
-      b.append(" ");
-    }
-    log.fine("Starting instruments:\n" + b.toString());
-    return command;
-
-  }
-
-  private File createTmpOutputFolder() throws IOException {
-    output = File.createTempFile(sessionId, null);
-    output.delete();
-    output.mkdir();
-    output.deleteOnExit();
-    return output;
-  }
 
   private void killSimulator() {
     if (deviceManager != null) {
@@ -277,11 +186,13 @@ public class InstrumentsManager {
   }
 
   public CommunicationChannel communicate() {
-    return communicationChannel;
+    return instruments.getChannel();
   }
+
 
   public void handleAppCrash(String log) {
     stop();
-    serverSideSession.sessionHasCrashed(log);
+    forceStop();
+    session.sessionHasCrashed(log);
   }
 }

@@ -41,7 +41,7 @@ public class FlickNHandler extends UIAScriptHandler {
     JSONObject payload = request.getPayload();
     String elementId = payload.optString("element");
 
-    Point fromPoint;
+    Point fromPoint = null;
     Dimension screenSize = driver.getSession(request.getSession()).getNativeDriver().getScreenSize();
 
     if (!payload.isNull("element") && !elementId.equals("")) {
@@ -49,7 +49,8 @@ public class FlickNHandler extends UIAScriptHandler {
         RemoteWebNativeBackedElement element = (RemoteWebNativeBackedElement) getSession().getRemoteWebDriver().createElement(elementId);
         fromPoint = element.getLocation();
       } catch (Exception e) {
-        fromPoint = getStartCoordinatesCentered(request, elementId);
+        // TODO freynaud fix that.
+        //fromPoint = getStartCoordinatesCentered(request, elementId);
       }
     } else {
       fromPoint = new Point(screenSize.getWidth() / 2, screenSize.getHeight() / 2);
@@ -84,7 +85,7 @@ public class FlickNHandler extends UIAScriptHandler {
     setJS(js);
   }
 
-  public Point getStartCoordinatesCentered(WebDriverLikeRequest request, String elementId) throws InterruptedException {
+  /*public Point getStartCoordinatesCentered(WebDriverLikeRequest request, String elementId) throws InterruptedException {
     String getElementJS = getElementTemplate
         .replace(":reference", elementId)
         .replace(":sessionId", request.getSession());
@@ -102,7 +103,7 @@ public class FlickNHandler extends UIAScriptHandler {
     }
 
     return CoordinateUtils.getCenterPointFromResponse(response);
-  }
+  }*/
 
   @Override
   public JSONObject configurationDescription() throws JSONException {

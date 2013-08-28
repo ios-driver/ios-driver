@@ -13,19 +13,21 @@
 var UIAutomation = {
     cache: new Cache(),
     CURL: "/usr/bin/curl",
-    COMMAND: "http://localhost:$PORT/wd/hub/uiascriptproxy?sessionId=$SESSION",
+    COMMAND: "http://localhost:" + CONFIG_PORT + "/wd/hub/uiascriptproxy?sessionId=" + CONFIG_SESSION,
     HOST: UIATarget.localTarget().host(),
     TIMEOUT_IN_SEC: {
         "implicit": 0
     },
-    SESSION: "$SESSION",
+    SESSION: CONFIG_SESSION,
+    AUT: CONFIG_AUT,
+    COMMUNICATION_MODE: CONFIG_MODE,
     CAPABILITIES: -1,
 
     /**
      * Create a webdriver response for ios-driver. The response won't be sent to the client directly,
      * but to the ios-server first, and then potentially forwarded, and modified.
      * @param {string} sessionId the session currently controlling instruments.
-     * @param {number} status the reponse status. 0 for ok.
+     * @param {number} status the response status. 0 for ok.
      * @param {Object} value the response value
      * @return {string} the response value, stringified.
      */
@@ -92,7 +94,7 @@ var UIAutomation = {
      * @return {string} the next command.The command is a javascript snipet, that will be executed
      * using eval().
      */
-    postResponseAndGetNextCommand: function (jsonResponse) {
+    postResponseWithCURLAndGetNextCommand: function (jsonResponse) {
         log("posting response : " + jsonResponse);
         var nextCommand = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.COMMAND,
                                                                                     "--data-binary",
@@ -106,6 +108,19 @@ var UIAutomation = {
         return nextCommand.stdout;
 
     },
+
+    postResponseMultiAndGetNextCommand: function (jsonResponse) {
+        response(jsonResponse);
+        while (true) {
+            UIATarget.localTarget().delay(0.05);
+            var cmd = UIATarget.localTarget().frontMostApp().preferencesValueForKey('cmd');
+            if (cmd) {
+                UIATarget.localTarget().frontMostApp().setPreferencesValueForKey(null, 'cmd');
+                return cmd;
+            }
+        }
+    },
+
     /**
      * Initialises the capabilities for this session. Capabilities should be immutable.
      * @return {Object} the capabilities for the current session. Part of the capabilities a client
@@ -127,14 +142,14 @@ var UIAutomation = {
         result.name = target.name();
         result.systemName = target.systemName();
         result.sdkVersion = target.systemVersion();
-        result.aut = "$AUT";
+        result.aut = this.AUT;
         result.rect = target.rect();
         return result;
     },
 
     /**
      * Return the capabilities of the session. Hack inside to have the dimension of the target.
-     * Capabilities should be immutable, and dimensions shoudln't be stored here.
+     * Capabilities should be immutable, and dimensions shouldn't be stored here.
      * @return {Object} the capabilities of the session.
      */
     getCapabilities: function () {
@@ -182,17 +197,25 @@ var UIAutomation = {
     },
 
     /**
-     * keep executing commands and sending the responses untils the stop command is received.
+     * Keep executing commands and sending the responses until the stop command is received.
      */
     commandLoop: function () {
         // first command after registration sends the capabilities.
         var init = {};
+        if (this.COMMUNICATION_MODE === "MULTI") {
+            UIATarget.localTarget().frontMostApp().setPreferencesValueForKey(null, 'cmd');
+        }
         init.firstResponse = UIAutomation.getCapabilities();
         var response = this.createJSONResponse(this.SESSION, 0, init);
         var ok = true;
         while (ok) {
             try {
-                var request = this.postResponseAndGetNextCommand(response);
+                var request;
+                if (this.COMMUNICATION_MODE === "CURL") {
+                    request = this.postResponseWithCURLAndGetNextCommand(response);
+                } else {
+                    request = this.postResponseMultiAndGetNextCommand(response);
+                }
                 if (request === "stop") {
                     ok = false;
                     log("end of the command loop.");
@@ -208,7 +231,6 @@ var UIAutomation = {
                         } else {
                             response = this.createJSONResponse(this.SESSION, 17, err.message);
                         }
-
                     }
                 }
             } catch (err) {

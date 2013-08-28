@@ -47,7 +47,6 @@ public class WebKitNotificationListener implements MessageListener {
 
   @Override
   public void onMessage(IOSMessage message) {
-
     if (message instanceof ReportSetupMessage) {
       ReportSetupMessage m = (ReportSetupMessage) message;
       driver.setDevice(m.getDevice());
@@ -84,9 +83,8 @@ public class WebKitNotificationListener implements MessageListener {
             "ApplicationSentListingMessage: message pages: " + m.getPages().size() + ", change: "
             + change);
 
-
         // a new page appeared. The driver needs to know.
-        if (change >0) {
+        if (change > 0) {
           List<WebkitPage> pages = new ArrayList<WebkitPage>();
           // keep all the pages currently known to the driver
           pages.addAll(driver.getPages());
@@ -95,7 +93,6 @@ public class WebKitNotificationListener implements MessageListener {
           for (WebkitPage p : driver.getPages()) {
             m.getPages().remove(p);
           }
-
 
           if (m.getPages().size() == 0) {
             throw new WebDriverException(m.getPages().size() + " new pages.");
@@ -125,12 +122,12 @@ public class WebKitNotificationListener implements MessageListener {
               driver.switchTo(focus);
             }
           }
-        // a page disappeared, the driver needs to know.
-        }else if (change <0){
+          // a page disappeared, the driver needs to know.
+        } else if (change < 0) {
           List<WebkitPage> old = new ArrayList<WebkitPage>();
           old.addAll(driver.getPages());
 
-          for (WebkitPage p : m.getPages()){
+          for (WebkitPage p : m.getPages()) {
             old.remove(p);
           }
 
@@ -140,12 +137,13 @@ public class WebKitNotificationListener implements MessageListener {
           // is ok. But for the extra window automatically closed ( ie the "there is an app for that
           // page, downlaod it on itune" page header, the header disappears when driver.get navigates
           // to a new page. The header disapeearing shouldn't impact the current state.
-          for( WebkitPage p : old){
-            log.fine("the page "+p +" has been deleted and must be removed from the driver cache");
+          for (WebkitPage p : old) {
+            log.fine(
+                "the page " + p + " has been deleted and must be removed from the driver cache");
             int currentFocus = driver.getCurrentPageID();
-            if (p.getPageId() == currentFocus){
+            if (p.getPageId() == currentFocus) {
               log.fine("the page deleted is the one with the focus.");
-            }else{
+            } else {
               driver.setPages(m.getPages());
             }
           }

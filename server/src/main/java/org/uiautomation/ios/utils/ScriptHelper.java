@@ -14,8 +14,11 @@
 
 package org.uiautomation.ios.utils;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableList;
 import org.apache.commons.io.IOUtils;
 import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.server.instruments.communication.CommunicationMode;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -35,52 +38,54 @@ import java.io.Writer;
 public class ScriptHelper {
 
   public static final String ENCODING = "UTF-8";
-  private final String main = "instruments-js/main.js";
-  private final String json = "instruments-js/json2.js";
-  private final String common = "instruments-js/common.js";
-  private final String lib0 = "instruments-js/UIAutomation.js";
-  private final String lib1 = "instruments-js/UIAKeyboard.js";
-  private final String lib2 = "instruments-js/UIAElement.js";
-  private final String lib3 = "instruments-js/UIAApplication.js";
-  private final String lib4 = "instruments-js/UIATarget.js";
-  private final String lib5 = "instruments-js/UIAAlert.js";
-  private final String lib6 = "instruments-js/Cache.js";
-  private final String lib7 = "instruments-js/SafariPageNavigator.js";
-  private final String lib8 = "instruments-js/UIAActionSheet.js";
 
+  private final ImmutableList<String> libs = ImmutableList.of(
+      "instruments-js/json2.js",
+      "instruments-js/common.js",
+      "instruments-js/UIAKeyboard.js",
+      "instruments-js/UIATarget.js",
+      "instruments-js/UIAApplication.js",
+      "instruments-js/UIAElement.js",
+      "instruments-js/UIAAlert.js",
+      "instruments-js/Cache.js",
+      "instruments-js/SafariPageNavigator.js",
+      "instruments-js/UIAActionSheet.js",
+      "instruments-js/UIAutomation.js",
+      "instruments-js/main.js"
+  );
 
   private static final String FILE_NAME = "uiamasterscript";
 
-  private String load(String resource) throws IOException {
+  private String load(String resource) {
     InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
     StringWriter writer = new StringWriter();
-    IOUtils.copy(is, writer, "UTF-8");
+    try {
+      IOUtils.copy(is, writer, ENCODING);
+    } catch (IOException e) {
+      throw new WebDriverException("Cannot load script :" + resource, e);
+    }
     String content = writer.toString();
     return content;
   }
 
-
-  private String generateScriptContent(int port, String aut, String opaqueKey) throws IOException {
+  // TODO freynaud AUT is only used for the capabilies. It should be a response decorator of getCaps
+  public String generateScriptContent(int port, String aut, String opaqueKey,
+                                      CommunicationMode mode) {
     StringBuilder scriptContent = new StringBuilder();
 
-    String c = load(lib0);
-    c = c.replace("$PORT", String.format("%d", port));
-    c = c.replace("$AUT", String.format("%s", aut));
-    c = c.replace("$SESSION", String.format("%s", opaqueKey));
+    scriptContent.append(Joiner.on("\n").join(
+        "/* Script configuration parameters. */",
+        String.format("var CONFIG_PORT = %d;", port),
+        String.format("var CONFIG_AUT = \"%s\";", aut),
+        String.format("var CONFIG_MODE = \"%s\";", mode),
+        String.format("var CONFIG_SESSION = \"%s\";", opaqueKey),
+        ""
+    ));
 
-    scriptContent.append(load(json));
-    scriptContent.append(load(common));
-    scriptContent.append(load(lib1));
-    scriptContent.append(load(lib4));
-    scriptContent.append(load(lib3));
-    scriptContent.append(load(lib2));
+    for (String lib : libs) {
+      scriptContent.append(load(lib));
+    }
 
-    scriptContent.append(load(lib5));
-    scriptContent.append(load(lib6));
-    scriptContent.append(load(lib7));
-    scriptContent.append(load(lib8));
-    scriptContent.append(c);
-    scriptContent.append(load(main));
     return scriptContent.toString();
   }
 
@@ -90,23 +95,21 @@ public class ScriptHelper {
       res.deleteOnExit();
       Writer
           writer =
-          new BufferedWriter(new OutputStreamWriter(new FileOutputStream(res), "UTF-8"));
+          new BufferedWriter(new OutputStreamWriter(new FileOutputStream(res), ENCODING));
       writer.write(content);
       writer.close();
       return res;
     } catch (Exception e) {
       throw new WebDriverException("Cannot generate script.");
     }
-
   }
 
-  public File getScript(int port, String aut, String opaqueKey) {
+  public File getScript(int port, String aut, String opaqueKey, CommunicationMode mode) {
     try {
-      String content = generateScriptContent(port, aut, opaqueKey);
+      String content = generateScriptContent(port, aut, opaqueKey, mode);
       return createTmpScript(content);
     } catch (Exception e) {
       throw new WebDriverException("cannot generate the script for instrument.", e);
     }
   }
-
 }

@@ -74,7 +74,7 @@ public abstract class WebKitRemoteDebugProtocol {
           }
 
         } catch (Exception e) {
-          //e.printStackTrace();
+          e.printStackTrace();
         } finally {
           readyToBeStopped = true;
         }

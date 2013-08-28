@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 
 public class ApplicationCrashListener implements CommandOutputListener {
 
-  private static final Logger log = Logger.getLogger(DefaultCommandListener.class.getName());
+  private static final Logger log = Logger.getLogger(ApplicationCrashListener.class.getName());
   private final InstrumentsManager instrumentsManager;
 
   public ApplicationCrashListener(InstrumentsManager im){

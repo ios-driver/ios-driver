@@ -6,5 +6,6 @@ before_script:
 - sudo python ./sim_access.py
 - grep -A 10 system.privilege.taskport /etc/authorization
 - sudo mkdir /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs 
-- sudo chmod -R +rw /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs 
+- sudo chmod -R a+rw /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs
+- sudo chmod 666 /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator*.sdk/Applications/MobileSafari.app/Info.plist
 script: mvn test

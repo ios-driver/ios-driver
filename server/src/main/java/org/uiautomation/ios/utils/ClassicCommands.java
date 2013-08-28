@@ -18,18 +18,25 @@ import org.openqa.selenium.WebDriverException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class ClassicCommands {
+
+  private static final Logger log = Logger.getLogger(ClassicCommands.class.getName());
 
   public static List<String> psgrep(String processName) {
     List<String> s = new ArrayList<String>();
     s.add("ps");
     s.add("aux");
 
-    Command com = new Command(s, false);
+    Command com = new Command(s, true);
     Grep grep = new Grep(processName);
     com.registerListener(grep);
-    com.executeAndWait();
+    try {
+      com.executeAndWait();
+    } catch (Exception e) {
+      log.warning("Error waiting for the process and the listener threads to finish.");
+    }
     return grep.getMatching();
   }
 

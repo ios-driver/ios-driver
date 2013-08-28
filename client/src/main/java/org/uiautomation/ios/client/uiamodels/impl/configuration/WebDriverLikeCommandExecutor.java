@@ -76,7 +76,12 @@ public class WebDriverLikeCommandExecutor {
       throw new WebDriverException(e);
     }
     response = errorHandler.throwIfResponseFailed(response, total);
+    try{
     return cast(response.getValue());
+    }catch (ClassCastException e){
+      System.out.println(e.getMessage()+" for "+response.getValue());
+      throw e;
+    }
   }
   
   private HttpClient newHttpClientWithTimeout() {

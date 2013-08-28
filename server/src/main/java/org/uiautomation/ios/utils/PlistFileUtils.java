@@ -17,7 +17,7 @@ import com.dd.plist.NSObject;
 import com.dd.plist.PropertyListParser;
 
 import org.json.JSONObject;
-import org.libimobiledevice.binding.raw.ApplicationInfo;
+import org.libimobiledevice.ios.driver.binding.ApplicationInfo;
 import org.openqa.selenium.WebDriverException;
 
 import java.io.File;

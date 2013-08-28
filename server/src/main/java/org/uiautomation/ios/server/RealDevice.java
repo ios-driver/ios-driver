@@ -1,6 +1,6 @@
 package org.uiautomation.ios.server;
 
-import org.libimobiledevice.binding.raw.DeviceInfo;
+import org.libimobiledevice.ios.driver.binding.DeviceInfo;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.server.application.APPIOSApplication;

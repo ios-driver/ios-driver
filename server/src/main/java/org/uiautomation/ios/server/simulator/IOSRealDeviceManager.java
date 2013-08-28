@@ -1,8 +1,8 @@
 package org.uiautomation.ios.server.simulator;
 
-import org.libimobiledevice.binding.raw.IMobileDeviceFactory;
-import org.libimobiledevice.binding.raw.IOSDevice;
-import org.openqa.selenium.WebDriverException;
+import org.libimobiledevice.ios.driver.binding.ApplicationInfo;
+import org.libimobiledevice.ios.driver.binding.IMobileDeviceFactory;
+import org.libimobiledevice.ios.driver.binding.IOSDevice;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
@@ -10,7 +10,6 @@ import org.uiautomation.ios.server.RealDevice;
 import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.application.IPAApplication;
 import org.uiautomation.ios.server.instruments.IOSDeviceManager;
-import org.libimobiledevice.binding.raw.ApplicationInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +33,7 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
    * @param app          the app that will be ran.
    */
   public IOSRealDeviceManager(IOSCapabilities capabilities, RealDevice device, IPAApplication app) {
-   this.device = factory.get(device.getUuid());
+    this.device = factory.get(device.getUuid());
     bundleId = capabilities.getBundleId();
     this.capabilities = capabilities;
     this.app = app;
@@ -45,29 +44,29 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
 
   @Override
   public void install(APPIOSApplication aut) {
-    if (aut instanceof IPAApplication) {
-      ApplicationInfo app = device.getApplication(bundleId);
-      // not installed ? install the app.
-      if (app == null) {
-        device.install(((IPAApplication) aut).getIPAFile());
-        return;
-      }
-
-      // already there and correct version
-      if (isCorrectVersion(app)) {
-        return;
-      }
-
-      // TODO upgrade ?
-      // needs to re-install
-      log.fine("uninstalling " + bundleId );
-      device.uninstall(bundleId);
-      log.fine("installing " + bundleId );
-      device.install(((IPAApplication) aut).getIPAFile());
-      log.fine(bundleId + " installed.");
-    } else {
-      throw new WebDriverException("only IPA apps can be used on a real device.");
-    }
+//    if (aut instanceof IPAApplication) {
+//      ApplicationInfo app = device.getApplication(bundleId);
+//      // not installed ? install the app.
+//      if (app == null) {
+//        device.install(((IPAApplication) aut).getIPAFile());
+//        return;
+//      }
+//
+//      // already there and correct version
+//      if (isCorrectVersion(app)) {
+//        return;
+//      }
+//
+//      // TODO upgrade ?
+//      // needs to re-install
+//      log.fine("uninstalling " + bundleId );
+//      device.uninstall(bundleId);
+//      log.fine("installing " + bundleId );
+//      device.install(((IPAApplication) aut).getIPAFile());
+//      log.fine(bundleId + " installed.");
+//    } else {
+//      throw new WebDriverException("only IPA apps can be used on a real device.");
+//    }
   }
 
   /**
@@ -94,13 +93,13 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
 
   @Override
   public void setL10N(String locale, String language) {
-    device.setLockDownValue("com.apple.international", "Language", language);
-    device.setLockDownValue("com.apple.international", "Locale", locale);
+//    device.setLockDownValue("com.apple.international", "Language", language);
+//    device.setLockDownValue("com.apple.international", "Locale", locale);
   }
 
   @Override
   public void resetContentAndSettings() {
-    device.emptyApplicationCache("com.ebay.iphone");
+    //device.emptyApplicationCache(bundleId);
   }
 
   @Override
@@ -119,6 +118,11 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
   }
 
   @Override
+  public void setSDKVersion() {
+    // no-op
+  }
+
+  @Override
   public void setLocationPreference(boolean authorized) {
     // no-op
   }
@@ -128,8 +132,5 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
     // no-op
   }
 
-  @Override
-  public String getInstrumentsClient() {
-    return "instruments";
-  }
+
 }

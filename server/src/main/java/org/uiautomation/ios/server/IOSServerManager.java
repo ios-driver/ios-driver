@@ -13,6 +13,7 @@
  */
 package org.uiautomation.ios.server;
 
+import org.libimobiledevice.ios.driver.binding.IMobileDeviceFactory;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
@@ -53,16 +54,8 @@ public class IOSServerManager {
     devices = new DeviceStore();
 
     if (Configuration.BETA_FEATURE) {
-      //LoggerService.enableDebug();
-      //DeviceDetector d = DeviceManagerService.getDetector();
-      //if (d == null) {
-      //  devices = new DeviceStore();
-      //  devices.add(new SimulatorDevice());
-      //} else {
-      //devices = (DeviceStore) d;
-      //}
-      //deviceManager = DeviceManagerService.create(devices);
-      // deviceManager.startDetection();
+      IMobileDeviceFactory.INSTANCE.setDeviceDetectionCallback(devices);
+      IMobileDeviceFactory.INSTANCE.startDetection();
     }
 
     if (Configuration.SIMULATORS_ENABLED) {
@@ -95,7 +88,7 @@ public class IOSServerManager {
 
   public void stop() {
     if (Configuration.BETA_FEATURE) {
-      //deviceManager.stopDetection();
+      IMobileDeviceFactory.INSTANCE.stopDetection();
     }
   }
 
