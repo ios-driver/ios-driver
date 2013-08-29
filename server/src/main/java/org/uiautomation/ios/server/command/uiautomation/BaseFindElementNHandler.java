@@ -3,6 +3,7 @@ package org.uiautomation.ios.server.command.uiautomation;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.InvalidSelectorException;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.predicate.AbstractCriteria;
@@ -56,7 +57,6 @@ public abstract class BaseFindElementNHandler extends UIAScriptHandler {
     String original = getRequest().getPayload().optString("value");
     return getL10NValue(original);
   }
-
 
   /**
    * replaces l10n('xyz') by the localized version of it.
@@ -136,6 +136,21 @@ public abstract class BaseFindElementNHandler extends UIAScriptHandler {
       throw new InvalidSelectorException(
           using + "is not a valid selector for the native part of ios-driver.");
     }
+  }
+
+  protected abstract <T> T find();
+
+  protected <T> T findByXpathWithImplicitWait() {
+    long now = System.currentTimeMillis();
+    long deadline = now + SetImplicitWaitTimeoutNHandler.TIMEOUT;
+    do {
+      try {
+        return find();
+      } catch (NoSuchElementException ignore) {
+      }
+    }
+    while (SetImplicitWaitTimeoutNHandler.TIMEOUT != 0 && System.currentTimeMillis() < deadline);
+    return find();
   }
 
   private JSONObject createGenericCriteria(String using, String value) {

@@ -15,7 +15,6 @@ package org.uiautomation.ios.server.command.uiautomation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
@@ -50,19 +49,14 @@ public class FindElementNHandler extends BaseFindElementNHandler {
     }
   }
 
-  private Map<String, String> findElementParsingLocalXMLTree() {
+  @Override
+  protected <T> T find() {
     String xpath = getRequest().getPayload().optString("value");
-    long now = System.currentTimeMillis();
-    long deadline = now + SetImplicitWaitTimeoutNHandler.TIMEOUT;
-    do {
-      try {
-        return getParser().findElementByXpath(xpath, getReference());
-      } catch (NoSuchElementException ignore) {
-      }
-    }
-    while (SetImplicitWaitTimeoutNHandler.TIMEOUT != 0 && System.currentTimeMillis() < deadline);
-    throw new NoSuchElementException("Cannot find element using " + xpath);
+    return (T) getParser().findElementByXpath(xpath, getReference());
+  }
 
+  private Map<String, String> findElementParsingLocalXMLTree() {
+    return findByXpathWithImplicitWait();
   }
 
   @Override

@@ -15,12 +15,10 @@ package org.uiautomation.ios.server.command.uiautomation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +40,8 @@ public class FindElementsRoot extends BaseFindElementNHandler {
     }
   }
 
+
+
   @Override
   public Response handle() throws Exception {
     if (!isXPathMode()) {
@@ -51,18 +51,14 @@ public class FindElementsRoot extends BaseFindElementNHandler {
     }
   }
 
-  private List<Map<String, String>> findElementsParsingLocalXMLTree() {
+  @Override
+  protected <T> T find() {
     String xpath = getRequest().getPayload().optString("value");
-    long now = System.currentTimeMillis();
-    long deadline = now + SetImplicitWaitTimeoutNHandler.TIMEOUT;
-    do {
-      try {
-        return getParser().findElementsByXpath(xpath, getReference());
-      } catch (NoSuchElementException ignore) {
-      }
-    }
-    while (SetImplicitWaitTimeoutNHandler.TIMEOUT != 0 && System.currentTimeMillis() < deadline);
-    return new ArrayList<Map<String, String>>();
+    return (T)getParser().findElementsByXpath(xpath, getReference());
+  }
+
+  private List<Map<String, String>> findElementsParsingLocalXMLTree() {
+    return findByXpathWithImplicitWait();
   }
 
   private String getJSForFindElementsUsingInstruments() {
