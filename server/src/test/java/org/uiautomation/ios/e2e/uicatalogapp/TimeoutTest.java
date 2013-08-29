@@ -2,6 +2,7 @@ package org.uiautomation.ios.e2e.uicatalogapp;
 
 import java.util.concurrent.TimeUnit;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -42,6 +43,40 @@ public class TimeoutTest extends BaseIOSDriverTest {
         driver.findElement(c);
         Assert.fail("shouldn't find element" + name);
 
+      } catch (NoSuchElementException e) {
+        long total = System.currentTimeMillis() - start;
+        Assert.assertTrue(total > 2000);
+      }
+    } finally {
+      if (driver != null) {
+        driver.quit();
+      }
+    }
+  }
+
+
+
+  @Test
+  public void getElementByXPathUsesImplicitWait(){
+    RemoteIOSDriver driver = null;
+    try {
+      driver = getDriver(SampleApps.uiCatalogCap());
+      String name = "Buttons, Various uses of UIButton2";
+
+      By b = By.xpath("//*[@name='"+name+"']");
+      long start = System.currentTimeMillis();
+      try {
+        driver.findElement(b);
+        Assert.fail("shouldn't find element" + name);
+      } catch (NoSuchElementException e) {
+        long total = System.currentTimeMillis() - start;
+        Assert.assertTrue(total < 2000);
+      }
+      try {
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+        start = System.currentTimeMillis();
+        driver.findElement(b);
+        Assert.fail("shouldn't find element" + name);
       } catch (NoSuchElementException e) {
         long total = System.currentTimeMillis() - start;
         Assert.assertTrue(total > 2000);
