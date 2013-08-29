@@ -21,7 +21,7 @@ import org.uiautomation.ios.server.IOSServerManager;
 
 public class SetImplicitWaitTimeoutNHandler extends SetTimeoutNHandler {
 
-  public static Integer TIMEOUT = null;
+  public static Integer TIMEOUT = 0;
 
   public SetImplicitWaitTimeoutNHandler(IOSServerManager driver, WebDriverLikeRequest request)
       throws Exception {

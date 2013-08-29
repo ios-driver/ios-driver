@@ -1,9 +1,8 @@
 package org.uiautomation.ios.e2e.uicatalogapp;
 
-import java.util.concurrent.TimeUnit;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
@@ -15,8 +14,10 @@ import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
-public class TimeoutTest extends BaseIOSDriverTest {
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+public class TimeoutTest extends BaseIOSDriverTest {
 
 
   @Test
@@ -55,15 +56,15 @@ public class TimeoutTest extends BaseIOSDriverTest {
   }
 
 
-
   @Test
-  public void getElementByXPathUsesImplicitWait(){
+  public void getElementByXPathUsesImplicitWait() {
     RemoteIOSDriver driver = null;
     try {
       driver = getDriver(SampleApps.uiCatalogCap());
       String name = "Buttons, Various uses of UIButton2";
 
-      By b = By.xpath("//*[@name='"+name+"']");
+      // single
+      By b = By.xpath("//*[@name='" + name + "']");
       long start = System.currentTimeMillis();
       try {
         driver.findElement(b);
@@ -72,11 +73,32 @@ public class TimeoutTest extends BaseIOSDriverTest {
         long total = System.currentTimeMillis() - start;
         Assert.assertTrue(total < 2000);
       }
+
+      // multi
       try {
-        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+        List<WebElement> els = driver.findElements(b);
+        Assert.assertTrue(els.size() == 0);
+      } catch (NoSuchElementException e) {
+        long total = System.currentTimeMillis() - start;
+        Assert.assertTrue(total < 2000);
+      }
+
+      // single
+      driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+      try {
         start = System.currentTimeMillis();
         driver.findElement(b);
         Assert.fail("shouldn't find element" + name);
+      } catch (NoSuchElementException e) {
+        long total = System.currentTimeMillis() - start;
+        Assert.assertTrue(total > 2000);
+      }
+
+      // multi
+      try {
+        start = System.currentTimeMillis();
+        List<WebElement> els = driver.findElements(b);
+        Assert.assertTrue(els.size() == 0);
       } catch (NoSuchElementException e) {
         long total = System.currentTimeMillis() - start;
         Assert.assertTrue(total > 2000);
