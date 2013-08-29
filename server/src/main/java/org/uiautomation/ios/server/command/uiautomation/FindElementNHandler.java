@@ -51,7 +51,7 @@ public class FindElementNHandler extends BaseFindElementNHandler {
 
   @Override
   protected <T> T find() {
-    String xpath = getRequest().getPayload().optString("value");
+    String xpath = getXpath();
     return (T) getParser().findElementByXpath(xpath, getReference());
   }
 

@@ -53,7 +53,7 @@ public class FindElementsRoot extends BaseFindElementNHandler {
 
   @Override
   protected <T> T find() {
-    String xpath = getRequest().getPayload().optString("value");
+    String xpath = getXpath();
     return (T)getParser().findElementsByXpath(xpath, getReference());
   }
 
