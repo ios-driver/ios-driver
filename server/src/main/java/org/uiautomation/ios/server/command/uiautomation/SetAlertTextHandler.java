@@ -19,9 +19,10 @@ import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
+import org.uiautomation.ios.server.command.UIAScriptHandler;
 
 
-public class SetAlertTextHandler extends BaseFindElementNHandler {
+public class SetAlertTextHandler extends UIAScriptHandler {
 
   private static final String jsTemplate = "var alert = UIAutomation.cache.get(3);"
                                            + "alert.sendKeys(':value');"
@@ -48,6 +49,7 @@ public class SetAlertTextHandler extends BaseFindElementNHandler {
     }
 
   }
+
 
   @Override
   public JSONObject configurationDescription() throws JSONException {

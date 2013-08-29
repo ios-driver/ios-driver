@@ -18,9 +18,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
+import org.uiautomation.ios.server.command.UIAScriptHandler;
 
 
-public class GetAlertTextNHandler extends BaseFindElementNHandler {
+public class GetAlertTextNHandler extends UIAScriptHandler {
 
   private static final String jsTemplate = "var alert = UIAutomation.cache.get(3);"
                                            + "var text = alert.getText();"
@@ -35,6 +36,7 @@ public class GetAlertTextNHandler extends BaseFindElementNHandler {
 
 
   }
+
 
   @Override
   public JSONObject configurationDescription() throws JSONException {

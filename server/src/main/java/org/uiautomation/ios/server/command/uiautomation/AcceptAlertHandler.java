@@ -18,8 +18,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
+import org.uiautomation.ios.server.command.UIAScriptHandler;
 
-public class AcceptAlertHandler extends BaseFindElementNHandler {
+public class AcceptAlertHandler extends UIAScriptHandler {
 
   private static final String jsTemplate = "var alert = UIAutomation.cache.get('3');"
                                            + "alert.accept();"
