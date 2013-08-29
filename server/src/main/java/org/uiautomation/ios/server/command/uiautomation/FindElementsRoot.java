@@ -61,7 +61,7 @@ public class FindElementsRoot extends BaseFindElementNHandler {
       } catch (NoSuchElementException ignore) {
       }
     }
-    while (SetImplicitWaitTimeoutNHandler.TIMEOUT != null && System.currentTimeMillis() < deadline);
+    while (SetImplicitWaitTimeoutNHandler.TIMEOUT != 0 && System.currentTimeMillis() < deadline);
     return new ArrayList<Map<String, String>>();
   }
 

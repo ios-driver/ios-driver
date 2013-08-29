@@ -60,7 +60,7 @@ public class FindElementNHandler extends BaseFindElementNHandler {
       } catch (NoSuchElementException ignore) {
       }
     }
-    while (SetImplicitWaitTimeoutNHandler.TIMEOUT != null && System.currentTimeMillis() < deadline);
+    while (SetImplicitWaitTimeoutNHandler.TIMEOUT != 0 && System.currentTimeMillis() < deadline);
     throw new NoSuchElementException("Cannot find element using " + xpath);
 
   }
