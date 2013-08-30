@@ -82,7 +82,7 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
       Map<String, Object> value = (Map<String, Object>) response.getValue();
       try {
         Map<String, Object> rootNode = (Map<String, Object>) value.get("tree");
-        addTranslation(rootNode, getDriver().getSession(response.getSessionId()).getApplication());
+        addTranslation(rootNode, getAUT());
       } catch (Exception e) {
         e.printStackTrace();
       }
