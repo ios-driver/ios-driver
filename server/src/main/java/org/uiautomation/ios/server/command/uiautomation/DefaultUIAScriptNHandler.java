@@ -28,9 +28,6 @@ import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.CommandMapping;
 import org.uiautomation.ios.server.IOSServerManager;
-import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.server.application.APPIOSApplication;
-import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 
 /**
@@ -43,17 +40,14 @@ public class DefaultUIAScriptNHandler extends UIAScriptHandler {
       "var parent = UIAutomation.cache.get(:reference);" +
       "var myStringResult = parent:jsMethod ;" +
       "UIAutomation.createJSONResponse(':sessionId',0,myStringResult)";
-
   private static final String objectTemplate =
       "var parent = UIAutomation.cache.get(:reference);" +
       "var myObjectResult = parent:jsMethod;" +
       "var k=UIAutomation.cache.store(myObjectResult);" +
       "UIAutomation.createJSONResponse(':sessionId',0,myObjectResult)";
-
   private static final String voidTemplate =
       "var parent = UIAutomation.cache.get(:reference);" +
       "parent:jsMethod;UIAutomation.createJSONResponse(':sessionId',0,'')";
-
 
   public DefaultUIAScriptNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -78,7 +72,6 @@ public class DefaultUIAScriptNHandler extends UIAScriptHandler {
       return null;
     }
   }
-
 
   public boolean isAUIASimpleObject(Class<?> type) {
     if (type == UIAApplication.class) {
@@ -107,12 +100,6 @@ public class DefaultUIAScriptNHandler extends UIAScriptHandler {
     }
     return false;
   }
-
-  private IOSRunningApplication getAUT() {
-    ServerSideSession session = getDriver().getSession(getRequest().getSession());
-    return session.getApplication();
-  }
-
 
   private String getFinalJS(String template) {
     WebDriverLikeCommand command = getRequest().getGenericCommand();
