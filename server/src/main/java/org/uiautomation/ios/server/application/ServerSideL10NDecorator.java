@@ -35,23 +35,15 @@ public class ServerSideL10NDecorator implements CriteriaDecorator {
     decorateMatching(c);
   }
 
-
   private void decorateContent(Criteria c) {
     if (!isElligibleForContent(c)) {
       return;
     }
     PropertyEqualCriteria criteria = (PropertyEqualCriteria) c;
-    String oldValue = criteria.getValue();
-    LanguageDictionary dict = app.getCurrentDictionary();
-    String newValue = dict.getContentForKey(oldValue);
-    if (newValue == null) {
-      throw new InvalidSelectorException("No entry for key " + oldValue + " in dictionary for "
-                                         + app.getCurrentLanguage());
-    }
-
-    criteria.setValue(LanguageDictionary.getRegexPattern(newValue));
+    String key = criteria.getValue();
+    String value = app.applyL10NOnKey(key);
+    criteria.setValue(value);
     criteria.setL10nstrategy(L10NStrategy.none);
-    //criteria.setMatchingStrategy(MatchingStrategy.regex);
   }
 
   private void decorateMatching(Criteria c) {
@@ -61,7 +53,7 @@ public class ServerSideL10NDecorator implements CriteriaDecorator {
     PropertyEqualCriteria criteria = (PropertyEqualCriteria) c;
     String oldValue = criteria.getValue();
 
-    String newValue = oldValue;
+    String newValue;
     switch (criteria.getMatchingStrategy()) {
       case starts:
         newValue = oldValue + "(.*)";

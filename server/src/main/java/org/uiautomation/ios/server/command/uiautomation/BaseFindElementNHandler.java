@@ -16,11 +16,9 @@ import org.uiautomation.ios.UIAModels.predicate.ValueCriteria;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
-import org.uiautomation.ios.server.application.LanguageDictionary;
 import org.uiautomation.ios.server.application.ServerSideL10NDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 import org.uiautomation.ios.utils.XPath2Engine;
-import org.uiautomation.ios.utils.XPathWithL10N;
 
 public abstract class BaseFindElementNHandler extends UIAScriptHandler {
 
@@ -55,37 +53,16 @@ public abstract class BaseFindElementNHandler extends UIAScriptHandler {
       throw new WebDriverException("Bug. parser only apply to xpath mode.");
     }
     String original = getRequest().getPayload().optString("value");
-    return getL10NValue(original);
+    return getAUT().applyL10N(original);
   }
 
-  /**
-   * replaces l10n('xyz') by the localized version of it.
-   */
-  private String getL10NValue(String original) {
 
-    XPathWithL10N l10ned = new XPathWithL10N(original);
-
-    IOSRunningApplication app = getDriver().getSession(getRequest().getSession()).getApplication();
-    for (String key : l10ned.getKeysToL10N()) {
-      LanguageDictionary dict = app.getCurrentDictionary();
-      String value = dict.getContentForKey(key);
-      if (value == null) {
-        throw new WebDriverException("One of the key requested for localization :" + key
-                                     + " isn't available in the l10n files.Most likely the key "
-                                     + "provided is wrong.You can use the inspector to find the "
-                                     + "correct keys.");
-      }
-      value = LanguageDictionary.getRegexPattern(value);
-      l10ned.setTranslation(key, value);
-    }
-    return l10ned.getXPath();
-  }
 
   protected Criteria getCriteria() {
     if (xpathMode) {
       throw new WebDriverException("Bug. Criteria do not apply for xpath mode.");
     }
-    ServerSideL10NDecorator decorator = new ServerSideL10NDecorator(getSession().getApplication());
+    ServerSideL10NDecorator decorator = new ServerSideL10NDecorator(getAUT());
     JSONObject json;
     try {
       json = getCriteria(getRequest().getPayload());
@@ -128,7 +105,7 @@ public abstract class BaseFindElementNHandler extends UIAScriptHandler {
       }
       //  http://developer.apple.com/library/ios/#documentation/uikit/reference/UIAccessibilityIdentification_Protocol/Introduction/Introduction.html
     } else if ("name".equals(using) || "id".equals(using)) {
-      Criteria c = new NameCriteria(getL10NValue(value));
+      Criteria c = new NameCriteria(getAUT().applyL10NOnKey(value));
       return c.stringify();
     } else if ("link text".equals(using) || "partial link text".equals(using)) {
       return createGenericCriteria(using, value);
@@ -156,7 +133,7 @@ public abstract class BaseFindElementNHandler extends UIAScriptHandler {
   private JSONObject createGenericCriteria(String using, String value) {
     String prop = value.split("=")[0];
     String val = value.split("=")[1];
-    val = getL10NValue(val);
+    val = getAUT().applyL10N(val);
 
     MatchingStrategy strategy = MatchingStrategy.exact;
 

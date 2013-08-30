@@ -22,11 +22,10 @@ public class IOSRunningApplication {
   public String getBundleId() {
     return underlyingApplication.getBundleId();
   }
-  
+
   public boolean isSafari() {
       return "com.apple.mobilesafari".equals(getBundleId());
   }
-
 
   public String getDotAppAbsolutePath() {
     return underlyingApplication.getApplicationPath().getAbsolutePath();
@@ -37,29 +36,19 @@ public class IOSRunningApplication {
     underlyingApplication.setDefaultDevice(defaultDevice);
   }
 
-
   public AppleLanguage getCurrentLanguage() {
     return currentLanguage;
   }
 
-  //public AppleLanguage setLanguage(String lang) {
+  public String applyL10N(String locator){
+    LocatorWithL10N l10n =  new LocatorWithL10N(this);
+    return l10n.translate(locator);
+  };
 
-    /*if (underlyingApplication.getSupportedLanguages().isEmpty()) {
-      return AppleLanguage.emptyLocale(lang);
-    }
-    if (lang == null) {
-      // default to english if none specified
-      lang = "en";
-    }
-    for (AppleLanguage loc : underlyingApplication.getSupportedLanguages()) {
-      if (loc.getIsoCode().equals(lang)) {
-        return loc;
-      }
-    }
-    throw new WebDriverException(
-        "Cannot find " + lang + " in the supported languages for the app.");*/
-  //}
-
+  public String applyL10NOnKey(String key){
+    LocatorWithL10N l10n =  new LocatorWithL10N(this);
+    return l10n.translateKey(key);
+  };
 
   private List<ContentResult> getPotentialMatches(String name) throws WebDriverException {
     LanguageDictionary dict = underlyingApplication.getDictionary(currentLanguage);

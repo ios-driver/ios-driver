@@ -16,6 +16,7 @@ package org.uiautomation.ios.server.command;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
+import org.uiautomation.ios.server.application.IOSRunningApplication;
 
 public abstract class BaseNativeCommandHandler extends BaseCommandHandler {
 
@@ -23,11 +24,13 @@ public abstract class BaseNativeCommandHandler extends BaseCommandHandler {
     super(driver, request);
   }
 
+  protected IOSRunningApplication getAUT() {
+    return getDriver().getSession(getRequest().getSession()).getApplication();
+  }
 
   protected <T> T getConfiguration(String key) {
     return getConfiguration(key, (T) null);
   }
-
 
   protected <T> T getConfiguration(String key, T defaultValue) {
     T nativeSpecific = getConf(WorkingMode.Native + "." + key);
