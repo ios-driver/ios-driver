@@ -39,10 +39,10 @@ public class LanguageDictionary {
 
   // TODO freynaud
   public static final Form norme = Form.NFKC;
-  private final AppleLanguage language;
-  private final String folder;
-  private final Map<String, String> content = new HashMap<String, String>();
   private static final Logger log = Logger.getLogger(LanguageDictionary.class.getName());
+  private final AppleLanguage language;
+  private final List<String> valueTooGeneric = new ArrayList<>();
+  private final Map<String, String> content = new HashMap<String, String>();
 
   /**
    * Creates a new dictionary for the language specified. Will guess the format of the underlying
@@ -51,30 +51,83 @@ public class LanguageDictionary {
    * @throws WebDriverException if the language isn't recognized.
    */
   public LanguageDictionary(String lprojName) throws WebDriverException {
-    folder = lprojName;
     language = AppleLanguage.create(lprojName);
+    valueTooGeneric.add("%@ %@");
+    valueTooGeneric.add("%@ %d of %d");
+    valueTooGeneric.add("%@ at %@");
+    valueTooGeneric.add("(%@)");
+
+  }
+
+  // "Shipping from: %@": "Versand ab: %@",
+  public static String getRegexPattern(String original) {
+    String res = original.replace("%@", "(.*){1}");
+    res = res.replaceAll("%1\\$@", "(.*){1}");
+    res = res.replaceAll("%2\\$@", "(.*){1}");
+    res = res.replaceAll("%3\\$@", "(.*){1}");
+    res = res.replaceAll("%d", "(.*){1}");
+    return res;
+  }
+
+  /**
+   * @param aut the application under test. /A/B/C/xxx.app
+   * @return the list of the folders hosting the l10ned files.
+   */
+  public static List<File> getL10NFiles(File aut) {
+    List<File> res = new ArrayList<File>();
+    File[] files = aut.listFiles(new FileFilter() {
+
+      public boolean accept(File pathname) {
+        return pathname.getName().endsWith("lproj");
+      }
+    });
+    for (File f : files) {
+      File[] all = f.listFiles();
+      for (File potential : all) {
+        String file = potential.getName();
+        if (file.endsWith(".strings") && !file.endsWith("InfoPlist.strings")) {
+          res.add(potential);
+        }
+      }
+    }
+    return res;
+  }
+
+  /**
+   * @param f the Localizable.strings file to use for the content.
+   */
+  public static LanguageDictionary createFromFile(File f) throws Exception {
+    String name = extractLanguageName(f);
+    LanguageDictionary res = new LanguageDictionary(name);
+    // and load the content.
+    JSONObject content = res.readContentFromBinaryFile(f);
+    res.addJSONContent(content);
+    return res;
+  }
+
+  public static String extractLanguageName(File f) {
+    String parent = f.getParentFile().getName();
+    String name = parent.replaceFirst(".lproj", "");
+    return name;
   }
 
   public List<ContentResult> getPotentialMatches(String string) throws WebDriverException {
-
     List<ContentResult> res = new ArrayList<ContentResult>();
     for (String key : content.keySet()) {
       String original = content.get(key);
-
-      boolean match = match(string, original);
-      boolean
-          tooGeneric =
-          key.equals("%@ %d of %d") || key.equals("%@ at %@") || key.equals("(%@)");
-      if (match && !tooGeneric) {
-        ContentResult r = new ContentResult(language, key, original, string);
-        for (String s : r.getArgs()) {
-          List<ContentResult> rec = getPotentialMatches(s);
-          if (!rec.isEmpty()) {
-            // TODO freynaud an argument can be l10ned too....
-            log.warning("recursion is found..." + getPotentialMatches(s));
+      if (!valueTooGeneric.contains(original)) {
+        boolean match = match(string, original);
+        if (match) {
+          ContentResult r = new ContentResult(language, key, original, string);
+          for (String s : r.getArgs()) {
+            List<ContentResult> rec = getPotentialMatches(s);
+            if (!rec.isEmpty()) {
+              // TODO freynaud an argument can be l10ned too....
+              log.warning("recursion is found..." + getPotentialMatches(s));
+            }
           }
+          res.add(r);
         }
-        res.add(r);
       }
     }
 
@@ -115,40 +168,6 @@ public class LanguageDictionary {
     return false;
   }
 
-  // "Shipping from: %@": "Versand ab: %@",
-  public static String getRegexPattern(String original) {
-    String res = original.replace("%@", "(.*){1}");
-    res = res.replaceAll("%1\\$@", "(.*){1}");
-    res = res.replaceAll("%2\\$@", "(.*){1}");
-    res = res.replaceAll("%3\\$@", "(.*){1}");
-    res = res.replaceAll("%d", "(.*){1}");
-    return res;
-  }
-
-  /**
-   * @param aut the application under test. /A/B/C/xxx.app
-   * @return the list of the folders hosting the l10ned files.
-   */
-  public static List<File> getL10NFiles(File aut) {
-    List<File> res = new ArrayList<File>();
-    File[] files = aut.listFiles(new FileFilter() {
-
-      public boolean accept(File pathname) {
-        return pathname.getName().endsWith("lproj");
-      }
-    });
-    for (File f : files) {
-      File[] all = f.listFiles();
-      for (File potential : all) {
-        String file = potential.getName();
-        if (file.endsWith(".strings") && !file.endsWith("InfoPlist.strings")) {
-          res.add(potential);
-        }
-      }
-    }
-    return res;
-  }
-
   /**
    * Take a json file ( plist exported as json format ) localizable.strings and loads its content.
    */
@@ -170,24 +189,6 @@ public class LanguageDictionary {
       res.put(key, json.getString(key));
     }
     return res;
-  }
-
-  /**
-   * @param f the Localizable.strings file to use for the content.
-   */
-  public static LanguageDictionary createFromFile(File f) throws Exception {
-    String name = extractLanguageName(f);
-    LanguageDictionary res = new LanguageDictionary(name);
-    // and load the content.
-    JSONObject content = res.readContentFromBinaryFile(f);
-    res.addJSONContent(content);
-    return res;
-  }
-
-  public static String extractLanguageName(File f) {
-    String parent = f.getParentFile().getName();
-    String name = parent.replaceFirst(".lproj", "");
-    return name;
   }
 
   /**
