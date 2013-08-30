@@ -1,7 +1,7 @@
 package org.uiautomation.ios.e2e.uicatalogapp;
 
-import org.openqa.selenium.Keyboard;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.interactions.Keyboard;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;

@@ -1,6 +1,5 @@
 package org.uiautomation.ios.e2e.uicatalogapp;
 
-import org.openqa.selenium.Keyboard;
 import org.openqa.selenium.WebDriverException;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;

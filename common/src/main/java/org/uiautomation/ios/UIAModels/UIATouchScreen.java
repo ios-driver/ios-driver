@@ -13,7 +13,7 @@
  */
 package org.uiautomation.ios.UIAModels;
 
-import org.openqa.selenium.TouchScreen;
+import org.openqa.selenium.interactions.TouchScreen;
 
 public interface UIATouchScreen extends TouchScreen {
 
