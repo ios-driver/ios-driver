@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 ios-driver committers.
+ * Copyright 2012-2013 eBay Software Foundation and ios-driver committers
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -18,8 +18,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
+import org.uiautomation.ios.server.command.UIAScriptHandler;
 
-public class AcceptAlertHandler extends BaseFindElementNHandler {
+public class AcceptAlertHandler extends UIAScriptHandler {
 
   private static final String jsTemplate = "var alert = UIAutomation.cache.get('3');"
                                            + "alert.accept();"

@@ -1,7 +1,20 @@
+/*
+ * Copyright 2012-2013 eBay Software Foundation and ios-driver committers
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package org.uiautomation.ios.server;
 
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.ImmutableMap;
 
 import org.json.JSONObject;
 import org.openqa.selenium.InvalidSelectorException;
@@ -16,9 +29,9 @@ import org.uiautomation.ios.UIAModels.UIATableCell;
 import org.uiautomation.ios.UIAModels.UIAWindow;
 import org.uiautomation.ios.utils.JSONToXMLConvertor;
 import org.uiautomation.ios.utils.XPath2Engine;
-import org.uiautomation.ios.utils.XPathWithL10N;
 
-import com.google.common.collect.ImmutableMap;
+import java.util.List;
+import java.util.Map;
 
 public class XpathTreeFinderTest {
 
@@ -30,10 +43,10 @@ public class XpathTreeFinderTest {
   String
       intlMountainZH =
       "{\"ref\":1,\"name\":\"山\",\"value\":null,\"children\":[{\"ref\":7,\"name\":null,\"value\":null,\"children\":[{\"ref\":8,\"name\":\"山 Detail\",\"value\":null,\"children\":[{\"ref\":9,\"name\":null,\"value\":null,\"children\":[{\"ref\":10,\"name\":null,\"value\":null,\"label\":null,\"rect\":{\"origin\":{\"y\":0,\"x\":0},\"size\":{\"height\":3,\"width\":320}},\"type\":\"UIAImage\"}],\"label\":null,\"rect\":{\"origin\":{\"y\":20,\"x\":0},\"size\":{\"height\":44,\"width\":320}},\"type\":\"UIAImage\"},{\"ref\":11,\"name\":\"山\",\"value\":null,\"label\":\"山\",\"rect\":{\"origin\":{\"y\":27,\"x\":5},\"size\":{\"height\":30,\"width\":48}},\"type\":\"UIAButton\"},{\"ref\":12,\"name\":\"山 Detail\",\"value\":\"山 Detail\",\"label\":\"山 Detail\",\"rect\":{\"origin\":{\"y\":29,\"x\":119},\"size\":{\"height\":27,\"width\":82}},\"type\":\"UIAStaticText\"}],\"label\":null,\"rect\":{\"origin\":{\"y\":20,\"x\":0},\"size\":{\"height\":44,\"width\":320}},\"type\":\"UIANavigationBar\"},{\"ref\":13,\"name\":\"山 1 是8,848米高。它第一次攀登了在29 May 1953。\",\"value\":\"山 1 是8,848米高。它第一次攀登了在29 May 1953。\",\"label\":\"山 1 是8,848米高。它第一次攀登了在29 May 1953。\",\"rect\":{\"origin\":{\"y\":168,\"x\":34},\"size\":{\"height\":164,\"width\":251}},\"type\":\"UIAStaticText\"},{\"ref\":14,\"name\":null,\"value\":null,\"children\":[{\"ref\":15,\"name\":null,\"value\":null,\"label\":null,\"rect\":{\"origin\":{\"y\":477,\"x\":0},\"size\":{\"height\":3,\"width\":320}},\"type\":\"UIAImage\"},{\"ref\":16,\"name\":null,\"value\":null,\"label\":null,\"rect\":{\"origin\":{\"y\":480,\"x\":0},\"size\":{\"height\":44,\"width\":320}},\"type\":\"UIAImage\"}],\"label\":null,\"rect\":{\"origin\":{\"y\":480,\"x\":0},\"size\":{\"height\":44,\"width\":320}},\"type\":\"UIAToolbar\"}],\"label\":null,\"rect\":{\"origin\":{\"y\":0,\"x\":0},\"size\":{\"height\":480,\"width\":320}},\"type\":\"UIAWindow\"},{\"ref\":17,\"name\":null,\"value\":null,\"children\":[{\"ref\":18,\"name\":null,\"value\":null,\"children\":[{\"ref\":19,\"name\":\"使用三指向下滑過螢幕來顯示通知中心。, 點兩下來捲動到頁首\",\"value\":null,\"label\":null,\"rect\":{\"origin\":{\"y\":0,\"x\":4},\"size\":{\"height\":20,\"width\":52}},\"type\":\"UIAElement\"},{\"ref\":20,\"name\":\"Wi-Fi 訊號強度 3 格(共 3 格)\",\"value\":null,\"label\":\"Wi-Fi 訊號強度 3 格(共 3 格)\",\"rect\":{\"origin\":{\"y\":0,\"x\":61},\"size\":{\"height\":20,\"width\":20}},\"type\":\"UIAElement\"},{\"ref\":21,\"name\":\"14:17\",\"value\":null,\"label\":\"14:17\",\"rect\":{\"origin\":{\"y\":0,\"x\":142},\"size\":{\"height\":20,\"width\":36}},\"type\":\"UIAElement\"},{\"ref\":22,\"name\":\"電池電力 100%\",\"value\":null,\"label\":\"電池電力 100%\",\"rect\":{\"origin\":{\"y\":0,\"x\":296},\"size\":{\"height\":20,\"width\":21}},\"type\":\"UIAElement\"},{\"ref\":23,\"name\":null,\"value\":null,\"label\":null,\"rect\":{\"origin\":{\"y\":0,\"x\":0},\"size\":{\"height\":3,\"width\":3}},\"type\":\"UIAImage\"},{\"ref\":24,\"name\":null,\"value\":null,\"label\":null,\"rect\":{\"origin\":{\"y\":0,\"x\":317},\"size\":{\"height\":3,\"width\":3}},\"type\":\"UIAImage\"}],\"label\":null,\"rect\":{\"origin\":{\"y\":0,\"x\":0},\"size\":{\"height\":20,\"width\":320}},\"type\":\"UIAStatusBar\"},{\"ref\":25,\"name\":null,\"value\":null,\"label\":null,\"rect\":{\"origin\":{\"y\":477,\"x\":0},\"size\":{\"height\":3,\"width\":3}},\"type\":\"UIAImage\"},{\"ref\":26,\"name\":null,\"value\":null,\"label\":null,\"rect\":{\"origin\":{\"y\":477,\"x\":317},\"size\":{\"height\":3,\"width\":3}},\"type\":\"UIAImage\"}],\"label\":null,\"rect\":{\"origin\":{\"y\":0,\"x\":0},\"size\":{\"height\":480,\"width\":320}},\"type\":\"UIAWindow\"}],\"label\":\"山\",\"rect\":{\"origin\":{\"y\":20,\"x\":0},\"size\":{\"height\":460,\"width\":320}},\"type\":\"UIAApplication\"}";
-
+  private final String mainWindowRef = "5";
+  private final String otherWindow = "38";
   private JSONObject tree;
   private XPath2Engine parser;
-
   private JSONObject treeIntl;
   private XPath2Engine parserIntl;
 
@@ -50,9 +63,6 @@ public class XpathTreeFinderTest {
   private Map<String, String> expected(int reference, Class<? extends UIAElement> type) {
     return ImmutableMap.of("ELEMENT", "" + reference, "type", type.getSimpleName());
   }
-
-  private final String mainWindowRef = "5";
-  private final String otherWindow = "38";
 
   @DataProvider(name = "xpaths")
   private Object[][] xpathAndResult() {
@@ -161,35 +171,26 @@ public class XpathTreeFinderTest {
 
   @Test
   public void withL10N() throws Exception {
-    XPath2Engine parserIntl = new XPath2Engine(new JSONToXMLConvertor(treeIntl).asXML());
-    XPathWithL10N xpath = new XPathWithL10N("//*[matches(@name,l10n('meterFormat'))]");
-    xpath.setTranslation("meterFormat", "(.*)米(.*)");
-    Map<String, String> el = parserIntl.findElementByXpath(xpath.getXPath());
+    Map<String, String> el = parserIntl.findElementByXpath("//*[matches(@name,'(.*)米(.*)')]");
     Assert.assertEquals(el, expected(13, UIAStaticText.class));
   }
 
   @Test
   public void withL10N2() throws Exception {
-    XPath2Engine parserIntl = new XPath2Engine(new JSONToXMLConvertor(treeIntl).asXML());
-    XPathWithL10N xpath = new XPathWithL10N("//*[matches(@name,l10n('meterFormat'))]");
-    xpath.setTranslation("meterFormat", "(.*)米(.*)");
-    Map<String, String> el = parserIntl.findElementByXpath(xpath.getXPath());
+    Map<String, String> el = parserIntl.findElementByXpath("//*[matches(@name,'(.*)米(.*)')]");
     Assert.assertEquals(el, expected(13, UIAStaticText.class));
   }
 
   @Test
   public void withL10N3() throws Exception {
-    XPath2Engine parserIntl = new XPath2Engine(new JSONToXMLConvertor(treeIntl).asXML());
-    XPathWithL10N xpath = new XPathWithL10N("//*[matches(@name,l10n('meterFormat'))]");
-    xpath.setTranslation("meterFormat", "(.*)米(.*)");
-    Map<String, String> el = parserIntl.findElementByXpath(xpath.getXPath());
+
+    Map<String, String> el = parserIntl.findElementByXpath("//*[matches(@name,'(.*)米(.*)')]");
     Assert.assertEquals(el, expected(13, UIAStaticText.class));
   }
 
   @Test
   public void contains() throws Exception {
-    XPathWithL10N xpath = new XPathWithL10N("//*[contains(@name,'米')]");
-    Map<String, String> el = parserIntl.findElementByXpath(xpath.getXPath());
+    Map<String, String> el = parserIntl.findElementByXpath("//*[contains(@name,'米')]");
     Assert.assertEquals(el, expected(13, UIAStaticText.class));
   }
 

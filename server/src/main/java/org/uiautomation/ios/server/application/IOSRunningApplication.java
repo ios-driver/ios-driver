@@ -1,3 +1,17 @@
+/*
+ * Copyright 2012-2013 eBay Software Foundation and ios-driver committers
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package org.uiautomation.ios.server.application;
 
 import org.json.JSONArray;
@@ -22,11 +36,10 @@ public class IOSRunningApplication {
   public String getBundleId() {
     return underlyingApplication.getBundleId();
   }
-  
+
   public boolean isSafari() {
       return "com.apple.mobilesafari".equals(getBundleId());
   }
-
 
   public String getDotAppAbsolutePath() {
     return underlyingApplication.getApplicationPath().getAbsolutePath();
@@ -37,29 +50,19 @@ public class IOSRunningApplication {
     underlyingApplication.setDefaultDevice(defaultDevice);
   }
 
-
   public AppleLanguage getCurrentLanguage() {
     return currentLanguage;
   }
 
-  //public AppleLanguage setLanguage(String lang) {
+  public String applyL10N(String locator){
+    LocatorWithL10N l10n =  new LocatorWithL10N(this);
+    return l10n.translate(locator);
+  };
 
-    /*if (underlyingApplication.getSupportedLanguages().isEmpty()) {
-      return AppleLanguage.emptyLocale(lang);
-    }
-    if (lang == null) {
-      // default to english if none specified
-      lang = "en";
-    }
-    for (AppleLanguage loc : underlyingApplication.getSupportedLanguages()) {
-      if (loc.getIsoCode().equals(lang)) {
-        return loc;
-      }
-    }
-    throw new WebDriverException(
-        "Cannot find " + lang + " in the supported languages for the app.");*/
-  //}
-
+  public String applyL10NOnKey(String key){
+    LocatorWithL10N l10n =  new LocatorWithL10N(this);
+    return l10n.translateKey(key);
+  };
 
   private List<ContentResult> getPotentialMatches(String name) throws WebDriverException {
     LanguageDictionary dict = underlyingApplication.getDictionary(currentLanguage);

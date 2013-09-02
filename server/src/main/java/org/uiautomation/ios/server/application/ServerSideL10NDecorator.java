@@ -1,11 +1,11 @@
 /*
- * Copyright 2012 ios-driver committers.
- * 
+ * Copyright 2012-2013 eBay Software Foundation and ios-driver committers
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -35,23 +35,15 @@ public class ServerSideL10NDecorator implements CriteriaDecorator {
     decorateMatching(c);
   }
 
-
   private void decorateContent(Criteria c) {
     if (!isElligibleForContent(c)) {
       return;
     }
     PropertyEqualCriteria criteria = (PropertyEqualCriteria) c;
-    String oldValue = criteria.getValue();
-    LanguageDictionary dict = app.getCurrentDictionary();
-    String newValue = dict.getContentForKey(oldValue);
-    if (newValue == null) {
-      throw new InvalidSelectorException("No entry for key " + oldValue + " in dictionary for "
-                                         + app.getCurrentLanguage());
-    }
-
-    criteria.setValue(LanguageDictionary.getRegexPattern(newValue));
+    String key = criteria.getValue();
+    String value = app.applyL10NOnKey(key);
+    criteria.setValue(value);
     criteria.setL10nstrategy(L10NStrategy.none);
-    //criteria.setMatchingStrategy(MatchingStrategy.regex);
   }
 
   private void decorateMatching(Criteria c) {
@@ -61,7 +53,7 @@ public class ServerSideL10NDecorator implements CriteriaDecorator {
     PropertyEqualCriteria criteria = (PropertyEqualCriteria) c;
     String oldValue = criteria.getValue();
 
-    String newValue = oldValue;
+    String newValue;
     switch (criteria.getMatchingStrategy()) {
       case starts:
         newValue = oldValue + "(.*)";
