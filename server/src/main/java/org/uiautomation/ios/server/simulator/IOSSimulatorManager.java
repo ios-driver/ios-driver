@@ -37,15 +37,15 @@ import java.util.logging.Logger;
  */
 public class IOSSimulatorManager implements IOSDeviceManager {
 
-  private static final Logger log = Logger.getLogger(IOSSimulatorManager.class.getName());
   public static final String SIMULATOR_PROCESS_NAME = "iPhone Simulator";
-
+  private static final Logger log = Logger.getLogger(IOSSimulatorManager.class.getName());
   private final List<String> sdks;
   private final String bundleId;
   private final File xcodeInstall;
   private final String desiredSDKVersion;
   private final SimulatorSettings simulatorSettings;
   private final Instruments instruments;
+  private final File developer;
 
   /**
    * manages a single instance of the instruments process. Only 1 process can run at a given time.
@@ -59,13 +59,15 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     simulatorSettings = new SimulatorSettings(desiredSDKVersion);
     bundleId = capabilities.getBundleId();
     this.instruments = instruments;
+    this.developer =
+        new File(xcodeInstall, "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer");
 
   }
 
   @Override
   public void setSDKVersion() {
     if (!isDefaultSDK()) {
-      warmup();
+      //warmup();
       forceDefaultSDK();
     }
   }
@@ -91,16 +93,11 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     for (String version : sdks) {
 
       if (new IOSVersion(version).isGreaterThan(desiredSDKVersion)) {
-        File f = new File(xcodeInstall,
-                          "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator"
-                          + version + ".sdk");
+        File f = new File(developer, "SDKs/iPhoneSimulator" + version + ".sdk");
         if (!f.exists()) {
           System.err.println("doesn't exist " + f);
         } else {
-          File renamed = new File(xcodeInstall,
-                                  "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs/iPhoneSimulator"
-                                  + version
-                                  + ".sdk");
+          File renamed = new File(developer, "/exiledSDKs/iPhoneSimulator" + version + ".sdk");
           boolean ok = f.renameTo(renamed);
           if (!ok) {
             throw new WebDriverException(
@@ -108,19 +105,14 @@ public class IOSSimulatorManager implements IOSDeviceManager {
                 + " to " + renamed + getErrorMessageMoveSDK());
           }
         }
+        f.mkdirs();
       }
     }
   }
 
   private String getErrorMessageMoveSDK() {
-    File
-        sdk =
-        new File(xcodeInstall,
-                 "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs");
-    File
-        exiled =
-        new File(xcodeInstall,
-                 "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs");
+    File sdk = new File(developer, "SDKs");
+    File exiled = new File(developer, "exiledSDKs");
     String msg = "Cannot move folders from " + sdk + " to " + exiled;
     msg += " Make sure the rights are correct (chmod -R +rw ... )";
     return msg;
@@ -128,10 +120,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   }
 
   public void restoreExiledSDKs() {
-    File
-        exiled =
-        new File(xcodeInstall,
-                 "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs/");
+    File exiled = new File(developer, "exiledSDKs/");
     if (!exiled.exists()) {
       log.warning(exiled.getAbsolutePath() + " doesn't exist." + getErrorMessageMoveSDK());
       return;
@@ -139,6 +128,9 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     for (String s : exiled.list()) {
       File sdk = new File(exiled, s);
       File original = new File(sdk.getParentFile().getParentFile() + "/SDKs/" + s);
+      if (original.listFiles().length == 0) {
+        original.delete();
+      }
       boolean ok = sdk.renameTo(original);
       if (!ok) {
         throw new WebDriverException(
@@ -163,6 +155,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
    * stopping the simulator at the end of the test.
    */
   public void cleanupDevice() {
+    restoreExiledSDKs();
     ClassicCommands.killall(SIMULATOR_PROCESS_NAME);
   }
 

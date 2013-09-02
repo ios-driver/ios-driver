@@ -44,14 +44,14 @@ public class InstrumentsManager {
   //public static boolean realDevice = false;
 
   private static final Logger log = Logger.getLogger(InstrumentsManager.class.getName());
-
-  private File output;
   private final File template;
+  private final int port;
+  private final ServerSideSession session;
+  private File output;
   private IOSRunningApplication application;
   private Device device;
   private IOSDeviceManager deviceManager;
   private String sessionId;
-  private final int port;
   private String sdkVersion;
   private String locale;
   private String language;
@@ -60,9 +60,6 @@ public class InstrumentsManager {
   private IOSCapabilities caps;
   private List<String> extraEnvtParams;
   private Command simulatorProcess;
-  private final ServerSideSession session;
-
-
   private Instruments instruments;
 
   /**
@@ -140,10 +137,11 @@ public class InstrumentsManager {
         instruments.stop();
       }
     } catch (Exception e) {
-      throw new WebDriverException("error starting the session:"+e.getMessage(), e);
+      throw new WebDriverException("error starting the session:" + e.getMessage(), e);
+    }finally {
+      deviceManager.cleanupDevice();
     }
   }
-
 
   public void stop() {
     if (instruments != null) {

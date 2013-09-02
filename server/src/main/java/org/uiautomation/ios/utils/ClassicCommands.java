@@ -47,7 +47,7 @@ public class ClassicCommands {
     s.add("ps");
     s.add("aux");
 
-    Command com = new Command(s, true);
+    Command com = new Command(s, false);
     Grep grep = new Grep(processName);
     com.registerListener(grep);
     try {
