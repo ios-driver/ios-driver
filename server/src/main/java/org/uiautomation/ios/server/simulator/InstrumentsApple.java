@@ -18,6 +18,7 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.command.UIAScriptResponse;
+import org.uiautomation.ios.server.instruments.InstrumentsVersion;
 import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
 import org.uiautomation.ios.server.instruments.communication.curl.CURLBasedCommunicationChannel;
 import org.uiautomation.ios.utils.ApplicationCrashListener;
@@ -45,15 +46,13 @@ public class InstrumentsApple implements Instruments {
   private final List<String> envtParams;
   private final Command instruments;
   private final CURLBasedCommunicationChannel channel;
-  private final String desiredSDKVersion;
+  private final InstrumentsVersion version;
 
-
-
-  public InstrumentsApple(String uuid, int port, String sessionId, File application,
+  public InstrumentsApple(String uuid,InstrumentsVersion version, int port, String sessionId, File application,
                           List<String> envtParams, String desiredSDKVersion,ApplicationCrashListener list) {
     this.uuid = uuid;
+    this.version = version;
     this.sessionId = sessionId;
-    this.desiredSDKVersion = desiredSDKVersion;
     this.application = application;
     this.envtParams = envtParams;
     template = ClassicCommands.getAutomationTemplate();
@@ -147,7 +146,7 @@ public class InstrumentsApple implements Instruments {
   }
 
   private String getInstrumentsClient() {
-    return InstrumentsNoDelayLoader.getInstance().getInstruments().getAbsolutePath();
+    return InstrumentsNoDelayLoader.getInstance(version).getInstruments().getAbsolutePath();
   }
 
   @Override

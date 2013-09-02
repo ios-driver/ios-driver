@@ -39,8 +39,6 @@ public class ClassicCommands {
     c.registerListener(version);
     c.executeAndWait(true);
 
-    System.out.println("version "+version.getVersion());
-    System.out.println("build "+version.getBuild());
     return version;
   }
 
