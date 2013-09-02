@@ -71,6 +71,11 @@ public class InstrumentsVersion implements CommandOutputListener {
   public String getBuild() {
     return build;
   }
+
+  @Override
+  public String toString(){
+    return "version:"+version+", build: "+build;
+  }
 }
 
 
