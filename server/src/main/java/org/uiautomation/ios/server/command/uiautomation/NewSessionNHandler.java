@@ -51,7 +51,7 @@ public class NewSessionNHandler extends BaseNativeCommandHandler {
       if (session != null) {
         session.stop();
       }
-      throw new SessionNotCreatedException(e.getMessage());
+      throw new SessionNotCreatedException(e.getMessage(),e);
     }
 
   }
