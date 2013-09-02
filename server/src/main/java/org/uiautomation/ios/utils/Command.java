@@ -47,7 +47,7 @@ public class Command {
   public Command(List<String> args, boolean logToConsole) {
     this.args = args;
     if (logToConsole) {
-      listeners.add(new DefaultCommandListener());
+      listeners.add(new DefaultCommandListener(args.toString()));
     }
   }
 

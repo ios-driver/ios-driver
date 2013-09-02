@@ -19,15 +19,24 @@ import java.util.logging.Logger;
 public class DefaultCommandListener implements CommandOutputListener {
 
   private static final Logger log = Logger.getLogger(DefaultCommandListener.class.getName());
+  private final String label;
+
+  private DefaultCommandListener(){
+    this("no label");
+  }
+
+  public DefaultCommandListener(String label){
+    this.label=label;
+  }
 
   @Override
   public void stdout(String log) {
-    this.log.info(log);
+    this.log.info(label+"\t"+log);
   }
 
   @Override
   public void stderr(String log) {
-    this.log.warning(log);
+    this.log.warning(label+"\t"+log);
   }
 
 }
