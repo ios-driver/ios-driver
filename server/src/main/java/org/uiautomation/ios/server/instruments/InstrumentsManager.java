@@ -114,13 +114,14 @@ public class InstrumentsManager {
       } else {
         ApplicationCrashListener list = new ApplicationCrashListener(this);
         instruments =
-            new InstrumentsApple(null, port, sessionId,
+            new InstrumentsApple(null, session.getIOSServerManager().getHostInfo()
+                .getInstrumentsVersion(), port, sessionId,
                                  new File(application.getDotAppAbsolutePath()), envtParams,
                                  sdkVersion, list);
 
         deviceManager = new IOSSimulatorManager(capabilities, instruments);
         // TODO freynaud part of AppleInstruments' logic
-        output = ((InstrumentsApple)instruments).getOuput();
+        output = ((InstrumentsApple) instruments).getOuput();
 
 
       }
