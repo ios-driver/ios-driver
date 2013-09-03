@@ -13,7 +13,7 @@
  */
 package org.uiautomation.ios.UIAModels;
 
-import org.openqa.selenium.Keyboard;
+import org.openqa.selenium.interactions.Keyboard;
 
 public interface UIAKeyboard extends Keyboard {
 

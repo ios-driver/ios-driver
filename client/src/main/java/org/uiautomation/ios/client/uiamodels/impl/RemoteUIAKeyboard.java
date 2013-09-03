@@ -14,9 +14,7 @@
 package org.uiautomation.ios.client.uiamodels.impl;
 
 import com.google.common.collect.ImmutableMap;
-
-import org.openqa.selenium.Keyboard;
-import org.openqa.selenium.Keys;
+import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.uiautomation.ios.UIAModels.UIAKeyboard;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
@@ -27,36 +25,35 @@ import java.util.List;
 
 public class RemoteUIAKeyboard extends RemoteUIAElement implements Keyboard, UIAKeyboard {
 
-  public RemoteUIAKeyboard(RemoteWebDriver driver, String reference) {
-    super(driver, reference);
-  }
-
-
-  @Override
-  public void sendKeys(CharSequence... keysToSend) {
-    StringBuilder builder = new StringBuilder();
-    for (CharSequence seq : keysToSend) {
-      builder.append(seq.toString());
+    public RemoteUIAKeyboard(RemoteWebDriver driver, String reference) {
+        super(driver, reference);
     }
-    List<String> all = new ArrayList<String>();
-    all.add(builder.toString());
 
-    WebDriverLikeRequest request = commandExecutor.buildRequest(WebDriverLikeCommand.SEND_KEYS,
-                                                                null,
-                                                                ImmutableMap.of("value", all));
-    commandExecutor.execute(request);
-  }
 
-  @Override
-  public void pressKey(Keys keyToPress) {
-    // TODO Auto-generated method stub
+    @Override
+    public void sendKeys(CharSequence... keysToSend) {
+        StringBuilder builder = new StringBuilder();
+        for (CharSequence seq : keysToSend) {
+            builder.append(seq.toString());
+        }
+        List<String> all = new ArrayList<String>();
+        all.add(builder.toString());
 
-  }
+        WebDriverLikeRequest request = commandExecutor.buildRequest(WebDriverLikeCommand.SEND_KEYS,
+                null,
+                ImmutableMap.of("value", all));
+        commandExecutor.execute(request);
+    }
 
-  @Override
-  public void releaseKey(Keys keyToRelease) {
-    // TODO Auto-generated method stub
+    @Override
+    public void pressKey(CharSequence charSequence) {
+        // TODO Auto-generated method stub
+    }
 
-  }
+    @Override
+    public void releaseKey(CharSequence charSequence) {
+        // TODO Auto-generated method stub
+    }
+
 
 }
