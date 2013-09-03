@@ -163,6 +163,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
    * stopping the simulator at the end of the test.
    */
   public void cleanupDevice() {
+    restoreExiledSDKs();
     ClassicCommands.killall(SIMULATOR_PROCESS_NAME);
   }
 
