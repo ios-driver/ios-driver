@@ -122,12 +122,13 @@ public class InstrumentsManager {
 
 
       }
+
+      deviceManager.setVariation(deviceType, variation);
       deviceManager.setSDKVersion();
       deviceManager.install(application.getUnderlyingApplication());
       deviceManager.resetContentAndSettings();
       deviceManager.setL10N(locale, language);
       deviceManager.setKeyboardOptions();
-      deviceManager.setVariation(deviceType, variation);
       deviceManager.setLocationPreference(true);
       deviceManager.setMobileSafariOptions();
 
