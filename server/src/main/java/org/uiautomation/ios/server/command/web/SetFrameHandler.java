@@ -39,7 +39,7 @@ public class SetFrameHandler extends BaseWebCommandHandler {
     Object p = getRequest().getPayload().get("id");
 
     if (JSONObject.NULL.equals(p)) {
-      getSession().getRemoteWebDriver().getContext().setCurrentFrame(null, null, null);
+      getWebDriver().getContext().setCurrentFrame(null, null, null);
     } else {
       RemoteWebElement iframe;
       if (p instanceof String) {
@@ -48,14 +48,14 @@ public class SetFrameHandler extends BaseWebCommandHandler {
         iframe = getIframe((Integer) p);
       } else if (p instanceof JSONObject) {
         String id = ((JSONObject) p).getString("ELEMENT");
-        iframe = getSession().getRemoteWebDriver().createElement(id);
+        iframe = getWebDriver().createElement(id);
       } else {
         throw new UnsupportedCommandException("not supported : frame selection by " + p.getClass());
       }
 
       RemoteWebElement document = iframe.getContentDocument();
       RemoteWebElement window = iframe.getContentWindow();
-      getSession().getRemoteWebDriver().getContext().setCurrentFrame(iframe, document, window);
+      getWebDriver().getContext().setCurrentFrame(iframe, document, window);
     }
 
     Response res = new Response();
@@ -66,7 +66,7 @@ public class SetFrameHandler extends BaseWebCommandHandler {
   }
 
   private RemoteWebElement getIframe(Integer index) throws Exception {
-    List<RemoteWebElement> iframes = getSession().getRemoteWebDriver().findElementsByCssSelector(
+    List<RemoteWebElement> iframes = getWebDriver().findElementsByCssSelector(
         "iframe,frame");
     try {
       return iframes.get(index);
@@ -77,7 +77,7 @@ public class SetFrameHandler extends BaseWebCommandHandler {
   }
 
   private RemoteWebElement getIframe(String id) throws Exception {
-    RemoteWebElement currentDocument = getSession().getRemoteWebDriver().getDocument();
+    RemoteWebElement currentDocument = getWebDriver().getDocument();
 
     String
         selector =

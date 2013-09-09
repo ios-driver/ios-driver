@@ -59,7 +59,12 @@ public class ClassicCommands {
   }
 
   public static boolean isRunning(String processName) {
+    try {
     return psgrep(processName).size() > 0;
+    }catch (Exception e){
+      e.printStackTrace();
+      return false;
+    }
   }
 
   public static void killall(String processName) {

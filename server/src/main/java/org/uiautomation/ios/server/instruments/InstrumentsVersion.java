@@ -53,6 +53,34 @@ public class InstrumentsVersion implements CommandOutputListener {
     }
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    InstrumentsVersion that = (InstrumentsVersion) o;
+
+    if (build != null ? !build.equals(that.build) : that.build != null) {
+      return false;
+    }
+    if (version != null ? !version.equals(that.version) : that.version != null) {
+      return false;
+    }
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = version != null ? version.hashCode() : 0;
+    result = 31 * result + (build != null ? build.hashCode() : 0);
+    return result;
+  }
+
   /**
    * 1.0 for Xcode 4.3.2 4.5 for Xcode 4.5 5.0 for Xcode 5
    *
@@ -73,8 +101,8 @@ public class InstrumentsVersion implements CommandOutputListener {
   }
 
   @Override
-  public String toString(){
-    return "version:"+version+", build: "+build;
+  public String toString() {
+    return "version:" + version + ", build: " + build;
   }
 }
 

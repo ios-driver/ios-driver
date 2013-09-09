@@ -59,7 +59,7 @@ public abstract class BaseFindElementNHandler extends UIAScriptHandler {
     if (!xpathMode) {
       throw new WebDriverException("Bug. parser only apply to xpath mode.");
     }
-    return XPath2Engine.getXpath2Engine(getSession().getNativeDriver());
+    return XPath2Engine.getXpath2Engine(getSession().getDualDriver().getNativeDriver());
   }
 
   protected String getXpath() {

@@ -12,24 +12,16 @@
  * the License.
  */
 
-package org.uiautomation.ios.server.utils;
+package org.uiautomation.ios.server.refactor;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
+import org.uiautomation.ios.server.instruments.InstrumentsVersion;
 
-import junit.framework.Assert;
+public interface Instruments {
 
-import org.testng.annotations.Test;
-import org.uiautomation.ios.SampleApps;
+  public InstrumentsVersion getVersion();
 
-public final class ZipUtilsTest {
+  public void start();
+  public void executeScript();
+  public void stop();
 
-  @Test
-  public void canExtractAppFromURL() throws IOException {
-    URL url = SampleApps.getUICatalogZipURL();
-    File appFile = ZipUtils.extractAppFromURL(url);
-    Assert.assertTrue(appFile.getAbsolutePath(), appFile.getName().endsWith("UICatalog.app"));
-    Assert.assertTrue(new File(appFile, "Info.plist").exists());
-  }
 }

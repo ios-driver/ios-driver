@@ -37,7 +37,7 @@ public class ExecuteScriptHandler extends BaseWebCommandHandler {
   public Response handle() throws Exception {
     String script = getRequest().getPayload().getString("script");
     JSONArray args = getRequest().getPayload().getJSONArray("args");
-    Object res = getSession().getRemoteWebDriver().executeScript(script, args);
+    Object res = getWebDriver().executeScript(script, args);
 
     Response resp = new Response();
     resp.setSessionId(getSession().getSessionId());

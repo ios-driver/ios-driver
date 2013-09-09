@@ -37,13 +37,13 @@ public class GetWindowHandlesNHandler extends BaseNativeCommandHandler {
   @Override
   public Response handle() throws Exception {
 
-    ServerSideSession sss = getDriver().getSession(getRequest().getSession());
+    ServerSideSession sss = getServer().getSession(getRequest().getSession());
 
     Set<String> handles = new HashSet<String>();
     handles.add(WorkingMode.Native.toString());
 
-    if (sss.getNativeDriver().findElements(new TypeCriteria(UIAWebView.class)).size() > 0) {
-      for (WebkitPage page : getSession().getRemoteWebDriver().getPages()) {
+    if (sss.getDualDriver().getNativeDriver().findElements(new TypeCriteria(UIAWebView.class)).size() > 0) {
+      for (WebkitPage page : getWebDriver().getPages()) {
         handles.add(WorkingMode.Web + "_" + page.getPageId());
       }
     }

@@ -37,8 +37,8 @@ public class LongTapHandler extends UIAScriptHandler {
     JSONObject payload = request.getPayload();
     String elementId = payload.optString("element");
 
-    Dimension screenSize = driver.getSession(request.getSession()).getNativeDriver().getScreenSize();
-    RemoteWebNativeBackedElement element = (RemoteWebNativeBackedElement) getSession().getRemoteWebDriver().createElement(elementId);
+    Dimension screenSize =getNativeDriver().getScreenSize();
+    RemoteWebNativeBackedElement element = (RemoteWebNativeBackedElement) getWebDriver().createElement(elementId);
     Point tapPoint = element.getLocation();
     tapPoint = CoordinateUtils.forcePointOnScreen(tapPoint, screenSize);
 

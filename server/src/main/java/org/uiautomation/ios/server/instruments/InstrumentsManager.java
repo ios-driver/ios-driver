@@ -71,19 +71,17 @@ public class InstrumentsManager {
     this.port = session.getIOSServerManager().getPort();
   }
 
-  public void startSession(String sessionId,
-                           IOSRunningApplication application,
-                           Device device,
-                           IOSCapabilities capabilities) throws WebDriverException {
+  public void startSession(ServerSideSession session) throws WebDriverException {
 
-    this.device = device;
-    caps = capabilities;
+    this.device = session.getDevice();
+    caps = session.getCapabilities();
 
     deviceType = caps.getDevice();
     variation = caps.getDeviceVariation();
     sdkVersion = caps.getSDKVersion();
     locale = caps.getLocale();
     language = caps.getLanguage();
+    sessionId = session.getSessionId();
     //language = application.getAppleLocaleFromLanguageCode(caps.getLanguage())
     //    .getAppleLanguagesForPreferencePlist();
     boolean timeHack = caps.isTimeHack();
@@ -92,10 +90,8 @@ public class InstrumentsManager {
     log.fine("starting session");
 
     try {
-      this.sessionId = sessionId;
       this.extraEnvtParams = envtParams;
-
-      this.application = application;
+      this.application = session.getApplication();
       this.application.setDefaultDevice(deviceType);
 
       if (device instanceof RealDevice) {
@@ -103,7 +99,7 @@ public class InstrumentsManager {
         instruments =
             new InstrumentsLibImobile(d.getUuid(), port, application.getDotAppAbsolutePath(),
                                       sessionId, application.getBundleId());
-        deviceManager = new IOSRealDeviceManager(capabilities,
+        deviceManager = new IOSRealDeviceManager(caps,
                                                  (RealDevice) device,
                                                  (IPAApplication) application
                                                      .getUnderlyingApplication());
@@ -116,7 +112,7 @@ public class InstrumentsManager {
                                  new File(application.getDotAppAbsolutePath()), envtParams,
                                  sdkVersion, list);
 
-        deviceManager = new IOSSimulatorManager(capabilities, instruments);
+        deviceManager = new IOSSimulatorManager(caps, instruments);
         // TODO freynaud part of AppleInstruments' logic
         output = ((InstrumentsApple) instruments).getOuput();
 
@@ -138,9 +134,10 @@ public class InstrumentsManager {
         instruments.stop();
       }
     } catch (Exception e) {
+      if (deviceManager != null) {
+        deviceManager.cleanupDevice();
+      }
       throw new WebDriverException("error starting the session:" + e.getMessage(), e);
-    }finally {
-      deviceManager.cleanupDevice();
     }
   }
 
@@ -170,7 +167,6 @@ public class InstrumentsManager {
     killSimulator();
   }
 
-
   private void killSimulator() {
     if (deviceManager != null) {
       deviceManager.cleanupDevice();
@@ -188,7 +184,6 @@ public class InstrumentsManager {
   public CommunicationChannel communicate() {
     return instruments.getChannel();
   }
-
 
   public void handleAppCrash(String log) {
     stop();

@@ -30,10 +30,10 @@ public class GetCurrentContextNHandler extends BaseNativeCommandHandler {
 
   @Override
   public Response handle() throws Exception {
-    WorkingMode mode = getSession().getWorkingMode();
+    WorkingMode mode = getIOSDualDriver().getWorkingMode();
     String value = mode.toString();
     if (mode == WorkingMode.Web) {
-      value = WorkingMode.Web + "_" + getSession().getRemoteWebDriver().getWindowHandle();
+      value = WorkingMode.Web + "_" + getWebDriver().getWindowHandle();
     }
     Response resp = new Response();
     resp.setSessionId(getSession().getSessionId());

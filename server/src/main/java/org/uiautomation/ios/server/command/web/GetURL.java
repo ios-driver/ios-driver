@@ -28,7 +28,7 @@ public class GetURL extends BaseWebCommandHandler {
 
   @Override
   public Response handle() throws Exception {
-    String url = getSession().getRemoteWebDriver().getCurrentUrl();
+    String url = getWebDriver().getCurrentUrl();
     Response res = new Response();
     res.setSessionId(getSession().getSessionId());
     res.setStatus(0);

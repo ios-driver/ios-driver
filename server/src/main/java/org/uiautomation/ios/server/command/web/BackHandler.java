@@ -37,8 +37,8 @@ public class BackHandler extends BaseWebCommandHandler {
     } else {
       backWeb();
     }
-    getSession().getRemoteWebDriver().getContext().newContext();
-    getSession().getRemoteWebDriver().waitForPageToLoad();
+    getWebDriver().getContext().newContext();
+    getWebDriver().waitForPageToLoad();
     Response resp = new Response();
     resp.setSessionId(getSession().getSessionId());
     resp.setStatus(0);
@@ -47,7 +47,7 @@ public class BackHandler extends BaseWebCommandHandler {
   }
 
   private void backWeb() throws Exception {
-    getSession().getRemoteWebDriver().back();
+    getWebDriver().back();
   }
 
   @Override

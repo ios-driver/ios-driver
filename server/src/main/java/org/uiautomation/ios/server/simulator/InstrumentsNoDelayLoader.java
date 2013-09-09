@@ -44,9 +44,10 @@ public class InstrumentsNoDelayLoader {
   }
 
   public static synchronized InstrumentsNoDelayLoader getInstance(InstrumentsVersion version) {
-    if (instance != null && version != instance.version) {
+    if (instance != null && !version.equals(instance.version)) {
       throw new WebDriverException(
-          "Cannot switch instruments version without restarting the server.");
+          "Cannot switch instruments from vesrion " + instance.version + " to version " + version
+          + " without restarting the server.");
     }
     if (instance == null) {
       instance = new InstrumentsNoDelayLoader(version);

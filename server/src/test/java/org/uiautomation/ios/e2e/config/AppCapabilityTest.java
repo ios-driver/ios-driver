@@ -25,13 +25,15 @@ import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
+import java.net.MalformedURLException;
+
 /**
  * Checks that one can use a URL as the argument to -aut.
  */
 public final class AppCapabilityTest extends BaseIOSDriverTest {
 
   @Test(enabled = false)
-  public void canSpecifyAppToUseAsCapability() {
+  public void canSpecifyAppToUseAsCapability() throws MalformedURLException {
     IOSCapabilities caps = SampleApps.uiCatalogCap();
     caps.setCapability("app", SampleApps.getUICatalogZipURL());
     RemoteIOSDriver driver = null;

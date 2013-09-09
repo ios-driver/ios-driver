@@ -49,7 +49,7 @@ public class SetTimeoutNHandler extends UIAScriptHandler {
 
   @Override
   public Response handle() throws Exception {
-    setJS(getScript(getDriver(), getRequest()));
+    setJS(getScript(getServer(), getRequest()));
     return super.handle();
   }
 

@@ -14,9 +14,12 @@
 
 package org.uiautomation.ios.server.command;
 
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
+import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
 
 public abstract class BaseWebCommandHandler extends BaseCommandHandler {
 
@@ -30,7 +33,7 @@ public abstract class BaseWebCommandHandler extends BaseCommandHandler {
   }
 
   protected void waitForPageToLoad() throws InterruptedException {
-    getSession().getRemoteWebDriver().waitForPageToLoad();
+    getWebDriver().waitForPageToLoad();
   }
 
   protected <T> T getConfiguration(String key, T defaultValue) {
@@ -41,4 +44,6 @@ public abstract class BaseWebCommandHandler extends BaseCommandHandler {
       return getConf(key, defaultValue);
     }
   }
+
+
 }

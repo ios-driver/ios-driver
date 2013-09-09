@@ -30,7 +30,7 @@ public class StopSessionNHandler extends UIAScriptHandler {
   public Response handle() throws Exception {
     super.handle();
     String opaqueKey = getRequest().getSession();
-    getDriver().stop(opaqueKey);
+    getServer().stop(opaqueKey);
 
     Response resp = new Response();
     resp.setSessionId(opaqueKey);

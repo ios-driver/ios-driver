@@ -291,7 +291,7 @@ public enum CommandMapping {
 
     if (!command.isSessionLess()) {
       ServerSideSession sss = driver.getSession(request.getSession());
-      isNative = sss.getWorkingMode() == WorkingMode.Native;
+      isNative = sss.getDualDriver().getWorkingMode() == WorkingMode.Native;
     }
     return isNative;
   }

@@ -121,6 +121,7 @@ public class IOSServerManager {
 
   public void stop(String opaqueKey) {
     ServerSideSession session = getSession(opaqueKey);
+
     session.stop();
     sessions.remove(session);
   }

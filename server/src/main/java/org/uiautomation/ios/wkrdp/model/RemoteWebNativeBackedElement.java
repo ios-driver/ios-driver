@@ -58,7 +58,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
                                       ServerSideSession session) {
     super(id, inspector);
     this.session = session;
-    this.nativeDriver = session.getNativeDriver();
+    this.nativeDriver = session.getDualDriver().getNativeDriver();
   }
 
   private static String normalizeDateValue(String value) {

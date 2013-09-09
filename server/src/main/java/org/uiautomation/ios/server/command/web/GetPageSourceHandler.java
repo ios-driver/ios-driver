@@ -33,7 +33,7 @@ public class GetPageSourceHandler extends BaseWebCommandHandler {
     Response res = new Response();
     res.setSessionId(getSession().getSessionId());
     res.setStatus(0);
-    res.setValue(getSession().getRemoteWebDriver().getPageSource());
+    res.setValue(getWebDriver().getPageSource());
     return res;
   }
 

@@ -98,23 +98,23 @@ public class GetHandler extends BaseWebCommandHandler {
     Criteria urlAddressBar = new AndCriteria(new TypeCriteria(UIAElement.class), new ValueCriteria(
         "Go to this address"));
     By b = By.xpath("//UIAElement[@name=l10n('Address')]");
-    addressBar = getSession().getNativeDriver().findElement(b);
+    addressBar = getNativeDriver().findElement(b);
     return addressBar;
   }
 
   private void typeURLNative(String url) {
-    getSession().setMode(WorkingMode.Native);
+    getSession().getDualDriver().setMode(WorkingMode.Native);
     getAddressBar().click();
-    RemoteUIAKeyboard keyboard = (RemoteUIAKeyboard) getSession().getNativeDriver().getKeyboard();
+    RemoteUIAKeyboard keyboard = (RemoteUIAKeyboard) getNativeDriver().getKeyboard();
     keyboard.sendKeys(url);
     UIAElement go = keyboard.findElement(new NameCriteria("Go"));
     go.tap();
-    getSession().setMode(WorkingMode.Web);
+    getSession().getDualDriver().setMode(WorkingMode.Web);
 
   }
 
   private void fakeTypeURL(String url) {
-    getSession().getRemoteWebDriver().get(url);
+    getWebDriver().get(url);
   }
 
 }

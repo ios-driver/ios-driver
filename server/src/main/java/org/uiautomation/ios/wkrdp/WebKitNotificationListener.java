@@ -102,8 +102,9 @@ public class WebKitNotificationListener implements MessageListener {
 
           int index =
               driver.getPages().size() == 0 ? 0
-                                            : session.getRemoteWebDriver().getWindowHandleIndex()
-                                              + 1;
+                                            :
+              session.getDualDriver().getRemoteWebDriver().getWindowHandleIndex()
+              + 1;
           pages.add(index, newOne);
 
           driver.setPages(pages);
@@ -186,7 +187,6 @@ public class WebKitNotificationListener implements MessageListener {
     }
     return null;
   }
-
 
   private void waitForWindowSwitchingAnimation() {
     try {

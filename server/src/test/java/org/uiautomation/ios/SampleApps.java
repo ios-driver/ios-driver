@@ -14,6 +14,7 @@
 package org.uiautomation.ios;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Logger;
 
@@ -58,8 +59,9 @@ public class SampleApps {
     return getFromClassPath(uiCatalog).getAbsolutePath();
   }
   
-  public static String getUICatalogZipURL() {
-    return "file://" + getFromClassPath(uiCatalogZip).getAbsolutePath();
+  public static URL getUICatalogZipURL() throws MalformedURLException {
+    String s =  "file://" + getFromClassPath(uiCatalogZip).getAbsolutePath();
+    return new URL(s);
   }
 
   public static String getIntlMountainsFile() {

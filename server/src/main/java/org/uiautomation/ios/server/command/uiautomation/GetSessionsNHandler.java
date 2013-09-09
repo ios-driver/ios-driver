@@ -22,7 +22,6 @@ import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
 
@@ -38,7 +37,7 @@ public class GetSessionsNHandler extends BaseNativeCommandHandler {
   public Response handle() throws Exception {
     JSONArray res = new JSONArray();
 
-    List<ServerSideSession> sessions = getDriver().getSessions();
+    List<ServerSideSession> sessions = getServer().getSessions();
 
     for (ServerSideSession s : sessions) {
       JSONObject session = new JSONObject();

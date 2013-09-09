@@ -71,6 +71,11 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
 
   }
 
+  @Override
+  public JSONObject configurationDescription() throws JSONException {
+    return noConfigDefined();
+  }
+
   class AddTranslationToLog extends PostHandleDecorator {
 
     public AddTranslationToLog(IOSServerManager driver) {
@@ -154,7 +159,7 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
       Map<String, Object> webView = (Map<String, Object>) getWebView(tree);
       if (webView != null) {
         ServerSideSession session = getDriver().getSession(getRequest().getSession());
-        RemoteIOSWebDriver inspector = session.getRemoteWebDriver();
+        RemoteIOSWebDriver inspector = getWebDriver();
         try {
           String rawHTML = inspector.getPageSource();
           webView.put("source", rawHTML);
@@ -193,11 +198,6 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
 
       return true;
     }
-  }
-
-  @Override
-  public JSONObject configurationDescription() throws JSONException {
-    return noConfigDefined();
   }
 
 }

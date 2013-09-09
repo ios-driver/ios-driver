@@ -120,7 +120,7 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
           log.fine("got first response");
           Response resp = r.getResponse();
           GetCapabilitiesNHandler.setCachedResponse(resp);
-          getDriver().getSession(resp.getSessionId()).communication().registerUIAScript();
+          getDriver().getSession(resp.getSessionId()).getDualDriver().communication().registerUIAScript();
         } else {
           getCommunicationChannel(request).addResponse(r);
         }
@@ -140,7 +140,7 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
     private CURLBasedCommunicationChannel getCommunicationChannel(HttpServletRequest request)
         throws Exception {
       String opaqueKey = request.getParameter("sessionId");
-      CommunicationChannel channel = getDriver().getSession(opaqueKey).communication();
+      CommunicationChannel channel = getDriver().getSession(opaqueKey).getDualDriver().communication();
       if (channel instanceof CURLBasedCommunicationChannel) {
         return (CURLBasedCommunicationChannel) channel;
       } else {

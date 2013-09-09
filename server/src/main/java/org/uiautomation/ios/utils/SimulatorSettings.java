@@ -246,9 +246,11 @@ public class SimulatorSettings {
       case Regular:
         return "iPhone";
       case Retina35:
-        return "\"iPhone (Retina 3.5-inch)\"";
+        //return "\"iPhone (Retina 3.5-inch)\"";
+        return "\"iPhone Retina (3.5-inch)\"";
       case Retina4:
-        return "\"iPhone (Retina 4-inch)\"";
+        //return "\"iPhone (Retina 4-inch)\"";
+        return "\"iPhone Retina (4-inch)\"";
       default:
         throw new WebDriverException(variation + " isn't supported for ipad.");
     }

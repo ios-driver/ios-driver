@@ -34,7 +34,7 @@ public class ClickHandler extends BaseWebCommandHandler {
   @Override
   public Response handle() throws Exception {
     String reference = getRequest().getVariableValue(":reference");
-    RemoteWebElement element = getSession().getRemoteWebDriver().createElement(reference);
+    RemoteWebElement element = getWebDriver().createElement(reference);
 
     boolean useNativeEvents = (Boolean) getConfiguration("nativeEvents");
 
@@ -42,7 +42,7 @@ public class ClickHandler extends BaseWebCommandHandler {
       ((RemoteWebNativeBackedElement) element).nativeClick();
       // native tapping in a webview delays triggering the event for 300ms (because iOS is looking to see if it's a gesture)
       // going to assume if you have implicit waits set you want this delay, if not you want it to return 'fast'
-      if (getSession().getWorkingMode() == WorkingMode.Web &&
+      if (getSession().getDualDriver().getWorkingMode() == WorkingMode.Web &&
           SetImplicitWaitTimeoutNHandler.TIMEOUT != null &&
           SetImplicitWaitTimeoutNHandler.TIMEOUT > 0) {
         Thread.sleep(300);

@@ -30,7 +30,7 @@ public class IsDisplayedHanlder extends BaseWebCommandHandler {
   @Override
   public Response handle() throws Exception {
     String reference = getRequest().getVariableValue(":reference");
-    RemoteWebElement element = getSession().getRemoteWebDriver().createElement(reference);
+    RemoteWebElement element = getWebDriver().createElement(reference);
     boolean isDisplayed = element.isDisplayed();
     Response res = new Response();
     res.setSessionId(getSession().getSessionId());
