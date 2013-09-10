@@ -24,6 +24,8 @@ import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.application.IPAApplication;
 import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
+import org.uiautomation.ios.server.refactor.InstrumentsAppleScreenshotService;
+import org.uiautomation.ios.server.refactor.TakeScreenshotService;
 import org.uiautomation.ios.server.simulator.IOSRealDeviceManager;
 import org.uiautomation.ios.server.simulator.IOSSimulatorManager;
 import org.uiautomation.ios.server.simulator.Instruments;
@@ -58,6 +60,7 @@ public class InstrumentsManager {
   private DeviceType deviceType;
   private DeviceVariation variation;
   private IOSCapabilities caps;
+  private TakeScreenshotService screenshotService;
   private List<String> extraEnvtParams;
   private Command simulatorProcess;
   private Instruments instruments;
@@ -106,12 +109,14 @@ public class InstrumentsManager {
 
       } else {
         ApplicationCrashListener list = new ApplicationCrashListener(this);
-        instruments =
+        InstrumentsApple appleInst =
             new InstrumentsApple(null, session.getIOSServerManager().getHostInfo()
                 .getInstrumentsVersion(), port, sessionId,
                                  new File(application.getDotAppAbsolutePath()), envtParams,
                                  sdkVersion, list);
 
+        screenshotService = new InstrumentsAppleScreenshotService(appleInst,sessionId);
+        this.instruments = appleInst;
         deviceManager = new IOSSimulatorManager(caps, instruments);
         // TODO freynaud part of AppleInstruments' logic
         output = ((InstrumentsApple) instruments).getOuput();
@@ -189,5 +194,9 @@ public class InstrumentsManager {
     stop();
     forceStop();
     session.sessionHasCrashed(log);
+  }
+
+  public TakeScreenshotService getScreenshotService() {
+    return screenshotService;
   }
 }

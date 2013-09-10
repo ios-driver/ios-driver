@@ -124,9 +124,6 @@ public class IOSDualDriver {
     return nativeDriver;
   }
 
-  public File getOutput() {
-    return instruments.getOutput();
-  }
 
   public synchronized RemoteIOSWebDriver getRemoteWebDriver() {
     if (webDriver == null) {
@@ -173,5 +170,9 @@ public class IOSDualDriver {
 
   public CommunicationChannel communication() {
     return instruments.communicate();
+  }
+
+  public InstrumentsManager getInstrumentsManager(){
+    return instruments;
   }
 }

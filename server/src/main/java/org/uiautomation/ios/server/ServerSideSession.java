@@ -184,8 +184,4 @@ public class ServerSideSession extends Session {
       driver.stop();
     }
   }
-
-  public String getOutputFolder() {
-    return outputFolder;
-  }
 }
