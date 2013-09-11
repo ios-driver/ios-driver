@@ -25,11 +25,10 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.CommandMapping;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
-import org.uiautomation.ios.server.refactor.IOSDualDriver;
+import org.uiautomation.ios.server.services.IOSDualDriver;
 
 public class SetCurrentContextNHandler extends BaseNativeCommandHandler {
 
-  private IOSDualDriver dualDriver;
 
   public SetCurrentContextNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -44,7 +43,7 @@ public class SetCurrentContextNHandler extends BaseNativeCommandHandler {
     } else {
       mode = WorkingMode.valueOf(context);
     }
-    getDualDriver().setMode(mode);
+    getIOSDualDriver().setMode(mode);
 
     if (context.startsWith(WorkingMode.Web + "_")) {
       if (getWebDriver().getWindowHandles().isEmpty()) {
@@ -85,7 +84,7 @@ public class SetCurrentContextNHandler extends BaseNativeCommandHandler {
       } catch (Exception e) {
         // dump out any exception, but ignore it as the primary concern is switching context
         // which has succeeded if we got here
-        e.printStackTrace();
+//        e.printStackTrace();
       }
     }
 
@@ -99,9 +98,5 @@ public class SetCurrentContextNHandler extends BaseNativeCommandHandler {
   @Override
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
-  }
-
-  public IOSDualDriver getDualDriver() {
-    return dualDriver;
   }
 }

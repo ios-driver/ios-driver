@@ -19,15 +19,17 @@ import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
+import org.uiautomation.ios.server.application.APPIOSApplication;
+import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.command.UIAScriptResponse;
 import org.uiautomation.ios.server.instruments.IOSDeviceManager;
 import org.uiautomation.ios.server.instruments.InstrumentsVersion;
 import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
 import org.uiautomation.ios.server.instruments.communication.curl.CURLBasedCommunicationChannel;
-import org.uiautomation.ios.server.refactor.Instruments;
-import org.uiautomation.ios.server.refactor.InstrumentsAppleScreenshotService;
-import org.uiautomation.ios.server.refactor.TakeScreenshotService;
+import org.uiautomation.ios.server.services.Instruments;
+import org.uiautomation.ios.server.services.InstrumentsAppleScreenshotService;
+import org.uiautomation.ios.server.services.TakeScreenshotService;
 import org.uiautomation.ios.utils.ApplicationCrashListener;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.Command;
@@ -46,7 +48,7 @@ public class InstrumentsApple implements Instruments {
   private static final Logger log = Logger.getLogger(InstrumentsApple.class.getName());
   private final String uuid;
   private final File template;
-  private final File application;
+  private final IOSRunningApplication application;
   private final File output;
   private final String sessionId;
   private final List<String> envtParams;
@@ -59,7 +61,7 @@ public class InstrumentsApple implements Instruments {
   private final IOSCapabilities caps;
 
   public InstrumentsApple(String uuid, InstrumentsVersion version, int port, String sessionId,
-                          File application,
+                          IOSRunningApplication application,
                           List<String> envtParams, String desiredSDKVersion,IOSCapabilities caps) {
     this.uuid = uuid;
     this.caps = caps;
@@ -69,7 +71,7 @@ public class InstrumentsApple implements Instruments {
     this.envtParams = envtParams;
     template = ClassicCommands.getAutomationTemplate();
 
-    String appPath = application.getAbsolutePath();
+    String appPath = application.getDotAppAbsolutePath();
     File scriptPath = new ScriptHelper().getScript(port, appPath, sessionId, CURL);
     output = createTmpOutputFolder();
 
@@ -92,6 +94,7 @@ public class InstrumentsApple implements Instruments {
     String language = caps.getLanguage();
 
     deviceManager.setVariation(deviceType, variation);
+    this.application.setDefaultDevice(deviceType);
     deviceManager.setSDKVersion();
     deviceManager.resetContentAndSettings();
     deviceManager.setL10N(locale, language);
@@ -145,7 +148,7 @@ public class InstrumentsApple implements Instruments {
     }
     command.add("-t");
     command.add(template.getAbsolutePath());
-    command.add(application.getAbsolutePath());
+    command.add(application.getDotAppAbsolutePath());
     command.add("-e");
     command.add("UIASCRIPT");
     command.add(script.getAbsolutePath());

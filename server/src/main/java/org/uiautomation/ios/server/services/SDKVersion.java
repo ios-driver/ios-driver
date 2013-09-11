@@ -12,11 +12,14 @@
  * the License.
  */
 
-package org.uiautomation.ios.server.refactor;
+package org.uiautomation.ios.server.services;
 
-public interface SimulatorSDKSetterService {
+public class SDKVersion {
 
-  public void setup(SDKVersion version);
+  private final String version;
 
-  public void teardown();
+  public SDKVersion(String version) {
+    this.version = version;
+  }
+
 }

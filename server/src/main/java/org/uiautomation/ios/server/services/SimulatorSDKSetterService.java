@@ -12,8 +12,11 @@
  * the License.
  */
 
-package org.uiautomation.ios.server.refactor;
+package org.uiautomation.ios.server.services;
 
-public interface Xcode {
+public interface SimulatorSDKSetterService {
 
+  public void setup(SDKVersion version);
+
+  public void teardown();
 }

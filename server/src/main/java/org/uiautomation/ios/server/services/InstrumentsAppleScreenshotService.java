@@ -9,7 +9,7 @@
  * the License.
  */
 
-package org.uiautomation.ios.server.refactor;
+package org.uiautomation.ios.server.services;
 
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;

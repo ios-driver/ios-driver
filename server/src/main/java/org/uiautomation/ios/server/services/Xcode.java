@@ -12,13 +12,8 @@
  * the License.
  */
 
-package org.uiautomation.ios.server.refactor;
+package org.uiautomation.ios.server.services;
 
-import org.uiautomation.ios.server.application.AppleLanguage;
-import org.uiautomation.ios.server.application.AppleLocale;
+public interface Xcode {
 
-public interface InternationalSetterService {
-
-  public void setLocale(AppleLocale locale);
-  public void setLanguage(AppleLanguage language);
 }

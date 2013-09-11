@@ -12,12 +12,11 @@
  * the License.
  */
 
-package org.uiautomation.ios.server.refactor;
+package org.uiautomation.ios.server.services;
 
 import org.uiautomation.ios.communication.device.DeviceVariation;
 
-public interface DeviceVariationSetterService {
+public interface DeviceVariationGetterService {
 
-  public void setVariation(DeviceVariation variation);
-
+  public DeviceVariation getDeviceVariation();
 }

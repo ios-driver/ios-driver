@@ -12,7 +12,7 @@
  * the License.
  */
 
-package org.uiautomation.ios.server.refactor;
+package org.uiautomation.ios.server.services;
 
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.server.Device;
@@ -50,7 +50,7 @@ public class InstrumentsFactory {
                                       .getInstrumentsVersion(),
                                   session.getOptions().getPort(),
                                   session.getSessionId(),
-                                  new File(session.getApplication().getDotAppAbsolutePath()),
+                                  session.getApplication(),
                                   envtParams,
                                   caps.getSDKVersion(),
                                   caps

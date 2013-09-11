@@ -25,7 +25,7 @@ import org.uiautomation.ios.server.application.AppleLanguage;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
-import org.uiautomation.ios.server.refactor.IOSDualDriver;
+import org.uiautomation.ios.server.services.IOSDualDriver;
 import org.uiautomation.ios.server.utils.IOSVersion;
 import org.uiautomation.ios.server.utils.ZipUtils;
 import org.uiautomation.ios.utils.ApplicationCrashDetails;
@@ -48,7 +48,6 @@ public class ServerSideSession extends Session {
   private Device device;
   private boolean sessionCrashed;
   private ApplicationCrashDetails applicationCrashDetails;
-  private String outputFolder;
 
   ServerSideSession(IOSServerManager server, IOSCapabilities desiredCapabilities,
                     IOSServerConfiguration options) {
@@ -180,6 +179,10 @@ public class ServerSideSession extends Session {
   }
 
   public void stop() {
+    if (device != null) {
+      device.release();
+    }
+
     if (driver != null) {
       driver.stop();
     }

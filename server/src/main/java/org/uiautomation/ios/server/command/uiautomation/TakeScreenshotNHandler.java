@@ -20,7 +20,7 @@ import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
-import org.uiautomation.ios.server.refactor.TakeScreenshotService;
+import org.uiautomation.ios.server.services.TakeScreenshotService;
 
 public class TakeScreenshotNHandler extends BaseNativeCommandHandler {
 

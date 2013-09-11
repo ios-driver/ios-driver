@@ -23,7 +23,7 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
-import org.uiautomation.ios.server.refactor.IOSDualDriver;
+import org.uiautomation.ios.server.services.IOSDualDriver;
 import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
 import org.uiautomation.ios.wkrdp.WebKitSeemsCorruptedException;
 

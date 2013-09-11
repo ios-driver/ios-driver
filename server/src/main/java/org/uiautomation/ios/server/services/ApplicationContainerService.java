@@ -12,15 +12,9 @@
  * the License.
  */
 
-package org.uiautomation.ios.server.refactor;
+package org.uiautomation.ios.server.services;
 
-import org.uiautomation.ios.server.application.AppleLanguage;
-import org.uiautomation.ios.server.application.AppleLocale;
+public interface ApplicationContainerService {
 
-public interface InternationalGetterService {
-
-  public AppleLanguage getLanguage();
-
-  public AppleLocale getLocale();
-
+  public void emptyApplicationCache(String bundleId);
 }

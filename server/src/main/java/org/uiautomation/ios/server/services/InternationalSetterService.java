@@ -12,9 +12,13 @@
  * the License.
  */
 
-package org.uiautomation.ios.server.refactor;
+package org.uiautomation.ios.server.services;
 
-public interface TakeScreenshotService {
+import org.uiautomation.ios.server.application.AppleLanguage;
+import org.uiautomation.ios.server.application.AppleLocale;
 
-  public String getScreenshot();
+public interface InternationalSetterService {
+
+  public void setLocale(AppleLocale locale);
+  public void setLanguage(AppleLanguage language);
 }

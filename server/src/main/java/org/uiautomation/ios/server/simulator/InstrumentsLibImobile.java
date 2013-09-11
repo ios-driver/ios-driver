@@ -26,8 +26,8 @@ import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.command.UIAScriptResponse;
 import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
 import org.uiautomation.ios.server.instruments.communication.multi.MultiInstrumentsBasedCommunicationChannel;
-import org.uiautomation.ios.server.refactor.Instruments;
-import org.uiautomation.ios.server.refactor.TakeScreenshotService;
+import org.uiautomation.ios.server.services.Instruments;
+import org.uiautomation.ios.server.services.TakeScreenshotService;
 import org.uiautomation.ios.utils.ScriptHelper;
 
 import java.util.logging.Logger;

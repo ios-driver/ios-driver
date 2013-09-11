@@ -12,14 +12,21 @@
  * the License.
  */
 
-package org.uiautomation.ios.server.refactor;
+package org.uiautomation.ios.server.services;
 
-public class SDKVersion {
+import org.openqa.selenium.remote.Response;
+import org.uiautomation.ios.server.command.UIAScriptRequest;
+import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
+import org.uiautomation.ios.server.simulator.InstrumentsFailedToStartException;
 
-  private final String version;
+public interface Instruments {
 
-  public SDKVersion(String version) {
-    this.version = version;
-  }
+  public void start() throws InstrumentsFailedToStartException;
+  public void stop();
 
+  public Response executeCommand(UIAScriptRequest request);
+
+  CommunicationChannel getChannel();
+
+  TakeScreenshotService getScreenshotService();
 }

@@ -19,7 +19,7 @@ import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.instruments.IOSDeviceManager;
-import org.uiautomation.ios.server.refactor.Instruments;
+import org.uiautomation.ios.server.services.Instruments;
 import org.uiautomation.ios.server.utils.IOSVersion;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.SimulatorSettings;
@@ -68,7 +68,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   @Override
   public void setSDKVersion() {
     if (!isDefaultSDK()) {
-      //warmup();
+      warmup();
       forceDefaultSDK();
     }
   }
