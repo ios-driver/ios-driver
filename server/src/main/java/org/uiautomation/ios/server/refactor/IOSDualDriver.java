@@ -14,6 +14,7 @@
 
 package org.uiautomation.ios.server.refactor;
 
+import org.omg.CORBA.PUBLIC_MEMBER;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NoSuchWindowException;
@@ -22,13 +23,12 @@ import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.client.uiamodels.impl.ServerSideNativeDriver;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.server.instruments.InstrumentsManager;
 import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
+import org.uiautomation.ios.server.simulator.InstrumentsFailedToStartException;
 import org.uiautomation.ios.server.utils.IOSVersion;
 import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
 import org.uiautomation.ios.wkrdp.internal.AlertDetector;
 
-import java.io.File;
 import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -37,21 +37,23 @@ import java.util.logging.Logger;
 public class IOSDualDriver {
 
   private static final Logger log = Logger.getLogger(IOSDualDriver.class.getName());
-  private final InstrumentsManager instruments;
   private final ServerSideSession session;
   private RemoteIOSDriver nativeDriver;
   private RemoteIOSWebDriver webDriver;
   private WorkingMode mode = WorkingMode.Native;
   private Timer stopSessionTimer = new Timer(true);
+  private final Instruments instruments;
+
   private Thread shutdownHook = new Thread() {
     @Override
     public void run() {
-      instruments.forceStop();
+      instruments.stop();
     }
   };
   public IOSDualDriver(ServerSideSession session) {
     this.session = session;
-    instruments = new InstrumentsManager(session);
+    instruments = InstrumentsFactory.getInstruments(session);
+
     Runtime.getRuntime().addShutdownHook(shutdownHook);
   }
 
@@ -71,7 +73,7 @@ public class IOSDualDriver {
 
   private void forceStop() {
     try {
-      instruments.forceStop();
+      instruments.stop();
     } catch (Exception ignore) {
     }
     if (webDriver != null) {
@@ -91,7 +93,11 @@ public class IOSDualDriver {
   }
 
   public void start() {
-    instruments.startSession(session);
+    try {
+      instruments.start();
+    } catch (InstrumentsFailedToStartException e) {
+      forceStop();
+    }
 
     // force stop session if running for too long
     final int sessionTimeoutMillis = session.getOptions().getSessionTimeoutMillis();
@@ -112,7 +118,7 @@ public class IOSDualDriver {
     } catch (Exception e) {
       e.printStackTrace();
     }
-    nativeDriver = new ServerSideNativeDriver(url, new SessionId(instruments.getSessionId()));
+    nativeDriver = new ServerSideNativeDriver(url, new SessionId(session.getSessionId()));
 
     if ("Safari".equals(session.getCapabilities().getBundleName())) {
       setMode(WorkingMode.Web);
@@ -124,6 +130,9 @@ public class IOSDualDriver {
     return nativeDriver;
   }
 
+  public Instruments getInstruments(){
+    return instruments;
+  }
 
   public synchronized RemoteIOSWebDriver getRemoteWebDriver() {
     if (webDriver == null) {
@@ -135,6 +144,10 @@ public class IOSDualDriver {
       }
     }
     return webDriver;
+  }
+
+  public CommunicationChannel communication(){
+    return instruments.getChannel();
   }
 
   public void setMode(WorkingMode mode) throws NoSuchWindowException {
@@ -168,11 +181,7 @@ public class IOSDualDriver {
     webDriver.switchTo(String.valueOf(currentPageID));
   }
 
-  public CommunicationChannel communication() {
-    return instruments.communicate();
-  }
-
-  public InstrumentsManager getInstrumentsManager(){
-    return instruments;
+  public TakeScreenshotService getScreenshotService() {
+    return instruments.getScreenshotService();
   }
 }

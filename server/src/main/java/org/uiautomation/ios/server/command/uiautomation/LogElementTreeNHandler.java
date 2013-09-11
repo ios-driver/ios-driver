@@ -26,6 +26,8 @@ import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+import org.uiautomation.ios.server.refactor.InstrumentsAppleScreenshotService;
+import org.uiautomation.ios.server.refactor.TakeScreenshotService;
 import org.uiautomation.ios.utils.InstrumentsGeneratedImage;
 import org.uiautomation.ios.utils.JSONWireImage;
 import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
@@ -39,6 +41,7 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
   private static final String jsTemplate = "var root = UIAutomation.cache.get(':reference');"
                                            + "var result = root.tree(:attachScreenshot);"
                                            + "UIAutomation.createJSONResponse(':sessionId',0,result);";
+  private static final String SCREEN_NAME = "tmpScreenshot";
 
   public LogElementTreeNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -110,6 +113,7 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
 
   class AttachScreenshotToLog extends PostHandleDecorator {
 
+
     public AttachScreenshotToLog(IOSServerManager driver) {
       super(driver);
     }
@@ -124,21 +128,30 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
 
       Orientation o = Orientation.fromInterfaceOrientation(orientationCode.intValue());
 
+      // TODO freynaud rethink that.
       if (screenshot) {
-        String path = getDriver().getSession(response.getSessionId()).getOutputFolder() + "/Run 1/"
-                      + TakeScreenshotNHandler.SCREEN_NAME + ".png";
-        File source = new File(path);
-        JSONWireImage image = new InstrumentsGeneratedImage(source, o);
-        try {
-          String content64 = image.getAsBase64String();
-          value.put("screenshot", ImmutableMap.of("64encoded", content64));
-        } catch (Exception e) {
-          throw new WebDriverException(
-              "Error converting " + source.getAbsolutePath() + " to a 64 encoded string "
-              + e.getMessage(), e);
-        } finally {
-          source.delete();
+        TakeScreenshotService
+            service =
+            getIOSDualDriver().getScreenshotService();
+
+        if (service instanceof InstrumentsAppleScreenshotService) {
+          File source = ((InstrumentsAppleScreenshotService) service).getScreenshotFile();
+          JSONWireImage image = new InstrumentsGeneratedImage(source, o);
+          try {
+            String content64 = image.getAsBase64String();
+            value.put("screenshot", ImmutableMap.of("64encoded", content64));
+          } catch (Exception e) {
+            throw new WebDriverException(
+                "Error converting " + source.getAbsolutePath() + " to a 64 encoded string "
+                + e.getMessage(), e);
+          } finally {
+            source.delete();
+          }
+
+        } else {
+          throw new RuntimeException("NI");
         }
+
       } else {
         value.put("screenshot", null);
       }

@@ -24,6 +24,7 @@ import java.io.File;
 
 public class InstrumentsAppleScreenshotService implements TakeScreenshotService {
 
+  private final File source;
   private final InstrumentsApple instruments;
   private final String jsCommand;
   private final UIAScriptRequest command;
@@ -41,6 +42,8 @@ public class InstrumentsAppleScreenshotService implements TakeScreenshotService 
     this.sessionId = sessionId;
     this.jsCommand = jsTemplate.replace(":sessionId", sessionId);
     this.command = new UIAScriptRequest(jsCommand);
+    File folder = new File(instruments.getOutput(),"/Run 1/");
+    source = new File(folder, SCREEN_NAME + ".png");
   }
 
 
@@ -49,6 +52,9 @@ public class InstrumentsAppleScreenshotService implements TakeScreenshotService 
     return r.getResponse();
   }
 
+  public File getScreenshotFile(){
+    return source;
+  }
   private String extractScreenshot(Response response){
     String orientation = response.getValue().toString();
     Orientation o;
@@ -61,10 +67,7 @@ public class InstrumentsAppleScreenshotService implements TakeScreenshotService 
           + orientation + " isn't a valid orientation.");
     }
 
-    File folder = new File(instruments.getOuput(),"/Run 1/");
-    File source = new File(folder, SCREEN_NAME + ".png");
-
-    try {
+   try {
       JSONWireImage image = new InstrumentsGeneratedImage(source, o);
       String content64 = image.getAsBase64String();
       return content64;

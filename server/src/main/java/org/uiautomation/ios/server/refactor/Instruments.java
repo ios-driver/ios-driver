@@ -14,14 +14,19 @@
 
 package org.uiautomation.ios.server.refactor;
 
-import org.uiautomation.ios.server.instruments.InstrumentsVersion;
+import org.openqa.selenium.remote.Response;
+import org.uiautomation.ios.server.command.UIAScriptRequest;
+import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
+import org.uiautomation.ios.server.simulator.InstrumentsFailedToStartException;
 
 public interface Instruments {
 
-  public InstrumentsVersion getVersion();
-
-  public void start();
-  public void executeScript();
+  public void start() throws InstrumentsFailedToStartException;
   public void stop();
 
+  public Response executeCommand(UIAScriptRequest request);
+
+  CommunicationChannel getChannel();
+
+  TakeScreenshotService getScreenshotService();
 }

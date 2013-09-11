@@ -90,7 +90,7 @@ public abstract class BaseCommandHandler implements Handler {
   }
 
   public CommunicationChannel communication() {
-    return driver.communication();
+    return getIOSDualDriver().communication();
   }
 
   @Override

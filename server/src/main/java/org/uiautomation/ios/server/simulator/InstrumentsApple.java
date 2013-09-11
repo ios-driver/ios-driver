@@ -16,11 +16,18 @@ package org.uiautomation.ios.server.simulator;
 
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
+import org.uiautomation.ios.IOSCapabilities;
+import org.uiautomation.ios.communication.device.DeviceType;
+import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.command.UIAScriptResponse;
+import org.uiautomation.ios.server.instruments.IOSDeviceManager;
 import org.uiautomation.ios.server.instruments.InstrumentsVersion;
 import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
 import org.uiautomation.ios.server.instruments.communication.curl.CURLBasedCommunicationChannel;
+import org.uiautomation.ios.server.refactor.Instruments;
+import org.uiautomation.ios.server.refactor.InstrumentsAppleScreenshotService;
+import org.uiautomation.ios.server.refactor.TakeScreenshotService;
 import org.uiautomation.ios.utils.ApplicationCrashListener;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.Command;
@@ -37,7 +44,6 @@ import static org.uiautomation.ios.server.instruments.communication.Communicatio
 public class InstrumentsApple implements Instruments {
 
   private static final Logger log = Logger.getLogger(InstrumentsApple.class.getName());
-
   private final String uuid;
   private final File template;
   private final File application;
@@ -47,10 +53,16 @@ public class InstrumentsApple implements Instruments {
   private final Command instruments;
   private final CURLBasedCommunicationChannel channel;
   private final InstrumentsVersion version;
+  private final TakeScreenshotService screenshotService;
+  private final ApplicationCrashListener listener;
+  private final IOSDeviceManager deviceManager;
+  private final IOSCapabilities caps;
 
-  public InstrumentsApple(String uuid,InstrumentsVersion version, int port, String sessionId, File application,
-                          List<String> envtParams, String desiredSDKVersion,ApplicationCrashListener list) {
+  public InstrumentsApple(String uuid, InstrumentsVersion version, int port, String sessionId,
+                          File application,
+                          List<String> envtParams, String desiredSDKVersion,IOSCapabilities caps) {
     this.uuid = uuid;
+    this.caps = caps;
     this.version = version;
     this.sessionId = sessionId;
     this.application = application;
@@ -62,13 +74,30 @@ public class InstrumentsApple implements Instruments {
     output = createTmpOutputFolder();
 
     instruments = new Command(createInstrumentCommand(scriptPath), true);
-    instruments.registerListener(list);
+    listener = new ApplicationCrashListener();
+    instruments.registerListener(listener);
     instruments.setWorkingDirectory(output);
 
     channel = new CURLBasedCommunicationChannel(sessionId);
+
+    screenshotService = new InstrumentsAppleScreenshotService(this, sessionId);
+    deviceManager = new IOSSimulatorManager(caps,this);
   }
 
   public void start() throws InstrumentsFailedToStartException {
+
+    DeviceType deviceType = caps.getDevice();
+    DeviceVariation variation = caps.getDeviceVariation();
+    String locale = caps.getLocale();
+    String language = caps.getLanguage();
+
+    deviceManager.setVariation(deviceType, variation);
+    deviceManager.setSDKVersion();
+    deviceManager.resetContentAndSettings();
+    deviceManager.setL10N(locale, language);
+    deviceManager.setKeyboardOptions();
+    deviceManager.setLocationPreference(true);
+    deviceManager.setMobileSafariOptions();
 
     instruments.start();
 
@@ -84,6 +113,9 @@ public class InstrumentsApple implements Instruments {
       // script. UIAScriptAgentSignaledException
       if (!success) {
         instruments.forceStop();
+        if (deviceManager!=null){
+          deviceManager.cleanupDevice();
+        }
         throw new InstrumentsFailedToStartException("Instruments crashed.");
       }
     }
@@ -91,10 +123,10 @@ public class InstrumentsApple implements Instruments {
 
   @Override
   public void stop() {
+    deviceManager.cleanupDevice();
     instruments.forceStop();
     channel.stop();
   }
-
 
   public void startWithDummyScript() {
     File script = new ScriptHelper().createTmpScript("UIALogger.logMessage('warming up');");
@@ -155,12 +187,23 @@ public class InstrumentsApple implements Instruments {
     return res.getResponse();
   }
 
+
+
   @Override
   public CommunicationChannel getChannel() {
     return channel;
   }
 
-  public File getOuput() {
+  @Override
+  public TakeScreenshotService getScreenshotService() {
+    return screenshotService;
+  }
+
+  public File getOutput(){
     return output;
   }
+
+
+
+
 }
