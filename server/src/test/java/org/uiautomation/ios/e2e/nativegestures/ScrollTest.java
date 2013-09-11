@@ -15,9 +15,6 @@
 package org.uiautomation.ios.e2e.nativegestures;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -51,81 +48,84 @@ public class ScrollTest extends BaseIOSDriverTest {
   @Test
   public void testVerticalScrollingDown() {
 
-    Assert.assertTrue(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 1')])[1]").isDisplayed());
-    Assert.assertFalse(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 2')])[1]").isDisplayed());
-    Assert.assertFalse(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 3')])[1]").isDisplayed());
+    Assert.assertTrue(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Vertical View 1')]").isDisplayed());
+    Assert.assertFalse(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Vertical View 2')]").isDisplayed());
+    Assert.assertFalse(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Vertical View 3')]").isDisplayed());
 
-    ((RemoteUIAScrollView) driver.findElementsByTagName("UIAScrollView").get(2)).scroll(ScrollDirection.DOWN);
+    ((RemoteUIAScrollView) driver.findElementByXPath("//UIAScrollView[contains(@name, 'Vertical Name')]")).scroll(ScrollDirection.DOWN);
 
-    waitForElement(driver, By.xpath("(//UIAStaticText[contains(@name, 'View 2')])[1]"), 6);
-    Assert.assertTrue(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 2')])[1]").isDisplayed());
-    Assert.assertFalse(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 1')])[1]").isDisplayed());
-    Assert.assertFalse(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 3')])[1]").isDisplayed());
+    waitForElement(driver, By.xpath("//UIAStaticText[contains(@name, 'Vertical View 2')]"), 6);
+    Assert.assertTrue(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Vertical View 2')]").isDisplayed());
+    Assert.assertFalse(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Vertical View 1')]").isDisplayed());
+    Assert.assertFalse(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Vertical View 3')]").isDisplayed());
 
-    ((RemoteUIAScrollView) driver.findElementsByTagName("UIAScrollView").get(1)).scroll(ScrollDirection.UP);
+      ((RemoteUIAScrollView) driver.findElementByXPath("//UIAScrollView[contains(@name, 'Vertical Name')]")).scroll(ScrollDirection.UP);
 
 
   }
 
   @Test
   public void testVerticalScrollingUp() {
-    Assert.assertTrue(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 1')])[1]").isDisplayed());
-    Assert.assertFalse(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 2')])[1]").isDisplayed());
-    Assert.assertFalse(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 3')])[1]").isDisplayed());
+    Assert.assertTrue(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Vertical View 1')]").isDisplayed());
+    Assert.assertFalse(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Vertical View 2')]").isDisplayed());
+    Assert.assertFalse(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Vertical View 3')]").isDisplayed());
 
-    ((RemoteUIAScrollView) driver.findElementsByTagName("UIAScrollView").get(2)).scroll(ScrollDirection.DOWN);
+    ((RemoteUIAScrollView) driver.findElementByXPath("//UIAScrollView[contains(@name, 'Vertical Name')]")).scroll(ScrollDirection.DOWN);
+    ((RemoteUIAScrollView) driver.findElementByXPath("//UIAScrollView[contains(@name, 'Vertical Name')]")).scroll(ScrollDirection.DOWN);
+    ((RemoteUIAScrollView) driver.findElementByXPath("//UIAScrollView[contains(@name, 'Vertical Name')]")).scroll(ScrollDirection.UP);
 
-    ((RemoteUIAScrollView) driver.findElementsByTagName("UIAScrollView").get(1)).scroll(ScrollDirection.DOWN);
+    waitForElement(driver, By.xpath("//UIAStaticText[contains(@name, 'Vertical View 2')]"), 6);
+    Assert.assertTrue(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Vertical View 2')]").isDisplayed());
+    Assert.assertFalse(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Vertical View 1')]").isDisplayed());
+    Assert.assertFalse(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Vertical View 3')]").isDisplayed());
+      ((RemoteUIAScrollView) driver.findElementByXPath("//UIAScrollView[contains(@name, 'Vertical Name')]")).scroll(ScrollDirection.UP);
 
-    ((RemoteUIAScrollView) driver.findElementsByTagName("UIAScrollView").get(1)).scroll(ScrollDirection.UP);
 
-    waitForElement(driver, By.xpath("(//UIAStaticText[contains(@name, 'View 2')])[1]"), 6);
-    Assert.assertTrue(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 2')])[1]").isDisplayed());
-    Assert.assertFalse(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 3')])[1]").isDisplayed());
-    Assert.assertFalse(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 1')])[1]").isDisplayed());
-
-    ((RemoteUIAScrollView) driver.findElementsByTagName("UIAScrollView").get(1)).scroll(ScrollDirection.UP);
   }
 
 
   @Test
   public void testHorizontalScrollingRight() {
 
-    Assert.assertTrue(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 1')])[2]").isDisplayed());
-    Assert.assertFalse(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 2')])[2]").isDisplayed());
-    Assert.assertFalse(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 3')])[2]").isDisplayed());
+    Assert.assertTrue(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Horizontal View 1')]").isDisplayed());
+    Assert.assertFalse(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Horizontal View 2')]").isDisplayed());
+    Assert.assertFalse(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Horizontal View 3')]").isDisplayed());
 
-    ((RemoteUIAScrollView) driver.findElementsByTagName("UIAScrollView").get(1)).scroll(ScrollDirection.RIGHT);
 
-    waitForElement(driver, By.xpath("(//UIAStaticText[contains(@name, 'View 2')])[2]"), 6);
+    ((RemoteUIAScrollView) driver.findElementByXPath("//UIAScrollView[contains(@name, 'Horizontal Name')]")).scroll(ScrollDirection.RIGHT);
 
-    Assert.assertTrue(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 2')])[2]").isDisplayed());
-    Assert.assertFalse(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 1')])[2]").isDisplayed());
-    Assert.assertFalse(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 3')])[2]").isDisplayed());
+    waitForElement(driver, By.xpath("//UIAStaticText[contains(@name, 'Horizontal View 2')]"), 6);
 
-    ((RemoteUIAScrollView) driver.findElementsByTagName("UIAScrollView").get(2)).scroll(ScrollDirection.LEFT);
+    Assert.assertTrue(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Horizontal View 2')]").isDisplayed());
+    Assert.assertFalse(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Horizontal View 1')]").isDisplayed());
+    Assert.assertFalse(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Horizontal View 3')]").isDisplayed());
+
+      ((RemoteUIAScrollView) driver.findElementByXPath("//UIAScrollView[contains(@name, 'Horizontal Name')]")).scroll(ScrollDirection.LEFT);
+
+
 
   }
 
   @Test
   public void testHorizontalScrollingLeft() {
 
-    Assert.assertTrue(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 1')])[2]").isDisplayed());
-    Assert.assertFalse(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 2')])[2]").isDisplayed());
-    Assert.assertFalse(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 3')])[2]").isDisplayed());
+      Assert.assertTrue(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Horizontal View 1')]").isDisplayed());
+      Assert.assertFalse(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Horizontal View 2')]").isDisplayed());
+      Assert.assertFalse(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Horizontal View 3')]").isDisplayed());
 
-    ((RemoteUIAScrollView) driver.findElementsByTagName("UIAScrollView").get(1)).scroll(ScrollDirection.RIGHT);
 
-    ((RemoteUIAScrollView) driver.findElementsByTagName("UIAScrollView").get(2)).scroll(ScrollDirection.RIGHT);
+      ((RemoteUIAScrollView) driver.findElementByXPath("//UIAScrollView[contains(@name, 'Horizontal Name')]")).scroll(ScrollDirection.RIGHT);
+      ((RemoteUIAScrollView) driver.findElementByXPath("//UIAScrollView[contains(@name, 'Horizontal Name')]")).scroll(ScrollDirection.RIGHT);
+      ((RemoteUIAScrollView) driver.findElementByXPath("//UIAScrollView[contains(@name, 'Horizontal Name')]")).scroll(ScrollDirection.LEFT);
 
-    ((RemoteUIAScrollView) driver.findElementsByTagName("UIAScrollView").get(3)).scroll(ScrollDirection.LEFT);
+      waitForElement(driver, By.xpath("//UIAStaticText[contains(@name, 'Horizontal View 2')]"), 6);
 
-    waitForElement(driver, By.xpath("(//UIAStaticText[contains(@name, 'View 2')])[2]"), 6);
-    Assert.assertTrue(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 2')])[2]").isDisplayed());
-    Assert.assertFalse(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 3')])[2]").isDisplayed());
-    Assert.assertFalse(driver.findElementByXPath("(//UIAStaticText[contains(@name, 'View 1')])[2]").isDisplayed());
+      Assert.assertTrue(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Horizontal View 2')]").isDisplayed());
+      Assert.assertFalse(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Horizontal View 1')]").isDisplayed());
+      Assert.assertFalse(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Horizontal View 3')]").isDisplayed());
 
-    ((RemoteUIAScrollView) driver.findElementsByTagName("UIAScrollView").get(2)).scroll(ScrollDirection.LEFT);
+      ((RemoteUIAScrollView) driver.findElementByXPath("//UIAScrollView[contains(@name, 'Horizontal Name')]")).scroll(ScrollDirection.LEFT);
+
 
   }
 }
