@@ -95,7 +95,7 @@ public class StatusTest extends BaseIOSDriverTest {
     }
 
     Assert.assertTrue(all.contains("en"));
-    Assert.assertTrue(all.contains("zh"));
+    Assert.assertTrue(all.contains("zh-Hant"));
     Assert.assertTrue(all.contains("fr"));
 
 
