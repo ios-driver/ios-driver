@@ -17,13 +17,9 @@ package org.uiautomation.ios.server.services;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NoSuchWindowException;
-import org.openqa.selenium.remote.SessionId;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.server.InstrumentsBackedNativeIOSDriver;
-import org.uiautomation.ios.server.ServerSideNativeDriver;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
 import org.uiautomation.ios.server.utils.IOSVersion;
 import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
 import org.uiautomation.ios.wkrdp.internal.AlertDetector;
@@ -108,7 +104,6 @@ public class IOSDualDriver {
     return nativeDriver;
   }
 
-
   public synchronized RemoteIOSWebDriver getRemoteWebDriver() {
     if (webDriver == null) {
       String version = session.getCapabilities().getSDKVersion();
@@ -120,8 +115,6 @@ public class IOSDualDriver {
     }
     return webDriver;
   }
-
-
 
   public void setMode(WorkingMode mode) throws NoSuchWindowException {
     if (mode == WorkingMode.Web) {
