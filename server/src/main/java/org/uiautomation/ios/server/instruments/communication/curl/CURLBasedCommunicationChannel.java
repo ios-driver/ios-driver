@@ -63,12 +63,10 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
     return res;
   }
 
-
   public static class UIAScriptServlet extends DriverBasedServlet {
 
     private static final Logger log = Logger.getLogger(UIAScriptServlet.class.getName());
     private static final long serialVersionUID = 41227429706998662L;
-
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
