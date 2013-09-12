@@ -28,7 +28,7 @@ public class TakeScreenshotNHandler extends BaseNativeCommandHandler {
 
   public TakeScreenshotNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
-    service = getIOSDualDriver().getInstruments().getScreenshotService();
+    service = getNativeDriver().getInstruments().getScreenshotService();
   }
 
   @Override

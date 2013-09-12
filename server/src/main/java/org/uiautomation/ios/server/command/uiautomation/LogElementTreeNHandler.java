@@ -130,9 +130,7 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
 
       // TODO freynaud rethink that.
       if (screenshot) {
-        TakeScreenshotService
-            service =
-            getIOSDualDriver().getScreenshotService();
+        TakeScreenshotService service = getNativeDriver().getScreenshotService();
 
         if (service instanceof InstrumentsAppleScreenshotService) {
           File source = ((InstrumentsAppleScreenshotService) service).getScreenshotFile();

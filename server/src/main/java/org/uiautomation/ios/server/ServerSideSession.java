@@ -14,6 +14,7 @@
 package org.uiautomation.ios.server;
 
 import org.openqa.selenium.SessionNotCreatedException;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
@@ -32,6 +33,7 @@ import org.uiautomation.ios.utils.ApplicationCrashDetails;
 import org.uiautomation.ios.utils.ClassicCommands;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -48,6 +50,7 @@ public class ServerSideSession extends Session {
   private Device device;
   private boolean sessionCrashed;
   private ApplicationCrashDetails applicationCrashDetails;
+  private java.net.URL URL;
 
   ServerSideSession(IOSServerManager server, IOSCapabilities desiredCapabilities,
                     IOSServerConfiguration options) {
@@ -186,5 +189,15 @@ public class ServerSideSession extends Session {
     if (driver != null) {
       driver.stop();
     }
+  }
+
+  public URL getURL() {
+    URL url;
+    try {
+      url = new URL("http://localhost:" + server.getHostInfo().getPort() + "/wd/hub");
+    } catch (MalformedURLException e) {
+      throw new WebDriverException(e.getMessage(), e);
+    }
+    return url;
   }
 }

@@ -21,6 +21,7 @@ import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
+import org.uiautomation.ios.server.InstrumentsBackedNativeIOSDriver;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
 import org.uiautomation.ios.server.services.IOSDualDriver;
@@ -58,7 +59,7 @@ public abstract class BaseCommandHandler implements Handler {
     return getIOSDualDriver().getRemoteWebDriver();
   }
 
-  protected RemoteIOSDriver getNativeDriver() {
+  protected InstrumentsBackedNativeIOSDriver getNativeDriver() {
     return getIOSDualDriver().getNativeDriver();
   }
 
@@ -90,7 +91,7 @@ public abstract class BaseCommandHandler implements Handler {
   }
 
   public CommunicationChannel communication() {
-    return getIOSDualDriver().communication();
+    return getNativeDriver().communication();
   }
 
   @Override

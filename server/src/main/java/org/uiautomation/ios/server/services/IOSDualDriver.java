@@ -20,10 +20,10 @@ import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.remote.SessionId;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
-import org.uiautomation.ios.client.uiamodels.impl.ServerSideNativeDriver;
+import org.uiautomation.ios.server.InstrumentsBackedNativeIOSDriver;
+import org.uiautomation.ios.server.ServerSideNativeDriver;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
-import org.uiautomation.ios.server.simulator.InstrumentsFailedToStartException;
 import org.uiautomation.ios.server.utils.IOSVersion;
 import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
 import org.uiautomation.ios.wkrdp.internal.AlertDetector;
@@ -37,44 +37,27 @@ public class IOSDualDriver {
 
   private static final Logger log = Logger.getLogger(IOSDualDriver.class.getName());
   private final ServerSideSession session;
-  private RemoteIOSDriver nativeDriver;
+  private final Timer stopSessionTimer = new Timer(true);
+  private InstrumentsBackedNativeIOSDriver nativeDriver;
   private RemoteIOSWebDriver webDriver;
   private WorkingMode mode = WorkingMode.Native;
-  private Timer stopSessionTimer = new Timer(true);
-  private final Instruments instruments;
 
-  private Thread shutdownHook = new Thread() {
-    @Override
-    public void run() {
-      instruments.stop();
-    }
-  };
   public IOSDualDriver(ServerSideSession session) {
     this.session = session;
-    instruments = InstrumentsFactory.getInstruments(session);
-
-    Runtime.getRuntime().addShutdownHook(shutdownHook);
   }
 
   public void stop() {
-    // nativeDriver should have instruments within it.
-    instruments.stop();
+    nativeDriver.stop();
+
     if (webDriver != null) {
       webDriver.stop();
       webDriver = null;
     }
-
     stopSessionTimer.cancel();
-    stopSessionTimer = null;
-    Runtime.getRuntime().removeShutdownHook(shutdownHook);
-    shutdownHook = null;
+
   }
 
   private void forceStop() {
-    try {
-      instruments.stop();
-    } catch (Exception ignore) {
-    }
     if (webDriver != null) {
       try {
         webDriver.stop();
@@ -85,21 +68,16 @@ public class IOSDualDriver {
     if (nativeDriver != null) {
       try {
         nativeDriver.quit();
+        nativeDriver.stop();
       } catch (Exception ignore) {
       }
-      nativeDriver = null;
     }
   }
 
   public void start() {
-    try {
-      instruments.start();
-    } catch (InstrumentsFailedToStartException e) {
-      forceStop();
-    }
-
     // force stop session if running for too long
     final int sessionTimeoutMillis = session.getOptions().getSessionTimeoutMillis();
+
     stopSessionTimer.schedule(new TimerTask() {
       @Override
       public void run() {
@@ -117,7 +95,8 @@ public class IOSDualDriver {
     } catch (Exception e) {
       e.printStackTrace();
     }
-    nativeDriver = new ServerSideNativeDriver(url, new SessionId(session.getSessionId()));
+    nativeDriver = new InstrumentsBackedNativeIOSDriver(url, session);
+    nativeDriver.start();
 
     if ("Safari".equals(session.getCapabilities().getBundleName())) {
       setMode(WorkingMode.Web);
@@ -125,13 +104,10 @@ public class IOSDualDriver {
     }
   }
 
-  public RemoteIOSDriver getNativeDriver() {
+  public InstrumentsBackedNativeIOSDriver getNativeDriver() {
     return nativeDriver;
   }
 
-  public Instruments getInstruments(){
-    return instruments;
-  }
 
   public synchronized RemoteIOSWebDriver getRemoteWebDriver() {
     if (webDriver == null) {
@@ -145,9 +121,7 @@ public class IOSDualDriver {
     return webDriver;
   }
 
-  public CommunicationChannel communication(){
-    return instruments.getChannel();
-  }
+
 
   public void setMode(WorkingMode mode) throws NoSuchWindowException {
     if (mode == WorkingMode.Web) {
@@ -180,7 +154,5 @@ public class IOSDualDriver {
     webDriver.switchTo(String.valueOf(currentPageID));
   }
 
-  public TakeScreenshotService getScreenshotService() {
-    return instruments.getScreenshotService();
-  }
+
 }
