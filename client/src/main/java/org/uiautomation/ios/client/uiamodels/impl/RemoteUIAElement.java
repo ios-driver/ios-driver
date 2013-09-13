@@ -214,7 +214,13 @@ public class RemoteUIAElement extends RemoteIOSObject implements UIAElement {
         request =
         commandExecutor.buildRequest(WebDriverLikeCommand.ATTRIBUTE, this, null,
                                      ImmutableMap.of("name", name));
-    return String.valueOf(commandExecutor.execute(request));
+
+    String returnValue =  String.valueOf(commandExecutor.execute(request));
+      if (returnValue.equals("null")) {
+          return null;
+      } else {
+          return returnValue;
+      }
   }
 
   @Override
