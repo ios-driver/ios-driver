@@ -60,7 +60,6 @@ to have the rotate of the top left corner. */
     position: absolute;
     z-index: 4;
     border:2px solid;
-    border-radius:25px;
 }
 
 #details {
