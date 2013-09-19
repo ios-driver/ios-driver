@@ -13,10 +13,7 @@
  */
 package org.uiautomation.ios;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -226,13 +223,22 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   public String getLocale() {
     Object o = getCapability(LOCALE);
-    return ((String) o);
+
+    if (o == null) {
+      return Locale.getDefault().toString();
+    } else {
+      return o.toString();
+    }
   }
 
   public String getLanguage() {
     Object o = getCapability(LANGUAGE);
-    return ((String) o);
 
+    if (o == null) {
+      return Locale.getDefault().getLanguage();
+    } else {
+      return o.toString();
+    }
   }
 
   public void setDevice(DeviceType device) {
