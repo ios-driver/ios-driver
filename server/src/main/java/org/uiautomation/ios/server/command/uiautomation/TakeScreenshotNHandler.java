@@ -23,6 +23,7 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+import org.uiautomation.ios.server.utils.JSTemplate;
 import org.uiautomation.ios.utils.InstrumentsGeneratedImage;
 import org.uiautomation.ios.utils.JSONWireImage;
 
@@ -31,15 +32,14 @@ import java.io.File;
 public class TakeScreenshotNHandler extends UIAScriptHandler {
 
   public static final String SCREEN_NAME = "tmpScreenshot";
-  private static final
-  String
-      jsTemplate =
-      "UIATarget.localTarget().captureScreenWithName('" + SCREEN_NAME + "');"
-      + "UIAutomation.createJSONResponse(':sessionId',0,UIATarget.localTarget().getDeviceOrientation());";
+  private static final JSTemplate template = new JSTemplate(
+      "UIATarget.localTarget().captureScreenWithName('" + SCREEN_NAME + "');" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,UIATarget.localTarget().getDeviceOrientation());",
+      "sessionId");
 
   public TakeScreenshotNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
-    setJS(jsTemplate.replace(":sessionId", request.getSession()));
+    setJS(template.generate(request.getSession()));
     addDecorator(new SendBack64EncodedStringDecorator(driver));
   }
 
@@ -77,7 +77,6 @@ public class TakeScreenshotNHandler extends UIAScriptHandler {
             "Error converting " + source.getAbsolutePath() + " to a 64 encoded string "
             + e.getMessage(), e);
       }
-
     }
   }
 

@@ -13,94 +13,83 @@
  */
 package org.uiautomation.ios.server.command.uiautomation;
 
+import com.google.common.collect.ObjectArrays;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+import org.uiautomation.ios.server.utils.JSTemplate;
 
 public class ElementScrollNHandler extends UIAScriptHandler {
 
-  private static final String scrollUpTemplate =
-          "var element = UIAutomation.cache.get(:reference);" +
-                  "element.scrollUp();" +
-                  "UIAutomation.createJSONResponse(':sessionId',0,'')";
+  private static final JSTemplate scrollUpTemplate = buildJSTemplate(
+      "var element = UIAutomation.cache.get(%:reference$s);" +
+      "element.scrollUp();" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')");
+  private static final JSTemplate scrollDownTemplate = buildJSTemplate(
+      "var element = UIAutomation.cache.get(%:reference$s);" +
+      "element.scrollDown();" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')");
+  private static final JSTemplate scrollLeftTemplate = buildJSTemplate(
+      "var element = UIAutomation.cache.get(%:reference$s);" +
+      "element.scrollLeft();" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')");
+  private static final JSTemplate scrollRightTemplate = buildJSTemplate(
+      "var element = UIAutomation.cache.get(%:reference$s);" +
+      "element.scrollRight();" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')");
+  private static final JSTemplate scrollToNameTemplate = buildJSTemplate(
+      "var element = UIAutomation.cache.get(%:reference$s);" +
+      "element.scrollToElementWithName('%:name$s');" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')",
+      "name");
+  private static final JSTemplate scrollToPredicateTemplate = buildJSTemplate(
+      "var element = UIAutomation.cache.get(%:reference$s);" +
+      "element.scrollToElementWithPredicate(\"%:predicateString$s\");" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')",
+      "predicateString");
+  private static final JSTemplate scrollToVisibleTemplate = buildJSTemplate(
+      "var element = UIAutomation.cache.get(%:reference$s);" +
+      "element.scrollToVisible();" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')");
 
-
-  private static final String scrollDownTemplate =
-          "var element = UIAutomation.cache.get(:reference);" +
-                  "element.scrollDown();" +
-                  "UIAutomation.createJSONResponse(':sessionId',0,'')";
-
-  private static final String scrollLeftTemplate =
-          "var element = UIAutomation.cache.get(:reference);" +
-                  "element.scrollLeft();" +
-                  "UIAutomation.createJSONResponse(':sessionId',0,'')";
-
-  private static final String scrollRightTemplate =
-          "var element = UIAutomation.cache.get(:reference);" +
-                  "element.scrollRight();" +
-                  "UIAutomation.createJSONResponse(':sessionId',0,'')";
-
-  private static final String scrollToNameTemplate =
-          "var element = UIAutomation.cache.get(:reference);" +
-                  "element.scrollToElementWithName(':name');" +
-                  "UIAutomation.createJSONResponse(':sessionId',0,'')";
-
-  private static final String scrollToPredicateTemplate =
-          "var element = UIAutomation.cache.get(:reference);" +
-                  "element.scrollToElementWithPredicate(\":predicateString\");" +
-                  "UIAutomation.createJSONResponse(':sessionId',0,'')";
-
-  private static final String scrollToVisibleTemplate =
-          "var element = UIAutomation.cache.get(:reference);" +
-                  "element.scrollToVisible();" +
-                  "UIAutomation.createJSONResponse(':sessionId',0,'')";
+  private static JSTemplate buildJSTemplate(String template, String... extraArgs) {
+    String[] args = {"sessionId", "reference"};
+    return new JSTemplate(template, ObjectArrays.concat(args, extraArgs, String.class));
+  }
 
   public ElementScrollNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
-    String template = null;
 
+    String reference = request.getVariableValue(":reference");
+    String sessionId = request.getSession();
+    final String js;
     JSONObject payload = request.getPayload();
     if (payload.has("direction")) {
-      String direction = payload.optString("direction");
-      if (direction.equals("up")) {
-        template = scrollUpTemplate;
-      } else if (direction.equals("down")) {
-        template = scrollDownTemplate;
-      } else if (direction.equals("left")) {
-        template = scrollLeftTemplate;
-      } else if (direction.equals("right")) {
-        template = scrollRightTemplate;
-      } else {
-        throw new WebDriverException("Invalid value for scrolling direction");
+      JSTemplate template;
+      switch (payload.optString("direction")) {
+        case "up": template = scrollUpTemplate; break;
+        case "down": template = scrollDownTemplate; break;
+        case "left": template = scrollLeftTemplate; break;
+        case "right": template = scrollRightTemplate; break;
+        default: throw new WebDriverException("Invalid value for scrolling direction");
       }
-
+      js = template.generate(sessionId, reference);
     } else if (payload.has("name")) {
       String name = payload.optString("name");
-      template = scrollToNameTemplate.replace(":name", name);
-
+      js = scrollToNameTemplate.generate(sessionId, reference, name);
     } else if (payload.has("predicateString")) {
       String predicateString = payload.optString("predicateString");
-      template = scrollToPredicateTemplate.replace(":predicateString", predicateString);
-
+      js = scrollToPredicateTemplate.generate(sessionId, reference, predicateString);
     } else if (payload.has("toVisible")) {
-      template = scrollToVisibleTemplate;
-
+      js = scrollToVisibleTemplate.generate(sessionId, reference);
     } else {
       throw new WebDriverException("Unrecognised payload for ELEMENT_SCROLL");
-
     }
-
-
-    String js = template
-            .replace(":sessionId", request.getSession())
-            .replace(":reference", request.getVariableValue(":reference"));
-
     setJS(js);
   }
-
 
   @Override
   public JSONObject configurationDescription() throws JSONException {

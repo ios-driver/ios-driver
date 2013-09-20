@@ -46,5 +46,4 @@ public class GetCurrentContextNHandler extends BaseNativeCommandHandler {
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
   }
-
 }

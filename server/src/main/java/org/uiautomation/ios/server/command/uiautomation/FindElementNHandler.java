@@ -18,14 +18,17 @@ import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
+import org.uiautomation.ios.server.utils.JSTemplate;
 
 import java.util.Map;
 
 public class FindElementNHandler extends BaseFindElementNHandler {
 
-  private static final String jsTemplate = "var root = UIAutomation.cache.get(':reference');"
-                                           + "var result = root.element(:depth,:criteria);"
-                                           + "UIAutomation.createJSONResponse(':sessionId',0,result);";
+  private static final JSTemplate template = new JSTemplate(
+      "var root = UIAutomation.cache.get('%:reference$s');" +
+      "var result = root.element(%:depth$d,%:criteria$s);" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,result);",
+      "sessionId", "reference", "depth", "criteria");
 
   public FindElementNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -66,13 +69,6 @@ public class FindElementNHandler extends BaseFindElementNHandler {
 
   private String getJSForFindElementUsingInstruments() {
     int depth = getRequest().getPayload().optInt("depth", -1);
-    String js = jsTemplate
-        .replace(":sessionId", getRequest().getSession())
-        .replace(":depth", "" + depth)
-        .replace(":reference", getReference())
-        .replace(":criteria", getCriteria().stringify().toString());
-    return js;
+    return template.generate(getRequest().getSession(), getReference(), depth, getCriteria().stringify().toString());
   }
-
-
 }

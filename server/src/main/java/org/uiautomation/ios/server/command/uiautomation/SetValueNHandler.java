@@ -19,18 +19,20 @@ import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+import org.uiautomation.ios.server.utils.JSTemplate;
 
 public class SetValueNHandler extends UIAScriptHandler {
 
-  private static final String voidTemplate =
-      "var parent = UIAutomation.cache.get(:reference);" +
-      "parent:jsMethod;" +
-      "UIAutomation.createJSONResponse(':sessionId',0,'')";
+  private static final JSTemplate template = new JSTemplate(
+      "var parent = UIAutomation.cache.get(%:reference$s);" +
+      "parent.sendKeys('%:value$s',%:useNativeEvents$b);" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')",
+      "sessionId", "reference", "value", "useNativeEvents");
 
   public SetValueNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
 
-    boolean useNativeEvents = (Boolean) getConfiguration("nativeEvents");
+    boolean useNativeEvents = getConfiguration("nativeEvents");
     try {
       JSONArray array = request.getPayload().getJSONArray("value");
       StringBuilder b = new StringBuilder();
@@ -46,10 +48,11 @@ public class SetValueNHandler extends UIAScriptHandler {
       corrected = corrected.replaceAll("\\n", "\\\\n");
       corrected = corrected.replaceAll("\\t", "\\\\t");
 
-      String js = voidTemplate
-          .replace(":sessionId", request.getSession())
-          .replace(":reference", request.getVariableValue(":reference"))
-          .replace(":jsMethod", ".sendKeys('" + corrected + "'," + useNativeEvents + ")");
+      String js = template.generate(
+          request.getSession(),
+          request.getVariableValue(":reference"),
+          corrected,
+          useNativeEvents);
       setJS(js);
     } catch (JSONException e) {
       e.printStackTrace();
@@ -60,5 +63,4 @@ public class SetValueNHandler extends UIAScriptHandler {
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
   }
-
 }

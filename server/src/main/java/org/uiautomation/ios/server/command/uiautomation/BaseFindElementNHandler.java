@@ -70,8 +70,6 @@ public abstract class BaseFindElementNHandler extends UIAScriptHandler {
     return getAUT().applyL10N(original);
   }
 
-
-
   protected Criteria getCriteria() {
     if (xpathMode) {
       throw new WebDriverException("Bug. Criteria do not apply for xpath mode.");
@@ -85,7 +83,6 @@ public abstract class BaseFindElementNHandler extends UIAScriptHandler {
     }
     Criteria decorated = AbstractCriteria.parse(json, decorator);
     return decorated;
-
   }
 
   /**
@@ -153,7 +150,9 @@ public abstract class BaseFindElementNHandler extends UIAScriptHandler {
 
     // for partial matching, remove the quotes.
     if ("partial link text".equals(using)) {
-      val = val.substring(1, val.length() - 1);
+      if (val.startsWith("\"") && val.endsWith("\"")) {
+        val = val.substring(1, val.length() - 1);
+      }
       strategy = MatchingStrategy.regex;
     }
 

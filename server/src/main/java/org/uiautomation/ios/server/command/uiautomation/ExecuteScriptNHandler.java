@@ -21,31 +21,26 @@ import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+import org.uiautomation.ios.server.utils.JSTemplate;
 
 import java.util.logging.Logger;
 
 public class ExecuteScriptNHandler extends UIAScriptHandler {
 
   private static final Logger log = Logger.getLogger(ExecuteScriptNHandler.class.getName());
-
-  private static final
-  String
-      template =
-      "UIAutomation.createJSONResponse(':sessionId',0,:function)";
+  private static final JSTemplate template = new JSTemplate(
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,%:function$s)",
+      "sessionId", "function");
 
   public ExecuteScriptNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
     try {
       String script = getRequest().getPayload().getString("script");
       JSONArray args = getRequest().getPayload().getJSONArray("args");
-
       String arguments = buildArguments(args);
 
       String f = "(function() { " + script + "})";
-      String
-          js =
-          template.replace(":sessionId", request.getSession())
-              .replace(":function", f + "(" + arguments + ")");
+      String js = template.generate(request.getSession(), f + "(" + arguments + ")");
       setJS(js);
     } catch (JSONException e) {
       e.printStackTrace();
@@ -115,7 +110,6 @@ public class ExecuteScriptNHandler extends UIAScriptHandler {
 
   @Override
   public JSONObject configurationDescription() throws JSONException {
-
     return noConfigDefined();
   }
 }

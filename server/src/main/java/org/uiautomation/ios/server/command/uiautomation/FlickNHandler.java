@@ -23,20 +23,21 @@ import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.utils.CoordinateUtils;
+import org.uiautomation.ios.server.utils.JSTemplate;
 import org.uiautomation.ios.wkrdp.model.RemoteWebNativeBackedElement;
 
 public class FlickNHandler extends UIAScriptHandler {
-  private static final String dragTemplate =
-      "UIATarget.localTarget().dragFromToForDuration({x:fromX,y:fromY},{x:toX,y:toY},duration);" +
-          "UIAutomation.createJSONResponse(':sessionId',0,'')";
-  private static final String getElementTemplate =
-      "var element = UIAutomation.cache.get(:reference);" +
-          "UIAutomation.createJSONResponse(':sessionId',0,result);";
-
+  private static final JSTemplate dragTemplate = new JSTemplate(
+      "UIATarget.localTarget().dragFromToForDuration({x:%:fromX$d,y:%:fromY$d},{x:%:toX$d,y:%:toY$d},%:duration$s);" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')",
+      "sessionId", "fromX", "fromY", "toX", "toY", "duration");
+  private static final JSTemplate getElementTemplate = new JSTemplate(
+      "var element = UIAutomation.cache.get(%:reference$s);" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,result);",
+      "sessionId", "reference");
 
   public FlickNHandler(IOSServerManager driver, WebDriverLikeRequest request) throws Exception {
     super(driver, request);
-
 
     JSONObject payload = request.getPayload();
     String elementId = payload.optString("element");
@@ -75,20 +76,18 @@ public class FlickNHandler extends UIAScriptHandler {
     fromPoint = CoordinateUtils.forcePointOnScreen(fromPoint, screenSize);
     toPoint = CoordinateUtils.forcePointOnScreen(toPoint, screenSize);
 
-    String js = dragTemplate
-        .replace(":sessionId", request.getSession())
-        .replace("fromX", String.valueOf(fromPoint.getX()))
-        .replace("fromY", String.valueOf(fromPoint.getY()))
-        .replace("toX", String.valueOf(toPoint.getX()))
-        .replace("toY", String.valueOf(toPoint.getY()))
-        .replace("duration", speed);
+    String js = dragTemplate.generate(
+        request.getSession(),
+        fromPoint.getX(),
+        fromPoint.getY(),
+        toPoint.getX(),
+        toPoint.getY(),
+        speed);
     setJS(js);
   }
 
   /*public Point getStartCoordinatesCentered(WebDriverLikeRequest request, String elementId) throws InterruptedException {
-    String getElementJS = getElementTemplate
-        .replace(":reference", elementId)
-        .replace(":sessionId", request.getSession());
+    String getElementJS = getElementTemplate.generate(request.getSession(), elementId);
 
     UIAScriptRequest r = new UIAScriptRequest(getElementJS);
     communication().sendNextCommand(r);
@@ -109,6 +108,4 @@ public class FlickNHandler extends UIAScriptHandler {
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
   }
-
-
 }

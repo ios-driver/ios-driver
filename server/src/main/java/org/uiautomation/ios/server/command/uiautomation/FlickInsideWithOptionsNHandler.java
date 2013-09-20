@@ -18,34 +18,31 @@ import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+import org.uiautomation.ios.server.utils.JSTemplate;
 
 public class FlickInsideWithOptionsNHandler extends UIAScriptHandler {
 
-  private static final String voidTemplate =
-          "var element = UIAutomation.cache.get(:reference);" +
-                  "element.flickInsideWithOptions({touchCount:touchCountx, startOffset:{x:xstart, y:ystart}, endOffset:{x:xend, y:yend}});" +
-                  "UIAutomation.createJSONResponse(':sessionId',0,'')";
-
+  private static final JSTemplate template = new JSTemplate(
+      "var element = UIAutomation.cache.get(%:reference$s);" +
+      "element.flickInsideWithOptions({touchCount:%:touchCountx$d, " +
+          "startOffset:{x:%:xstart$f, y:%:ystart$f}, endOffset:{x:%:xend$f, y:%:yend$f}});" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')",
+      "sessionId", "reference", "xstart", "ystart", "xend", "yend", "touchCountx");
 
   public FlickInsideWithOptionsNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
 
-
     JSONObject payload = request.getPayload();
 
-    String js = voidTemplate
-            .replace(":sessionId", request.getSession())
-            .replace(":reference", request.getVariableValue(":reference"))
-            .replace("xstart", payload.optString("xstart"))
-            .replace("ystart", payload.optString("ystart"))
-            .replace("xend", payload.optString("xend"))
-            .replace("yend", payload.optString("yend"))
-            .replace("touchCountx", payload.optString("touchCount"));
-
-
+    String js = template.generate(
+        request.getSession(),
+        request.getVariableValue(":reference"),
+        payload.optDouble("xstart"),
+        payload.optDouble("ystart"),
+        payload.optDouble("xend"),
+        payload.optDouble("yend"),
+        payload.optInt("touchCount"));
     setJS(js);
-
-
   }
 
   @Override

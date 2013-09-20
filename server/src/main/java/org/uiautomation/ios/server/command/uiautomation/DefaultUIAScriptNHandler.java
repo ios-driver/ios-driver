@@ -29,6 +29,7 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.CommandMapping;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+import org.uiautomation.ios.server.utils.JSTemplate;
 
 /**
  * execute the command on instruments, and returns the result cast based on the expected result.
@@ -36,18 +37,22 @@ import org.uiautomation.ios.server.command.UIAScriptHandler;
 public class DefaultUIAScriptNHandler extends UIAScriptHandler {
 
   // TODO freynaud extract?
-  private static final String stringTemplate =
-      "var parent = UIAutomation.cache.get(:reference);" +
-      "var myStringResult = parent:jsMethod ;" +
-      "UIAutomation.createJSONResponse(':sessionId',0,myStringResult)";
-  private static final String objectTemplate =
-      "var parent = UIAutomation.cache.get(:reference);" +
-      "var myObjectResult = parent:jsMethod;" +
-      "var k=UIAutomation.cache.store(myObjectResult);" +
-      "UIAutomation.createJSONResponse(':sessionId',0,myObjectResult)";
-  private static final String voidTemplate =
-      "var parent = UIAutomation.cache.get(:reference);" +
-      "parent:jsMethod;UIAutomation.createJSONResponse(':sessionId',0,'')";
+  private static final JSTemplate stringTemplate = buildJSTemplate(
+      "var parent = UIAutomation.cache.get(%:reference$s);" +
+      "var myStringResult = parent%:jsMethod$s;" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,myStringResult)");
+  private static final JSTemplate objectTemplate = buildJSTemplate(
+      "var parent = UIAutomation.cache.get(%:reference$s);" +
+      "var myObjectResult = parent%:jsMethod$s;" +
+          "var k=UIAutomation.cache.store(myObjectResult);" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,myObjectResult)");
+  private static final JSTemplate voidTemplate = buildJSTemplate(
+      "var parent = UIAutomation.cache.get(%:reference$s);" +
+      "parent%:jsMethod$s;UIAutomation.createJSONResponse('%:sessionId$s',0,'')");
+
+  private static JSTemplate buildJSTemplate(String template) {
+    return new JSTemplate(template, "sessionId", "reference", "jsMethod");
+  }
 
   public DefaultUIAScriptNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -56,11 +61,11 @@ public class DefaultUIAScriptNHandler extends UIAScriptHandler {
 
   private String computeJS() {
     Class<?> returnType = getRequest().getGenericCommand().returnType();
-    String template = findTemplate(returnType);
+    JSTemplate template = findTemplate(returnType);
     return getFinalJS(template);
   }
 
-  private String findTemplate(Class<?> returnType) {
+  private JSTemplate findTemplate(Class<?> returnType) {
     if (returnType == String.class || returnType == UIARect.class || returnType == Integer.class
         || returnType == Boolean.class || returnType == JSONObject.class) {
       return stringTemplate;
@@ -101,25 +106,19 @@ public class DefaultUIAScriptNHandler extends UIAScriptHandler {
     return false;
   }
 
-  private String getFinalJS(String template) {
+  private String getFinalJS(JSTemplate template) {
+    String reference = getRequest().hasVariable(":reference") ? getRequest().getVariableValue(":reference")
+        : ":reference";
     WebDriverLikeCommand command = getRequest().getGenericCommand();
     CommandMapping mapping = CommandMapping.get(command);
-    String method = mapping.jsMethod(getRequest().getPayload());
+    String jsMethod = mapping.jsMethod(getRequest().getPayload());
+    String sessionId = getRequest().getSession();
 
-    String js =
-        template.replace(":jsMethod", method)
-            .replace(":sessionId", getRequest().getSession());
-    if (getRequest().hasVariable(":reference")) {
-      js = js.replace(":reference", getRequest().getVariableValue(":reference"));
-    }
-
-    return js;
+    return template.generate(sessionId, reference, jsMethod);
   }
 
   @Override
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
   }
-
-
 }

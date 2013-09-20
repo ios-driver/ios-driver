@@ -20,13 +20,15 @@ import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
-
+import org.uiautomation.ios.server.utils.JSTemplate;
 
 public class SendKeysNHandler extends UIAScriptHandler {
 
-  private static final String template = "var keyboard = UIAutomation.cache.get('1').keyboard();"
-                                         + "keyboard.typeString(':value');"
-                                         + "UIAutomation.createJSONResponse(':sessionId',0,'')";
+  private static final JSTemplate template = new JSTemplate(
+      "var keyboard = UIAutomation.cache.get('1').keyboard();" +
+      "keyboard.typeString('%:value$s');" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')",
+      "sessionId", "value");
 
   public SendKeysNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -48,9 +50,9 @@ public class SendKeysNHandler extends UIAScriptHandler {
         throw new WebDriverException("cannot tab on the ios keyboard.");
       }
 
-      String js = template
-          .replace(":sessionId", request.getSession())
-          .replace(":value", corrected);
+      String js = template.generate(
+          request.getSession(),
+          corrected);
       setJS(js);
     } catch (JSONException e) {
       throw new WebDriverException("Error parsing the send keys command.", e);
@@ -61,5 +63,4 @@ public class SendKeysNHandler extends UIAScriptHandler {
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
   }
-
 }

@@ -22,20 +22,21 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+import org.uiautomation.ios.server.utils.JSTemplate;
 import org.uiautomation.ios.utils.hack.TimeSpeeder;
 
 public class GetTimeoutNHandler extends UIAScriptHandler {
 
-
-  private static final String getTimeout =
-      "var timeout =UIAutomation.getTimeout(':type');" +
-      "UIAutomation.createJSONResponse(':sessionId',0,timeout)";
+  private static final JSTemplate template = new JSTemplate(
+      "var timeout = UIAutomation.getTimeout('%:type$s');" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,timeout)",
+      "sessionId", "type");
 
   public GetTimeoutNHandler(IOSServerManager driver, WebDriverLikeRequest request)
       throws Exception {
     super(driver, request);
     String type = request.getPayload().getString("type");
-    setJS(getTimeout.replace(":type", type));
+    setJS(template.generate(request.getSession(), type));
     addDecorator(new CorrectTimeout(driver));
   }
 
@@ -57,15 +58,11 @@ public class GetTimeoutNHandler extends UIAScriptHandler {
             "error correcting the timeout to take the timespeeder into account." + e.getMessage(),
             e);
       }
-
-
     }
-
   }
 
   @Override
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
   }
-
 }

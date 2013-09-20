@@ -67,7 +67,7 @@ public enum CommandMapping {
   TARGET_TAP(".tap({x::x,y::y})"),
   SET_ORIENTATION(SetOrientationNHandler.class),
   GET_ORIENTATION(GetOrientationNHandler.class),
-  DRAG_FROM_TO_FOR_DURATION(DragFromToForDurationNHander.class),
+  DRAG_FROM_TO_FOR_DURATION(DragFromToForDurationNHandler.class),
   PINCH_CLOSE_FROM_TO_FOR_DURATION(PinchCloseNHandler.class, NotImplementedWebHandler.class),
   PINCH_OPEN_FROM_TO_FOR_DURATION(PinchOpenNHandler.class, NotImplementedWebHandler.class),
 

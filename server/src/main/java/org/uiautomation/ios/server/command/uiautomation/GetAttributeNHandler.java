@@ -18,35 +18,33 @@ import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+import org.uiautomation.ios.server.utils.JSTemplate;
 
 public class GetAttributeNHandler extends UIAScriptHandler {
 
-  private static final String template =
-      "var parent = UIAutomation.cache.get(:reference);" +
-      "var myStringResult = parent:attribute ;" +
-      "UIAutomation.createJSONResponse(':sessionId',0,myStringResult)";
-
-
-  private static final String logElementTree = "var root = UIAutomation.cache.get(':reference');"
-                                               + "var result = root.tree(false);"
-                                               + "var str = JSON.stringify(result.tree);"
-                                               + "UIAutomation.createJSONResponse(':sessionId',0,str);";
+  private static final JSTemplate template = new JSTemplate(
+      "var parent = UIAutomation.cache.get(%:reference$s);" +
+      "var myStringResult = parent.%:attribute$s();" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,myStringResult)",
+      "sessionId", "reference", "attribute");
+  private static final JSTemplate logElementTreeTemplate = new JSTemplate(
+      "var root = UIAutomation.cache.get('%:reference$s');" +
+      "var result = root.tree(false);" +
+      "var str = JSON.stringify(result.tree);" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,str);",
+      "sessionId", "reference");
 
   public GetAttributeNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
 
-    String attributeMethod = "." + request.getVariableValue(":name") + "()";
+    String attributeMethod = request.getVariableValue(":name");
     String reference = request.getVariableValue(":reference");
-    String js = null;
+    final String js;
 
-    if (".tree()".equals(attributeMethod)) {
-      js = logElementTree.replace(":sessionId", request.getSession())
-          .replace(":reference", reference);
+    if ("tree".equals(attributeMethod)) {
+      js = logElementTreeTemplate.generate(request.getSession(), reference);
     } else {
-      js = template
-          .replace(":sessionId", request.getSession())
-          .replace(":attribute", attributeMethod)
-          .replace(":reference", reference);
+      js = template.generate(request.getSession(), reference, attributeMethod);
     }
     setJS(js);
   }
@@ -55,5 +53,4 @@ public class GetAttributeNHandler extends UIAScriptHandler {
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
   }
-
 }

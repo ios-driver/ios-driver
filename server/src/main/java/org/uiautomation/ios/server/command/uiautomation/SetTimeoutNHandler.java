@@ -22,12 +22,16 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.PreHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+import org.uiautomation.ios.server.utils.JSTemplate;
 import org.uiautomation.ios.utils.hack.TimeSpeeder;
 
 public class SetTimeoutNHandler extends UIAScriptHandler {
 
-  protected static final String setTimeout = "UIAutomation.setTimeout(':type',:timeout);"
-                                             + "UIAutomation.createJSONResponse(':sessionId',0,'')";
+  protected static final String kTimeoutName = "ms";
+  private static final JSTemplate template = new JSTemplate(
+      "UIAutomation.setTimeout('%:type$s',%:"+ kTimeoutName +"$d);" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')",
+      "type", kTimeoutName, "sessionId");
 
   public SetTimeoutNHandler(IOSServerManager driver, WebDriverLikeRequest request)
       throws Exception {
@@ -36,15 +40,18 @@ public class SetTimeoutNHandler extends UIAScriptHandler {
   }
 
   protected String getVariableToCorrect() {
-    return "timeout";
+    return kTimeoutName;
+  }
+
+  protected String generateScript(String type, int timeout, String sessionId) {
+    return template.generate(type, timeout, sessionId);
   }
 
   protected String getScript(IOSServerManager driver, WebDriverLikeRequest r) throws Exception {
-    int timeout = r.getPayload().getInt("timeout");
     String type = r.getPayload().getString("type");
-    String s = setTimeout.replace(":timeout", String.format("%d", timeout));
-    s = s.replace(":type", type);
-    return s;
+    int timeout = r.getPayload().getInt(kTimeoutName);
+    String sessionId = r.getSession();
+    return generateScript(type, timeout, sessionId);
   }
 
   @Override
@@ -74,7 +81,6 @@ public class SetTimeoutNHandler extends UIAScriptHandler {
             "error correcting the timeout to take the timespeeder into account."
             + e.getMessage(), e);
       }
-
     }
   }
 

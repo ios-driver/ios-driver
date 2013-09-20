@@ -19,19 +19,21 @@ import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+import org.uiautomation.ios.server.utils.JSTemplate;
 
 public class SetLocationNHandler extends UIAScriptHandler {
 
-  private static final String template = "var res = UIATarget.localTarget().setLocation(:coord);"
-                                         + "UIAutomation.createJSONResponse(':sessionId',0,'')";
+  private static final JSTemplate template = new JSTemplate(
+      "var res = UIATarget.localTarget().setLocation(%:coord$s);" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')",
+      "sessionId", "coord");
 
   public SetLocationNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
-
     JSONObject payload = request.getPayload();
-
-    String js = template.replace(":sessionId", request.getSession())
-        .replace(":coord", "{'latitude': 45 ,'longitude': 45 }");
+    String js = template.generate(
+        request.getSession(),
+        "{'latitude': 45 ,'longitude': 45 }");
     setJS(js);
   }
 

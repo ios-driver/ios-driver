@@ -33,7 +33,7 @@ public class SetConfigurationNHandler extends BaseNativeCommandHandler {
   public Response handle() throws Exception {
     WebDriverLikeCommand
         command =
-        WebDriverLikeCommand.valueOf((String) getRequest().getVariableValue(":command"));
+        WebDriverLikeCommand.valueOf(getRequest().getVariableValue(":command"));
     JSONObject payload = getRequest().getPayload();
 
     Iterator<String> iter = payload.keys();

@@ -29,7 +29,6 @@ public class NewSessionNHandler extends BaseNativeCommandHandler {
 
   public NewSessionNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
-
   }
 
   public Response handle() throws Exception {
@@ -53,12 +52,10 @@ public class NewSessionNHandler extends BaseNativeCommandHandler {
       }
       throw new SessionNotCreatedException(e.getMessage());
     }
-
   }
 
   @Override
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
   }
-
 }

@@ -18,19 +18,18 @@ import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+import org.uiautomation.ios.server.utils.JSTemplate;
 
 public class GetOrientationNHandler extends UIAScriptHandler {
 
-  private static final String template = "var res = UIATarget.localTarget().getDeviceOrientation();"
-                                         + "UIAutomation.createJSONResponse(':sessionId',0,res)";
+  private static final JSTemplate template = new JSTemplate(
+      "var res = UIATarget.localTarget().getDeviceOrientation();" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,res)",
+      "sessionId");
 
   public GetOrientationNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
-
-    JSONObject payload = request.getPayload();
-
-    String js = template.replace(":sessionId", request.getSession());
-
+    String js = template.generate(request.getSession());
     setJS(js);
   }
 
@@ -39,4 +38,3 @@ public class GetOrientationNHandler extends UIAScriptHandler {
     return noConfigDefined();
   }
 }
-

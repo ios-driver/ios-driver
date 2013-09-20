@@ -18,30 +18,28 @@ import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+import org.uiautomation.ios.server.utils.JSTemplate;
 
 public class PinchCloseNHandler extends UIAScriptHandler {
   //UIATarget.localTarget().pinchCloseFromToForDuration({x:"300", y:"400"}, {x:"50", y:"100"}, "1");
 
-
-  private static final
-  String
-      template =
-      "UIATarget.localTarget().pinchCloseFromToForDuration({x:':x1', y:':y1'}, {x:':x2', y:':y2'}, ':duration');"
-      +
-      "UIAutomation.createJSONResponse(':sessionId',0,'')";
+  private static final JSTemplate template = new JSTemplate(
+      "UIATarget.localTarget().pinchCloseFromToForDuration({x:'%:x1$f', y:'%:y1$f'}, {x:'%:x2$f', y:'%:y2$f'}, '%:duration$f');" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')",
+      "sessionId", "x1", "y1", "x2", "y2", "duration");
 
   public PinchCloseNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
 
     JSONObject payload = request.getPayload();
 
-    String js = template
-        .replace(":sessionId", request.getSession())
-        .replace(":x1", payload.optString("fromX"))
-        .replace(":y1", payload.optString("fromY"))
-        .replace(":x2", payload.optString("toX"))
-        .replace(":y2", payload.optString("toY"))
-        .replace(":duration", payload.optString("duration"));
+    String js = template.generate(
+        request.getSession(),
+        payload.optDouble("fromX"),
+        payload.optDouble("fromY"),
+        payload.optDouble("toX"),
+        payload.optDouble("toY"),
+        payload.optDouble("duration"));
     setJS(js);
   }
 
@@ -49,5 +47,4 @@ public class PinchCloseNHandler extends UIAScriptHandler {
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
   }
-
 }

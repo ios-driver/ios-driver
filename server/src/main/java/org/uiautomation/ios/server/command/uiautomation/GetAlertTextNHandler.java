@@ -19,28 +19,24 @@ import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
-
+import org.uiautomation.ios.server.utils.JSTemplate;
 
 public class GetAlertTextNHandler extends UIAScriptHandler {
 
-  private static final String jsTemplate = "var alert = UIAutomation.cache.get(3);"
-                                           + "var text = alert.getText();"
-                                           + "UIAutomation.createJSONResponse(':sessionId',0,text);";
+  private static final JSTemplate template = new JSTemplate(
+      "var alert = UIAutomation.cache.get(3);" +
+      "var text = alert.getText();" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,text);",
+      "sessionId");
 
   public GetAlertTextNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
-
-    String js = jsTemplate
-        .replace(":sessionId", getRequest().getSession());
+    String js = template.generate(getRequest().getSession());
     setJS(js);
-
-
   }
-
 
   @Override
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
   }
-
 }

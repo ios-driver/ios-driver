@@ -20,14 +20,14 @@ import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+import org.uiautomation.ios.server.utils.JSTemplate;
 
 public class SetOrientationNHandler extends UIAScriptHandler {
 
-  private static final
-  String
-      template =
-      "UIATarget.localTarget().setDeviceOrientation(:orientation);"
-      + "UIAutomation.createJSONResponse(':sessionId',0,'')";
+  private static final JSTemplate template = new JSTemplate(
+      "UIATarget.localTarget().setDeviceOrientation(%:orientation$s);" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')",
+      "sessionId", "orientation");
 
   public SetOrientationNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -35,10 +35,9 @@ public class SetOrientationNHandler extends UIAScriptHandler {
     JSONObject payload = request.getPayload();
     String orientation = payload.optString("orientation");
     Orientation o = Orientation.valueOf(orientation);
-
-    String js = template.replace(":sessionId", request.getSession()).replace(":orientation",
-                                                                             o.instrumentsValue());
-
+    String js = template.generate(
+        request.getSession(),
+        o.instrumentsValue());
     setJS(js);
   }
 

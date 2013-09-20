@@ -19,29 +19,27 @@ import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+import org.uiautomation.ios.server.utils.JSTemplate;
 
-public class DragFromToForDurationNHander extends UIAScriptHandler {
+public class DragFromToForDurationNHandler extends UIAScriptHandler {
 
-  private static final String voidTemplate =
-          "UIATarget.localTarget().dragFromToForDuration({x:fromX, y:fromY}, {x:toX, y:toY}, duration);" +
-                  "UIAutomation.createJSONResponse(':sessionId',0,'')";
+  private static final JSTemplate template = new JSTemplate(
+      "UIATarget.localTarget().dragFromToForDuration({x:%:fromX$f, y:%:fromY$f}, {x:%:toX$f, y:%:toY$f}, %:duration$f);" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')",
+      "sessionId", "fromX", "fromY", "toX", "toY", "duration");
 
-
-
-  public DragFromToForDurationNHander(IOSServerManager driver, WebDriverLikeRequest request) {
+  public DragFromToForDurationNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
 
     JSONObject payload = request.getPayload();
 
-    String js = voidTemplate
-            .replace(":sessionId", request.getSession())
-            .replace("fromX", payload.optString("fromX"))
-            .replace("fromY", payload.optString("fromY"))
-            .replace("toX", payload.optString("toX"))
-            .replace("toY", payload.optString("toY"))
-            .replace("duration", payload.optString("duration"));
-
-
+    String js = template.generate(
+        request.getSession(),
+        payload.optDouble("fromX"),
+        payload.optDouble("fromY"),
+        payload.optDouble("toX"),
+        payload.optDouble("toY"),
+        payload.optDouble("duration"));
     setJS(js);
   }
 

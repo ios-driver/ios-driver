@@ -22,6 +22,7 @@ import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+import org.uiautomation.ios.server.utils.JSTemplate;
 
 import java.util.List;
 import java.util.Map;
@@ -37,12 +38,14 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
     hasBeenDecorated = false;
   }
 
-  private static final String capabilities = "var json = UIAutomation.getCapabilities();"
-                                             + "UIAutomation.createJSONResponse(':sessionId',0,json)";
+  private static final JSTemplate template = new JSTemplate(
+      "var json = UIAutomation.getCapabilities();" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,json)",
+      "sessionId");
 
   public GetCapabilitiesNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
-    setJS(capabilities.replace(":sessionId", request.getSession()));
+    setJS(template.generate(request.getSession()));
     addDecorator(new AddAllSupportedLocalesDecorator(getDriver()));
   }
 
@@ -101,7 +104,6 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
       // TODO freynaud fill in device here ?
       response.setValue(o);
       hasBeenDecorated = true;
-
     }
   }
 
@@ -109,5 +111,4 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
   }
-
 }

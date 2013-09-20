@@ -19,24 +19,23 @@ import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+import org.uiautomation.ios.server.utils.JSTemplate;
 
 public class SetPickerWheelValueNHandler extends UIAScriptHandler {
 
-  private static final
-  String
-      template =
-          "var element = UIAutomation.cache.get(:reference);" +
-                  "element.selectValue(':value');" +
-                  "UIAutomation.createJSONResponse(':sessionId',0,'')";
+  private static final JSTemplate template = new JSTemplate(
+      "var element = UIAutomation.cache.get(%:reference$s);" +
+      "element.selectValue('%:value$s');" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')",
+      "sessionId", "reference", "value");
 
   public SetPickerWheelValueNHandler(IOSServerManager driver, WebDriverLikeRequest request) throws JSONException {
     super(driver, request);
-
-      String js = template
-              .replace(":sessionId", request.getSession())
-              .replace(":reference", request.getVariableValue(":reference"))
-              .replace(":value", request.getPayload().getString("value"));
-      setJS(js);
+    String js = template.generate(
+        request.getSession(),
+        request.getVariableValue(":reference"),
+        request.getPayload().getString("value"));
+    setJS(js);
   }
 
   @Override

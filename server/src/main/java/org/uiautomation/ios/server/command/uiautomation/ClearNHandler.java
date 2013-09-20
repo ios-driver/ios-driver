@@ -18,22 +18,20 @@ import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
-
+import org.uiautomation.ios.server.utils.JSTemplate;
 
 public class ClearNHandler extends UIAScriptHandler {
 
-  private static final String voidTemplate =
-      "var element = UIAutomation.cache.get(:reference);" +
+  private static JSTemplate template = new JSTemplate(
+      "var element = UIAutomation.cache.get(%:reference$s);" +
       "element.setValue('');" +
-      "UIAutomation.createJSONResponse(':sessionId',0,'')";
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')",
+      "sessionId", "reference");
 
   public ClearNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
-    String js = voidTemplate
-        .replace(":sessionId", request.getSession())
-        .replace(":reference", request.getVariableValue(":reference"));
+    String js = template.generate(request.getSession(), request.getVariableValue(":reference"));
     setJS(js);
-
   }
 
   @Override

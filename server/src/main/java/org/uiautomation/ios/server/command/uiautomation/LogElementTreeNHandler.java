@@ -26,6 +26,7 @@ import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+import org.uiautomation.ios.server.utils.JSTemplate;
 import org.uiautomation.ios.utils.InstrumentsGeneratedImage;
 import org.uiautomation.ios.utils.JSONWireImage;
 import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
@@ -36,9 +37,11 @@ import java.util.Map;
 
 public class LogElementTreeNHandler extends UIAScriptHandler {
 
-  private static final String jsTemplate = "var root = UIAutomation.cache.get(':reference');"
-                                           + "var result = root.tree(:attachScreenshot);"
-                                           + "UIAutomation.createJSONResponse(':sessionId',0,result);";
+  private static final JSTemplate template = new JSTemplate(
+      "var root = UIAutomation.cache.get('%:reference$s');" +
+      "var result = root.tree(%:attachScreenshot$b);" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,result);",
+      "sessionId", "reference", "attachScreenshot");
 
   public LogElementTreeNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -58,17 +61,16 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
       e.printStackTrace();
     }
 
-    String js;
+    final String js;
     try {
-      js = jsTemplate.replace(":sessionId", request.getSession())
-          .replace(":attachScreenshot", "" + request.getPayload().getBoolean("attachScreenshot"))
-          .replace(":reference", reference);
+      js = template.generate(
+          request.getSession(),
+          reference,
+          request.getPayload().getBoolean("attachScreenshot"));
     } catch (JSONException e) {
       throw new WebDriverException("wrong params", e);
     }
-
     setJS(js);
-
   }
 
   class AddTranslationToLog extends PostHandleDecorator {
@@ -100,7 +102,6 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
         }
       }
     }
-
   }
 
   class AttachScreenshotToLog extends PostHandleDecorator {
@@ -190,7 +191,6 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
     }
 
     private boolean containsAWebView(Response response) {
-
       return true;
     }
   }
@@ -199,5 +199,4 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
   }
-
 }

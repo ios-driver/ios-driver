@@ -18,25 +18,23 @@ import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+import org.uiautomation.ios.server.utils.JSTemplate;
 
 public class TouchAndHoldNHandler extends UIAScriptHandler {
 
-  private static final String voidTemplate =
-          "var element = UIAutomation.cache.get(:reference);" +
-                  "element.touchAndHold(:duration);" +
-                  "UIAutomation.createJSONResponse(':sessionId',0,'')";
-
+  private static final JSTemplate template = new JSTemplate(
+      "var element = UIAutomation.cache.get(%:reference$s);" +
+      "element.touchAndHold(%:duration$f);" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')",
+      "sessionId", "reference", "duration");
 
   public TouchAndHoldNHandler(IOSServerManager driver, WebDriverLikeRequest request) throws Exception {
     super(driver, request);
-
-    String duration = request.getPayload().optString("duration");
-
-    String js = voidTemplate
-            .replace(":sessionId", request.getSession())
-            .replace(":reference", request.getVariableValue(":reference"))
-            .replace(":duration", duration);
-
+    Double duration = request.getPayload().optDouble("duration");
+    String js = template.generate(
+        request.getSession(),
+        request.getVariableValue(":reference"),
+        duration);
     setJS(js);
   }
 
@@ -44,5 +42,4 @@ public class TouchAndHoldNHandler extends UIAScriptHandler {
   public JSONObject configurationDescription() throws JSONException {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
-
 }

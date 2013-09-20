@@ -35,7 +35,7 @@ public class SetCurrentContextNHandler extends BaseNativeCommandHandler {
   @Override
   public Response handle() throws Exception {
     String context = getRequest().getPayload().getString("name");
-    WorkingMode mode = null;
+    final WorkingMode mode;
     if (context.startsWith(WorkingMode.Web.toString())) {
       mode = WorkingMode.Web;
     } else {
@@ -52,7 +52,7 @@ public class SetCurrentContextNHandler extends BaseNativeCommandHandler {
       } else {
         String pageId = context.replace(WorkingMode.Web + "_", "");
 
-        // TODO freynaud. 2 windows doesnt mean 2 pages ...
+        // TODO freynaud. 2 windows doesn't mean 2 pages ...
         int delta = getSession().getRemoteWebDriver().getWindowHandleIndexDifference(pageId);
         if (delta != 0) {
           if (getSession().getApplication().isSafari()) {
@@ -97,5 +97,4 @@ public class SetCurrentContextNHandler extends BaseNativeCommandHandler {
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
   }
-
 }

@@ -32,14 +32,13 @@ public class SetImplicitWaitTimeoutNHandler extends SetTimeoutNHandler {
     return "ms";
   }
 
+  @Override
   protected String getScript(IOSServerManager driver, WebDriverLikeRequest r) throws Exception {
-    int timeout = r.getPayload().getInt("ms");
-    TIMEOUT = timeout;
-    int timeoutInSec = timeout / 1000;
     String type = "implicit";
-    String s = setTimeout.replace(":timeout", String.format("%d", timeoutInSec));
-    s = s.replace(":type", type);
-    return s;
+    TIMEOUT = r.getPayload().getInt(kTimeoutName);
+    int timeout = TIMEOUT / 1000;
+    String sessionId = r.getSession();
+    return generateScript(type, timeout, sessionId);
   }
 
   @Override
@@ -51,5 +50,4 @@ public class SetImplicitWaitTimeoutNHandler extends SetTimeoutNHandler {
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
   }
-
 }

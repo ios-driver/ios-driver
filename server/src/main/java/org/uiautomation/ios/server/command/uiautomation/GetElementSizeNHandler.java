@@ -18,27 +18,25 @@ import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+import org.uiautomation.ios.server.utils.JSTemplate;
 
 public class GetElementSizeNHandler extends UIAScriptHandler {
 
-  private static final
-  String
-      template =
-      "var element = UIAutomation.cache.get(:reference, :opt_checkStale);" +
+  private static final JSTemplate template = new JSTemplate(
+      "var element = UIAutomation.cache.get(%:reference$s, %:opt_checkStale$b);" +
       "var result = element.rect();" +
-      "UIAutomation.createJSONResponse(':sessionId',0,result)";
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,result)",
+      "sessionId", "reference", "opt_checkStale");
 
   public GetElementSizeNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
 
-    String js = template
-        .replace(":sessionId", request.getSession())
-        .replace(":opt_checkStale", shouldCheckForStaleness() + "")
-        .replace(":reference", request.getVariableValue(":reference"));
+    String js = template.generate(
+        request.getSession(),
+        request.getVariableValue(":reference"),
+        shouldCheckForStaleness());
     setJS(js);
-
   }
-
 
   private boolean shouldCheckForStaleness() {
     boolean check = getConfiguration("checkForStale", true);
@@ -50,5 +48,4 @@ public class GetElementSizeNHandler extends UIAScriptHandler {
     // TODO Auto-generated method stub
     return null;
   }
-
 }

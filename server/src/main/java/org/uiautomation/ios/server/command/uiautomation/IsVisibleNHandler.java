@@ -19,31 +19,26 @@ import org.json.JSONObject;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+import org.uiautomation.ios.server.utils.JSTemplate;
 
 public class IsVisibleNHandler extends UIAScriptHandler {
 
-  private static final
-  String
-      template =
-      "var element = UIAutomation.cache.get(:reference, false);" +
+  private static final JSTemplate template = new JSTemplate(
+      "var element = UIAutomation.cache.get(%:reference$s, false);" +
       "var result = element.isVisible();" +
-      "UIAutomation.createJSONResponse(':sessionId',0,result)";
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,result)",
+      "sessionId", "reference");
 
   public IsVisibleNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
-
-    String js = template
-        .replace(":sessionId", request.getSession())
-        .replace(":reference", request.getVariableValue(":reference"));
+    String js = template.generate(
+        request.getSession(),
+        request.getVariableValue(":reference"));
     setJS(js);
-
   }
-
 
   @Override
   public JSONObject configurationDescription() throws JSONException {
     return super.noConfigDefined();
   }
-
 }
-

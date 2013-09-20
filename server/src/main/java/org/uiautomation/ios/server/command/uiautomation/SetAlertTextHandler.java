@@ -20,13 +20,15 @@ import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
-
+import org.uiautomation.ios.server.utils.JSTemplate;
 
 public class SetAlertTextHandler extends UIAScriptHandler {
 
-  private static final String jsTemplate = "var alert = UIAutomation.cache.get(3);"
-                                           + "alert.sendKeys(':value');"
-                                           + "UIAutomation.createJSONResponse(':sessionId',0,'');";
+  private static final JSTemplate template = new JSTemplate(
+      "var alert = UIAutomation.cache.get(3);" +
+      "alert.sendKeys('%:value$s');" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'');",
+      "sessionId", "value");
 
   public SetAlertTextHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -39,17 +41,14 @@ public class SetAlertTextHandler extends UIAScriptHandler {
       if (value.contains("\\t")) {
         throw new WebDriverException("cannot tab on the ios keyboard.");
       }
-      String js = jsTemplate
-          .replace(":sessionId", getRequest().getSession())
-          .replace(":value", corrected);
+      String js = template.generate(
+          getRequest().getSession(),
+          corrected);
       setJS(js);
-
     } catch (JSONException e) {
       throw new WebDriverException("error parsing request " + request + "\n" + e.getMessage(), e);
     }
-
   }
-
 
   @Override
   public JSONObject configurationDescription() throws JSONException {

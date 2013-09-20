@@ -55,10 +55,8 @@ public class GetWindowHandlesNHandler extends BaseNativeCommandHandler {
     return resp;
   }
 
-
   @Override
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
   }
-
 }
