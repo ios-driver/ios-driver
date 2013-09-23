@@ -41,5 +41,4 @@ public class GetPageSizeHandler extends BaseWebCommandHandler {
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
   }
-
 }

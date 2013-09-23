@@ -82,7 +82,6 @@ public class WebKitSynchronizer {
   }
 
   public void waitForSimToSendApps() {
-
     try {
       simLock.lock();
       if (driver.getApplications() != null && !driver.getApplications().isEmpty()) {

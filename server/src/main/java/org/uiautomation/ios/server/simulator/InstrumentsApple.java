@@ -47,10 +47,8 @@ public class InstrumentsApple implements Instruments {
   private final CURLBasedCommunicationChannel channel;
   private final String desiredSDKVersion;
 
-
-
   public InstrumentsApple(String uuid, int port, String sessionId, File application,
-                          List<String> envtParams, String desiredSDKVersion,ApplicationCrashListener list) {
+                          List<String> envtParams, String desiredSDKVersion, ApplicationCrashListener list) {
     this.uuid = uuid;
     this.sessionId = sessionId;
     this.desiredSDKVersion = desiredSDKVersion;
@@ -94,7 +92,6 @@ public class InstrumentsApple implements Instruments {
     instruments.forceStop();
     channel.stop();
   }
-
 
   public void startWithDummyScript() {
     File script = new ScriptHelper().createTmpScript("UIALogger.logMessage('warming up');");

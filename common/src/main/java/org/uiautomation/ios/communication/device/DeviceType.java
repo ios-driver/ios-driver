@@ -51,5 +51,4 @@ public enum DeviceType {
     }
     throw new WebDriverException("device family not recognized : " + deviceFamily);
   }
-
 }

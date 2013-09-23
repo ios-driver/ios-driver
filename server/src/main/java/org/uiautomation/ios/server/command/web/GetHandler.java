@@ -116,5 +116,4 @@ public class GetHandler extends BaseWebCommandHandler {
   private void fakeTypeURL(String url) {
     getSession().getRemoteWebDriver().get(url);
   }
-
 }

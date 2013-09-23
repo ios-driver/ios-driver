@@ -91,7 +91,6 @@ public class SetFrameHandler extends BaseWebCommandHandler {
     }
 
     // string|number|null|WebElement JSON Object
-
   }
 
   @Override

@@ -18,7 +18,7 @@ import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.command.UIAScriptResponse;
 
 
-// TODO freynaud should send Request and Reponse directly, not UIRequest UIResponse
+// TODO freynaud should send Request and Response directly, not UIRequest UIResponse
 public interface CommunicationChannel {
 
   boolean waitForUIScriptToBeStarted() throws InterruptedException;

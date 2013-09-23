@@ -26,7 +26,6 @@ import org.uiautomation.ios.wkrdp.model.RemoteWebNativeBackedElement;
 
 public class ClickHandler extends BaseWebCommandHandler {
 
-
   public ClickHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
   }

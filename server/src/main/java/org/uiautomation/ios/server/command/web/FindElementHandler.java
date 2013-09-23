@@ -68,7 +68,6 @@ public class FindElementHandler extends BaseWebCommandHandler {
     }
   }
 
-
   private RemoteWebElement findElement() throws Exception {
     JSONObject payload = getRequest().getPayload();
     String type = payload.getString("using");
@@ -100,5 +99,4 @@ public class FindElementHandler extends BaseWebCommandHandler {
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
   }
-
 }

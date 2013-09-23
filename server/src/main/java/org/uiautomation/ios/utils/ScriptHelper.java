@@ -68,7 +68,7 @@ public class ScriptHelper {
     return content;
   }
 
-  // TODO freynaud AUT is only used for the capabilies. It should be a response decorator of getCaps
+  // TODO freynaud AUT is only used for the capabilities. It should be a response decorator of getCaps
   public String generateScriptContent(int port, String aut, String opaqueKey,
                                       CommunicationMode mode) {
     StringBuilder scriptContent = new StringBuilder();

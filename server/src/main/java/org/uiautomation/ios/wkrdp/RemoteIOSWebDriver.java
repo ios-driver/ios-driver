@@ -47,7 +47,6 @@ import java.util.logging.Logger;
 
 public class RemoteIOSWebDriver {
 
-
   public static void main(String[] args) throws Exception {
     RemoteIOSWebDriver driver = new RemoteIOSWebDriver(null);
     //driver.connect(uiCatalog);
@@ -114,7 +113,6 @@ public class RemoteIOSWebDriver {
     }
   }
 
-
   public void setPages(List<WebkitPage> pages) {
     this.pages = ImmutableList.copyOf(pages);
   }
@@ -128,16 +126,13 @@ public class RemoteIOSWebDriver {
     return !applications.isEmpty();
   }*/
 
-
   public void start() {
     protocol.start();
   }
 
-
   public void stop() {
     protocol.stop();
   }
-
 
   public RemoteWebElement createElement(String reference) {
     int pageId = Integer.parseInt(reference.split("_")[0]);
@@ -154,7 +149,6 @@ public class RemoteIOSWebDriver {
       return new RemoteWebElement(new NodeId(nodeId), currentInspector);
     }
   }
-
 
   public void connect(String bundleId) {
     List<WebkitApplication> knownApps = getApplications();
@@ -228,11 +222,9 @@ public class RemoteIOSWebDriver {
     return currentInspector.getDocument();
   }*/
 
-
   public void get(String url) {
     currentInspector.get(url);
   }
-
 
   public List<Cookie> getCookies() {
     return currentInspector.getCookies();
@@ -241,7 +233,6 @@ public class RemoteIOSWebDriver {
   public void deleteCookie(String name, String domain) {
     currentInspector.deleteCookie(name, domain);
   }
-
 
   public String getCurrentUrl() {
     try {
@@ -252,7 +243,6 @@ public class RemoteIOSWebDriver {
       return null;
     }
   }
-
 
   public String getTitle() {
     return currentInspector.getTitle();
@@ -266,11 +256,9 @@ public class RemoteIOSWebDriver {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
-
   public RemoteWebElement findElement(By by) {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
-
 
   public RemoteWebElement findElementByCssSelector(String cssSelector) throws Exception {
     return currentInspector.findElementByCSSSelector(cssSelector);
@@ -339,15 +327,12 @@ public class RemoteIOSWebDriver {
     return destination - currentIndex;
   }
 
-
   public WebDriver.TargetLocator switchTo() {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
   public void back() throws JSONException {
-
     currentInspector.back();
-
   }
 
   public void forward() {
@@ -376,7 +361,6 @@ public class RemoteIOSWebDriver {
 
   public Object executeAsyncScript(String script, Object... args) {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
-
   }
 
   // TODO remove.
@@ -403,10 +387,4 @@ public class RemoteIOSWebDriver {
   public synchronized WebkitDevice getDevice() {
     return device;
   }
-
-
 }
-
-
-
-

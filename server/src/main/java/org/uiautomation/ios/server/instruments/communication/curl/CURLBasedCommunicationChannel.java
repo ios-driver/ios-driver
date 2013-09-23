@@ -42,7 +42,6 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
     super(sessionId);
   }
 
-
   public UIAScriptResponse executeCommand(UIAScriptRequest request) {
     handleLastCommand(request);
     requestQueue.add(request);
@@ -63,12 +62,10 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
     return res;
   }
 
-
   public static class UIAScriptServlet extends DriverBasedServlet {
 
     private static final Logger log = Logger.getLogger(UIAScriptServlet.class.getName());
     private static final long serialVersionUID = 41227429706998662L;
-
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -95,7 +92,6 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
 
     private void sendNextCommand(HttpServletRequest request, HttpServletResponse response)
         throws Exception {
-
       UIAScriptRequest nextCommand = getCommunicationChannel(request).getNextCommand();
       String script = nextCommand.getScript();
 
@@ -108,7 +104,6 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
 
     private void getResponse(HttpServletRequest request, HttpServletResponse response)
         throws Exception {
-
       if (request.getInputStream() != null) {
         StringWriter writer = new StringWriter();
         IOUtils.copy(request.getInputStream(), writer, "UTF-8");
@@ -150,6 +145,4 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
       }
     }
   }
-
-
 }

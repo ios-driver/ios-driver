@@ -25,7 +25,6 @@ import org.uiautomation.ios.wkrdp.model.RemoteWebNativeBackedElement;
 
 public class GetLocationHandler extends BaseWebCommandHandler {
 
-
   public GetLocationHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
   }

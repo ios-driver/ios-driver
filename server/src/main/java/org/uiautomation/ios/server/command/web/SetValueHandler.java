@@ -29,7 +29,6 @@ public class SetValueHandler extends BaseWebCommandHandler {
 
   private static final Logger log = Logger.getLogger(SetValueHandler.class.getName());
 
-
   public SetValueHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
@@ -72,5 +71,4 @@ public class SetValueHandler extends BaseWebCommandHandler {
         + "debugging will be used.Faster but doesn't always fire all JS events.");
     return desc;
   }
-
 }
