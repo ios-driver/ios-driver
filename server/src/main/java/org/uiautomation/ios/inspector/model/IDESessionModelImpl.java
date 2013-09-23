@@ -71,7 +71,7 @@ public class IDESessionModelImpl implements IDESessionModel {
    * @see org.uiautomation.ios.ide.model.IDESessionModel2#refresh()
    */
   @Override
-  public void refresh() {
+  public synchronized void refresh() {
     screenshot.delete();
     elementTree = driver.logElementTree(screenshot, true);
   }
@@ -92,7 +92,7 @@ public class IDESessionModelImpl implements IDESessionModel {
    * @see org.uiautomation.ios.ide.model.IDESessionModel2#getScreenshot()
    */
   @Override
-  public InputStream getScreenshot() throws FileNotFoundException {
+  public synchronized InputStream getScreenshot() throws FileNotFoundException {
     return new FileInputStream(screenshot);
   }
 
