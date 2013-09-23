@@ -109,7 +109,7 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
         StringWriter writer = new StringWriter();
         IOUtils.copy(request.getInputStream(), writer, "UTF-8");
         String json = writer.toString();
-        json = Normalizer.normalize(json, LanguageDictionary.norme);
+        json = Normalizer.normalize(json, LanguageDictionary.form);
         UIAScriptResponse r = new UIAScriptResponse(json);
 
         if (r.isFirstResponse()) {

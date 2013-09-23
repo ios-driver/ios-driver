@@ -16,6 +16,8 @@ package org.uiautomation.ios.server.application;
 
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
+import org.apache.http.annotation.Immutable;
 import org.openqa.selenium.WebDriverException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -37,7 +39,7 @@ public class IOSL10NTest {
   public void noVariable() {
     String content = "Mountain Detail";
 
-    List<ContentResult> results = app.getCurrentDictionary().getPotentialMatches(content);
+    ImmutableList<ContentResult> results = app.getCurrentDictionary().getPotentialMatches(content);
 
     Assert.assertEquals(results.size(), 1);
 
@@ -53,7 +55,7 @@ public class IOSL10NTest {
   public void matchesPatternStart() {
     // %@ items found in %@
     String content = "42 feet";
-    List<ContentResult> results = app.getCurrentDictionary().getPotentialMatches(content);
+    ImmutableList<ContentResult> results = app.getCurrentDictionary().getPotentialMatches(content);
     Assert.assertEquals(results.size(), 1);
     ContentResult res = results.get(0);
     Assert.assertEquals(res.getArgs().size(), 1);
@@ -67,14 +69,14 @@ public class IOSL10NTest {
   @Test
   public void notFound() {
     String content = "ferrets are great pets";
-    List<ContentResult> results = app.getDictionary("en").getPotentialMatches(content);
+    ImmutableList<ContentResult> results = app.getDictionary("en").getPotentialMatches(content);
     Assert.assertEquals(results.size(), 0);
   }
 
   @Test(expectedExceptions = {WebDriverException.class})
   public void languageNotFound() {
     String content = "42 feet";
-    List<ContentResult> results = app.getDictionary("en").getPotentialMatches(content);
+    ImmutableList<ContentResult> results = app.getDictionary("en").getPotentialMatches(content);
     Assert.assertEquals(results.size(), 1);
 
     app.translate(results.get(0), AppleLanguage.es);
@@ -84,7 +86,7 @@ public class IOSL10NTest {
   public void complex() {
     // %@ items found in %@
     String content = "Mountain 1 was first climbed on 29 May 1953 and has a height of 8,848 meters";
-    List<ContentResult> results = app.getDictionary("en").getPotentialMatches(content);
+    ImmutableList<ContentResult> results = app.getDictionary("en").getPotentialMatches(content);
     Assert.assertEquals(results.size(), 1);
     ContentResult res = results.get(0);
     String french = app.getDictionary("fr").translate(res);

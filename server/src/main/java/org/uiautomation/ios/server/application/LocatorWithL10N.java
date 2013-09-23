@@ -55,8 +55,8 @@ class LocatorWithL10N {
     String value = dict.getContentForKey(key);
     if (value == null) {
       throw new WebDriverException("One of the key requested for localization :" + key
-                                   + " isn't available in the l10n files.Most likely the key "
-                                   + "provided is wrong.You can use the inspector to find the "
+                                   + " isn't available in the l10n files. Most likely the key "
+                                   + "provided is wrong. You can use the inspector to find the "
                                    + "correct keys.");
     }
     return LanguageDictionary.getRegexPattern(value);

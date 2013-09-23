@@ -39,7 +39,6 @@ public class LanguageDictionaryTest {
     Assert.assertEquals(dict.getLanguage().getIsoCode(), "fr");
   }
 
-
   @Test(enabled = false, expectedExceptions = {WebDriverException.class})
   public void notARecognizedLanguage() {
     String name = "Klingon";
@@ -66,7 +65,7 @@ public class LanguageDictionaryTest {
     File app = new File(SampleApps.getIntlMountainsFile());
     List<File> languageFiles = LanguageDictionary.getL10NFiles(app);
 
-    List<LanguageDictionary> dicts = new ArrayList<LanguageDictionary>();
+    List<LanguageDictionary> dicts = new ArrayList<>();
     for (File f : languageFiles) {
       dicts.add(LanguageDictionary.createFromFile(f));
     }
@@ -74,7 +73,6 @@ public class LanguageDictionaryTest {
     Assert.assertTrue(dicts.contains(new LanguageDictionary("en")));
     Assert.assertTrue(dicts.contains(new LanguageDictionary("fr")));
     Assert.assertTrue(dicts.contains(new LanguageDictionary("zh-Hant")));
-
   }
 
   @Test(dependsOnMethods = {"reflectionOnProjectToFindLanguageFiles2"})
@@ -82,7 +80,7 @@ public class LanguageDictionaryTest {
     File app = new File(SampleApps.getUICatalogFile());
     List<File> languageFiles = LanguageDictionary.getL10NFiles(app);
 
-    List<LanguageDictionary> dicts = new ArrayList<LanguageDictionary>();
+    List<LanguageDictionary> dicts = new ArrayList<>();
     for (File f : languageFiles) {
       dicts.add(LanguageDictionary.createFromFile(f));
     }
@@ -113,4 +111,22 @@ public class LanguageDictionaryTest {
     Assert.assertEquals(frenchStr, "French");
   }
 
+  @Test
+  public void getRegexPattern() {
+    Assert.assertEquals(LanguageDictionary.getRegexPattern(
+        "%@"),
+        "(.*){1}");
+    Assert.assertEquals(LanguageDictionary.getRegexPattern(
+        "\\%@"),
+        "\\%@");
+    Assert.assertEquals(LanguageDictionary.getRegexPattern(
+        "[](){}.?*+"),
+        "\\[\\]\\(\\)\\{\\}\\.\\?\\*\\+");
+    Assert.assertEquals(LanguageDictionary.getRegexPattern(
+        "% %%"),
+        "% %%");
+    Assert.assertEquals(LanguageDictionary.getRegexPattern(
+        "(%@ %1$@ %23$@ %d %@ %1$@ %54$@ %d % %%)."),
+        "\\((.*){1} (.*){1} (.*){1} (.*){1} (.*){1} (.*){1} (.*){1} (.*){1} % %%\\)\\.");
+  }
 }

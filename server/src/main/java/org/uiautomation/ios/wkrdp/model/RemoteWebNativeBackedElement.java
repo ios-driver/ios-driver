@@ -14,6 +14,7 @@
 
 package org.uiautomation.ios.wkrdp.model;
 
+import com.google.common.collect.ImmutableList;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -133,8 +134,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
         script.append("var y = top+96;");
       } else {
 
-        List<ContentResult>
-            results =
+        ImmutableList<ContentResult> results =
             session.getApplication().getCurrentDictionary().getPotentialMatches("Address");
         if (results.size() != 1) {
           log.warning("translation returned " + results.size());

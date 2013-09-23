@@ -14,6 +14,7 @@
 
 package org.uiautomation.ios.server.application;
 
+import com.google.common.collect.ImmutableList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,7 +50,7 @@ public class IOSRunningApplication {
     return underlyingApplication.getApplicationPath().getAbsolutePath();
   }
 
-  // TODO will have to be syncronized, or copy the app.
+  // TODO will have to be synchronized, or copy the app.
   public void setDefaultDevice(DeviceType defaultDevice, boolean putDefaultFirst) {
     underlyingApplication.setDefaultDevice(defaultDevice, putDefaultFirst);
   }
@@ -61,31 +62,36 @@ public class IOSRunningApplication {
   public String applyL10N(String locator){
     LocatorWithL10N l10n =  new LocatorWithL10N(this);
     return l10n.translate(locator);
-  };
+  }
 
   public String applyL10NOnKey(String key){
     LocatorWithL10N l10n =  new LocatorWithL10N(this);
     return l10n.translateKey(key);
-  };
+  }
 
-  private List<ContentResult> getPotentialMatches(String name) throws WebDriverException {
-    LanguageDictionary dict = underlyingApplication.getDictionary(currentLanguage);
-    List<ContentResult> res = dict.getPotentialMatches(name);
-    return res;
-  }  // TODO freynaud return a Map
+  private ImmutableList<ContentResult> getPotentialMatches(String name) throws WebDriverException {
+    if (underlyingApplication.getSupportedLanguages().contains(currentLanguage)) {
+      return underlyingApplication.getDictionary(currentLanguage).getPotentialMatches(name);
+    } else {
+      return ImmutableList.of(new ContentResult(currentLanguage, name, name, name));
+    }
+  }
 
   public JSONObject getTranslations(String name) throws JSONException {
-
     JSONObject l10n = new JSONObject();
     l10n.put("matches", 0);
     if (name != null && !name.isEmpty() && !"null".equals(name)) {
       try {
-        List<ContentResult> results = getPotentialMatches(name);
+        ImmutableList<ContentResult> results = getPotentialMatches(name);
 
         int size = results.size();
         if (size != 0) {
           l10n.put("matches", size);
-          l10n.put("key", results.get(0).getKey());
+          JSONArray keys = new JSONArray();
+          for (ContentResult res : results) {
+            keys.put(res.getKey());
+          }
+          l10n.put("key", keys);
         }
 
         JSONArray langs = new JSONArray();
