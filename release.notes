@@ -60,11 +60,30 @@
 
 0.6.1
 -----
+- Move to Java 7
 - HasTouchScreen
 - Native actions for native apps
 - Native actions for safari
 - Screenshot returns image in correct orientation
 - Grid heartbeat/reconnect
+
+0.6.2
+-----
+- New inspector
+- bugfixes
+
+0.6.3
+-----
+- Integration with new Libimobiledevice libraries
+- bugfixes
+
+0.6.4
+-----
+- fixes to integrate with Selenium 2.35.0 - interfaces locations changed
+
+0.6.5
+-----
+- Fix for locale capability problem created by Selenium 2.34.0. We now default to a locale if one is not provided. 
 
 0.7.0 (current)
 -----
