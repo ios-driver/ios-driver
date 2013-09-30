@@ -62,7 +62,7 @@ public class InstrumentsApple implements Instruments {
     File scriptPath = new ScriptHelper().getScript(port, appPath, sessionId, CURL);
     output = createTmpOutputFolder();
 
-    instruments = new Command(createInstrumentCommand(scriptPath), true);
+    instruments = createInstrumentCommand(scriptPath);
     instruments.registerListener(list);
     instruments.setWorkingDirectory(output);
 
@@ -70,7 +70,6 @@ public class InstrumentsApple implements Instruments {
   }
 
   public void start() throws InstrumentsFailedToStartException {
-
     instruments.start();
 
     log.fine("waiting for registration request");
@@ -99,37 +98,29 @@ public class InstrumentsApple implements Instruments {
 
   public void startWithDummyScript() {
     File script = new ScriptHelper().createTmpScript("UIALogger.logMessage('warming up');");
-    List<String> cmd = createInstrumentCommand(script);
-    Command c = new Command(cmd, true);
+    Command c = createInstrumentCommand(script);
     c.executeAndWait();
   }
 
-  private List<String> createInstrumentCommand(File script) {
-    List<String> command = new ArrayList<String>();
+  private Command createInstrumentCommand(File script) {
+    List<String> args = new ArrayList<String>();
 
-    command.add(getInstrumentsClient());
+    args.add(getInstrumentsClient());
     if (uuid != null) {
-      command.add("-w");
-      command.add(uuid);
+      args.add("-w");
+      args.add(uuid);
     }
-    command.add("-t");
-    command.add(template.getAbsolutePath());
-    command.add(application.getAbsolutePath());
-    command.add("-e");
-    command.add("UIASCRIPT");
-    command.add(script.getAbsolutePath());
-    command.add("-e");
-    command.add("UIARESULTSPATH");
-    command.add(output.getAbsolutePath());
-    command.addAll(envtParams);
-    StringBuilder b = new StringBuilder();
-    for (String s : command) {
-      b.append(s);
-      b.append(" ");
-    }
-    log.fine("Starting instruments:\n" + b.toString());
-    return command;
-
+    args.add("-t");
+    args.add(template.getAbsolutePath());
+    args.add(application.getAbsolutePath());
+    args.add("-e");
+    args.add("UIASCRIPT");
+    args.add(script.getAbsolutePath());
+    args.add("-e");
+    args.add("UIARESULTSPATH");
+    args.add(output.getAbsolutePath());
+    args.addAll(envtParams);
+    return new Command(args, true);
   }
 
   private File createTmpOutputFolder() {

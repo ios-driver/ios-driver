@@ -14,6 +14,7 @@
 
 package org.uiautomation.ios.utils;
 
+import com.google.common.base.Joiner;
 import org.openqa.selenium.WebDriverException;
 
 import java.io.BufferedReader;
@@ -51,9 +52,8 @@ public class Command {
     }
   }
 
-
   /**
-   * execute the command, and wait for it to finish. Also wait for stdout and std err listener to
+   * Execute the command, and wait for it to finish. Also wait for stdout and stderr listener to
    * finish processing their streams.
    */
   public void executeAndWait() {
@@ -70,13 +70,13 @@ public class Command {
         throw new WebDriverException(e);
       }
     }
-
   }
 
   /**
-   * starts the command. Doesn't wait for it to finish.Doesn't wait for stdout and stderr either.
+   * Starts the command. Doesn't wait for it to finish. Doesn't wait for stdout and stderr either.
    */
   public void start() {
+    log.fine(String.format("Starting command: %s", commandString()));
     ProcessBuilder builder = new ProcessBuilder(args);
     if (workingDir != null) {
       builder.directory(workingDir);
@@ -93,7 +93,6 @@ public class Command {
 
     threads.add(listen(normal, out, true));
     threads.add(listen(error, err, false));
-
   }
 
   /**
@@ -140,7 +139,6 @@ public class Command {
           }
         } catch (IOException e) {
           log.warning("Error reading the output of the process :"+e.getMessage());
-          return;
         }
       }
     });
@@ -149,6 +147,7 @@ public class Command {
   }
 
   private void add(String line, boolean normal) {
+    log.finer(String.format("%s %s: %s", args.get(0), normal ? "stdout" : "stderr", line));
     if (normal) {
       out.add(line);
     } else {
@@ -179,21 +178,21 @@ public class Command {
     for (Thread t : threads) {
       t.interrupt();
     }
+  }
 
+  public String commandString() {
+    return Joiner.on(" ").join(args);
   }
 
   public String toString() {
     StringBuilder b = new StringBuilder();
-    for (String s : args) {
-      b.append(" " + s);
-    }
+    b.append(commandString());
     b.append("\n\n");
     b.append(getStdOut());
     b.append("\n\n");
     b.append(getErr());
 
     return b.toString();
-
   }
 
   /**
@@ -202,5 +201,4 @@ public class Command {
   public void setWorkingDirectory(File output) {
     this.workingDir = output;
   }
-
 }
