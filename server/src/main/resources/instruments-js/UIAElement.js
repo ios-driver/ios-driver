@@ -549,7 +549,6 @@ UIAElement.prototype.matches = function (criteria) {
             case 'regex':
                 var regex = new RegExp(expected, 'g');
                 return regex.test(current);
-                break;
             default:
                 throw new UIAutomationException("not a valid strategy, -> " + JSON
                     .stringify(criteria), 32);

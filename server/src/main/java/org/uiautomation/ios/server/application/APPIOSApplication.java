@@ -14,15 +14,11 @@
 
 package org.uiautomation.ios.server.application;
 
-import com.dd.plist.ASCIIPropertyListParser;
-import com.dd.plist.BinaryPropertyListParser;
 import com.dd.plist.BinaryPropertyListWriter;
 import com.dd.plist.NSArray;
 import com.dd.plist.NSDictionary;
 import com.dd.plist.NSNumber;
-import com.dd.plist.NSObject;
 import com.dd.plist.PropertyListParser;
-import com.dd.plist.XMLPropertyListParser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,7 +27,6 @@ import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
-import org.uiautomation.ios.server.utils.ZipUtils;
 import org.uiautomation.ios.utils.PlistFileUtils;
 
 import java.io.*;
@@ -51,7 +46,7 @@ public class APPIOSApplication {
 
   private final JSONObject metadata;
   private final File app;
-  private final List<LanguageDictionary> dictionaries = new ArrayList<LanguageDictionary>();
+  private final List<LanguageDictionary> dictionaries = new ArrayList<>();
 
   /**
    * @param pathToApp
@@ -84,7 +79,7 @@ public class APPIOSApplication {
 
   public List<String> getSupportedLanguagesCodes() {
     List<AppleLanguage> list = getSupportedLanguages();
-    List<String> res = new ArrayList<String>();
+    List<String> res = new ArrayList<>();
     for (AppleLanguage lang : list) {
       res.add(lang.getIsoCode());
     }
@@ -105,7 +100,7 @@ public class APPIOSApplication {
      * LanguageDictionary(name).getLanguage()); } return new
      * ArrayList<Localizable>(res);
      */
-    List<AppleLanguage> res = new ArrayList<AppleLanguage>();
+    List<AppleLanguage> res = new ArrayList<>();
     for (LanguageDictionary dict : dictionaries) {
       res.add(dict.getLanguage());
     }
@@ -130,13 +125,12 @@ public class APPIOSApplication {
 
   public LanguageDictionary getDictionary(String languageCode) throws WebDriverException {
     return getDictionary(AppleLanguage.valueOf(languageCode));
-
   }
 
   public LanguageDictionary getDictionary(AppleLanguage language) throws WebDriverException {
     if (!language.exists()) {
       throw new WebDriverException("The application doesn't have any content files.The l10n "
-                                   + "features cannot be used.");
+          + "features cannot be used.");
     }
     for (LanguageDictionary dict : dictionaries) {
       if (dict.getLanguage() == language) {
@@ -154,7 +148,7 @@ public class APPIOSApplication {
     if (!dictionaries.isEmpty()) {
       throw new WebDriverException("Content already present.");
     }
-    Map<String, LanguageDictionary> dicts = new HashMap<String, LanguageDictionary>();
+    Map<String, LanguageDictionary> dicts = new HashMap<>();
 
     List<File> l10nFiles = LanguageDictionary.getL10NFiles(app);
     for (File f : l10nFiles) {
@@ -180,9 +174,7 @@ public class APPIOSApplication {
   public String translate(ContentResult res, AppleLanguage language) throws WebDriverException {
     LanguageDictionary destinationLanguage = getDictionary(language);
     return destinationLanguage.translate(res);
-
   }
-
 
   public void addDictionary(LanguageDictionary dict) {
     dictionaries.add(dict);
@@ -192,7 +184,6 @@ public class APPIOSApplication {
     return getMetadata("CFBundleIdentifier");
   }
 
-
   public File getApplicationPath() {
     return app;
   }
@@ -201,7 +192,7 @@ public class APPIOSApplication {
    * the list of resources to publish via http.
    */
   public Map<String, String> getResources() {
-    Map<String, String> resourceByResourceName = new HashMap<String, String>();
+    Map<String, String> resourceByResourceName = new HashMap<>();
     String metadata =  getMetadata(ICON);
     if(metadata.equals("")){
       metadata = getFirstIconFile(BUNDLE_ICONS);
@@ -247,7 +238,7 @@ public class APPIOSApplication {
   public List<Integer> getDeviceFamily() {
     try {
       JSONArray array = metadata.getJSONArray(DEVICE_FAMILLY);
-      List<Integer> res = new ArrayList<Integer>();
+      List<Integer> res = new ArrayList<>();
       for (int i = 0; i < array.length(); i++) {
         res.add(array.getInt(i));
       }
@@ -256,7 +247,6 @@ public class APPIOSApplication {
       throw new WebDriverException("Cannot load device family", e);
     }
   }
-
 
   @Override
   public int hashCode() {
@@ -300,7 +290,6 @@ public class APPIOSApplication {
   }
 
   public void setDefaultDevice(DeviceType device) {
-
     try {
       File plist = new File(app, "Info.plist");
 
@@ -332,43 +321,46 @@ public class APPIOSApplication {
       rearrangedArray.setValue(index, last);
       root.put("UIDeviceFamily", rearrangedArray);
 
-
       write(plist,root,format);
     } catch (Exception e) {
-      throw new WebDriverException("Cannot change the default device for the app." + e.getMessage(),
-                                   e);
+      throw new WebDriverException("Cannot change the default device for the app." + e.getMessage(), e);
     }
-
   }
 
   enum PListFormat{
-    binary,text,xml;
+    binary, text, xml
   }
 
-  private void write(File dest,NSDictionary content,PListFormat format) throws IOException {
-    switch (format){
-      case binary:
-        BinaryPropertyListWriter.write(dest,content);
-      case xml:
-        PropertyListParser.saveAsXML(content,dest);
-      case text:
-        PropertyListParser.saveAsASCII(content,dest);
+  private void write(File dest, NSDictionary content, PListFormat format) throws IOException {
+    switch (format) {
+    case binary:
+      BinaryPropertyListWriter.write(dest, content);
+      break;
+    case xml:
+      PropertyListParser.saveAsXML(content, dest);
+      break;
+    case text:
+      PropertyListParser.saveAsASCII(content, dest);
+      break;
+    default:
+      throw new RuntimeException("Invalid plist output format");
     }
   }
 
   private PListFormat getFormat(File f) throws IOException {
-      FileInputStream fis = new FileInputStream(f);
-      byte b[] = new byte[8];
-      fis.read(b,0,8);
-      String magicString = new String(b);
-      fis.close();
-      if (magicString.startsWith("bplist")) {
-        return PListFormat.binary;
-      } else if (magicString.trim().startsWith("(") || magicString.trim().startsWith("{") || magicString.trim().startsWith("/")) {
-        return PListFormat.text;
-      } else {
-        return PListFormat.xml;
-      }
+    FileInputStream fis = new FileInputStream(f);
+    byte b[] = new byte[8];
+    fis.read(b,0,8);
+    String magicString = new String(b);
+    fis.close();
+    if (magicString.startsWith("bplist")) {
+      return PListFormat.binary;
+    } else if (magicString.trim().startsWith("(") || magicString.trim().startsWith("{")
+        || magicString.trim().startsWith("/")) {
+      return PListFormat.text;
+    } else {
+      return PListFormat.xml;
+    }
   }
 
   public IOSCapabilities getCapabilities() {
@@ -429,8 +421,7 @@ public class APPIOSApplication {
     if (desiredCapabilities.getDevice() == null) {
       throw new WebDriverException("you need to specify the device.");
     }
-    if (!(appCapability.getSupportedDevices()
-              .contains(desiredCapabilities.getDevice()))) {
+    if (!appCapability.getSupportedDevices().contains(desiredCapabilities.getDevice())) {
       return false;
     }
 
@@ -466,12 +457,11 @@ public class APPIOSApplication {
     String name = getMetadata(IOSCapabilities.BUNDLE_NAME);
     String displayName = getMetadata(IOSCapabilities.BUNDLE_DISPLAY_NAME);
     return (name != null) && ! name.trim().isEmpty() ? name : displayName;
-
   }
 
   public List<DeviceType> getSupportedDevices() {
-    List<DeviceType> families = new ArrayList<DeviceType>();
-    String s = (String) getMetadata(IOSCapabilities.DEVICE_FAMILLY);
+    List<DeviceType> families = new ArrayList<>();
+    String s = getMetadata(IOSCapabilities.DEVICE_FAMILLY);
     try {
       JSONArray ar = new JSONArray(s);
       for (int i = 0; i < ar.length(); i++) {
@@ -488,7 +478,6 @@ public class APPIOSApplication {
     } catch (JSONException e) {
       throw new WebDriverException(e);
     }
-
   }
 
   public boolean isSimulator() {
@@ -510,6 +499,4 @@ public class APPIOSApplication {
       return null;
     }
   }
-
-
 }

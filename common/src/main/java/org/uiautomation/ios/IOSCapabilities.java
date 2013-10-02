@@ -15,6 +15,8 @@ package org.uiautomation.ios;
 
 import java.util.*;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -195,7 +197,7 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   public List<DeviceType> getSupportedDevicesFromDeviceFamily() {
     JSONArray o = (JSONArray) asMap().get(DEVICE_FAMILLY);
-    List<DeviceType> devices = new ArrayList<DeviceType>();
+    List<DeviceType> devices = new ArrayList<>();
     for (int i = 0; i < o.length(); i++) {
       try {
         devices.add(DeviceType.getFromFamilyCode(o.getInt(i)));
@@ -251,7 +253,6 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   public void setLocale(String locale) {
     setCapability(LOCALE, locale);
-
   }
 
   public void setLanguage(String language) {
@@ -280,10 +281,18 @@ public class IOSCapabilities extends DesiredCapabilities {
   private List<String> getList(String key) {
     Object o = getCapability(key);
     if (o instanceof List<?>) {
-      return (List<String>) o;
+      return Lists.transform((List<?>) o, new Function<Object, String>() {
+        @Override
+        public String apply(Object o) {
+          if (o == null) {
+            return null;
+          }
+          return o.toString();
+        }
+      });
     } else if (o instanceof JSONArray) {
       JSONArray a = (JSONArray) o;
-      List<String> res = new ArrayList<String>();
+      List<String> res = new ArrayList<>();
 
       for (int i = 0; i < a.length(); i++) {
         try {
@@ -301,8 +310,13 @@ public class IOSCapabilities extends DesiredCapabilities {
     return getList(SUPPORTED_LANGUAGES);
   }
 
-  public List<String> getSupportedDevices() {
-    return getList(SUPPORTED_DEVICES);
+  public List<DeviceType> getSupportedDevices() {
+    return Lists.transform(getList(SUPPORTED_DEVICES), new Function<String, DeviceType>() {
+      @Override
+      public DeviceType apply(String capability) {
+        return DeviceType.valueOf(capability);
+      }
+    });
   }
 
   public void setSupportedLanguages(List<String> supportedLanguages) {
@@ -320,7 +334,6 @@ public class IOSCapabilities extends DesiredCapabilities {
     } else {
       return o;
     }
-
   }
 
   public void setDeviceVariation(DeviceVariation variation) {
@@ -331,7 +344,6 @@ public class IOSCapabilities extends DesiredCapabilities {
     Object o = getCapability(VARIATION);
     return o == null ? null : DeviceVariation.valueOf(o);
   }
-
 
   public String getDeviceUUID() {
     return (String) getCapability(UUID);
