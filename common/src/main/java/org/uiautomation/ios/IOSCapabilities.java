@@ -13,10 +13,9 @@
  */
 package org.uiautomation.ios;
 
-import java.util.*;
-
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,6 +23,10 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
 
 public class IOSCapabilities extends DesiredCapabilities {
 
@@ -39,12 +42,10 @@ public class IOSCapabilities extends DesiredCapabilities {
   public static final String UI_BUNDLE_VERSION = "bundleVersion";
   // UIAAplication.version();
   public static final String UI_VERSION = "version";
-
   // plist + envt variable
   public static final String DEVICE = "device";
   public static final String VARIATION = "variation";
   public static final String SIMULATOR = "simulator";
-
   public static final String IOS_SWITCHES = "ios.switches";
   public static final String LANGUAGE = "language";
   public static final String SUPPORTED_LANGUAGES = "supportedLanguages";
@@ -52,7 +53,6 @@ public class IOSCapabilities extends DesiredCapabilities {
   public static final String LOCALE = "locale";
   public static final String AUT = "aut";
   public static final String TIME_HACK = "timeHack";
-
   public static final String BUNDLE_VERSION = "CFBundleVersion";
   public static final String BUNDLE_ID = "CFBundleIdentifier";
   public static final String BUNDLE_SHORT_VERSION = "CFBundleShortVersionString";
@@ -62,21 +62,48 @@ public class IOSCapabilities extends DesiredCapabilities {
   // http://developer.apple.com/library/ios/#documentation/general/Reference/InfoPlistKeyReference/Articles/iPhoneOSKeys.html
   public static final String ICON = "CFBundleIconFile";
   public static final String BUNDLE_ICONS = "CFBundleIcons";
-
   public static final String MAGIC_PREFIX = "plist_";
   public static final String CONFIGURABLE = "configurable";
   public static final String ELEMENT_TREE = "elementTree";
   public static final String IOS_SEARCH_CONTEXT = "iosSearchContext";
   public static final String UUID = "uuid";
   public static final String IOS_TOUCH_SCREEN = "iosTouchScreen";
-
   // default selenium bindings for mobile safari
   public static final String BROWSER_NAME = "browserName";
-  
   // TODO: make a parameter?
   public static final int COMMAND_TIMEOUT_MILLIS = 10 * 60 * 1000; // 10 minutes
 
   // private final Map<String, Object> raw = new HashMap<String, Object>();
+
+  public IOSCapabilities() {
+    setCapability(TIME_HACK, false);
+    setCapability(VARIATION, DeviceVariation.Regular);
+    setCapability(SIMULATOR, true);
+  }
+
+  public IOSCapabilities(JSONObject json) throws JSONException {
+    Iterator<String> iter = json.keys();
+    while (iter.hasNext()) {
+      String key = iter.next();
+      Object value = json.get(key);
+      if (BROWSER_NAME.equalsIgnoreCase(key) && json.isNull(BUNDLE_NAME)) {
+        setCapability(BUNDLE_NAME, "Safari");
+        if (((String) value).equalsIgnoreCase("iphone")) {
+          setCapability(DEVICE, "iphone");
+        } else if (((String) value).equalsIgnoreCase("ipad")) {
+          setCapability(DEVICE, "ipad");
+        }
+      } else {
+        setCapability(key, decode(value));
+      }
+    }
+  }
+
+  public IOSCapabilities(Map<String, ?> from) {
+    for (String key : from.keySet()) {
+      setCapability(key, from.get(key));
+    }
+  }
 
   public static IOSCapabilities iphone(String bundleName, String bundleVersion) {
     IOSCapabilities res = new IOSCapabilities();
@@ -110,12 +137,6 @@ public class IOSCapabilities extends DesiredCapabilities {
     return res;
   }
 
-  public IOSCapabilities() {
-    setCapability(TIME_HACK, false);
-    setCapability(VARIATION, DeviceVariation.Regular);
-    setCapability(SIMULATOR, true);
-  }
-
   public Boolean isSimulator() {
     Object o = getCapability(SIMULATOR);
     if (o == null) {
@@ -141,33 +162,13 @@ public class IOSCapabilities extends DesiredCapabilities {
     return ((String) o);
   }
 
+  public void setBundleName(String bundleName) {
+    setCapability(BUNDLE_NAME, bundleName);
+  }
+
   public String getBundleVersion() {
     Object o = asMap().get(BUNDLE_VERSION);
     return ((String) o);
-  }
-
-  public IOSCapabilities(JSONObject json) throws JSONException {
-    Iterator<String> iter = json.keys();
-    while (iter.hasNext()) {
-      String key = iter.next();
-      Object value = json.get(key);
-      if (BROWSER_NAME.equalsIgnoreCase(key) && json.isNull(BUNDLE_NAME)) {
-        setCapability(BUNDLE_NAME, "Safari");
-        if (((String) value).equalsIgnoreCase("iphone")) {
-          setCapability(DEVICE, "iphone");
-        } else if (((String) value).equalsIgnoreCase("ipad")) {
-          setCapability(DEVICE, "ipad");
-        }
-      } else {
-        setCapability(key, decode(value));
-      }
-    }
-  }
-
-  public IOSCapabilities(Map<String, ?> from) {
-    for (String key : from.keySet()) {
-      setCapability(key, from.get(key));
-    }
   }
 
   private Object decode(Object o) throws JSONException {
@@ -188,13 +189,6 @@ public class IOSCapabilities extends DesiredCapabilities {
     return (Map<String, Object>) asMap();
   }
 
-  public void setSupportedDevices(List<DeviceType> devices) {
-    if (devices.isEmpty()) {
-      throw new WebDriverException("your app need to support at least 1  device.");
-    }
-    setCapability(SUPPORTED_DEVICES, devices);
-  }
-
   public List<DeviceType> getSupportedDevicesFromDeviceFamily() {
     JSONArray o = (JSONArray) asMap().get(DEVICE_FAMILLY);
     List<DeviceType> devices = new ArrayList<>();
@@ -213,9 +207,17 @@ public class IOSCapabilities extends DesiredCapabilities {
     return DeviceType.valueOf(o);
   }
 
+  public void setDevice(DeviceType device) {
+    setCapability(DEVICE, device);
+  }
+
   public String getSDKVersion() {
     Object o = getCapability(UI_SDK_VERSION);
     return ((String) o);
+  }
+
+  public void setSDKVersion(String sdkVersion) {
+    setCapability(UI_SDK_VERSION, sdkVersion);
   }
 
   public String getApplication() {
@@ -233,26 +235,13 @@ public class IOSCapabilities extends DesiredCapabilities {
     }
   }
 
-  public String getLanguage() {
-    Object o = getCapability(LANGUAGE);
-
-    if (o == null) {
-      return Locale.getDefault().getLanguage();
-    } else {
-      return o.toString();
-    }
-  }
-
-  public void setDevice(DeviceType device) {
-    setCapability(DEVICE, device);
-  }
-
-  public void setSDKVersion(String sdkVersion) {
-    setCapability(UI_SDK_VERSION, sdkVersion);
-  }
-
   public void setLocale(String locale) {
     setCapability(LOCALE, locale);
+  }
+
+  public String getLanguage() {
+    Object o = getCapability(LANGUAGE);
+    return ((String) o);
   }
 
   public void setLanguage(String language) {
@@ -310,6 +299,10 @@ public class IOSCapabilities extends DesiredCapabilities {
     return getList(SUPPORTED_LANGUAGES);
   }
 
+  public void setSupportedLanguages(List<String> supportedLanguages) {
+    setCapability(SUPPORTED_LANGUAGES, supportedLanguages);
+  }
+
   public List<DeviceType> getSupportedDevices() {
     return Lists.transform(getList(SUPPORTED_DEVICES), new Function<String, DeviceType>() {
       @Override
@@ -319,12 +312,11 @@ public class IOSCapabilities extends DesiredCapabilities {
     });
   }
 
-  public void setSupportedLanguages(List<String> supportedLanguages) {
-    setCapability(SUPPORTED_LANGUAGES, supportedLanguages);
-  }
-
-  public void setBundleName(String bundleName) {
-    setCapability(BUNDLE_NAME, bundleName);
+  public void setSupportedDevices(List<DeviceType> devices) {
+    if (devices.isEmpty()) {
+      throw new WebDriverException("your app need to support at least 1  device.");
+    }
+    setCapability(SUPPORTED_DEVICES, devices);
   }
 
   public Object getCapability(String key) {
@@ -336,13 +328,13 @@ public class IOSCapabilities extends DesiredCapabilities {
     }
   }
 
-  public void setDeviceVariation(DeviceVariation variation) {
-    setCapability(VARIATION, variation);
-  }
-
   public DeviceVariation getDeviceVariation() {
     Object o = getCapability(VARIATION);
     return o == null ? null : DeviceVariation.valueOf(o);
+  }
+
+  public void setDeviceVariation(DeviceVariation variation) {
+    setCapability(VARIATION, variation);
   }
 
   public String getDeviceUUID() {
@@ -351,5 +343,15 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   public void setDeviceUUID(String deviceUUID) {
     setCapability(UUID, deviceUUID);
+  }
+
+  public URL getAppURL() {
+    String app = (String) getCapability("app");
+    try {
+      return app == null ? null : new URL(app);
+    } catch (MalformedURLException e) {
+      throw new WebDriverException(
+          "The 'app' key is supposed to point to a URL." + app + " is not a URL.");
+    }
   }
 }

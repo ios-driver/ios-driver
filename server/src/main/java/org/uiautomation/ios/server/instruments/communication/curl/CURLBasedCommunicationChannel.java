@@ -15,6 +15,7 @@ package org.uiautomation.ios.server.instruments.communication.curl;
 
 import org.apache.commons.io.IOUtils;
 import org.openqa.selenium.remote.Response;
+import org.uiautomation.ios.server.InstrumentsBackedNativeIOSDriver;
 import org.uiautomation.ios.server.application.LanguageDictionary;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.command.UIAScriptResponse;
@@ -42,7 +43,6 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
     super(sessionId);
   }
 
-
   public UIAScriptResponse executeCommand(UIAScriptRequest request) {
     handleLastCommand(request);
     requestQueue.add(request);
@@ -63,12 +63,10 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
     return res;
   }
 
-
   public static class UIAScriptServlet extends DriverBasedServlet {
 
     private static final Logger log = Logger.getLogger(UIAScriptServlet.class.getName());
     private static final long serialVersionUID = 41227429706998662L;
-
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -120,7 +118,10 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
           log.fine("got first response");
           Response resp = r.getResponse();
           GetCapabilitiesNHandler.setCachedResponse(resp);
-          getDriver().getSession(resp.getSessionId()).communication().registerUIAScript();
+          InstrumentsBackedNativeIOSDriver
+              nativeDriver =
+              getDriver().getSession(resp.getSessionId()).getDualDriver().getNativeDriver();
+          nativeDriver.communication().registerUIAScript();
         } else {
           getCommunicationChannel(request).addResponse(r);
         }
@@ -140,7 +141,11 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
     private CURLBasedCommunicationChannel getCommunicationChannel(HttpServletRequest request)
         throws Exception {
       String opaqueKey = request.getParameter("sessionId");
-      CommunicationChannel channel = getDriver().getSession(opaqueKey).communication();
+      InstrumentsBackedNativeIOSDriver
+          nativeDriver =
+          getDriver().getSession(opaqueKey).getDualDriver().getNativeDriver();
+
+      CommunicationChannel channel = nativeDriver.communication();
       if (channel instanceof CURLBasedCommunicationChannel) {
         return (CURLBasedCommunicationChannel) channel;
       } else {

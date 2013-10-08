@@ -12,11 +12,21 @@
  * the License.
  */
 
-package org.uiautomation.ios.server.instruments;
+package org.uiautomation.ios.server.services;
 
-public interface InstrumentManager {
+import org.openqa.selenium.remote.Response;
+import org.uiautomation.ios.server.command.UIAScriptRequest;
+import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
+import org.uiautomation.ios.server.simulator.InstrumentsFailedToStartException;
 
-  public void start();
+public interface Instruments {
 
+  public void start() throws InstrumentsFailedToStartException;
   public void stop();
+
+  public Response executeCommand(UIAScriptRequest request);
+
+  CommunicationChannel getChannel();
+
+  TakeScreenshotService getScreenshotService();
 }

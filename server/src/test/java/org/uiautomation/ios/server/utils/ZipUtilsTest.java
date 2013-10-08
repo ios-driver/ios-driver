@@ -16,6 +16,7 @@ package org.uiautomation.ios.server.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import junit.framework.Assert;
 
@@ -26,7 +27,7 @@ public final class ZipUtilsTest {
 
   @Test
   public void canExtractAppFromURL() throws IOException {
-    String url = SampleApps.getUICatalogZipURL();
+    URL url = SampleApps.getUICatalogZipURL();
     File appFile = ZipUtils.extractAppFromURL(url);
     Assert.assertTrue(appFile.getAbsolutePath(), appFile.getName().endsWith("UICatalog.app"));
     Assert.assertTrue(new File(appFile, "Info.plist").exists());

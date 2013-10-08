@@ -30,7 +30,6 @@ import org.uiautomation.ios.utils.BuildInfo;
 import org.uiautomation.ios.utils.ClassicCommands;
 
 import java.util.List;
-import java.util.Map;
 
 public class ServerStatusNHandler extends BaseNativeCommandHandler {
 
@@ -65,7 +64,7 @@ public class ServerStatusNHandler extends BaseNativeCommandHandler {
             .put("time", BuildInfo.getAttribute("buildTimestamp"))
             .put("revision", BuildInfo.getAttribute("sha")));
 
-    List<ServerSideSession> sessions = getDriver().getSessions();
+    List<ServerSideSession> sessions = getServer().getSessions();
     Response resp = new Response();
 
     resp.setStatus(0);
@@ -83,7 +82,7 @@ public class ServerStatusNHandler extends BaseNativeCommandHandler {
   private JSONArray getSupportedApps() throws JSONException {
     JSONArray supportedApps = new JSONArray();
 
-    List<IOSCapabilities> caps = getDriver().getAllCapabilities();
+    List<IOSCapabilities> caps = getServer().getAllCapabilities();
     for (IOSCapabilities cap : caps) {
       try {
         String json = new BeanToJsonConverter().convert(cap);
@@ -102,9 +101,9 @@ public class ServerStatusNHandler extends BaseNativeCommandHandler {
     if (app.has("applicationPath")) {
       try {
         String applicationPath = (String) app.get("applicationPath");
-        APPIOSApplication a = getDriver().getApplicationStore().getApplication(applicationPath);
+        APPIOSApplication a = getServer().getApplicationStore().getApplication(applicationPath);
         for (String key : a.getResources().keySet()) {
-          resources.put(key, "/wd/hub/resources/" + getDriver().getCache().getKey(a, key));
+          resources.put(key, "/wd/hub/resources/" + getServer().getCache().getKey(a, key));
         }
       } catch (JSONException ignored) {
       }

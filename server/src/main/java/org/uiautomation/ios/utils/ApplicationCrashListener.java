@@ -15,17 +15,14 @@
 package org.uiautomation.ios.utils;
 
 
-import org.uiautomation.ios.server.instruments.InstrumentsManager;
-
 import java.util.logging.Logger;
 
 public class ApplicationCrashListener implements CommandOutputListener {
 
   private static final Logger log = Logger.getLogger(ApplicationCrashListener.class.getName());
-  private final InstrumentsManager instrumentsManager;
 
-  public ApplicationCrashListener(InstrumentsManager im){
-    this.instrumentsManager = im;
+  public ApplicationCrashListener() {
+
   }
 
   @Override
@@ -38,9 +35,10 @@ public class ApplicationCrashListener implements CommandOutputListener {
     hasApplicationCrashed(log);
   }
 
-  private void hasApplicationCrashed(String log){
-    if(log.contains("The target application appears to have died") || log.contains("Script was stopped by the user")){
-      instrumentsManager.handleAppCrash(log);
+  private void hasApplicationCrashed(String log) {
+    if (log.contains("The target application appears to have died") || log
+        .contains("Script was stopped by the user")) {
+      this.log.warning("log from crash " + log);
     }
   }
 }

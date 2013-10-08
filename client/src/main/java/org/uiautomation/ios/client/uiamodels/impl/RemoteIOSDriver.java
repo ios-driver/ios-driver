@@ -68,12 +68,12 @@ public class RemoteIOSDriver extends RemoteWebDriver
 
   private String remoteURL;
   private Map<String, Object> requestedCapabilities;
-  // private Session session;
   private String host;
   private int port;
   private DriverConfiguration configuration;
   protected WebDriverLikeCommandExecutor executor;
   private TouchScreen touchScreen;
+
 
 
   protected RemoteIOSDriver() {
@@ -209,36 +209,7 @@ public class RemoteIOSDriver extends RemoteWebDriver
     return (RemoteUIAKeyboard)findElement(new TypeCriteria(UIAKeyboard.class));
   }
 
-  /*@Override
-  public void tap(int x, int y) {
-    WebDriverLikeRequest
-        request =
-        executor.buildRequest(WebDriverLikeCommand.TARGET_TAP, RemoteUIAElement.target(this),
-                     ImmutableMap.of("x", x, "y", y));
-    executor.execute(request);
-  }*/
 
-
-
-
-  /*@Override
-  public RemoteUIAAlert getAlert() throws NoAlertPresentException {
-    RemoteUIAAlert alert = new RemoteUIAAlert(this, "3");
-    // but need to access it once with a call just to check if an alert actually
-    // exists. If not,
-    // throw a no alert exception
-    alert.getName();
-    return alert;
-  } */
-
-  /*@Override
-  public void pinchClose(int x1, int y1, int x2, int y2, int duration) {
-    /*WebDriverLikeRequest request = buildRequest(WebDriverLikeCommand.PINCH_CLOSE,
-                                                ImmutableMap
-                                                    .of("x1", x1, "y1", y1, "x2", x2, "y2", y2,
-                                                        "duration", duration));
-    execute(request);
-  }  */
 
   @Override
   public void rotate(ScreenOrientation orientation) {

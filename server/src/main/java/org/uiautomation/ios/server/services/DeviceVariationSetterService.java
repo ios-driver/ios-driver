@@ -12,18 +12,12 @@
  * the License.
  */
 
-package org.uiautomation.ios.server.simulator;
+package org.uiautomation.ios.server.services;
 
-import org.openqa.selenium.remote.Response;
-import org.uiautomation.ios.server.command.UIAScriptRequest;
-import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
+import org.uiautomation.ios.communication.device.DeviceVariation;
 
-public interface Instruments {
+public interface DeviceVariationSetterService {
 
-  public void start() throws InstrumentsFailedToStartException;
-  public void stop();
+  public void setVariation(DeviceVariation variation);
 
-  public Response executeCommand(UIAScriptRequest request);
-
-  CommunicationChannel getChannel();
 }

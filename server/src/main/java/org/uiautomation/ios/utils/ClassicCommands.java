@@ -14,6 +14,7 @@
 package org.uiautomation.ios.utils;
 
 import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.server.instruments.InstrumentsVersion;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -24,12 +25,29 @@ public class ClassicCommands {
 
   private static final Logger log = Logger.getLogger(ClassicCommands.class.getName());
 
+
+  /**
+   * returns the version of the currently selected ( xcode-select -switch ) Xcode.
+   * @return
+   */
+  public static InstrumentsVersion getInstrumentsVersion(){
+    List<String> s = new ArrayList<>();
+    s.add("instruments");
+
+    Command c = new Command(s,false);
+    InstrumentsVersion version = new InstrumentsVersion();
+    c.registerListener(version);
+    c.executeAndWait(true);
+
+    return version;
+  }
+
   public static List<String> psgrep(String processName) {
     List<String> s = new ArrayList<String>();
     s.add("ps");
     s.add("aux");
 
-    Command com = new Command(s, true);
+    Command com = new Command(s, false);
     Grep grep = new Grep(processName);
     com.registerListener(grep);
     try {
@@ -41,7 +59,12 @@ public class ClassicCommands {
   }
 
   public static boolean isRunning(String processName) {
+    try {
     return psgrep(processName).size() > 0;
+    }catch (Exception e){
+      e.printStackTrace();
+      return false;
+    }
   }
 
   public static void killall(String processName) {

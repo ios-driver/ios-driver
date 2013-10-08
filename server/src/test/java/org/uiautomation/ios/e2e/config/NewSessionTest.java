@@ -107,7 +107,6 @@ public class NewSessionTest extends BaseIOSDriverTest {
     }
   }
 
-
   @Test
   public void startDefaultLanguageLocale() {
     RemoteIOSDriver driver = null;
@@ -364,5 +363,4 @@ public class NewSessionTest extends BaseIOSDriverTest {
       }
     }
   }
-
 }

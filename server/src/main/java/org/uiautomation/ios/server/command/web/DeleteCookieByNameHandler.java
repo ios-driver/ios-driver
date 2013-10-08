@@ -34,11 +34,11 @@ public class DeleteCookieByNameHandler extends BaseWebCommandHandler {
   @Override
   public Response handle() throws Exception {
     String name = getRequest().getVariableValue(":name");
-    String url = getSession().getRemoteWebDriver().getCurrentUrl();
+    String url = getWebDriver().getCurrentUrl();
     URL u = new URL(url);
     String domain = u.getHost();
 
-    getSession().getRemoteWebDriver().deleteCookie(name, domain);
+    getWebDriver().deleteCookie(name, domain);
     Response res = new Response();
     res.setSessionId(getSession().getSessionId());
     res.setStatus(0);

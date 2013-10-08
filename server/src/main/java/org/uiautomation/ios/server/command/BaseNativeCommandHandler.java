@@ -26,7 +26,7 @@ public abstract class BaseNativeCommandHandler extends BaseCommandHandler {
   }
 
   protected IOSRunningApplication getAUT() {
-    return getDriver().getSession(getRequest().getSession()).getApplication();
+    return getServer().getSession(getRequest().getSession()).getApplication();
   }
 
   protected <T> T getConfiguration(String key) {

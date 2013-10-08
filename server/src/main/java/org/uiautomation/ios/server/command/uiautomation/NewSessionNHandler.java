@@ -35,10 +35,8 @@ public class NewSessionNHandler extends BaseNativeCommandHandler {
     try {
       GetCapabilitiesNHandler.reset();
       JSONObject payload = getRequest().getPayload();
-      IOSCapabilities
-          capabilities =
-          new IOSCapabilities(payload.getJSONObject("desiredCapabilities"));
-      session = getDriver().createSession(capabilities);
+      IOSCapabilities cap = new IOSCapabilities(payload.getJSONObject("desiredCapabilities"));
+      session = getServer().createSession(cap);
       session.start();
 
       Response resp = new Response();
@@ -47,10 +45,11 @@ public class NewSessionNHandler extends BaseNativeCommandHandler {
       resp.setValue("");
       return resp;
     } catch (Exception e) {
+      e.printStackTrace();
       if (session != null) {
         session.stop();
       }
-      throw new SessionNotCreatedException(e.getMessage());
+      throw new SessionNotCreatedException(e.getMessage(), e);
     }
   }
 

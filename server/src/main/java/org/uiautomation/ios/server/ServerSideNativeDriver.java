@@ -12,13 +12,15 @@
  * the License.
  */
 
-package org.uiautomation.ios.client.uiamodels.impl;
+package org.uiautomation.ios.server;
 
 
 import com.google.common.collect.ImmutableMap;
 
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.SessionId;
+import org.uiautomation.ios.client.uiamodels.impl.AttachRemoteIOSDriver;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAElement;
 import org.uiautomation.ios.client.uiamodels.impl.configuration.WebDriverLikeCommandExecutor;
 import org.uiautomation.ios.communication.Path;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
@@ -35,6 +37,9 @@ import java.util.Map;
  * be native without impacting the working mode, making it safely usable in threads.
  */
 public class ServerSideNativeDriver extends AttachRemoteIOSDriver {
+
+
+
 
   public ServerSideNativeDriver(URL url, SessionId session) {
     super(url, session);

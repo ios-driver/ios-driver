@@ -26,6 +26,8 @@ import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.command.UIAScriptResponse;
 import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
 import org.uiautomation.ios.server.instruments.communication.multi.MultiInstrumentsBasedCommunicationChannel;
+import org.uiautomation.ios.server.services.Instruments;
+import org.uiautomation.ios.server.services.TakeScreenshotService;
 import org.uiautomation.ios.utils.ScriptHelper;
 
 import java.util.logging.Logger;
@@ -105,8 +107,15 @@ public class InstrumentsLibImobile implements Instruments, MessageHandler {
     return res.getResponse();
   }
 
+
+
   @Override
   public CommunicationChannel getChannel() {
     return channel;
+  }
+
+  @Override
+  public TakeScreenshotService getScreenshotService() {
+    return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 }

@@ -30,7 +30,7 @@ public class GetTextHandler extends BaseWebCommandHandler {
   @Override
   public Response handle() throws Exception {
     String ref = getRequest().getVariableValue(":reference");
-    RemoteWebElement element = getSession().getRemoteWebDriver().createElement(ref);
+    RemoteWebElement element = getWebDriver().createElement(ref);
     String text = element.getText();
     Response res = new Response();
     res.setSessionId(getSession().getSessionId());

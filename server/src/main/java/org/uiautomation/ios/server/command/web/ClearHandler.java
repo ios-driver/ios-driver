@@ -30,7 +30,7 @@ public class ClearHandler extends BaseWebCommandHandler {
   @Override
   public Response handle() throws Exception {
     String ref = getRequest().getVariableValue(":reference");
-    RemoteWebElement element = getSession().getRemoteWebDriver().createElement(ref);
+    RemoteWebElement element = getWebDriver().createElement(ref);
     element.clear();
     Response resp = new Response();
     resp.setSessionId(getSession().getSessionId());

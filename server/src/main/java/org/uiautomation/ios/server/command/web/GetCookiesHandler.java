@@ -36,7 +36,7 @@ public class GetCookiesHandler extends BaseWebCommandHandler {
   @Override
   public Response handle() throws Exception {
 
-    List<Cookie> cookies = getSession().getRemoteWebDriver().getCookies();
+    List<Cookie> cookies = getWebDriver().getCookies();
     Response res = new Response();
     res.setSessionId(getSession().getSessionId());
     res.setStatus(0);

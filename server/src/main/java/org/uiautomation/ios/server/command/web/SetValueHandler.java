@@ -37,7 +37,7 @@ public class SetValueHandler extends BaseWebCommandHandler {
   @Override
   public Response handle() throws Exception {
     String ref = getRequest().getVariableValue(":reference");
-    RemoteWebElement element = getSession().getRemoteWebDriver().createElement(ref);
+    RemoteWebElement element = getWebDriver().createElement(ref);
 
     JSONArray array = getRequest().getPayload().getJSONArray("value");
     log.fine("payload : " + getRequest().getPayload().toString(2));

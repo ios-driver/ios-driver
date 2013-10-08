@@ -28,16 +28,20 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class SimulatorSettings {
 
+  private static final Logger log = Logger.getLogger(SimulatorSettings.class.getName());
+  private static final String PLUTIL = "/usr/bin/plutil";
+  private static final String TEMPLATE = "/globalPlist.json";
   private final String sdkVersion;
   private final File contentAndSettingsFolder;
   private final File globalPreferencePlist;
-  private static final String PLUTIL = "/usr/bin/plutil";
-  private static final String TEMPLATE = "/globalPlist.json";
 
   public SimulatorSettings(String sdkVersion) {
     this.sdkVersion = sdkVersion;
@@ -168,16 +172,25 @@ public class SimulatorSettings {
 
   private boolean deleteRecursive(File folder) {
     if (folder.isDirectory()) {
-      String[] children = folder.list();
-      for (int i = 0; i < children.length; i++) {
-        File delMe = new File(folder, children[i]);
-        boolean success = deleteRecursive(delMe);
-        if (!success) {
-          System.err.println("cannot delete " + delMe);
+      if (isSymLink(folder)) {
+        folder.delete();
+      }else{
+        String[] children = folder.list();
+        for (int i = 0; i < children.length; i++) {
+          File delMe = new File(folder, children[i]);
+          boolean success = deleteRecursive(delMe);
+          if (!success) {
+            log.warning("cannot delete " + delMe
+                        + ".Are you trying to start a test while a simulator is still running ?");
+          }
         }
       }
     }
     return folder.delete();
+  }
+
+  private boolean isSymLink(File folder) {
+    return Files.isSymbolicLink(Paths.get(folder.toURI()));
   }
 
   private boolean hasContentAndSettingsFolder() {
@@ -234,8 +247,10 @@ public class SimulatorSettings {
         return "iPhone";
       case Retina35:
         return "\"iPhone (Retina 3.5-inch)\"";
+        //return "\"iPhone Retina (3.5-inch)\"";
       case Retina4:
         return "\"iPhone (Retina 4-inch)\"";
+        //return "\"iPhone Retina (4-inch)\"";
       default:
         throw new WebDriverException(variation + " isn't supported for ipad.");
     }

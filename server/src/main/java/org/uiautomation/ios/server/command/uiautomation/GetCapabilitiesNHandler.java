@@ -46,7 +46,7 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
   public GetCapabilitiesNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
     setJS(template.generate(request.getSession()));
-    addDecorator(new AddAllSupportedLocalesDecorator(getDriver()));
+    addDecorator(new AddAllSupportedLocalesDecorator(getServer()));
   }
 
   @Override

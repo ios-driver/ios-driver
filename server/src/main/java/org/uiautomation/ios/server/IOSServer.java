@@ -115,7 +115,8 @@ public class IOSServer {
       if (Configuration.BETA_FEATURE && !appFile.exists()) {
         // if an url download and extract it 
         try {
-          appFile = ZipUtils.extractAppFromURL(app);
+          // TODO freynaud ?
+          appFile = ZipUtils.extractAppFromURL(null);
         } catch (IOException ignore) {
           log.fine("url: " + app + ": " + ignore);
         }

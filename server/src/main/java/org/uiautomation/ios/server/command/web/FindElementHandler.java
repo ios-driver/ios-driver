@@ -47,7 +47,7 @@ public class FindElementHandler extends BaseWebCommandHandler {
         // Something (alert during onload ) might have prevented the page
         // refresh.
         if (!getRequest().hasVariable(":reference")) {
-          getSession().getRemoteWebDriver().getContext().newContext();
+          getWebDriver().getContext().newContext();
         }
 
       }
@@ -78,9 +78,9 @@ public class FindElementHandler extends BaseWebCommandHandler {
 
     if (getRequest().hasVariable(":reference")) {
       String reference = getRequest().getVariableValue(":reference");
-      element = getSession().getRemoteWebDriver().createElement(reference);
+      element = getWebDriver().createElement(reference);
     } else {
-      element = getSession().getRemoteWebDriver().getDocument();
+      element = getWebDriver().getDocument();
     }
     RemoteWebElement rwe;
     if ("link text".equals(type)) {

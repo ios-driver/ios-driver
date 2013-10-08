@@ -80,7 +80,7 @@ public class ArchiveServlet extends DriverBasedServlet {
       /*final DeviceInstallerService
           service =
           new DeviceInstallerService(uuid);
-      final File archiveFolder = getDriver().getApplicationStore().getArchiveFolder();
+      final File archiveFolder = getServer().getApplicationStore().getArchiveFolder();
       new Thread(new Runnable() {
         @Override
         public void run() {

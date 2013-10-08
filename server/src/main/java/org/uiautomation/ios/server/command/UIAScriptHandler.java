@@ -39,7 +39,8 @@ public abstract class UIAScriptHandler extends BaseNativeCommandHandler {
       throw new RuntimeException("need to specify the JS to run");
     }
     UIAScriptRequest r = new UIAScriptRequest(js);
-    return communication().executeCommand(r).getResponse();
+    Response response = getNativeDriver().getInstruments().executeCommand(r);
+    return response;
 
   }
 

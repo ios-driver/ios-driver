@@ -48,7 +48,7 @@ public class Command {
   public Command(List<String> args, boolean logToConsole) {
     this.args = args;
     if (logToConsole) {
-      listeners.add(new DefaultCommandListener());
+      listeners.add(new DefaultCommandListener(args.toString()));
     }
   }
 
@@ -56,10 +56,14 @@ public class Command {
    * Execute the command, and wait for it to finish. Also wait for stdout and stderr listener to
    * finish processing their streams.
    */
-  public void executeAndWait() {
+  public int executeAndWait() {
+    return executeAndWait(false);
+  }
+
+  public int executeAndWait(boolean ignoreErrors) {
     start();
     int exitCode = waitFor(-1);
-    if (exitCode != 0) {
+    if (!ignoreErrors && exitCode != 0) {
       throw new WebDriverException(
           "execution failed. Exit code =" + exitCode + " , command was : " + args);
     }
@@ -70,6 +74,7 @@ public class Command {
         throw new WebDriverException(e);
       }
     }
+    return exitCode;
   }
 
   /**
@@ -138,7 +143,8 @@ public class Command {
             add(line, normal);
           }
         } catch (IOException e) {
-          log.warning("Error reading the output of the process :"+e.getMessage());
+          log.warning("Error reading the output of the process :" + e.getMessage());
+          return;
         }
       }
     });

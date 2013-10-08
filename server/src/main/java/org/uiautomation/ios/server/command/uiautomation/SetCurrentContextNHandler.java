@@ -25,8 +25,10 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.CommandMapping;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
+import org.uiautomation.ios.server.services.IOSDualDriver;
 
 public class SetCurrentContextNHandler extends BaseNativeCommandHandler {
+
 
   public SetCurrentContextNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -41,28 +43,28 @@ public class SetCurrentContextNHandler extends BaseNativeCommandHandler {
     } else {
       mode = WorkingMode.valueOf(context);
     }
-    getSession().setMode(mode);
+    getIOSDualDriver().setMode(mode);
 
     if (context.startsWith(WorkingMode.Web + "_")) {
-      if (getSession().getRemoteWebDriver().getWindowHandles().isEmpty()) {
+      if (getWebDriver().getWindowHandles().isEmpty()) {
         throw new NoSuchWindowException("Cannot find a web view in the current app.");
       }
       if (WorkingMode.Web.toString().equals(context)) {
-        getSession().setMode(WorkingMode.Web);
+        getSession().getDualDriver().setMode(WorkingMode.Web);
       } else {
         String pageId = context.replace(WorkingMode.Web + "_", "");
 
         // TODO freynaud. 2 windows doesn't mean 2 pages ...
-        int delta = getSession().getRemoteWebDriver().getWindowHandleIndexDifference(pageId);
+        int delta = getWebDriver().getWindowHandleIndexDifference(pageId);
         if (delta != 0) {
           if (getSession().getApplication().isSafari()) {
-            getSession().getNativeDriver()
-                .executeScript("new SafariPageNavigator().enter().goToWebView(" + delta + ");");
+            getNativeDriver().executeScript(
+                "new SafariPageNavigator().enter().goToWebView(" + delta + ");");
           } else {
             // TODO?
           }
         }
-        getSession().getRemoteWebDriver().switchTo(pageId);
+        getWebDriver().switchTo(pageId);
       }
 
     }
@@ -78,11 +80,11 @@ public class SetCurrentContextNHandler extends BaseNativeCommandHandler {
 
       // set the timeout by 'handling' the request, we don't care about it's response.
       try {
-        CommandMapping.SET_TIMEOUT.createHandler(getDriver(), wdlr).handle();
+        CommandMapping.SET_TIMEOUT.createHandler(getServer(), wdlr).handle();
       } catch (Exception e) {
         // dump out any exception, but ignore it as the primary concern is switching context
         // which has succeeded if we got here
-        e.printStackTrace();
+//        e.printStackTrace();
       }
     }
 

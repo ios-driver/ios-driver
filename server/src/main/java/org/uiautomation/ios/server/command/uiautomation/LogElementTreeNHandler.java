@@ -26,6 +26,8 @@ import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+import org.uiautomation.ios.server.services.InstrumentsAppleScreenshotService;
+import org.uiautomation.ios.server.services.TakeScreenshotService;
 import org.uiautomation.ios.server.utils.JSTemplate;
 import org.uiautomation.ios.utils.InstrumentsGeneratedImage;
 import org.uiautomation.ios.utils.JSONWireImage;
@@ -42,6 +44,7 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
       "var result = root.tree(%:attachScreenshot$b);" +
       "UIAutomation.createJSONResponse('%:sessionId$s',0,result);",
       "sessionId", "reference", "attachScreenshot");
+  private static final String SCREEN_NAME = "tmpScreenshot";
 
   public LogElementTreeNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -71,6 +74,11 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
       throw new WebDriverException("wrong params", e);
     }
     setJS(js);
+  }
+
+  @Override
+  public JSONObject configurationDescription() throws JSONException {
+    return noConfigDefined();
   }
 
   class AddTranslationToLog extends PostHandleDecorator {
@@ -106,6 +114,7 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
 
   class AttachScreenshotToLog extends PostHandleDecorator {
 
+
     public AttachScreenshotToLog(IOSServerManager driver) {
       super(driver);
     }
@@ -120,21 +129,28 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
 
       Orientation o = Orientation.fromInterfaceOrientation(orientationCode.intValue());
 
+      // TODO freynaud rethink that.
       if (screenshot) {
-        String path = getDriver().getSession(response.getSessionId()).getOutputFolder() + "/Run 1/"
-                      + TakeScreenshotNHandler.SCREEN_NAME + ".png";
-        File source = new File(path);
-        JSONWireImage image = new InstrumentsGeneratedImage(source, o);
-        try {
-          String content64 = image.getAsBase64String();
-          value.put("screenshot", ImmutableMap.of("64encoded", content64));
-        } catch (Exception e) {
-          throw new WebDriverException(
-              "Error converting " + source.getAbsolutePath() + " to a 64 encoded string "
-              + e.getMessage(), e);
-        } finally {
-          source.delete();
+        TakeScreenshotService service = getNativeDriver().getScreenshotService();
+
+        if (service instanceof InstrumentsAppleScreenshotService) {
+          File source = ((InstrumentsAppleScreenshotService) service).getScreenshotFile();
+          JSONWireImage image = new InstrumentsGeneratedImage(source, o);
+          try {
+            String content64 = image.getAsBase64String();
+            value.put("screenshot", ImmutableMap.of("64encoded", content64));
+          } catch (Exception e) {
+            throw new WebDriverException(
+                "Error converting " + source.getAbsolutePath() + " to a 64 encoded string "
+                + e.getMessage(), e);
+          } finally {
+            source.delete();
+          }
+
+        } else {
+          throw new RuntimeException("NI");
         }
+
       } else {
         value.put("screenshot", null);
       }
@@ -155,7 +171,7 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
       Map<String, Object> webView = (Map<String, Object>) getWebView(tree);
       if (webView != null) {
         ServerSideSession session = getDriver().getSession(getRequest().getSession());
-        RemoteIOSWebDriver inspector = session.getRemoteWebDriver();
+        RemoteIOSWebDriver inspector = getWebDriver();
         try {
           String rawHTML = inspector.getPageSource();
           webView.put("source", rawHTML);
@@ -193,10 +209,5 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
     private boolean containsAWebView(Response response) {
       return true;
     }
-  }
-
-  @Override
-  public JSONObject configurationDescription() throws JSONException {
-    return noConfigDefined();
   }
 }

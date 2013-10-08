@@ -39,10 +39,6 @@ public class SimulatorProtocolImpl extends WebKitRemoteDebugProtocol {
   private final String LOCALHOST_IPV6 = "::1";
   private final int port = 27753;
 
-
-  private final boolean displayPerformance = false;
-
-
   public SimulatorProtocolImpl(MessageListener listener,
                                ResponseFinder... finders) {
     super(listener, finders);

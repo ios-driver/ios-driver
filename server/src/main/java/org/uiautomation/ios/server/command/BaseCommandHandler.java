@@ -18,10 +18,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
+import org.uiautomation.ios.server.InstrumentsBackedNativeIOSDriver;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
+import org.uiautomation.ios.server.services.IOSDualDriver;
+import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
 import org.uiautomation.ios.wkrdp.WebKitSeemsCorruptedException;
 
 import java.util.ArrayList;
@@ -31,21 +35,36 @@ import java.util.logging.Logger;
 public abstract class BaseCommandHandler implements Handler {
 
   private static final Logger log = Logger.getLogger(BaseCommandHandler.class.getName());
-  private final IOSServerManager driver;
+  private final IOSServerManager server;
   private final ServerSideSession session;
+  private final IOSDualDriver driver;
   private final WebDriverLikeRequest request;
   private final List<PreHandleDecorator> preDecorators = new ArrayList<PreHandleDecorator>();
   private final List<PostHandleDecorator> postDecorators = new ArrayList<PostHandleDecorator>();
 
-  public BaseCommandHandler(IOSServerManager driver, WebDriverLikeRequest request) {
-    this.driver = driver;
+  public BaseCommandHandler(IOSServerManager server, WebDriverLikeRequest request) {
+    this.server = server;
     this.request = request;
 
     if (request.hasVariable(":sessionId")) {
-      session = driver.getSession(request.getSession());
+      session = server.getSession(request.getSession());
+      driver = session.getDualDriver();
     } else {
       session = null;
+      driver = null;
     }
+  }
+
+  protected RemoteIOSWebDriver getWebDriver() {
+    return getIOSDualDriver().getRemoteWebDriver();
+  }
+
+  protected InstrumentsBackedNativeIOSDriver getNativeDriver() {
+    return getIOSDualDriver().getNativeDriver();
+  }
+
+  protected IOSDualDriver getIOSDualDriver() {
+    return getSession().getDualDriver();
   }
 
   public ServerSideSession getSession() {
@@ -63,8 +82,8 @@ public abstract class BaseCommandHandler implements Handler {
     preDecorators.add(decorator);
   }
 
-  protected IOSServerManager getDriver() {
-    return driver;
+  protected IOSServerManager getServer() {
+    return server;
   }
 
   protected WebDriverLikeRequest getRequest() {
@@ -72,8 +91,7 @@ public abstract class BaseCommandHandler implements Handler {
   }
 
   public CommunicationChannel communication() {
-    ServerSideSession session = getDriver().getSession(request.getSession());
-    return session.communication();
+    return getNativeDriver().communication();
   }
 
   @Override
@@ -86,7 +104,7 @@ public abstract class BaseCommandHandler implements Handler {
       response = handle();
     } catch (WebKitSeemsCorruptedException e) {
       log.warning("WebKitSeemsCorruptedException.Attempting a restart.");
-      session.restartWebkit();
+      driver.restartWebkit();
       log.warning("restart done.");
       response = handle();
     }
@@ -113,7 +131,6 @@ public abstract class BaseCommandHandler implements Handler {
     JSONObject res = new JSONObject().put("No config for this command", "");
     return res;
   }
-
 
   protected Response createResponse(Object value) {
     Response r = new Response();

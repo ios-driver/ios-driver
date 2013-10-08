@@ -14,6 +14,7 @@
 
 package org.uiautomation.ios.server;
 
+import org.uiautomation.ios.server.instruments.InstrumentsVersion;
 import org.uiautomation.ios.utils.BuildInfo;
 import org.uiautomation.ios.utils.ClassicCommands;
 
@@ -30,6 +31,7 @@ public class HostInfo {
   private final String simulatorVersion;
   private final List<String> installedSimulators;
   private final File xCodeInstall;
+  private final InstrumentsVersion instrumentsVersion;
   private final BuildInfo info = new BuildInfo();
   private final int port;
 
@@ -46,10 +48,12 @@ public class HostInfo {
       simulatorVersion = sdk;
       installedSimulators = ClassicCommands.getInstalledSDKs();
       xCodeInstall = ClassicCommands.getXCodeInstall();
+      instrumentsVersion = ClassicCommands.getInstrumentsVersion();
     } else {
       simulatorVersion = "";
       installedSimulators = new ArrayList<String>();
       xCodeInstall = null;
+      instrumentsVersion = null;
     }
   }
 
@@ -59,6 +63,10 @@ public class HostInfo {
 
   public File getXCodeInstall() {
     return xCodeInstall;
+  }
+
+  public InstrumentsVersion getInstrumentsVersion(){
+    return instrumentsVersion;
   }
 
   public List<String> getInstalledSDKs() {

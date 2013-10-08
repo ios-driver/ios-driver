@@ -33,7 +33,7 @@ public class GetPageSizeHandler extends BaseWebCommandHandler {
     Response res = new Response();
     res.setSessionId(getSession().getSessionId());
     res.setStatus(0);
-    res.setValue(getSession().getRemoteWebDriver().getSize());
+    res.setValue(getWebDriver().getSize());
     return res;
   }
 

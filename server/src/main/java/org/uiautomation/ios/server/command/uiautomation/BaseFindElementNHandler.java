@@ -59,7 +59,7 @@ public abstract class BaseFindElementNHandler extends UIAScriptHandler {
     if (!xpathMode) {
       throw new WebDriverException("Bug. parser only apply to xpath mode.");
     }
-    return XPath2Engine.getXpath2Engine(getSession().getNativeDriver());
+    return XPath2Engine.getXpath2Engine(getSession().getDualDriver().getNativeDriver());
   }
 
   protected String getXpath() {
@@ -116,7 +116,7 @@ public abstract class BaseFindElementNHandler extends UIAScriptHandler {
       }
       //  http://developer.apple.com/library/ios/#documentation/uikit/reference/UIAccessibilityIdentification_Protocol/Introduction/Introduction.html
     } else if ("name".equals(using) || "id".equals(using)) {
-      Criteria c = new NameCriteria(getAUT().applyL10NOnKey(value));
+      Criteria c = new NameCriteria(getAUT().applyL10N(value));
       return c.stringify();
     } else if ("link text".equals(using) || "partial link text".equals(using)) {
       return createGenericCriteria(using, value);

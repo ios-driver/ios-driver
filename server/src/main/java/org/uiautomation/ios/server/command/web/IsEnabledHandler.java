@@ -30,7 +30,7 @@ public class IsEnabledHandler extends BaseWebCommandHandler {
   @Override
   public Response handle() throws Exception {
     String ref = getRequest().getVariableValue(":reference");
-    RemoteWebElement element = getSession().getRemoteWebDriver().createElement(ref);
+    RemoteWebElement element = getWebDriver().createElement(ref);
     boolean isEnabled = element.isEnabled();
     Response res = new Response();
     res.setSessionId(getSession().getSessionId());

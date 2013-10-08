@@ -37,15 +37,14 @@ public final class ZipUtils {
    *          url to zipped .app or .ipa
    * @return .app or .ipa file
    */
-  public static File extractAppFromURL(String url) throws IOException {
-    String fileName = url.substring(url.lastIndexOf('/') + 1);
-    URL theUrl = new URL(url);
+  public static File extractAppFromURL(URL url) throws IOException {
+    String fileName = url.toExternalForm().substring(url.toExternalForm().lastIndexOf('/') + 1);
 
     File tmpDir = createTmpDir("iosd");
     log.fine("tmpDir: " + tmpDir.getAbsolutePath());
 
     File downloadedFile = new File(tmpDir, fileName);
-    FileUtils.copyURLToFile(theUrl, downloadedFile);
+    FileUtils.copyURLToFile(url, downloadedFile);
 
     if (fileName.endsWith(".ipa"))
       return downloadedFile;

@@ -35,13 +35,13 @@ public class DeleteAllCookiesHandler extends BaseWebCommandHandler {
   @Override
   public Response handle() throws Exception {
 
-    String url = getSession().getRemoteWebDriver().getCurrentUrl();
+    String url = getWebDriver().getCurrentUrl();
     URL u = new URL(url);
     String domain = u.getHost();
 
-    List<Cookie> cookies = getSession().getRemoteWebDriver().getCookies();
+    List<Cookie> cookies = getWebDriver().getCookies();
     for (Cookie c : cookies) {
-      getSession().getRemoteWebDriver().deleteCookie(c.getName(), domain);
+      getWebDriver().deleteCookie(c.getName(), domain);
     }
 
     Response res = new Response();
