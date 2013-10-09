@@ -27,7 +27,6 @@ import org.openqa.grid.internal.utils.HtmlRenderer;
 import org.openqa.grid.selenium.proxy.DefaultRemoteProxy;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Map;
 
 public class IOSRemoteProxy extends DefaultRemoteProxy implements SelfHealingProxy {
@@ -78,6 +77,7 @@ public class IOSRemoteProxy extends DefaultRemoteProxy implements SelfHealingPro
   }
 
   private void SeleniumGridExtrasReboot() throws IOException {
+    System.out.println("Asking SeleniumGridExtras to reboot node");
     HttpClient client = new DefaultHttpClient();
     String url = "http://" + this.getRemoteHost().getHost() + ":" + 3000 + "/reboot";
     BasicHttpRequest r = new BasicHttpRequest("GET", url);
@@ -86,7 +86,7 @@ public class IOSRemoteProxy extends DefaultRemoteProxy implements SelfHealingPro
   }
 
   private boolean sessionLimitReached(){
-    return sessionsLimit >= sessionsServed;
+    return sessionsLimit <= sessionsServed;
   }
 
   public boolean isRestarting() {
