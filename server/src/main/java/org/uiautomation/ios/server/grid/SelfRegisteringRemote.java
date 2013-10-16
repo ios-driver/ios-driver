@@ -31,17 +31,23 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Logger;
 
-public class SelfRegisteringRemote {
+public class SelfRegisteringRemote implements Runnable {
+
+  private static final Logger log = Logger.getLogger(SelfRegisteringRemote.class.getName());
 
   private final HttpClientFactory httpClientFactory;
   private IOSServerConfiguration nodeConfig;
   private IOSServerManager driver;
-  private static final Logger log = Logger.getLogger(SelfRegisteringRemote.class.getName());
+  private final Object stoppedLock;
+  private boolean stopped;
+  private Thread thread;
 
   public SelfRegisteringRemote(IOSServerConfiguration config, IOSServerManager driver) {
     this.nodeConfig = config;
     this.driver = driver;
     this.httpClientFactory = new HttpClientFactory();
+    stoppedLock = new Object();
+    stopped = false;
   }
 
   private static JSONObject extractObject(HttpResponse resp) throws IOException, JSONException {
@@ -55,45 +61,11 @@ public class SelfRegisteringRemote {
     return new JSONObject(s.toString());
   }
 
-  public void startRegistrationProcess() {
-    new Thread(new Runnable() { // Thread safety reviewed
-
-      public void run() {
-        boolean first = true;
-        while (true) {
-          try {
-            boolean checkForPresence = true;
-            if (first) {
-              first = false;
-              checkForPresence = false;
-            }
-            registerToHub(checkForPresence);
-          } catch (GridException e) {
-            log.info("Problem registering the node : " + e.getMessage());
-          } catch (MalformedURLException e) {
-            e.printStackTrace();
-          }
-          try {
-            Thread.sleep(5000);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-        }
-      }
-    }).start();
-  }
-
   private void registerToHub(boolean checkPresenceFirst) throws MalformedURLException {
-    // check for presence :
-    boolean ok = checkPresenceFirst == true ? !isAlreadyRegistered() : true;
-
-    if (ok) {
-      RegistrationRequest
-          request =
-          new RegistrationRequest(nodeConfig, driver);
+    if (!checkPresenceFirst || !isAlreadyRegistered()) {
+      RegistrationRequest request = new RegistrationRequest(nodeConfig, driver);
       request.registerToHub();
     }
-
   }
 
   private boolean isAlreadyRegistered() {
@@ -114,6 +86,52 @@ public class SelfRegisteringRemote {
       return (Boolean) o.get("success");
     } catch (Exception e) {
       throw new GridException("Problem registering with hub", e);
+    }
+  }
+
+  @Override
+  public void run() {
+    boolean first = true;
+    synchronized (stoppedLock) {
+      for (int i = 0; !stopped; i++) {
+        // Do not attempt registration on every iteration, because it is an expensive operation that always requires
+        // at least one http request.
+        if (i % 5 == 0) {
+          try {
+            boolean checkForPresence = true;
+            if (first) {
+              first = false;
+              checkForPresence = false;
+            }
+            registerToHub(checkForPresence);
+          } catch (GridException e) {
+            log.info("Problem registering the node : " + e.getMessage());
+          } catch (MalformedURLException e) {
+            e.printStackTrace();
+          }
+        }
+        try {
+          stoppedLock.wait(1000, 0);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+  }
+
+  public void start() {
+    thread = new Thread(this);
+    thread.start();
+  }
+
+  public void stop() {
+    synchronized (stoppedLock) {
+      stopped = true;
+    }
+    try {
+      thread.join();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
     }
   }
 }

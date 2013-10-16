@@ -27,19 +27,23 @@ import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
-
 
 public class FolderMonitor implements Runnable {
   private static final Logger log = Logger.getLogger(FolderMonitor.class.getName());
   private IOSServerManager iosServerManager;
   private IOSServerConfiguration iosServerConfiguration;
   private WatchService folderWatcher;
+  private final Object stoppedLock;
   private boolean stopped;
+  private Thread thread;
 
-  public FolderMonitor(IOSServerConfiguration iosServerConfiguration, IOSServerManager iosServerManager) throws IOException {
+  public FolderMonitor(IOSServerConfiguration iosServerConfiguration, IOSServerManager iosServerManager)
+      throws IOException {
     this.iosServerConfiguration = iosServerConfiguration;
     this.iosServerManager = iosServerManager;
+    stoppedLock = new Object();
     stopped = false;
     init();
     folderWatcher = FileSystems.getDefault().newWatchService();
@@ -56,6 +60,9 @@ public class FolderMonitor implements Runnable {
 
   private void init() {
     File[] listOfFiles = new File(iosServerConfiguration.getAppFolderToMonitor()).listFiles();
+    if (listOfFiles == null) {
+      return;
+    }
     for (File file : listOfFiles) {
       if (isApp(file)) {
         addApplication(file);
@@ -68,12 +75,14 @@ public class FolderMonitor implements Runnable {
 
   @Override
   public void run() {
-    while (!stopped) {
-      checkForChanges();
-      try {
-        Thread.sleep(1000);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
+    synchronized (stoppedLock) {
+      while (!stopped) {
+        checkForChanges();
+        try {
+          stoppedLock.wait(1000, 0);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
       }
     }
   }
@@ -83,23 +92,22 @@ public class FolderMonitor implements Runnable {
 
     if (key != null) {
       for (WatchEvent<?> watchEvent : key.pollEvents()) {
-        final WatchEvent<Path> ev = (WatchEvent<Path>) watchEvent;
-        final Path filePath = ev.context();
+        final Path filePath = (Path) watchEvent.context();
         final WatchEvent.Kind<?> kind = watchEvent.kind();
         log.fine(kind + " : " + filePath);
-        handleFileChange(kind, new File(iosServerConfiguration.getAppFolderToMonitor() + File.separator + filePath.getFileName()));
+        handleFileChange(kind,
+            new File(iosServerConfiguration.getAppFolderToMonitor(), filePath.getFileName().toString()));
       }
 
       boolean valid = key.reset();
       if (!valid) {
-        log.warning("Can't monitor folder anymore, has it been deleted?");
+        log.warning("Can't monitor folder anymore; has it been deleted?");
         stop();
       }
     }
   }
 
   private void handleFileChange(WatchEvent.Kind kind, File file) {
-
     if (kind.equals(StandardWatchEventKinds.ENTRY_CREATE)) {
       if (isApp(file)) {
         log.info("New app found! " + file.getName());
@@ -145,7 +153,19 @@ public class FolderMonitor implements Runnable {
     return ext.endsWith(".zip");
   }
 
+  public void start() {
+    thread = new Thread(this);
+    thread.start();
+  }
+
   public void stop() {
-    stopped = true;
+    synchronized (stoppedLock) {
+      stopped = true;
+    }
+    try {
+      thread.join();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
   }
 }
