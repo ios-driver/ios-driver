@@ -64,9 +64,15 @@ public class IOSServer {
 
   public static void main(String[] args) throws Exception {
     IOSServer server = new IOSServer(args);
-    server.start();
-    IOSServerConfiguration options = server.getOptions();
-    IOSServerManager driver = server.getDriver();
+    try {
+      server.start();
+    } catch (Exception e) {
+      try {
+        server.stop();
+      } finally {
+        System.exit(1);
+      }
+    }
   }
 
   public IOSServerConfiguration getOptions() {
