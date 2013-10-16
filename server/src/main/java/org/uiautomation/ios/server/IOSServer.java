@@ -46,7 +46,6 @@ import java.util.logging.Logger;
 public class IOSServer {
 
   public static final String DRIVER = IOSServerManager.class.getName();
-  public static final boolean debugMode = true;
   private static final Logger log = Logger.getLogger(IOSServer.class.getName());
   private Server server;
   private IOSServerConfiguration options;
@@ -55,7 +54,6 @@ public class IOSServer {
 
   public IOSServer(IOSServerConfiguration options) {
     init(options);
-
   }
 
   public IOSServer(String[] args) {
@@ -135,17 +133,16 @@ public class IOSServer {
     startFolderMonitor();
 
     StringBuilder b = new StringBuilder();
-    b.append("\nBeta features enabled ( enabled by -beta flag ): " + Configuration.BETA_FEATURE);
-    b.append(
-        "\nSimulator enabled ( enabled by -simulators flag): " + Configuration.SIMULATORS_ENABLED);
-    b.append("\nInspector: http://0.0.0.0:" + options.getPort() + "/inspector/");
-    b.append("\ntests can access the server at http://0.0.0.0:" + options.getPort() + "/wd/hub");
-    b.append("\nserver status: http://0.0.0.0:" + options.getPort() + "/wd/hub/status");
-    b.append("\nConnected devices: http://0.0.0.0:" + options.getPort() + "/wd/hub/devices/all");
-    b.append("\nApplications: http://0.0.0.0:" + options.getPort() + "/wd/hub/applications/all");
-    b.append("\nCapabilities: http://0.0.0.0:" + options.getPort() + "/wd/hub/capabilities/all");
-    b.append("\nMonitoring '" + options.getAppFolderToMonitor() + "' for new applications");
-    b.append("\nArchived apps " + driver.getApplicationStore().getFolder().getAbsolutePath());
+    b.append(String.format("\nBeta features enabled ( enabled by -beta flag ): %b", Configuration.BETA_FEATURE));
+    b.append(String.format("\nSimulator enabled ( enabled by -simulators flag): %b", Configuration.SIMULATORS_ENABLED));
+    b.append(String.format("\nInspector: http://0.0.0.0:%d/inspector/", options.getPort()));
+    b.append(String.format("\nTests can access the server at http://0.0.0.0:%d/wd/hub", options.getPort()));
+    b.append(String.format("\nServer status: http://0.0.0.0:%d/wd/hub/status", options.getPort()));
+    b.append(String.format("\nConnected devices: http://0.0.0.0:%d/wd/hub/devices/all", options.getPort()));
+    b.append(String.format("\nApplications: http://0.0.0.0:%d/wd/hub/applications/all", options.getPort()));
+    b.append(String.format("\nCapabilities: http://0.0.0.0:%d/wd/hub/capabilities/all", options.getPort()));
+    b.append(String.format("\nMonitoring '%s' for new applications", options.getAppFolderToMonitor()));
+    b.append(String.format("\nArchived apps: %s", driver.getApplicationStore().getFolder().getAbsolutePath()));
 
     if (Configuration.SIMULATORS_ENABLED) {
       addSimulatorDetails(b);
@@ -153,12 +150,13 @@ public class IOSServer {
 
     b.append("\n\nApplications :\n--------------- \n");
     for (APPIOSApplication app : driver.getSupportedApplications()) {
-      b.append("\tCFBundleName=" + (app.getMetadata(IOSCapabilities.BUNDLE_NAME).isEmpty() ? app
-          .getMetadata(IOSCapabilities.BUNDLE_DISPLAY_NAME) : app
-                                        .getMetadata(IOSCapabilities.BUNDLE_NAME)));
+      String name = app.getMetadata(IOSCapabilities.BUNDLE_NAME).isEmpty()
+          ? app.getMetadata(IOSCapabilities.BUNDLE_DISPLAY_NAME)
+          : app.getMetadata(IOSCapabilities.BUNDLE_NAME);
+      b.append(String.format("\tCFBundleName=%s", name));
       String version = app.getMetadata(IOSCapabilities.BUNDLE_VERSION);
       if (version != null && !version.isEmpty()) {
-        b.append(",CFBundleVersion=" + version);
+        b.append(String.format(",CFBundleVersion=%s", version));
       }
       b.append("\n");
     }
@@ -178,13 +176,12 @@ public class IOSServer {
         }
       }
     });
-
   }
 
   private void addSimulatorDetails(StringBuilder b) {
     File xcodeInstall = driver.getHostInfo().getXCodeInstall();
-    b.append("\nusing xcode install : " + driver.getHostInfo().getXCodeInstall());
-    b.append("\nusing IOS version " + driver.getHostInfo().getSDK());
+    b.append(String.format("\nusing xcode install : %s", driver.getHostInfo().getXCodeInstall().getPath()));
+    b.append(String.format("\nusing IOS version %s", driver.getHostInfo().getSDK()));
 
     boolean safari = false;
     // automatically add safari for SDK 6.0 and above.
@@ -219,10 +216,6 @@ public class IOSServer {
     return new APPIOSApplication(copy.getAbsolutePath());
   }
 
-  private boolean safariCopyExist(String sdk) {
-    return false;
-  }
-
   private void startFolderMonitor() {
     if (options.getAppFolderToMonitor() != null) {
       try {
@@ -245,7 +238,6 @@ public class IOSServer {
     if (!server.isRunning()) {
       server.start();
     }
-
   }
 
   public void stop() throws Exception {
@@ -255,5 +247,4 @@ public class IOSServer {
     driver.stop();
     server.stop();
   }
-
 }
