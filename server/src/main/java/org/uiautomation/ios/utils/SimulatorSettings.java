@@ -173,16 +173,15 @@ public class SimulatorSettings {
   private boolean deleteRecursive(File folder) {
     if (folder.isDirectory()) {
       if (isSymLink(folder)) {
-        folder.delete();
-      }else{
-        String[] children = folder.list();
-        for (int i = 0; i < children.length; i++) {
-          File delMe = new File(folder, children[i]);
-          boolean success = deleteRecursive(delMe);
-          if (!success) {
-            log.warning("cannot delete " + delMe
-                        + ".Are you trying to start a test while a simulator is still running ?");
-          }
+        return folder.delete();
+      }
+      String[] children = folder.list();
+      for (int i = 0; i < children.length; i++) {
+        File delMe = new File(folder, children[i]);
+        boolean success = deleteRecursive(delMe);
+        if (!success) {
+          log.warning("cannot delete " + delMe
+                      + ".Are you trying to start a test while a simulator is still running ?");
         }
       }
     }
