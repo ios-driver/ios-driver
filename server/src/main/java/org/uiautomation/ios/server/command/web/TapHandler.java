@@ -21,15 +21,16 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 import org.uiautomation.ios.server.utils.CoordinateUtils;
-import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
+import org.uiautomation.ios.server.utils.JSTemplate;
 import org.uiautomation.ios.wkrdp.model.RemoteWebNativeBackedElement;
 
 public class TapHandler extends UIAScriptHandler {
 
-  private static final String tapTemplate =
-      "UIATarget.localTarget().tap({x:tapX, y:tapY});" +
-          "UIAutomation.createJSONResponse(':sessionId',0,'')";
-
+  private static final JSTemplate template = new JSTemplate(
+      "UIATarget.localTarget().tap({x:%:tapX$d, y:%:tapY$d});" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')",
+      "sessionId", "tapX", "tapY"
+  );
   // CGRectMake(yourPoint.x, yourPoint.y, yourSize.width, yourSize.height);
 
   public TapHandler(IOSServerManager driver, WebDriverLikeRequest request) throws Exception {
@@ -44,11 +45,7 @@ public class TapHandler extends UIAScriptHandler {
     Point tapPoint = element.getLocation();
     tapPoint = CoordinateUtils.forcePointOnScreen(tapPoint, screenSize);
 
-    String js = tapTemplate
-        .replace(":sessionId", request.getSession())
-        .replace("tapX", Integer.toString(tapPoint.getX()))
-        .replace("tapY", Integer.toString(tapPoint.getY()));
-
+    String js = template.generate(request.getSession(), tapPoint.getX(), tapPoint.getY());
     setJS(js);
   }
 

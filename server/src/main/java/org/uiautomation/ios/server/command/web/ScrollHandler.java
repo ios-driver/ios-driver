@@ -21,14 +21,16 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 import org.uiautomation.ios.server.utils.CoordinateUtils;
+import org.uiautomation.ios.server.utils.JSTemplate;
 import org.uiautomation.ios.wkrdp.model.RemoteWebNativeBackedElement;
 
 public class ScrollHandler extends UIAScriptHandler {
 
-  private static final String scrollTemplate =
-      "UIATarget.localTarget().dragFromToForDuration({x:fromX,y:fromY},{x:toX,y:toY},1);" +
-          "UIAutomation.createJSONResponse(':sessionId',0,'')";
-
+  private static final JSTemplate template = new JSTemplate(
+      "UIATarget.localTarget().dragFromToForDuration({x:%:fromX$d,y:%:fromY$d},{x:%:toX$d,y:%:toY$d},1);" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')",
+      "sessionId", "fromX", "fromY", "toX", "toY"
+  );
 
   public ScrollHandler(IOSServerManager driver, WebDriverLikeRequest request) throws Exception {
     super(driver, request);
@@ -48,13 +50,12 @@ public class ScrollHandler extends UIAScriptHandler {
     fromPoint =  CoordinateUtils.forcePointOnScreen(fromPoint, screenSize);
     Point toPoint = new Point(fromPoint.getX() + payload.getInt("xoffset"), fromPoint.getY() + payload.getInt("yoffset"));
     toPoint = CoordinateUtils.forcePointOnScreen(toPoint, screenSize);
-    String js = scrollTemplate
-        .replace(":sessionId", request.getSession())
-        .replace("fromX", Integer.toString(fromPoint.getX()))
-        .replace("fromY", Integer.toString(fromPoint.getY()))
-        .replace("toX", Integer.toString(toPoint.getX()))
-        .replace("toY", Integer.toString(toPoint.getY()));
-
+    String js = template.generate(
+        request.getSession(),
+        fromPoint.getX(),
+        fromPoint.getY(),
+        toPoint.getX(),
+        toPoint.getY());
     setJS(js);
   }
 

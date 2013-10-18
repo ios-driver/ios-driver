@@ -21,15 +21,16 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
 import org.uiautomation.ios.server.utils.CoordinateUtils;
-import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
+import org.uiautomation.ios.server.utils.JSTemplate;
 import org.uiautomation.ios.wkrdp.model.RemoteWebNativeBackedElement;
 
 public class LongTapHandler extends UIAScriptHandler {
-  //tapWithOptions({x:hitPointX, y:hitPointY}, {touchCount:1, tapCount:1, duration:0});
-  private static final String longTapTemplate =
-      "UIATarget.localTarget().tapWithOptions({x:tapX, y:tapY}, {touchCount:1, tapCount:1, duration:3});" +
-          "UIAutomation.createJSONResponse(':sessionId',0,'')";
 
+  private static final JSTemplate template = new JSTemplate(
+      "UIATarget.localTarget().tapWithOptions({x:%:tapX$d, y:%:tapY$d}, {touchCount:1, tapCount:1, duration:3});" +
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')",
+      "sessionId", "tapX", "tapY"
+  );
 
   public LongTapHandler(IOSServerManager driver, WebDriverLikeRequest request) throws Exception {
     super(driver, request);
@@ -42,12 +43,7 @@ public class LongTapHandler extends UIAScriptHandler {
     Point tapPoint = element.getLocation();
     tapPoint = CoordinateUtils.forcePointOnScreen(tapPoint, screenSize);
 
-
-    String js = longTapTemplate
-        .replace(":sessionId", request.getSession())
-        .replace("tapX", Integer.toString(tapPoint.getX()))
-        .replace("tapY", Integer.toString(tapPoint.getY()));
-
+    String js = template.generate(request.getSession(), tapPoint.getX(), tapPoint.getY());
     setJS(js);
   }
 
