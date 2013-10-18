@@ -90,7 +90,7 @@ public class FindElementHandler extends BaseWebCommandHandler {
     } else if ("xpath".equals(type)) {
       rwe = element.findElementByXpath(value);
     } else {
-      String cssSelector = ToCSSSelectorConvertor.convertToCSSSelector(type, value);
+      String cssSelector = ToCSSSelectorConverter.convertToCSSSelector(type, value);
       rwe = element.findElementByCSSSelector(cssSelector);
     }
     return rwe;

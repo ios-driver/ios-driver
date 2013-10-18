@@ -22,7 +22,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class WebKitSyncronizer {
+public class WebKitSynchronizer {
 
   private Lock simLock = new ReentrantLock();
   private Condition simRegistered = simLock.newCondition();
@@ -30,7 +30,7 @@ public class WebKitSyncronizer {
   private Condition simSentPages = simLock.newCondition();
   private final RemoteIOSWebDriver driver;
 
-  public WebKitSyncronizer(RemoteIOSWebDriver driver) {
+  public WebKitSynchronizer(RemoteIOSWebDriver driver) {
     this.driver = driver;
   }
 

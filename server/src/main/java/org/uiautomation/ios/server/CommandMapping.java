@@ -107,7 +107,7 @@ public enum CommandMapping {
   //ELEMENTS(".elements2(:depth,:criteria)"),
   //ANCESTRY(NotImplementedNativeHandler.class, NotImplementedWebHandler.class),
 
-  DISPLAYED(IsVisibleNHandler.class, IsDisplayedHanlder.class),
+  DISPLAYED(IsVisibleNHandler.class, IsDisplayedHandler.class),
   ENABLED(IsEnabledNHandler.class, IsEnabledHandler.class),
   LOCATION(null, null, GetLocationHandler.class),
 

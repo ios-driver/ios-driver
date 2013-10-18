@@ -30,7 +30,7 @@ import org.uiautomation.ios.wkrdp.command.Page;
 import org.uiautomation.ios.wkrdp.internal.RealDeviceProtocolImpl;
 import org.uiautomation.ios.wkrdp.internal.SimulatorProtocolImpl;
 import org.uiautomation.ios.wkrdp.internal.WebKitRemoteDebugProtocol;
-import org.uiautomation.ios.wkrdp.internal.WebKitSyncronizer;
+import org.uiautomation.ios.wkrdp.internal.WebKitSynchronizer;
 import org.uiautomation.ios.wkrdp.message.WebkitApplication;
 import org.uiautomation.ios.wkrdp.message.WebkitDevice;
 import org.uiautomation.ios.wkrdp.message.WebkitPage;
@@ -85,13 +85,12 @@ public class RemoteIOSWebDriver {
   private static final Logger log = Logger.getLogger(RemoteIOSWebDriver.class.getName());
   private List<WebkitPage> pages = new ArrayList<WebkitPage>();
   private final List<WebInspector> created = new ArrayList<WebInspector>();
-  private final WebKitSyncronizer sync;
-
+  private final WebKitSynchronizer sync;
 
   public RemoteIOSWebDriver(ServerSideSession session, ResponseFinder... finders) {
     this.session = session;
     connectionKey = UUID.randomUUID().toString();
-    sync = new WebKitSyncronizer(this);
+    sync = new WebKitSynchronizer(this);
     MessageListener notification = new WebKitNotificationListener(this, sync, session);
     if (session.getDevice() instanceof RealDevice) {
       if (!Configuration.BETA_FEATURE) {

@@ -102,8 +102,8 @@ public class IOSServlet extends DriverBasedServlet {
         response.setHeader("location", url + "/session/" + session);
       }
       // String s = toString(resp);
-      BeanToJsonConverter convertor = new BeanToJsonConverter();
-      String s = convertor.convert(resp);
+      BeanToJsonConverter converter = new BeanToJsonConverter();
+      String s = converter.convert(resp);
 
       // status is also used for debugging, it's worth formatting it nice.
       if (req.getGenericCommand() == WebDriverLikeCommand.STATUS) {
