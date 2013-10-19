@@ -134,9 +134,20 @@ public class RemoteIOSWebDriver {
     protocol.stop();
   }
 
-  public RemoteWebElement createElement(String reference) {
-    int pageId = Integer.parseInt(reference.split("_")[0]);
-    int nodeId = Integer.parseInt(reference.split("_")[1]);
+  // Native-backed (embedded web view) element references are encoded as e.g. "1_42", whereas plain elements are
+  // encoded as e.g. "17".  The JavaScript code necessary to operate on the two types of elements differs
+  // substantially.
+  public static boolean isPlainElement(String elementId) {
+    return (elementId.split("_").length == 1);
+  }
+
+  public static NodeId plainNodeId(String elementId) {
+    return new NodeId(Integer.parseInt(elementId));
+  }
+
+  public RemoteWebElement createElement(String elementId) {
+    int pageId = Integer.parseInt(elementId.split("_")[0]);
+    int nodeId = Integer.parseInt(elementId.split("_")[1]);
 
     if (currentInspector.getPageIdentifier() != pageId) {
       throw new StaleElementReferenceException("Node " + nodeId

@@ -23,7 +23,6 @@ import java.util.Map;
 public class CoordinateUtils {
 
   public static Point forcePointOnScreen(Point point, Dimension screenSize) {
-
     int x;
     int y;
 
@@ -44,20 +43,21 @@ public class CoordinateUtils {
     }
 
     return new Point(x, y);
+  }
 
+  public static Point getScreenCenter(Dimension screenSize) {
+    return new Point(screenSize.getWidth() / 2, screenSize.getHeight() / 2);
   }
 
   public static Point getCenterPoint(Point topLeft, Dimension size) {
     return getCenterPoint(topLeft.getX(), topLeft.getY(), size.getWidth(), size.getHeight());
-
   }
 
   private static Point getCenterPoint(int xCoord, int yCoord, int width, int height) {
     int centerX = xCoord + (width / 2);
     int centerY = yCoord + (height / 2);
 
-    Point center = new Point(centerX, centerY);
-    return center;
+    return new Point(centerX, centerY);
   }
 
   public static Point getCenterPointFromResponse(Response response) {

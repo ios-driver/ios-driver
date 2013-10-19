@@ -27,116 +27,87 @@ import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
 import org.uiautomation.ios.wkrdp.model.NodeId;
 import org.uiautomation.ios.wkrdp.model.RemoteWebNativeBackedElement;
 
-public class FlickNHandler extends UIAScriptHandler {
+public class ScrollNHandler extends UIAScriptHandler {
 
-  // dragFromToForDuration()'s duration argument must be in [0.5 .. 60.0).
   private static final JSTemplate plainFromElementTemplate = new JSTemplate(
       "var element = UIAutomation.cache.get(%:nodeId$d, false);" +
       "var status = Number(!element.isVisible());" +
       "if (status == 0) {" +
         "var hp = element.hitpoint();" +
-        "var toX = hp.x + %:offsetX$d;" +
-        "var toY = hp.y + %:offsetY$d;" +
+        "var toX = hp.x + %:toX$d;" +
+        "var toY = hp.y + %:toY$d;" +
         "if (toX < 0) {toX = 0} else if (toX >= %:screenSizeX$d) {toX = %:screenSizeX$d - 1}" +
         "if (toY < 0) {toY = 0} else if (toY >= %:screenSizeY$d) {toY = %:screenSizeY$d - 1}" +
-        "var dx = toX - hp.x;" +
-        "var dy = toY - hp.y;" +
-        "var distance = Math.sqrt(dx*dx + dy*dy);" +
-        "var duration = distance / %:speed$f;" +
-        "if (duration < 0.5) {" +
-          "UIATarget.localTarget().flickFromTo(hp, {x:toX, y:toY});" +
-        "} else {" +
-          "if (duration >= 60.0) {duration = 59.9}" +
-          "UIATarget.localTarget().dragFromToForDuration(hp, {x:toX, y:toY}, duration);" +
-        "}" +
+        "UIATarget.localTarget().dragFromToForDuration(hp, {x:toX, y:toY}, 1);" +
       "}" +
       "UIAutomation.createJSONResponse('%:sessionId$s', status, '');",
-      "sessionId", "nodeId", "screenSizeX", "screenSizeY", "offsetX", "offsetY", "speed");
-  private static final JSTemplate fromToTemplate = new JSTemplate(
-      "var duration = %:duration$f;" +
-      "if (duration < 0.5) {" +
-        "UIATarget.localTarget().flickFromTo({x:%:fromX$d, y:%:fromY$d}, {x:%:toX$d, y:%:toY$d});" +
-      "} else {" +
-        "if (duration >= 60.0) {duration = 59.9}" +
-        "UIATarget.localTarget().dragFromToForDuration({x:%:fromX$d, y:%:fromY$d}, {x:%:toX$d, y:%:toY$d}, duration);" +
-      "}" +
+      "sessionId", "nodeId", "screenSizeX", "screenSizeY", "toX", "toY");
+  private static final JSTemplate nativeFromElementTemplate = new JSTemplate(
+      "UIATarget.localTarget().dragFromToForDuration({x:%:fromX$d,y:%:fromY$d},{x:%:toX$d,y:%:toY$d},1);" +
+          "UIAutomation.createJSONResponse('%:sessionId$s',0,'')",
+      "sessionId", "fromX", "fromY", "toX", "toY");
+  private static final JSTemplate fromCenterTemplate = new JSTemplate(
+      "UIATarget.localTarget().dragFromToForDuration({x:%:fromX$d, y:%:fromY$d}, {x:%:toX$d, y:%:toY$d}, 1);" +
       "UIAutomation.createJSONResponse('%:sessionId$s', 0, '')",
-      "sessionId", "fromX", "fromY", "toX", "toY", "duration");
+      "sessionId", "fromX", "fromY", "toX", "toY");
 
-  public FlickNHandler(IOSServerManager driver, WebDriverLikeRequest request) throws Exception {
+  public ScrollNHandler(IOSServerManager driver, WebDriverLikeRequest request) throws Exception {
     super(driver, request);
 
     JSONObject payload = request.getPayload();
     Dimension screenSize = driver.getSession(request.getSession()).getNativeDriver().getScreenSize();
+    Point offset = new Point(payload.getInt("xoffset"), payload.getInt("yoffset"));
     String elementId = payload.optString("element");
     if (!payload.isNull("element") && !elementId.equals("")) {
-      Point offset = new Point(payload.getInt("xoffset"), payload.getInt("yoffset"));
-      double speed = payload.optDouble("speed", 1.0);
       if (RemoteIOSWebDriver.isPlainElement(elementId)) {
         NodeId nodeId = RemoteIOSWebDriver.plainNodeId(elementId);
-        plainFlickFromElement(request, screenSize, offset, speed, nodeId.getId());
+        plainScrollFromElement(request, screenSize, nodeId.getId(), offset);
       } else {
-        nativeFlickFromElement(request, screenSize, offset, speed, elementId);
+        nativeScrollFromElement(request, screenSize, elementId, offset);
       }
     } else {
-      double speedX = payload.optDouble("xspeed", 1.0);
-      double speedY = payload.optDouble("yspeed", 1.0);
-      flickFromCenter(request, screenSize, speedX, speedY);
+      scrollFromCenter(request, screenSize, offset);
     }
   }
 
-  private void plainFlickFromElement(WebDriverLikeRequest request, Dimension screenSize, Point offset, double speed,
-                                     int nodeId) {
-    String js = plainFromElementTemplate.generate(
+  private void plainScrollFromElement(WebDriverLikeRequest request, Dimension screenSize, int nodeId, Point offset) {
+    setJS(plainFromElementTemplate.generate(
         request.getSession(),
         nodeId,
         screenSize.getWidth(),
         screenSize.getHeight(),
         offset.getX(),
-        offset.getY(),
-        speed);
-    setJS(js);
+        offset.getY()));
   }
 
-  private void nativeFlickFromElement(WebDriverLikeRequest request, Dimension screenSize, Point offset, double speed,
-                                      String elementId) throws Exception {
+  private void nativeScrollFromElement(WebDriverLikeRequest request, Dimension screenSize, String elementId,
+                                       Point offset) throws Exception {
     RemoteWebNativeBackedElement element =
         (RemoteWebNativeBackedElement) getSession().getRemoteWebDriver().createElement(elementId);
     Point fromPoint = element.getLocation();
-    Point toPoint = new Point(fromPoint.getX() + offset.getX(), fromPoint.getY() + offset.getY());
     fromPoint = CoordinateUtils.forcePointOnScreen(fromPoint, screenSize);
+    Point toPoint = new Point(
+        fromPoint.getX() + offset.getX(),
+        fromPoint.getY() + offset.getY());
     toPoint = CoordinateUtils.forcePointOnScreen(toPoint, screenSize);
-    int dx = toPoint.getX() - fromPoint.getX();
-    int dy = toPoint.getY() - fromPoint.getY();
-    double distance = Math.sqrt(dx*dx + dy*dy);
-    double duration = distance / speed;
-    setJS(fromToTemplate.generate(
+    setJS(nativeFromElementTemplate.generate(
         request.getSession(),
         fromPoint.getX(),
         fromPoint.getY(),
         toPoint.getX(),
-        toPoint.getY(),
-        duration));
+        toPoint.getY()));
   }
 
-  private void flickFromCenter(WebDriverLikeRequest request, Dimension screenSize, double speedX, double speedY) {
+  private void scrollFromCenter(WebDriverLikeRequest request, Dimension screenSize, Point offset) {
     Point fromPoint = CoordinateUtils.getScreenCenter(screenSize);
-
-    // Convert "flick from center at given speed vector" to "drag from center to edge for duration".
-    double duration = Math.min(
-        fromPoint.getX() / Math.abs(speedX),
-        fromPoint.getY() / Math.abs(speedY));
-    Point toPoint = new Point(
-        (int)(fromPoint.getX() + speedX * duration),
-        (int)(fromPoint.getY() + speedY * duration));
+    Point toPoint = new Point(fromPoint.getX() + offset.getX(), fromPoint.getY() + offset.getY());
     toPoint = CoordinateUtils.forcePointOnScreen(toPoint, screenSize);
-    setJS(fromToTemplate.generate(
+    setJS(fromCenterTemplate.generate(
         request.getSession(),
         fromPoint.getX(),
         fromPoint.getY(),
         toPoint.getX(),
-        toPoint.getY(),
-        duration));
+        toPoint.getY()));
   }
 
   @Override
