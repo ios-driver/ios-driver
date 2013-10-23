@@ -31,81 +31,88 @@ import java.util.Map;
 
 public class IOSRemoteProxy extends DefaultRemoteProxy implements SelfHealingProxy {
 
-  private boolean restarting;
-  private boolean available;
-  private int sessionsServed;
-  private int sessionsLimit;
+    private boolean restarting;
+    private boolean available;
+    private int sessionsServed;
+    private int sessionsLimit;
 
-  private HtmlRenderer renderer = new IOSHtmlRenderer(this);
+    private HtmlRenderer renderer = new IOSHtmlRenderer(this);
 
-  public IOSRemoteProxy(RegistrationRequest request, Registry registry) {
-    super(request, registry);
-    IOSCapabilitiesMonitor iosCapabilitiesMonitor = new IOSCapabilitiesMonitor(this);
-    new Thread(iosCapabilitiesMonitor).start();
-    sessionsServed = 0;
-    sessionsLimit = 2;
-  }
-
-  @Override
-  public HtmlRenderer getHtmlRender() {
-    return renderer;
-  }
-
-  @Override
-  public TestSession getNewSession(Map<String, Object> requestedCapability) {
-    synchronized (this) {
-      if(sessionLimitReached()){
-        setRestarting(false);
-        setAvailable(false);
-        doSessionLimitCleardown();
-        unregister();
-      }
-      if (isRestarting() || !isAvailable()) {
-        return null;
-      }
-      sessionsServed++;
-      return super.getNewSession(requestedCapability);
+    public IOSRemoteProxy(RegistrationRequest request, Registry registry) {
+        super(request, registry);
+        IOSCapabilitiesMonitor iosCapabilitiesMonitor = new IOSCapabilitiesMonitor(this);
+        new Thread(iosCapabilitiesMonitor).start();
+        sessionsServed = 0;
+        sessionsLimit = 3;
     }
-  }
 
-  private void doSessionLimitCleardown() {
-    try {
-      SeleniumGridExtrasReboot();
-    } catch (IOException e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+    @Override
+    public HtmlRenderer getHtmlRender() {
+        return renderer;
     }
-  }
 
-  private void SeleniumGridExtrasReboot() throws IOException {
-    System.out.println("Asking SeleniumGridExtras to reboot node");
-    HttpClient client = new DefaultHttpClient();
-    String url = "http://" + this.getRemoteHost().getHost() + ":" + 3000 + "/reboot";
-    BasicHttpRequest r = new BasicHttpRequest("GET", url);
-    HttpResponse response = client.execute(new HttpHost(this.getRemoteHost().getHost(), 3000), r);
-    System.out.println(response.toString());
-  }
+    @Override
+    public TestSession getNewSession(Map<String, Object> requestedCapability) {
+        synchronized (this) {
+            if (sessionLimitReached() && !this.isBusy()) {
+                setRestarting(false);
+                setAvailable(false);
+                doSessionLimitCleardown();
+                unregister();
+            }
+            if (isRestarting() || !isAvailable() || this.isBusy()) {
+                return null;
+            } else {
+                TestSession session = super.getNewSession(requestedCapability);
+                if (session == null) {
+                    return null;
+                } else {
+                    sessionsServed++;
+                    return session;
+                }
+            }
 
-  private boolean sessionLimitReached(){
-    return sessionsLimit <= sessionsServed;
-  }
+        }
+    }
 
-  public boolean isRestarting() {
-    return restarting;
-  }
+    private void doSessionLimitCleardown() {
+        try {
+            SeleniumGridExtrasReboot();
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+    }
 
-  public void setRestarting(boolean restarting) {
-    this.restarting = restarting;
-  }
+    private void SeleniumGridExtrasReboot() throws IOException {
+        System.out.println("Asking SeleniumGridExtras to reboot node");
+        HttpClient client = new DefaultHttpClient();
+        String url = "http://" + this.getRemoteHost().getHost() + ":" + 3000 + "/reboot";
+        BasicHttpRequest r = new BasicHttpRequest("GET", url);
+        HttpResponse response = client.execute(new HttpHost(this.getRemoteHost().getHost(), 3000), r);
+        System.out.println(response.toString());
+    }
 
-  public boolean isAvailable() {
-    return available;
-  }
+    private boolean sessionLimitReached() {
+        return sessionsLimit <= sessionsServed;
+    }
 
-  public void setAvailable(boolean available) {
-    this.available = available;
-  }
+    public boolean isRestarting() {
+        return restarting;
+    }
 
-  public void unregister(){
-    addNewEvent(new RemoteUnregisterException("Unregistering the node."));
-  }
+    public void setRestarting(boolean restarting) {
+        this.restarting = restarting;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
+    public void unregister() {
+        addNewEvent(new RemoteUnregisterException("Unregistering the node."));
+    }
 }
