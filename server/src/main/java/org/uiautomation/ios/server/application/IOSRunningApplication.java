@@ -40,14 +40,18 @@ public class IOSRunningApplication {
   public boolean isSafari() {
       return "com.apple.mobilesafari".equals(getBundleId());
   }
+  
+  public boolean isSimulator() {
+      return underlyingApplication.isSimulator();
+  }
 
   public String getDotAppAbsolutePath() {
     return underlyingApplication.getApplicationPath().getAbsolutePath();
   }
 
   // TODO will have to be syncronized, or copy the app.
-  public void setDefaultDevice(DeviceType defaultDevice) {
-    underlyingApplication.setDefaultDevice(defaultDevice);
+  public void setDefaultDevice(DeviceType defaultDevice, boolean putDefaultFirst) {
+    underlyingApplication.setDefaultDevice(defaultDevice, putDefaultFirst);
   }
 
   public AppleLanguage getCurrentLanguage() {
@@ -129,5 +133,10 @@ public class IOSRunningApplication {
 
   public APPIOSApplication getUnderlyingApplication() {
     return underlyingApplication;
+  }
+  
+  @Override
+  public String toString() {
+    return underlyingApplication.toString();
   }
 }

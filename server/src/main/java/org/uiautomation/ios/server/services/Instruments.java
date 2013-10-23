@@ -21,10 +21,10 @@ import org.uiautomation.ios.server.simulator.InstrumentsFailedToStartException;
 
 public interface Instruments {
 
-  public void start() throws InstrumentsFailedToStartException;
-  public void stop();
+  void start() throws InstrumentsFailedToStartException;
+  void stop();
 
-  public Response executeCommand(UIAScriptRequest request);
+  Response executeCommand(UIAScriptRequest request);
 
   CommunicationChannel getChannel();
 

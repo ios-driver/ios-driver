@@ -105,12 +105,7 @@ public class ServerSideSession extends Session {
       }
       if (!server.getHostInfo().getInstalledSDKs().contains(version)) {
         throw new SessionNotCreatedException(
-            "SDK " + version + " not installed on this machine.");
-      }
-
-      if (!server.getHostInfo().getInstalledSDKs().contains(version)) {
-        throw new SessionNotCreatedException(
-            "Cannot start on version " + version + ".Installed : "
+            "Cannot start on version " + version + ".Installed: "
             + server.getHostInfo().getInstalledSDKs());
       }
     }

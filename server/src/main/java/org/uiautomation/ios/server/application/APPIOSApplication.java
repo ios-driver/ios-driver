@@ -27,6 +27,7 @@ import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
+import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.PlistFileUtils;
 
 import java.io.*;
@@ -41,6 +42,19 @@ import static org.uiautomation.ios.IOSCapabilities.*;
 
 // TODO freynaud create IOSApp vs Running App that has locale + language
 public class APPIOSApplication {
+    
+  public static void main(String[] args) throws Exception {
+    showAppData("MobileSafari6.1", APPIOSApplication.findSafariApp(ClassicCommands.getXCodeInstall(), "6.1"));
+    showAppData("MobileSafari7.0", APPIOSApplication.findSafariApp(ClassicCommands.getXCodeInstall(), "7.0"));
+  }
+
+  private static void showAppData(String label, APPIOSApplication app) throws JSONException {
+    System.out.println(label + ':');
+    System.out.println("  path: " + app.getApplicationPath().getAbsolutePath());
+    System.out.println("  metadata: " + app.getMetadata().toString(2));
+  }
+  
+  //
 
   private static final Logger log = Logger.getLogger(APPIOSApplication.class.getName());
 
@@ -277,19 +291,23 @@ public class APPIOSApplication {
     }
     return true;
   }
-
-  public static APPIOSApplication findSafariLocation(File xcodeInstall, String sdkVersion) {
-    File app = new File(xcodeInstall,
-                        "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator"
-                        + sdkVersion
-                        + ".sdk/Applications/MobileSafari.app");
-    if (!app.exists()) {
-      throw new WebDriverException(app + " should be the safari app, but doesn't exist.");
+  
+  public static File findSafariLocation(File xcodeInstall, String sdkVersion) {
+      File app = new File(xcodeInstall,
+                          "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator"
+                          + sdkVersion
+                          + ".sdk/Applications/MobileSafari.app");
+      if (!app.exists()) {
+        throw new WebDriverException(app + " should be the safari app, but doesn't exist.");
+      }
+      return app;
     }
-    return new APPIOSApplication(app.getAbsolutePath());
+
+  public static APPIOSApplication findSafariApp(File xcodeInstall, String sdkVersion) {
+    return new APPIOSApplication(findSafariLocation(xcodeInstall, sdkVersion).getAbsolutePath());
   }
 
-  public void setDefaultDevice(DeviceType device) {
+  public void setDefaultDevice(DeviceType device, boolean putDefaultFirst) {
     try {
       File plist = new File(app, "Info.plist");
 
@@ -303,22 +321,22 @@ public class APPIOSApplication {
       }
 
       NSArray rearrangedArray = new NSArray(length);
-      NSNumber last = null;
-      int index = 0;
+      NSNumber defaultDevice = null;
+      int index = putDefaultFirst? 1 : 0;
       for (int i = 0; i < length; i++) {
         NSNumber d = (NSNumber) devices.objectAtIndex(i);
         if (d.intValue() == device.getDeviceFamily()) {
-          last = d;
+          defaultDevice = d;
         } else {
           rearrangedArray.setValue(index, d);
           index++;
         }
       }
-      if (last == null) {
+      if (defaultDevice == null) {
         throw new WebDriverException(
             "Cannot find device " + device + " in the supported device list.");
       }
-      rearrangedArray.setValue(index, last);
+      rearrangedArray.setValue(putDefaultFirst? 0 : index, defaultDevice);
       root.put("UIDeviceFamily", rearrangedArray);
 
       write(plist,root,format);

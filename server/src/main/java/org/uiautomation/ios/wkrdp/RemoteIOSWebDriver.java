@@ -21,9 +21,7 @@ import org.json.JSONException;
 import org.openqa.selenium.*;
 import org.uiautomation.ios.context.BaseWebInspector;
 import org.uiautomation.ios.context.WebInspector;
-import org.uiautomation.ios.server.DOMContext;
-import org.uiautomation.ios.server.RealDevice;
-import org.uiautomation.ios.server.ServerSideSession;
+import org.uiautomation.ios.server.*;
 import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.wkrdp.command.Network;
 import org.uiautomation.ios.wkrdp.command.Page;
@@ -43,15 +41,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 public class RemoteIOSWebDriver {
 
 
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] args) throws Exception { 
+    try {
+      LogManager.getLogManager()
+        .readConfiguration(IOSServerManager.class.getResourceAsStream("/ios-logging.properties"));
+    } catch (Exception e) {
+      System.err.println("Cannot configure logger.");
+    }
+      
     RemoteIOSWebDriver driver = new RemoteIOSWebDriver(null);
     //driver.connect(uiCatalog);
-    driver.switchTo(driver.getPages().get(0));
+    // driver.switchTo(driver.getPages().get(0)); 
     driver.get("http://ebay.co.uk/");
     RemoteWebElement body = driver.findElementByCssSelector("body");
     driver.get("http://google.co.uk/");
@@ -93,7 +99,7 @@ public class RemoteIOSWebDriver {
     connectionKey = UUID.randomUUID().toString();
     sync = new WebKitSyncronizer(this);
     MessageListener notification = new WebKitNotificationListener(this, sync, session);
-    if (session.getDevice() instanceof RealDevice) {
+    if (session != null && session.getDevice() instanceof RealDevice) {
       if (!Configuration.BETA_FEATURE) {
         Configuration.off();
       }
@@ -107,6 +113,8 @@ public class RemoteIOSWebDriver {
     protocol.register();
     sync.waitForSimToRegister();
     sync.waitForSimToSendApps();
+    
+    log.fine("connectionKey=" + connectionKey);
 
     if (applications.size() == 1) {
       connect(applications.get(0).getBundleId());
@@ -164,6 +172,7 @@ public class RemoteIOSWebDriver {
         this.bundleId = bundleId;
         protocol.connect(bundleId);
         sync.waitForSimToSendPages();
+        log.fine("bundleId=" + bundleId);
         switchTo(getPages().get(0));
         if (getPages().size() > 1) {
           log.warning("Application started, but already have " + getPages().size()
@@ -198,6 +207,7 @@ public class RemoteIOSWebDriver {
   public void switchTo(WebkitPage page) {
     currentInspector = connect(page);
     inspectors.put(page.getPageId(), currentInspector);
+    log.fine("pageId=" + page.getPageId());
   }
 
   private BaseWebInspector connect(WebkitPage webkitPage) {

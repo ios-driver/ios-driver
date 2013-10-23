@@ -35,6 +35,17 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class SimulatorSettings {
+    
+  public static void main(String[] args) throws Exception {
+    SimulatorSettings settings61 = new SimulatorSettings("6.1");
+    JSONObject globalPreferences61 = new PlistFileUtils(settings61.globalPreferencePlist).toJSON();
+    System.out.println("globalPreferences 6.1: " + globalPreferences61.toString(2));
+    SimulatorSettings settings70 = new SimulatorSettings("7.0");
+    JSONObject globalPreferences70 = new PlistFileUtils(settings70.globalPreferencePlist).toJSON();
+    System.out.println("globalPreferences 7.0: " + globalPreferences70.toString(2));
+  }
+  
+  //
 
   private static final Logger log = Logger.getLogger(SimulatorSettings.class.getName());
   private static final String PLUTIL = "/usr/bin/plutil";

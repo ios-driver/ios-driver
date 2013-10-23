@@ -134,8 +134,8 @@ public class IOSServer {
     b.append(
         "\nSimulator enabled ( enabled by -simulators flag): " + Configuration.SIMULATORS_ENABLED);
     b.append("\nInspector: http://0.0.0.0:" + options.getPort() + "/inspector/");
-    b.append("\ntests can access the server at http://0.0.0.0:" + options.getPort() + "/wd/hub");
-    b.append("\nserver status: http://0.0.0.0:" + options.getPort() + "/wd/hub/status");
+    b.append("\nTests can access the server at http://0.0.0.0:" + options.getPort() + "/wd/hub");
+    b.append("\nServer status: http://0.0.0.0:" + options.getPort() + "/wd/hub/status");
     b.append("\nConnected devices: http://0.0.0.0:" + options.getPort() + "/wd/hub/devices/all");
     b.append("\nApplications: http://0.0.0.0:" + options.getPort() + "/wd/hub/applications/all");
     b.append("\nCapabilities: http://0.0.0.0:" + options.getPort() + "/wd/hub/capabilities/all");
@@ -178,23 +178,23 @@ public class IOSServer {
 
   private void addSimulatorDetails(StringBuilder b) {
     File xcodeInstall = driver.getHostInfo().getXCodeInstall();
-    b.append("\nusing xcode install : " + driver.getHostInfo().getXCodeInstall());
-    b.append("\nusing IOS version " + driver.getHostInfo().getSDK());
+    String hostSDK = driver.getHostInfo().getSDK();
+    b.append("\nUsing Xcode install: " + driver.getHostInfo().getXCodeInstall());
+    b.append("\nUsing iOS version " + hostSDK);
 
     boolean safari = false;
-    // automatically add safari for SDK 6.0 and above.
+    // automatically add safari for host SDK and above as instruments starts simulator on host SDK version
     for (String s : driver.getHostInfo().getInstalledSDKs()) {
       Float version = Float.parseFloat(s);
-      if (version >= 6L) {
+      if (version >= Float.parseFloat(hostSDK)) {
         safari = true;
-//        driver.addSupportedApplication(copyOfSafari());APPIOSApplication.findSafariLocation(driver.getHostInfo().getXCodeInstall(), s));
         driver.addSupportedApplication(copyOfSafari(xcodeInstall, s));
       }
     }
     if (safari) {
-      b.append("\nios >= 6.0. Safari and hybrid apps are supported.");
+      b.append("\niOS >= 6.0. Safari and hybrid apps are supported.");
     } else {
-      b.append("\nios < 6.0. Safari and hybrid apps are NOT supported.");
+      b.append("\niOS < 6.0. Safari and hybrid apps are NOT supported.");
     }
   }
 
@@ -202,11 +202,10 @@ public class IOSServer {
   private APPIOSApplication copyOfSafari(File xcodeInstall, String sdk) {
     File copy = new File(System.getProperty("user.home")+"/.ios-driver/safariCopies", "safari-"+sdk+".app");
     if (!copy.exists()) {
-      APPIOSApplication safari = APPIOSApplication.findSafariLocation(xcodeInstall, sdk);
-      File folderToCopy = safari.getApplicationPath();
+      File safariFolder = APPIOSApplication.findSafariLocation(xcodeInstall, sdk);
       copy.mkdirs();
       try {
-        FileUtils.copyDirectory(folderToCopy, copy);
+        FileUtils.copyDirectory(safariFolder, copy);
       } catch (IOException e) {
         log.warning("Cannot create the copy of safari : " + e.getMessage());
       }

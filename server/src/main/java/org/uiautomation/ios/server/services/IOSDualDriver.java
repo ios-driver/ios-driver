@@ -14,9 +14,7 @@
 
 package org.uiautomation.ios.server.services;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.NoSuchWindowException;
+import org.openqa.selenium.*;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.server.InstrumentsBackedNativeIOSDriver;
 import org.uiautomation.ios.server.ServerSideSession;
@@ -94,7 +92,16 @@ public class IOSDualDriver {
     nativeDriver = new InstrumentsBackedNativeIOSDriver(url, session);
     nativeDriver.start();
 
-    if ("Safari".equals(session.getCapabilities().getBundleName())) {
+    if (session.getApplication().isSafari()) {
+      try {
+        // TODO: check if running 7.0?
+        // click on "Apple" button to get the simulator out of initial state where webview is not updated
+        WebElement appleButton = nativeDriver.findElement(By.xpath("//UIAWindow/UIAScrollView/UIAButton"));
+        if (appleButton.getAttribute("name") == null)
+          appleButton.click();
+      } catch (WebDriverException ignore) {
+          // button is not there
+      }
       setMode(WorkingMode.Web);
       getRemoteWebDriver().get("about:blank");
     }

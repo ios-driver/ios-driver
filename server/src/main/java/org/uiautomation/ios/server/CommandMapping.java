@@ -267,7 +267,7 @@ public enum CommandMapping {
     }
 
     if (clazz == null) {
-      throw new RuntimeException("handler NI");
+      throw new RuntimeException("handler NYI: " + name());
     }
 
     Object[] args = new Object[]{driver, request};
