@@ -247,7 +247,7 @@ public class InstrumentsApple implements Instruments {
 
   private void putMobileSafariAppBackInInstallDir() {
     if (safariFolder.exists()) {
-      log.warning("cannot put back MobileSafari.app, folder already exists: " + safariFolder.getAbsolutePath());
+      log.fine("not restoring MobileSafari.app, folder already exists: " + safariFolder.getAbsolutePath());
       return;
     }
     

@@ -96,12 +96,16 @@ public class IOSDualDriver {
       String sdkVersion = session.getCapabilities().getSDKVersion();
       if (sdkVersion != null && Float.parseFloat(sdkVersion) >= 7.0) {
         try {
+          // instruments sometimes crashes if click is done before page is fully loaded
+          Thread.sleep(3000);
           // click on "Apple" button to get the simulator out of initial state where webview is not updated
           WebElement appleButton = nativeDriver.findElement(By.xpath("//UIAWindow/UIAScrollView/UIAButton"));
           if (appleButton.getAttribute("name") == null)
             appleButton.click();
         } catch (WebDriverException ignore) {
           // button is not there
+        } catch (InterruptedException ie) {
+          Thread.currentThread().interrupt();
         }
       }
       setMode(WorkingMode.Web);

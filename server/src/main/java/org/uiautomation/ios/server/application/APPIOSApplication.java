@@ -293,18 +293,22 @@ public class APPIOSApplication {
   }
   
   public static File findSafariLocation(File xcodeInstall, String sdkVersion) {
-      File app = new File(xcodeInstall,
-                          "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator"
-                          + sdkVersion
-                          + ".sdk/Applications/MobileSafari.app");
-      if (!app.exists()) {
-        throw new WebDriverException(app + " should be the safari app, but doesn't exist.");
-      }
-      return app;
+    File safariFolder = new File(xcodeInstall,
+                        "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator"
+                        + sdkVersion
+                        + ".sdk/Applications/MobileSafari.app");
+    if (!safariFolder.exists()) {
+      log.warning("safari app doesn't exist: " + safariFolder.getAbsolutePath());
     }
+    return safariFolder;
+  }
 
   public static APPIOSApplication findSafariApp(File xcodeInstall, String sdkVersion) {
-    return new APPIOSApplication(findSafariLocation(xcodeInstall, sdkVersion).getAbsolutePath());
+    File safariFolder = findSafariLocation(xcodeInstall, sdkVersion);
+    if (!safariFolder.exists()) {
+      throw new WebDriverException(safariFolder + " should be the safari app, but doesn't exist.");
+    }
+    return new APPIOSApplication(safariFolder.getAbsolutePath());
   }
 
   public void setDefaultDevice(DeviceType device, boolean putDefaultFirst) {
