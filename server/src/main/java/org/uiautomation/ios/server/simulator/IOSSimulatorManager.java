@@ -103,7 +103,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
           if (!ok) {
             throw new WebDriverException(
                 "Starting the non default SDK requires some more setup.Failed to move " + f
-                + " to " + renamed + getErrorMessageMoveSDK());
+                + " to " + renamed + getErrorMessageMoveSDK(f));
           }
         }
         f.mkdirs();
@@ -111,19 +111,23 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     }
   }
 
-  private String getErrorMessageMoveSDK() {
+  private String getErrorMessageMoveSDK(File sdkVersion) {
     File sdk = new File(developer, "SDKs");
     File exiled = new File(developer, "exiledSDKs");
     String msg = "Cannot move folders from " + sdk + " to " + exiled;
-    msg += " Make sure the rights are correct (chmod -R +rw ... )";
+    msg += "\nMake sure the rights are correct by running the following commands:";
+    msg += "\nsudo chmod a+rwx " + sdk;
+    if (sdkVersion != null)
+      msg += "\nsudo chmod a+rwx " + sdkVersion.getAbsolutePath();
+    msg += "\nsudo mkdir " + exiled;
+    msg += "\nsudo chmod -R a+rw " + exiled;
     return msg;
-
   }
 
   public void restoreExiledSDKs() {
     File exiled = new File(developer, "exiledSDKs/");
     if (!exiled.exists()) {
-      log.warning(exiled.getAbsolutePath() + " doesn't exist." + getErrorMessageMoveSDK());
+      log.warning(exiled.getAbsolutePath() + " doesn't exist." + getErrorMessageMoveSDK(null));
       return;
     }
     for (String s : exiled.list()) {

@@ -93,14 +93,16 @@ public class IOSDualDriver {
     nativeDriver.start();
 
     if (session.getApplication().isSafari()) {
-      try {
-        // TODO: check if running 7.0?
-        // click on "Apple" button to get the simulator out of initial state where webview is not updated
-        WebElement appleButton = nativeDriver.findElement(By.xpath("//UIAWindow/UIAScrollView/UIAButton"));
-        if (appleButton.getAttribute("name") == null)
-          appleButton.click();
-      } catch (WebDriverException ignore) {
+      String sdkVersion = session.getCapabilities().getSDKVersion();
+      if (sdkVersion != null && Float.parseFloat(sdkVersion) >= 7.0) {
+        try {
+          // click on "Apple" button to get the simulator out of initial state where webview is not updated
+          WebElement appleButton = nativeDriver.findElement(By.xpath("//UIAWindow/UIAScrollView/UIAButton"));
+          if (appleButton.getAttribute("name") == null)
+            appleButton.click();
+        } catch (WebDriverException ignore) {
           // button is not there
+        }
       }
       setMode(WorkingMode.Web);
       getRemoteWebDriver().get("about:blank");

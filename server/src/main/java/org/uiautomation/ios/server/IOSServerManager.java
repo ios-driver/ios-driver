@@ -136,15 +136,27 @@ public class IOSServerManager {
 
   public IOSRunningApplication findAndCreateInstanceMatchingApplication(
       IOSCapabilities desiredCapabilities) {
+    List<APPIOSApplication> matchingApps = findAllMatchingApplications(desiredCapabilities);
+    if (matchingApps.size() == 0) {
+      throw new SessionNotCreatedException("desired app not found on server: "
+            + desiredCapabilities.getRawCapabilities());
+    }
+    // if more than one matches it returns the last in the list (highest version for MobileSafari)
+    APPIOSApplication app = matchingApps.get(matchingApps.size() - 1);
+    AppleLanguage lang = AppleLanguage.create(desiredCapabilities.getLanguage());
+    return app.createInstance(lang);
+  }
+  
+  public List<APPIOSApplication> findAllMatchingApplications(
+        IOSCapabilities desiredCapabilities) {
+    List<APPIOSApplication> matchingApps = new ArrayList<APPIOSApplication>();
     for (APPIOSApplication app : getApplicationStore().getApplications()) {
       IOSCapabilities appCapabilities = app.getCapabilities();
       if (APPIOSApplication.canRun(desiredCapabilities, appCapabilities)) {
-        AppleLanguage lang = AppleLanguage.create(desiredCapabilities.getLanguage());
-        return app.createInstance(lang);
+        matchingApps.add(app);
       }
     }
-    throw new SessionNotCreatedException(
-        desiredCapabilities.getRawCapabilities() + " not found on server.");
+    return matchingApps;
   }
 
   public Device findAndReserveMatchingDevice(IOSCapabilities desiredCapabilities) {

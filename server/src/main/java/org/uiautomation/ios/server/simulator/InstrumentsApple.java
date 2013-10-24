@@ -62,6 +62,7 @@ public class InstrumentsApple implements Instruments {
   private final IOSDeviceManager deviceManager;
   private final IOSCapabilities caps;
   private final String desiredSDKVersion;
+  private final File safariFolder;
 
   public InstrumentsApple(String uuid, InstrumentsVersion version, int port, String sessionId,
                           IOSRunningApplication application,
@@ -88,6 +89,8 @@ public class InstrumentsApple implements Instruments {
 
     screenshotService = new InstrumentsAppleScreenshotService(this, sessionId);
     deviceManager = new IOSSimulatorManager(caps,this);
+    
+    safariFolder = APPIOSApplication.findSafariLocation(ClassicCommands.getXCodeInstall(), desiredSDKVersion);
   }
 
   @Override
@@ -98,6 +101,15 @@ public class InstrumentsApple implements Instruments {
     String language = caps.getLanguage();
     String instrumentsVersion = version.getVersion();
     boolean putDefaultFirst = "5.0".equals(instrumentsVersion);
+    
+    // the 5.0 instruments can't start MobileSafari
+    // workaround is to remove the MobileSafari app from the install directory and put
+    // it back after instruments starts it
+    boolean tempRemoveMobileSafari = "5.0".equals(instrumentsVersion)
+            && application.isSafari() && application.isSimulator();
+    
+    if (tempRemoveMobileSafari)
+      moveMobileSafariAppOutOfInstallDir();
 
     deviceManager.setVariation(deviceType, variation);
     this.application.setDefaultDevice(deviceType, putDefaultFirst);
@@ -107,20 +119,9 @@ public class InstrumentsApple implements Instruments {
     deviceManager.setKeyboardOptions();
     deviceManager.setLocationPreference(true);
     deviceManager.setMobileSafariOptions();
-    
-    // the 5.0 instruments can't start MobileSafari
-    // workaround is to remove the MobileSafari app from the install directory and put
-    // it back after instruments starts it
-    boolean tempRemoveMobileSafari = "5.0".equals(instrumentsVersion) && "7.0".equals(desiredSDKVersion)
-            && application.isSafari() && application.isSimulator();
-    File safariFolder = APPIOSApplication.findSafariLocation(ClassicCommands.getXCodeInstall(), desiredSDKVersion);
 
-    boolean movedMobileSafariOut = false;
     boolean success = false;
     try {
-      if (tempRemoveMobileSafari)
-        movedMobileSafariOut = moveMobileSafariAppOutOfInstallDir(safariFolder, desiredSDKVersion);
-
       instruments.start();
       
       log.fine("waiting for registration request");
@@ -128,8 +129,6 @@ public class InstrumentsApple implements Instruments {
     } catch (InterruptedException e) {
       throw new InstrumentsFailedToStartException("instruments was interrupted while starting.");
     } finally {
-      if (movedMobileSafariOut)
-        putMobileSafariAppBackInInstallDir(safariFolder, desiredSDKVersion);
       // appears only in ios6. : Automation Instrument ran into an exception
       // while trying to run the script. UIAScriptAgentSignaledException
       if (!success) {
@@ -139,6 +138,7 @@ public class InstrumentsApple implements Instruments {
         }
         throw new InstrumentsFailedToStartException("Instruments crashed.");
       }
+      putMobileSafariAppBackInInstallDir();
     }
   }
 
@@ -147,6 +147,7 @@ public class InstrumentsApple implements Instruments {
     deviceManager.cleanupDevice();
     instruments.forceStop();
     channel.stop();
+    putMobileSafariAppBackInInstallDir();
   }
 
   public void startWithDummyScript() {
@@ -217,9 +218,9 @@ public class InstrumentsApple implements Instruments {
   /**
    * @return true if MobileSafari was moved out, false otherwide
    */
-  private boolean moveMobileSafariAppOutOfInstallDir(File safariFolder, String sdkVersion) {
+  private boolean moveMobileSafariAppOutOfInstallDir() {
     // make backup copy before deleting
-    File copy = new File(System.getProperty("user.home")+"/.ios-driver/safariCopies", "MobileSafari-" + sdkVersion + ".app");
+    File copy = new File(System.getProperty("user.home")+"/.ios-driver/safariCopies", "MobileSafari-" + desiredSDKVersion + ".app");
     if (!copy.exists()) {
       copy.mkdirs();
       try {
@@ -244,13 +245,13 @@ public class InstrumentsApple implements Instruments {
     return true;
   }
 
-  private void putMobileSafariAppBackInInstallDir(File safariFolder, String sdkVersion) {
+  private void putMobileSafariAppBackInInstallDir() {
     if (safariFolder.exists()) {
       log.warning("cannot put back MobileSafari.app, folder already exists: " + safariFolder.getAbsolutePath());
       return;
     }
     
-    File copy = new File(System.getProperty("user.home")+"/.ios-driver/safariCopies", "MobileSafari-" + sdkVersion + ".app");
+    File copy = new File(System.getProperty("user.home")+"/.ios-driver/safariCopies", "MobileSafari-" + desiredSDKVersion + ".app");
     safariFolder.mkdir();
     try {
       FileUtils.copyDirectory(copy, safariFolder);

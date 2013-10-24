@@ -65,7 +65,7 @@ public class Command {
     int exitCode = waitFor(-1);
     if (!ignoreErrors && exitCode != 0) {
       throw new WebDriverException(
-          "execution failed. Exit code =" + exitCode + " , command was : " + args);
+          "execution failed. Exit code =" + exitCode + " , command was: " + commandString());
     }
     for (Thread t : threads) {
       try {

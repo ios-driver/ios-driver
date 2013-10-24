@@ -130,9 +130,9 @@ public class IOSServer {
     startFolderMonitor();
 
     StringBuilder b = new StringBuilder();
-    b.append("\nBeta features enabled ( enabled by -beta flag ): " + Configuration.BETA_FEATURE);
+    b.append("\nBeta features enabled (enabled by -beta flag): " + Configuration.BETA_FEATURE);
     b.append(
-        "\nSimulator enabled ( enabled by -simulators flag): " + Configuration.SIMULATORS_ENABLED);
+        "\nSimulator enabled (enabled by -simulators flag): " + Configuration.SIMULATORS_ENABLED);
     b.append("\nInspector: http://0.0.0.0:" + options.getPort() + "/inspector/");
     b.append("\nTests can access the server at http://0.0.0.0:" + options.getPort() + "/wd/hub");
     b.append("\nServer status: http://0.0.0.0:" + options.getPort() + "/wd/hub/status");
@@ -186,7 +186,7 @@ public class IOSServer {
     // automatically add safari for host SDK and above as instruments starts simulator on host SDK version
     for (String s : driver.getHostInfo().getInstalledSDKs()) {
       Float version = Float.parseFloat(s);
-      if (version >= Float.parseFloat(hostSDK)) {
+      if (version >= 6.0) {
         safari = true;
         driver.addSupportedApplication(copyOfSafari(xcodeInstall, s));
       }
