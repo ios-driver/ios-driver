@@ -87,7 +87,7 @@ public class InstrumentsNoDelayLoader {
     InputStream is = InstrumentsNoDelayLoader.class.getResourceAsStream(base + resource);
 
     if (is == null) {
-      String msg = "Cannot find " + resource + ".";
+      String msg = "Cannot find " + base + resource + ".";
       throw new WebDriverException(msg);
     }
     File f = null;

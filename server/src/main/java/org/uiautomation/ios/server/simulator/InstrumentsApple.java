@@ -31,6 +31,7 @@ import org.uiautomation.ios.server.instruments.communication.curl.CURLBasedCommu
 import org.uiautomation.ios.server.services.Instruments;
 import org.uiautomation.ios.server.services.InstrumentsAppleScreenshotService;
 import org.uiautomation.ios.server.services.TakeScreenshotService;
+import org.uiautomation.ios.server.utils.IOSVersion;
 import org.uiautomation.ios.utils.ApplicationCrashListener;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.Command;
@@ -100,13 +101,13 @@ public class InstrumentsApple implements Instruments {
     String locale = caps.getLocale();
     String language = caps.getLanguage();
     String instrumentsVersion = version.getVersion();
-    boolean putDefaultFirst = "5.0".equals(instrumentsVersion);
+    boolean instrumentsIs50OrHigher = new IOSVersion(instrumentsVersion).isGreaterOrEqualTo("5.0");
+    boolean putDefaultFirst = instrumentsIs50OrHigher;
     
     // the 5.0 instruments can't start MobileSafari
     // workaround is to remove the MobileSafari app from the install directory and put
     // it back after instruments starts it
-    boolean tempRemoveMobileSafari = "5.0".equals(instrumentsVersion)
-            && application.isSafari() && application.isSimulator();
+    boolean tempRemoveMobileSafari = instrumentsIs50OrHigher && application.isSafari() && application.isSimulator();
     
     if (tempRemoveMobileSafari)
       moveMobileSafariAppOutOfInstallDir();
