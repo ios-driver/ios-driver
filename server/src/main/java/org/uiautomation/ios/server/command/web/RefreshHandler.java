@@ -30,6 +30,8 @@ public class RefreshHandler extends BaseWebCommandHandler {
   public Response handle() throws Exception {
     getWebDriver().getContext().newContext();
     getWebDriver().refresh();
+    // needed to add this waitForLoadEvent() as waitForPageToLoad() is empty currently
+    getWebDriver().getContext().waitForLoadEvent();
     getWebDriver().waitForPageToLoad();
     Response res = new Response();
     res.setSessionId(getSession().getSessionId());
