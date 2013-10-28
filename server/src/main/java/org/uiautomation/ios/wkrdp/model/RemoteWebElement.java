@@ -510,6 +510,8 @@ public class RemoteWebElement {
   }
 
   public void setValueAtoms(String value) throws Exception {
+    value = replaceSpecialKeys(value);  
+      
     String
         f =
         "(function(element,value) { var result = " + IosAtoms.TYPE + "(element,value);"
@@ -522,6 +524,12 @@ public class RemoteWebElement {
     getInspectorResponse(f, args, false);
   }
 
+  private String replaceSpecialKeys(String value) {
+    value = value.replace(Keys.RETURN.toString().charAt(0), '\r');
+    value = value.replace(Keys.ENTER.toString().charAt(0), '\r');
+    // TODO: more keys to replace?
+    return value;
+  }
 
   public void scrollIntoViewIfNeeded() throws Exception {
     String f = "(function(element) { element.scrollIntoViewIfNeeded()})";
