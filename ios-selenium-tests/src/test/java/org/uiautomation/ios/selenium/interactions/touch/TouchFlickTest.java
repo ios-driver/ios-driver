@@ -34,6 +34,18 @@ import static org.junit.Assert.assertTrue;
  */
 public class TouchFlickTest extends BaseSeleniumTest {
 
+  // Flick speed is measured in pixels per second.  What constitutes "normal" versus "fast" is entirely up to the
+  // application, but Selenium's FlickAction erroneously encodes SPEED_NORMAL and SPEED_FAST as 0 and 1, respectively.
+  // Do not use FlickAction's SPEED_NORMAL or SPEED_FAST.  The normal vs. fast tests are intended to test both paths
+  // of the JavaScript code that uses flickFromTo() (if (duration == distance/speed) < 0.5s) or dragFromToForDuration().
+  private static int speedNormal(int distance) {
+    return Math.abs(distance);
+  }
+
+  private static int speedFast(int distance) {
+    return Math.abs(distance * 3);
+  }
+
   private TouchActions getBuilder(WebDriver driver) {
     return new TouchActions(driver);
   }
@@ -48,8 +60,8 @@ public class TouchFlickTest extends BaseSeleniumTest {
     int originalX = link.getLocation().x;
     // The element is located at the right of the page,
     // so it is not initially visible on the screen.
-    Action flick = getBuilder(driver).flick(toFlick, -1000, 0, FlickAction.SPEED_NORMAL)
-        .build();
+    int dx = -100;
+    Action flick = getBuilder(driver).flick(toFlick, dx, 0, speedNormal(dx)).build();
     flick.perform();
 
     int newX = link.getLocation().x;
@@ -67,8 +79,8 @@ public class TouchFlickTest extends BaseSeleniumTest {
     int originalX = link.getLocation().x;
     // The element is located at the right of the page,
     // so it is not initially visible on the screen.
-    Action flick = getBuilder(driver).flick(toFlick, -1000, 0, FlickAction.SPEED_FAST)
-        .build();
+    int dx = -100;
+    Action flick = getBuilder(driver).flick(toFlick, dx, 0, speedFast(dx)).build();
     flick.perform();
     int newX = link.getLocation().x;
     // After flicking, the element should now be visible on the screen.
@@ -118,8 +130,8 @@ public class TouchFlickTest extends BaseSeleniumTest {
     // The element is located at the bottom of the page,
     // so it is not initially visible on the screen.
     WebElement toFlick = driver.findElement(By.id("imagestart"));
-    Action flick = getBuilder(driver).flick(toFlick, 0, -600, FlickAction.SPEED_NORMAL)
-        .build();
+    int dy = -100;
+    Action flick = getBuilder(driver).flick(toFlick, 0, dy, speedNormal(dy)).build();
     flick.perform();
     int newY = link.getLocation().y;
     // After flicking, the element should now be visible on the screen.
@@ -136,8 +148,8 @@ public class TouchFlickTest extends BaseSeleniumTest {
     // The element is located at the bottom of the page,
     // so it is not initially visible on the screen.
     WebElement toFlick = driver.findElement(By.id("imagestart"));
-    Action flick = getBuilder(driver).flick(toFlick, 0, -600, FlickAction.SPEED_FAST)
-        .build();
+    int dy = -100;
+    Action flick = getBuilder(driver).flick(toFlick, 0, dy, speedFast(dy)).build();
     flick.perform();
     int newY = link.getLocation().y;
     // After flicking, the element should now be visible on the screen.

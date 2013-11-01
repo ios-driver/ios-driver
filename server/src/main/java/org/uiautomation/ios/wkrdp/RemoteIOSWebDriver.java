@@ -28,7 +28,7 @@ import org.uiautomation.ios.wkrdp.command.Page;
 import org.uiautomation.ios.wkrdp.internal.RealDeviceProtocolImpl;
 import org.uiautomation.ios.wkrdp.internal.SimulatorProtocolImpl;
 import org.uiautomation.ios.wkrdp.internal.WebKitRemoteDebugProtocol;
-import org.uiautomation.ios.wkrdp.internal.WebKitSyncronizer;
+import org.uiautomation.ios.wkrdp.internal.WebKitSynchronizer;
 import org.uiautomation.ios.wkrdp.message.WebkitApplication;
 import org.uiautomation.ios.wkrdp.message.WebkitDevice;
 import org.uiautomation.ios.wkrdp.message.WebkitPage;
@@ -46,15 +46,14 @@ import java.util.logging.Logger;
 
 public class RemoteIOSWebDriver {
 
-
-  public static void main(String[] args) throws Exception { 
+  public static void main(String[] args) throws Exception {
     try {
       LogManager.getLogManager()
         .readConfiguration(IOSServerManager.class.getResourceAsStream("/ios-logging.properties"));
     } catch (Exception e) {
       System.err.println("Cannot configure logger.");
     }
-      
+
     RemoteIOSWebDriver driver = new RemoteIOSWebDriver(null);
     //driver.connect(uiCatalog);
     // driver.switchTo(driver.getPages().get(0)); 
@@ -91,13 +90,12 @@ public class RemoteIOSWebDriver {
   private static final Logger log = Logger.getLogger(RemoteIOSWebDriver.class.getName());
   private List<WebkitPage> pages = new ArrayList<WebkitPage>();
   private final List<WebInspector> created = new ArrayList<WebInspector>();
-  private final WebKitSyncronizer sync;
-
+  private final WebKitSynchronizer sync;
 
   public RemoteIOSWebDriver(ServerSideSession session, ResponseFinder... finders) {
     this.session = session;
     connectionKey = UUID.randomUUID().toString();
-    sync = new WebKitSyncronizer(this);
+    sync = new WebKitSynchronizer(this);
     MessageListener notification = new WebKitNotificationListener(this, sync, session);
     if (session != null && session.getDevice() instanceof RealDevice) {
       if (!Configuration.BETA_FEATURE) {
@@ -123,7 +121,6 @@ public class RemoteIOSWebDriver {
     }
   }
 
-
   public void setPages(List<WebkitPage> pages) {
     this.pages = ImmutableList.copyOf(pages);
   }
@@ -137,20 +134,28 @@ public class RemoteIOSWebDriver {
     return !applications.isEmpty();
   }*/
 
-
   public void start() {
     protocol.start();
   }
-
 
   public void stop() {
     protocol.stop();
   }
 
+  // Native-backed (embedded web view) element references are encoded as e.g. "1_42", whereas plain elements are
+  // encoded as e.g. "17".  The JavaScript code necessary to operate on the two types of elements differs
+  // substantially.
+  public static boolean isPlainElement(String elementId) {
+    return (elementId.split("_").length == 1);
+  }
 
-  public RemoteWebElement createElement(String reference) {
-    int pageId = Integer.parseInt(reference.split("_")[0]);
-    int nodeId = Integer.parseInt(reference.split("_")[1]);
+  public static NodeId plainNodeId(String elementId) {
+    return new NodeId(Integer.parseInt(elementId));
+  }
+
+  public RemoteWebElement createElement(String elementId) {
+    int pageId = Integer.parseInt(elementId.split("_")[0]);
+    int nodeId = Integer.parseInt(elementId.split("_")[1]);
 
     if (currentInspector.getPageIdentifier() != pageId) {
       throw new StaleElementReferenceException("Node " + nodeId
@@ -163,7 +168,6 @@ public class RemoteIOSWebDriver {
       return new RemoteWebElement(new NodeId(nodeId), currentInspector);
     }
   }
-
 
   public void connect(String bundleId) {
     List<WebkitApplication> knownApps = getApplications();
@@ -239,11 +243,9 @@ public class RemoteIOSWebDriver {
     return currentInspector.getDocument();
   }*/
 
-
   public void get(String url) {
     currentInspector.get(url);
   }
-
 
   public List<Cookie> getCookies() {
     return currentInspector.getCookies();
@@ -252,7 +254,6 @@ public class RemoteIOSWebDriver {
   public void deleteCookie(String name, String domain) {
     currentInspector.deleteCookie(name, domain);
   }
-
 
   public String getCurrentUrl() {
     try {
@@ -263,7 +264,6 @@ public class RemoteIOSWebDriver {
       return null;
     }
   }
-
 
   public String getTitle() {
     return currentInspector.getTitle();
@@ -277,11 +277,9 @@ public class RemoteIOSWebDriver {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
-
   public RemoteWebElement findElement(By by) {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
-
 
   public RemoteWebElement findElementByCssSelector(String cssSelector) throws Exception {
     return currentInspector.findElementByCSSSelector(cssSelector);
@@ -350,15 +348,12 @@ public class RemoteIOSWebDriver {
     return destination - currentIndex;
   }
 
-
   public WebDriver.TargetLocator switchTo() {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
   public void back() throws JSONException {
-
     currentInspector.back();
-
   }
 
   public void forward() {
@@ -387,7 +382,6 @@ public class RemoteIOSWebDriver {
 
   public Object executeAsyncScript(String script, Object... args) {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
-
   }
 
   // TODO remove.
@@ -414,10 +408,4 @@ public class RemoteIOSWebDriver {
   public synchronized WebkitDevice getDevice() {
     return device;
   }
-
-
 }
-
-
-
-

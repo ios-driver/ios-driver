@@ -21,13 +21,13 @@ import java.util.Map;
 public class UIAScriptResponse {
 
   private final String rawResponse;
-  private final JsonToBeanConverter convertor = new JsonToBeanConverter();
+  private final JsonToBeanConverter converter = new JsonToBeanConverter();
   private boolean firstResponse = false;
   private final Response response;
 
   public UIAScriptResponse(String rawResponse) {
     this.rawResponse = rawResponse;
-    response = convertor.convert(Response.class, rawResponse);
+    response = converter.convert(Response.class, rawResponse);
     if (isFirstResponse(response)) {
       firstResponse = true;
       Object realResponse = ((Map<String, Object>) response.getValue()).get("firstResponse");

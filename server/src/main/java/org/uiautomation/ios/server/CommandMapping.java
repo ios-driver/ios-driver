@@ -107,17 +107,17 @@ public enum CommandMapping {
   //ELEMENTS(".elements2(:depth,:criteria)"),
   //ANCESTRY(NotImplementedNativeHandler.class, NotImplementedWebHandler.class),
 
-  DISPLAYED(IsVisibleNHandler.class, IsDisplayedHanlder.class),
+  DISPLAYED(IsVisibleNHandler.class, IsDisplayedHandler.class),
   ENABLED(IsEnabledNHandler.class, IsEnabledHandler.class),
   LOCATION(null, null, GetLocationHandler.class),
 
   LOG(NotImplementedNativeHandler.class, LogHandler.class),
   LOG_TYPES(NotImplementedNativeHandler.class, LogTypesHandler.class),
 
-  SCROLL(ScrollHandler.class),
-  LONG_TAP(LongTapHandler.class),
-  TAP(TapHandler.class),
-  DOUBLE_TAP(DoubleTapHandler.class),
+  SCROLL(ScrollNHandler.class),
+  LONG_TAP(LongTapNHandler.class),
+  TAP(TapNHandler.class),
+  DOUBLE_TAP(DoubleTapNHandler.class),
   ATTRIBUTE(GetAttributeNHandler.class, GetAttributeHandler.class),
   TEXT(null, null, GetTextHandler.class),
   CSS(NotImplementedNativeHandler.class, CssPropertyHandler.class),

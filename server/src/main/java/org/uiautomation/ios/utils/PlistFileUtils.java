@@ -33,7 +33,6 @@ public class PlistFileUtils {
     this.plistContent = read(source);
   }
 
-
   private Map<String, Object> read(File plist) {
     try {
       NSObject object = PropertyListParser.parse(plist);
@@ -41,12 +40,12 @@ public class PlistFileUtils {
       return info.getProperties();
     } catch (Exception ex) {
       throw new WebDriverException(
-          "Cannot parse " + plist.getAbsolutePath() + ": " + ex.getMessage(), ex);
+          String.format("In %s: Cannot parse %s: %s", source, plist.getAbsolutePath(), ex.getMessage()),
+          ex);
     }
   }
 
   public JSONObject toJSON() throws Exception {
-    JSONObject res = new JSONObject(plistContent);
-    return res;
+    return new JSONObject(plistContent);
   }
 }

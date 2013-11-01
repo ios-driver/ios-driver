@@ -53,7 +53,6 @@ public class ExecuteScriptHandler extends BaseWebCommandHandler {
     } else if (res instanceof Boolean) {
       resp.setValue(res);
     } else if (res instanceof Collection) {
-
       List<Object> rwes = new ArrayList<Object>();
 
       Collection<Object> all = (Collection<Object>) res;
@@ -75,12 +74,10 @@ public class ExecuteScriptHandler extends BaseWebCommandHandler {
     }
 
     return resp;
-
   }
 
   @Override
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
   }
-
 }

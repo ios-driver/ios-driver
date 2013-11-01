@@ -39,7 +39,6 @@ public class SetImplicitWaitTimeoutHandler extends BaseWebCommandHandler {
     impacted.add(WebDriverLikeCommand.ELEMENTS_ROOT);
   }
 
-
   @Override
   public Response handle() throws Exception {
     Integer ms = getRequest().getPayload().getInt("ms");
@@ -55,10 +54,8 @@ public class SetImplicitWaitTimeoutHandler extends BaseWebCommandHandler {
     return res;
   }
 
-
   @Override
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
   }
-
 }

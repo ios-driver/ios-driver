@@ -16,7 +16,7 @@ package org.uiautomation.ios.wkrdp;
 
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.wkrdp.internal.WebKitSyncronizer;
+import org.uiautomation.ios.wkrdp.internal.WebKitSynchronizer;
 import org.uiautomation.ios.wkrdp.message.ApplicationConnectedMessage;
 import org.uiautomation.ios.wkrdp.message.ApplicationDataMessage;
 import org.uiautomation.ios.wkrdp.message.ApplicationSentListingMessage;
@@ -36,9 +36,9 @@ public class WebKitNotificationListener implements MessageListener {
   private static final Logger log = Logger.getLogger(WebKitNotificationListener.class.getName());
   private final RemoteIOSWebDriver driver;
   private final ServerSideSession session;
-  private final WebKitSyncronizer sync;
+  private final WebKitSynchronizer sync;
 
-  public WebKitNotificationListener(RemoteIOSWebDriver driver, WebKitSyncronizer syncronizer,
+  public WebKitNotificationListener(RemoteIOSWebDriver driver, WebKitSynchronizer syncronizer,
                                     ServerSideSession session) {
     this.driver = driver;
     this.session = session;

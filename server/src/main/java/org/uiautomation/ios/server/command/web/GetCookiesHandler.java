@@ -27,11 +27,9 @@ import java.util.List;
 
 public class GetCookiesHandler extends BaseWebCommandHandler {
 
-
   public GetCookiesHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
-
 
   @Override
   public Response handle() throws Exception {

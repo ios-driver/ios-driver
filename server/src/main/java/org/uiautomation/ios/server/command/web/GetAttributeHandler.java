@@ -29,7 +29,6 @@ public class GetAttributeHandler extends BaseWebCommandHandler {
 
   @Override
   public Response handle() throws Exception {
-
     String attributeName = getRequest().getVariableValue(":name");
     String ref = getRequest().getVariableValue(":reference");
     RemoteWebElement element = getWebDriver().createElement(ref);
@@ -45,5 +44,4 @@ public class GetAttributeHandler extends BaseWebCommandHandler {
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
   }
-
 }

@@ -41,5 +41,4 @@ public class GetPageSourceHandler extends BaseWebCommandHandler {
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
   }
-
 }

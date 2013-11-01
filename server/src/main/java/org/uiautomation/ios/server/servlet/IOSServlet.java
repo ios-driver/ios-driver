@@ -74,7 +74,6 @@ public class IOSServlet extends DriverBasedServlet {
   }
 
   private void process(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
     WebDriverLikeRequest req = new WebDriverLikeRequest(request);
 
     response.setContentType("application/json;charset=UTF-8");
@@ -93,7 +92,6 @@ public class IOSServlet extends DriverBasedServlet {
           response.setStatus(500);
         }
 
-
         String scheme = request.getScheme(); // http
         String serverName = request.getServerName(); // hostname.com
         int serverPort = request.getServerPort(); // 80
@@ -104,8 +102,8 @@ public class IOSServlet extends DriverBasedServlet {
         response.setHeader("location", url + "/session/" + session);
       }
       // String s = toString(resp);
-      BeanToJsonConverter convertor = new BeanToJsonConverter();
-      String s = convertor.convert(resp);
+      BeanToJsonConverter converter = new BeanToJsonConverter();
+      String s = converter.convert(resp);
 
       // status is also used for debugging, it's worth formatting it nice.
       if (req.getGenericCommand() == WebDriverLikeCommand.STATUS) {
@@ -133,7 +131,8 @@ public class IOSServlet extends DriverBasedServlet {
   }
 
   private Response getResponse(WebDriverLikeRequest request) {
-    long start = System.currentTimeMillis();
+    Level level = Level.FINE;
+    long startTime = System.currentTimeMillis();
     String command = "";
     WebDriverLikeCommand wdlc = null;
     try {
@@ -156,15 +155,20 @@ public class IOSServlet extends DriverBasedServlet {
         JSONObject o = serializeException(we);
         response.setValue(o);
       } catch (JSONException e) {
+        level = Level.SEVERE;
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
       return response;
     } catch (Exception e) {
+      level = Level.SEVERE;
       throw new WebDriverException("bug." + e.getMessage(), e);
     } finally {
-      String message = ((System.currentTimeMillis() - start) + "ms.\t" + command);
-      log.warning(message);
+      String message = String.format("REQUEST: %s\tCOMMAND: %dms.\t%s",
+          request.toString(),
+          System.currentTimeMillis() - startTime,
+          command);
+      log.log(level, message);
     }
   }
 
@@ -178,7 +182,6 @@ public class IOSServlet extends DriverBasedServlet {
       res.put("cause", serializeException(e.getCause()));
     }
     return res;
-
   }
 
   private JSONArray serializeStackTrace(StackTraceElement[] els) throws JSONException {

@@ -20,11 +20,11 @@ import org.dom4j.Element;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class JSONToXMLConvertor {
+public class JSONToXMLConverter {
 
   private final String xml;
 
-  public JSONToXMLConvertor(JSONObject tree) {
+  public JSONToXMLConverter(JSONObject tree) {
     xml = buildXMLDoc(tree).asXML();
   }
 

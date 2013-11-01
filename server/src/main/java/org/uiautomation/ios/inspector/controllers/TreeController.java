@@ -22,7 +22,7 @@ import org.uiautomation.ios.inspector.model.Cache;
 import org.uiautomation.ios.inspector.model.IDESessionModel;
 import org.uiautomation.ios.inspector.views.JSONView;
 import org.uiautomation.ios.inspector.views.View;
-import org.uiautomation.ios.utils.JSONToXMLConvertor;
+import org.uiautomation.ios.utils.JSONToXMLConverter;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -47,7 +47,7 @@ public class TreeController implements IDECommandController {
     Thread.sleep(200);
     model.refresh();
     JSONObject rootNode = model.getTree().getJSONObject("tree");
-    JSONToXMLConvertor conv = new JSONToXMLConvertor(rootNode);
+    JSONToXMLConverter conv = new JSONToXMLConverter(rootNode);
     JSONObject jsTreeObject = createFrom(rootNode, conv.asXML());
     return new JSONView(jsTreeObject);
 

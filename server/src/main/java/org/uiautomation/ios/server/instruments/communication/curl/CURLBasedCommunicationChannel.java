@@ -93,7 +93,6 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
 
     private void sendNextCommand(HttpServletRequest request, HttpServletResponse response)
         throws Exception {
-
       UIAScriptRequest nextCommand = getCommunicationChannel(request).getNextCommand();
       String script = nextCommand.getScript();
 
@@ -106,7 +105,6 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
 
     private void getResponse(HttpServletRequest request, HttpServletResponse response)
         throws Exception {
-
       if (request.getInputStream() != null) {
         StringWriter writer = new StringWriter();
         IOUtils.copy(request.getInputStream(), writer, "UTF-8");
@@ -155,6 +153,4 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
       }
     }
   }
-
-
 }

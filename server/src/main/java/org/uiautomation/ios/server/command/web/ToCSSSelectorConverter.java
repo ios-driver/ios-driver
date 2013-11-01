@@ -15,7 +15,7 @@ package org.uiautomation.ios.server.command.web;
 
 import org.openqa.selenium.WebDriverException;
 
-public class ToCSSSelectorConvertor {
+public class ToCSSSelectorConverter {
 
   public static String convertToCSSSelector(String type, String value) {
     if ("css selector".equals(type)) {

@@ -14,12 +14,11 @@
 
 package org.uiautomation.ios.utils;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.AgeFileFilter;
+import org.apache.commons.io.comparator.LastModifiedFileComparator;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.Date;
+import java.io.FileFilter;
+import java.util.Arrays;
 
 public class ApplicationCrashDetails {
 
@@ -33,28 +32,25 @@ public class ApplicationCrashDetails {
 
   private String mostRecentCrashReport() {
     File crashFolder = new File(System.getProperty("user.home") + "/Library/Logs/DiagnosticReports/");
-    Date now = new Date();
-    Date cutoffDate = new Date(now.getTime() - 10000);
-    Collection<File> files = FileUtils.listFiles(crashFolder, new AgeFileFilter(cutoffDate, false), null);
-    StringBuilder sb = new StringBuilder();
-    if (files.size() > 0) {
-      sb.append("The crash report can be found:");
-      for (File f : files) {
-        sb.append("\n" + f.getAbsoluteFile());
+    File[] files = crashFolder.listFiles(new FileFilter() {
+      @Override
+      public boolean accept(File file) {
+        // Each crash is reported both as .Foo[...].crash.plist and as Foo[...].crash. Filter out the plists.
+        return file.getName().endsWith(".crash");
       }
+    });
+    if (files != null && files.length > 0) {
+      Arrays.sort(files, LastModifiedFileComparator.LASTMODIFIED_REVERSE);
+      File newestFile = files[0];
+      return String.format("The crash report can be found at: %s", newestFile.getAbsoluteFile());
+    } else if (log.contains("Script was stopped by the user")) {
+      return "Instruments appears to have crashed.";
+    } else {
+      return "The Simulator appears to have crashed.";
     }
-    if (sb.toString().isEmpty()) {
-      if (log.contains("Script was stopped by the user")) {
-        sb.append("It appears like the Instruments process has crashed.");
-      } else {
-        sb.append("It appears like the Simulator process has crashed.");
-      }
-    }
-    return sb.toString();
   }
 
   public String toString() {
     return log + "\n" + crashReport;
   }
-
 }

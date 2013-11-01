@@ -25,11 +25,9 @@ import java.net.URL;
 
 public class DeleteCookieByNameHandler extends BaseWebCommandHandler {
 
-
   public DeleteCookieByNameHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
-
 
   @Override
   public Response handle() throws Exception {

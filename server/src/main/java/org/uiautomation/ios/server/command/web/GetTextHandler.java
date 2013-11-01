@@ -43,5 +43,4 @@ public class GetTextHandler extends BaseWebCommandHandler {
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
   }
-
 }

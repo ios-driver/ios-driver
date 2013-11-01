@@ -116,5 +116,4 @@ public class GetHandler extends BaseWebCommandHandler {
   private void fakeTypeURL(String url) {
     getWebDriver().get(url);
   }
-
 }

@@ -27,7 +27,7 @@ import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIAStaticText;
 import org.uiautomation.ios.UIAModels.UIATableCell;
 import org.uiautomation.ios.UIAModels.UIAWindow;
-import org.uiautomation.ios.utils.JSONToXMLConvertor;
+import org.uiautomation.ios.utils.JSONToXMLConverter;
 import org.uiautomation.ios.utils.XPath2Engine;
 
 import java.util.List;
@@ -55,8 +55,8 @@ public class XpathTreeFinderTest {
     tree = new JSONObject(uiCatalog1).getJSONObject("tree");
     treeIntl = new JSONObject(intlMountainZH);
 
-    parserIntl = new XPath2Engine(new JSONToXMLConvertor(treeIntl).asXML());
-    parser = new XPath2Engine(new JSONToXMLConvertor(tree).asXML());
+    parserIntl = new XPath2Engine(new JSONToXMLConverter(treeIntl).asXML());
+    parser = new XPath2Engine(new JSONToXMLConverter(tree).asXML());
 
   }
 

@@ -21,9 +21,9 @@ import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
 
-public class IsDisplayedHanlder extends BaseWebCommandHandler {
+public class IsDisplayedHandler extends BaseWebCommandHandler {
 
-  public IsDisplayedHanlder(IOSServerManager driver, WebDriverLikeRequest request) {
+  public IsDisplayedHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
 
@@ -43,5 +43,4 @@ public class IsDisplayedHanlder extends BaseWebCommandHandler {
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
   }
-
 }

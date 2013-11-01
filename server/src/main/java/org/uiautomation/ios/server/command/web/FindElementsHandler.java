@@ -91,7 +91,7 @@ public class FindElementsHandler extends BaseWebCommandHandler {
     } else if ("xpath".equals(type)) {
       res = element.findElementsByXpath(value);
     } else {
-      String cssSelector = ToCSSSelectorConvertor.convertToCSSSelector(type, value);
+      String cssSelector = ToCSSSelectorConverter.convertToCSSSelector(type, value);
       res = element.findElementsByCSSSelector(cssSelector);
     }
     return res;
@@ -101,5 +101,4 @@ public class FindElementsHandler extends BaseWebCommandHandler {
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
   }
-
 }
