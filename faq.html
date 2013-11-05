@@ -93,9 +93,9 @@ $(document).ready(function($){
   sudo chmod -R +rw /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/exiledSDKs
 </pre>
 
-        <h4>Developer Tools Access needs to take control</h4>
+        <h3>Developer Tools Access needs to take control</h3>
         <img src="images/devaccess.png" width='640'><br/>
-        <h3>Enable allow-root in /etc/authorization</h3>
+        <h4>Enable allow-root in /etc/authorization</h4>
         To stop this message being displayed you need to udpate /etc/authorization. 
 
 
@@ -110,11 +110,11 @@ $(document).ready(function($){
         &lt;true/>
 
 </pre>
-<h3>Enable DevToolsSecurity</h3>
+<h4>Enable DevToolsSecurity</h4>
 <pre class="prettyprint">
   sudo /usr/sbin/DevToolsSecurity --enable
 </pre>
-<h3>Add user to developer group</h3>
+<h4>Add user to developer group</h4>
 <pre class="prettyprint">
   sudo dscl . append /Groups/_developer GroupMembership <your_username>
 </pre>
