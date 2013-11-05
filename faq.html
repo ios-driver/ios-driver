@@ -95,6 +95,7 @@ $(document).ready(function($){
 
         <h4>Developer Tools Access needs to take control</h4>
         <img src="images/devaccess.png" width='640'><br/>
+        <h3>Enable allow-root in /etc/authorization</h3>
         To stop this message being displayed you need to udpate /etc/authorization. 
 
 
@@ -109,6 +110,15 @@ $(document).ready(function($){
         &lt;true/>
 
 </pre>
+<h3>Enable DevToolsSecurity</h3>
+<pre class="prettyprint">
+  sudo /usr/sbin/DevToolsSecurity --enable
+</pre>
+<h3>Add user to developer group</h3>
+<pre class="prettyprint">
+  sudo dscl . append /Groups/_developer GroupMembership <your_username>
+</pre>
+
         <h3>Real Devices</h3>    
         <h4>Can't launch tests on real device / getting capabilities not found error</h4>
         Have you run through all the steps <a href="setup.html#real">here</a>
