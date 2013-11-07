@@ -73,6 +73,11 @@ public class IOSServerConfiguration {
       names = "-sessionTimeout")
   private int sessionTimeoutSeconds = 30 * 60; // 30 minutes
   
+  @Parameter(
+      description = "location of the TrustStore.sqlite3 to use for the simulator.",
+      names = "-trustStore")
+  private String trustStore = null;
+  
   public String getRegistrationURL() {
     return registrationURL;
   }
@@ -152,5 +157,9 @@ public class IOSServerConfiguration {
 
   public void setProxy(String proxy) {
     this.proxy = proxy;
+  }
+  
+  public String getTrustStore() {
+    return trustStore;
   }
 }

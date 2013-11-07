@@ -20,6 +20,7 @@ import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
+import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
@@ -64,17 +65,20 @@ public class InstrumentsApple implements Instruments {
   private final IOSCapabilities caps;
   private final String desiredSDKVersion;
   private final File safariFolder;
+  private final ServerSideSession session;
 
   public InstrumentsApple(String uuid, InstrumentsVersion version, int port, String sessionId,
                           IOSRunningApplication application,
-                          List<String> envtParams, String desiredSDKVersion,IOSCapabilities caps) {
+                          List<String> envtParams, IOSCapabilities caps,
+                          ServerSideSession session) {
     this.uuid = uuid;
     this.caps = caps;
     this.version = version;
     this.sessionId = sessionId;
     this.application = application;
     this.envtParams = envtParams;
-    this.desiredSDKVersion = desiredSDKVersion;
+    this.session = session;
+    this.desiredSDKVersion = caps.getSDKVersion();
     template = ClassicCommands.getAutomationTemplate();
 
     String appPath = application.getDotAppAbsolutePath();
@@ -120,6 +124,9 @@ public class InstrumentsApple implements Instruments {
     deviceManager.setKeyboardOptions();
     deviceManager.setLocationPreference(true);
     deviceManager.setMobileSafariOptions();
+    
+    if (application.isSimulator())
+      installTrustStore();
 
     boolean success = false;
     try {
@@ -214,6 +221,36 @@ public class InstrumentsApple implements Instruments {
 
   public File getOutput(){
     return output;
+  }
+  
+  private void installTrustStore() {
+    String trustStore = session.getOptions().getTrustStore();
+    if (trustStore != null) {
+      log.info("installing -trustStore: " + trustStore);
+      // executes:
+      // mkdir ~/"Library/Application Support/iPhone Simulator/7.0/Library/Keychains"
+      // cp libs/ios/TrustStore.sqlite3 ~/"Library/Application Support/iPhone Simulator/7.0/Library/Keychains"
+      File keychainsDir = new File(System.getProperty("user.home") + "/Library/Application Support/iPhone Simulator/"
+        + desiredSDKVersion + "/Library/Keychains");
+      File sourceFile = new File(trustStore);
+      if (!sourceFile.exists()) {
+          log.severe("-trustStore: source trust store file doesn't exist: " + sourceFile.getAbsolutePath());
+          return;
+      }
+      File destFile = new File(keychainsDir, "TrustStore.sqlite3");
+      try {
+        if (!keychainsDir.exists()) {
+            if (!keychainsDir.mkdir()) {
+                log.severe("-trustStore: could not create Keychains dir: " + keychainsDir.getAbsolutePath());
+                return;
+            }
+        }
+        FileUtils.copyFile(sourceFile, destFile, false);
+      } catch (Exception e) {
+        log.severe("cannot install trust store file " + sourceFile.getAbsolutePath()
+                + " to " + destFile.getAbsolutePath() + ": " + e);
+      }
+    }
   }
   
   /**

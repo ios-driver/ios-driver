@@ -52,8 +52,8 @@ public class InstrumentsFactory {
                                   session.getSessionId(),
                                   session.getApplication(),
                                   envtParams,
-                                  caps.getSDKVersion(),
-                                  caps
+                                  caps,
+                                  session
       );
 
 
