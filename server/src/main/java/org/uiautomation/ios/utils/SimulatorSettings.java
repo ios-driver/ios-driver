@@ -13,6 +13,7 @@
  */
 package org.uiautomation.ios.utils;
 
+import com.google.common.collect.ImmutableList;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,42 +23,70 @@ import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.command.uiautomation.NewSessionNHandler;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SimulatorSettings {
     
   public static void main(String[] args) throws Exception {
-    SimulatorSettings settings61 = new SimulatorSettings("6.1");
-    JSONObject globalPreferences61 = new PlistFileUtils(settings61.globalPreferencePlist).toJSON();
-    System.out.println("globalPreferences 6.1: " + globalPreferences61.toString(2));
-    SimulatorSettings settings70 = new SimulatorSettings("7.0");
-    JSONObject globalPreferences70 = new PlistFileUtils(settings70.globalPreferencePlist).toJSON();
-    System.out.println("globalPreferences 7.0: " + globalPreferences70.toString(2));
+    ImmutableList<String> sdkVersions = ImmutableList.of("6.1", "7.0");
+    for (String sdkVersion : sdkVersions) {
+      String exactSdkVersion;
+      String globalPreferences;
+      try {
+        SimulatorSettings settings = new SimulatorSettings(sdkVersion);
+        JSONObject json = new PlistFileUtils(settings.globalPreferencePlist).toJSON();
+        exactSdkVersion = settings.exactSdkVersion;
+        globalPreferences = json.toString(2);
+      } catch (WebDriverException e) {
+        exactSdkVersion = sdkVersion;
+        globalPreferences = "not available";
+      }
+      System.out.println(String.format("globalPreferences %s (%s): %s",
+          sdkVersion,
+          exactSdkVersion,
+          globalPreferences));
+    }
   }
-  
-  //
 
   private static final Logger log = Logger.getLogger(SimulatorSettings.class.getName());
   private static final String PLUTIL = "/usr/bin/plutil";
   private static final String TEMPLATE = "/globalPlist.json";
-  private final String sdkVersion;
+
+  private final String exactSdkVersion;
   private final File contentAndSettingsFolder;
   private final File globalPreferencePlist;
 
   public SimulatorSettings(String sdkVersion) {
-    this.sdkVersion = sdkVersion;
+    this.exactSdkVersion = getExactSdkVersion(sdkVersion);
     this.contentAndSettingsFolder = getContentAndSettingsFolder();
     this.globalPreferencePlist = getGlobalPreferenceFile();
+  }
+
+  private String getExactSdkVersion(String sdkVersion) {
+    File parentFolder = getContentAndSettingsParentFolder();
+    if (!parentFolder.isDirectory()) {
+      return sdkVersion;
+    }
+    int maxMinorVersion = -1;
+    Pattern pattern = Pattern.compile(String.format("^%s.([0-9]+)$", sdkVersion));
+    for (String child : parentFolder.list()) {
+      Matcher matcher = pattern.matcher(child);
+      if (matcher.matches()) {
+        int minorVersion = Integer.parseInt(matcher.group(1));
+        maxMinorVersion = Math.max(minorVersion, maxMinorVersion);
+      }
+    }
+    if (maxMinorVersion != -1) {
+      return String.format("%s.%d", sdkVersion, maxMinorVersion);
+    }
+    return sdkVersion;
   }
 
   public void setLocationPreference(boolean authorized, String bundleId) {
@@ -140,7 +169,7 @@ public class SimulatorSettings {
    * [DeviceType | Version ]
    */
   private void setDefaultSimulatorPreference(String key, String value) {
-    List<String> com = new ArrayList<String>();
+    List<String> com = new ArrayList<>();
     com.add("defaults");
     com.add("write");
     com.add("com.apple.iphonesimulator");
@@ -168,16 +197,13 @@ public class SimulatorSettings {
     }
   }
 
-  private File getContentAndSettingsFolder() {
+  private File getContentAndSettingsParentFolder() {
     String home = System.getProperty("user.home");
-    String
-        s =
-        String.format("%s/Library/Application Support/iPhone Simulator/%s", home, sdkVersion);
-    File f = new File(s);
-    if (!f.exists()) {
-      f.mkdirs();
-    }
-    return f;
+    return new File(home, "Library/Application Support/iPhone Simulator");
+  }
+
+  private File getContentAndSettingsFolder() {
+    return new File(getContentAndSettingsParentFolder(), exactSdkVersion);
   }
 
   private boolean deleteRecursive(File folder) {
@@ -202,8 +228,7 @@ public class SimulatorSettings {
   }
 
   private boolean hasContentAndSettingsFolder() {
-    File f = getContentAndSettingsFolder();
-    return f.exists();
+    return getContentAndSettingsFolder().exists();
   }
 
   private String getSimulateDeviceValue(DeviceType device, DeviceVariation variation) {
@@ -284,7 +309,7 @@ public class SimulatorSettings {
 
     File from = createTmpFile(plistJSON);
 
-    List<String> command = new ArrayList<String>();
+    List<String> command = new ArrayList<>();
     command.add(PLUTIL);
     command.add("-convert");
     command.add("binary1");
