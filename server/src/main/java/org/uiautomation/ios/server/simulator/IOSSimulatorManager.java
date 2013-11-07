@@ -88,11 +88,11 @@ public class IOSSimulatorManager implements IOSDeviceManager {
       throw new RuntimeException("NI");
     }
   }
+  
+  private boolean exiledSDKsNeeded;
 
   private void forceDefaultSDK() {
-
     for (String version : sdks) {
-
       if (new IOSVersion(version).isGreaterThan(desiredSDKVersion)) {
         File f = new File(developer, "SDKs/iPhoneSimulator" + version + ".sdk");
         if (!f.exists()) {
@@ -105,6 +105,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
                 "Starting the non default SDK requires some more setup.Failed to move " + f
                 + " to " + renamed + getErrorMessageMoveSDK(f));
           }
+          exiledSDKsNeeded = true;
         }
         f.mkdirs();
       }
@@ -127,7 +128,9 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   public void restoreExiledSDKs() {
     File exiled = new File(developer, "exiledSDKs/");
     if (!exiled.exists()) {
-      log.warning(exiled.getAbsolutePath() + " doesn't exist." + getErrorMessageMoveSDK(null));
+      if (exiledSDKsNeeded) {
+          log.warning(exiled.getAbsolutePath() + " doesn't exist." + getErrorMessageMoveSDK(null));
+      }
       return;
     }
     for (String s : exiled.list()) {
