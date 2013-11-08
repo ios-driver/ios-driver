@@ -14,10 +14,8 @@
 
 package org.uiautomation.ios.context;
 
-
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.server.application.APPIOSApplication;
-
 
 public class ApplicationContext {
 
@@ -26,11 +24,8 @@ public class ApplicationContext {
   private final String bundleId;
   private APPIOSApplication application;
 
-
   public ApplicationContext(String bundleId) {
     this.bundleId = bundleId;
     //this.viewContext = new WebViewContext(bundleId);
   }
-
-
 }

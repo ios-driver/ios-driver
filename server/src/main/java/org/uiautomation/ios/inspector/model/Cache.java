@@ -19,7 +19,6 @@ import java.net.URL;
 
 public interface Cache {
 
-
   public final String KEY = Cache.class.getCanonicalName();
 
   /**
@@ -33,6 +32,4 @@ public interface Cache {
    * that application, and model().refresh(); may be necessary to have the current state.
    */
   public IDESessionModel getModel(Session session);
-
-
 }

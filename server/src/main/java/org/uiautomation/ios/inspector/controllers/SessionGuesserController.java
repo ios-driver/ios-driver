@@ -47,7 +47,6 @@ public class SessionGuesserController implements IDECommandController {
   public View handle(HttpServletRequest req) throws Exception {
     Session session = getSession();
     return new RedirectView("session/" + session.getSessionId() + "/home");
-
   }
 
   private Session getSession() throws Exception {
@@ -65,7 +64,5 @@ public class SessionGuesserController implements IDECommandController {
       throw new WebDriverException("cannot guess the sessionId for the IDE to use.");
     }
     return new Session(id);
-
   }
-
 }

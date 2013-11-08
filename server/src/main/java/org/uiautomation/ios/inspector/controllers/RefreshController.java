@@ -53,5 +53,4 @@ public class RefreshController implements IDECommandController {
       throw new WebDriverException("cannot extract session id from " + pathInfo);
     }
   }
-
 }

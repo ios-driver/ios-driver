@@ -26,5 +26,4 @@ public class NotImplementedIDEController implements IDECommandController {
   public View handle(HttpServletRequest req) {
     throw new RuntimeException("no controller matching " + req.getPathInfo());
   }
-
 }

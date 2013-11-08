@@ -32,8 +32,7 @@ public class IDEController implements IDECommandController {
 
   @Override
   public boolean canHandle(String pathInfo) {
-    boolean ok = pathInfo.startsWith("/session/") && pathInfo.endsWith("/home");
-    return ok;
+    return pathInfo.startsWith("/session/") && pathInfo.endsWith("/home");
   }
 
   @Override
@@ -45,7 +44,6 @@ public class IDEController implements IDECommandController {
   }
 
   private String extractSession(String pathInfo) {
-
     if (pathInfo.startsWith("/session/")) {
       String tmp = pathInfo.replace("/session/", "");
       if (tmp.contains("/")) {

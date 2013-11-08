@@ -42,7 +42,6 @@ public class IDESessionModelImpl implements IDESessionModel {
   private final RemoteIOSDriver driver;
   private File screenshot;
   private final URL remoteEndPoint;
-
   private JSONObject elementTree;
 
   public IDESessionModelImpl(Session session, URL remoteURL) {
@@ -119,7 +118,6 @@ public class IDESessionModelImpl implements IDESessionModel {
 
   @Override
   public JSONObject getStatus() {
-
     try {
       HttpClient client = HttpClientFactory.getClient();
       String url = getEndPoint() + "/status";
@@ -129,13 +127,9 @@ public class IDESessionModelImpl implements IDESessionModel {
       HttpHost h = new HttpHost(u.getHost(), u.getPort());
       HttpResponse response = client.execute(h, r);
 
-      JSONObject o = Helper.extractObject(response);
-
-      return o;
+      return Helper.extractObject(response);
     } catch (Exception e) {
       throw new WebDriverException(e.getMessage(), e);
     }
-
   }
-
 }

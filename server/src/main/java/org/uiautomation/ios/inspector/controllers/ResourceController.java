@@ -54,7 +54,6 @@ public class ResourceController implements IDECommandController {
       } catch (FileNotFoundException e) {
         is = null;
       }
-
     } else {
       is = IDEServlet.class.getResourceAsStream("/" + resource);
     }
@@ -83,7 +82,6 @@ public class ResourceController implements IDECommandController {
   }
 
   private String extractSession(String pathInfo) {
-
     if (pathInfo.startsWith("/resources/session/")) {
       String tmp = pathInfo.replace("/resources/session/", "");
       if (tmp.contains("/")) {
@@ -110,5 +108,4 @@ public class ResourceController implements IDECommandController {
     
     
    */
-
 }

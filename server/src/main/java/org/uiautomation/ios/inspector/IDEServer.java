@@ -25,7 +25,6 @@ public class IDEServer {
   private final ServletContextHandler servletContextHandler;
 
   public static void main(String[] args) throws Exception {
-
     int port = 5555;
     if (args.length == 1) {
       port = Integer.parseInt(args[0]);
@@ -40,7 +39,6 @@ public class IDEServer {
   }
 
   public void init() {
-
     servletContextHandler.addServlet(IDEServlet.class, "/*");
 
     Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -52,7 +50,6 @@ public class IDEServer {
         }
       }
     });
-
   }
 
   public void start() throws Exception {
@@ -70,5 +67,4 @@ public class IDEServer {
     server = new Server(new InetSocketAddress("localhost", port));
     servletContextHandler = new ServletContextHandler(server, "/inspector", true, false);
   }
-
 }

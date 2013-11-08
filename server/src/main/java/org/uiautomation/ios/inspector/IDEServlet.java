@@ -39,7 +39,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 public class IDEServlet extends HttpServlet {
 
   private static final Logger log = Logger.getLogger(IDEServlet.class.getName());
@@ -51,7 +50,7 @@ public class IDEServlet extends HttpServlet {
 
   private static final long serialVersionUID = 333974658353413397L;
 
-  private final List<IDECommandController> controllers = new ArrayList<IDECommandController>();
+  private final List<IDECommandController> controllers = new ArrayList<>();
 
   @Override
   public void init() throws ServletException {
@@ -68,7 +67,6 @@ public class IDEServlet extends HttpServlet {
       } else {
         log.warning("couldn't find the end point.");
       }
-
     } catch (MalformedURLException e) {
       e.printStackTrace();
     }
@@ -83,8 +81,6 @@ public class IDEServlet extends HttpServlet {
     controllers.add(new RefreshController(cache));
     controllers.add(new TreeController(cache));
     controllers.add(new WebViewContentController(cache));
-
-
   }
 
   @Override
@@ -100,7 +96,6 @@ public class IDEServlet extends HttpServlet {
     }
   }
 
-
   private IDECommandController getController(String pathInfo) {
     for (IDECommandController c : controllers) {
       if (c.canHandle(pathInfo)) {
@@ -109,6 +104,4 @@ public class IDEServlet extends HttpServlet {
     }
     return new NotImplementedIDEController();
   }
-
-
 }

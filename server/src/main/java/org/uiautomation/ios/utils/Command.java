@@ -144,7 +144,6 @@ public class Command {
           }
         } catch (IOException e) {
           log.warning("Error reading the output of the process :" + e.getMessage());
-          return;
         }
       }
     });

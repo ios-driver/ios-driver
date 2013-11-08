@@ -13,7 +13,6 @@
  */
 package org.uiautomation.ios.UIAModels;
 
-
 public enum Orientation {
   PORTRAIT("UIA_DEVICE_ORIENTATION_PORTRAIT", 1, 0),
   UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN("UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN", 2, 180),
@@ -21,7 +20,6 @@ public enum Orientation {
   UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT("UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT", 4, 90),
   UIA_DEVICE_ORIENTATION_FACEUP("UIA_DEVICE_ORIENTATION_FACEUP", -1, -1),
   UIA_DEVICE_ORIENTATION_FACEDOWN("UIA_DEVICE_ORIENTATION_FACEDOWN", -1, -1);
-
 
   private final String value;
   private final int interfaceOrientation;
@@ -45,7 +43,6 @@ public enum Orientation {
     }
     throw new IllegalArgumentException("interfaceOrientation not recognized.");
   }
-
 
   public String instrumentsValue() {
     return value;

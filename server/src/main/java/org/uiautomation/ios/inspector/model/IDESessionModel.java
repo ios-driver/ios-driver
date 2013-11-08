@@ -39,5 +39,4 @@ public interface IDESessionModel {
   public URL getEndPoint();
 
   public JSONObject getStatus();
-
 }

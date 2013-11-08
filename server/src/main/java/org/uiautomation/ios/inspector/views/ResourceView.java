@@ -39,7 +39,5 @@ public class ResourceView implements View {
     } catch (IOException e) {
       throw new WebDriverException("Cannot load the requested resource : " + e.getMessage(), e);
     }
-
   }
-
 }

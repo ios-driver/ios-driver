@@ -40,7 +40,5 @@ public class WebView implements View {
     } catch (Exception e) {
       throw new WebDriverException(e);
     }
-
   }
-
 }

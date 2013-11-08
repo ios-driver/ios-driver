@@ -26,7 +26,4 @@ public class RedirectView implements View {
   public void render(HttpServletResponse response) throws Exception {
     response.sendRedirect(to);
   }
-
-
-
 }

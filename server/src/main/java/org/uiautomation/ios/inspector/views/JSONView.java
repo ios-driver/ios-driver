@@ -49,5 +49,4 @@ public class JSONView implements View {
     response.setStatus(200);
     response.getWriter().print(getContent());
   }
-
 }

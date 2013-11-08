@@ -36,8 +36,7 @@ public class WebViewContentController implements IDECommandController {
 
   @Override
   public boolean canHandle(String pathInfo) {
-    boolean ok = pathInfo.endsWith("/latestWebView");
-    return ok;
+    return pathInfo.endsWith("/latestWebView");
   }
 
   @Override

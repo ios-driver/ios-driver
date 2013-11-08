@@ -50,7 +50,6 @@ public class TreeController implements IDECommandController {
     JSONToXMLConverter conv = new JSONToXMLConverter(rootNode);
     JSONObject jsTreeObject = createFrom(rootNode, conv.asXML());
     return new JSONView(jsTreeObject);
-
   }
 
   private JSONObject createFrom(JSONObject from, String xml) throws JSONException {
@@ -127,7 +126,6 @@ public class TreeController implements IDECommandController {
     return false;
   }
 
-
   private String getNodeTitle(JSONObject node) throws JSONException {
     StringBuilder b = new StringBuilder();
     b.append("[" + node.getString("type") + "]-");
@@ -143,11 +141,9 @@ public class TreeController implements IDECommandController {
       b.append(name);
     }
     return b.toString();
-
   }
 
   private String extractSession(String pathInfo) {
-
     if (pathInfo.startsWith("/session/")) {
       String tmp = pathInfo.replace("/session/", "");
       if (tmp.contains("/")) {
@@ -159,5 +155,4 @@ public class TreeController implements IDECommandController {
       throw new WebDriverException("cannot extract session id from " + pathInfo);
     }
   }
-
 }

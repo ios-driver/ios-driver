@@ -20,7 +20,7 @@ import org.uiautomation.ios.wkrdp.internal.SimulatorProtocolImpl;
 
 /**
  * Context for the webview accessed with the remote webkit protocol. If the application was launched
- * with instruments, and can be controled that way, it can be accessed via the ApplicationContext.
+ * with instruments, and can be controlled that way, it can be accessed via the ApplicationContext.
  * If application context is null, it means the WebContext was started on a non instrumented app,
  * and only web access via the remoteWebKit protocol can be done.
  */

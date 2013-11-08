@@ -39,7 +39,7 @@ public class Model {
 
   public void setDriver(RemoteIOSDriver driver) {
     if (this.driver != null) {
-      throw new WebDriverException("driver already instanciated.");
+      throw new WebDriverException("driver already instantiated.");
     }
     this.driver = driver;
   }
@@ -49,12 +49,10 @@ public class Model {
   }
 
   public JSONObject getObjectTree() {
-    JSONObject res = cache.optJSONObject("tree");
-    return res;
+    return cache.optJSONObject("tree");
   }
 
   public void refresh() {
-
     cache = driver.logElementTree(null, false);
   }
 
@@ -65,12 +63,10 @@ public class Model {
         log.warning("cannot find " + f + ".Last screenshot cannot be found.");
         Thread.sleep(250);
       }
-      InputStream is = new FileInputStream(f);
-      return is;
+      return new FileInputStream(f);
     } catch (Exception e) {
       throw new WebDriverException(e);
     }
-
   }
 
   public void stop() {
@@ -81,7 +77,6 @@ public class Model {
       driver.quit();
       driver = null;
     }
-
   }
 
   public String getLanguage() {
@@ -100,7 +95,5 @@ public class Model {
 
   public void setAUT(APPIOSApplication app) {
     this.app = app;
-
   }
-
 }

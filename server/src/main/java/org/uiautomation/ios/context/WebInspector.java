@@ -14,7 +14,6 @@
 
 package org.uiautomation.ios.context;
 
-
 import org.json.JSONObject;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.wkrdp.internal.WebKitRemoteDebugProtocol;
@@ -45,7 +44,6 @@ public class WebInspector extends BaseWebInspector {
     this.senderKey = generateSenderString(pageIdentifierKey);
   }
 
-
   public JSONObject sendCommand(JSONObject command) {
     JSONObject
         res =
@@ -67,6 +65,5 @@ public class WebInspector extends BaseWebInspector {
     } else {
       return senderBase + pageIdentifierKey;
     }
-
   }
 }
