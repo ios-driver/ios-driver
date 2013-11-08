@@ -20,6 +20,7 @@ import com.dd.plist.NSDictionary;
 import com.dd.plist.NSNumber;
 import com.dd.plist.PropertyListParser;
 
+import com.google.common.collect.ImmutableList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,11 +32,7 @@ import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.PlistFileUtils;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 import static org.uiautomation.ios.IOSCapabilities.*;
@@ -60,7 +57,8 @@ public class APPIOSApplication {
 
   private final JSONObject metadata;
   private final File app;
-  private final List<LanguageDictionary> dictionaries = new ArrayList<>();
+  private final ImmutableList<LanguageDictionary> dictionaries;
+  private final ImmutableList<AppleLanguage> languages;
 
   /**
    * @param pathToApp
@@ -71,7 +69,8 @@ public class APPIOSApplication {
     if (!app.exists()) {
       throw new WebDriverException(pathToApp + "isn't an IOS app.");
     }
-    loadAllContent();
+    dictionaries = loadDictionaries();
+    languages = loadLanguages();
     try {
       metadata = getFullPlist();
     } catch (Exception e) {
@@ -101,24 +100,10 @@ public class APPIOSApplication {
   }
 
   /**
-   * get the list of languages the application if localized to.
+   * Get the list of languages the application is localized to.
    */
   List<AppleLanguage> getSupportedLanguages() {
-    if (dictionaries.isEmpty()) {
-      loadAllContent();
-    }
-    /*
-     * Set<Localizable> res = new HashSet<Localizable>(); List<File> l10ns =
-     * LanguageDictionary.getL10NFiles(app); for (File f : l10ns) { String name
-     * = LanguageDictionary.extractLanguageName(f); res.add(new
-     * LanguageDictionary(name).getLanguage()); } return new
-     * ArrayList<Localizable>(res);
-     */
-    List<AppleLanguage> res = new ArrayList<>();
-    for (LanguageDictionary dict : dictionaries) {
-      res.add(dict.getLanguage());
-    }
-    return res;
+    return languages;
   }
 
   public AppleLanguage getLanguage(String languageCode) {
@@ -152,46 +137,49 @@ public class APPIOSApplication {
       }
     }
     throw new WebDriverException("Cannot find dictionary for " + language);
-
   }
 
   /**
    * Load all the dictionaries for the application.
    */
-  private void loadAllContent() throws WebDriverException {
-    if (!dictionaries.isEmpty()) {
-      throw new WebDriverException("Content already present.");
-    }
-    Map<String, LanguageDictionary> dicts = new HashMap<>();
-
-    List<File> l10nFiles = LanguageDictionary.getL10NFiles(app);
-    for (File f : l10nFiles) {
+  private ImmutableList<LanguageDictionary> loadDictionaries() {
+    Map<String, LanguageDictionary> languageNameMap = new HashMap<>();
+    for (File f : LanguageDictionary.getL10NFiles(app)) {
       String name = LanguageDictionary.extractLanguageName(f);
-      LanguageDictionary res = dicts.get(name);
+      LanguageDictionary res = languageNameMap.get(name);
       if (res == null) {
         res = new LanguageDictionary(name);
-        dicts.put(name, res);
+        languageNameMap.put(name, res);
       }
       try {
-        // and load the content.
+        // Load the content.
         JSONObject content = res.readContentFromBinaryFile(f);
         res.addJSONContent(content);
       } catch (Exception e) {
-        throw new WebDriverException("error loading content for l10n", e);
+        throw new WebDriverException("Error loading content for l10n", e);
       }
-
     }
-    dictionaries.addAll(dicts.values());
+    List<LanguageDictionary> dicts = new ArrayList<>(languageNameMap.values());
+    Collections.sort(dicts, new Comparator<LanguageDictionary>() {
+      @Override
+      public int compare(LanguageDictionary o1, LanguageDictionary o2) {
+        return o1.getLanguage().compareTo(o2.getLanguage());
+      }
+    });
+    return ImmutableList.copyOf(dicts);
+  }
 
+  private ImmutableList<AppleLanguage> loadLanguages() {
+    ImmutableList.Builder<AppleLanguage> builder = ImmutableList.builder();
+    for (LanguageDictionary dict : dictionaries) {
+      builder.add(dict.getLanguage());
+    }
+    return builder.build();
   }
 
   public String translate(ContentResult res, AppleLanguage language) throws WebDriverException {
     LanguageDictionary destinationLanguage = getDictionary(language);
     return destinationLanguage.translate(res);
-  }
-
-  public void addDictionary(LanguageDictionary dict) {
-    dictionaries.add(dict);
   }
 
   public String getBundleId() {
@@ -434,12 +422,10 @@ public class APPIOSApplication {
     if (!desired.equals(name)) {
       return false;
     }
-
     if (desiredCapabilities.getBundleVersion() != null && !desiredCapabilities.getBundleVersion()
         .equals(appCapability.getBundleVersion())) {
       return false;
     }
-
     if (desiredCapabilities.getDevice() == null) {
       throw new WebDriverException("you need to specify the device.");
     }
@@ -496,7 +482,6 @@ public class APPIOSApplication {
         }
       }
       return families;
-
     } catch (JSONException e) {
       throw new WebDriverException(e);
     }
