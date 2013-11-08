@@ -48,18 +48,21 @@ public class IOSServer {
   public static final String DRIVER = IOSServerManager.class.getName();
   private static final Logger log = Logger.getLogger(IOSServer.class.getName());
 
+  private boolean initialized = false;
+  private final IOSServerConfiguration options;
   private Server server;
-  private IOSServerConfiguration options;
   private IOSServerManager driver;
   private FolderMonitor folderMonitor;
   private SelfRegisteringRemote selfRegisteringRemote;
 
   public IOSServer(IOSServerConfiguration options) {
-    init(options);
+    this.options = options;
   }
 
   public IOSServer(String[] args) {
-    init(args);
+    IOSServerConfiguration options = new IOSServerConfiguration();
+    new JCommander(options, args);
+    this.options = options;
   }
 
   public static void main(String[] args) throws Exception {
@@ -82,14 +85,7 @@ public class IOSServer {
     }
   }
 
-  private void init(String[] args) {
-    IOSServerConfiguration options = new IOSServerConfiguration();
-    new JCommander(options, args);
-    init(options);
-  }
-
-  private void init(IOSServerConfiguration options) {
-    this.options = options;
+  private void init() {
     Configuration.BETA_FEATURE = options.isBeta();
     Configuration.SIMULATORS_ENABLED = options.hasSimulators();
     initDriver();
@@ -210,6 +206,9 @@ public class IOSServer {
   }
 
   public void start() throws Exception {
+    if (!initialized) {
+      init();
+    }
     if (!server.isRunning()) {
       server.start();
     }
@@ -236,6 +235,9 @@ public class IOSServer {
   }
 
   public void stop() throws Exception {
+    if (!initialized) {
+      return;
+    }
     if (selfRegisteringRemote != null) {
       selfRegisteringRemote.stop();
     }

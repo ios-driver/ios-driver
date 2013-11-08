@@ -29,12 +29,11 @@ import java.util.Map;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-
 public class IOSServerManager {
 
   private static final Logger log = Logger.getLogger(IOSServerManager.class.getName());
   public final ApplicationStore apps;
-  private final List<ServerSideSession> sessions = new ArrayList<ServerSideSession>();
+  private final List<ServerSideSession> sessions = new ArrayList<>();
   private final HostInfo hostInfo;
   private final ResourceCache cache = new ResourceCache();
   private final IOSServerConfiguration options;
@@ -63,7 +62,6 @@ public class IOSServerManager {
     }
 
     apps = new ApplicationStore(options.getAppFolderToMonitor());
-
   }
 
   public static boolean matches(Map<String, Object> appCapabilities,
@@ -71,22 +69,20 @@ public class IOSServerManager {
     IOSCapabilities a = new IOSCapabilities(appCapabilities);
     IOSCapabilities d = new IOSCapabilities(desiredCapabilities);
     return matches(a, d);
-
   }
 
   private static boolean matches(IOSCapabilities applicationCapabilities,
                                  IOSCapabilities desiredCapabilities) {
-
-    if (!APPIOSApplication.canRun(desiredCapabilities, applicationCapabilities)) {
-      return false;
-    }
-    if (!Device.canRun(desiredCapabilities, applicationCapabilities)) {
-      return false;
-    }
-    return true;
+    return APPIOSApplication.canRun(desiredCapabilities, applicationCapabilities) &&
+        Device.canRun(desiredCapabilities, applicationCapabilities);
   }
 
   public void stop() {
+    for (ServerSideSession session : sessions) {
+      session.stop();
+    }
+    sessions.clear();
+
     if (Configuration.BETA_FEATURE) {
       IMobileDeviceFactory.INSTANCE.stopDetection();
     }
@@ -127,7 +123,7 @@ public class IOSServerManager {
   }
 
   public List<IOSCapabilities> getAllCapabilities() {
-    List<IOSCapabilities> res = new ArrayList<IOSCapabilities>();
+    List<IOSCapabilities> res = new ArrayList<>();
     for (Device d : getDeviceStore().getDevices()) {
       res.addAll(getApplicationStore().getCapabilities(d));
     }
@@ -149,7 +145,7 @@ public class IOSServerManager {
   
   public List<APPIOSApplication> findAllMatchingApplications(
         IOSCapabilities desiredCapabilities) {
-    List<APPIOSApplication> matchingApps = new ArrayList<APPIOSApplication>();
+    List<APPIOSApplication> matchingApps = new ArrayList<>();
     for (APPIOSApplication app : getApplicationStore().getApplications()) {
       IOSCapabilities appCapabilities = app.getCapabilities();
       if (APPIOSApplication.canRun(desiredCapabilities, appCapabilities)) {

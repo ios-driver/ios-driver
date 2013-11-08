@@ -60,7 +60,6 @@ public class InstrumentsApple implements Instruments {
   private final CURLBasedCommunicationChannel channel;
   private final InstrumentsVersion version;
   private final TakeScreenshotService screenshotService;
-  private final ApplicationCrashListener listener;
   private final IOSDeviceManager deviceManager;
   private final IOSCapabilities caps;
   private final String desiredSDKVersion;
@@ -86,8 +85,7 @@ public class InstrumentsApple implements Instruments {
     output = createTmpOutputFolder();
 
     instruments = createInstrumentCommand(scriptPath);
-    listener = new ApplicationCrashListener();
-    instruments.registerListener(listener);
+    instruments.registerListener(new ApplicationCrashListener());
     instruments.setWorkingDirectory(output);
 
     channel = new CURLBasedCommunicationChannel(sessionId);
@@ -141,9 +139,7 @@ public class InstrumentsApple implements Instruments {
       // while trying to run the script. UIAScriptAgentSignaledException
       if (!success) {
         instruments.forceStop();
-        if (deviceManager!=null){
-          deviceManager.cleanupDevice();
-        }
+        deviceManager.cleanupDevice();
         throw new InstrumentsFailedToStartException("Instruments crashed.");
       }
       putMobileSafariAppBackInInstallDir();
@@ -165,7 +161,7 @@ public class InstrumentsApple implements Instruments {
   }
 
   private Command createInstrumentCommand(File script) {
-    List<String> args = new ArrayList<String>();
+    List<String> args = new ArrayList<>();
 
     args.add(getInstrumentsClient());
     if (uuid != null) {
@@ -254,7 +250,7 @@ public class InstrumentsApple implements Instruments {
   }
   
   /**
-   * @return true if MobileSafari was moved out, false otherwide
+   * @return true if MobileSafari was moved out, false otherwise
    */
   private boolean moveMobileSafariAppOutOfInstallDir() {
     // make backup copy before deleting

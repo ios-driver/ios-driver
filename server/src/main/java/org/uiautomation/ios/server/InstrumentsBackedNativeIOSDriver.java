@@ -26,21 +26,23 @@ import java.net.URL;
 public class InstrumentsBackedNativeIOSDriver extends ServerSideNativeDriver {
 
   private final Instruments instruments;
-  private final Thread shutdownHook = new Thread() {
-    @Override
-    public void run() {
-      instruments.stop();
-    }
-  };
+  private final Thread shutdownHook;
 
   public InstrumentsBackedNativeIOSDriver(URL url, ServerSideSession session) {
     super(url, new SessionId(session.getSessionId()));
     instruments = InstrumentsFactory.getInstruments(session);
+    shutdownHook = new Thread() {
+      @Override
+      public void run() {
+        instruments.stop();
+      }
+    };
   }
 
   public void start() {
     try {
       instruments.start();
+      Runtime.getRuntime().addShutdownHook(shutdownHook);
     } catch (InstrumentsFailedToStartException e) {
       stop();
     }
