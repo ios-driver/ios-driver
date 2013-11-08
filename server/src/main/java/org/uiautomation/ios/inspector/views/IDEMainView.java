@@ -41,16 +41,15 @@ public class IDEMainView implements View {
     this.servletPath = servletPath;
   }
 
-
   @Override
   public void render(HttpServletResponse response) throws Exception {
     Configuration conf = new Configuration();
     conf.setClassForTemplateLoading(this.getClass(), "/");
     Template template = conf.getTemplate("/inspector/inspector.html");
     StringWriter writer = new StringWriter();
-    Map<String, Object> map = new HashMap<String, Object>();
+    Map<String, Object> map = new HashMap<>();
 
-    List<String> cssList = new ArrayList<String>();
+    List<String> cssList = new ArrayList<>();
     cssList.add(getResource("inspector/css/inspector.css"));
     cssList.add(getResource("inspector/css/ide.css"));
     cssList.add(getResource("inspector/third_party/jquery.layout.css"));
@@ -58,7 +57,7 @@ public class IDEMainView implements View {
 
     map.put("cssList", cssList);
 
-    List<String> jsList = new ArrayList<String>();
+    List<String> jsList = new ArrayList<>();
 
     jsList.add(getResource("inspector/third_party/jquery-ui-1.10.3.custom/js/jquery-1.9.1.js"));
     jsList.add(getResource("inspector/third_party/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js"));
@@ -81,7 +80,6 @@ public class IDEMainView implements View {
 
     map.put("frame", getFrame(device, variation, orientation));
 
-
     map.put("screenshot", getScreen());
 
     String type = "iphone";
@@ -99,22 +97,20 @@ public class IDEMainView implements View {
     response.setStatus(200);
 
     response.getWriter().print(writer.toString());
-
   }
-
-
 
   private String getScreen() {
     return getResource("session/" + model.getSession().getSessionId() + "/screenshot.png");
   }
 
   private String getFrame(DeviceType device, DeviceVariation variation, Orientation o) {
-
     if (device == DeviceType.iphone) {
-      if (variation == DeviceVariation.Retina4) {
-        return getResource("inspector/images/frames/frame_iphone5_" + o.instrumentsValue() + ".png");
-      } else {
-        return getResource("inspector/images/frames/frame_iphone_" + o.instrumentsValue() + ".png");
+      switch (variation) {
+        case iPhoneRetina4:
+        case iPhoneRetina4_64bit:
+          return getResource("inspector/images/frames/frame_iphone5_" + o.instrumentsValue() + ".png");
+        default:
+          return getResource("inspector/images/frames/frame_iphone_" + o.instrumentsValue() + ".png");
       }
     } else {
       return getResource("inspector/images/frames/frame_ipad_" + o.instrumentsValue() + ".jpg");
@@ -122,8 +118,7 @@ public class IDEMainView implements View {
   }
 
   private String getResource(String name) {
-    String res = servletPath + "/resources/" + name;
-    return res;
+    return servletPath + "/resources/" + name;
   }
 
   private JSONObject getStatus() throws Exception {
@@ -143,6 +138,4 @@ public class IDEMainView implements View {
     }
     return null;
   }
-
-
 }

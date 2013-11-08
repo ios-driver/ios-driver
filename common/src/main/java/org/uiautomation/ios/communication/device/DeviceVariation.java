@@ -17,11 +17,13 @@ package org.uiautomation.ios.communication.device;
 import org.openqa.selenium.WebDriverException;
 
 public enum DeviceVariation {
-  Regular, // iphone , ipad 
-  Retina35,//iphone
-  Retina4, // iphone
-  Retina,  // ipad
-  iPad25; // ipad mini
+  Regular, // iPhone or iPad.
+  iPhoneRetina35,
+  iPhoneRetina4,
+  iPhoneRetina4_64bit,
+  iPadRetina,
+  iPadRetina_64bit,
+  iPad25; // iPad mini.
   
   public static DeviceVariation getDefault() {
     return Regular;

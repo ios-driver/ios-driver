@@ -62,7 +62,6 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     this.instruments = instruments;
     this.developer =
         new File(xcodeInstall, "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer");
-
   }
 
   @Override
@@ -75,10 +74,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
 
   private boolean isDefaultSDK() {
     String defaultSDK = ClassicCommands.getDefaultSDK();
-    if (new IOSVersion(defaultSDK).equals(desiredSDKVersion)) {
-      return true;
-    }
-    return false;
+    return new IOSVersion(defaultSDK).equals(desiredSDKVersion);
   }
 
   private void warmup() {
@@ -145,7 +141,6 @@ public class IOSSimulatorManager implements IOSDeviceManager {
             "Error restoring the SDK to its original directory. The SDK will be missing in xcode.");
       }
     }
-
   }
 
   private String validateSDK(String sdk) {
@@ -194,14 +189,12 @@ public class IOSSimulatorManager implements IOSDeviceManager {
 
   @Override
   public void setVariation(DeviceType device, DeviceVariation variation) {
-    simulatorSettings.setVariation(device, variation);
+    simulatorSettings.setVariation(device, variation, desiredSDKVersion);
   }
-
 
   @Override
   public void resetContentAndSettings() {
     simulatorSettings.resetContentAndSettings();
 
   }
-
 }

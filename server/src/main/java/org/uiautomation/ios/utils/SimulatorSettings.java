@@ -22,12 +22,14 @@ import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.command.uiautomation.NewSessionNHandler;
+import org.uiautomation.ios.server.utils.IOSVersion;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -159,8 +161,8 @@ public class SimulatorSettings {
    * update the preference to have the simulator start in the correct more ( ie retina vs normal,
    * iphone screen size ).
    */
-  public void setVariation(DeviceType device, DeviceVariation variation) {
-    String value = getSimulateDeviceValue(device, variation);
+  public void setVariation(DeviceType device, DeviceVariation variation, String desiredSDKVersion) {
+    String value = getSimulateDeviceValue(device, variation, desiredSDKVersion);
     setDefaultSimulatorPreference("SimulateDevice", value);
   }
 
@@ -174,7 +176,7 @@ public class SimulatorSettings {
     com.add("write");
     com.add("com.apple.iphonesimulator");
     com.add(key);
-    com.add(value);
+    com.add(String.format("\"%s\"", value));
 
     Command updatePreference = new Command(com, true);
     updatePreference.executeAndWait();
@@ -231,10 +233,10 @@ public class SimulatorSettings {
     return getContentAndSettingsFolder().exists();
   }
 
-  private String getSimulateDeviceValue(DeviceType device, DeviceVariation variation) {
+  private String getSimulateDeviceValue(DeviceType device, DeviceVariation variation, String desiredSDKVersion) {
     switch (device) {
       case iphone:
-        return getIphoneString(variation);
+        return getIphoneString(variation, desiredSDKVersion);
       case ipad:
         return getIpadString(variation);
       default:
@@ -247,10 +249,12 @@ public class SimulatorSettings {
     switch (variation) {
       case Regular:
         return "iPad";
-      case Retina:
-        return "\"iPad (Retina)\"";
+      case iPadRetina:
+        return "iPad Retina";
+      case iPadRetina_64bit:
+        return "iPad Retina (64-bit)";
       default:
-        throw new WebDriverException(variation + " isn't supported for ipad.");
+        throw new WebDriverException(variation + " isn't supported for iPad.");
     }
   }
 
@@ -270,21 +274,28 @@ public class SimulatorSettings {
     res.put("AppleLanguages", languages);
     res.put("AppleLocale", locale);
     return res;
-
   }
 
-  private String getIphoneString(DeviceVariation variation) {
+  private String getIphoneString(DeviceVariation variation, String desiredSDKVersion) {
     switch (variation) {
       case Regular:
+        IOSVersion desired = new IOSVersion(desiredSDKVersion);
+        String supportDropped = "7.0";
+        if (desired.isGreaterOrEqualTo(supportDropped)) {
+          log.warning(String.format(
+              "Non-retina iPhone not supported starting with SDK %s; substituting 3.5-inch retina iPhone",
+              supportDropped));
+          return "iPhone Retina (3.5-inch)";
+        }
         return "iPhone";
-      case Retina35:
-        return "\"iPhone (Retina 3.5-inch)\"";
-        //return "\"iPhone Retina (3.5-inch)\"";
-      case Retina4:
-        return "\"iPhone (Retina 4-inch)\"";
-        //return "\"iPhone Retina (4-inch)\"";
+      case iPhoneRetina35:
+        return "iPhone Retina (3.5-inch)";
+      case iPhoneRetina4:
+        return "iPhone Retina (4-inch)";
+      case iPhoneRetina4_64bit:
+        return "iPhone Retina (4-inch 64-bit)";
       default:
-        throw new WebDriverException(variation + " isn't supported for ipad.");
+        throw new WebDriverException(variation + " isn't supported for iPhone.");
     }
   }
 
@@ -297,7 +308,7 @@ public class SimulatorSettings {
   private void writeOnDisk(JSONObject plistJSON, File destination)
       throws IOException, JSONException {
     if (destination.exists()) {
-      // to be on the safe side. If the emulator already runs, it won't work
+      // To be on the safe side. If the emulator already runs, it won't work
       // anyway.
       throw new WebDriverException(globalPreferencePlist + " already exists. Cannot create it.");
     }
@@ -326,7 +337,7 @@ public class SimulatorSettings {
       throw new WebDriverException("failed to run " + command.toString(), e);
     }
     if (i != 0) {
-      throw new WebDriverException("conversion to binary pfile failed. exitCode=" + i);
+      throw new WebDriverException("conversion to binary plist failed. exitCode=" + i);
     }
   }
 

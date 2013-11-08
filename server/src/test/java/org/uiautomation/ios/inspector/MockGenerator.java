@@ -40,17 +40,24 @@ import java.net.URL;
 
 public class MockGenerator {
 
-
   public static void main_tree(String[] args) throws Exception {
     String[] param = {"-port", "4444", "-host", "localhost", "-simulators"};
     IOSServerConfiguration config = IOSServerConfiguration.create(param);
     IOSServer server = new IOSServer(config);
     server.start();
 
-    DeviceVariation[]
-        iphoneVariations =
-        {DeviceVariation.Regular, DeviceVariation.Retina35, DeviceVariation.Retina4};
-    DeviceVariation[] ipadVariations = {DeviceVariation.Regular, DeviceVariation.Retina};
+    DeviceVariation[] iphoneVariations = {
+        DeviceVariation.Regular,
+        DeviceVariation.iPhoneRetina35,
+        DeviceVariation.iPhoneRetina4,
+        DeviceVariation.iPhoneRetina4_64bit
+    };
+    DeviceVariation[] ipadVariations = {
+        DeviceVariation.Regular,
+        DeviceVariation.iPadRetina,
+        DeviceVariation.iPadRetina_64bit,
+        DeviceVariation.iPad25
+    };
 
     generateAllVariations(DeviceType.iphone, iphoneVariations);
     generateAllVariations(DeviceType.ipad, ipadVariations);
@@ -96,15 +103,11 @@ public class MockGenerator {
     for (DeviceVariation variation : variations) {
       generate(type, variation);
     }
-
-
   }
 
   private static void generate(DeviceType device, DeviceVariation variation) throws Exception {
-
     RemoteWebDriver driver = null;
     try {
-
       IOSCapabilities caps = IOSCapabilities.iphone("Safari");
       if (device == DeviceType.ipad) {
         caps.setDevice(DeviceType.ipad);
@@ -129,14 +132,11 @@ public class MockGenerator {
           }
         }
       }
-
     } finally {
       if (driver != null) {
         driver.quit();
       }
     }
-
-
   }
 
   private static void dumpCapabilities(DeviceType device, DeviceVariation variation,
@@ -151,7 +151,6 @@ public class MockGenerator {
     w.write(content);
     w.close();
     System.out.println(caps.getAbsolutePath());
-
   }
 
   private static void dumpElementTree(DeviceType device, DeviceVariation variation, Orientation o,
@@ -174,6 +173,5 @@ public class MockGenerator {
     FileWriter writer = new FileWriter(tree);
     writer.write(json.toString(2));
     writer.close();
-
   }
 }

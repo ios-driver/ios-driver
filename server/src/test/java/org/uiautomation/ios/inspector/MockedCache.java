@@ -32,19 +32,20 @@ import java.util.Map;
 
 public class MockedCache implements Cache {
 
-  private Map<Session, IDESessionModel> cache = new HashMap<Session, IDESessionModel>();
+  private Map<Session, IDESessionModel> cache = new HashMap<>();
 
   public MockedCache() throws Exception {
-
     for (Orientation o : Orientation.values()) {
       addModel(DeviceType.iphone, DeviceVariation.Regular, o);
-      addModel(DeviceType.iphone, DeviceVariation.Retina35, o);
-      addModel(DeviceType.iphone, DeviceVariation.Retina4, o);
+      addModel(DeviceType.iphone, DeviceVariation.iPhoneRetina35, o);
+      addModel(DeviceType.iphone, DeviceVariation.iPhoneRetina4, o);
+      addModel(DeviceType.iphone, DeviceVariation.iPhoneRetina4_64bit, o);
 
       addModel(DeviceType.ipad, DeviceVariation.Regular, o);
-      addModel(DeviceType.ipad, DeviceVariation.Retina, o);
+      addModel(DeviceType.ipad, DeviceVariation.iPadRetina, o);
+      addModel(DeviceType.ipad, DeviceVariation.iPadRetina_64bit, o);
+      addModel(DeviceType.ipad, DeviceVariation.iPad25, o);
     }
-
   }
 
   private void addModel(DeviceType device, DeviceVariation variation, Orientation o)
@@ -84,7 +85,6 @@ public class MockedCache implements Cache {
         model =
         new MockedModel(session, screenshot, t, c, new JSONObject(s.toString()));
     cache.put(session, model);
-
   }
 
   @Override
@@ -96,5 +96,4 @@ public class MockedCache implements Cache {
   public IDESessionModel getModel(Session session) {
     return cache.get(session);
   }
-
 }
