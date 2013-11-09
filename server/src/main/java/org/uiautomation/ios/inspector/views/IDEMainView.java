@@ -105,9 +105,9 @@ public class IDEMainView implements View {
 
   private String getFrame(DeviceType device, DeviceVariation variation, Orientation o) {
     if (device == DeviceType.iphone) {
-      switch (variation) {
-        case iPhoneRetina4:
-        case iPhoneRetina4_64bit:
+      switch (DeviceVariation.normalize(device, variation)) {
+        case iPhoneRetina_4inch:
+        case iPhoneRetina_4inch_64bit:
           return getResource("inspector/images/frames/frame_iphone5_" + o.instrumentsValue() + ".png");
         default:
           return getResource("inspector/images/frames/frame_iphone_" + o.instrumentsValue() + ".png");

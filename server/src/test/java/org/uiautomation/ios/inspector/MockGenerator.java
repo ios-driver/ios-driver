@@ -47,16 +47,15 @@ public class MockGenerator {
     server.start();
 
     DeviceVariation[] iphoneVariations = {
-        DeviceVariation.Regular,
-        DeviceVariation.iPhoneRetina35,
-        DeviceVariation.iPhoneRetina4,
-        DeviceVariation.iPhoneRetina4_64bit
+        DeviceVariation.iPhone,
+        DeviceVariation.iPhoneRetina,
+        DeviceVariation.iPhoneRetina_4inch,
+        DeviceVariation.iPhoneRetina_4inch_64bit
     };
     DeviceVariation[] ipadVariations = {
-        DeviceVariation.Regular,
+        DeviceVariation.iPad,
         DeviceVariation.iPadRetina,
-        DeviceVariation.iPadRetina_64bit,
-        DeviceVariation.iPad25
+        DeviceVariation.iPadRetina_64bit
     };
 
     generateAllVariations(DeviceType.iphone, iphoneVariations);

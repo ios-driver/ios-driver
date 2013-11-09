@@ -31,7 +31,7 @@ public class Device {
   }
 
   public static Device iphone4S(SDKVersion version) {
-    return new Device(DeviceType.iphone, DeviceVariation.iPhoneRetina35, version);
+    return new Device(DeviceType.iphone, DeviceVariation.iPhoneRetina, version);
   }
 
   private void validate() {

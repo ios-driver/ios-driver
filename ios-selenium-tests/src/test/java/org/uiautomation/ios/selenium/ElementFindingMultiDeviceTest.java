@@ -57,12 +57,14 @@ public class ElementFindingMultiDeviceTest {
   public Object[][] createData1() {
     return new Object[][]{
 
-        {DeviceType.iphone, DeviceVariation.Regular},
-        {DeviceType.iphone, DeviceVariation.iPhoneRetina35},
-        {DeviceType.iphone, DeviceVariation.iPhoneRetina4},
+        {DeviceType.iphone, DeviceVariation.iPhone},
+        {DeviceType.iphone, DeviceVariation.iPhoneRetina},
+        {DeviceType.iphone, DeviceVariation.iPhoneRetina_4inch},
+        {DeviceType.iphone, DeviceVariation.iPhoneRetina_4inch_64bit},
 
-        {DeviceType.ipad, DeviceVariation.Regular},
+        {DeviceType.ipad, DeviceVariation.iPad},
         {DeviceType.ipad, DeviceVariation.iPadRetina},
+        {DeviceType.ipad, DeviceVariation.iPadRetina_64bit},
     };
   }
 

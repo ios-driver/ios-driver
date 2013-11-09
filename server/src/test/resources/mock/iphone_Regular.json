@@ -70,6 +70,6 @@
   "systemName": "iPhone OS",
   "takesElementScreenshot": false,
   "takesScreenshot": true,
-  "variation": "Regular",
+  "variation": "iPhone",
   "version": "6.0"
 }

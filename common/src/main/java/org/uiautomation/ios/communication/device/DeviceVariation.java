@@ -17,16 +17,89 @@ package org.uiautomation.ios.communication.device;
 import org.openqa.selenium.WebDriverException;
 
 public enum DeviceVariation {
-  Regular, // iPhone or iPad.
-  iPhoneRetina35,
-  iPhoneRetina4,
-  iPhoneRetina4_64bit,
+  // Legacy names, preserved because they are client-visible as capability names.
+  Regular,  // iPhone or iPad.
+  Retina35, // iPhone retina 3.5".
+  Retina4,  // iPhone retina 4".
+  Retina,   // iPad retina.
+  iPad25,   // iPad Mini.
+
+  // Normalized names. The naming scheme is accretive; as new devices are introduced, the corresponding names encode
+  // relevant distinguishing characteristics relative to the existing set of devices at the time of release.
+  iPhone,
+  iPhoneRetina,
+  iPhoneRetina_4inch,
+  iPhoneRetina_4inch_64bit,
+
+  iPad,
   iPadRetina,
-  iPadRetina_64bit,
-  iPad25; // iPad mini.
-  
-  public static DeviceVariation getDefault() {
-    return Regular;
+  iPadRetina_64bit;
+
+  public static DeviceVariation normalize(DeviceType deviceType, DeviceVariation deviceVariation) {
+    switch (deviceVariation) {
+      case Regular:
+        switch (deviceType) {
+          case iphone:
+            return iPhone;
+          case ipad:
+            return iPad;
+        }
+      case Retina35:
+        return iPhoneRetina;
+      case Retina4:
+        return iPhoneRetina_4inch;
+      case Retina:
+        return iPadRetina;
+      case iPad25:
+        return iPad;
+      default:
+        return deviceVariation;
+    }
+  }
+
+  public static String deviceString(DeviceType deviceType, DeviceVariation deviceVariation) {
+    String result;
+    boolean mismatch;
+
+    switch (normalize(deviceType, deviceVariation)) {
+      case iPhone:
+        result = "iPhone";
+        mismatch = (deviceType != DeviceType.iphone);
+        break;
+      case iPhoneRetina:
+        result = "iPhone Retina (3.5-inch)";
+        mismatch = (deviceType != DeviceType.iphone);
+        break;
+      case iPhoneRetina_4inch:
+        result = "iPhone Retina (4-inch)";
+        mismatch = (deviceType != DeviceType.iphone);
+        break;
+      case iPhoneRetina_4inch_64bit:
+        result = "iPhone Retina (4-inch 64-bit)";
+        mismatch = (deviceType != DeviceType.iphone);
+        break;
+      case iPad:
+        result = "iPad";
+        mismatch = (deviceType != DeviceType.ipad);
+        break;
+      case iPadRetina:
+        result = "iPad Retina";
+        mismatch = (deviceType != DeviceType.ipad);
+        break;
+      case iPadRetina_64bit:
+        result = "iPad Retina (64-bit)";
+        mismatch = (deviceType != DeviceType.ipad);
+        break;
+      default:
+        result = "";
+        mismatch = true;
+    }
+
+    if (mismatch) {
+      throw new WebDriverException(String.format("Unsupported device type/variation %s/%s",
+          deviceType.name(), deviceVariation.name()));
+    }
+    return result;
   }
 
   public static DeviceVariation valueOf(Object o) {

@@ -29,7 +29,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -234,28 +233,17 @@ public class SimulatorSettings {
   }
 
   private String getSimulateDeviceValue(DeviceType device, DeviceVariation variation, String desiredSDKVersion) {
-    switch (device) {
-      case iphone:
-        return getIphoneString(variation, desiredSDKVersion);
-      case ipad:
-        return getIpadString(variation);
-      default:
-        throw new WebDriverException(
-            device + " - " + variation + " doesn't map to a supported apple device.");
+    if (device == DeviceType.iphone && DeviceVariation.normalize(device, variation) == DeviceVariation.iPhone) {
+      IOSVersion desired = new IOSVersion(desiredSDKVersion);
+      String supportDropped = "7.0";
+      if (desired.isGreaterOrEqualTo(supportDropped)) {
+        log.warning(String.format(
+            "Non-retina iPhone not supported starting with SDK %s; substituting 3.5-inch retina iPhone",
+            supportDropped));
+        variation = DeviceVariation.iPhoneRetina;
+      }
     }
-  }
-
-  private String getIpadString(DeviceVariation variation) {
-    switch (variation) {
-      case Regular:
-        return "iPad";
-      case iPadRetina:
-        return "iPad Retina";
-      case iPadRetina_64bit:
-        return "iPad Retina (64-bit)";
-      default:
-        throw new WebDriverException(variation + " isn't supported for iPad.");
-    }
+    return DeviceVariation.deviceString(device, variation);
   }
 
   private JSONObject loadGlobalPreferencesTemplate() throws JSONException, IOException {
@@ -274,29 +262,6 @@ public class SimulatorSettings {
     res.put("AppleLanguages", languages);
     res.put("AppleLocale", locale);
     return res;
-  }
-
-  private String getIphoneString(DeviceVariation variation, String desiredSDKVersion) {
-    switch (variation) {
-      case Regular:
-        IOSVersion desired = new IOSVersion(desiredSDKVersion);
-        String supportDropped = "7.0";
-        if (desired.isGreaterOrEqualTo(supportDropped)) {
-          log.warning(String.format(
-              "Non-retina iPhone not supported starting with SDK %s; substituting 3.5-inch retina iPhone",
-              supportDropped));
-          return "iPhone Retina (3.5-inch)";
-        }
-        return "iPhone";
-      case iPhoneRetina35:
-        return "iPhone Retina (3.5-inch)";
-      case iPhoneRetina4:
-        return "iPhone Retina (4-inch)";
-      case iPhoneRetina4_64bit:
-        return "iPhone Retina (4-inch 64-bit)";
-      default:
-        throw new WebDriverException(variation + " isn't supported for iPhone.");
-    }
   }
 
   private File getGlobalPreferenceFile() {

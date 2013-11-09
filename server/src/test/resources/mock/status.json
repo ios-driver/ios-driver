@@ -209,7 +209,7 @@
           "de"
         ],
         "timeHack": false,
-        "variation": "Regular"
+        "variation": "iPhone"
       },
       {
         "CFBundleDevelopmentRegion": "English",
@@ -402,7 +402,7 @@
           "de"
         ],
         "timeHack": false,
-        "variation": "Regular"
+        "variation": "iPhone"
       }
     ]
   }

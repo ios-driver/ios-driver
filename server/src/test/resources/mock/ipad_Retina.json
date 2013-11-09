@@ -70,6 +70,6 @@
   "systemName": "iPhone OS",
   "takesElementScreenshot": false,
   "takesScreenshot": true,
-  "variation": "Retina",
+  "variation": "iPadRetina",
   "version": "6.0"
 }

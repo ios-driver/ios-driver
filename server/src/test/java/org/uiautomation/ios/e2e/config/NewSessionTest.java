@@ -307,11 +307,11 @@ public class NewSessionTest extends BaseIOSDriverTest {
   public Object[][] createData1() {
     return new Object[][]{
 
-        {DeviceType.iphone, DeviceVariation.Regular, 320, 480},
-        {DeviceType.iphone, DeviceVariation.iPhoneRetina35, 640, 960},
-        {DeviceType.iphone, DeviceVariation.iPhoneRetina4, 640, 1136},
-        {DeviceType.iphone, DeviceVariation.iPhoneRetina4_64bit, 640, 1136},
-        {DeviceType.ipad, DeviceVariation.Regular, 768, 1024},
+        {DeviceType.iphone, DeviceVariation.iPhone, 320, 480},
+        {DeviceType.iphone, DeviceVariation.iPhoneRetina, 640, 960},
+        {DeviceType.iphone, DeviceVariation.iPhoneRetina_4inch, 640, 1136},
+        {DeviceType.iphone, DeviceVariation.iPhoneRetina_4inch_64bit, 640, 1136},
+        {DeviceType.ipad, DeviceVariation.iPad, 768, 1024},
         {DeviceType.ipad, DeviceVariation.iPadRetina, 1536, 2048},
         {DeviceType.ipad, DeviceVariation.iPadRetina_64bit, 1536, 2048},
 
