@@ -147,20 +147,17 @@ public class CrashHandling {
     }
 
     driver = new RemoteWebDriver(getRemoteURL(), cap);
-
-    Assert.assertTrue("We can start a new test session", driver != null);
   }
 
   @Test
   public void isSimulatorCrashDetected() throws InterruptedException {
-
     WebElement crashButton = driver.findElement(By.name("Crash me!"));
 
     boolean crashExceptionThrown = false;
+    // kill simulator
+    ClassicCommands.killall("iPhone Simulator");
+    Thread.sleep(1000);
     try {
-      // kill simulator
-      ClassicCommands.killall("iPhone Simulator");
-      Thread.sleep(1000);
       // should throw an exception
       crashButton.click();
     } catch (Exception e) {
@@ -168,24 +165,21 @@ public class CrashHandling {
       Assert.assertTrue("Crash error contains Simulator as likely cause of problem. " + e.getMessage(), e.getMessage().contains("It appears like the Simulator process has crashed"));
     }
     Assert.assertTrue("Simulator crash detected.", crashExceptionThrown);
-
   }
 
   @Test
   public void canStartANewSessionAfterSimulatorCrash() throws InterruptedException {
-
     WebElement crashButton = driver.findElement(By.name("Crash me!"));
+    // kill simulator
+    ClassicCommands.killall("iPhone Simulator");
+    Thread.sleep(1000);
     try {
-      // kill simulator
-      ClassicCommands.killall("iPhone Simulator");
-      Thread.sleep(1000);
       // should throw an exception
       crashButton.click();
     } catch (Exception ignored) {
       // this is expected since we crashed the simulator
     }
     driver = new RemoteWebDriver(getRemoteURL(), cap);
-    Assert.assertTrue("We can start a new test session", driver != null);
   }
 
   @Test
@@ -204,17 +198,15 @@ public class CrashHandling {
       Assert.assertTrue("Crash error contains Instruments as likely cause of problem. " + e.getMessage(), e.getMessage().contains("Instruments"));
     }
     Assert.assertTrue("Instruments crash detected.", crashExceptionThrown);
-
   }
 
   @Test
   public void canStartANewSessionAfterInstrumentsCrash() throws InterruptedException {
-
     WebElement crashButton = driver.findElement(By.name("Crash me!"));
+    // kill instruments
+    ClassicCommands.killall("instruments");
+    Thread.sleep(1000);
     try {
-      // kill instruments
-      ClassicCommands.killall("instruments");
-      Thread.sleep(1000);
       // should throw an exception
       crashButton.click();
     } catch (Exception e) {

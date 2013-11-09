@@ -68,20 +68,18 @@ public class ClassicCommands {
   }
 
   public static void killall(String processName) {
-
     if (isRunning(processName)) {
-      List<String> s = new ArrayList<String>();
+      List<String> s = new ArrayList<>();
       s.add("killall");
       s.add(processName);
 
       Command com = new Command(s, false);
-      com.executeAndWait();
+      com.executeAndWait(true);
     }
-
   }
 
   public static File getXCodeInstall() {
-    List<String> cmd = new ArrayList<String>();
+    List<String> cmd = new ArrayList<>();
     cmd.add("/usr/bin/xcrun");
     cmd.add("-find");
     cmd.add("xcodebuild");
