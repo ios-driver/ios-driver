@@ -55,7 +55,6 @@ public class CrashHandling {
     cap.setCapability(IOSCapabilities.SIMULATOR, true);
 
     driver = new RemoteWebDriver(getRemoteURL(), cap);
-
   }
 
   @AfterMethod
@@ -79,8 +78,7 @@ public class CrashHandling {
 
   private URL getRemoteURL() {
     try {
-      URL remote = new URL("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub");
-      return remote;
+      return new URL("http://" + config.getHost() + ":" + config.getPort() + "/wd/hub");
     } catch (MalformedURLException e) {
       throw new RuntimeException(e);
     }
@@ -88,7 +86,6 @@ public class CrashHandling {
 
   @Test
   public void isAppCrashDetected() throws InterruptedException {
-
     WebElement crashButton = driver.findElement(By.name("Crash me!"));
 
     boolean crashExceptionThrown = false;
@@ -103,12 +100,10 @@ public class CrashHandling {
       Assert.assertTrue("Crash error contains the crash trace file details. " + e.getMessage(), e.getMessage().contains("The crash report can be found"));
     }
     Assert.assertTrue("App crash detected.", crashExceptionThrown);
-
   }
 
   @Test
   public void isExceptionThrownOnEveryActionAfterCrash() throws InterruptedException {
-
     WebElement crashButton = driver.findElement(By.name("Crash me!"));
     crashButton.click();
     // give instruments some time to realise there has been a crash and report it
@@ -117,7 +112,6 @@ public class CrashHandling {
     catchCrashException(crashButton);
     catchCrashException(crashButton);
     catchCrashException(crashButton);
-
   }
 
   private boolean catchCrashException(WebElement button) {
@@ -134,7 +128,6 @@ public class CrashHandling {
 
   @Test
   public void canStartANewSessionAfterAppCrash() throws InterruptedException {
-
     WebElement crashButton = driver.findElement(By.name("Crash me!"));
     try {
       crashButton.click();
@@ -214,30 +207,21 @@ public class CrashHandling {
     }
 
     driver = new RemoteWebDriver(getRemoteURL(), cap);
-
-    Assert.assertTrue("We can start a new test session", driver != null);
   }
 
+  @Test(enabled = false)
+  public void canHandleVeryLargeAmountsOfDataInTableViewWithoutCrashing() throws InterruptedException {
+    WebElement largeTableViewButton = driver.findElement(By.name("TableView 10000"));
+    try {
+      largeTableViewButton.click();
 
-    @Test(enabled = false)
-    public void canHandleVeryLargeAmountsOfDataInTableViewWithoutCrashing() throws InterruptedException {
+      ElementTree tree = IOSDriverAugmenter.augment(driver);
 
-        WebElement largeTableViewButton = driver.findElement(By.name("TableView 10000"));
-        try {
-            largeTableViewButton.click();
+      JSONObject json = tree.logElementTree(null, false);
 
-            ElementTree tree = IOSDriverAugmenter.augment(driver);
-
-            JSONObject json = tree.logElementTree(null, false);
-
-            Assert.assertNotNull("We can get the page source for a large tableview", json);
-
-
-        } catch (Exception e) {
-            Assert.fail("Exception caught while performing logElementTree on page with large TreeView. App crashed");
-        }
-
-
+      Assert.assertNotNull("We can get the page source for a large tableview", json);
+    } catch (Exception e) {
+        Assert.fail("Exception caught while performing logElementTree on page with large TreeView. App crashed");
     }
-
+  }
 }

@@ -25,7 +25,6 @@ public class ClassicCommands {
 
   private static final Logger log = Logger.getLogger(ClassicCommands.class.getName());
 
-
   /**
    * returns the version of the currently selected ( xcode-select -switch ) Xcode.
    * @return
@@ -43,7 +42,7 @@ public class ClassicCommands {
   }
 
   public static List<String> psgrep(String processName) {
-    List<String> s = new ArrayList<String>();
+    List<String> s = new ArrayList<>();
     s.add("ps");
     s.add("aux");
 
@@ -97,11 +96,10 @@ public class ClassicCommands {
     int index = path.indexOf(pattern);
     String res = path.substring(0, index + pattern.length());
     return new File(res);
-
   }
 
   public static File getAutomationTemplate() {
-    List<String> cmd = new ArrayList<String>();
+    List<String> cmd = new ArrayList<>();
     cmd.add("instruments");
     cmd.add("-s");
     Command c = new Command(cmd, false);
@@ -126,7 +124,7 @@ public class ClassicCommands {
   }
 
   public static List<String> getInstalledSDKs() {
-    List<String> c = new ArrayList<String>();
+    List<String> c = new ArrayList<>();
     c.add("xcodebuild");
     c.add("-showsdks");
     Command com = new Command(c, false);
@@ -141,14 +139,14 @@ public class ClassicCommands {
     List<String> sdks = getInstalledSDKs();
     return sdks.get(sdks.size() - 1);
   }
-
 }
 
 class ShowSDKsPasrer implements CommandOutputListener {
 
-  private List<String> sdks = new ArrayList<String>();
+  private static final String pattern = "iphonesimulator";
+
+  private List<String> sdks = new ArrayList<>();
   private boolean ok = true;
-  private final String pattern = "iphonesimulator";
 
   public void stdout(String log) {
     String sdk = extractSDK(log);
@@ -176,13 +174,12 @@ class ShowSDKsPasrer implements CommandOutputListener {
     }
     return sdks;
   }
-
 }
 
 class Grep implements CommandOutputListener {
 
   private final String pattern;
-  private final List<String> matching = new ArrayList<String>();
+  private final List<String> matching = new ArrayList<>();
 
   public Grep(String pattern) {
     this.pattern = pattern;
@@ -203,5 +200,4 @@ class Grep implements CommandOutputListener {
       matching.add(log);
     }
   }
-
 }
