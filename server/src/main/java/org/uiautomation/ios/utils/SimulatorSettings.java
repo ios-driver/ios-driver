@@ -45,7 +45,6 @@ public class SimulatorSettings {
     this.globalPreferencePlist = getGlobalPreferenceFile();
   }
 
-
   public void setLocationPreference(boolean authorized, String bundleId) {
     File f = new File(contentAndSettingsFolder + "/Library/Caches/locationd/", "clients.plist");
 
@@ -168,9 +167,8 @@ public class SimulatorSettings {
 
   private boolean deleteRecursive(File folder) {
     if (folder.isDirectory()) {
-      String[] children = folder.list();
-      for (int i = 0; i < children.length; i++) {
-        File delMe = new File(folder, children[i]);
+      for (String child : folder.list()) {
+        File delMe = new File(folder, child);
         boolean success = deleteRecursive(delMe);
         if (!success) {
           System.err.println("cannot delete " + delMe);
@@ -213,8 +211,7 @@ public class SimulatorSettings {
     StringWriter writer = new StringWriter();
     IOUtils.copy(is, writer, "UTF-8");
     String content = writer.toString();
-    JSONObject config = new JSONObject(content);
-    return config;
+    return new JSONObject(content);
   }
 
   private JSONObject getPreferenceFile(String locale, String language)
@@ -243,8 +240,7 @@ public class SimulatorSettings {
 
   private File getGlobalPreferenceFile() {
     File folder = new File(contentAndSettingsFolder + "/Library/Preferences/");
-    File global = new File(folder, ".GlobalPreferences.plist");
-    return global;
+    return new File(folder, ".GlobalPreferences.plist");
   }
 
   // TODO use plist utils.
@@ -253,7 +249,7 @@ public class SimulatorSettings {
     if (destination.exists()) {
       // to be on the safe side. If the emulator already runs, it won't work
       // anyway.
-      throw new WebDriverException(globalPreferencePlist + "already exists.Cannot create it.");
+      throw new WebDriverException(globalPreferencePlist + " already exists. Cannot create it.");
     }
 
     // make sure the folder is ready for the plist file
@@ -272,7 +268,7 @@ public class SimulatorSettings {
     command.add(from.getAbsolutePath());
 
     ProcessBuilder b = new ProcessBuilder(command);
-    int i = -1;
+    int i;
     try {
       Process p = b.start();
       i = p.waitFor();
@@ -280,9 +276,8 @@ public class SimulatorSettings {
       throw new WebDriverException("failed to run " + command.toString(), e);
     }
     if (i != 0) {
-      throw new WebDriverException("convertion to binary pfile failed.exitCode=" + i);
+      throw new WebDriverException("conversion to binary pfile failed. exitCode=" + i);
     }
-
   }
 
   private File createTmpFile(JSONObject content) throws IOException, JSONException {
@@ -298,6 +293,5 @@ public class SimulatorSettings {
     if (!f.exists() || !f.canExecute()) {
       throw new WebDriverException("Cannot access " + PLUTIL);
     }
-
   }
 }

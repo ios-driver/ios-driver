@@ -46,16 +46,16 @@ import java.util.logging.Logger;
 public class IOSServer {
 
   public static final String DRIVER = IOSServerManager.class.getName();
-  public static final boolean debugMode = true;
   private static final Logger log = Logger.getLogger(IOSServer.class.getName());
+
   private Server server;
   private IOSServerConfiguration options;
   private IOSServerManager driver;
   private FolderMonitor folderMonitor;
+  private SelfRegisteringRemote selfRegisteringRemote;
 
   public IOSServer(IOSServerConfiguration options) {
     init(options);
-
   }
 
   public IOSServer(String[] args) {
@@ -63,18 +63,23 @@ public class IOSServer {
   }
 
   public static void main(String[] args) throws Exception {
-    IOSServer server = new IOSServer(args);
-    server.start();
-    IOSServerConfiguration options = server.getOptions();
-    IOSServerManager driver = server.getDriver();
-  }
+    final IOSServer server = new IOSServer(args);
 
-  public IOSServerConfiguration getOptions() {
-    return options;
-  }
+    Runtime.getRuntime().addShutdownHook(new Thread() {
+      public void run() {
+        try {
+          server.stop();
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+    });
 
-  public IOSServerManager getDriver() {
-    return driver;
+    try {
+      server.start();
+    } catch (Exception e) {
+      Runtime.getRuntime().exit(1);
+    }
   }
 
   private void init(String[] args) {
@@ -87,33 +92,16 @@ public class IOSServer {
     this.options = options;
     Configuration.BETA_FEATURE = options.isBeta();
     Configuration.SIMULATORS_ENABLED = options.hasSimulators();
-    server = new Server(new InetSocketAddress("0.0.0.0", options.getPort()));
+    initDriver();
+    initServer();
+  }
 
-    ServletContextHandler wd = new ServletContextHandler(server, "/wd/hub", true, false);
-    wd.addServlet(CURLBasedCommunicationChannel.UIAScriptServlet.class, "/uiascriptproxy/*");
-    wd.addServlet(IOSServlet.class, "/*");
-    wd.addServlet(ResourceServlet.class, "/resources/*");
-    wd.addServlet(DeviceServlet.class, "/devices/*");
-    wd.addServlet(ApplicationsServlet.class, "/applications/*");
-    wd.addServlet(CapabilitiesServlet.class, "/capabilities/*");
-    wd.addServlet(ArchiveServlet.class, "/archive/*");
-    wd.getServletContext().getContextHandler().setMaxFormContentSize(500000);
-
-    ServletContextHandler statics = new ServletContextHandler(server, "/static", true, false);
-    statics.addServlet(StaticResourceServlet.class, "/*");
-
-    ServletContextHandler extra = new ServletContextHandler(server, "/", true, false);
-    extra.addServlet(IDEServlet.class, "/inspector/*");
-
-    HandlerList handlers = new HandlerList();
-    handlers.setHandlers(new Handler[]{wd, statics, extra});
-    server.setHandler(handlers);
-
+  private void initDriver() {
     driver = new IOSServerManager(options);
     for (String app : this.options.getSupportedApps()) {
       File appFile = new File(app);
       if (Configuration.BETA_FEATURE && !appFile.exists()) {
-        // if an url download and extract it 
+        // if an url download and extract it
         try {
           appFile = ZipUtils.extractAppFromURL(app);
         } catch (IOException ignore) {
@@ -126,20 +114,17 @@ public class IOSServer {
       driver.addSupportedApplication(APPIOSApplication.createFrom(appFile));
     }
 
-    startFolderMonitor();
-
     StringBuilder b = new StringBuilder();
-    b.append("\nBeta features enabled ( enabled by -beta flag ): " + Configuration.BETA_FEATURE);
-    b.append(
-        "\nSimulator enabled ( enabled by -simulators flag): " + Configuration.SIMULATORS_ENABLED);
-    b.append("\nInspector: http://0.0.0.0:" + options.getPort() + "/inspector/");
-    b.append("\ntests can access the server at http://0.0.0.0:" + options.getPort() + "/wd/hub");
-    b.append("\nserver status: http://0.0.0.0:" + options.getPort() + "/wd/hub/status");
-    b.append("\nConnected devices: http://0.0.0.0:" + options.getPort() + "/wd/hub/devices/all");
-    b.append("\nApplications: http://0.0.0.0:" + options.getPort() + "/wd/hub/applications/all");
-    b.append("\nCapabilities: http://0.0.0.0:" + options.getPort() + "/wd/hub/capabilities/all");
-    b.append("\nMonitoring '" + options.getAppFolderToMonitor() + "' for new applications");
-    b.append("\nArchived apps " + driver.getApplicationStore().getFolder().getAbsolutePath());
+    b.append(String.format("\nBeta features enabled ( enabled by -beta flag ): %b", Configuration.BETA_FEATURE));
+    b.append(String.format("\nSimulator enabled ( enabled by -simulators flag): %b", Configuration.SIMULATORS_ENABLED));
+    b.append(String.format("\nInspector: http://0.0.0.0:%d/inspector/", options.getPort()));
+    b.append(String.format("\nTests can access the server at http://0.0.0.0:%d/wd/hub", options.getPort()));
+    b.append(String.format("\nServer status: http://0.0.0.0:%d/wd/hub/status", options.getPort()));
+    b.append(String.format("\nConnected devices: http://0.0.0.0:%d/wd/hub/devices/all", options.getPort()));
+    b.append(String.format("\nApplications: http://0.0.0.0:%d/wd/hub/applications/all", options.getPort()));
+    b.append(String.format("\nCapabilities: http://0.0.0.0:%d/wd/hub/capabilities/all", options.getPort()));
+    b.append(String.format("\nMonitoring '%s' for new applications", options.getAppFolderToMonitor()));
+    b.append(String.format("\nArchived apps: %s", driver.getApplicationStore().getFolder().getAbsolutePath()));
 
     if (Configuration.SIMULATORS_ENABLED) {
       addSimulatorDetails(b);
@@ -147,38 +132,23 @@ public class IOSServer {
 
     b.append("\n\nApplications :\n--------------- \n");
     for (APPIOSApplication app : driver.getSupportedApplications()) {
-      b.append("\tCFBundleName=" + (app.getMetadata(IOSCapabilities.BUNDLE_NAME).isEmpty() ? app
-          .getMetadata(IOSCapabilities.BUNDLE_DISPLAY_NAME) : app
-                                        .getMetadata(IOSCapabilities.BUNDLE_NAME)));
+      String name = app.getMetadata(IOSCapabilities.BUNDLE_NAME).isEmpty()
+          ? app.getMetadata(IOSCapabilities.BUNDLE_DISPLAY_NAME)
+          : app.getMetadata(IOSCapabilities.BUNDLE_NAME);
+      b.append(String.format("\tCFBundleName=%s", name));
       String version = app.getMetadata(IOSCapabilities.BUNDLE_VERSION);
       if (version != null && !version.isEmpty()) {
-        b.append(",CFBundleVersion=" + version);
+        b.append(String.format(",CFBundleVersion=%s", version));
       }
       b.append("\n");
     }
     log.info(b.toString());
-
-    startHubRegistration();
-
-    wd.setAttribute(DRIVER, driver);
-    extra.setAttribute(DRIVER, driver);
-
-    Runtime.getRuntime().addShutdownHook(new Thread() {
-      public void run() {
-        try {
-          server.stop();
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
-    });
-
   }
 
   private void addSimulatorDetails(StringBuilder b) {
     File xcodeInstall = driver.getHostInfo().getXCodeInstall();
-    b.append("\nusing xcode install : " + driver.getHostInfo().getXCodeInstall());
-    b.append("\nusing IOS version " + driver.getHostInfo().getSDK());
+    b.append(String.format("\nusing xcode install : %s", driver.getHostInfo().getXCodeInstall().getPath()));
+    b.append(String.format("\nusing IOS version %s", driver.getHostInfo().getSDK()));
 
     boolean safari = false;
     // automatically add safari for SDK 6.0 and above.
@@ -197,6 +167,32 @@ public class IOSServer {
     }
   }
 
+  private void initServer() {
+    server = new Server(new InetSocketAddress("0.0.0.0", options.getPort()));
+
+    ServletContextHandler wd = new ServletContextHandler(server, "/wd/hub", true, false);
+    wd.addServlet(CURLBasedCommunicationChannel.UIAScriptServlet.class, "/uiascriptproxy/*");
+    wd.addServlet(IOSServlet.class, "/*");
+    wd.addServlet(ResourceServlet.class, "/resources/*");
+    wd.addServlet(DeviceServlet.class, "/devices/*");
+    wd.addServlet(ApplicationsServlet.class, "/applications/*");
+    wd.addServlet(CapabilitiesServlet.class, "/capabilities/*");
+    wd.addServlet(ArchiveServlet.class, "/archive/*");
+    wd.getServletContext().getContextHandler().setMaxFormContentSize(500000);
+    wd.setAttribute(DRIVER, driver);
+
+    ServletContextHandler statics = new ServletContextHandler(server, "/static", true, false);
+    statics.addServlet(StaticResourceServlet.class, "/*");
+
+    ServletContextHandler extra = new ServletContextHandler(server, "/", true, false);
+    extra.addServlet(IDEServlet.class, "/inspector/*");
+    extra.setAttribute(DRIVER, driver);
+
+    HandlerList handlers = new HandlerList();
+    handlers.setHandlers(new Handler[]{wd, statics, extra});
+    server.setHandler(handlers);
+  }
+
   // TODO freynaud - if xcode change, the safari copy should be wiped out.
   private APPIOSApplication copyOfSafari(File xcodeInstall, String sdk) {
     File copy = new File(System.getProperty("user.home")+"/.ios-driver/safariCopies", "safari-"+sdk+".app");
@@ -213,15 +209,19 @@ public class IOSServer {
     return new APPIOSApplication(copy.getAbsolutePath());
   }
 
-  private boolean safariCopyExist(String sdk) {
-    return false;
+  public void start() throws Exception {
+    if (!server.isRunning()) {
+      server.start();
+    }
+    startFolderMonitor();
+    startHubRegistration();
   }
 
   private void startFolderMonitor() {
     if (options.getAppFolderToMonitor() != null) {
       try {
         folderMonitor = new FolderMonitor(options, driver);
-        new Thread(folderMonitor).start();
+        folderMonitor.start();
       } catch (IOException e) {
         log.warning("Couldn't monitor the given folder: " + options.getAppFolderToMonitor());
       }
@@ -230,24 +230,19 @@ public class IOSServer {
 
   private void startHubRegistration() {
     if (options.getRegistrationURL() != null) {
-      SelfRegisteringRemote selfRegisteringRemote = new SelfRegisteringRemote(options, driver);
-      selfRegisteringRemote.startRegistrationProcess();
+      selfRegisteringRemote = new SelfRegisteringRemote(options, driver);
+      selfRegisteringRemote.start();
     }
-  }
-
-  public void start() throws Exception {
-    if (!server.isRunning()) {
-      server.start();
-    }
-
   }
 
   public void stop() throws Exception {
+    if (selfRegisteringRemote != null) {
+      selfRegisteringRemote.stop();
+    }
     if (folderMonitor != null) {
       folderMonitor.stop();
     }
     driver.stop();
     server.stop();
   }
-
 }

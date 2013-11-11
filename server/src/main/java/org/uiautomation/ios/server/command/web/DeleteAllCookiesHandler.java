@@ -31,7 +31,6 @@ public class DeleteAllCookiesHandler extends BaseWebCommandHandler {
     super(driver, request);
   }
 
-
   @Override
   public Response handle() throws Exception {
 

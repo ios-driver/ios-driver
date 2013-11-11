@@ -53,25 +53,25 @@ public class IDEMainView implements View {
     List<String> cssList = new ArrayList<String>();
     cssList.add(getResource("inspector/css/inspector.css"));
     cssList.add(getResource("inspector/css/ide.css"));
-    cssList.add(getResource("inspector/thrid_party/jquery.layout.css"));
-    cssList.add(getResource("inspector/thrid_party/jquery-ui-1.10.3.custom/css/smoothness/jquery-ui-1.10.3.custom.min.css"));
+    cssList.add(getResource("inspector/third_party/jquery.layout.css"));
+    cssList.add(getResource("inspector/third_party/jquery-ui-1.10.3.custom/css/smoothness/jquery-ui-1.10.3.custom.min.css"));
 
     map.put("cssList", cssList);
 
     List<String> jsList = new ArrayList<String>();
 
-    jsList.add(getResource("inspector/thrid_party/jquery-ui-1.10.3.custom/js/jquery-1.9.1.js"));
-    jsList.add(getResource("inspector/thrid_party/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js"));
+    jsList.add(getResource("inspector/third_party/jquery-ui-1.10.3.custom/js/jquery-1.9.1.js"));
+    jsList.add(getResource("inspector/third_party/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js"));
     jsList.add(getResource("inspector/layout.js"));
-    jsList.add(getResource("inspector/thrid_party/jquery.jstree.js"));
-    jsList.add(getResource("inspector/thrid_party/jquery.xpath.js"));
+    jsList.add(getResource("inspector/third_party/jquery.jstree.js"));
+    jsList.add(getResource("inspector/third_party/jquery.xpath.js"));
     jsList.add(getResource("inspector/prettify.js"));
     jsList.add(getResource("inspector/Logger.js"));
     jsList.add(getResource("inspector/Recorder.js"));
     jsList.add(getResource("inspector/inspector.js"));
     jsList.add(getResource("inspector/ide.js"));
     jsList.add(getResource("uiactions.js"));
-    jsList.add(getResource("inspector/thrid_party/jquery.layout1.3.js"));
+    jsList.add(getResource("inspector/third_party/jquery.layout1.3.js"));
 
     map.put("jsList", jsList);
 

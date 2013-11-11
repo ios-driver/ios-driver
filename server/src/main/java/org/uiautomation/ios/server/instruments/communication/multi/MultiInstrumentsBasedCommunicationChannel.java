@@ -40,7 +40,6 @@ public class MultiInstrumentsBasedCommunicationChannel extends BaseCommunication
     this.instruments = instruments;
   }
 
-
   @Override
   public UIAScriptResponse executeCommand(UIAScriptRequest request) {
     StringBuilder b = new StringBuilder();
@@ -55,7 +54,6 @@ public class MultiInstrumentsBasedCommunicationChannel extends BaseCommunication
     //instruments.stopApp();
   }
 
-
   private void sendNextCommand(UIAScriptRequest r) {
     try {
       String
@@ -69,7 +67,6 @@ public class MultiInstrumentsBasedCommunicationChannel extends BaseCommunication
       e.printStackTrace();
     }
   }
-
 
   public void handle(String message) {
     //System.out.println("MESSAGE : " + message);
@@ -88,10 +85,7 @@ public class MultiInstrumentsBasedCommunicationChannel extends BaseCommunication
     }
   }
 
-
   public void log(String message) {
     System.out.println(message);
   }
-
-
 }

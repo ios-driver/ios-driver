@@ -26,7 +26,6 @@ public class ForwardHandler extends BaseWebCommandHandler {
 
   public ForwardHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
-
   }
 
   @Override
@@ -58,5 +57,4 @@ public class ForwardHandler extends BaseWebCommandHandler {
         + ".true = UIAutomation native events will be used to enter click the forward arrow (slow) , Web =  WebKit remote debugging will be used.Faster.");
     return desc;
   }
-
 }

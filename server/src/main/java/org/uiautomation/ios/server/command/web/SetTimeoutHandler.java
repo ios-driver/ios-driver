@@ -57,5 +57,4 @@ public class SetTimeoutHandler extends BaseWebCommandHandler {
   public JSONObject configurationDescription() throws JSONException {
     return new JSONObject();
   }
-
 }
