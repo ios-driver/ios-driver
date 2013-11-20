@@ -160,7 +160,8 @@ public class SimulatorSettings {
    * update the preference to have the simulator start in the correct more ( ie retina vs normal,
    * iphone screen size ).
    */
-  public void setVariation(DeviceType device, DeviceVariation variation, String desiredSDKVersion) {
+  public void setVariation(DeviceType device, DeviceVariation variation, String desiredSDKVersion)
+      throws WebDriverException {
     String value = getSimulateDeviceValue(device, variation, desiredSDKVersion);
     setDefaultSimulatorPreference("SimulateDevice", value);
   }
@@ -232,15 +233,14 @@ public class SimulatorSettings {
     return getContentAndSettingsFolder().exists();
   }
 
-  private String getSimulateDeviceValue(DeviceType device, DeviceVariation variation, String desiredSDKVersion) {
+  private String getSimulateDeviceValue(DeviceType device, DeviceVariation variation, String desiredSDKVersion)
+      throws WebDriverException {
     if (device == DeviceType.iphone && DeviceVariation.normalize(device, variation) == DeviceVariation.iPhone) {
       IOSVersion desired = new IOSVersion(desiredSDKVersion);
       String supportDropped = "7.0";
       if (desired.isGreaterOrEqualTo(supportDropped)) {
-        log.warning(String.format(
-            "Non-retina iPhone not supported starting with SDK %s; substituting 3.5-inch retina iPhone",
+        throw new WebDriverException(String.format("Non-retina iPhone not supported starting with SDK %s",
             supportDropped));
-        variation = DeviceVariation.iPhoneRetina;
       }
     }
     return DeviceVariation.deviceString(device, variation);
