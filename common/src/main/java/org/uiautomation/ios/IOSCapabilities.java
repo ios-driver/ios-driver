@@ -30,7 +30,7 @@ import java.util.*;
 
 public class IOSCapabilities extends DesiredCapabilities {
 
-  // UIAutomation properties called from instuments
+  // UIAutomation properties called from instruments
   // UIAAplication.bundleID();
   // UIATarget.systemName();
   public static final String UI_SYSTEM_NAME = "systemName";
@@ -293,7 +293,7 @@ public class IOSCapabilities extends DesiredCapabilities {
       }
       return res;
     }
-    throw new ClassCastException("expected collection of string, got " + o.getClass());
+    throw new ClassCastException("Expected collection of string, got " + o.getClass());
   }
 
   public List<String> getSupportedLanguages() {
@@ -315,7 +315,7 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   public void setSupportedDevices(List<DeviceType> devices) {
     if (devices.isEmpty()) {
-      throw new WebDriverException("your app need to support at least 1  device.");
+      throw new WebDriverException("Your app needs to support at least 1 device.");
     }
     setCapability(SUPPORTED_DEVICES, devices);
   }

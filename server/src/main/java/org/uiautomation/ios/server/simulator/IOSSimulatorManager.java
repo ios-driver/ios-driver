@@ -179,7 +179,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
 
   @Override
   public void install(APPIOSApplication aut) {
-    //no-op instruments installs automatically for simualtor.
+    //no-op instruments installs automatically for simulator.
   }
 
   @Override

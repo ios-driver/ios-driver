@@ -91,7 +91,7 @@ public class InstrumentsApple implements Instruments {
     channel = new CURLBasedCommunicationChannel(sessionId);
 
     screenshotService = new InstrumentsAppleScreenshotService(this, sessionId);
-    deviceManager = new IOSSimulatorManager(caps,this);
+    deviceManager = new IOSSimulatorManager(caps, this);
     
     safariFolder = APPIOSApplication.findSafariLocation(ClassicCommands.getXCodeInstall(), desiredSDKVersion);
   }
