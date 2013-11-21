@@ -22,7 +22,6 @@ import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.command.uiautomation.NewSessionNHandler;
-import org.uiautomation.ios.server.utils.IOSVersion;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -235,13 +234,10 @@ public class SimulatorSettings {
 
   private String getSimulateDeviceValue(DeviceType device, DeviceVariation variation, String desiredSDKVersion)
       throws WebDriverException {
-    if (device == DeviceType.iphone && DeviceVariation.normalize(device, variation) == DeviceVariation.iPhone) {
-      IOSVersion desired = new IOSVersion(desiredSDKVersion);
-      String supportDropped = "7.0";
-      if (desired.isGreaterOrEqualTo(supportDropped)) {
-        throw new WebDriverException(String.format("Non-retina iPhone not supported starting with SDK %s",
-            supportDropped));
-      }
+    if (!DeviceVariation.compatibleWithSDKVersion(device, variation, desiredSDKVersion)) {
+      throw new WebDriverException(String.format("%s incompatible with SDK %s",
+          DeviceVariation.deviceString(device, variation),
+          desiredSDKVersion));
     }
     return DeviceVariation.deviceString(device, variation);
   }

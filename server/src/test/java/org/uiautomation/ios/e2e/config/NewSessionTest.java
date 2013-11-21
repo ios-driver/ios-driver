@@ -29,8 +29,8 @@ import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
-import org.uiautomation.ios.server.utils.IOSVersion;
 import org.uiautomation.ios.utils.ClassicCommands;
+import org.uiautomation.ios.utils.IOSVersion;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

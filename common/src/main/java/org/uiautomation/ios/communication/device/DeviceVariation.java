@@ -15,6 +15,7 @@
 package org.uiautomation.ios.communication.device;
 
 import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.utils.IOSVersion;
 
 public enum DeviceVariation {
   // Legacy names, preserved because they are client-visible as capability names.
@@ -55,6 +56,29 @@ public enum DeviceVariation {
       default:
         return deviceVariation;
     }
+  }
+
+  public static boolean compatibleWithSDKVersion(DeviceType device, DeviceVariation deviceVariation,
+                                                 String sdkVersion) {
+    deviceVariation = DeviceVariation.normalize(device, deviceVariation);
+    boolean isSdk7OrNewer = (new IOSVersion(sdkVersion)).isGreaterOrEqualTo("7.0");
+    switch (device) {
+      case iphone:
+        switch (deviceVariation) {
+          case iPhone:
+            return !isSdk7OrNewer;
+          case iPhoneRetina_4inch_64bit:
+            return isSdk7OrNewer;
+        }
+        break;
+      case ipad:
+        switch (deviceVariation) {
+          case iPadRetina_64bit:
+            return isSdk7OrNewer;
+        }
+        break;
+    }
+    return true;
   }
 
   public static String deviceString(DeviceType deviceType, DeviceVariation deviceVariation) {

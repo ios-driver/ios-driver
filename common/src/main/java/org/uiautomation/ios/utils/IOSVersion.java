@@ -12,7 +12,7 @@
  * the License.
  */
 
-package org.uiautomation.ios.server.utils;
+package org.uiautomation.ios.utils;
 
 public class IOSVersion {
 
@@ -25,7 +25,7 @@ public class IOSVersion {
   private int compare(String other) {
     String[] piecesMe = version.split("\\.");
     String[] piecesOther = other.split("\\.");
-    int i = 0; // left has more weigth= starting at 0
+    int i = 0; // left has more weight= starting at 0
     // check for the first int no equal.
     while (i < piecesMe.length && i < piecesOther.length && piecesMe[i].equals(piecesOther[i])) {
       i++;

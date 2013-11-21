@@ -12,7 +12,7 @@
  * the License.
  */
 
-package org.uiautomation.ios.server.utils;
+package org.uiautomation.ios.utils;
 
 import org.junit.Assert;
 import org.testng.annotations.Test;

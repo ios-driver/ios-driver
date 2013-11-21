@@ -18,7 +18,7 @@ import org.openqa.selenium.*;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.server.InstrumentsBackedNativeIOSDriver;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.server.utils.IOSVersion;
+import org.uiautomation.ios.utils.IOSVersion;
 import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
 import org.uiautomation.ios.wkrdp.internal.AlertDetector;
 

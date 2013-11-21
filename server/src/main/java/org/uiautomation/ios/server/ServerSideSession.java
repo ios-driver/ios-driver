@@ -27,10 +27,10 @@ import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
 import org.uiautomation.ios.server.services.IOSDualDriver;
-import org.uiautomation.ios.server.utils.IOSVersion;
 import org.uiautomation.ios.server.utils.ZipUtils;
 import org.uiautomation.ios.utils.ApplicationCrashDetails;
 import org.uiautomation.ios.utils.ClassicCommands;
+import org.uiautomation.ios.utils.IOSVersion;
 
 import java.io.File;
 import java.net.MalformedURLException;

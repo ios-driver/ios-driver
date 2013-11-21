@@ -32,11 +32,7 @@ import org.uiautomation.ios.server.instruments.communication.curl.CURLBasedCommu
 import org.uiautomation.ios.server.services.Instruments;
 import org.uiautomation.ios.server.services.InstrumentsAppleScreenshotService;
 import org.uiautomation.ios.server.services.TakeScreenshotService;
-import org.uiautomation.ios.server.utils.IOSVersion;
-import org.uiautomation.ios.utils.ApplicationCrashListener;
-import org.uiautomation.ios.utils.ClassicCommands;
-import org.uiautomation.ios.utils.Command;
-import org.uiautomation.ios.utils.ScriptHelper;
+import org.uiautomation.ios.utils.*;
 
 import java.io.File;
 import java.io.IOException;
