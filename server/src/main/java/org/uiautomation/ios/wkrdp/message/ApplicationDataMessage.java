@@ -35,7 +35,7 @@ public class ApplicationDataMessage extends BaseIOSWebKitMessage {
     byte[] bytes = Base64.decodeBase64(encoded);
     String s = new String(bytes);
     message = new JSONObject(s);
-    log.fine("got : " + rawMessage + "\n\tContent :" + message.toString());
+    log.finest("got : " + rawMessage + "\n\tContent :" + message.toString());
   }
 
   public JSONObject getMessage() {
