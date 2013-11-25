@@ -14,6 +14,7 @@
 package org.uiautomation.ios.utils;
 
 import com.google.common.collect.ImmutableList;
+
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -163,6 +164,16 @@ public class SimulatorSettings {
       throws WebDriverException {
     String value = getSimulateDeviceValue(device, variation, desiredSDKVersion);
     setDefaultSimulatorPreference("SimulateDevice", value);
+  }
+  
+  public void setSimulatorScale(String scale) {
+    if (scale != null) {
+      // error check scale value
+      float fScale = Float.parseFloat(scale);
+      if (fScale <= 0)
+        throw new WebDriverException("invalid simulator scale: " + scale);
+      setDefaultSimulatorPreference("SimulatorWindowLastScale", scale);
+    }
   }
 
   /**

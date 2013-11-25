@@ -146,5 +146,8 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
     // no-op
   }
 
-
+  @Override
+  public void setSimulatorScale(String scale) {
+    // not-applicable
+  }
 }

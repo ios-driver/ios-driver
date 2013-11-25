@@ -197,4 +197,9 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     simulatorSettings.resetContentAndSettings();
 
   }
+
+  @Override
+  public void setSimulatorScale(String scale) {
+    simulatorSettings.setSimulatorScale(scale);
+  }
 }

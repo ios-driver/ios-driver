@@ -111,6 +111,7 @@ public class InstrumentsApple implements Instruments {
       moveMobileSafariAppOutOfInstallDir();
 
     deviceManager.setVariation(deviceType, variation);
+    deviceManager.setSimulatorScale(caps.getSimulatorScale());
     this.application.setDefaultDevice(deviceType, putDefaultFirst);
     deviceManager.setSDKVersion();
     deviceManager.resetContentAndSettings();

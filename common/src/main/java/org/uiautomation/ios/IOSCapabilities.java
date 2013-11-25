@@ -68,6 +68,7 @@ public class IOSCapabilities extends DesiredCapabilities {
   public static final String IOS_SEARCH_CONTEXT = "iosSearchContext";
   public static final String UUID = "uuid";
   public static final String IOS_TOUCH_SCREEN = "iosTouchScreen";
+  public static final String SIMULATOR_SCALE = "simulatorScale";
   // default selenium bindings for mobile safari
   public static final String BROWSER_NAME = "browserName";
   // TODO: make a parameter?
@@ -367,5 +368,9 @@ public class IOSCapabilities extends DesiredCapabilities {
       throw new WebDriverException(
           "The 'app' key is supposed to point to a URL." + app + " is not a URL.");
     }
+  }
+  
+  public String getSimulatorScale() {
+    return (String) getCapability(SIMULATOR_SCALE);
   }
 }
