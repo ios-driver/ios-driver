@@ -133,11 +133,14 @@ public class FolderMonitor implements Runnable {
   }
 
   private void addApplication(File file) {
+    APPIOSApplication app;
     if (isApp(file)) {
-      iosServerManager.addSupportedApplication(APPIOSApplication.createFrom(file));
+      app = APPIOSApplication.createFrom(file);
     } else {
-      iosServerManager.addSupportedApplication(new APPIOSApplication(file.getAbsolutePath()));
+      app = new APPIOSApplication(file.getAbsolutePath());
     }
+    iosServerManager.addSupportedApplication(app);
+    log.info("added:\n\t" + app.toBundleInfoString());
   }
 
   private boolean isApp(File file) {

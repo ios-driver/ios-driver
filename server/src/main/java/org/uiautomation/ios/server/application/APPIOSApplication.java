@@ -19,8 +19,8 @@ import com.dd.plist.NSArray;
 import com.dd.plist.NSDictionary;
 import com.dd.plist.NSNumber;
 import com.dd.plist.PropertyListParser;
-
 import com.google.common.collect.ImmutableList;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -81,6 +81,22 @@ public class APPIOSApplication {
 
   public String toString() {
     return ".APP:" + getApplicationPath().getAbsolutePath();
+  }
+  
+  /**
+   * @return a String of the form "CFBundleName={name},CFBundleVersion={version}"
+   */
+  public Object toBundleInfoString() {
+    StringBuilder info = new StringBuilder();
+    String name = getMetadata(IOSCapabilities.BUNDLE_NAME).isEmpty()
+            ? getMetadata(IOSCapabilities.BUNDLE_DISPLAY_NAME)
+            : getMetadata(IOSCapabilities.BUNDLE_NAME);
+    info.append(String.format("CFBundleName=%s", name));
+    String version = getMetadata(IOSCapabilities.BUNDLE_VERSION);
+    if (version != null && !version.isEmpty()) {
+      info.append(String.format(",CFBundleVersion=%s", version));
+    }
+    return info.toString();
   }
 
   /**

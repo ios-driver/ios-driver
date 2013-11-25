@@ -129,15 +129,7 @@ public class IOSServer {
 
     b.append("\n\nApplications :\n--------------- \n");
     for (APPIOSApplication app : driver.getSupportedApplications()) {
-      String name = app.getMetadata(IOSCapabilities.BUNDLE_NAME).isEmpty()
-          ? app.getMetadata(IOSCapabilities.BUNDLE_DISPLAY_NAME)
-          : app.getMetadata(IOSCapabilities.BUNDLE_NAME);
-      b.append(String.format("\tCFBundleName=%s", name));
-      String version = app.getMetadata(IOSCapabilities.BUNDLE_VERSION);
-      if (version != null && !version.isEmpty()) {
-        b.append(String.format(",CFBundleVersion=%s", version));
-      }
-      b.append("\n");
+      b.append("\t" + app.toBundleInfoString() + "\n");
     }
     log.info(b.toString());
   }
