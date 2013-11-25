@@ -78,7 +78,6 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   public IOSCapabilities() {
     setCapability(TIME_HACK, false);
-    initDefaultDeviceVariation();
     setCapability(SIMULATOR, true);
   }
 
@@ -98,7 +97,6 @@ public class IOSCapabilities extends DesiredCapabilities {
         setCapability(key, decode(value));
       }
     }
-    initDefaultDeviceVariation();
   }
 
   public IOSCapabilities(Map<String, ?> from) {
@@ -327,19 +325,6 @@ public class IOSCapabilities extends DesiredCapabilities {
       return null;
     } else {
       return o;
-    }
-  }
-
-  private void initDefaultDeviceVariation() {
-    if (getCapability(DEVICE) != null && getDeviceVariation() == null) {
-      switch (getDevice()) {
-        case iphone:
-          setDeviceVariation(DeviceVariation.iPhoneRetina);
-          break;
-        case ipad:
-          setDeviceVariation(DeviceVariation.iPad);
-          break;
-      }
     }
   }
 

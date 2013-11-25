@@ -89,16 +89,12 @@ public class ServerSideSession extends Session {
 
   private void updateCapabilitiesWithSensibleDefaults() {
     // update capabilities and put default values in the missing fields.
-    if (capabilities.getDeviceVariation() == null) {
-      capabilities.setDeviceVariation(DeviceVariation.Regular);
-    }
     capabilities.setBundleId(application.getBundleId());
     // TODO device.getSDK()
     if (capabilities.getSDKVersion() == null) {
       capabilities.setSDKVersion(ClassicCommands.getDefaultSDK());
     } else {
       String version = capabilities.getSDKVersion();
-
       if (!new IOSVersion(version).isGreaterOrEqualTo("5.0")) {
         throw new SessionNotCreatedException(
             version + " is too old. Only support SDK 5.0 and above.");
@@ -108,6 +104,12 @@ public class ServerSideSession extends Session {
             "Cannot start on version " + version + ".Installed: "
             + server.getHostInfo().getInstalledSDKs());
       }
+    }
+    if (capabilities.getDeviceVariation() == null) {
+      // use a variation that matches the SDK
+      String sdkVersion = capabilities.getSDKVersion();
+      capabilities.setDeviceVariation(DeviceVariation.getCompatibleVersion(
+              capabilities.getDevice(), sdkVersion));
     }
   }
 

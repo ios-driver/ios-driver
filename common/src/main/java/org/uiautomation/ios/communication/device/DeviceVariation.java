@@ -80,6 +80,17 @@ public enum DeviceVariation {
     }
     return true;
   }
+  
+  public static DeviceVariation getCompatibleVersion(DeviceType device, String sdkVersion) {
+      boolean isSdk7OrNewer = (new IOSVersion(sdkVersion)).isGreaterOrEqualTo("7.0");
+      switch (device) {
+        case iphone:
+          return isSdk7OrNewer? Retina4 : Regular;
+        case ipad:
+          return isSdk7OrNewer? Retina : Regular;
+      }
+      return Regular;
+  }
 
   public static String deviceString(DeviceType deviceType, DeviceVariation deviceVariation) {
     String result;
@@ -135,6 +146,7 @@ public enum DeviceVariation {
           return variation;
         }
       }
+      throw new WebDriverException("not a valid DeviceVariation: " + o);
     }
     throw new WebDriverException("Cannot cast " + (o == null ? "null" : o.getClass()) + " to IOSDevice");
   }
