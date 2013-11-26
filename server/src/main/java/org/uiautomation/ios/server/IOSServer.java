@@ -86,6 +86,7 @@ public class IOSServer {
   }
 
   private void init() {
+    initialized = true;
     Configuration.BETA_FEATURE = options.isBeta();
     Configuration.SIMULATORS_ENABLED = options.hasSimulators();
     initDriver();
