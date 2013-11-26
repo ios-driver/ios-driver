@@ -199,6 +199,7 @@ public class IOSServer {
 
   public void start() throws Exception {
     if (!initialized) {
+      initialized = true;
       init();
     }
     if (!server.isRunning()) {
@@ -232,11 +233,19 @@ public class IOSServer {
     }
     if (selfRegisteringRemote != null) {
       selfRegisteringRemote.stop();
+      selfRegisteringRemote = null;
     }
     if (folderMonitor != null) {
       folderMonitor.stop();
+      folderMonitor = null;
     }
-    driver.stop();
-    server.stop();
+    if (driver != null) {
+      driver.stop();
+      driver = null;
+    }
+    if (server != null) {
+      server.stop();
+      server = null;
+    }
   }
 }
