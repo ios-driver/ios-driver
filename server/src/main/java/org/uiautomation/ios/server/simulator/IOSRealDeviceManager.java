@@ -150,4 +150,9 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
   public void setSimulatorScale(String scale) {
     // not-applicable
   }
+
+  @Override
+  public void installTrustStore(String trustStore) {
+   // not-applicable
+  }
 }

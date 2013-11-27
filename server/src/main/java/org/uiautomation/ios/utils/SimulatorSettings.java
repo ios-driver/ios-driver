@@ -15,6 +15,7 @@ package org.uiautomation.ios.utils;
 
 import com.google.common.collect.ImmutableList;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -325,6 +326,36 @@ public class SimulatorSettings {
     File f = new File(PLUTIL);
     if (!f.exists() || !f.canExecute()) {
       throw new WebDriverException("Cannot access " + PLUTIL);
+    }
+  }
+
+  public void installTrustStore(String trustStore) {
+    if (trustStore == null)
+      return;
+          
+    // executes:
+    // mkdir ~/"Library/Application Support/iPhone Simulator/7.0/Library/Keychains"
+    // cp libs/ios/TrustStore.sqlite3 ~/"Library/Application Support/iPhone Simulator/7.0/Library/Keychains"
+    File keychainsDir = new File(System.getProperty("user.home") + "/Library/Application Support/iPhone Simulator/"
+            + exactSdkVersion + "/Library/Keychains");
+    log.info("installing -trustStore: " + trustStore + " in " + keychainsDir.getAbsolutePath());
+    File sourceFile = new File(trustStore);
+    if (!sourceFile.exists()) {
+      log.severe("-trustStore: source trust store file doesn't exist: " + sourceFile.getAbsolutePath());
+      return;
+    }
+    File destFile = new File(keychainsDir, "TrustStore.sqlite3");
+    try {
+      if (!keychainsDir.exists()) {
+        if (!keychainsDir.mkdir()) {
+          log.severe("-trustStore: could not create Keychains dir: " + keychainsDir.getAbsolutePath());
+          return;
+        }
+      }
+      FileUtils.copyFile(sourceFile, destFile, false);
+    } catch (Exception e) {
+      log.severe("cannot install trust store file " + sourceFile.getAbsolutePath()
+              + " to " + destFile.getAbsolutePath() + ": " + e);
     }
   }
 }

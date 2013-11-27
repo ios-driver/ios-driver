@@ -21,22 +21,18 @@ public class DefaultCommandListener implements CommandOutputListener {
   private static final Logger log = Logger.getLogger(DefaultCommandListener.class.getName());
   private final String label;
 
-  private DefaultCommandListener(){
-    this("no label");
-  }
-
   public DefaultCommandListener(String label){
     this.label=label;
   }
 
   @Override
-  public void stdout(String log) {
-    this.log.info(label+"\t"+log);
+  public void stdout(String line) {
+    log.fine(label+"\t"+line);
   }
 
   @Override
-  public void stderr(String log) {
-    this.log.warning(label+"\t"+log);
+  public void stderr(String line) {
+    log.warning(label+"\t"+line);
   }
 
 }

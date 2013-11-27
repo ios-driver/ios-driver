@@ -39,4 +39,6 @@ public interface IOSDeviceManager {
   void setSDKVersion();
 
   void setSimulatorScale(String scale);
+
+  void installTrustStore(String trustStore);
 }
