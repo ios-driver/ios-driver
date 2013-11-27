@@ -38,7 +38,7 @@ public final class SessionTimeoutTest {
 
   @BeforeClass
   public void startServer() throws Exception {
-    String[] args = {"-port", "4444", "-host", "localhost", "-sessionTimeout", "5", "-simulators"};
+    String[] args = {"-port", "4444", "-host", "localhost", "-sessionTimeout", "20", "-simulators"};
     config = IOSServerConfiguration.create(args);
 
     server = new IOSServer(config);

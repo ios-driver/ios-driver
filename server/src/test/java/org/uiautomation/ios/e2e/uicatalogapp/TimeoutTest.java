@@ -77,7 +77,9 @@ public class TimeoutTest extends BaseIOSDriverTest {
       driver = getDriver(SampleApps.uiCatalogCap());
       String name = "Buttons, Various uses of UIButton2";
 
+      
       // single
+      driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
       By b = By.xpath("//*[@name='" + name + "']");
       long start = System.currentTimeMillis();
       try {

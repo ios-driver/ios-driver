@@ -38,6 +38,7 @@ public enum DeviceType {
           return device;
         }
       }
+      throw new WebDriverException("not a matching DeviceType string: " + o);
     }
     throw new WebDriverException(
         "Cannot cast " + (o == null ? "null" : o.getClass() + "=" + o) + " to DeviceType");
