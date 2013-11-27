@@ -389,4 +389,8 @@ public class IOSCapabilities extends DesiredCapabilities {
           "The 'app' key is supposed to point to a URL." + app + " is not a URL.");
     }
   }
+
+  public void setSDKVersion(String sdkVersion) {
+    setCapability(UI_SDK_VERSION, sdkVersion);
+  }
 }
