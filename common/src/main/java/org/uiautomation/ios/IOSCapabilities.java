@@ -393,4 +393,8 @@ public class IOSCapabilities extends DesiredCapabilities {
   public void setSDKVersion(String sdkVersion) {
     setCapability(UI_SDK_VERSION, sdkVersion);
   }
+
+  public void setDevice(DeviceType device) {
+    setCapability(DEVICE, device);
+  }
 }

@@ -42,6 +42,7 @@ import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
+import org.uiautomation.ios.utils.IOSVersion;
 
 
 public class AlertTest extends BaseIOSDriverTest {

@@ -203,4 +203,8 @@ public class ServerSideSession extends Session {
     }
     return url;
   }
+
+  public IOSLogManager getLogManager() {
+    return logManager;
+  }
 }

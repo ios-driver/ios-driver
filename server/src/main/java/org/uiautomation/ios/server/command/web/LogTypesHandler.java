@@ -38,7 +38,7 @@ public class LogTypesHandler extends BaseWebCommandHandler{
 
   @Override
   public Response handle() throws Exception {
-    ServerSideSession session = getDriver().getSession(getRequest().getSession());
+    ServerSideSession session = getSession();
     Set<String> types = session.getLogManager().getTypes();
     return createResponse(types);
   }

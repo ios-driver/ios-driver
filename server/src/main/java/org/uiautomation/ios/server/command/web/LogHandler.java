@@ -37,7 +37,7 @@ public class LogHandler extends BaseWebCommandHandler {
 
   @Override
   public Response handle() throws Exception {
-    ServerSideSession session = getDriver().getSession(getRequest().getSession());
+    ServerSideSession session = getSession();
     JSONObject payload = getRequest().getPayload();
     String type = payload.getString("type");
     List<LogEntry> entries = session.getLogManager().getLog(type);
