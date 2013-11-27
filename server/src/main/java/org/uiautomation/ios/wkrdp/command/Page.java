@@ -30,7 +30,7 @@ public class Page {
     }
   }
 
-  public static JSONObject enablePageEvent() {
+  public static JSONObject enable() {
     try {
       JSONObject cmd = new JSONObject();
       cmd.put("method", "Page.enable");

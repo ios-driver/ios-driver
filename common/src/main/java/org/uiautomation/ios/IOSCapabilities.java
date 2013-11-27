@@ -17,11 +17,20 @@ import java.util.*;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+
+import com.google.common.collect.ImmutableList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.logging.LoggingPreferences;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 
@@ -351,5 +360,18 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   public void setDeviceUUID(String deviceUUID) {
     setCapability(UUID, deviceUUID);
+  }
+
+  public LoggingPreferences getLoggingPreferences() throws JSONException {
+    LoggingPreferences ret = new LoggingPreferences();
+    JSONObject json = (JSONObject) getCapability(CapabilityType.LOGGING_PREFS);
+    if (json != null) {
+      for (Object key : ImmutableList.copyOf(json.keys())) {
+        String logType = (String) key;
+        Level level = Level.parse((String) json.get(logType));
+        ret.enable(logType, level);
+      }
+    }
+    return ret;
   }
 }

@@ -27,6 +27,7 @@ import org.openqa.selenium.WebElement;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.server.DOMContext;
 import org.uiautomation.ios.server.ServerSideSession;
+import org.uiautomation.ios.wkrdp.ConnectListener;
 import org.uiautomation.ios.wkrdp.MessageListener;
 import org.uiautomation.ios.wkrdp.RemoteExceptionException;
 import org.uiautomation.ios.wkrdp.WebKitSeemsCorruptedException;
@@ -53,7 +54,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 
-public abstract class BaseWebInspector implements MessageListener {
+public abstract class BaseWebInspector implements MessageListener, ConnectListener {
 
   private static final Logger log = Logger.getLogger(BaseWebInspector.class.getName());
   protected final ServerSideSession session;
@@ -554,6 +555,14 @@ public abstract class BaseWebInspector implements MessageListener {
       if ("Profiler.resetProfiles".equals(m.getMessage().optString("method"))) {
 
       }
+    }
+  }
+
+  @Override
+  public void onConnect(WebInspector inspector) {
+    if (inspector == this) {
+      // We are being connected. We want to get our own Page events.
+      sendCommand(Page.enable());
     }
   }
 
