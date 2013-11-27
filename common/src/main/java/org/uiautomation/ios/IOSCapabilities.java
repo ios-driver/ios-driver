@@ -13,14 +13,24 @@
  */
 package org.uiautomation.ios;
 
+import java.util.*;
+
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
 
+import com.google.common.collect.ImmutableList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.logging.LoggingPreferences;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 
@@ -30,7 +40,7 @@ import java.util.*;
 
 public class IOSCapabilities extends DesiredCapabilities {
 
-  // UIAutomation properties called from instruments
+  // UIAutomation properties called from instuments
   // UIAAplication.bundleID();
   // UIATarget.systemName();
   public static final String UI_SYSTEM_NAME = "systemName";
@@ -42,10 +52,12 @@ public class IOSCapabilities extends DesiredCapabilities {
   public static final String UI_BUNDLE_VERSION = "bundleVersion";
   // UIAAplication.version();
   public static final String UI_VERSION = "version";
+
   // plist + envt variable
   public static final String DEVICE = "device";
   public static final String VARIATION = "variation";
   public static final String SIMULATOR = "simulator";
+
   public static final String IOS_SWITCHES = "ios.switches";
   public static final String LANGUAGE = "language";
   public static final String SUPPORTED_LANGUAGES = "supportedLanguages";
@@ -53,6 +65,7 @@ public class IOSCapabilities extends DesiredCapabilities {
   public static final String LOCALE = "locale";
   public static final String AUT = "aut";
   public static final String TIME_HACK = "timeHack";
+
   public static final String BUNDLE_VERSION = "CFBundleVersion";
   public static final String BUNDLE_ID = "CFBundleIdentifier";
   public static final String BUNDLE_SHORT_VERSION = "CFBundleShortVersionString";
@@ -62,14 +75,17 @@ public class IOSCapabilities extends DesiredCapabilities {
   // http://developer.apple.com/library/ios/#documentation/general/Reference/InfoPlistKeyReference/Articles/iPhoneOSKeys.html
   public static final String ICON = "CFBundleIconFile";
   public static final String BUNDLE_ICONS = "CFBundleIcons";
+
   public static final String MAGIC_PREFIX = "plist_";
   public static final String CONFIGURABLE = "configurable";
   public static final String ELEMENT_TREE = "elementTree";
   public static final String IOS_SEARCH_CONTEXT = "iosSearchContext";
   public static final String UUID = "uuid";
   public static final String IOS_TOUCH_SCREEN = "iosTouchScreen";
+
   // default selenium bindings for mobile safari
   public static final String BROWSER_NAME = "browserName";
+  
   // TODO: make a parameter?
   public static final int COMMAND_TIMEOUT_MILLIS = 10 * 60 * 1000; // 10 minutes
 
@@ -208,18 +224,14 @@ public class IOSCapabilities extends DesiredCapabilities {
     return DeviceType.valueOf(o);
   }
 
-  public void setDevice(DeviceType device) {
-    setCapability(DEVICE, device);
-  }
+ 
 
   public String getSDKVersion() {
     Object o = getCapability(UI_SDK_VERSION);
     return ((String) o);
   }
 
-  public void setSDKVersion(String sdkVersion) {
-    setCapability(UI_SDK_VERSION, sdkVersion);
-  }
+
 
   public String getApplication() {
     Object o = getCapability(AUT);
@@ -300,9 +312,7 @@ public class IOSCapabilities extends DesiredCapabilities {
     return getList(SUPPORTED_LANGUAGES);
   }
 
-  public void setSupportedLanguages(List<String> supportedLanguages) {
-    setCapability(SUPPORTED_LANGUAGES, supportedLanguages);
-  }
+  
 
   public List<DeviceType> getSupportedDevices() {
     return Lists.transform(getList(SUPPORTED_DEVICES), new Function<String, DeviceType>() {
@@ -313,12 +323,10 @@ public class IOSCapabilities extends DesiredCapabilities {
     });
   }
 
-  public void setSupportedDevices(List<DeviceType> devices) {
-    if (devices.isEmpty()) {
-      throw new WebDriverException("Your app needs to support at least 1 device.");
-    }
-    setCapability(SUPPORTED_DEVICES, devices);
+  public void setSupportedLanguages(List<String> supportedLanguages) {
+    setCapability(SUPPORTED_LANGUAGES, supportedLanguages);
   }
+
 
   public Object getCapability(String key) {
     Object o = getRawCapabilities().get(key);
@@ -357,6 +365,19 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   public void setDeviceUUID(String deviceUUID) {
     setCapability(UUID, deviceUUID);
+  }
+
+  public LoggingPreferences getLoggingPreferences() throws JSONException {
+    LoggingPreferences ret = new LoggingPreferences();
+    JSONObject json = (JSONObject) getCapability(CapabilityType.LOGGING_PREFS);
+    if (json != null) {
+      for (Object key : ImmutableList.copyOf(json.keys())) {
+        String logType = (String) key;
+        Level level = Level.parse((String) json.get(logType));
+        ret.enable(logType, level);
+      }
+    }
+    return ret;
   }
 
   public URL getAppURL() {

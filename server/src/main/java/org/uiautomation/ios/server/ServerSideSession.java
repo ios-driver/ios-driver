@@ -26,6 +26,7 @@ import org.uiautomation.ios.server.application.AppleLanguage;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
+import org.uiautomation.ios.server.logging.IOSLogManager;
 import org.uiautomation.ios.server.services.IOSDualDriver;
 import org.uiautomation.ios.server.utils.ZipUtils;
 import org.uiautomation.ios.utils.ApplicationCrashDetails;
@@ -51,13 +52,20 @@ public class ServerSideSession extends Session {
   private boolean sessionCrashed;
   private ApplicationCrashDetails applicationCrashDetails;
   private java.net.URL URL;
+  private final IOSLogManager logManager;
 
-  ServerSideSession(IOSServerManager server, IOSCapabilities desiredCapabilities,
-                    IOSServerConfiguration options) {
+  ServerSideSession(IOSServerManager server, IOSCapabilities desiredCapabilities, IOSServerConfiguration options) {
     super(UUID.randomUUID().toString());
     this.server = server;
     this.capabilities = desiredCapabilities;
     this.options = options;
+
+    try {
+      logManager = new IOSLogManager(capabilities.getLoggingPreferences());
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      throw new SessionNotCreatedException("Cannot create logManager", ex);
+    }
 
     this.sessionCrashed = false;
     this.applicationCrashDetails = null;

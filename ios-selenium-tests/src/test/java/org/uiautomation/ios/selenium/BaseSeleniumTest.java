@@ -27,10 +27,7 @@ public class BaseSeleniumTest {
   public void setup() throws Throwable {
     startIOSServer();
     startTestServer();
-    IOSCapabilities safari = IOSCapabilities.iphone("Safari");
-    // safari.setLanguage("fr");
-    driver = new RemoteIOSDriver(new URL(url), safari);
-
+    startDriver(IOSCapabilities.iphone("Safari"));
   }
 
   public void startIOSServer() throws Exception {
@@ -45,19 +42,30 @@ public class BaseSeleniumTest {
     pages = new Pages(appServer);
   }
 
+  protected void startDriver(IOSCapabilities caps) throws Exception {
+    stopDriver();
+    // caps.setLanguage("fr");
+    driver = new RemoteIOSDriver(new URL(url), caps);
+  }
+
   public void stopIOSServer() throws Exception {
     server.stop();
   }
 
+  protected void stopDriver() {
+    if (driver != null) {
+      try {
+        driver.quit();
+      } catch (Exception e) {
+        System.err.println("cannot quit properly :" + e.getMessage());
+      }
+      driver = null;
+    }
+  }
 
   @AfterClass
   public void tearDown() throws Exception {
-
-    try {
-      driver.quit();
-    } catch (Exception e) {
-      System.err.println("cannot quit properly :" + e.getMessage());
-    }
+    stopDriver();
     stopIOSServer();
     appServer.stop();
   }

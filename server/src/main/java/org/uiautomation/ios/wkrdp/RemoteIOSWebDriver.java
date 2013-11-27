@@ -23,8 +23,6 @@ import org.uiautomation.ios.context.BaseWebInspector;
 import org.uiautomation.ios.context.WebInspector;
 import org.uiautomation.ios.server.*;
 import org.uiautomation.ios.server.configuration.Configuration;
-import org.uiautomation.ios.wkrdp.command.Network;
-import org.uiautomation.ios.wkrdp.command.Page;
 import org.uiautomation.ios.wkrdp.internal.RealDeviceProtocolImpl;
 import org.uiautomation.ios.wkrdp.internal.SimulatorProtocolImpl;
 import org.uiautomation.ios.wkrdp.internal.WebKitRemoteDebugProtocol;
@@ -89,7 +87,6 @@ public class RemoteIOSWebDriver {
   private Map<Integer, BaseWebInspector> inspectors = new HashMap<Integer, BaseWebInspector>();
   private static final Logger log = Logger.getLogger(RemoteIOSWebDriver.class.getName());
   private List<WebkitPage> pages = new ArrayList<WebkitPage>();
-  private final List<WebInspector> created = new ArrayList<WebInspector>();
   private final WebKitSynchronizer sync;
 
   public RemoteIOSWebDriver(ServerSideSession session, ResponseFinder... finders) {
@@ -108,6 +105,9 @@ public class RemoteIOSWebDriver {
       protocol = new SimulatorProtocolImpl(notification, finders);
 
     }
+
+    session.getLogManager().onProtocolCreated(protocol);
+
     protocol.register();
     sync.waitForSimToRegister();
     sync.waitForSimToSendApps();
@@ -217,18 +217,11 @@ public class RemoteIOSWebDriver {
   private BaseWebInspector connect(WebkitPage webkitPage) {
     for (WebkitPage page : getPages()) {
       if (page.equals(webkitPage)) {
-        WebInspector
-            inspector =
-            new WebInspector(null, webkitPage.getPageId(), protocol, bundleId,
-                             connectionKey, session);
-
         protocol.attachToPage(page.getPageId());
-        inspector.sendCommand(Page.enablePageEvent());
-        inspector.sendCommand(Network.enable());
-        boolean ok = created.add(inspector);
-        if (ok) {
-          protocol.addListener(inspector);
-        }
+
+        WebInspector inspector = new WebInspector(
+            null, webkitPage.getPageId(), protocol, bundleId, connectionKey, session);
+        protocol.addListener(inspector);
         return inspector;
       }
     }
