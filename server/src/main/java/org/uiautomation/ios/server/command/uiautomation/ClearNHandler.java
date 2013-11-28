@@ -24,7 +24,7 @@ public class ClearNHandler extends UIAScriptHandler {
 
   private static JSTemplate template = new JSTemplate(
       "var element = UIAutomation.cache.get(%:reference$s);" +
-      "element.setValue('');" +
+      "element.clear();" +
       "UIAutomation.createJSONResponse('%:sessionId$s',0,'')",
       "sessionId", "reference");
 

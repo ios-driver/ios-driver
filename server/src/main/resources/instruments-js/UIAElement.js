@@ -26,6 +26,10 @@ UIAElement.prototype.rect = function () {
     return rect;
 }
 
+
+UIAElement.prototype.clear = function () {
+    this.setValue('');
+}
 /**
  * enter text / password in the input fields.
  * @param value  the text to enter.

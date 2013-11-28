@@ -64,7 +64,7 @@ public class UIAKeyboardTest extends BaseIOSDriverTest {
   }
 
   @Test
-  public void capital() {
+  public void capital() throws InterruptedException {
     String v = "aBC";
     textview.clear();
     textview.sendKeys(v);

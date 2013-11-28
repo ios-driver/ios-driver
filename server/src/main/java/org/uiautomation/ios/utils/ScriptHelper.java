@@ -46,6 +46,7 @@ public class ScriptHelper {
       "instruments-js/UIATarget.js",
       "instruments-js/UIAApplication.js",
       "instruments-js/UIAElement.js",
+      "instruments-js/UIATextView.js",
       "instruments-js/UIAAlert.js",
       "instruments-js/Cache.js",
       "instruments-js/SafariPageNavigator.js",

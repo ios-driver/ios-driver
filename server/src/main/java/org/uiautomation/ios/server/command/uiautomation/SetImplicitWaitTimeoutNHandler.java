@@ -21,6 +21,7 @@ import org.uiautomation.ios.server.IOSServerManager;
 
 public class SetImplicitWaitTimeoutNHandler extends SetTimeoutNHandler {
 
+  // TODO freynaud use config store.static is a bug.
   public static Integer TIMEOUT = 0;
 
   public SetImplicitWaitTimeoutNHandler(IOSServerManager driver, WebDriverLikeRequest request)
