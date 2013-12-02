@@ -112,7 +112,7 @@ public class IOSServer {
     }
 
     StringBuilder b = new StringBuilder();
-    b.append(String.format("\nBeta features enabled (enabled by -beta flag ): %b", Configuration.BETA_FEATURE));
+    b.append(String.format("\nBeta features enabled (enabled by -beta flag): %b", Configuration.BETA_FEATURE));
     b.append(String.format("\nSimulator enabled (enabled by -simulators flag): %b", Configuration.SIMULATORS_ENABLED));
     b.append(String.format("\nInspector: http://0.0.0.0:%d/inspector/", options.getPort()));
     b.append(String.format("\nTests can access the server at http://0.0.0.0:%d/wd/hub", options.getPort()));
@@ -138,7 +138,7 @@ public class IOSServer {
     File xcodeInstall = driver.getHostInfo().getXCodeInstall();
     String hostSDK = driver.getHostInfo().getSDK();
     b.append(String.format("\nUsing Xcode install : %s", driver.getHostInfo().getXCodeInstall().getPath()));
-    b.append(String.format("\nUsing IOS version %s", hostSDK));
+    b.append(String.format("\nUsing iOS version %s", hostSDK));
 
     boolean safari = false;
     // automatically add safari for host SDK and above as instruments starts simulator on host SDK version

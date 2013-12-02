@@ -146,7 +146,7 @@ public enum DeviceVariation {
           return variation;
         }
       }
-      throw new WebDriverException("not a valid DeviceVariation: " + o);
+      throw new WebDriverException("not a valid DeviceVariation string: " + o);
     }
     throw new WebDriverException("Cannot cast " + (o == null ? "null" : o.getClass()) + " to IOSDevice");
   }
