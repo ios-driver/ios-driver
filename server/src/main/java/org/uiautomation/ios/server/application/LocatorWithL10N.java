@@ -44,8 +44,10 @@ class LocatorWithL10N {
     for (String key : keys) {
       String value = translateKey(key);
       String originalFunction = "l10n\\('" + key + "'\\)|l10n\\(\"" + key + "\"\\)";
-      String l10ned = "'" + value + "'";
+      String l10ned = "\"" + value + "\"";
+      String oldRes = res;
       res = res.replaceAll(originalFunction, l10ned);
+      oldRes = oldRes + "";
     }
     return res;
   }
