@@ -15,6 +15,7 @@
 package org.uiautomation.ios.server.application;
 
 import com.google.common.collect.ImmutableList;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
@@ -24,8 +25,14 @@ import java.io.File;
 import java.io.FileFilter;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -191,7 +198,8 @@ public class LanguageDictionary {
     try {
       return normalizedContent.matches(pattern);
     } catch (PatternSyntaxException e) {
-      throw new RuntimeException(String.format("Unexpected error matching against pattern \"%s\"", pattern));
+      throw new RuntimeException(
+          String.format("Unexpected error matching against pattern \"%s\"", pattern));
     }
   }
 
@@ -260,7 +268,8 @@ public class LanguageDictionary {
       matchCount++;
     }
     if (matchCount != args.size()) {
-      log.warning(String.format("Format string \"%s\" requires %d argument%s, but %d argument%s provided: %s",
+      log.warning(String.format(
+          "Format string \"%s\" requires %d argument%s, but %d argument%s provided: %s",
           languageTemplate,
           matchCount,
           matchCount == 1 ? "" : "s",
