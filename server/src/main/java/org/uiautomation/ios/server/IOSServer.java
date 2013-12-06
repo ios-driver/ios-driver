@@ -40,7 +40,9 @@ import org.uiautomation.ios.server.utils.ZipUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.BindException;
 import java.net.InetSocketAddress;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class IOSServer {
@@ -81,6 +83,7 @@ public class IOSServer {
     try {
       server.start();
     } catch (Exception e) {
+      log.log(Level.SEVERE, "cannot start ios-driver server: " + e, e);
       Runtime.getRuntime().exit(1);
     }
   }
@@ -129,7 +132,7 @@ public class IOSServer {
 
     b.append("\n\nApplications :\n--------------- \n");
     for (APPIOSApplication app : driver.getSupportedApplications()) {
-      b.append("\t" + app.toBundleInfoString() + "\n");
+      b.append("\t" + app + "\n");
     }
     log.info(b.toString());
   }

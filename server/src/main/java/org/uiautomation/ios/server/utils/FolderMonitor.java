@@ -140,7 +140,7 @@ public class FolderMonitor implements Runnable {
       app = new APPIOSApplication(file.getAbsolutePath());
     }
     iosServerManager.addSupportedApplication(app);
-    log.info("added:\n\t" + app.toBundleInfoString());
+    log.info("added:\n\t" + app);
   }
 
   private boolean isApp(File file) {

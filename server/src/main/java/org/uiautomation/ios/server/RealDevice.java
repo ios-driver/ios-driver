@@ -107,10 +107,10 @@ public class RealDevice extends Device {
     }
     return true;
   }
-/*
+
   @Override
   public String toString(){
-    return this.uuid+", name:"+this.name;
-  }*/
+    return "Device[" + uuid + ",name:" + name + (isBusy()? ",busy" : ",available") + ']';
+  }
 }
 

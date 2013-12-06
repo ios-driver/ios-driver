@@ -45,6 +45,6 @@ public class SimulatorDevice extends Device {
   }
   @Override
   public String toString(){
-    return "Simulator";
+    return "Simulator[" + (isBusy()? "busy" : "available") + ']';
   }
 }

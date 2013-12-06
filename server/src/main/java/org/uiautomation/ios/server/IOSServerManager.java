@@ -148,7 +148,8 @@ public class IOSServerManager {
     List<APPIOSApplication> matchingApps = findAllMatchingApplications(desiredCapabilities);
     if (matchingApps.size() == 0) {
       throw new SessionNotCreatedException("desired app not found on server: "
-            + desiredCapabilities.getRawCapabilities());
+            + desiredCapabilities.getRawCapabilities() + ".\n    Available apps: "
+            + getSupportedApplications());
     }
     // if more than one matches it returns the last in the list (highest version for MobileSafari)
     APPIOSApplication app = matchingApps.get(matchingApps.size() - 1);
@@ -180,7 +181,7 @@ public class IOSServerManager {
       }
     }
     throw new SessionNotCreatedException(
-        desiredCapabilities.getRawCapabilities() + "not available. Available are " + devices);
+        desiredCapabilities.getRawCapabilities() + " no devices available.\n    Known devices: " + devices);
   }
 
   public ApplicationStore getApplicationStore() {

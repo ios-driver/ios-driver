@@ -93,17 +93,14 @@ public class Command {
       throw new WebDriverException("failed to start process " + args, e);
     }
 
-    final InputStream normal = process.getInputStream();
-    final InputStream error = process.getErrorStream();
-
-    threads.add(listen(normal, out, true));
-    threads.add(listen(error, err, false));
+    threads.add(listen(process.getInputStream(), out, true));
+    threads.add(listen(process.getErrorStream(), err, false));
   }
 
   /**
    * @param maxWaitMillis max time to wait for the command to finish, -1 for not limit
    */
-  public int waitFor(int maxWaitMillis) {
+  public int waitFor(final int maxWaitMillis) {
     Timer forceStopTimer = null;
     try {
       if (maxWaitMillis > 0) {
@@ -111,6 +108,7 @@ public class Command {
         forceStopTimer.schedule(new TimerTask() {
           @Override
           public void run() {
+            log.info("destroying process after waiting for " + maxWaitMillis + "ms: " + commandString());
             process.destroy();
           }
         }, maxWaitMillis);
@@ -130,7 +128,8 @@ public class Command {
   }
 
   private Thread listen(final InputStream in, final List<String> out, final boolean normal) {
-    Thread t = new Thread(new Runnable() {
+    Thread t = new Thread() {
+      @Override
       public void run() {
         BufferedReader reader = null;
         try {
@@ -143,10 +142,11 @@ public class Command {
             add(line, normal);
           }
         } catch (IOException e) {
-          log.warning("Error reading the output of the process :" + e.getMessage());
+          if (!"Stream closed".equals(e.getMessage()))
+            log.warning("Error reading the output of the process: " + e);
         }
       }
-    });
+    };
     t.start();
     return t;
   }
@@ -189,6 +189,7 @@ public class Command {
     return Joiner.on(" ").join(args);
   }
 
+  @Override
   public String toString() {
     StringBuilder b = new StringBuilder();
     b.append(commandString());

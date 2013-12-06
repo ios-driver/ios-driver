@@ -73,23 +73,22 @@ public class APPIOSApplication {
     }
   }
 
-  public String toString() {
-    return ".APP:" + getApplicationPath().getAbsolutePath();
-  }
-  
   /**
-   * @return a String of the form "CFBundleName={name},CFBundleVersion={version}"
+   * @return a String of the form "CFBundleName={name},CFBundleVersion={version},app-path"
    */
-  public Object toBundleInfoString() {
+  @Override
+  public String toString() {
     StringBuilder info = new StringBuilder();
     String name = getMetadata(IOSCapabilities.BUNDLE_NAME).isEmpty()
-            ? getMetadata(IOSCapabilities.BUNDLE_DISPLAY_NAME)
-            : getMetadata(IOSCapabilities.BUNDLE_NAME);
+       ? getMetadata(IOSCapabilities.BUNDLE_DISPLAY_NAME)
+       : getMetadata(IOSCapabilities.BUNDLE_NAME);
     info.append(String.format("CFBundleName=%s", name));
     String version = getMetadata(IOSCapabilities.BUNDLE_VERSION);
     if (version != null && !version.isEmpty()) {
       info.append(String.format(",CFBundleVersion=%s", version));
     }
+    info.append(',');
+    info.append(getApplicationPath().getAbsolutePath());
     return info.toString();
   }
 
