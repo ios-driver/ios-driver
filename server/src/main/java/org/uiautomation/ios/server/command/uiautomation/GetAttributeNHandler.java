@@ -23,12 +23,12 @@ import org.uiautomation.ios.server.utils.JSTemplate;
 public class GetAttributeNHandler extends UIAScriptHandler {
 
   private static final JSTemplate template = new JSTemplate(
-      "var parent = UIAutomation.cache.get(%:reference$s);" +
+      "var parent = UIAutomation.cache.get(%:reference$s,false);" +
       "var myStringResult = parent.%:attribute$s();" +
       "UIAutomation.createJSONResponse('%:sessionId$s',0,myStringResult)",
       "sessionId", "reference", "attribute");
   private static final JSTemplate logElementTreeTemplate = new JSTemplate(
-      "var root = UIAutomation.cache.get('%:reference$s');" +
+      "var root = UIAutomation.cache.get('%:reference$s',false);" +
       "var result = root.tree(false);" +
       "var str = JSON.stringify(result.tree);" +
       "UIAutomation.createJSONResponse('%:sessionId$s',0,str);",
