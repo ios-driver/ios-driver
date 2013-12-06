@@ -39,23 +39,63 @@ public class SimulatorSettings {
   public static void main(String[] args) throws Exception {
     ImmutableList<String> sdkVersions = ImmutableList.of("6.1", "7.0");
     for (String sdkVersion : sdkVersions) {
-      String exactSdkVersion;
-      String globalPreferences;
+      SimulatorSettings settings = new SimulatorSettings(sdkVersion);
+      String exactSdkVersion = settings.exactSdkVersion;
+      
+      String globalPreferences = "not available";
       try {
-        SimulatorSettings settings = new SimulatorSettings(sdkVersion);
-        JSONObject json = new PlistFileUtils(settings.globalPreferencePlist).toJSON();
-        exactSdkVersion = settings.exactSdkVersion;
-        globalPreferences = json.toString(2);
+        globalPreferences = new PlistFileUtils(settings.globalPreferencePlist).toJSON().toString(2);
       } catch (WebDriverException e) {
-        exactSdkVersion = sdkVersion;
-        globalPreferences = "not available";
       }
-      System.out.println(String.format("globalPreferences %s (%s): %s",
-          sdkVersion,
-          exactSdkVersion,
-          globalPreferences));
+      System.out.println(String.format("\nglobalPreferences %s (%s): %s",
+          sdkVersion, exactSdkVersion, globalPreferences));
+      
+      String safariPreferences = "not available";
+      try {
+        safariPreferences = new PlistFileUtils(settings.getMobileSafariPreferencesFile()).toJSON().toString(2);
+      } catch (WebDriverException e) {
+      }
+      System.out.println(String.format("\nsafariPreferences %s (%s): %s",
+          sdkVersion, exactSdkVersion, safariPreferences));
+      
+      String miscPreferences = "not available";
+      String miscPlistFile = "Applications/90428432-F387-4323-B697-3596C419CD1B/Library/Safari/SuspendState.plist";
+      try {
+        miscPreferences = new PlistFileUtils(new File(settings.contentAndSettingsFolder, miscPlistFile))
+            .toJSON().toString(2);
+      } catch (WebDriverException e) {
+      }
+      System.out.println(String.format("\n%s %s (%s): %s",
+          miscPlistFile, sdkVersion, exactSdkVersion, miscPreferences));
+      
+      // showAllPlistFiles(settings.contentAndSettingsFolder);
     }
   }
+  
+  private static void showAllPlistFiles(File rootDir) {
+    File[] files = rootDir.listFiles();
+    if (files == null)
+      return;
+    for (File file: files) {
+      if (file.isDirectory()) {
+        showAllPlistFiles(file);
+      } else if (file.getName().endsWith(".plist")) {
+        showPlistFile(file);
+      }
+    }
+  }
+  
+  private static void showPlistFile(File file) {
+    try {
+      String plist = new PlistFileUtils(file).toJSON().toString(2);
+      if (plist.contains("cnn"))
+        System.out.println("\n" + file.getAbsolutePath() + ": " + plist);
+    } catch (Exception e) {
+      System.err.println("exception reading " + file.getAbsolutePath() + ": " + e);
+    }
+  }
+
+  //
 
   private static final Logger log = Logger.getLogger(SimulatorSettings.class.getName());
   private static final String PLUTIL = "/usr/bin/plutil";
@@ -103,7 +143,7 @@ public class SimulatorSettings {
       clients.put(bundleId, options);
       writeOnDisk(clients, f);
     } catch (Exception e) {
-      throw new WebDriverException("cannot set location in " + f.getAbsolutePath());
+      throw new WebDriverException("cannot set location in " + f.getAbsolutePath(), e);
     }
   }
 
@@ -124,21 +164,24 @@ public class SimulatorSettings {
       preferences.put("KeyboardCheckSpelling", false);
       writeOnDisk(preferences, preferenceFile);
     } catch (Exception e) {
-      throw new WebDriverException("cannot set options in " + preferenceFile.getAbsolutePath());
+      throw new WebDriverException("cannot set options in " + preferenceFile.getAbsolutePath(), e);
     }
   }
 
   public void setMobileSafariOptions() {
-    File folder = new File(contentAndSettingsFolder + "/Library/Preferences/");
-    File preferenceFile = new File(folder, "com.apple.mobilesafari.plist");
-
+    File preferenceFile = getMobileSafariPreferencesFile();
     try {
       JSONObject preferences = new JSONObject();
       preferences.put("WarnAboutFraudulentWebsites", false);
       writeOnDisk(preferences, preferenceFile);
     } catch (Exception e) {
-      throw new WebDriverException("cannot set options in " + preferenceFile.getAbsolutePath());
+      throw new WebDriverException("cannot set options in " + preferenceFile.getAbsolutePath(), e);
     }
+  }
+  
+  private File getMobileSafariPreferencesFile() {
+      File folder = new File(contentAndSettingsFolder + "/Library/Preferences/");
+      return new File(folder, "com.apple.mobilesafari.plist");
   }
 
   /**

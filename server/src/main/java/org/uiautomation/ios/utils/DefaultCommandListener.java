@@ -22,6 +22,8 @@ public class DefaultCommandListener implements CommandOutputListener {
   private final String label;
 
   public DefaultCommandListener(String label){
+    if (label != null && label.length() > 40)
+        label = label.substring(0, 40);
     this.label=label;
   }
 

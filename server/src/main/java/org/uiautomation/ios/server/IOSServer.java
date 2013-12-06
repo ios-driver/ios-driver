@@ -137,7 +137,8 @@ public class IOSServer {
   private void addSimulatorDetails(StringBuilder b) {
     File xcodeInstall = driver.getHostInfo().getXCodeInstall();
     String hostSDK = driver.getHostInfo().getSDK();
-    b.append(String.format("\nUsing Xcode install : %s", driver.getHostInfo().getXCodeInstall().getPath()));
+    b.append(String.format("\nUsing Xcode install: %s", driver.getHostInfo().getXCodeInstall().getPath()));
+    b.append(String.format("\nUsing instruments: %s", driver.getHostInfo().getInstrumentsVersion()));
     b.append(String.format("\nUsing iOS version %s", hostSDK));
 
     boolean safari = false;
