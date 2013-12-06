@@ -48,7 +48,6 @@ public class IOSDualDriver {
       webDriver = null;
     }
     stopSessionTimer.cancel();
-
   }
 
   private void forceStop() {
@@ -95,21 +94,36 @@ public class IOSDualDriver {
     if (session.getApplication().isSafari()) {
       String sdkVersion = session.getCapabilities().getSDKVersion();
       if (sdkVersion != null && Float.parseFloat(sdkVersion) >= 7.0) {
-        try {
-          // instruments sometimes crashes if click is done before page is fully loaded
-          Thread.sleep(3000);
-          // click on "Apple" button to get the simulator out of initial state where webview is not updated
-          WebElement appleButton = nativeDriver.findElement(By.xpath("//UIAWindow/UIAScrollView/UIAButton"));
-          if (appleButton.getAttribute("name") == null)
-            appleButton.click();
-        } catch (WebDriverException ignore) {
-          // button is not there
-        } catch (InterruptedException ie) {
-          Thread.currentThread().interrupt();
+        // to get Safari out of his home page and become responsive we need to click
+        // on one of the home icons, click on the "about:blank" we added in prefs
+        for (int i = 0; i < 3; i++) {
+          try {
+            WebElement scrollView = nativeDriver.findElement(By.className("UIAScrollView"));
+            log.fine("clicking on about:blank button: " + i);
+            scrollView.findElement(By.className("UIAButton")).click();
+          } catch (NoSuchElementException e) {
+            // else keep trying as sometimes the click doesn't take effect on slow machines
+            log.fine("about:blank button gone, proceeding");
+            break;
+          }
+          sleep(2000); // allow some time to take effect
         }
+        
+        log.fine("before setMode");
+        setMode(WorkingMode.Web);
+      } else {
+        setMode(WorkingMode.Web);
+        getRemoteWebDriver().get("about:blank");
       }
-      setMode(WorkingMode.Web);
-      getRemoteWebDriver().get("about:blank");
+    }
+    log.fine("started");
+  }
+
+  private void sleep(int ms) {
+    try {
+      Thread.sleep(ms);
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
     }
   }
 
@@ -146,7 +160,6 @@ public class IOSDualDriver {
         throw new NoSuchWindowException("The app currently doesn't have a webview displayed.");
       }
     }
-
   }
 
   public WorkingMode getWorkingMode() {
@@ -159,6 +172,4 @@ public class IOSDualDriver {
     webDriver = new RemoteIOSWebDriver(session, new AlertDetector(nativeDriver));
     webDriver.switchTo(String.valueOf(currentPageID));
   }
-
-
 }

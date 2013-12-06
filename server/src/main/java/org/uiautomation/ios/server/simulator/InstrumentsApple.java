@@ -100,6 +100,7 @@ public class InstrumentsApple implements Instruments {
     String language = caps.getLanguage();
     String instrumentsVersion = version.getVersion();
     boolean instrumentsIs50OrHigher = new IOSVersion(instrumentsVersion).isGreaterOrEqualTo("5.0");
+    boolean isSDK70OrHigher = new IOSVersion(desiredSDKVersion).isGreaterOrEqualTo("7.0");
     boolean putDefaultFirst = instrumentsIs50OrHigher;
     
     // the 5.0 instruments can't start MobileSafari
@@ -112,7 +113,9 @@ public class InstrumentsApple implements Instruments {
 
     deviceManager.setVariation(deviceType, variation);
     deviceManager.setSimulatorScale(caps.getSimulatorScale());
-    this.application.setDefaultDevice(deviceType, putDefaultFirst);
+    application.setDefaultDevice(deviceType, putDefaultFirst);
+    if (application.isSafari() && isSDK70OrHigher && application.isSimulator())
+      application.setSafariBuiltinFavorites();
     deviceManager.setSDKVersion();
     deviceManager.resetContentAndSettings();
     deviceManager.setL10N(locale, language);
@@ -130,6 +133,9 @@ public class InstrumentsApple implements Instruments {
       success = channel.waitForUIScriptToBeStarted();
     } catch (InterruptedException e) {
       throw new InstrumentsFailedToStartException("instruments was interrupted while starting.");
+    } catch (Exception e) {
+      // otherwise the finally below hides it
+      log.log(Level.WARNING, "exception while starting instruments: " + e);
     } finally {
       // appears only in ios6. : Automation Instrument ran into an exception
       // while trying to run the script. UIAScriptAgentSignaledException
@@ -235,15 +241,24 @@ public class InstrumentsApple implements Instruments {
     // delete MobileSafari in install dir
     try {
       FileUtils.deleteDirectory(safariFolder);
+      if (!howToMoveSafariBackMessageGiven) {
+        howToMoveSafariBackMessageGiven = true;
+        String to = safariFolder.getAbsolutePath();
+        log.info("temporarily moving MobileSafari out of the install directory, if you need to restore it yourself use:\n$ cp -rf " + copy + ' ' + to);
+      }
     } catch (IOException e) {
-      log.log(Level.WARNING, "couldn't delete MobileSafari app install dir: " + e.getMessage(), e);
-      log.warning("make sure ios-driver has read/write permissions to that folder by executing those 2 commands:\n" + 
-              "sudo chmod a+rw " + safariFolder.getParentFile().getAbsolutePath() + '\n' +
-              "sudo chmod -R a+rw " + safariFolder.getAbsolutePath());
+      log.log(Level.SEVERE, "----------------------------------------------------------------------------");
+      log.log(Level.SEVERE, "couldn't delete MobileSafari app install dir: " + e.getMessage(), e);
+      log.log(Level.SEVERE, "make sure ios-driver has read/write permissions to that folder by executing those 2 commands:" + 
+              "\nsudo chmod a+rw " + safariFolder.getParentFile().getAbsolutePath() +
+              "\nsudo chmod -R a+rw " + safariFolder.getAbsolutePath());
+      log.log(Level.SEVERE, "----------------------------------------------------------------------------");
     }
     
     return true;
   }
+  
+  private boolean howToMoveSafariBackMessageGiven;
 
   private void putMobileSafariAppBackInInstallDir() {
     if (safariFolder.exists()) {

@@ -54,6 +54,10 @@ public class IOSRunningApplication {
   public void setDefaultDevice(DeviceType defaultDevice, boolean putDefaultFirst) {
     underlyingApplication.setDefaultDevice(defaultDevice, putDefaultFirst);
   }
+  
+  public void setSafariBuiltinFavorites() {
+    underlyingApplication.setSafariBuiltinFavorites();
+  }
 
   public AppleLanguage getCurrentLanguage() {
     return currentLanguage;

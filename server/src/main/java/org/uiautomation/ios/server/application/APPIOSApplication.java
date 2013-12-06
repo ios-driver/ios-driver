@@ -14,16 +14,13 @@
 
 package org.uiautomation.ios.server.application;
 
-import com.dd.plist.BinaryPropertyListWriter;
-import com.dd.plist.NSArray;
-import com.dd.plist.NSDictionary;
-import com.dd.plist.NSNumber;
-import com.dd.plist.PropertyListParser;
-import com.google.common.collect.ImmutableList;
+import static org.uiautomation.ios.IOSCapabilities.*;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.io.*;
+import java.util.*;
+import java.util.logging.Logger;
+
+import org.json.*;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
@@ -31,11 +28,8 @@ import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.PlistFileUtils;
 
-import java.io.*;
-import java.util.*;
-import java.util.logging.Logger;
-
-import static org.uiautomation.ios.IOSCapabilities.*;
+import com.dd.plist.*;
+import com.google.common.collect.ImmutableList;
 
 // TODO freynaud create IOSApp vs Running App that has locale + language
 public class APPIOSApplication {
@@ -352,12 +346,44 @@ public class APPIOSApplication {
       throw new WebDriverException("Cannot change the default device for the app." + e.getMessage(), e);
     }
   }
+  
+  /** 
+   * Modifies the BuiltinFavorites....plist in safariCopies/safari.app to contain only "about:blank"
+   */
+  public void setSafariBuiltinFavorites() {
+    File[] files = app.listFiles(new FilenameFilter() {
+      @Override
+      public boolean accept(File dir, String name) {
+        return name.startsWith("BuiltinFavorites") && name.endsWith(".plist");     
+      }
+    });
+    for (File plist: files) {
+      setSafariBuiltinFavories(plist);
+    }
+  }
+  
+  private void setSafariBuiltinFavories (File builtinFavoritesPList) {
+    try {
+      PListFormat format = getFormat(builtinFavoritesPList);
+     
+      NSArray root = new NSArray(1);
+      NSDictionary favorite = new NSDictionary();
+      favorite.put("Title", "about:blank");
+      favorite.put("URL", "about:blank");
+      root.setValue(0, favorite);
+         
+      write(builtinFavoritesPList, root, format);
+    } catch (Exception e) {
+      throw new WebDriverException("Cannot set " + builtinFavoritesPList.getAbsolutePath()
+          + ": " + e.getMessage(), e);
+    }
+  }
 
   enum PListFormat{
     binary, text, xml
   }
 
-  private void write(File dest, NSDictionary content, PListFormat format) throws IOException {
+  private void write(File dest, NSObject content, PListFormat format) throws IOException {
     switch (format) {
     case binary:
       BinaryPropertyListWriter.write(dest, content);
@@ -366,10 +392,15 @@ public class APPIOSApplication {
       PropertyListParser.saveAsXML(content, dest);
       break;
     case text:
-      PropertyListParser.saveAsASCII(content, dest);
+      if (content instanceof NSDictionary)
+        PropertyListParser.saveAsASCII((NSDictionary) content, dest);
+      else if (content instanceof NSArray)
+        PropertyListParser.saveAsASCII((NSArray) content, dest);
+      else
+        throw new IllegalArgumentException("Invalid content type for ascii: " + content.getClass());
       break;
     default:
-      throw new RuntimeException("Invalid plist output format");
+      throw new IllegalArgumentException("Invalid plist output format: " + format);
     }
   }
 
