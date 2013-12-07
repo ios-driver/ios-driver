@@ -106,12 +106,14 @@ public class SimulatorSettings {
   private final File globalPreferencePlist;
 
   public SimulatorSettings(String sdkVersion) {
-    this.exactSdkVersion = getExactSdkVersion(sdkVersion);
+    this.exactSdkVersion = ClassicCommands.getSimulatorProductVersion(sdkVersion);
     this.contentAndSettingsFolder = getContentAndSettingsFolder();
     this.globalPreferencePlist = getGlobalPreferenceFile();
   }
 
   private String getExactSdkVersion(String sdkVersion) {
+    // NOTE: this method gives the wrong version the first time is run on a clean
+    // iPhone simulator dir (i.e. would return "7.0" instead of "7.0.3"
     File parentFolder = getContentAndSettingsParentFolder();
     if (!parentFolder.isDirectory()) {
       return sdkVersion;
@@ -379,8 +381,7 @@ public class SimulatorSettings {
     // executes:
     // mkdir ~/"Library/Application Support/iPhone Simulator/7.0/Library/Keychains"
     // cp libs/ios/TrustStore.sqlite3 ~/"Library/Application Support/iPhone Simulator/7.0/Library/Keychains"
-    File keychainsDir = new File(System.getProperty("user.home") + "/Library/Application Support/iPhone Simulator/"
-            + exactSdkVersion + "/Library/Keychains");
+    File keychainsDir = new File(contentAndSettingsFolder + "/Library/Keychains");
     log.info("installing -trustStore: " + trustStore + " in " + keychainsDir.getAbsolutePath());
     File sourceFile = new File(trustStore);
     if (!sourceFile.exists()) {

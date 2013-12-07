@@ -45,8 +45,7 @@ public class IOSServlet extends DriverBasedServlet {
     try {
       process(request, response);
     } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      log.warning(e.toString());
     }
   }
 
@@ -56,8 +55,7 @@ public class IOSServlet extends DriverBasedServlet {
     try {
       process(request, response);
     } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      log.warning(e.toString());
     }
   }
 
@@ -68,8 +66,7 @@ public class IOSServlet extends DriverBasedServlet {
     try {
       process(request, response);
     } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      log.warning(e.toString());
     }
   }
 
@@ -156,8 +153,7 @@ public class IOSServlet extends DriverBasedServlet {
         response.setValue(o);
       } catch (JSONException e) {
         level = Level.SEVERE;
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        log.warning(e.toString());
       }
       return response;
     } catch (Exception e) {
