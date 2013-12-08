@@ -45,12 +45,12 @@ import java.util.logging.Logger;
 
 public class RemoteWebNativeBackedElement extends RemoteWebElement {
 
-
   private static final Logger log = Logger.getLogger(RemoteWebNativeBackedElement.class.getName());
 
   private final ServerSideSession session;
   private final RemoteIOSDriver nativeDriver;
-  private final List<Character> specialKeys = new ArrayList<Character>() {{
+  
+  private static final List<Character> specialKeys = new ArrayList<Character>() {{
     this.add(Keys.DELETE.toString().charAt(0));
     this.add(Keys.ENTER.toString().charAt(0));
     this.add(Keys.RETURN.toString().charAt(0));
@@ -87,10 +87,8 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
   }
 
   public void nativeClick() {
-
     if ("option".equalsIgnoreCase(getTagName())) {
       click();
-
     } else {
       try {
         ((JavascriptExecutor) nativeDriver).executeScript(getNativeElementClickOnIt());
@@ -99,7 +97,6 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
         throw new WebDriverException(e);
       }
     }
-
   }
 
   @Override
@@ -183,10 +180,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     // web stuff.
     scrollIntoViewIfNeeded();
     Point location = getLocation();
-    String script = "UIATarget.localTarget().tap({'x':x_coord,'y':y_coord});";
-    script = script.replace("x_coord", String.valueOf(location.getX()))
-        .replace("y_coord", String.valueOf(location.getY()));
-    return script;
+    return "UIATarget.localTarget().tap({'x':" + location.getX() + ",'y':" + location.getY() + "});";
   }
 
   private String getKeyboardTypeStringSegement(String value) {
@@ -203,7 +197,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
   private String getReferenceToTapByXpath(XPath2Engine xPath2Engine, String xpath) {
     StringBuilder script = new StringBuilder();
     script.append("UIAutomation.cache.get(");
-    script.append((String) xPath2Engine.findElementByXpath(xpath).get("ELEMENT"));
+    script.append(xPath2Engine.findElementByXpath(xpath).get("ELEMENT"));
     script.append(", false).tap();");
     return script.toString();
   }
@@ -211,12 +205,11 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
   // TODO freynaud use keyboard.js bot.Keyboard.prototype.moveCursor = function(element)
   private String getNativeElementClickOnItAndTypeUsingKeyboardScript(String value)
       throws Exception {
-
-
     StringBuilder script = new StringBuilder();
     script.append("var keyboard = UIAutomation.cache.get('1').keyboard();");
 
     Boolean keyboardResigned = false;
+    boolean ios7 = new IOSVersion(session.getCapabilities().getSDKVersion()).isGreaterOrEqualTo("7.0");
 
     StringBuilder current = new StringBuilder();
     XPath2Engine xpathEngine = null;
@@ -237,7 +230,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
             // (like keyboard.shift)
             script.append(getReferenceToTapByXpath(xpathEngine, "//UIAKeyboard/UIAKey[" +
                 ( nativeDriver.getCapabilities().getDevice() == DeviceType.ipad ?
-                    "11]" : "last()-3]")
+                    (ios7? "13" : "11") : (ios7? "last()-2" : "last()-3")) + ']'
             ));
             break;
           case 1:
@@ -246,7 +239,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
             // TODO another smelly xpath.
             script.append(getReferenceToTapByXpath(xpathEngine, "//UIAKeyboard/UIAButton[" +
                 ( nativeDriver.getCapabilities().getDevice() == DeviceType.ipad ?
-                    "1]" : "2]")
+                    "1" : (ios7? "4" : "2")) + ']'
             ));
             keyboardResigned = true;
             break;
@@ -271,7 +264,6 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     return script.toString();
   }
 
-
   public void setValueNative(String value) throws Exception {
     String type = getAttribute("type");
     if ("date".equalsIgnoreCase(type)) {
@@ -294,7 +286,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
   }
 
   // TODO actually handle more locales
-  private String replaceLettersWithNumbersKeypad(String str, String locale) {
+  private static String replaceLettersWithNumbersKeypad(String str, String locale) {
     if (locale.toLowerCase().startsWith("en")) {
       return str.replaceAll("[AaBbCc]", "2").replaceAll("[DdEeFf]", "3").replaceAll("[GgHhIi]", "4")
           .replaceAll("[JjKkLl]", "5").replaceAll("[MmNnOo]", "6").replaceAll("[PpQqRrSs]", "7")
@@ -302,6 +294,4 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
        }
     return str.replaceAll("-", "");
   }
-
-  
 }
