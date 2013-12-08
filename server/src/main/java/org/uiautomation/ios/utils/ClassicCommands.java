@@ -27,7 +27,7 @@ public class ClassicCommands {
     System.out.println(getSimulatorProductVersion("7.0"));  
   }
 
-  private static final Logger log = Logger.getLogger(ClassicCommands.class.getName());
+  static final Logger log = Logger.getLogger(ClassicCommands.class.getName());
 
   /**
    * returns the version of the currently selected ( xcode-select -switch ) Xcode.
@@ -187,6 +187,7 @@ class SimulatorProductVersionParser implements CommandOutputListener {
 
   @Override
   public void stdout(String line) {
+    ClassicCommands.log.fine(line);
     // SDKVersion: 7.0
     if (line.startsWith("SDKVersion:")) {
       String version = line.substring(12).trim();
@@ -201,6 +202,7 @@ class SimulatorProductVersionParser implements CommandOutputListener {
 
   @Override
   public void stderr(String line) {
+    ClassicCommands.log.warning(line);
   }
 }
 

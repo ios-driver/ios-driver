@@ -82,7 +82,7 @@ public class WebDriverLikeRequest {
   public String toString() {
     String res = method + ":" + path;
     if (hasPayload()) {
-      res += "\nbody:" + payload;
+      res += "\n\tbody:" + payload;
     }
     return res;
   }
