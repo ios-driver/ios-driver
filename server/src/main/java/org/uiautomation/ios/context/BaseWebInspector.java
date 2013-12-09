@@ -534,7 +534,7 @@ public abstract class BaseWebInspector implements MessageListener {
       cmd.put("params",
               new JSONObject().put("expression", f).put("returnByValue", true));
       JSONObject response = sendCommand(cmd);
-      cast(response);
+      Object resp = cast(response);
     } catch (JSONException e) {
       throw new WebDriverException(e);
     }
@@ -554,7 +554,7 @@ public abstract class BaseWebInspector implements MessageListener {
       cmd.put("params",
               new JSONObject().put("expression", f).put("returnByValue", true));
       JSONObject response = sendCommand(cmd);
-      cast(response);
+      Object resp = cast(response);
     } catch (JSONException e) {
       throw new WebDriverException(e);
     }

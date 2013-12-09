@@ -70,7 +70,7 @@ public class RemoteWebElement {
       args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
 
       JSONObject response = getInspectorResponse(f, args, true);
-      inspector.cast(response);
+      Object resp = inspector.cast(response);
 
     } catch (JSONException e) {
       throw new WebDriverException(e);
@@ -466,7 +466,7 @@ public class RemoteWebElement {
     args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
 
     JSONObject response = getInspectorResponse(f, args, true);
-    inspector.cast(response);
+    Object resp = inspector.cast(response);
     inspector.checkForPageLoad();
 
   }
@@ -538,7 +538,7 @@ public class RemoteWebElement {
     args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
 
     JSONObject response = getInspectorResponse(f, args, true);
-    inspector.cast(response);
+    Object resp = inspector.cast(response);
 
   }
 
@@ -551,7 +551,7 @@ public class RemoteWebElement {
     args.put(new JSONObject().put("objectId", getRemoteObject().getId()));
 
     JSONObject response = getInspectorResponse(f, args, true);
-    inspector.cast(response);
+    Object resp = inspector.cast(response);
 
   }
 
