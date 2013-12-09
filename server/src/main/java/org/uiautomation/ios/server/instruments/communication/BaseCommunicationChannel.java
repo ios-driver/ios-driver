@@ -37,7 +37,7 @@ public abstract class BaseCommunicationChannel implements CommunicationChannel {
 
   private static final Logger log = Logger.getLogger(BaseCommunicationChannel.class.getName());
 
-  private final BlockingQueue<UIAScriptResponse> responseQueue = new ArrayBlockingQueue<>(1);
+  private final BlockingQueue<UIAScriptResponse> responseQueue = new ArrayBlockingQueue<UIAScriptResponse>(1);
 
   private final Lock lock = new ReentrantLock();
   private final Condition condition = lock.newCondition();

@@ -227,7 +227,7 @@ public class SimulatorSettings {
    * [DeviceType | Version ]
    */
   private void setDefaultSimulatorPreference(String key, String value) {
-    List<String> com = new ArrayList<>();
+    List<String> com = new ArrayList<String>();
     com.add("defaults");
     com.add("write");
     com.add("com.apple.iphonesimulator");
@@ -281,8 +281,27 @@ public class SimulatorSettings {
     return folder.delete();
   }
 
-  private boolean isSymLink(File folder) {
-    return Files.isSymbolicLink(Paths.get(folder.toURI()));
+//  private boolean isSymLink(File folder) {
+//    return Files.isSymbolicLink(Paths.get(folder.toURI()));
+//  }
+  
+  // from Apache:
+  private boolean isSymLink(File file) {
+    try {
+      if (file == null)
+        throw new NullPointerException("File must not be null");
+      File canon;
+      if (file.getParent() == null) {
+        canon = file;
+      } else {
+        File canonDir = file.getParentFile().getCanonicalFile();
+        canon = new File(canonDir, file.getName());
+      }
+      return !canon.getCanonicalFile().equals(canon.getAbsoluteFile());
+    } catch (IOException e) {
+      log.warning("assuming not a symlink because of: " + e);
+      return false;
+    }
   }
 
   private boolean hasContentAndSettingsFolder() {
@@ -338,7 +357,7 @@ public class SimulatorSettings {
 
     File from = createTmpFile(plistJSON);
 
-    List<String> command = new ArrayList<>();
+    List<String> command = new ArrayList<String>();
     command.add(PLUTIL);
     command.add("-convert");
     command.add("binary1");

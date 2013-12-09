@@ -220,6 +220,8 @@ public class IOSServer {
         folderMonitor.start();
       } catch (IOException e) {
         log.warning("Couldn't monitor the given folder: " + options.getAppFolderToMonitor());
+      } catch (NoClassDefFoundError error) {
+        log.warning("-folderMonitor not supported when running with Java 6");
       }
     }
   }

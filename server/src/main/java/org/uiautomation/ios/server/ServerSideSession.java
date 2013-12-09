@@ -32,6 +32,8 @@ import org.uiautomation.ios.utils.ApplicationCrashDetails;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.IOSVersion;
 
+import com.google.common.base.Throwables;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -43,9 +45,9 @@ public class ServerSideSession extends Session {
   private static final Logger log = Logger.getLogger(ServerSideSession.class.getName());
   public final IOSServerManager server;
   private final IOSCapabilities capabilities;
-  private final IOSDualDriver driver;
+  private IOSDualDriver driver;
   private final IOSServerConfiguration options;
-  private final DriverConfiguration configuration;
+  private DriverConfiguration configuration;
   private IOSRunningApplication application;
   private Device device;
   private boolean sessionCrashed;
@@ -83,7 +85,7 @@ public class ServerSideSession extends Session {
       if (device != null) {
         device.release();
       }
-      throw e;
+      Throwables.propagate(e);
     }
   }
 

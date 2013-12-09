@@ -37,7 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
 
-  private final BlockingQueue<UIAScriptRequest> requestQueue = new ArrayBlockingQueue<>(1);
+  private final BlockingQueue<UIAScriptRequest> requestQueue = new ArrayBlockingQueue<UIAScriptRequest>(1);
 
   public CURLBasedCommunicationChannel(String sessionId) {
     super(sessionId);

@@ -32,7 +32,7 @@ import java.util.Map;
 
 public class MockedCache implements Cache {
 
-  private Map<Session, IDESessionModel> cache = new HashMap<>();
+  private Map<Session, IDESessionModel> cache = new HashMap<Session, IDESessionModel>();
 
   public MockedCache() throws Exception {
     for (Orientation o : Orientation.values()) {

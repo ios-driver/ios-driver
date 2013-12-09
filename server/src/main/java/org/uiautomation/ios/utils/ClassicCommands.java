@@ -34,7 +34,7 @@ public class ClassicCommands {
    * @return
    */
   public static InstrumentsVersion getInstrumentsVersion(){
-    List<String> s = new ArrayList<>();
+    List<String> s = new ArrayList<String>();
     s.add("instruments");
 
     Command c = new Command(s,false);
@@ -46,7 +46,7 @@ public class ClassicCommands {
   }
 
   public static List<String> psgrep(String processName) {
-    List<String> s = new ArrayList<>();
+    List<String> s = new ArrayList<String>();
     s.add("ps");
     s.add("aux");
 
@@ -72,7 +72,7 @@ public class ClassicCommands {
 
   public static void killall(String processName) {
     if (isRunning(processName)) {
-      List<String> s = new ArrayList<>();
+      List<String> s = new ArrayList<String>();
       s.add("killall");
       s.add(processName);
 
@@ -82,7 +82,7 @@ public class ClassicCommands {
   }
 
   public static File getXCodeInstall() {
-    List<String> cmd = new ArrayList<>();
+    List<String> cmd = new ArrayList<String>();
     cmd.add("/usr/bin/xcrun");
     cmd.add("-find");
     cmd.add("xcodebuild");
@@ -103,7 +103,7 @@ public class ClassicCommands {
   }
 
   public static File getAutomationTemplate() {
-    List<String> cmd = new ArrayList<>();
+    List<String> cmd = new ArrayList<String>();
     cmd.add("instruments");
     cmd.add("-s");
     Command c = new Command(cmd, false);
@@ -128,7 +128,7 @@ public class ClassicCommands {
   }
 
   public static List<String> getInstalledSDKs() {
-    List<String> c = new ArrayList<>();
+    List<String> c = new ArrayList<String>();
     c.add("xcodebuild");
     c.add("-showsdks");
     Command com = new Command(c, false);
@@ -148,7 +148,7 @@ public class ClassicCommands {
    * @return the simulator ProductVersion for the corresponding SDKVersion (i.e. "7.0.3" for "7.0")
    */
   public static String getSimulatorProductVersion(String sdkVersion) {
-    List<String> c = new ArrayList<>();
+    List<String> c = new ArrayList<String>();
     c.add("xcodebuild");
     c.add("-version");
     c.add("-sdk");
@@ -210,7 +210,7 @@ class ShowSDKsParser implements CommandOutputListener {
 
   private static final String pattern = "iphonesimulator";
 
-  private List<String> sdks = new ArrayList<>();
+  private List<String> sdks = new ArrayList<String>();
   private boolean ok = true;
 
   public void stdout(String log) {
@@ -244,7 +244,7 @@ class ShowSDKsParser implements CommandOutputListener {
 class Grep implements CommandOutputListener {
 
   private final String pattern;
-  private final List<String> matching = new ArrayList<>();
+  private final List<String> matching = new ArrayList<String>();
 
   public Grep(String pattern) {
     this.pattern = pattern;

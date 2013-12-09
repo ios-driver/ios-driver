@@ -69,13 +69,12 @@ public class ElementScrollNHandler extends UIAScriptHandler {
     JSONObject payload = request.getPayload();
     if (payload.has("direction")) {
       JSTemplate template;
-      switch (payload.optString("direction")) {
-        case "up": template = scrollUpTemplate; break;
-        case "down": template = scrollDownTemplate; break;
-        case "left": template = scrollLeftTemplate; break;
-        case "right": template = scrollRightTemplate; break;
-        default: throw new WebDriverException("Invalid value for scrolling direction");
-      }
+      String direction = payload.optString("direction");
+      if (direction.equals("up")) template = scrollUpTemplate;
+      else if (direction.equals("down")) template = scrollDownTemplate;
+      else if (direction.equals("left")) template = scrollLeftTemplate;
+      else if (direction.equals("right")) template = scrollRightTemplate;
+      else throw new WebDriverException("Invalid value for scrolling direction");
       js = template.generate(sessionId, reference);
     } else if (payload.has("name")) {
       String name = payload.optString("name");

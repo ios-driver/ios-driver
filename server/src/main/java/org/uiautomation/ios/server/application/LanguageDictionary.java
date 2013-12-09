@@ -43,7 +43,7 @@ public class LanguageDictionary {
   public static final Form form = Form.NFKC;
   public static final Pattern specifierPattern = Pattern.compile("(?<!\\\\)%((?:[1-9]+\\$)?@|d)");
 
-  private final Map<String, String> content = new HashMap<>();
+  private final Map<String, String> content = new HashMap<String, String>();
   private final AppleLanguage language;
 
   /**
@@ -89,7 +89,7 @@ public class LanguageDictionary {
    * @return a key : value map.
    */
   private Map<String, String> convertToMap(JSONObject json) throws JSONException {
-    Map<String, String> res = new HashMap<>();
+    Map<String, String> res = new HashMap<String, String>();
     @SuppressWarnings("unchecked")
     Iterator<String> iter = json.keys();
     while (iter.hasNext()) {
@@ -104,7 +104,7 @@ public class LanguageDictionary {
    * @return the list of the folders hosting the l10ned files.
    */
   public static List<File> getL10NFiles(File aut) {
-    List<File> res = new ArrayList<>();
+    List<File> res = new ArrayList<File>();
     File[] files = aut.listFiles(new FileFilter() {
 
       public boolean accept(File pathname) {
@@ -131,7 +131,7 @@ public class LanguageDictionary {
   }
 
   public ImmutableList<ContentResult> getPotentialMatches(String string) throws WebDriverException {
-    List<ContentResult> candidates = new ArrayList<>();
+    List<ContentResult> candidates = new ArrayList<ContentResult>();
     for (Map.Entry<String, String> entry : content.entrySet()) {
       String key = entry.getKey();
       String original = entry.getValue();
@@ -167,7 +167,7 @@ public class LanguageDictionary {
     });
     // Build the final result by filtering out ContentResult instances that with formatted strings that are contained by
     // the already selected instances' formatted strings.
-    List<ContentResult> res = new ArrayList<>();
+    List<ContentResult> res = new ArrayList<ContentResult>();
     for (ContentResult candidate : candidates) {
       boolean contained = false;
       for (ContentResult member : res) {

@@ -50,7 +50,7 @@ public class IDEServlet extends HttpServlet {
 
   private static final long serialVersionUID = 333974658353413397L;
 
-  private final List<IDECommandController> controllers = new ArrayList<>();
+  private final List<IDECommandController> controllers = new ArrayList<IDECommandController>();
 
   @Override
   public void init() throws ServletException {

@@ -65,7 +65,7 @@ public class LanguageDictionaryTest {
     File app = new File(SampleApps.getIntlMountainsFile());
     List<File> languageFiles = LanguageDictionary.getL10NFiles(app);
 
-    List<LanguageDictionary> dicts = new ArrayList<>();
+    List<LanguageDictionary> dicts = new ArrayList<LanguageDictionary>();
     for (File f : languageFiles) {
       dicts.add(LanguageDictionary.createFromFile(f));
     }
@@ -80,7 +80,7 @@ public class LanguageDictionaryTest {
     File app = new File(SampleApps.getUICatalogFile());
     List<File> languageFiles = LanguageDictionary.getL10NFiles(app);
 
-    List<LanguageDictionary> dicts = new ArrayList<>();
+    List<LanguageDictionary> dicts = new ArrayList<LanguageDictionary>();
     for (File f : languageFiles) {
       dicts.add(LanguageDictionary.createFromFile(f));
     }

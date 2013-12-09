@@ -101,7 +101,7 @@ public class APPIOSApplication {
 
   public List<String> getSupportedLanguagesCodes() {
     List<AppleLanguage> list = getSupportedLanguages();
-    List<String> res = new ArrayList<>();
+    List<String> res = new ArrayList<String>();
     for (AppleLanguage lang : list) {
       res.add(lang.getIsoCode());
     }
@@ -152,7 +152,7 @@ public class APPIOSApplication {
    * Load all the dictionaries for the application.
    */
   private ImmutableList<LanguageDictionary> loadDictionaries() {
-    Map<String, LanguageDictionary> languageNameMap = new HashMap<>();
+    Map<String, LanguageDictionary> languageNameMap = new HashMap<String, LanguageDictionary>();
     for (File f : LanguageDictionary.getL10NFiles(app)) {
       String name = LanguageDictionary.extractLanguageName(f);
       LanguageDictionary res = languageNameMap.get(name);
@@ -168,7 +168,7 @@ public class APPIOSApplication {
         throw new WebDriverException("Error loading content for l10n", e);
       }
     }
-    List<LanguageDictionary> dicts = new ArrayList<>(languageNameMap.values());
+    List<LanguageDictionary> dicts = new ArrayList<LanguageDictionary>(languageNameMap.values());
     Collections.sort(dicts, new Comparator<LanguageDictionary>() {
       @Override
       public int compare(LanguageDictionary o1, LanguageDictionary o2) {
@@ -203,7 +203,7 @@ public class APPIOSApplication {
    * the list of resources to publish via http.
    */
   public Map<String, String> getResources() {
-    Map<String, String> resourceByResourceName = new HashMap<>();
+    Map<String, String> resourceByResourceName = new HashMap<String, String>();
     String metadata =  getMetadata(ICON);
     if(metadata.equals("")){
       metadata = getFirstIconFile(BUNDLE_ICONS);
@@ -249,7 +249,7 @@ public class APPIOSApplication {
   public List<Integer> getDeviceFamily() {
     try {
       JSONArray array = metadata.getJSONArray(DEVICE_FAMILLY);
-      List<Integer> res = new ArrayList<>();
+      List<Integer> res = new ArrayList<Integer>();
       for (int i = 0; i < array.length(); i++) {
         res.add(array.getInt(i));
       }
@@ -514,7 +514,7 @@ public class APPIOSApplication {
   }
 
   public List<DeviceType> getSupportedDevices() {
-    List<DeviceType> families = new ArrayList<>();
+    List<DeviceType> families = new ArrayList<DeviceType>();
     String s = getMetadata(IOSCapabilities.DEVICE_FAMILLY);
     try {
       JSONArray ar = new JSONArray(s);

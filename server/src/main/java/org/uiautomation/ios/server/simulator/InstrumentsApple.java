@@ -163,7 +163,7 @@ public class InstrumentsApple implements Instruments {
   }
 
   private Command createInstrumentCommand(File script) {
-    List<String> args = new ArrayList<>();
+    List<String> args = new ArrayList<String>();
 
     args.add(getInstrumentsClient());
     if (uuid != null) {

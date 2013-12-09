@@ -306,7 +306,7 @@ public abstract class BaseWebInspector implements MessageListener {
   }
 
   private <T> T cast_(JSONObject body) throws JSONException {
-    List<String> primitives = new ArrayList<>();
+    List<String> primitives = new ArrayList<String>();
     primitives.add("boolean");
     primitives.add("number");
     primitives.add("string");
@@ -332,7 +332,7 @@ public abstract class BaseWebInspector implements MessageListener {
       if ("array".equals(body.optString("subtype"))) {
         RemoteObject array = new RemoteObject(body.getString("objectId"), this);
         RemoteObjectArray a = new RemoteObjectArray(array);
-        ArrayList<Object> res = new ArrayList<>();
+        ArrayList<Object> res = new ArrayList<Object>();
         for (Object ro : a) {
           res.add(ro);
         }
@@ -570,7 +570,7 @@ public abstract class BaseWebInspector implements MessageListener {
 
   public List<Cookie> getCookies() {
 
-    List<Cookie> res = new ArrayList<>();
+    List<Cookie> res = new ArrayList<Cookie>();
     JSONObject o = sendCommand(Page.getCookies());
     JSONArray cookies = o.optJSONArray("cookies");
     if (cookies != null) {

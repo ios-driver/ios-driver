@@ -37,7 +37,7 @@ public class IOSServerConfiguration {
   private boolean beta = false;
 
   @Parameter(description = "enable simulators, this requires running on a Mac with Xcode and some configuration prerequisites [see the wiki for more details]", names = "-simulators")
-  private boolean simulators = false;
+  private boolean simulators = true;
 
   @Parameter(description = "port the server will listen on.", names = "-port")
   private int port = 5555;

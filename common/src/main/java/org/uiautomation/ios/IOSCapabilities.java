@@ -191,7 +191,7 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   public List<DeviceType> getSupportedDevicesFromDeviceFamily() {
     JSONArray o = (JSONArray) asMap().get(DEVICE_FAMILLY);
-    List<DeviceType> devices = new ArrayList<>();
+    List<DeviceType> devices = new ArrayList<DeviceType>();
     for (int i = 0; i < o.length(); i++) {
       try {
         devices.add(DeviceType.getFromFamilyCode(o.getInt(i)));
@@ -281,7 +281,7 @@ public class IOSCapabilities extends DesiredCapabilities {
       });
     } else if (o instanceof JSONArray) {
       JSONArray a = (JSONArray) o;
-      List<String> res = new ArrayList<>();
+      List<String> res = new ArrayList<String>();
 
       for (int i = 0; i < a.length(); i++) {
         try {

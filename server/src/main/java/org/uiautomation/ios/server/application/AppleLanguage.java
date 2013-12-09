@@ -344,17 +344,16 @@ public enum AppleLanguage {
   private static final Logger log = Logger.getLogger(AppleLanguage.class.getName());
 
   public static AppleLanguage create(String lprojname) {
-    switch (lprojname) {
-      case "German":    return de;
-      case "English":   return en;
-      case "Spanish":   return es;
-      case "French":    return fr;
-      case "Israel":    return he;
-      case "Indonesia": return id;
-      case "Italian":   return it;
-      case "Japanese":  return ja;
-      case "Dutch":     return nl;
-      default: {
+    if (lprojname.equals("German")) return de;
+    if (lprojname.equals("English")) return en;
+    if (lprojname.equals("Spanish")) return es;
+    if (lprojname.equals("French")) return fr;
+    if (lprojname.equals("Israel")) return he;
+    if (lprojname.equals("Indonesia")) return id;
+    if (lprojname.equals("Italian")) return it;
+    if (lprojname.equals("Japanese")) return ja;
+    if (lprojname.equals("Dutch")) return nl;
+
         String normalizedLprojname = lprojname.replace("-", "_");
         try {
           return AppleLanguage.valueOf(normalizedLprojname);
@@ -364,8 +363,6 @@ public enum AppleLanguage {
               lprojname));
         }
         return unknown;
-      }
-    }
   }
 
   public static AppleLanguage emptyLocale(String languageCode) {

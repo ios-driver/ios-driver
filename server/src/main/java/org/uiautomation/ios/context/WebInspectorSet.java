@@ -21,7 +21,7 @@ import java.util.Set;
 
 public class WebInspectorSet implements Set<WebInspector> {
 
-  private Set<WebInspector> windows = new HashSet<>();
+  private Set<WebInspector> windows = new HashSet<WebInspector>();
   private WebInspector selected;
 
   public WebInspector getSelected() {

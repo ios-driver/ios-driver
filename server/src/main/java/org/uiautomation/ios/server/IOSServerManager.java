@@ -33,7 +33,7 @@ import java.util.logging.Logger;
 public class IOSServerManager {
 
   public final ApplicationStore apps;
-  private final List<ServerSideSession> sessions = new ArrayList<>();
+  private final List<ServerSideSession> sessions = new ArrayList<ServerSideSession>();
   private final HostInfo hostInfo;
   private final ResourceCache cache = new ResourceCache();
   private final IOSServerConfiguration options;
@@ -136,7 +136,7 @@ public class IOSServerManager {
   }
 
   public List<IOSCapabilities> getAllCapabilities() {
-    List<IOSCapabilities> res = new ArrayList<>();
+    List<IOSCapabilities> res = new ArrayList<IOSCapabilities>();
     for (Device d : getDeviceStore().getDevices()) {
       res.addAll(getApplicationStore().getCapabilities(d));
     }
@@ -159,7 +159,7 @@ public class IOSServerManager {
   
   public List<APPIOSApplication> findAllMatchingApplications(
         IOSCapabilities desiredCapabilities) {
-    List<APPIOSApplication> matchingApps = new ArrayList<>();
+    List<APPIOSApplication> matchingApps = new ArrayList<APPIOSApplication>();
     for (APPIOSApplication app : getApplicationStore().getApplications()) {
       IOSCapabilities appCapabilities = app.getCapabilities();
       if (APPIOSApplication.canRun(desiredCapabilities, appCapabilities)) {

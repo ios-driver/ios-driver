@@ -47,9 +47,9 @@ public class IDEMainView implements View {
     conf.setClassForTemplateLoading(this.getClass(), "/");
     Template template = conf.getTemplate("/inspector/inspector.html");
     StringWriter writer = new StringWriter();
-    Map<String, Object> map = new HashMap<>();
+    Map<String, Object> map = new HashMap<String, Object>();
 
-    List<String> cssList = new ArrayList<>();
+    List<String> cssList = new ArrayList<String>();
     cssList.add(getResource("inspector/css/inspector.css"));
     cssList.add(getResource("inspector/css/ide.css"));
     cssList.add(getResource("inspector/third_party/jquery.layout.css"));
@@ -57,7 +57,7 @@ public class IDEMainView implements View {
 
     map.put("cssList", cssList);
 
-    List<String> jsList = new ArrayList<>();
+    List<String> jsList = new ArrayList<String>();
 
     jsList.add(getResource("inspector/third_party/jquery-ui-1.10.3.custom/js/jquery-1.9.1.js"));
     jsList.add(getResource("inspector/third_party/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js"));
