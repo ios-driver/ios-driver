@@ -32,7 +32,7 @@ public class SetValueNHandler extends UIAScriptHandler {
   public SetValueNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
 
-    boolean useNativeEvents = getConfiguration("nativeEvents");
+    boolean useNativeEvents = (Boolean) getConfiguration("nativeEvents");
     try {
       JSONArray array = request.getPayload().getJSONArray("value");
       StringBuilder b = new StringBuilder();
