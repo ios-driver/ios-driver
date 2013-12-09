@@ -35,7 +35,6 @@ import org.uiautomation.ios.server.servlet.DeviceServlet;
 import org.uiautomation.ios.server.servlet.IOSServlet;
 import org.uiautomation.ios.server.servlet.ResourceServlet;
 import org.uiautomation.ios.server.servlet.StaticResourceServlet;
-import org.uiautomation.ios.server.utils.FolderMonitor;
 import org.uiautomation.ios.server.utils.ZipUtils;
 
 import java.io.File;
@@ -54,7 +53,7 @@ public class IOSServer {
   private final IOSServerConfiguration options;
   private Server server;
   private IOSServerManager driver;
-  private FolderMonitor folderMonitor;
+  // private FolderMonitor folderMonitor;
   private SelfRegisteringRemote selfRegisteringRemote;
 
   public IOSServer(IOSServerConfiguration options) {
@@ -215,14 +214,15 @@ public class IOSServer {
 
   private void startFolderMonitor() {
     if (options.getAppFolderToMonitor() != null) {
-      try {
-        folderMonitor = new FolderMonitor(options, driver);
-        folderMonitor.start();
-      } catch (IOException e) {
-        log.warning("Couldn't monitor the given folder: " + options.getAppFolderToMonitor());
-      } catch (NoClassDefFoundError error) {
-        log.warning("-folderMonitor not supported when running with Java 6");
-      }
+      log.severe("FolderMonitor not available with Java 6");
+//      try {
+//        folderMonitor = new FolderMonitor(options, driver);
+//        folderMonitor.start();
+//      } catch (IOException e) {
+//        log.warning("Couldn't monitor the given folder: " + options.getAppFolderToMonitor());
+//      } catch (NoClassDefFoundError error) {
+//        log.warning("-folderMonitor not supported when running with Java 6");
+//      }
     }
   }
 
@@ -241,10 +241,10 @@ public class IOSServer {
       selfRegisteringRemote.stop();
       selfRegisteringRemote = null;
     }
-    if (folderMonitor != null) {
-      folderMonitor.stop();
-      folderMonitor = null;
-    }
+//    if (folderMonitor != null) {
+//      folderMonitor.stop();
+//      folderMonitor = null;
+//    }
     if (driver != null) {
       driver.stop();
       driver = null;

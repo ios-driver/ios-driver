@@ -26,8 +26,6 @@ import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.command.uiautomation.NewSessionNHandler;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
