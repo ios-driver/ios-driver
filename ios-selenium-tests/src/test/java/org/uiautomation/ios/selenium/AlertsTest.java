@@ -1,34 +1,25 @@
 package org.uiautomation.ios.selenium;
 
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.InvalidElementStateException;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoAlertPresentException;
-import org.openqa.selenium.NoSuchWindowException;
-import org.openqa.selenium.UnhandledAlertException;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import static org.openqa.selenium.TestWaiter.waitFor;
+import static org.openqa.selenium.WaitingConditions.*;
+import static org.testng.Assert.*;
 
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import static org.openqa.selenium.TestWaiter.waitFor;
-import static org.openqa.selenium.WaitingConditions.alertToBePresent;
-import static org.openqa.selenium.WaitingConditions.elementTextToEqual;
-import static org.openqa.selenium.WaitingConditions.windowHandleCountToBe;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.fail;
+import org.openqa.selenium.*;
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
  * no really done right now. it will be possible, but there will be some timing issues.
  */
 public class AlertsTest extends BaseSeleniumTest {
 
-  @BeforeClass
+  @BeforeMethod
   public void setUp() throws Exception {
+    // set the initial page for each test
     driver.get(pages.alertsPage);
   }
 
@@ -44,7 +35,6 @@ public class AlertsTest extends BaseSeleniumTest {
 
   @Test//(expectedExceptions = UnhandledAlertException.class)
   public void testShouldAllowUsersToAcceptAnAlertManually() throws InterruptedException {
-    driver.get(pages.alertsPage);
     driver.findElement(By.id("alert")).click();
     Alert alert = waitFor(alertToBePresent(driver));
     alert.accept();
@@ -55,7 +45,6 @@ public class AlertsTest extends BaseSeleniumTest {
 
   @Test
   public void testShouldAllowUsersToAcceptAnAlertWithNoTextManually() {
-    driver.get(pages.alertsPage);
     driver.findElement(By.id("empty-alert")).click();
 
     Alert alert = waitFor(alertToBePresent(driver));
@@ -68,7 +57,6 @@ public class AlertsTest extends BaseSeleniumTest {
 
   @Test
   public void testShouldGetTextOfAlertOpenedInSetTimeout() throws Exception {
-    driver.get(pages.alertsPage);
     driver.findElement(By.id("slow-alert")).click();
 
     // DO NOT WAIT OR SLEEP HERE.
@@ -88,7 +76,6 @@ public class AlertsTest extends BaseSeleniumTest {
 
   @Test
   public void testShouldAllowUsersToDismissAnAlertManually() {
-    driver.get(pages.alertsPage);
     driver.findElement(By.id("alert")).click();
 
     Alert alert = waitFor(alertToBePresent(driver));
@@ -101,7 +88,6 @@ public class AlertsTest extends BaseSeleniumTest {
 
   @Test
   public void testShouldAllowAUserToAcceptAPrompt() {
-    driver.get(pages.alertsPage);
     driver.findElement(By.id("prompt")).click();
 
     Alert alert = waitFor(alertToBePresent(driver));
@@ -114,7 +100,6 @@ public class AlertsTest extends BaseSeleniumTest {
 
   @Test
   public void testShouldAllowAUserToDismissAPrompt() {
-    driver.get(pages.alertsPage);
     driver.findElement(By.id("prompt")).click();
 
     Alert alert = waitFor(alertToBePresent(driver));
@@ -127,7 +112,6 @@ public class AlertsTest extends BaseSeleniumTest {
 
   @Test
   public void testShouldAllowAUserToSetTheValueOfAPrompt() {
-    driver.get(pages.alertsPage);
     driver.findElement(By.id("prompt")).click();
 
     Alert alert = waitFor(alertToBePresent(driver));
@@ -140,7 +124,6 @@ public class AlertsTest extends BaseSeleniumTest {
 
   @Test
   public void testSettingTheValueOfAnAlertThrows() {
-    driver.get(pages.alertsPage);
     driver.findElement(By.id("alert")).click();
 
     Alert alert = waitFor(alertToBePresent(driver));
@@ -156,7 +139,6 @@ public class AlertsTest extends BaseSeleniumTest {
 
   @Test
   public void testShouldAllowTheUserToGetTheTextOfAnAlert() {
-    driver.get(pages.alertsPage);
     driver.findElement(By.id("alert")).click();
 
     Alert alert = waitFor(alertToBePresent(driver));
@@ -169,7 +151,6 @@ public class AlertsTest extends BaseSeleniumTest {
   @Test
 
   public void testShouldAllowTheUserToGetTheTextOfAPrompt() {
-    driver.get(pages.alertsPage);
     driver.findElement(By.id("prompt")).click();
 
     Alert alert = waitFor(alertToBePresent(driver));
@@ -182,7 +163,6 @@ public class AlertsTest extends BaseSeleniumTest {
 
   @Test
   public void testAlertShouldNotAllowAdditionalCommandsIfDismissed() {
-    driver.get(pages.alertsPage);
     driver.findElement(By.id("alert")).click();
 
     Alert alert = waitFor(alertToBePresent(driver));
@@ -196,7 +176,6 @@ public class AlertsTest extends BaseSeleniumTest {
 
   @Test
   public void testAlertInFrameKeepSelectedFrame() {
-    driver.get(pages.alertsPage);
     driver.switchTo().frame("iframeWithAlert");
 
     driver.findElement(By.id("alertInFrame")).click();
@@ -220,7 +199,6 @@ public class AlertsTest extends BaseSeleniumTest {
 
   @Test
   public void testShouldAllowUsersToAcceptAnAlertInAFrame() {
-    driver.get(pages.alertsPage);
     driver.switchTo().frame("iframeWithAlert");
 
     driver.findElement(By.id("alertInFrame")).click();
@@ -235,7 +213,6 @@ public class AlertsTest extends BaseSeleniumTest {
 
   @Test
   public void testShouldAllowUsersToAcceptAnAlertInANestedFrame() {
-    driver.get(pages.alertsPage);
     driver.switchTo().frame("iframeWithIframe").switchTo().frame("iframeWithAlert");
 
     driver.findElement(By.id("alertInFrame")).click();
@@ -250,7 +227,6 @@ public class AlertsTest extends BaseSeleniumTest {
 
   @Test
   public void testShouldThrowAnExceptionIfAnAlertHasNotBeenDealtWithAndDismissTheAlert() {
-    driver.get(pages.alertsPage);
     driver.findElement(By.id("alert")).click();
     Alert alert = null;
     try {
@@ -268,7 +244,6 @@ public class AlertsTest extends BaseSeleniumTest {
 
   @Test
   public void testSwitchingToMissingAlertThrows() throws Exception {
-    driver.get(pages.alertsPage);
     try {
       driver.switchTo().alert();
       fail("Expected exception");
@@ -454,12 +429,9 @@ public class AlertsTest extends BaseSeleniumTest {
 
   @Test(enabled = false)
   public void testCanQuitWhenAnAlertIsPresent() {
-    driver.get(pages.alertsPage);
     driver.findElement(By.id("alert")).click();
     waitFor(alertToBePresent(driver));
 
     driver.quit();
   }
-
-
 }

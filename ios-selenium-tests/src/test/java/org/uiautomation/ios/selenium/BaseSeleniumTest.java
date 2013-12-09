@@ -1,64 +1,67 @@
 package org.uiautomation.ios.selenium;
 
+import java.net.URL;
+
 import org.openqa.selenium.Pages;
 import org.openqa.selenium.environment.webserver.AppServer;
 import org.openqa.selenium.environment.webserver.WebbitAppServer;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.*;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
 
-import java.net.URL;
+public abstract class BaseSeleniumTest {
 
-public class BaseSeleniumTest {
-
+  private static final String[] args = {"-port", "4444", "-host", "localhost", /*"-beta",*/ "-simulators"};
+  private static final IOSServerConfiguration config = IOSServerConfiguration.create(args);
+  private static final String url = "http://" + config.getHost() + ":" + config.getPort() + "/wd/hub";
+ 
   private IOSServer server;
-  private static String[] args = {"-port", "4444", "-host", "localhost", /*"-beta",*/ "-simulators"};
-  private static IOSServerConfiguration config = IOSServerConfiguration.create(args);
-  protected RemoteIOSDriver driver = null;
-  private String url = "http://" + config.getHost() + ":" + config.getPort() + "/wd/hub";
+  protected RemoteIOSDriver driver;
   protected Pages pages;
   protected AppServer appServer;
 
   @BeforeClass
-  public void setup() throws Throwable {
+  public void setup() throws Exception {
     startIOSServer();
     startTestServer();
     IOSCapabilities safari = IOSCapabilities.iphone("Safari");
     // safari.setLanguage("fr");
     driver = new RemoteIOSDriver(new URL(url), safari);
-
+  }
+  
+  @BeforeMethod
+  public void beforeMethod() {
+    // this ensures all initial test pages are loaded in a clean state
+    // (i.e. they don't stay zoomed because of a previous test method action)
+    driver.get("about:blank");
   }
 
-  public void startIOSServer() throws Exception {
+  @AfterClass
+  public void tearDown() throws Exception {
+    try {
+      driver.quit();
+    } catch (Exception e) {
+      System.err.println("cannot quit properly :" + e);
+    }
+    stopIOSServer();
+    appServer.stop();
+  }
+  
+  private void startIOSServer() throws Exception {
     server = new IOSServer(config);
     server.start();
   }
 
-  public void startTestServer() {
+  private void startTestServer() {
     appServer = new WebbitAppServer();
     appServer.start();
 
     pages = new Pages(appServer);
   }
 
-  public void stopIOSServer() throws Exception {
+  private void stopIOSServer() throws Exception {
     server.stop();
-  }
-
-
-  @AfterClass
-  public void tearDown() throws Exception {
-
-    try {
-      driver.quit();
-    } catch (Exception e) {
-      System.err.println("cannot quit properly :" + e.getMessage());
-    }
-    stopIOSServer();
-    appServer.stop();
   }
 }
