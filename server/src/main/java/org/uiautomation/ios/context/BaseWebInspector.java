@@ -364,7 +364,7 @@ public abstract class BaseWebInspector implements MessageListener {
     cmd.put("params", new JSONObject().put("expression", "document.body.clientWidth;"));
 
     JSONObject response = sendCommand(cmd);
-    return cast(response);
+    return (Integer) cast(response);
   }
 
   public Dimension getSize() throws Exception {
