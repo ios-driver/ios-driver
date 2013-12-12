@@ -14,13 +14,16 @@
 
 package org.uiautomation.ios.server.application;
 
-import static org.uiautomation.ios.IOSCapabilities.*;
-
-import java.io.*;
-import java.util.*;
-import java.util.logging.Logger;
-
-import org.json.*;
+import com.dd.plist.BinaryPropertyListWriter;
+import com.dd.plist.NSArray;
+import com.dd.plist.NSDictionary;
+import com.dd.plist.NSNumber;
+import com.dd.plist.NSObject;
+import com.dd.plist.PropertyListParser;
+import com.google.common.collect.ImmutableList;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
@@ -28,8 +31,20 @@ import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.PlistFileUtils;
 
-import com.dd.plist.*;
-import com.google.common.collect.ImmutableList;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
+
+import static org.uiautomation.ios.IOSCapabilities.*;
 
 // TODO freynaud create IOSApp vs Running App that has locale + language
 public class APPIOSApplication {
@@ -212,18 +227,21 @@ public class APPIOSApplication {
     return resourceByResourceName;
   }
 
-  private String getFirstIconFile(String bundleIcons){
-    if(!metadata.has(bundleIcons)){
-      return "";
+  private String getFirstIconFile(String bundleIcons) {
+    if (!metadata.has(bundleIcons)) {
+        return "";
     }
-    try{
-      HashMap icons = (HashMap)metadata.get(bundleIcons);
-      HashMap primaryIcon = (HashMap)icons.get("CFBundlePrimaryIcon");
-      ArrayList iconFiles = (ArrayList)primaryIcon.get("CFBundleIconFiles");
-      return iconFiles.get(0).toString();
-    }
-    catch (JSONException e) {
-      throw new WebDriverException("property 'CFBundleIcons' can't be returned. " + e.getMessage(), e);
+    try {
+        HashMap icons = (HashMap) metadata.get(bundleIcons);
+        HashMap primaryIcon = (HashMap) icons.get("CFBundlePrimaryIcon");
+        ArrayList iconFiles = (ArrayList) primaryIcon.get("CFBundleIconFiles");
+        if (iconFiles != null) {
+            return iconFiles.get(0).toString();
+        } else {
+            return "";
+        }
+    } catch (JSONException e) {
+        throw new WebDriverException("property 'CFBundleIcons' can't be returned. " + e.getMessage(), e);
     }
   }
 
