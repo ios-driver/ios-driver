@@ -45,9 +45,9 @@ buildMenu = function (page) {
                     '<li><a href="safari.html" id="safari">Safari</a></li>' +
                     '<li><a href="hybrid.html" id="hybrid">Hybrid</a></li>' +
                     '<li><a href="scale.html" id="scale">Scale</a></li>' +
+                    '<li><a href="building-source.html" id="building">Building</a></li>' +
                     '<li><a href="faq.html" id="faq">FAQ</a></li>' +
                     '<li><a href="bug.html" id="bug">Report a Bug</a></li>' +
-                    '<li><a href="building-source.html" id="branch">Building</a></li>' +
                     '</ul>');
     $("#" + page).parent().addClass("active");
 };
