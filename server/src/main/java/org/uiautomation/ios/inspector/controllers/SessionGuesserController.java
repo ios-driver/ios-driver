@@ -40,13 +40,16 @@ public class SessionGuesserController implements IDECommandController {
 
   @Override
   public boolean canHandle(String pathInfo) {
-    return pathInfo.equals("/");
+   // allow either "http://localhost/inspector" or "http://localhost/inspector/" 
+    return pathInfo == null || pathInfo.equals("/");
   }
 
   @Override
   public View handle(HttpServletRequest req) throws Exception {
     Session session = getSession();
-    return new RedirectView("session/" + session.getSessionId() + "/home");
+    // allow either "http://localhost/inspector" or "http://localhost/inspector/" 
+    String base = req.getPathInfo() == null? "inspector/session/" : "session/";
+    return new RedirectView(base + session.getSessionId() + "/home");
   }
 
   private Session getSession() throws Exception {
