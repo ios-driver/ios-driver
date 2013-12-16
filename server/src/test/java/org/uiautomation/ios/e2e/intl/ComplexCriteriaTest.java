@@ -80,4 +80,28 @@ public class ComplexCriteriaTest extends BaseIOSDriverTest {
     }
   }
 
+
+  @Test
+  public void apostrophe() {
+
+    RemoteIOSDriver driver = null;
+    try {
+
+      driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.intlMountainsCap("fr"));
+
+      Criteria c1 = new TypeCriteria(UIATableCell.class);
+      UIAElement element = driver.findElement(c1);
+      element.tap();
+
+      // and using Xpath
+      WebElement
+          el =
+          driver.findElement(By.xpath("//*[matches(@name,l10n('detailViewNavTitle'))]"));
+
+    } finally {
+      if (driver != null) {
+        driver.quit();
+      }
+    }
+  }
 }
