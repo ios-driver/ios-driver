@@ -37,6 +37,7 @@ import org.uiautomation.ios.server.servlet.ResourceServlet;
 import org.uiautomation.ios.server.servlet.StaticResourceServlet;
 import org.uiautomation.ios.server.utils.FolderMonitor;
 import org.uiautomation.ios.server.utils.ZipUtils;
+import org.uiautomation.ios.utils.BuildInfo;
 
 import java.io.File;
 import java.io.IOException;
@@ -125,7 +126,9 @@ public class IOSServer {
     b.append(String.format("\nCapabilities: http://0.0.0.0:%d/wd/hub/capabilities/all", options.getPort()));
     b.append(String.format("\nMonitoring '%s' for new applications", options.getAppFolderToMonitor()));
     b.append(String.format("\nArchived apps: %s", driver.getApplicationStore().getFolder().getAbsolutePath()));
-
+    b.append("\nBuild info: " + BuildInfo.toBuildInfoString());
+    b.append("\nRunning on: " + driver.getHostInfo().getOSInfo());
+    b.append("\nUsing java: " + driver.getHostInfo().getJavaVersion());
     if (Configuration.SIMULATORS_ENABLED) {
       addSimulatorDetails(b);
     }
