@@ -33,6 +33,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -110,7 +111,8 @@ public class DOMContext {
 
   // TODO freynaud reset() != pageLoad
   public void reset() {
-    log.fine("reset called on " + toString());
+    if (log.isLoggable(Level.FINE))
+      log.fine("reset called on " + toString());
     RemoteWebElement newDocument = null;
     RemoteWebElement newWindow = null;
 
@@ -120,7 +122,8 @@ public class DOMContext {
       try {
         newDocument = iframe.getContentDocument();
         newWindow = iframe.getContentWindow();
-        log.fine("newDoc=" + newDocument + " newWindow=" + newWindow);
+        if (log.isLoggable(Level.FINE))
+          log.fine("newDoc=" + newDocument + " newWindow=" + newWindow);
         setCurrentFrame(iframe, newDocument, newWindow);
 
         return;
@@ -265,7 +268,8 @@ public class DOMContext {
         } else {
           // is it the new node we're looking for ?
           if (parent.equals(newFrame.getParent())) {
-            log.fine("the new node is here :" + newFrame.getNode());
+            if (log.isLoggable(Level.FINE))
+              log.fine("the new node is here :" + newFrame.getNode());
             assignNewFrameFromEvent(newFrame);
           }
         }

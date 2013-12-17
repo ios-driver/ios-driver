@@ -23,6 +23,7 @@ import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
 import org.uiautomation.ios.wkrdp.model.RemoteWebNativeBackedElement;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SetValueHandler extends BaseWebCommandHandler {
@@ -39,7 +40,8 @@ public class SetValueHandler extends BaseWebCommandHandler {
     RemoteWebElement element = getWebDriver().createElement(ref);
 
     JSONArray array = getRequest().getPayload().getJSONArray("value");
-    log.fine("payload : " + getRequest().getPayload().toString(2));
+    if (log.isLoggable(Level.FINE))
+      log.fine("payload : " + getRequest().getPayload().toString(2));
     String value = "";
 
     for (int i = 0; i < array.length(); i++) {

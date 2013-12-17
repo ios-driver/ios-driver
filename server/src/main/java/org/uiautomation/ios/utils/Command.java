@@ -14,21 +14,15 @@
 
 package org.uiautomation.ios.utils;
 
-import com.google.common.base.Joiner;
+import java.io.*;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.openqa.selenium.WebDriverException;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.logging.Logger;
+import com.google.common.base.Joiner;
 
 public class Command {
 
@@ -81,7 +75,8 @@ public class Command {
    * Starts the command. Doesn't wait for it to finish. Doesn't wait for stdout and stderr either.
    */
   public void start() {
-    log.fine(String.format("Starting command: %s", commandString()));
+    if (log.isLoggable(Level.FINE))
+      log.fine(String.format("Starting command: %s", commandString()));
     ProcessBuilder builder = new ProcessBuilder(args);
     if (workingDir != null) {
       builder.directory(workingDir);
@@ -152,7 +147,8 @@ public class Command {
   }
 
   private void add(String line, boolean normal) {
-    log.finer(String.format("%s %s: %s", args.get(0), normal ? "stdout" : "stderr", line));
+    if (log.isLoggable(Level.FINER))
+      log.finer(String.format("%s %s: %s", args.get(0), normal ? "stdout" : "stderr", line));
     if (normal) {
       out.add(line);
     } else {

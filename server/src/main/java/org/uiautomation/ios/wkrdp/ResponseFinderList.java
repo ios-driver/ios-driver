@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -53,9 +54,9 @@ public class ResponseFinderList {
         public void run() {
           try {
             finder.startSearch(id);
-            log.fine(
-                "finder " + finder.getClass() + " found something - " + (System.currentTimeMillis()
-                                                                         - start) + "ms");
+            if (log.isLoggable(Level.FINE))
+              log.fine(
+                "finder " + finder.getClass() + " found something - " + (System.currentTimeMillis()                                                                        - start) + "ms");
             try {
               lock.lock();
               foundIt.signal();
@@ -77,7 +78,8 @@ public class ResponseFinderList {
       try {
         lock.lock();
         foundIt.await(timeoutInMs, TimeUnit.MILLISECONDS);
-        log.fine("await returns " + (System.currentTimeMillis() - start) + "ms");
+        if (log.isLoggable(Level.FINE))
+          log.fine("await returns " + (System.currentTimeMillis() - start) + "ms");
       } finally {
         lock.unlock();
       }
@@ -92,11 +94,13 @@ public class ResponseFinderList {
     for (ResponseFinder finder : finders) {
       finder.interruptSearch();
     }
-    log.fine("all finders interrupted " + (System.currentTimeMillis() - start) + "ms");
+    if (log.isLoggable(Level.FINE))
+      log.fine("all finders interrupted " + (System.currentTimeMillis() - start) + "ms");
     for (ResponseFinder finder : finders) {
       JSONObject response = finder.getResponse();
       if (response != null) {
-        log.fine("returns response  " + (System.currentTimeMillis() - start) + "ms");
+        if (log.isLoggable(Level.FINE))
+          log.fine("returns response  " + (System.currentTimeMillis() - start) + "ms");
         return response;
       }
     }

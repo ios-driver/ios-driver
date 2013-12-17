@@ -25,6 +25,7 @@ import org.uiautomation.ios.wkrdp.message.MessageFactory;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -103,9 +104,10 @@ public class DefaultMessageHandler implements MessageHandler {
     ResponseFinderList all = new ResponseFinderList(finders, timeoutInMs);
     try {
       JSONObject res = all.findResponse(id);
+      if (log.isLoggable(Level.FINE)) {
       log.fine(
-          "response " + id + " , " + (System.currentTimeMillis() - start) + "ms. " + res
-              .toString());
+          "response " + id + " , " + (System.currentTimeMillis() - start) + "ms. " + res);
+      }
 
       return res;
     } catch (RuntimeException e) {

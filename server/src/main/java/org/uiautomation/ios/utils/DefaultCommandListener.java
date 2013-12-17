@@ -14,6 +14,7 @@
 
 package org.uiautomation.ios.utils;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DefaultCommandListener implements CommandOutputListener {
@@ -29,12 +30,12 @@ public class DefaultCommandListener implements CommandOutputListener {
 
   @Override
   public void stdout(String line) {
-    log.fine(label+"\t"+line);
+    if (log.isLoggable(Level.FINE))
+      log.fine(label+"\t"+line);
   }
 
   @Override
   public void stderr(String line) {
     log.warning(label+"\t"+line);
   }
-
 }

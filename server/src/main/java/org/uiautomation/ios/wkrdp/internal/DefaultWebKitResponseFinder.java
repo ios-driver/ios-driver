@@ -20,6 +20,7 @@ import org.uiautomation.ios.wkrdp.ResponseFinder;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -64,7 +65,7 @@ public class DefaultWebKitResponseFinder implements ResponseFinder {
       synchronized (this) {
         if (System.currentTimeMillis() > end) {
           exception =
-              new WebDriverException("timeout waiting for a response for request id : " + id);
+              new WebDriverException("timeout (" + timeout + "ms) waiting for a response for request id: " + id);
           return;
         }
         try {
@@ -73,7 +74,8 @@ public class DefaultWebKitResponseFinder implements ResponseFinder {
             if (o.optInt("id") == id) {
               responses.remove(o);
               response = o;
-              log.fine("found a response " + (System.currentTimeMillis() - start) + "ms.");
+              if (log.isLoggable(Level.FINE))
+                log.fine("found a response " + (System.currentTimeMillis() - start) + "ms.");
               return;
             }
           }

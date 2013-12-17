@@ -19,6 +19,7 @@ import com.dd.plist.NSDictionary;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ApplicationSentListingMessage extends BaseIOSWebKitMessage {
@@ -36,7 +37,8 @@ public class ApplicationSentListingMessage extends BaseIOSWebKitMessage {
       NSDictionary page = (NSDictionary) list.objectForKey(key);
       pages.add(new WebkitPage(page));
     }
-    log.fine("got :" + toString());
+    if (log.isLoggable(Level.FINE))
+      log.fine("got: " + this);
   }
 
   public List<WebkitPage> getPages() {
@@ -53,6 +55,5 @@ public class ApplicationSentListingMessage extends BaseIOSWebKitMessage {
           + p.getConnection() + "\n\t");
     }
     return builder.toString();
-
   }
 }
