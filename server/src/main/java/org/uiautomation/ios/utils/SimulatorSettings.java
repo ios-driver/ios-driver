@@ -64,29 +64,9 @@ public class SimulatorSettings {
   private final File globalPreferencePlist;
 
   public SimulatorSettings(String sdkVersion) {
-    this.exactSdkVersion = getExactSdkVersion(sdkVersion);
+    this.exactSdkVersion = sdkVersion;
     this.contentAndSettingsFolder = getContentAndSettingsFolder();
     this.globalPreferencePlist = getGlobalPreferenceFile();
-  }
-
-  private String getExactSdkVersion(String sdkVersion) {
-    File parentFolder = getContentAndSettingsParentFolder();
-    if (!parentFolder.isDirectory()) {
-      return sdkVersion;
-    }
-    int maxMinorVersion = -1;
-    Pattern pattern = Pattern.compile(String.format("^%s.([0-9]+)$", sdkVersion));
-    for (String child : parentFolder.list()) {
-      Matcher matcher = pattern.matcher(child);
-      if (matcher.matches()) {
-        int minorVersion = Integer.parseInt(matcher.group(1));
-        maxMinorVersion = Math.max(minorVersion, maxMinorVersion);
-      }
-    }
-    if (maxMinorVersion != -1) {
-      return String.format("%s.%d", sdkVersion, maxMinorVersion);
-    }
-    return sdkVersion;
   }
 
   public void setLocationPreference(boolean authorized, String bundleId) {

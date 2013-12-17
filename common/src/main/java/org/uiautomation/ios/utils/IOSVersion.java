@@ -17,9 +17,24 @@ package org.uiautomation.ios.utils;
 public class IOSVersion {
 
   private final String version;
+  private String major;
+  private String minor;
+  private String incremental;
 
   public IOSVersion(String version) {
     this.version = version;
+    String[] pieces = version.split("\\.");
+    int l = pieces.length;
+    if (l > 0) {
+      major = pieces[0];
+    }
+    if (l > 1) {
+      minor = pieces[1];
+    }
+    if (l > 2) {
+      incremental = pieces[2];
+    }
+
   }
 
   private int compare(String other) {
@@ -51,5 +66,17 @@ public class IOSVersion {
 
   public boolean isGreaterOrEqualTo(String other) {
     return compare(other) != -1;
+  }
+
+  public String getMajor() {
+    return major;
+  }
+
+  public String getMinor() {
+    return minor;
+  }
+
+  public String getIncremental() {
+    return incremental;
   }
 }

@@ -29,6 +29,7 @@ import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.utils.ClassicCommands;
+import org.uiautomation.ios.utils.IOSVersion;
 import org.uiautomation.ios.utils.PlistFileUtils;
 
 import java.io.*;
@@ -281,9 +282,11 @@ public class APPIOSApplication {
   }
   
   public static File findSafariLocation(File xcodeInstall, String sdkVersion) {
+    IOSVersion version = new IOSVersion(sdkVersion);
+    String v = version.getMajor()+"."+version.getMinor();
     File safariFolder = new File(xcodeInstall,
                         "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator"
-                        + sdkVersion
+                        + v
                         + ".sdk/Applications/MobileSafari.app");
     if (!safariFolder.exists()) {
       log.warning("safari app doesn't exist: " + safariFolder.getAbsolutePath());

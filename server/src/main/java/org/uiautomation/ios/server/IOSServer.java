@@ -37,6 +37,7 @@ import org.uiautomation.ios.server.servlet.ResourceServlet;
 import org.uiautomation.ios.server.servlet.StaticResourceServlet;
 import org.uiautomation.ios.server.utils.FolderMonitor;
 import org.uiautomation.ios.server.utils.ZipUtils;
+import org.uiautomation.ios.utils.IOSVersion;
 
 import java.io.File;
 import java.io.IOException;
@@ -152,8 +153,8 @@ public class IOSServer {
     boolean safari = false;
     // automatically add safari for host SDK and above as instruments starts simulator on host SDK version
     for (String s : driver.getHostInfo().getInstalledSDKs()) {
-      Float version = Float.parseFloat(s);
-      if (version >= 6.0) {
+      IOSVersion version = new IOSVersion(s);
+      if (version.isGreaterOrEqualTo("6.0")) {
         safari = true;
         driver.addSupportedApplication(copyOfSafari(xcodeInstall, s));
       }

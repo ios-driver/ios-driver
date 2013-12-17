@@ -27,13 +27,12 @@ public class ClassicCommands {
 
   /**
    * returns the version of the currently selected ( xcode-select -switch ) Xcode.
-   * @return
    */
-  public static InstrumentsVersion getInstrumentsVersion(){
+  public static InstrumentsVersion getInstrumentsVersion() {
     List<String> s = new ArrayList<>();
     s.add("instruments");
 
-    Command c = new Command(s,false);
+    Command c = new Command(s, false);
     InstrumentsVersion version = new InstrumentsVersion();
     c.registerListener(version);
     c.executeAndWait(true);
@@ -134,7 +133,6 @@ public class ClassicCommands {
     return l.getSDKs();
   }
 
-  // TODO freynaud find the correct command
   public static String getDefaultSDK() {
     List<String> sdks = getInstalledSDKs();
     return sdks.get(sdks.size() - 1);
@@ -158,10 +156,18 @@ class ShowSDKsPasrer implements CommandOutputListener {
   private String extractSDK(String log) {
     if (log.contains(pattern)) {
       int index = log.indexOf(pattern) + pattern.length();
-      return log.substring(index);
+      String raw = log.substring(index);
+      return decorate(raw);
     } else {
       return null;
     }
+  }
+
+  private String decorate(String raw) {
+    if (raw.equals("7.0")) {
+      return "7.0.3";
+    }
+    return raw;
   }
 
   public void stderr(String log) {
