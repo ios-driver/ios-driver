@@ -292,9 +292,10 @@ public class SimulatorSettings {
   private String getSimulateDeviceValue(DeviceType device, DeviceVariation variation, String desiredSDKVersion)
       throws WebDriverException {
     if (!DeviceVariation.compatibleWithSDKVersion(device, variation, desiredSDKVersion)) {
-      throw new WebDriverException(String.format("%s incompatible with SDK %s",
+      DeviceVariation compatibleVariation = DeviceVariation.getCompatibleVersion(device, desiredSDKVersion);
+      throw new WebDriverException(String.format("%s variation incompatible with SDK %s, a compatible variation is %s",
           DeviceVariation.deviceString(device, variation),
-          desiredSDKVersion));
+          desiredSDKVersion, compatibleVariation));
     }
     return DeviceVariation.deviceString(device, variation);
   }
