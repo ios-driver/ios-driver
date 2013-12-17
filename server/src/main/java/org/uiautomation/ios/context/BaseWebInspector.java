@@ -57,7 +57,7 @@ public abstract class BaseWebInspector implements MessageListener {
   private static final Logger log = Logger.getLogger(BaseWebInspector.class.getName());
   protected final ServerSideSession session;
   private boolean newPage = true;
-  public static final Long defaultPageLoadTimeoutInMs = 30000L;
+  public static final Long defaultPageLoadTimeoutInMs = 60000L;
   private final DOMContext context;
 
   protected BaseWebInspector(ServerSideSession session) {
