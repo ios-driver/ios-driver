@@ -24,7 +24,10 @@ UIATextView.prototype.setValue = function (value) {
     var keyboard = app.keyboard(2);
 
     this.setValueOriginal(value);
-    //UIATarget.localTarget().delay(10);
 
-    keyboard.hide();
+    try {
+        keyboard.hide();
+
+    } catch (err) {
+    }
 }

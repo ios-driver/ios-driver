@@ -125,6 +125,8 @@ UIAKeyboard.prototype.hide = function () {
                                 {"l10n": "none", "expected": "Hide keyboard", "matching": "exact", "method": "name"}
                             ]});
     hide.tap();
+    // and wait for the keyboard to disapear.
+    UIATarget.localTarget().delay(0.5);
 }
 
 function Mapping(keyboard) {

@@ -153,6 +153,9 @@ public abstract class BaseFindElementNHandler extends UIAScriptHandler {
       if (val.startsWith("\"") && val.endsWith("\"")) {
         val = val.substring(1, val.length() - 1);
       }
+      if (val.startsWith("'") && val.endsWith("'")) {
+        val = val.substring(1, val.length() - 1);
+      }
       strategy = MatchingStrategy.regex;
     }
 
