@@ -323,6 +323,11 @@ public class NewSessionTest extends BaseIOSDriverTest {
                                                          DeviceVariation variation,
                                                          int expectedW,
                                                          int expectedH) throws Exception {
+
+    String sdk = ClassicCommands.getDefaultSDK();
+    if (!DeviceVariation.compatibleWithSDKVersion(device, variation, sdk)) {
+      return;
+    }
     IOSCapabilities cap = new IOSCapabilities();
 
     cap.setCapability(DEVICE, device);
@@ -356,8 +361,8 @@ public class NewSessionTest extends BaseIOSDriverTest {
       File f = driver.getScreenshotAs(OutputType.FILE);
 
       BufferedImage bimg = ImageIO.read(f);
-      Assert.assertTrue(bimg.getWidth() ==  expectedW || bimg.getHeight() == expectedW);
-      Assert.assertTrue(bimg.getWidth() ==  expectedH || bimg.getHeight() == expectedH);
+      Assert.assertTrue(bimg.getWidth() == expectedW || bimg.getHeight() == expectedW);
+      Assert.assertTrue(bimg.getWidth() == expectedH || bimg.getHeight() == expectedH);
 
     } finally {
       if (driver != null) {
