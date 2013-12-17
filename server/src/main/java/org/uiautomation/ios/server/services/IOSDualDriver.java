@@ -94,7 +94,8 @@ public class IOSDualDriver {
 
     if (session.getApplication().isSafari()) {
       String sdkVersion = session.getCapabilities().getSDKVersion();
-      if (sdkVersion != null && Float.parseFloat(sdkVersion) >= 7.0) {
+      IOSVersion version = new IOSVersion(sdkVersion);
+      if (sdkVersion != null && version.isGreaterOrEqualTo("7.0")) {
         try {
           // instruments sometimes crashes if click is done before page is fully loaded
           Thread.sleep(3000);

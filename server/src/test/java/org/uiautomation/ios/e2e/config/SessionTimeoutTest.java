@@ -38,7 +38,7 @@ public final class SessionTimeoutTest {
 
   @BeforeClass
   public void startServer() throws Exception {
-    String[] args = {"-port", "4444", "-host", "localhost", "-sessionTimeout", "5", "-simulators"};
+    String[] args = {"-port", "4444", "-host", "localhost", "-sessionTimeout", "20", "-simulators"};
     config = IOSServerConfiguration.create(args);
 
     server = new IOSServer(config);
@@ -83,6 +83,6 @@ public final class SessionTimeoutTest {
     }
     Assert.assertNull(element);
     long elapsedSeconds = (System.currentTimeMillis() - startTime) / 1000;
-    Assert.assertTrue(elapsedSeconds > 5 && elapsedSeconds < 30, "Elapsed: " + elapsedSeconds);
+    Assert.assertTrue(elapsedSeconds > 20 && elapsedSeconds < 40, "Elapsed: " + elapsedSeconds);
   }
 }
