@@ -23,6 +23,7 @@ import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.application.AppleLanguage;
+import org.uiautomation.ios.server.application.AppleLocale;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
@@ -41,6 +42,9 @@ import java.util.logging.Logger;
 
 public class ServerSideSession extends Session {
 
+  private static final String DEFAULT_LANGUAGE_CODE = "en";
+  private static final String DEFAULT_LOCALE = "en_GB";
+
   private static final Logger log = Logger.getLogger(ServerSideSession.class.getName());
   public final IOSServerManager server;
   private final IOSCapabilities capabilities;
@@ -54,7 +58,9 @@ public class ServerSideSession extends Session {
   private java.net.URL URL;
   private final IOSLogManager logManager;
 
-  ServerSideSession(IOSServerManager server, IOSCapabilities desiredCapabilities, IOSServerConfiguration options) {
+  ServerSideSession(IOSServerManager server, IOSCapabilities desiredCapabilities,
+                    IOSServerConfiguration options)
+      throws NoSuchLocaleException, NoSuchLanguageCodeException {
     super(UUID.randomUUID().toString());
     this.server = server;
     this.capabilities = desiredCapabilities;
@@ -69,6 +75,9 @@ public class ServerSideSession extends Session {
 
     this.sessionCrashed = false;
     this.applicationCrashDetails = null;
+
+    ensureLanguage();
+    ensureLocale();
 
     // extract application from capabilities if necessary
     URL url = desiredCapabilities.getAppURL();
@@ -92,6 +101,50 @@ public class ServerSideSession extends Session {
         device.release();
       }
       throw e;
+    }
+  }
+
+  private void ensureLanguage() throws NoSuchLanguageCodeException {
+    String languageCode = capabilities.getLanguage();
+
+    // if language code is not specified in the capabilities
+    if (languageCode == null || languageCode.trim().length() == 0) {
+      // then use the default language code "en"
+      capabilities.setLanguage(DEFAULT_LANGUAGE_CODE);
+    } else {
+
+      AppleLanguage[] values = AppleLanguage.values();
+      boolean languageCodeFound = false;
+      for (AppleLanguage value : values) {
+        if (value.name().equals(languageCode)) {
+          languageCodeFound = true;
+        }
+      }
+      if (!languageCodeFound) {
+        throw new NoSuchLanguageCodeException(languageCode);
+      }
+    }
+  }
+
+  private void ensureLocale() throws NoSuchLocaleException {
+    String locale = capabilities.getLocale();
+
+    // if locale is not specified in the capabilities
+    if (locale == null || locale.trim().length() == 0) {
+      // then use the default locale "en_GB"
+      capabilities.setLocale(DEFAULT_LOCALE);
+    } else {
+
+      AppleLocale[] values = AppleLocale.values();
+      boolean localeFound = false;
+      for (AppleLocale value : values) {
+        if (value.name().equals(locale)) {
+          localeFound = true;
+        }
+      }
+      if (!localeFound) {
+        throw new NoSuchLocaleException(locale);
+      }
     }
   }
 

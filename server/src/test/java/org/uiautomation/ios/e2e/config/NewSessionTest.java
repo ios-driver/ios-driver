@@ -111,10 +111,13 @@ public class NewSessionTest extends BaseIOSDriverTest {
   public void startDefaultLanguageLocale() {
     RemoteIOSDriver driver = null;
     try {
-      driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
+      IOSCapabilities capabilitiesNoLanguageNoLocale;
+      capabilitiesNoLanguageNoLocale = SampleConfig.uiCatalogCapNoLangNoLocale();
+      driver = new RemoteIOSDriver(getRemoteURL(), capabilitiesNoLanguageNoLocale);
       IOSCapabilities actual = driver.getCapabilities();
+
       Assert.assertEquals(actual.getBundleId(), "com.yourcompany.UICatalog");
-      Assert.assertEquals(actual.getBundleVersion(), "2.10"); // default to UK
+      Assert.assertEquals(actual.getBundleVersion(), "2.10");
       Assert.assertEquals(actual.getLanguage(), "en");
       Assert.assertEquals(actual.getLocale(), "en_GB");
     } finally {

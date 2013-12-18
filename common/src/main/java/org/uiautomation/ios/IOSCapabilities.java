@@ -13,30 +13,27 @@
  */
 package org.uiautomation.ios;
 
-import java.util.*;
-
 import com.google.common.base.Function;
-import com.google.common.collect.Lists;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.logging.LoggingPreferences;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
 
 public class IOSCapabilities extends DesiredCapabilities {
 
@@ -85,7 +82,7 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   // default selenium bindings for mobile safari
   public static final String BROWSER_NAME = "browserName";
-  
+
   // TODO: make a parameter?
   public static final int COMMAND_TIMEOUT_MILLIS = 10 * 60 * 1000; // 10 minutes
 
@@ -224,13 +221,11 @@ public class IOSCapabilities extends DesiredCapabilities {
     return DeviceType.valueOf(o);
   }
 
- 
 
   public String getSDKVersion() {
     Object o = getCapability(UI_SDK_VERSION);
     return ((String) o);
   }
-
 
 
   public String getApplication() {
@@ -240,12 +235,7 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   public String getLocale() {
     Object o = getCapability(LOCALE);
-
-    if (o == null) {
-      return Locale.getDefault().toString();
-    } else {
-      return o.toString();
-    }
+    return ((String) o);
   }
 
   public void setLocale(String locale) {
@@ -312,7 +302,6 @@ public class IOSCapabilities extends DesiredCapabilities {
     return getList(SUPPORTED_LANGUAGES);
   }
 
-  
 
   public List<DeviceType> getSupportedDevices() {
     return Lists.transform(getList(SUPPORTED_DEVICES), new Function<String, DeviceType>() {
