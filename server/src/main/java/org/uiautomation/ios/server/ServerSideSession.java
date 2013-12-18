@@ -116,7 +116,7 @@ public class ServerSideSession extends Session {
       AppleLanguage[] values = AppleLanguage.values();
       boolean languageCodeFound = false;
       for (AppleLanguage value : values) {
-        if (value.name().equals(languageCode)) {
+        if (value.getIsoCode().equals(languageCode)) {
           languageCodeFound = true;
         }
       }
