@@ -95,9 +95,10 @@ public class GetHandler extends BaseWebCommandHandler {
 
   private WebElement getAddressBar() {
 
-    Criteria urlAddressBar = new AndCriteria(new TypeCriteria(UIAElement.class), new ValueCriteria(
-        "Go to this address"));
-    By b = By.xpath("//UIAElement[@name=l10n('Address')]");
+
+    By b = By.xpath("//UIAElement[@name=l10n('Address')] | //UIATextField[@value=l10n('Search or enter an address')]");
+
+
     addressBar = getNativeDriver().findElement(b);
     return addressBar;
   }

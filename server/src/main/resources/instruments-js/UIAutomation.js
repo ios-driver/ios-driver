@@ -13,7 +13,9 @@
 var UIAutomation = {
     cache: new Cache(),
     CURL: "/usr/bin/curl",
-    COMMAND: "http://localhost:" + CONFIG_PORT + "/wd/hub/uiascriptproxy?sessionId=" + CONFIG_SESSION,
+    COMMAND: "http://localhost:" + CONFIG_PORT + "/wd/hub/uiascriptproxy?sessionId="
+        + CONFIG_SESSION,
+    LOG: "http://localhost:" + CONFIG_PORT + "/wd/hub/log?sessionId=" + CONFIG_SESSION,
     HOST: UIATarget.localTarget().host(),
     TIMEOUT_IN_SEC: {
         "implicit": 0
@@ -107,6 +109,24 @@ var UIAutomation = {
         log("command : " + nextCommand.stdout);
         return nextCommand.stdout;
 
+    },
+
+    /**
+     * Post the response from the previous call, and wait for the next command, up to 10 minutes.
+     * @param {string} jsonResponse the response to send to ios-server.
+     * @return {string} the next command.The command is a javascript snipet, that will be executed
+     * using eval().
+     */
+    pushLogToServer: function (log) {
+        try {
+            this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.LOG, "--data-binary",
+                                                                      log], 10);
+        } catch (err) {
+            // TODO freynaud : put failed logs in a queue ?
+            // a call to perform can fail if the log is from the alert handling method for instance.
+            // in that case, the postResponseWithCURLAndGetNextCommand is still hanging, and perform
+            // won't be called twice.
+        }
     },
 
     postResponseMultiAndGetNextCommand: function (jsonResponse) {

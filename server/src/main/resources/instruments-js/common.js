@@ -2,6 +2,8 @@
  * @module ios-driver
  */
 
+
+var DEBUG = false;
 /**
  * Create an ios exception following the webdriver JSON protocol
  * @param {string} message
@@ -25,6 +27,10 @@ function UIAutomationException(message, status) {
  */
 function log(msg) {
     UIALogger.logMessage("log:" + msg);
+    if (DEBUG === true) {
+        UIAutomation.pushLogToServer(msg);
+    }
+
 }
 
 function response(msg) {

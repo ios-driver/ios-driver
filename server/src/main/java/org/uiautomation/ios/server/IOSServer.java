@@ -33,6 +33,7 @@ import org.uiautomation.ios.server.servlet.ArchiveServlet;
 import org.uiautomation.ios.server.servlet.CapabilitiesServlet;
 import org.uiautomation.ios.server.servlet.DeviceServlet;
 import org.uiautomation.ios.server.servlet.IOSServlet;
+import org.uiautomation.ios.server.servlet.InstrumentsLogServlet;
 import org.uiautomation.ios.server.servlet.ResourceServlet;
 import org.uiautomation.ios.server.servlet.StaticResourceServlet;
 import org.uiautomation.ios.server.utils.FolderMonitor;
@@ -171,6 +172,7 @@ public class IOSServer {
 
     ServletContextHandler wd = new ServletContextHandler(server, "/wd/hub", true, false);
     wd.addServlet(CURLBasedCommunicationChannel.UIAScriptServlet.class, "/uiascriptproxy/*");
+    wd.addServlet(InstrumentsLogServlet.class, "/log/*");
     wd.addServlet(IOSServlet.class, "/*");
     wd.addServlet(ResourceServlet.class, "/resources/*");
     wd.addServlet(DeviceServlet.class, "/devices/*");
