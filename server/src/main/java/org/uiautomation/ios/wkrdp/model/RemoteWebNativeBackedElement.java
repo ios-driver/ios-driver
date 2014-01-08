@@ -109,7 +109,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     Dimension dim = getInspector().getSize();
     int webPageWidth = getInspector().getInnerWidth();
     if (dim.getWidth() != webPageWidth) {
-      log.fine("BUG : dim.getWidth()!=webPageWidth");
+      log.warning("BUG: dim.getWidth()!=webPageWidth");
     }
 
     Criteria c = new TypeCriteria(UIAWebView.class);
@@ -121,8 +121,11 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     script.append("var ratio = webviewSize.size.width / " + dim.getWidth() + ";");
     int top = po.getY();
     int left = po.getX();
-    script.append("var top = (" + top + "*ratio )+1;");
-    script.append("var left = (" + left + "*ratio)+1;");
+    // switch +1 to +2 in next, with +1 some clicks in text fields didn't bring up the
+    // keyboard, the text field would get focus, but the keyboard would not launch
+    // also with this change 17 miscellaneous selenium tests got fixed
+    script.append("var top = (" + top + "*ratio)+2;");
+    script.append("var left = (" + left + "*ratio)+2;");
 
     script.append("var x = left;");
     boolean ipad = session.getCapabilities().getDevice() == DeviceType.ipad;
