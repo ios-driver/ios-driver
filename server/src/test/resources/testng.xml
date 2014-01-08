@@ -11,6 +11,11 @@
 			<package name="org.uiautomation.ios.e2e.config.*" />
 		</packages>
 	</test>
+    <test name="crash" preserve-order="true">
+        <packages>
+            <package name="org.uiautomation.ios.e2e.crash.*" />
+        </packages>
+    </test>
 	<test name="hybrid" preserve-order="true">
 		<packages>
 			<package name="org.uiautomation.ios.e2e.hybrid.*" />

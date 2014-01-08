@@ -15,14 +15,17 @@
 package org.uiautomation.ios.utils;
 
 
+import org.uiautomation.ios.server.ServerSideSession;
+
 import java.util.logging.Logger;
 
 public class ApplicationCrashListener implements CommandOutputListener {
 
   private static final Logger log = Logger.getLogger(ApplicationCrashListener.class.getName());
+  private final ServerSideSession session;
 
-  public ApplicationCrashListener() {
-
+  public ApplicationCrashListener(ServerSideSession session) {
+    this.session = session;
   }
 
   @Override
@@ -39,6 +42,7 @@ public class ApplicationCrashListener implements CommandOutputListener {
     if (log.contains("The target application appears to have died") || log
         .contains("Script was stopped by the user")) {
       this.log.warning("log from crash " + log);
+      session.sessionHasCrashed(log);
     }
   }
 }

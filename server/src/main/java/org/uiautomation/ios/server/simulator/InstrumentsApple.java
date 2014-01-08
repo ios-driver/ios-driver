@@ -81,7 +81,7 @@ public class InstrumentsApple implements Instruments {
     output = createTmpOutputFolder();
 
     instruments = createInstrumentCommand(scriptPath);
-    instruments.registerListener(new ApplicationCrashListener());
+    instruments.registerListener(new ApplicationCrashListener(session));
     instruments.setWorkingDirectory(output);
 
     channel = new CURLBasedCommunicationChannel(sessionId);
