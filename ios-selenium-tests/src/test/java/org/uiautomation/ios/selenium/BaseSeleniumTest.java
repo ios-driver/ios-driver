@@ -43,9 +43,13 @@ public abstract class BaseSeleniumTest {
     try {
       driver.quit();
     } catch (Exception e) {
-      System.err.println("cannot quit properly :" + e);
+      System.err.println("cannot quit properly: " + e);
     }
-    stopIOSServer();
+    try {
+      stopIOSServer();
+    } catch (Exception e) {
+      System.err.println("cannot stop IOServer propery: " + e);
+    }
     appServer.stop();
   }
   
