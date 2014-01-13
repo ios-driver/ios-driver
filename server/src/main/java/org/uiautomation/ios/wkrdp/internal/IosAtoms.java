@@ -17,8 +17,8 @@
 package org.uiautomation.ios.wkrdp.internal;
 
 import org.apache.commons.io.IOUtils;
-import org.openqa.selenium.WebDriverException;
 
+import java.io.IOException;
 import java.io.StringWriter;
 
 /**
@@ -48,7 +48,7 @@ public enum IosAtoms {
   TYPE("type_ios.js"),
   XPATH("xpath_ios.js"),
   XPATHS("xpaths_ios.js"),
-  GET_SIZE("getElementSize_ios.js"),
+  GET_SIZE("get_element_size_ios.js"),
   ;
 
   private final String value;
@@ -57,19 +57,19 @@ public enum IosAtoms {
     return value;
   }
 
-  @Override
   public String toString() {
     return getValue();
   }
 
-  private IosAtoms(String fileLocation) {
+  IosAtoms(String fileLocation) {
     StringWriter sw = new StringWriter();
-    String resource = "atoms/" + fileLocation;
     try {
-      IOUtils.copy(getClass().getClassLoader().getResourceAsStream(resource), sw);
-    } catch (Exception e) {
-      throw new WebDriverException("cannot copy " + resource, e);
+      IOUtils
+          .copy(this.getClass().getClassLoader().getResourceAsStream("atoms/" + fileLocation), sw);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
     this.value = sw.toString();
   }
+
 }
