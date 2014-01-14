@@ -241,7 +241,12 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   public String getLanguage() {
     Object o = getCapability(LANGUAGE);
-    return ((String) o);
+
+	if (o == null) {
+	  return Locale.getDefault().getLanguage();
+	} else {
+	  return o.toString();
+	}
   }
 
   public void setLanguage(String language) {
