@@ -564,8 +564,8 @@ public abstract class BaseWebInspector implements MessageListener {
     sendCommand(DOM.highlightNode(nodeId));
   }
 
-  public void deleteCookie(String name, String domain) {
-    sendCommand(Page.deleteCookie(name, domain));
+  public void deleteCookie(String name, String url) {
+    sendCommand(Page.deleteCookie(name, url));
   }
 
   public List<Cookie> getCookies() {

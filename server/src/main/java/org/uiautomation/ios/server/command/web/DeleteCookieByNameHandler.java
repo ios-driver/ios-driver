@@ -36,7 +36,7 @@ public class DeleteCookieByNameHandler extends BaseWebCommandHandler {
     URL u = new URL(url);
     String domain = u.getHost();
 
-    getWebDriver().deleteCookie(name, domain);
+    getWebDriver().deleteCookie(name, url);
     Response res = new Response();
     res.setSessionId(getSession().getSessionId());
     res.setStatus(0);

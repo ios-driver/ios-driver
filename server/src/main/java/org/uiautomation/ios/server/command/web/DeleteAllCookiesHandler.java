@@ -40,7 +40,7 @@ public class DeleteAllCookiesHandler extends BaseWebCommandHandler {
 
     List<Cookie> cookies = getWebDriver().getCookies();
     for (Cookie c : cookies) {
-      getWebDriver().deleteCookie(c.getName(), domain);
+      getWebDriver().deleteCookie(c.getName(), url);
     }
 
     Response res = new Response();
