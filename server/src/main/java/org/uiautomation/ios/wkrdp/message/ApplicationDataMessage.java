@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 public class ApplicationDataMessage extends BaseIOSWebKitMessage {
 
   private static final Logger log = Logger.getLogger(ApplicationDataMessage.class.getName());
+  private final String destinationKey;
   private final JSONObject message;
 
   public ApplicationDataMessage(String rawMessage) throws Exception {
@@ -35,6 +36,7 @@ public class ApplicationDataMessage extends BaseIOSWebKitMessage {
     byte[] bytes = Base64.decodeBase64(encoded);
     String s = new String(bytes);
     message = new JSONObject(s);
+    destinationKey = arguments.objectForKey("WIRDestinationKey").toString();
     if (log.isLoggable(Level.FINEST)) {
       log.finest("got : " + rawMessage + "\n\tContent :" + message);
     }
@@ -42,6 +44,10 @@ public class ApplicationDataMessage extends BaseIOSWebKitMessage {
 
   public JSONObject getMessage() {
     return message;
+  }
+
+  public String getDestinationKey() {
+    return destinationKey;
   }
 
   @Override
