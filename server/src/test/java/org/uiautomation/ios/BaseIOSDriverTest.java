@@ -23,10 +23,13 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Listeners;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
+import org.uiautomation.ios.utils.RealTimeTestMonitor;
 
+@Listeners(RealTimeTestMonitor.class)
 public abstract class BaseIOSDriverTest {
 
   private IOSServer server;

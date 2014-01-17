@@ -18,8 +18,6 @@ import org.testng.IInvokedMethod;
 import org.testng.IInvokedMethodListener2;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
-import org.testng.annotations.Listeners;
-
 
 
 public class RealTimeTestMonitor implements IInvokedMethodListener2 {
@@ -28,8 +26,16 @@ public class RealTimeTestMonitor implements IInvokedMethodListener2 {
   @Override
   public void beforeInvocation(IInvokedMethod method, ITestResult testResult,
                                ITestContext context) {
-    System.out.println("starting :" + method.toString());
+    System.out.println("starting :" + toString(method));
 
+  }
+
+  private String toString(IInvokedMethod method) {
+    try {
+      return method.getTestMethod().getConstructorOrMethod().getMethod().toString();
+    } catch (Exception e) {
+      return method.toString();
+    }
   }
 
   @Override
@@ -44,7 +50,13 @@ public class RealTimeTestMonitor implements IInvokedMethodListener2 {
         status = "SKIPPED";
     }
     long total = res.getEndMillis() - res.getStartMillis();
-    System.out.println(status + ": " + method.toString() + " in " + total + " ms");
+    if (res.isSuccess()) {
+      status = "PASSED ";
+    } else {
+      status = "FAILED";
+    }
+
+    System.out.println(status + ": " + toString(method) + " in " + total + " ms");
 
   }
 

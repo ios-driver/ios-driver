@@ -37,7 +37,7 @@ import org.uiautomation.ios.client.uiamodels.impl.augmenter.IOSDriverAugmenter;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.RealTimeTestMonitor;
 
-@Listeners(RealTimeTestMonitor.class)
+
 public class SmokeIOSDriverTest extends BaseIOSDriverTest {
 
   private RemoteWebDriver driver;

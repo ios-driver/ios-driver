@@ -27,6 +27,7 @@ import org.testng.ISuiteResult;
 import org.testng.ITestContext;
 import org.testng.ITestNGMethod;
 import org.testng.ITestResult;
+import org.testng.annotations.Listeners;
 
 import java.io.File;
 import java.io.FileReader;
@@ -41,6 +42,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+@Listeners(StatCollector.class)
 public class StatCollector implements ISuiteListener, IMethodInterceptor {
 
 
