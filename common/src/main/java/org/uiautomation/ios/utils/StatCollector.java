@@ -134,7 +134,7 @@ public class StatCollector implements ISuiteListener, IMethodInterceptor {
     for (SubSuite suite : suites) {
       File f = new File(suite.getName() + ".xml");
       suite.generateTestNGXMLFile(f);
-      p.put(suite.getName(), suite.generateCommandLineArguments());
+      p.put(suite.getName().toUpperCase(), suite.generateCommandLineArguments());
 
     }
 
