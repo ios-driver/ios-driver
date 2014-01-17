@@ -27,6 +27,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
 import org.uiautomation.ios.IOSCapabilities;
@@ -34,7 +35,9 @@ import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.UIATableCell;
 import org.uiautomation.ios.client.uiamodels.impl.augmenter.IOSDriverAugmenter;
 import org.uiautomation.ios.utils.ClassicCommands;
+import org.uiautomation.ios.utils.RealTimeTestMonitor;
 
+@Listeners(RealTimeTestMonitor.class)
 public class SmokeIOSDriverTest extends BaseIOSDriverTest {
 
   private RemoteWebDriver driver;

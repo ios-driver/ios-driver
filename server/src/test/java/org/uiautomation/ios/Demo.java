@@ -17,9 +17,14 @@ package org.uiautomation.ios;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.uiautomation.ios.UIAModels.UIAPickerWheel;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
+import org.uiautomation.ios.client.uiamodels.impl.augmenter.IOSDriverAugmenter;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
+import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
 
 import java.net.URL;
 import java.util.Arrays;
