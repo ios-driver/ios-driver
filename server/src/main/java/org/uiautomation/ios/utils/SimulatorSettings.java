@@ -184,8 +184,10 @@ public class SimulatorSettings {
   }
 
   private File getContentAndSettingsFolder() {
-    return new File(getContentAndSettingsParentFolder(), exactSdkVersion);
-  }
+    File f =  new File(getContentAndSettingsParentFolder(), exactSdkVersion);
+    System.out.println("tmp location : "+f.getAbsoluteFile());
+    return f;
+   }
 
   private boolean deleteRecursive(File folder) {
     if (folder.isDirectory()) {

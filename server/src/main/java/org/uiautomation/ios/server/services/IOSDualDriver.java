@@ -14,8 +14,16 @@
 
 package org.uiautomation.ios.server.services;
 
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.NoSuchWindowException;
+import org.openqa.selenium.WebElement;
+import org.uiautomation.ios.UIAModels.UIAButton;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
+import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
+import org.uiautomation.ios.UIAModels.predicate.Criteria;
+import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
+import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.server.InstrumentsBackedNativeIOSDriver;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.utils.IOSVersion;
@@ -93,25 +101,33 @@ public class IOSDualDriver {
     nativeDriver.start();
 
     if (session.getApplication().isSafari()) {
+      setMode(WorkingMode.Web);
+      getRemoteWebDriver().get("about:blank");
+
       String sdkVersion = session.getCapabilities().getSDKVersion();
       IOSVersion version = new IOSVersion(sdkVersion);
       if (sdkVersion != null && version.isGreaterOrEqualTo("7.0")) {
-        try {
-          // instruments sometimes crashes if click is done before page is fully loaded
-          Thread.sleep(3000);
-          // click on "Apple" button to get the simulator out of initial state where webview is not updated
-          WebElement appleButton = nativeDriver.findElement(By.xpath("//UIAWindow/UIAScrollView/UIAButton"));
-          if (appleButton.getAttribute("name") == null)
-            appleButton.click();
-        } catch (WebDriverException ignore) {
-          // button is not there
-        } catch (InterruptedException ie) {
-          Thread.currentThread().interrupt();
-        }
+        forceWebViewToReloadManually();
       }
-      setMode(WorkingMode.Web);
-      getRemoteWebDriver().get("about:blank");
     }
+  }
+
+  /**
+   * the webview doesn't refresh correctly if it hasn't been loaded at lease once.
+   */
+  private void forceWebViewToReloadManually() {
+
+    setMode(WorkingMode.Native);
+
+    // click on the address bar
+    WebElement b = getNativeDriver().findElement(By.xpath("//UIAWindow/UIAButton"));
+    b.click();
+
+    // click on the Go! button on the keyboard
+    Criteria c = new AndCriteria(new NameCriteria("Go"), new TypeCriteria(UIAButton.class));
+    UIAButton go = getNativeDriver().findElement(c);
+    go.click();
+    setMode(WorkingMode.Web);
   }
 
   public InstrumentsBackedNativeIOSDriver getNativeDriver() {

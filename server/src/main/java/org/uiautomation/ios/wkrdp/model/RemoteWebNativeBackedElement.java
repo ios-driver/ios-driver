@@ -145,9 +145,14 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
         ContentResult result = results.get(0);
         String addressL10ned = result.getL10nFormatted();
         Criteria
-            c2 =
+            ios6address =
             new AndCriteria(new TypeCriteria(UIAElement.class), new NameCriteria(addressL10ned),
                 new LabelCriteria(addressL10ned));
+        Criteria
+            ios7address =
+            new AndCriteria(new TypeCriteria(UIAButton.class));
+        Criteria c2 = ios7address;//;new OrCriteria(ios6address,ios7address);
+
         script.append("var addressBar = root.element(-1," + c2.stringify().toString() + ");");
         script.append("var addressBarSize = addressBar.rect();");
         script.append("var delta = addressBarSize.origin.y +39;");

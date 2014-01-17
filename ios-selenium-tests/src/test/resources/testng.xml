@@ -1,10 +1,13 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="ios-driver" parallel="false">
+<suite name="ios-selenium-tests" parallel="false">
+    <listeners>
+        <listener class-name="org.uiautomation.ios.utils.StatCollector"></listener>
+    </listeners>
     <test name="web regression" preserve-order="true">
         <packages>
-            <package name="org.uiautomation.ios.selenium"/>
-            <package name="org.uiautomation.ios.selenium.interactions.touch"/>
+            <package name="org.uiautomation.ios.selenium.*"/>
+            <!--<package name="org.uiautomation.ios.selenium.interactions.touch"/>-->
         </packages>
 
     </test>

@@ -40,7 +40,7 @@ public class IOSHtmlRenderer implements HtmlRenderer {
     builder.append("Listening on ").append(proxy.getRemoteHost());
     if (proxy.getTimeOut() > 0) {
       int inSec = proxy.getTimeOut() / 1000;
-      builder.append(". Test session time out after ").append(inSec).append(" sec.");
+      builder.append(". Metrics session time out after ").append(inSec).append(" sec.");
     }
 
     builder.append("<br>Supports up to <b>").append(proxy.getMaxNumberOfConcurrentTestSessions())

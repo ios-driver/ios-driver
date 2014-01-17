@@ -127,7 +127,6 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
 
 
   public void get(String url) {
-
     try {
       context.eventsLock().lock();
       JSONObject command = Page.navigate(url);

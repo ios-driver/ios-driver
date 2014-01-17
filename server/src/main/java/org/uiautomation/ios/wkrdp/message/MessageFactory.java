@@ -59,7 +59,7 @@ public class MessageFactory {
 
       Constructor<?> c = impl.getConstructor(argsClass);
       IOSMessage message = (IOSMessage) c.newInstance(args);
-      log.fine("Message: " + message);
+      log.warning("Message: " + message);
       return message;
     } catch (Exception e1) {
       e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.

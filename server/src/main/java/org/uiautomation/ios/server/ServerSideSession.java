@@ -133,7 +133,6 @@ public class ServerSideSession extends Session {
     if (locale == null || locale.trim().length() == 0) {
       // then use the default locale "en_GB"
       capabilities.setLocale(DEFAULT_LOCALE);
-    } else {
 
       AppleLocale[] values = AppleLocale.values();
       boolean localeFound = false;
@@ -215,6 +214,7 @@ public class ServerSideSession extends Session {
   public void sessionHasCrashed(String log) {
     sessionCrashed = true;
     applicationCrashDetails = new ApplicationCrashDetails(log);
+    stop();
   }
 
   public ApplicationCrashDetails getCrashDetails() {

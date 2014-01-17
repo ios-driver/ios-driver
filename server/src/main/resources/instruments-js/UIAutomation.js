@@ -208,8 +208,8 @@ var UIAutomation = {
         var ignoreAllAlerts = false;
         UIATarget.onAlert = function onAlert(alert) {
 
-            log(alert);
-            log(alert.tree());
+            //log(alert);
+            //log(alert.tree());
             //UIAutomation.cache.setAlert(alert);
             return !ignoreAllAlerts;
             //return ignoreAllAlerts;
