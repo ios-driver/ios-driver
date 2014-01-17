@@ -32,7 +32,6 @@ import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.utils.StatCollector;
 
-@Listeners(StatCollector.class)
 public class ComplexCriteriaTest extends BaseIOSDriverTest {
 
   @DataProvider(name = "intlMountain", parallel = false)
