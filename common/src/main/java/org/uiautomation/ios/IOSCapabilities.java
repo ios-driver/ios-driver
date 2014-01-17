@@ -14,19 +14,26 @@
 package org.uiautomation.ios;
 
 import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.logging.LoggingPreferences;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.logging.Level;
 
 public class IOSCapabilities extends DesiredCapabilities {
 
@@ -242,11 +249,11 @@ public class IOSCapabilities extends DesiredCapabilities {
   public String getLanguage() {
     Object o = getCapability(LANGUAGE);
 
-	if (o == null) {
-	  return Locale.getDefault().getLanguage();
-	} else {
-	  return o.toString();
-	}
+    if (o == null) {
+      return Locale.getDefault().getLanguage();
+    } else {
+      return o.toString();
+    }
   }
 
   public void setLanguage(String language) {
@@ -359,8 +366,21 @@ public class IOSCapabilities extends DesiredCapabilities {
           "The 'app' key is supposed to point to a URL." + app + " is not a URL.");
     }
   }
-  
+
   public String getSimulatorScale() {
     return (String) getCapability(SIMULATOR_SCALE);
+  }
+
+  public LoggingPreferences getLoggingPreferences() throws JSONException {
+    LoggingPreferences ret = new LoggingPreferences();
+    JSONObject json = (JSONObject) getCapability(CapabilityType.LOGGING_PREFS);
+    if (json != null) {
+      for (Object key : ImmutableList.copyOf(json.keys())) {
+        String logType = (String) key;
+        Level level = Level.parse((String) json.get(logType));
+        ret.enable(logType, level);
+      }
+    }
+    return ret;
   }
 }

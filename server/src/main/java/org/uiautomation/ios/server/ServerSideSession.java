@@ -23,9 +23,11 @@ import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.application.AppleLanguage;
+import org.uiautomation.ios.server.application.AppleLocale;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
+import org.uiautomation.ios.server.logging.IOSLogManager;
 import org.uiautomation.ios.server.services.IOSDualDriver;
 import org.uiautomation.ios.server.utils.ZipUtils;
 import org.uiautomation.ios.utils.ApplicationCrashDetails;
@@ -40,6 +42,9 @@ import java.util.logging.Logger;
 
 public class ServerSideSession extends Session {
 
+  private static final String DEFAULT_LANGUAGE_CODE = "en";
+  private static final String DEFAULT_LOCALE = "en_GB";
+
   private static final Logger log = Logger.getLogger(ServerSideSession.class.getName());
   public final IOSServerManager server;
   private final IOSCapabilities capabilities;
@@ -51,16 +56,28 @@ public class ServerSideSession extends Session {
   private boolean sessionCrashed;
   private ApplicationCrashDetails applicationCrashDetails;
   private java.net.URL URL;
+  private final IOSLogManager logManager;
 
   ServerSideSession(IOSServerManager server, IOSCapabilities desiredCapabilities,
-                    IOSServerConfiguration options) {
+                    IOSServerConfiguration options)
+      throws NoSuchLocaleException, NoSuchLanguageCodeException {
     super(UUID.randomUUID().toString());
     this.server = server;
     this.capabilities = desiredCapabilities;
     this.options = options;
 
+    try {
+      logManager = new IOSLogManager(capabilities.getLoggingPreferences());
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      throw new SessionNotCreatedException("Cannot create logManager", ex);
+    }
+
     this.sessionCrashed = false;
     this.applicationCrashDetails = null;
+
+    ensureLanguage();
+    ensureLocale();
 
     // extract application from capabilities if necessary
     URL url = desiredCapabilities.getAppURL();
@@ -87,14 +104,62 @@ public class ServerSideSession extends Session {
     }
   }
 
+  private void ensureLanguage() throws NoSuchLanguageCodeException {
+    String languageCode = capabilities.getLanguage();
+
+    // if language code is not specified in the capabilities
+    if (languageCode == null || languageCode.trim().length() == 0) {
+      // then use the default language code "en"
+      capabilities.setLanguage(DEFAULT_LANGUAGE_CODE);
+    } else {
+
+      AppleLanguage[] values = AppleLanguage.values();
+      boolean languageCodeFound = false;
+      for (AppleLanguage value : values) {
+        if (value.getIsoCode().equals(languageCode)) {
+          languageCodeFound = true;
+        }
+      }
+      if (!languageCodeFound) {
+        throw new NoSuchLanguageCodeException(languageCode);
+      }
+    }
+  }
+
+  private void ensureLocale() throws NoSuchLocaleException {
+    String locale = capabilities.getLocale();
+
+    // if locale is not specified in the capabilities
+    if (locale == null || locale.trim().length() == 0) {
+      // then use the default locale "en_GB"
+      capabilities.setLocale(DEFAULT_LOCALE);
+    } else {
+
+      AppleLocale[] values = AppleLocale.values();
+      boolean localeFound = false;
+      for (AppleLocale value : values) {
+        if (value.name().equals(locale)) {
+          localeFound = true;
+        }
+      }
+      if (!localeFound) {
+        throw new NoSuchLocaleException(locale);
+      }
+    }
+  }
+
   private void updateCapabilitiesWithSensibleDefaults() {
     // update capabilities and put default values in the missing fields.
+    if (capabilities.getDeviceVariation() == null) {
+      capabilities.setDeviceVariation(DeviceVariation.Regular);
+    }
     capabilities.setBundleId(application.getBundleId());
     // TODO device.getSDK()
     if (capabilities.getSDKVersion() == null) {
       capabilities.setSDKVersion(ClassicCommands.getDefaultSDK());
     } else {
       String version = capabilities.getSDKVersion();
+
       if (!new IOSVersion(version).isGreaterOrEqualTo("5.0")) {
         throw new SessionNotCreatedException(
             version + " is too old. Only support SDK 5.0 and above.");
@@ -102,14 +167,8 @@ public class ServerSideSession extends Session {
       if (!server.getHostInfo().getInstalledSDKs().contains(version)) {
         throw new SessionNotCreatedException(
             "Cannot start on version " + version + ".Installed: "
-            + server.getHostInfo().getInstalledSDKs());
+                + server.getHostInfo().getInstalledSDKs());
       }
-    }
-    if (capabilities.getDeviceVariation() == null) {
-      // use a variation that matches the SDK
-      String sdkVersion = capabilities.getSDKVersion();
-      capabilities.setDeviceVariation(DeviceVariation.getCompatibleVersion(
-              capabilities.getDevice(), sdkVersion));
     }
   }
 
@@ -196,5 +255,9 @@ public class ServerSideSession extends Session {
       throw new WebDriverException(e.getMessage(), e);
     }
     return url;
+  }
+
+  public IOSLogManager getLogManager() {
+    return logManager;
   }
 }

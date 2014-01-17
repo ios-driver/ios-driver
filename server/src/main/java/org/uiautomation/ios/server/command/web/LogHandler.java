@@ -15,23 +15,32 @@ package org.uiautomation.ios.server.command.web;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
+import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
+import org.uiautomation.ios.server.logging.WebDriverLog;
+import java.util.Collections;
+import java.util.List;
 
-public class LogHandler extends BaseWebCommandHandler{
+public class LogHandler extends BaseWebCommandHandler {
   public LogHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
 
   @Override
   public JSONObject configurationDescription() throws JSONException {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+    return noConfigDefined();
   }
 
   @Override
   public Response handle() throws Exception {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+    ServerSideSession session = getDriver().getSession(getRequest().getSession());
+    JSONObject payload = getRequest().getPayload();
+    String type = payload.getString("type");
+    List<LogEntry> entries = session.getLogManager().getLog(type);
+    return createResponse(entries);
   }
 }

@@ -65,7 +65,25 @@ public abstract class BaseSeleniumTest {
     pages = new Pages(appServer);
   }
 
-  private void stopIOSServer() throws Exception {
+  protected void startDriver(IOSCapabilities caps) throws Exception {
+    stopDriver();
+    // caps.setLanguage("fr");
+    driver = new RemoteIOSDriver(new URL(url), caps);
+  }
+
+  public void stopIOSServer() throws Exception {
     server.stop();
   }
+
+  protected void stopDriver() {
+    if (driver != null) {
+      try {
+        driver.quit();
+      } catch (Exception e) {
+        System.err.println("cannot quit properly :" + e.getMessage());
+      }
+      driver = null;
+    }
+  }
+
 }

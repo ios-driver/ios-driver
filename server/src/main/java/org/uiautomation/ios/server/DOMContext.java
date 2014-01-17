@@ -325,7 +325,7 @@ public class DOMContext {
   public void setWindow(String pageId) throws Exception {
     newContext();
     //session.getRemoteWebDriver().getProtocol().switchTo(pageId);
-    //session.getRemoteWebDriver().enablePageEvent();
+    //session.getRemoteWebDriver().enable();
   }
 
   public String getId() {

@@ -13,6 +13,11 @@
  */
 package org.uiautomation.ios.grid;
 
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHttpRequest;
 import org.openqa.grid.common.RegistrationRequest;
 import org.openqa.grid.common.exception.RemoteUnregisterException;
 import org.openqa.grid.internal.Registry;
@@ -21,53 +26,93 @@ import org.openqa.grid.internal.listeners.SelfHealingProxy;
 import org.openqa.grid.internal.utils.HtmlRenderer;
 import org.openqa.grid.selenium.proxy.DefaultRemoteProxy;
 
+import java.io.IOException;
 import java.util.Map;
 
 public class IOSRemoteProxy extends DefaultRemoteProxy implements SelfHealingProxy {
 
-  private boolean restarting;
-  private boolean available;
+    private boolean restarting;
+    private boolean available;
+    private int sessionsServed;
+    private int sessionsLimit;
 
-  private HtmlRenderer renderer = new IOSHtmlRenderer(this);
+    private HtmlRenderer renderer = new IOSHtmlRenderer(this);
 
-  public IOSRemoteProxy(RegistrationRequest request, Registry registry) {
-    super(request, registry);
-    IOSCapabilitiesMonitor iosCapabilitiesMonitor = new IOSCapabilitiesMonitor(this);
-    new Thread(iosCapabilitiesMonitor).start();
-  }
-
-  @Override
-  public HtmlRenderer getHtmlRender() {
-    return renderer;
-  }
-
-  @Override
-  public TestSession getNewSession(Map<String, Object> requestedCapability) {
-    synchronized (this) {
-      if (isRestarting() || !isAvailable()) {
-        return null;
-      }
-      return super.getNewSession(requestedCapability);
+    public IOSRemoteProxy(RegistrationRequest request, Registry registry) {
+        super(request, registry);
+        IOSCapabilitiesMonitor iosCapabilitiesMonitor = new IOSCapabilitiesMonitor(this);
+        new Thread(iosCapabilitiesMonitor).start();
+        sessionsServed = 0;
+        sessionsLimit = 3;
     }
-  }
 
-  public boolean isRestarting() {
-    return restarting;
-  }
+    @Override
+    public HtmlRenderer getHtmlRender() {
+        return renderer;
+    }
 
-  public void setRestarting(boolean restarting) {
-    this.restarting = restarting;
-  }
+    @Override
+    public TestSession getNewSession(Map<String, Object> requestedCapability) {
+        synchronized (this) {
+            if (sessionLimitReached() && !this.isBusy()) {
+                setRestarting(false);
+                setAvailable(false);
+                doSessionLimitCleardown();
+                unregister();
+            }
+            if (isRestarting() || !isAvailable() || this.isBusy()) {
+                return null;
+            } else {
+                TestSession session = super.getNewSession(requestedCapability);
+                if (session == null) {
+                    return null;
+                } else {
+                    sessionsServed++;
+                    return session;
+                }
+            }
 
-  public boolean isAvailable() {
-    return available;
-  }
+        }
+    }
 
-  public void setAvailable(boolean available) {
-    this.available = available;
-  }
+    private void doSessionLimitCleardown() {
+        try {
+            SeleniumGridExtrasReboot();
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+    }
 
-  public void unregister(){
-    addNewEvent(new RemoteUnregisterException("Unregistering the node."));
-  }
+    private void SeleniumGridExtrasReboot() throws IOException {
+        System.out.println("Asking SeleniumGridExtras to reboot node");
+        HttpClient client = new DefaultHttpClient();
+        String url = "http://" + this.getRemoteHost().getHost() + ":" + 3000 + "/reboot";
+        BasicHttpRequest r = new BasicHttpRequest("GET", url);
+        HttpResponse response = client.execute(new HttpHost(this.getRemoteHost().getHost(), 3000), r);
+        System.out.println(response.toString());
+    }
+
+    private boolean sessionLimitReached() {
+        return sessionsLimit <= sessionsServed;
+    }
+
+    public boolean isRestarting() {
+        return restarting;
+    }
+
+    public void setRestarting(boolean restarting) {
+        this.restarting = restarting;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
+    public void unregister() {
+        addNewEvent(new RemoteUnregisterException("Unregistering the node."));
+    }
 }
