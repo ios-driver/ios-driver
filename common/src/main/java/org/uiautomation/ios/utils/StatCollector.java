@@ -120,7 +120,7 @@ public class StatCollector implements ISuiteListener, IMethodInterceptor {
 
       String s = p.getProperty(clazz);
       if (s == null) {
-        s = "0";
+        s = "1";
       }
       int t = (int) Long.parseLong(s);
       old.add(new OldResultTime(clazz, t));
