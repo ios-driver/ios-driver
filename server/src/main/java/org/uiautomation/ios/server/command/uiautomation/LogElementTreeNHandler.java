@@ -57,7 +57,7 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
     addDecorator(new AttachScreenshotToLog(driver));
     addDecorator(new GetHTMLForWebView(driver));
     try {
-      if (request.getPayload().getBoolean("translation")) {
+      if (request.getPayload().has("translation") && request.getPayload().getBoolean("translation")) {
         addDecorator(new AddTranslationToLog(driver));
       }
     } catch (JSONException e) {
@@ -66,10 +66,9 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
 
     final String js;
     try {
-      js = template.generate(
-          request.getSession(),
-          reference,
-          request.getPayload().getBoolean("attachScreenshot"));
+      boolean attachScreenshot = request.getPayload().has("attachScreenshot") &&
+                                 request.getPayload().getBoolean("attachScreenshot");
+      js = template.generate(request.getSession(), reference, attachScreenshot);
     } catch (JSONException e) {
       throw new WebDriverException("wrong params", e);
     }
