@@ -138,7 +138,7 @@ public class StatCollector implements ISuiteListener, IMethodInterceptor {
 
     }
 
-    File cla = new File("subsuites.cla");
+    File cla = new File("subsuites.properties");
     FileWriter write = new FileWriter(cla);
     p.store(write, "ios-driver internal build.File generated automatically.Do not edit manually. ");
   }
