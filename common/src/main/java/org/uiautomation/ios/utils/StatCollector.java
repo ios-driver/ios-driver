@@ -16,6 +16,8 @@ package org.uiautomation.ios.utils;
 
 
 import org.testng.IClass;
+import org.testng.IInvokedMethod;
+import org.testng.IInvokedMethodListener2;
 import org.testng.IMethodInstance;
 import org.testng.IMethodInterceptor;
 import org.testng.IResultMap;
@@ -39,7 +41,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-public class StatCollector implements ISuiteListener, IMethodInterceptor {
+public class StatCollector implements ISuiteListener, IMethodInterceptor, IInvokedMethodListener2 {
 
 
   private final Map<String, Long> timePerClass = new HashMap<>();
@@ -74,6 +76,31 @@ public class StatCollector implements ISuiteListener, IMethodInterceptor {
         e.printStackTrace();
       }
     }
+
+  }
+
+  @Override
+  public void beforeInvocation(IInvokedMethod method, ITestResult testResult,
+                               ITestContext context) {
+    System.out.println("about to run : " + method.toString());
+
+  }
+
+  @Override
+  public void afterInvocation(IInvokedMethod method, ITestResult testResult, ITestContext context) {
+    System.out.println(
+        "ran : " + method.toString() + " in " + (testResult.getEndMillis() - testResult
+            .getStartMillis()) + "ms");
+
+  }
+
+  @Override
+  public void beforeInvocation(IInvokedMethod method, ITestResult testResult) {
+
+  }
+
+  @Override
+  public void afterInvocation(IInvokedMethod method, ITestResult testResult) {
 
   }
 
