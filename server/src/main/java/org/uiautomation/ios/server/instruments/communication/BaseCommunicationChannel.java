@@ -59,7 +59,7 @@ public abstract class BaseCommunicationChannel implements CommunicationChannel {
       if (ready) {
         return true;
       }
-      return condition.await(60, TimeUnit.SECONDS);
+      return condition.await(15, TimeUnit.SECONDS);
     } finally {
       lock.unlock();
     }
