@@ -118,17 +118,15 @@ UIAKeyboard.prototype.shift = function () {
  * makes the keyboard disappear.
  */
 UIAKeyboard.prototype.hide = function () {
-    log('UIAKeyboard.prototype.hide1');
     var root = UIAutomation.cache.get('1');
-    log('UIAKeyboard.prototype.hide2');
     var hide = root.element(-1,
                             {"OR": [
                                 {"l10n": "none", "expected": "Done", "matching": "exact", "method": "name"},
                                 {"l10n": "none", "expected": "Hide keyboard", "matching": "exact", "method": "name"}
                             ]});
-    log('UIAKeyboard.prototype.hide2');
     hide.tap();
-    log('UIAKeyboard.prototype.hide3');
+    // and wait for the keyboard to disapear.
+    UIATarget.localTarget().delay(0.5);
 }
 
 function Mapping(keyboard) {

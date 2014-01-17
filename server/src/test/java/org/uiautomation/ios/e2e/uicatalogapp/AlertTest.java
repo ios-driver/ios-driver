@@ -42,6 +42,7 @@ import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
+import org.uiautomation.ios.utils.IOSVersion;
 
 
 public class AlertTest extends BaseIOSDriverTest {
@@ -87,6 +88,12 @@ public class AlertTest extends BaseIOSDriverTest {
     Alert alert = waitForAlert(driver);
     Assert.assertEquals(alert.getText(), "<Alert message>");
     alert.dismiss();
+    waitForAlertToBeGone();
+  }
+
+  private void waitForAlertToBeGone() throws InterruptedException {
+    // TODO freynaud dismiss should block until alert is gone.
+    Thread.sleep(500);
   }
 
   @Test(expectedExceptions = UnhandledAlertException.class)
@@ -102,6 +109,7 @@ public class AlertTest extends BaseIOSDriverTest {
       Assert.fail("shouldn't click behind alerts.");
     } finally {
       driver.switchTo().alert().dismiss();
+      waitForAlertToBeGone();
     }
   }
 
@@ -128,7 +136,6 @@ public class AlertTest extends BaseIOSDriverTest {
       // expected
     }
     WebElement alert = driver.findElement(By.xpath("//UIAAlert"));
-    System.out.println("name : " + alert.getAttribute("name"));
     driver.switchTo().alert().dismiss();
 
   }
@@ -154,9 +161,20 @@ public class AlertTest extends BaseIOSDriverTest {
     String json = rwe.getAttribute("tree");
     JSONObject tree = new JSONObject(json);
     Assert.assertEquals(tree.getString("type"), "UIAAlert");
-    WebElement element = rwe.findElement(By.className("UIAButton"));
-    element.click();
+    // IOS 6. Alert OK buttons are buttons.
+    String version = driver.getCapabilities().getSDKVersion();
+    IOSVersion v = new IOSVersion(version);
 
+    By selector;
+    if (v.isGreaterOrEqualTo("7")) {
+      selector = By.className("UIATableCell");
+    } else {
+      selector = By.className("UIAButton");
+    }
+
+    WebElement element = rwe.findElement(selector);
+    element.click();
+    waitForAlertToBeGone();
   }
 
 
@@ -288,7 +306,17 @@ public class AlertTest extends BaseIOSDriverTest {
     // check the alert has all its elements
     alert.findElement(UIAStaticText.class, new NameCriteria("UIAlertView"));
     alert.findElement(UIAStaticText.class, new NameCriteria("<Alert message>"));
-    UIAButton ok = alert.findElement(UIAButton.class, new NameCriteria("OK"));
+
+    String version = driver.getCapabilities().getSDKVersion();
+    IOSVersion v = new IOSVersion(version);
+    Class type;
+    if (v.isGreaterOrEqualTo("7")) {
+      type = UIATableCell.class;
+    } else {
+      type = UIAButton.class;
+    }
+
+    UIAElement ok = alert.findElement(type, new NameCriteria("OK"));
 
     ok.tap();
     // wait for the alert to disappear.

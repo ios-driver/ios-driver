@@ -15,14 +15,12 @@
 package org.uiautomation.ios.server;
 
 import com.beust.jcommander.JCommander;
-
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.inspector.IDEServlet;
 import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.configuration.Configuration;
@@ -38,10 +36,10 @@ import org.uiautomation.ios.server.servlet.StaticResourceServlet;
 import org.uiautomation.ios.server.utils.FolderMonitor;
 import org.uiautomation.ios.server.utils.ZipUtils;
 import org.uiautomation.ios.utils.BuildInfo;
+import org.uiautomation.ios.utils.IOSVersion;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,9 +48,8 @@ public class IOSServer {
 
   public static final String DRIVER = IOSServerManager.class.getName();
   private static final Logger log = Logger.getLogger(IOSServer.class.getName());
-
-  private boolean initialized = false;
   private final IOSServerConfiguration options;
+  private boolean initialized = false;
   private Server server;
   private IOSServerManager driver;
   private FolderMonitor folderMonitor;
@@ -90,6 +87,7 @@ public class IOSServer {
   }
 
   private void init() {
+    initialized = true;
     Configuration.BETA_FEATURE = options.isBeta();
     Configuration.SIMULATORS_ENABLED = options.hasSimulators();
     initDriver();
@@ -150,8 +148,8 @@ public class IOSServer {
     boolean safari = false;
     // automatically add safari for host SDK and above as instruments starts simulator on host SDK version
     for (String s : driver.getHostInfo().getInstalledSDKs()) {
-      Float version = Float.parseFloat(s);
-      if (version >= 6.0) {
+      IOSVersion version = new IOSVersion(s);
+      if (version.isGreaterOrEqualTo("6.0")) {
         safari = true;
         driver.addSupportedApplication(copyOfSafari(xcodeInstall, s));
       }
@@ -191,7 +189,7 @@ public class IOSServer {
 
   // TODO freynaud - if xcode change, the safari copy should be wiped out.
   private APPIOSApplication copyOfSafari(File xcodeInstall, String sdk) {
-    File copy = new File(System.getProperty("user.home")+"/.ios-driver/safariCopies", "safari-"+sdk+".app");
+    File copy = new File(System.getProperty("user.home") + "/.ios-driver/safariCopies", "safari-" + sdk + ".app");
     if (!copy.exists()) {
       File safariFolder = APPIOSApplication.findSafariLocation(xcodeInstall, sdk);
       copy.mkdirs();

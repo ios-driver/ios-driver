@@ -19,7 +19,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
-import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIARect;
@@ -84,8 +83,11 @@ public class CriteriaTest extends BaseIOSDriverTest {
 
     UIARect position = element.getRect();
 
-    // top left corner
-    Criteria test = new LocationCriteria(position.getX(), position.getY());
+    //center
+    Criteria
+        test =
+        new LocationCriteria(position.getX() + (position.getWidth() / 2),
+                             position.getY() + (position.getHeight() / 2));
     UIAElement res = driver.findElement(test);
     Assert.assertEquals(res.getName(), buttonName);
 

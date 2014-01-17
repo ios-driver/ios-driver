@@ -111,10 +111,13 @@ public class NewSessionTest extends BaseIOSDriverTest {
   public void startDefaultLanguageLocale() {
     RemoteIOSDriver driver = null;
     try {
-      driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
+      IOSCapabilities capabilitiesNoLanguageNoLocale;
+      capabilitiesNoLanguageNoLocale = SampleConfig.uiCatalogCapNoLangNoLocale();
+      driver = new RemoteIOSDriver(getRemoteURL(), capabilitiesNoLanguageNoLocale);
       IOSCapabilities actual = driver.getCapabilities();
+
       Assert.assertEquals(actual.getBundleId(), "com.yourcompany.UICatalog");
-      Assert.assertEquals(actual.getBundleVersion(), "2.10"); // default to UK
+      Assert.assertEquals(actual.getBundleVersion(), "2.10");
       Assert.assertEquals(actual.getLanguage(), "en");
       Assert.assertEquals(actual.getLocale(), "en_GB");
     } finally {
@@ -323,6 +326,11 @@ public class NewSessionTest extends BaseIOSDriverTest {
                                                          DeviceVariation variation,
                                                          int expectedW,
                                                          int expectedH) throws Exception {
+
+    String sdk = ClassicCommands.getDefaultSDK();
+    if (!DeviceVariation.compatibleWithSDKVersion(device, variation, sdk)) {
+      return;
+    }
     IOSCapabilities cap = new IOSCapabilities();
 
     cap.setCapability(DEVICE, device);
@@ -356,8 +364,8 @@ public class NewSessionTest extends BaseIOSDriverTest {
       File f = driver.getScreenshotAs(OutputType.FILE);
 
       BufferedImage bimg = ImageIO.read(f);
-      Assert.assertTrue(bimg.getWidth() ==  expectedW || bimg.getHeight() == expectedW);
-      Assert.assertTrue(bimg.getWidth() ==  expectedH || bimg.getHeight() == expectedH);
+      Assert.assertTrue(bimg.getWidth() == expectedW || bimg.getHeight() == expectedW);
+      Assert.assertTrue(bimg.getWidth() == expectedH || bimg.getHeight() == expectedH);
 
     } finally {
       if (driver != null) {

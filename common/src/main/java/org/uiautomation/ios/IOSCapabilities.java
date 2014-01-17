@@ -37,7 +37,7 @@ import java.util.logging.Level;
 
 public class IOSCapabilities extends DesiredCapabilities {
 
-  // UIAutomation properties called from instruments
+  // UIAutomation properties called from instuments
   // UIAAplication.bundleID();
   // UIATarget.systemName();
   public static final String UI_SYSTEM_NAME = "systemName";
@@ -49,10 +49,12 @@ public class IOSCapabilities extends DesiredCapabilities {
   public static final String UI_BUNDLE_VERSION = "bundleVersion";
   // UIAAplication.version();
   public static final String UI_VERSION = "version";
+
   // plist + envt variable
   public static final String DEVICE = "device";
   public static final String VARIATION = "variation";
   public static final String SIMULATOR = "simulator";
+
   public static final String IOS_SWITCHES = "ios.switches";
   public static final String LANGUAGE = "language";
   public static final String SUPPORTED_LANGUAGES = "supportedLanguages";
@@ -60,6 +62,7 @@ public class IOSCapabilities extends DesiredCapabilities {
   public static final String LOCALE = "locale";
   public static final String AUT = "aut";
   public static final String TIME_HACK = "timeHack";
+
   public static final String BUNDLE_VERSION = "CFBundleVersion";
   public static final String BUNDLE_ID = "CFBundleIdentifier";
   public static final String BUNDLE_SHORT_VERSION = "CFBundleShortVersionString";
@@ -69,6 +72,7 @@ public class IOSCapabilities extends DesiredCapabilities {
   // http://developer.apple.com/library/ios/#documentation/general/Reference/InfoPlistKeyReference/Articles/iPhoneOSKeys.html
   public static final String ICON = "CFBundleIconFile";
   public static final String BUNDLE_ICONS = "CFBundleIcons";
+
   public static final String MAGIC_PREFIX = "plist_";
   public static final String CONFIGURABLE = "configurable";
   public static final String ELEMENT_TREE = "elementTree";
@@ -78,6 +82,7 @@ public class IOSCapabilities extends DesiredCapabilities {
   public static final String SIMULATOR_SCALE = "simulatorScale";
   // default selenium bindings for mobile safari
   public static final String BROWSER_NAME = "browserName";
+
   // TODO: make a parameter?
   public static final int COMMAND_TIMEOUT_MILLIS = 10 * 60 * 1000; // 10 minutes
 
@@ -214,18 +219,12 @@ public class IOSCapabilities extends DesiredCapabilities {
     return DeviceType.valueOf(o);
   }
 
-  public void setDevice(DeviceType device) {
-    setCapability(DEVICE, device);
-  }
 
   public String getSDKVersion() {
     Object o = getCapability(UI_SDK_VERSION);
     return ((String) o);
   }
 
-  public void setSDKVersion(String sdkVersion) {
-    setCapability(UI_SDK_VERSION, sdkVersion);
-  }
 
   public String getApplication() {
     Object o = getCapability(AUT);
@@ -234,12 +233,7 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   public String getLocale() {
     Object o = getCapability(LOCALE);
-
-    if (o == null) {
-      return Locale.getDefault().toString();
-    } else {
-      return o.toString();
-    }
+    return ((String) o);
   }
 
   public void setLocale(String locale) {
@@ -311,9 +305,6 @@ public class IOSCapabilities extends DesiredCapabilities {
     return getList(SUPPORTED_LANGUAGES);
   }
 
-  public void setSupportedLanguages(List<String> supportedLanguages) {
-    setCapability(SUPPORTED_LANGUAGES, supportedLanguages);
-  }
 
   public List<DeviceType> getSupportedDevices() {
     return Lists.transform(getList(SUPPORTED_DEVICES), new Function<String, DeviceType>() {
@@ -324,12 +315,10 @@ public class IOSCapabilities extends DesiredCapabilities {
     });
   }
 
-  public void setSupportedDevices(List<DeviceType> devices) {
-    if (devices.isEmpty()) {
-      throw new WebDriverException("Your app needs to support at least 1 device.");
-    }
-    setCapability(SUPPORTED_DEVICES, devices);
+  public void setSupportedLanguages(List<String> supportedLanguages) {
+    setCapability(SUPPORTED_LANGUAGES, supportedLanguages);
   }
+
 
   public Object getCapability(String key) {
     Object o = getRawCapabilities().get(key);
@@ -363,7 +352,7 @@ public class IOSCapabilities extends DesiredCapabilities {
       return app == null ? null : new URL(app);
     } catch (MalformedURLException e) {
       throw new WebDriverException(
-          "The 'app' key is supposed to point to a URL." + app + " is not a URL.");
+          "The 'app' key is supposed to point to a URL. " + app + " is not a URL.");
     }
   }
 
@@ -382,5 +371,13 @@ public class IOSCapabilities extends DesiredCapabilities {
       }
     }
     return ret;
+  }
+
+  public void setSDKVersion(String sdkVersion) {
+    setCapability(UI_SDK_VERSION, sdkVersion);
+  }
+
+  public void setDevice(DeviceType device) {
+    setCapability(DEVICE, device);
   }
 }

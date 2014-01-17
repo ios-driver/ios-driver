@@ -47,7 +47,7 @@ public class IOSL10NTest {
     Assert.assertEquals(res.getArgs().size(), 0);
 
     String french = app.translate(res, AppleLanguage.fr);
-    Assert.assertEquals(french, "Détail de Montagne");
+    Assert.assertEquals(french, "Détail de l'apostrophe \" Montagne");
 
   }
 

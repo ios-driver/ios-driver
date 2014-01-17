@@ -14,6 +14,7 @@
 
 package org.uiautomation.ios.context;
 
+
 import org.json.JSONObject;
 import org.uiautomation.ios.context.WebInspector;
 import org.uiautomation.ios.server.ServerSideSession;
@@ -66,5 +67,6 @@ public class WebInspector extends BaseWebInspector {
     } else {
       return senderBase + pageIdentifierKey;
     }
+
   }
 }

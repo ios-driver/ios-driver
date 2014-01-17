@@ -71,31 +71,6 @@ public class SimulatorSettings {
       // showAllPlistFiles(settings.contentAndSettingsFolder);
     }
   }
-  
-  private static void showAllPlistFiles(File rootDir) {
-    File[] files = rootDir.listFiles();
-    if (files == null)
-      return;
-    for (File file: files) {
-      if (file.isDirectory()) {
-        showAllPlistFiles(file);
-      } else if (file.getName().endsWith(".plist")) {
-        showPlistFile(file);
-      }
-    }
-  }
-  
-  private static void showPlistFile(File file) {
-    try {
-      String plist = new PlistFileUtils(file).toJSON().toString(2);
-      if (plist.contains("cnn"))
-        System.out.println("\n" + file.getAbsolutePath() + ": " + plist);
-    } catch (Exception e) {
-      System.err.println("exception reading " + file.getAbsolutePath() + ": " + e);
-    }
-  }
-
-  //
 
   private static final Logger log = Logger.getLogger(SimulatorSettings.class.getName());
   private static final String PLUTIL = "/usr/bin/plutil";
@@ -106,31 +81,9 @@ public class SimulatorSettings {
   private final File globalPreferencePlist;
 
   public SimulatorSettings(String sdkVersion) {
-    this.exactSdkVersion = ClassicCommands.getSimulatorProductVersion(sdkVersion);
+    this.exactSdkVersion = sdkVersion;
     this.contentAndSettingsFolder = getContentAndSettingsFolder();
     this.globalPreferencePlist = getGlobalPreferenceFile();
-  }
-
-  private String getExactSdkVersion(String sdkVersion) {
-    // NOTE: this method gives the wrong version the first time is run on a clean
-    // iPhone simulator dir (i.e. would return "7.0" instead of "7.0.3"
-    File parentFolder = getContentAndSettingsParentFolder();
-    if (!parentFolder.isDirectory()) {
-      return sdkVersion;
-    }
-    int maxMinorVersion = -1;
-    Pattern pattern = Pattern.compile(String.format("^%s.([0-9]+)$", sdkVersion));
-    for (String child : parentFolder.list()) {
-      Matcher matcher = pattern.matcher(child);
-      if (matcher.matches()) {
-        int minorVersion = Integer.parseInt(matcher.group(1));
-        maxMinorVersion = Math.max(minorVersion, maxMinorVersion);
-      }
-    }
-    if (maxMinorVersion != -1) {
-      return String.format("%s.%d", sdkVersion, maxMinorVersion);
-    }
-    return sdkVersion;
   }
 
   public void setLocationPreference(boolean authorized, String bundleId) {

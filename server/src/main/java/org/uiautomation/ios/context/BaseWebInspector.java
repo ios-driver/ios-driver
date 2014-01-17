@@ -68,6 +68,7 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
 
   public abstract JSONObject sendCommand(JSONObject command);
 
+
   public abstract int getPageIdentifier();
 
   public RemoteWebElement getDocument() {
@@ -85,9 +86,11 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
     return result;
   }
 
+
   public RemoteWebElement getMainWindow() {
     return new RemoteWebElement(new NodeId(0), this);
   }
+
 
   private RemoteWebElement retrieveDocumentAndCheckReady(long deadline) {
     RemoteWebElement element = null;
@@ -107,18 +110,23 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
             "The given document is corrupted, nodeId=" + ((element != null) ? element.getNodeId()
                                                                             : "null") + ": " + e);
         throw new WebKitSeemsCorruptedException();
+
       }
     }
     return element;
   }
 
+
   private RemoteWebElement retrieveDocument() throws Exception {
     JSONObject result = sendCommand(DOM.getDocument());
     JSONObject root = result.getJSONObject("root");
-    return new RemoteWebElement(new NodeId(root.getInt("nodeId")), this);
+    RemoteWebElement rme = new RemoteWebElement(new NodeId(root.getInt("nodeId")), this);
+    return rme;
   }
 
+
   public void get(String url) {
+
     try {
       context.eventsLock().lock();
       JSONObject command = Page.navigate(url);
@@ -132,6 +140,7 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
       context.eventsLock().unlock();
     }
   }
+
 
   public String getCurrentUrl() {
     long deadline = System.currentTimeMillis() + getTimeout();
@@ -149,6 +158,7 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
   }
 
   private String getCurrentUrlOnce() {
+
     try {
       RemoteWebElement document = getDocument();
       String f = "(function(arg) { var url=this.URL;return url;})";
@@ -166,7 +176,10 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
     } catch (JSONException e) {
       throw new WebDriverException(e);
     }
+
+
   }
+
 
   public String getTitle() {
     try {
@@ -183,13 +196,16 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
     return title;*/
   }
 
+
   public List<WebElement> findElements(By by) {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
+
   public WebElement findElement(By by) {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
+
 
   public String getPageSource() {
     try {
@@ -203,23 +219,29 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
     } catch (Exception e) {
       throw new WebDriverException(e);
     }
+
   }
+
 
   public void close() {
     //To change body of implemented methods use File | Settings | File Templates.
   }
 
+
   public void quit() {
     //To change body of implemented methods use File | Settings | File Templates.
   }
+
 
   public WebDriver.TargetLocator switchTo() {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
+
   public WebDriver.Navigation navigate() {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
+
 
   public ResolverConfiguration.Options manage() {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
@@ -227,6 +249,7 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
 
   // TODO freynaud fix the element swapping.
   public Object executeScript(String script, JSONArray args) {
+
     try {
       RemoteWebElement document = getDocument();
       RemoteWebElement window = context.getWindow();
@@ -239,7 +262,7 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
         if (arg instanceof JSONObject) {
           JSONObject jsonArg = (JSONObject) arg;
           if (jsonArg.optString("ELEMENT") != null) {
-            // TODO use driver factory to check the pageId
+            // TODO use driver factory to check the  pageId
             NodeId n = new NodeId(Integer.parseInt(jsonArg.optString("ELEMENT").split("_")[1]));
             RemoteWebElement rwep = new RemoteWebElement(n, this);
             arguments.put(new JSONObject().put("objectId", rwep.getRemoteObject().getId()));
@@ -252,6 +275,7 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
         } else {
           arguments.put(new JSONObject().put("value", arg));
         }
+
       }
 
       if (!context.isOnMainFrame()) {
@@ -260,6 +284,7 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
 
         String contextObject = "{'document': arguments[" + nbParam + "], 'window': arguments[" + (nbParam + 1) + "]}";
         script = "with (" + contextObject + ") {" + script + "}";
+
       }
 
       cmd.put("method", "Runtime.callFunctionOn");
@@ -276,6 +301,7 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
     } catch (JSONException e) {
       throw new WebDriverException(e);
     }
+
   }
 
   public void checkForJSErrors(JSONObject response) throws JSONException {
@@ -304,10 +330,12 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
     } catch (JSONException e) {
       throw new WebDriverException(e);
     }
+
+
   }
 
   private <T> T cast_(JSONObject body) throws JSONException {
-    List<String> primitives = new ArrayList<>();
+    List<String> primitives = new ArrayList<String>();
     primitives.add("boolean");
     primitives.add("number");
     primitives.add("string");
@@ -333,7 +361,7 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
       if ("array".equals(body.optString("subtype"))) {
         RemoteObject array = new RemoteObject(body.getString("objectId"), this);
         RemoteObjectArray a = new RemoteObjectArray(array);
-        ArrayList<Object> res = new ArrayList<>();
+        ArrayList<Object> res = new ArrayList<Object>();
         for (Object ro : a) {
           res.add(ro);
         }
@@ -349,11 +377,14 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
           JSONObject o = new JSONObject(ro.stringify());
           return (T) o;
         }
+
       }
       return (T) new RemoteObject(body.getString("objectId"), this);
+
     }
     throw new RuntimeException("NI " + body);
   }
+
 
   public Object executeAsyncScript(String script, Object... args) {
     return null;  //To change body of implemented methods use File | Settings | File Templates.
@@ -365,7 +396,7 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
     cmd.put("params", new JSONObject().put("expression", "document.body.clientWidth;"));
 
     JSONObject response = sendCommand(cmd);
-    return cast(response);
+    return (Integer) cast(response);
   }
 
   public Dimension getSize() throws Exception {
@@ -387,7 +418,9 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
     JSONObject response = sendCommand(cmd);
     String s = cast(response);
     JSONObject o = new JSONObject(s);
-    return new Dimension(o.getInt("width"), o.getInt("height"));
+    Dimension dim = new Dimension(o.getInt("width"), o.getInt("height"));
+    return dim;
+
   }
 
   public RemoteWebElement findElementByCSSSelector(String cssSelector) {
@@ -410,6 +443,7 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
     } catch (JSONException e) {
       throw new WebDriverException(e);
     }
+
   }
 
   public String getLoadedFlag() {

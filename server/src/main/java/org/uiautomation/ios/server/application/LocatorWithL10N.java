@@ -38,16 +38,64 @@ class LocatorWithL10N {
   }
 
 
+  /**
+   *
+    * @param locator
+   * @return a JS string
+   */
   public String translate(String locator) {
     Set<String> keys = extractKeysToL10N(locator);
     String res = locator;
     for (String key : keys) {
       String value = translateKey(key);
       String originalFunction = "l10n\\('" + key + "'\\)|l10n\\(\"" + key + "\"\\)";
-      String l10ned = "'" + value + "'";
+      String l10ned = escapeXPath(value);
       res = res.replaceAll(originalFunction, l10ned);
     }
+
     return res;
+  }
+
+  public static String escapeXPath(String base){
+    boolean needsConcat= false;
+    if (base.contains("'") && base.contains("\"")){
+      Pattern pattern = Pattern.compile("[^'\"]+|['\"]");
+      Matcher matcher = pattern.matcher(base);
+      StringBuilder b = new StringBuilder();
+      b.append("concat(");
+      boolean first = true;
+      while (matcher.find()) {
+        String s = matcher.group();
+        if (first) {
+          first = false;
+        } else {
+          b.append(",");
+        }
+        switch (s) {
+          case "'":
+            b.append("\"'\"");
+            break;
+          case "\"":
+            b.append("'\"'");
+            break;
+          default:
+            b.append("'" + s + "'");
+            break;
+        }
+      }
+      b.append(")");
+      return b.toString();
+    }
+
+    if (base.contains("'")){
+      return "\""+base+"\"";
+    }
+
+    if (base.contains("\"")){
+      return "'"+base+"'";
+    }
+
+    return "'"+base+"'";
   }
 
   public String translateKey(String key) {

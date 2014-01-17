@@ -75,6 +75,8 @@ public class TimeoutTest extends BaseIOSDriverTest {
     RemoteIOSDriver driver = null;
     try {
       driver = getDriver(SampleApps.uiCatalogCap());
+      // TODO freynaud fic SetImplicitWaitTimeoutNHandler.Timeout.
+      driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
       String name = "Buttons, Various uses of UIButton2";
 
       

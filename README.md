@@ -17,6 +17,8 @@ Contributing
 
 Active development is done on the 'dev' branch. Please make use that branch and make pull requests to it instead of to master.
 
+Please sign the CLA ["Personal"](https://docs.google.com/forms/d/1Bt0oyAX33lmEKRktPTZEDzpnSHsDd_cztwNPaKUxqD0/viewform), ["Corporate"](https://docs.google.com/forms/d/1btYM6nwpnSZFg_y6_O3Bg9EeqGBcvgfLCgp5SyBEZgw/viewform).
+
 The ["release notes"](https://github.com/ios-driver/ios-driver/blob/master/release.notes) contain a list of TODOs at the bottom.
 
   

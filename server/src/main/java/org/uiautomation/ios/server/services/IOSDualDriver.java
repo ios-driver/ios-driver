@@ -75,7 +75,7 @@ public class IOSDualDriver {
       @Override
       public void run() {
         log.warning("forcing stop session that has been running for " + sessionTimeoutMillis / 1000
-                    + " seconds");
+            + " seconds");
         forceStop();
       }
     }, sessionTimeoutMillis);
@@ -84,7 +84,7 @@ public class IOSDualDriver {
     try {
       url =
           new URL("http://localhost:" + session.getIOSServerManager().getHostInfo().getPort()
-                  + "/wd/hub");
+              + "/wd/hub");
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -108,7 +108,7 @@ public class IOSDualDriver {
           }
           sleep(2000); // allow some time to take effect
         }
-        
+
         log.fine("before setMode");
         setMode(WorkingMode.Web);
       } else {

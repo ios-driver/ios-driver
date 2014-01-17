@@ -14,14 +14,14 @@
 
 package org.uiautomation.ios.server.application;
 
-import java.io.IOException;
-
 import org.json.JSONException;
 import org.openqa.selenium.WebDriverException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
+
+import java.io.IOException;
 
 public class ServerSideL10NTest {
 
@@ -82,4 +82,42 @@ public class ServerSideL10NTest {
     NameCriteria c = factory.nameCriteria("footFormat");
     Assert.assertEquals(c.getValue(), "(.*){1}英尺");
   }
+
+  @Test(enabled = false)
+  public void apostrophe() throws JSONException {
+    ServerSideL10NFactory factory = create(AppleLanguage.fr);
+    NameCriteria c = factory.nameCriteria("detailViewNavTitle");
+    Assert.assertEquals(c.getValue(), "Détail de l'apostrophe Montagne");
+  }
+
+  @Test
+  public void normalStringDoNotRequireConcat() {
+    String s = "ABC";
+    String res = LocatorWithL10N.escapeXPath(s);
+    Assert.assertEquals(res, "'"+s+"'");
+  }
+
+  @Test
+  public void useDoubleQuoteIfStringContainsSingleQuote() {
+    String s = "ABC's";
+    String res = LocatorWithL10N.escapeXPath(s);
+    Assert.assertEquals(res, "\"" + s + "\"");
+  }
+
+  @Test
+  public void useSingleQuoteIfStringContainsDouble() {
+    String s = "ABC\"D";
+    String res = LocatorWithL10N.escapeXPath(s);
+    Assert.assertEquals(res, "'" + s + "'");
+
+  }
+
+  @Test
+  public void concat() {
+    String base = "I'm using \"that\"";
+    String res = LocatorWithL10N.escapeXPath(base);
+    Assert.assertEquals(res, "concat('I',\"'\",'m using ','\"','that','\"')");
+
+  }
+
 }
