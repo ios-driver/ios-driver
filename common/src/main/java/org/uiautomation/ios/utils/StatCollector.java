@@ -41,7 +41,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-public class StatCollector implements ISuiteListener, IMethodInterceptor, IInvokedMethodListener2 {
+public class StatCollector implements ISuiteListener, IMethodInterceptor {
 
 
   private final Map<String, Long> timePerClass = new HashMap<>();
@@ -79,30 +79,7 @@ public class StatCollector implements ISuiteListener, IMethodInterceptor, IInvok
 
   }
 
-  @Override
-  public void beforeInvocation(IInvokedMethod method, ITestResult testResult,
-                               ITestContext context) {
-    System.out.println("about to run : " + method.toString());
 
-  }
-
-  @Override
-  public void afterInvocation(IInvokedMethod method, ITestResult testResult, ITestContext context) {
-    System.out.println(
-        "ran : " + method.toString() + " in " + (testResult.getEndMillis() - testResult
-            .getStartMillis()) + "ms");
-
-  }
-
-  @Override
-  public void beforeInvocation(IInvokedMethod method, ITestResult testResult) {
-
-  }
-
-  @Override
-  public void afterInvocation(IInvokedMethod method, ITestResult testResult) {
-
-  }
 
   class OldResultTime implements Comparable<OldResultTime> {
 
