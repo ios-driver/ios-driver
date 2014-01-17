@@ -128,14 +128,19 @@ public class StatCollector implements ISuiteListener, IMethodInterceptor {
     }
     Collections.sort(old);
 
+    Properties p = new Properties();
+
     List<SubSuite> suites = greedy(nbSlaves, old);
     for (SubSuite suite : suites) {
       File f = new File(suite.getName() + ".xml");
       suite.generateTestNGXMLFile(f);
-      File cla = new File(suite.getName() + ".cla");
-      suite.generateCommandLineArguments(cla);
-      System.out.println("generated : " + f.getAbsolutePath());
+      p.put(suite.getName(), suite.generateCommandLineArguments());
+
     }
+
+    File cla = new File("subsuites.cla");
+    FileWriter write = new FileWriter(cla);
+    p.store(write, "ios-driver internal build.File generated automatically.Do not edit manually. ");
   }
 
 
@@ -216,18 +221,16 @@ public class StatCollector implements ISuiteListener, IMethodInterceptor {
       return name;
     }
 
-    public void generateCommandLineArguments(File f) throws IOException {
+    public String generateCommandLineArguments() throws IOException {
       StringBuilder builder = new StringBuilder();
 
       for (OldResultTime old : classes) {
         builder.append(old.getClassCanonicalName() + ",");
       }
-
-      FileWriter writer = new FileWriter(f);
-      writer.write(builder.toString());
-      writer.flush();
-      writer.close();
+      return builder.toString();
     }
+
+
   }
 
   private List<SubSuite> greedy(int nbSlaves, List<OldResultTime> old) {
@@ -248,7 +251,6 @@ public class StatCollector implements ISuiteListener, IMethodInterceptor {
     }
     return suites;
   }
-
 
   private void add(IClass clazz, long time) {
     String name = clazz.getRealClass().getCanonicalName();
@@ -318,3 +320,4 @@ public class StatCollector implements ISuiteListener, IMethodInterceptor {
     }
   }
 }
+
