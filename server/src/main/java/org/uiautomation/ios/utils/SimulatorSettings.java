@@ -185,7 +185,6 @@ public class SimulatorSettings {
 
   private File getContentAndSettingsFolder() {
     File f =  new File(getContentAndSettingsParentFolder(), exactSdkVersion);
-    System.out.println("tmp location : "+f.getAbsoluteFile());
     return f;
    }
 
