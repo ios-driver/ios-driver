@@ -3,6 +3,7 @@
 <suite name="server" parallel="false">
     <listeners>
         <listener class-name="org.uiautomation.ios.utils.StatCollector"></listener>
+        <listener class-name="org.uiautomation.ios.utils.RealTimeTestMonitor"></listener>
     </listeners>
 	<test name="unit tests" preserve-order="true">
 		<packages>
