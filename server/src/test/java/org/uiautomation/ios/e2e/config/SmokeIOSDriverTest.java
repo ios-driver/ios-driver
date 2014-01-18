@@ -14,10 +14,6 @@
 
 package org.uiautomation.ios.e2e.config;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.util.List;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.OutputType;
@@ -27,7 +23,6 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
 import org.uiautomation.ios.IOSCapabilities;
@@ -35,7 +30,10 @@ import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.UIATableCell;
 import org.uiautomation.ios.client.uiamodels.impl.augmenter.IOSDriverAugmenter;
 import org.uiautomation.ios.utils.ClassicCommands;
-import org.uiautomation.ios.utils.RealTimeTestMonitor;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.util.List;
 
 
 public class SmokeIOSDriverTest extends BaseIOSDriverTest {
@@ -44,8 +42,11 @@ public class SmokeIOSDriverTest extends BaseIOSDriverTest {
 
   @BeforeClass
   public void startDriver() {
-    driver = new RemoteWebDriver(getRemoteURL(), SampleApps.uiCatalogCap());
-
+    try {
+      driver = new RemoteWebDriver(getRemoteURL(), SampleApps.uiCatalogCap());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   @AfterClass
