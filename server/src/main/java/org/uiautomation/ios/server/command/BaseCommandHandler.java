@@ -96,12 +96,16 @@ public abstract class BaseCommandHandler implements Handler {
 
   @Override
   public Response handleAndRunDecorators() throws Exception {
+    log.info("pre decorator"+request);
     for (PreHandleDecorator pre : preDecorators) {
       pre.decorate(request);
     }
+    log.info("done");
     Response response = null;
     try {
+      log.info("will handle");
       response = handle();
+      log.info("handled"+response);
     } catch (WebKitSeemsCorruptedException e) {
       log.warning("WebKitSeemsCorruptedException.Attempting a restart.");
       driver.restartWebkit();
@@ -109,7 +113,7 @@ public abstract class BaseCommandHandler implements Handler {
       response = handle();
     }
 
-    log.info("pre decorator");
+    log.info("post decorator");
     for (PostHandleDecorator post : postDecorators) {
       post.decorate(response);
     }
