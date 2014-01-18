@@ -64,8 +64,12 @@ public class AlertTest extends BaseIOSDriverTest {
 
   @AfterClass
   public void stopDriver() {
-    if (driver != null) {
-      driver.quit();
+    try {
+      if (driver != null) {
+        driver.quit();
+      }
+    } catch (Exception e) {
+      System.err.println("Error stopping the driver :" + e.getMessage());
     }
   }
 
