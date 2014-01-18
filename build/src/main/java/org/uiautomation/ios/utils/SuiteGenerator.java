@@ -123,7 +123,6 @@ public class SuiteGenerator implements ISuiteListener, IMethodInterceptor {
     List<ClassTestTime> old = new ArrayList<>();
     for (String clazz : classesToRun) {
       Properties p = new Properties();
-      log("looking in : " + previousRunMetricsFolder.getAbsolutePath());
       try {
         FileReader reader = new FileReader("");
         p.load(reader);
