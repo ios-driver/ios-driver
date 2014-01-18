@@ -19,6 +19,7 @@ import org.testng.IMethodInterceptor;
 import org.testng.ISuite;
 import org.testng.ISuiteListener;
 import org.testng.ITestContext;
+import org.testng.ITestNGMethod;
 
 import java.io.File;
 import java.io.FileReader;
@@ -52,13 +53,12 @@ public class SuiteGenerator implements ISuiteListener, IMethodInterceptor {
     log("generation mode is " + (this.on ? "ON " : "OFF") + ".");
   }
 
-  private void log(String msg){
-    System.out.println("BUILD STUFF::SuiteGenerator "+msg);
+  private void log(String msg) {
+    System.out.println("BUILD STUFF::SuiteGenerator " + msg);
   }
 
   @Override
   public void onStart(ISuite suite) {
-    log(suite.getXmlSuite().getListeners()+"");
     File parent = new File(suite.getOutputDirectory());
     File folder = null;
     while (parent != null) {
@@ -71,30 +71,28 @@ public class SuiteGenerator implements ISuiteListener, IMethodInterceptor {
     }
 
     if (folder == null) {
-      System.out.println("np parent");
+      log("couldn't find metrics from previous run.Assuming all tests run as fast.");
     } else {
-      log("will use metrics from :"+folder.getAbsolutePath());
+      log("will use metrics from :" + folder.getAbsolutePath());
     }
 
+    this.suite = suite.getName();
 
+    for (ITestNGMethod m : suite.getAllMethods()) {
+      classesToRun.add(m.getTestClass().getRealClass().getCanonicalName());
+    }
 
-//    this.suite = suite.getName();
-//
-//    for (ITestNGMethod m : suite.getAllMethods()) {
-//      classesToRun.add(m.getTestClass().getRealClass().getCanonicalName());
-//    }
-//
-//    if (on) {
-//      for (ITestNGMethod m : suite.getExcludedMethods()) {
-//        System.out.println("EXCLUDED : " + m.getConstructorOrMethod().getMethod().toString());
-//      }
-//
-//      try {
-//        split(nbSlave);
-//      } catch (IOException e) {
-//        e.printStackTrace();
-//      }
-//    }
+    if (on) {
+      for (ITestNGMethod m : suite.getExcludedMethods()) {
+        System.out.println("EXCLUDED : " + m.getConstructorOrMethod().getMethod().toString());
+      }
+
+      try {
+        split(nbSlave, folder);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   @Override
@@ -121,12 +119,13 @@ public class SuiteGenerator implements ISuiteListener, IMethodInterceptor {
     return suites;
   }
 
-  private void split(int nbSlaves) throws IOException {
+  private void split(int nbSlaves, File previousRunMetricsFolder) throws IOException {
     List<ClassTestTime> old = new ArrayList<>();
     for (String clazz : classesToRun) {
       Properties p = new Properties();
+      log("looking in : " + previousRunMetricsFolder.getAbsolutePath());
       try {
-        FileReader reader = new FileReader("ios-driver.txt.back");
+        FileReader reader = new FileReader("");
         p.load(reader);
       } catch (Exception e) {
         e.printStackTrace();
@@ -154,6 +153,7 @@ public class SuiteGenerator implements ISuiteListener, IMethodInterceptor {
 
     File cla = new File("subsuites.properties");
     FileWriter write = new FileWriter(cla);
+    log("creating " + cla.getAbsolutePath());
     p.store(write, "ios-driver internal build.File generated automatically.Do not edit manually. ");
   }
 
