@@ -53,7 +53,11 @@ public class StatCollector implements IReporter {
     if (on != null) {
       this.on = true;
     }
-    System.out.println("BUILD STUFF : duration per class is " + (this.on ? "ON " : "OFF") + ".");
+    log("duration per class is " + (this.on ? "ON " : "OFF") + ".");
+  }
+
+  private void log(String msg){
+    System.out.println("BUILD STUFF::StatCollector "+msg);
   }
 
 
@@ -119,7 +123,7 @@ public class StatCollector implements IReporter {
       resultsFile.mkdirs();
 
       resultsFile = new File(resultsFile, fileName);
-      System.out.println("BUILD STUFF : metrics=" + resultsFile.getAbsolutePath());
+      log(" metrics=" + resultsFile.getAbsolutePath());
 
       for (ISuite suite : suites) {
         addResults(suite);

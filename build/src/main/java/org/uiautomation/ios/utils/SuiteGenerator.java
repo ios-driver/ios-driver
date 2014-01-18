@@ -58,6 +58,7 @@ public class SuiteGenerator implements ISuiteListener, IMethodInterceptor {
 
   @Override
   public void onStart(ISuite suite) {
+    log(suite.getXmlSuite().getListeners()+"");
     File parent = new File(suite.getOutputDirectory());
     File folder = null;
     while (parent != null) {

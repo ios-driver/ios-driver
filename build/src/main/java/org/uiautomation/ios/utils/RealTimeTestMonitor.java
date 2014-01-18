@@ -25,6 +25,7 @@ public class RealTimeTestMonitor implements IInvokedMethodListener2 {
 
   private final boolean monitor;
 
+
   public RealTimeTestMonitor() {
     String flag = System.getProperty("realTimeMonitor");
     if (flag != null) {
@@ -34,14 +35,14 @@ public class RealTimeTestMonitor implements IInvokedMethodListener2 {
     }
     String help = "You can enable using the realTimeMonitor system property flag."
                   + " -DrealTimeMonitor in your mvn build.";
-    System.out.println("BUILD STUFF : real time monitor is " + (monitor ? "ON" : "OFF." + help) + ".");
+    log("real time monitor is " + (monitor ? "ON" : "OFF." + help) + ".");
   }
 
   @Override
   public void beforeInvocation(IInvokedMethod method, ITestResult testResult,
                                ITestContext context) {
     if (monitor) {
-      System.out.println("starting :" + toString(method));
+      log("starting :" + toString(method));
     }
 
   }
@@ -52,6 +53,11 @@ public class RealTimeTestMonitor implements IInvokedMethodListener2 {
     } catch (Exception e) {
       return method.toString();
     }
+  }
+
+
+  private void log(String msg) {
+    System.out.println("BUILD STUFF::RealTimeTestMonitor " + msg);
   }
 
   @Override
@@ -72,7 +78,7 @@ public class RealTimeTestMonitor implements IInvokedMethodListener2 {
       } else {
         status = "FAILED";
       }
-      System.out.println(status + ": " + toString(method) + " in " + total + " ms");
+      log(status + ": " + toString(method) + " in " + total + " ms");
     }
 
   }
