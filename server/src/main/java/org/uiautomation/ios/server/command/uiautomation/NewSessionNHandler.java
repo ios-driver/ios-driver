@@ -23,9 +23,12 @@ import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
 
+import java.util.logging.Logger;
+
 public class NewSessionNHandler extends BaseNativeCommandHandler {
 
   private ServerSideSession session;
+  private static final Logger log = Logger.getLogger(NewSessionNHandler.class.getName());
 
   public NewSessionNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -39,6 +42,7 @@ public class NewSessionNHandler extends BaseNativeCommandHandler {
       session = getServer().createSession(cap);
       session.start();
 
+      log.info("session started");
       Response resp = new Response();
       resp.setSessionId(session.getSessionId());
       resp.setStatus(0);

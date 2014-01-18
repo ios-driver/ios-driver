@@ -46,7 +46,7 @@ public abstract class BaseIOSDriverTest {
                      "-aut", SampleApps.gettestNoContentFile(),
                      "-aut", SampleApps.getPPNQASampleApp(),
                      /*"-beta",*/ "-folder", "applications",
-                     "-sessionTimeout", "180",
+                     "-sessionTimeout", "120",
                      "-simulators"
     };
     config = IOSServerConfiguration.create(args);
@@ -64,6 +64,7 @@ public abstract class BaseIOSDriverTest {
   @AfterClass
   public void stopServer() throws Exception {
     server.stop();
+
   }
 
 

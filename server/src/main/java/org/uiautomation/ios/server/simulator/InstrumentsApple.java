@@ -136,6 +136,7 @@ public class InstrumentsApple implements Instruments {
       log.info("instruments-4");
       throw new InstrumentsFailedToStartException("instruments was interrupted while starting.");
     } finally {
+      log.info("instruments-5");
       // appears only in ios6. : Automation Instrument ran into an exception
       // while trying to run the script. UIAScriptAgentSignaledException
       if (!success) {
@@ -144,7 +145,9 @@ public class InstrumentsApple implements Instruments {
         throw new InstrumentsFailedToStartException("Instruments crashed.");
       }
       putMobileSafariAppBackInInstallDir();
+      log.info("instruments-6");
     }
+
   }
 
   @Override

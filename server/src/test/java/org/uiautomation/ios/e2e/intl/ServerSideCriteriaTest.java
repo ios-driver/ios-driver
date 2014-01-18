@@ -37,6 +37,7 @@ public class ServerSideCriteriaTest extends BaseIOSDriverTest {
 
   @BeforeClass
   public void startDriver() {
+
     driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.intlMountainsCap("fr"));
   }
 
