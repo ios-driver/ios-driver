@@ -94,6 +94,7 @@ public class InstrumentsApple implements Instruments {
 
   @Override
   public void start() throws InstrumentsFailedToStartException {
+    log.info("starting");
     DeviceType deviceType = caps.getDevice();
     DeviceVariation variation = caps.getDeviceVariation();
     String locale = caps.getLocale();
@@ -106,7 +107,7 @@ public class InstrumentsApple implements Instruments {
     // workaround is to remove the MobileSafari app from the install directory and put
     // it back after instruments starts it
     boolean tempRemoveMobileSafari = instrumentsIs50OrHigher && application.isSafari() && application.isSimulator();
-    
+    log.info("mv safari");
     if (tempRemoveMobileSafari)
       moveMobileSafariAppOutOfInstallDir();
 
@@ -118,17 +119,21 @@ public class InstrumentsApple implements Instruments {
     deviceManager.setKeyboardOptions();
     deviceManager.setLocationPreference(true);
     deviceManager.setMobileSafariOptions();
-    
+    log.info("install tstore");
     if (application.isSimulator())
       installTrustStore();
 
     boolean success = false;
     try {
+      log.info("instruments-1");
       instruments.start();
-      
+      log.info("instruments-2");
+
       log.fine("waiting for registration request");
       success = channel.waitForUIScriptToBeStarted();
+      log.info("instruments-3");
     } catch (InterruptedException e) {
+      log.info("instruments-4");
       throw new InstrumentsFailedToStartException("instruments was interrupted while starting.");
     } finally {
       // appears only in ios6. : Automation Instrument ran into an exception
