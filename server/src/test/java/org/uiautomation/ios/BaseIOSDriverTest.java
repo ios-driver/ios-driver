@@ -77,7 +77,6 @@ public abstract class BaseIOSDriverTest {
   }
 
   public void waitForElement(WebDriver driver, org.openqa.selenium.By by, long timeOut) {
-
     WebElement element = (new WebDriverWait(driver, timeOut)).until(ExpectedConditions.visibilityOfElementLocated(by));
 
   }

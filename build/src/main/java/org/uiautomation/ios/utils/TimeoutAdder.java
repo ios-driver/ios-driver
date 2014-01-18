@@ -23,6 +23,7 @@ public class TimeoutAdder implements ISuiteListener{
   @Override
   public void onStart(ISuite suite) {
     suite.getXmlSuite().setTimeOut("30000");
+    suite.getXmlSuite().setPreserveOrder("true");
   }
 
   @Override
