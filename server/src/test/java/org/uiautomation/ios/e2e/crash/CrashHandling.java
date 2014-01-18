@@ -34,6 +34,7 @@ import org.uiautomation.ios.utils.ClassicCommands;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+/*
 public class CrashHandling {
 
   private IOSServer server;
@@ -234,3 +235,4 @@ public class CrashHandling {
     }
   }
 }
+*/
