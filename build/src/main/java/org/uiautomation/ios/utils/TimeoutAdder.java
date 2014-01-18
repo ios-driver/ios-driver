@@ -17,13 +17,19 @@ package org.uiautomation.ios.utils;
 
 import org.testng.ISuite;
 import org.testng.ISuiteListener;
+import org.testng.xml.XmlTest;
 
-public class TimeoutAdder implements ISuiteListener{
+import java.util.List;
+
+public class TimeoutAdder implements ISuiteListener {
 
   @Override
   public void onStart(ISuite suite) {
     suite.getXmlSuite().setTimeOut("30000");
-    suite.getXmlSuite().setPreserveOrder("true");
+    List<XmlTest> l = suite.getXmlSuite().getTests();
+    for (XmlTest test : l) {
+      test.setPreserveOrder("true");
+    }
   }
 
   @Override
