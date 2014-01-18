@@ -119,7 +119,7 @@ public class StatCollector implements IReporter {
         fileName = "duration_per_class.metrics";
       }
 
-      resultsFile = new File(outputDirectory, "metrics");
+      resultsFile = new File("target", "metrics");
       resultsFile.mkdirs();
 
       resultsFile = new File(resultsFile, fileName);
