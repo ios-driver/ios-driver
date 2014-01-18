@@ -24,6 +24,7 @@ import org.testng.ITestNGMethod;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,6 +60,9 @@ public class SuiteGenerator implements ISuiteListener, IMethodInterceptor {
 
   @Override
   public void onStart(ISuite suite) {
+    if (!on) {
+      return;
+    }
     File parent = new File(suite.getOutputDirectory());
     File folder = null;
     while (parent != null) {
@@ -123,9 +127,21 @@ public class SuiteGenerator implements ISuiteListener, IMethodInterceptor {
     List<ClassTestTime> old = new ArrayList<>();
     Properties previousMetrics = new Properties();
     try {
-      File metricsFolder = new File("server/target/metrics");
-      FileReader reader = new FileReader("");
-      previousMetrics.load(reader);
+      File metricsFolder = new File("target");
+      String[] metrics = metricsFolder.list(new FilenameFilter() {
+        @Override
+        public boolean accept(File dir, String name) {
+          return name.endsWith(".metrics");
+        }
+      });
+      for (String f : metrics) {
+        Properties tmp = new Properties();
+        File t = new File(metricsFolder, f);
+        log("loading metrics from " + t.getAbsolutePath());
+        tmp.load(new FileReader(t));
+        previousMetrics.putAll(tmp);
+      }
+
     } catch (Exception e) {
       log("no previous metrics could be loaded.");
     }
