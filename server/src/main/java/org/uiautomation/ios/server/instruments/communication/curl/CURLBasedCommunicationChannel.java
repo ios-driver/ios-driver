@@ -113,7 +113,7 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
         UIAScriptResponse r = new UIAScriptResponse(json);
 
         if (r.isFirstResponse()) {
-          log.fine("got first response");
+          log.info("got first response");
           Response resp = r.getResponse();
           GetCapabilitiesNHandler.setCachedResponse(resp);
           InstrumentsBackedNativeIOSDriver

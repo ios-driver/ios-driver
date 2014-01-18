@@ -26,10 +26,12 @@ import org.uiautomation.ios.server.utils.JSTemplate;
 
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class GetCapabilitiesNHandler extends UIAScriptHandler {
 
   // TODO freynaud
+  private static final Logger log = Logger.getLogger(GetCapabilitiesNHandler.class.getName());
   private static Response cachedResponse = null;
   private static boolean hasBeenDecorated = false;
 
@@ -51,8 +53,11 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
 
   @Override
   public Response handle() throws Exception {
+    log.info("will handle GetCapabilitiesNHandler::handle");
     if (cachedResponse == null) {
+      log.info("cache=null");
       cachedResponse = super.handle();
+      log.info("done getting caps");
     }
     return cachedResponse;
   }
