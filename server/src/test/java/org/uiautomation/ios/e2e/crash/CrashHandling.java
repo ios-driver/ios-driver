@@ -41,7 +41,7 @@ public class CrashHandling {
   private RemoteWebDriver driver;
   private IOSCapabilities cap;
 
-  @BeforeMethod
+  @BeforeMethod(timeOut = 30000)
   public void startServer() throws Exception {
     String[] args = {"-port", "4444", "-host", "localhost",
                      "-app", SampleApps.getPPNQASampleApp(), "-simulators"};
@@ -85,7 +85,7 @@ public class CrashHandling {
     }
   }
 
-  @Test(timeOut = 30000)
+  @Test
   public void isAppCrashDetected() throws InterruptedException {
     WebElement crashButton = driver.findElement(By.name("Crash me!"));
 
@@ -104,7 +104,7 @@ public class CrashHandling {
     Assert.assertTrue("App crash detected.", crashExceptionThrown);
   }
 
-  @Test(timeOut = 30000)
+  @Test
   public void isExceptionThrownOnEveryActionAfterCrash() throws InterruptedException {
     WebElement crashButton = driver.findElement(By.name("Crash me!"));
     crashButton.click();
@@ -129,7 +129,7 @@ public class CrashHandling {
     return crashExceptionThrown;
   }
 
-  @Test(timeOut = 30000)
+  @Test
   public void canStartANewSessionAfterAppCrash() throws InterruptedException {
     WebElement crashButton = driver.findElement(By.name("Crash me!"));
     try {
@@ -145,7 +145,7 @@ public class CrashHandling {
     driver = new RemoteWebDriver(getRemoteURL(), cap);
   }
 
-  @Test(timeOut = 30000)
+  @Test
   public void isSimulatorCrashDetected() throws InterruptedException {
     WebElement crashButton = driver.findElement(By.name("Crash me!"));
 
@@ -166,7 +166,7 @@ public class CrashHandling {
     Assert.assertTrue("Simulator crash detected.", crashExceptionThrown);
   }
 
-  @Test(timeOut = 30000)
+  @Test
   public void canStartANewSessionAfterSimulatorCrash() throws InterruptedException {
     WebElement crashButton = driver.findElement(By.name("Crash me!"));
     // kill simulator
@@ -181,7 +181,7 @@ public class CrashHandling {
     driver = new RemoteWebDriver(getRemoteURL(), cap);
   }
 
-  @Test(timeOut = 30000)
+  @Test
   public void isInstrumentsCrashDetected() throws InterruptedException {
     WebElement crashButton = driver.findElement(By.name("Crash me!"));
 
@@ -200,7 +200,7 @@ public class CrashHandling {
     Assert.assertTrue("Instruments crash detected.", crashExceptionThrown);
   }
 
-  @Test(timeOut = 30000)
+  @Test
   public void canStartANewSessionAfterInstrumentsCrash() throws InterruptedException {
     WebElement crashButton = driver.findElement(By.name("Crash me!"));
     // kill instruments
