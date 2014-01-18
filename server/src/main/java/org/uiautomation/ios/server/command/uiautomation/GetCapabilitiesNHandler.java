@@ -50,6 +50,7 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
     log.info("will handle GetCapabilitiesNHandler::handle");
     Response r = getSession().getCachedCapabilityResponse();
     if (r==null){
+      log.warning("Didn't know the capabilities. Should have known at registration.");
       r = super.handle();
       getSession().setCapabilityCachedResponse(r);
     }
