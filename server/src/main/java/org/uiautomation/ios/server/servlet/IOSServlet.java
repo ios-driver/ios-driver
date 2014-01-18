@@ -131,7 +131,7 @@ public class IOSServlet extends DriverBasedServlet {
   }
 
   private Response getResponse(WebDriverLikeRequest request) {
-    Level level = Level.FINE;
+    Level level = Level.INFO;
     long startTime = System.currentTimeMillis();
     String command = "";
     WebDriverLikeCommand wdlc = null;

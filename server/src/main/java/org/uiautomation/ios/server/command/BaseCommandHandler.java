@@ -109,9 +109,11 @@ public abstract class BaseCommandHandler implements Handler {
       response = handle();
     }
 
+    log.info("pre decorator");
     for (PostHandleDecorator post : postDecorators) {
       post.decorate(response);
     }
+    log.info("returning "+response);
     return response;
   }
 

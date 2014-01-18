@@ -47,6 +47,7 @@ public class NewSessionNHandler extends BaseNativeCommandHandler {
       resp.setSessionId(session.getSessionId());
       resp.setStatus(0);
       resp.setValue("");
+      log.info("returning "+resp);
       return resp;
     } catch (Exception e) {
       e.printStackTrace();
