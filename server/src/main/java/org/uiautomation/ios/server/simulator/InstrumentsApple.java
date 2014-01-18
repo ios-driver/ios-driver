@@ -125,18 +125,15 @@ public class InstrumentsApple implements Instruments {
 
     boolean success = false;
     try {
-      log.info("instruments-1");
       instruments.start();
-      log.info("instruments-2");
 
-      log.fine("waiting for registration request");
+      log.info("waiting for registration request");
       success = channel.waitForUIScriptToBeStarted();
-      log.info("instruments-3");
+      log.info("registration request received");
     } catch (InterruptedException e) {
       log.info("instruments-4");
       throw new InstrumentsFailedToStartException("instruments was interrupted while starting.");
     } finally {
-      log.info("instruments-5");
       // appears only in ios6. : Automation Instrument ran into an exception
       // while trying to run the script. UIAScriptAgentSignaledException
       if (!success) {
@@ -145,7 +142,6 @@ public class InstrumentsApple implements Instruments {
         throw new InstrumentsFailedToStartException("Instruments crashed.");
       }
       putMobileSafariAppBackInInstallDir();
-      log.info("instruments-6");
     }
 
   }
