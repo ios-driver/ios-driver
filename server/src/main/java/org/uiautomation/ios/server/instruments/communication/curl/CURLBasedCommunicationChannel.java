@@ -16,6 +16,7 @@ package org.uiautomation.ios.server.instruments.communication.curl;
 import org.apache.commons.io.IOUtils;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.server.InstrumentsBackedNativeIOSDriver;
+import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.LanguageDictionary;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.command.UIAScriptResponse;
@@ -115,7 +116,9 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
         if (r.isFirstResponse()) {
           log.info("got first response");
           Response resp = r.getResponse();
-          GetCapabilitiesNHandler.setCachedResponse(resp);
+          ServerSideSession session = getDriver().getSession(resp.getSessionId());
+          session.setCapabilityCachedResponse(resp);
+          //GetCapabilitiesNHandler.setCachedResponse(resp);
           InstrumentsBackedNativeIOSDriver
               nativeDriver =
               getDriver().getSession(resp.getSessionId()).getDualDriver().getNativeDriver();

@@ -36,7 +36,6 @@ public class NewSessionNHandler extends BaseNativeCommandHandler {
 
   public Response handle() throws Exception {
     try {
-      GetCapabilitiesNHandler.reset();
       JSONObject payload = getRequest().getPayload();
       IOSCapabilities cap = new IOSCapabilities(payload.getJSONObject("desiredCapabilities"));
       session = getServer().createSession(cap);

@@ -32,13 +32,6 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
 
   // TODO freynaud
   private static final Logger log = Logger.getLogger(GetCapabilitiesNHandler.class.getName());
-  private static Response cachedResponse = null;
-  private static boolean hasBeenDecorated = false;
-
-  public static void reset() {
-    cachedResponse = null;
-    hasBeenDecorated = false;
-  }
 
   private static final JSTemplate template = new JSTemplate(
       "var json = UIAutomation.getCapabilities();" +
@@ -51,20 +44,19 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
     addDecorator(new AddAllSupportedLocalesDecorator(getServer()));
   }
 
+
   @Override
-  public Response handle() throws Exception {
+  public synchronized Response handle() throws Exception {
     log.info("will handle GetCapabilitiesNHandler::handle");
-    if (cachedResponse == null) {
-      log.info("cache=null");
-      cachedResponse = super.handle();
-      log.info("done getting caps");
+    Response r = getSession().getCachedCapabilityResponse();
+    if (r==null){
+      r = super.handle();
+      getSession().setCapabilityCachedResponse(r);
     }
-    return cachedResponse;
+    return r;
   }
 
-  public static void setCachedResponse(Response r) {
-    cachedResponse = r;
-  }
+
 
   class AddAllSupportedLocalesDecorator extends PostHandleDecorator {
 
@@ -74,8 +66,9 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
     }
 
     @Override
-    public void decorate(Response response) {
-      if (hasBeenDecorated) {
+    public synchronized  void decorate(Response response) {
+
+      if (getSession().hasBeenDecorated()) {
         return;
       }
       ServerSideSession session = getDriver().getSession(response.getSessionId());
@@ -106,9 +99,8 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
       o.put(IOSCapabilities.SIMULATOR, true);
       o.put(IOSCapabilities.DEVICE, session.getCapabilities().getDevice());
       o.put(IOSCapabilities.VARIATION, session.getCapabilities().getDeviceVariation());
-      // TODO freynaud fill in device here ?
       response.setValue(o);
-      hasBeenDecorated = true;
+      getSession().setDecorated(true);
     }
   }
 

@@ -15,6 +15,7 @@ package org.uiautomation.ios.server;
 
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
@@ -57,6 +58,8 @@ public class ServerSideSession extends Session {
   private ApplicationCrashDetails applicationCrashDetails;
   private java.net.URL URL;
   private final IOSLogManager logManager;
+  private Response capabilityCachedResponse;
+  private boolean decorated = false;
 
   ServerSideSession(IOSServerManager server, IOSCapabilities desiredCapabilities,
                     IOSServerConfiguration options)
@@ -259,5 +262,22 @@ public class ServerSideSession extends Session {
 
   public IOSLogManager getLogManager() {
     return logManager;
+  }
+
+  public void setCapabilityCachedResponse(Response capabilityCachedResponse) {
+    this.capabilityCachedResponse = capabilityCachedResponse;
+  }
+
+
+  public Response getCachedCapabilityResponse() {
+    return capabilityCachedResponse;
+  }
+
+  public boolean hasBeenDecorated() {
+    return decorated;
+  }
+
+  public void setDecorated(boolean dec){
+    decorated = dec;
   }
 }
