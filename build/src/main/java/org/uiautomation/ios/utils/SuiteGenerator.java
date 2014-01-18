@@ -126,7 +126,7 @@ public class SuiteGenerator implements ISuiteListener, IMethodInterceptor {
       FileReader reader = new FileReader("");
       previousMetrics.load(reader);
     } catch (Exception e) {
-      e.printStackTrace();
+      log("no previous metrics could be loaded.");
     }
     for (String clazz : classesToRun) {
 
