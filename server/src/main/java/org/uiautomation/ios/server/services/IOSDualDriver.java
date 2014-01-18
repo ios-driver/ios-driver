@@ -60,6 +60,11 @@ public class IOSDualDriver {
   }
 
   private void forceStop() {
+    try {
+      session.getIOSServerManager().stop(session.getSessionId());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
     if (webDriver != null) {
       try {
         webDriver.stop();
