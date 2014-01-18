@@ -94,7 +94,6 @@ public class InstrumentsApple implements Instruments {
 
   @Override
   public void start() throws InstrumentsFailedToStartException {
-    log.info("starting");
     DeviceType deviceType = caps.getDevice();
     DeviceVariation variation = caps.getDeviceVariation();
     String locale = caps.getLocale();
@@ -107,7 +106,6 @@ public class InstrumentsApple implements Instruments {
     // workaround is to remove the MobileSafari app from the install directory and put
     // it back after instruments starts it
     boolean tempRemoveMobileSafari = instrumentsIs50OrHigher && application.isSafari() && application.isSimulator();
-    log.info("mv safari");
     if (tempRemoveMobileSafari)
       moveMobileSafariAppOutOfInstallDir();
 
@@ -119,7 +117,6 @@ public class InstrumentsApple implements Instruments {
     deviceManager.setKeyboardOptions();
     deviceManager.setLocationPreference(true);
     deviceManager.setMobileSafariOptions();
-    log.info("install tstore");
     if (application.isSimulator())
       installTrustStore();
 
@@ -130,6 +127,9 @@ public class InstrumentsApple implements Instruments {
       log.info("waiting for registration request");
       success = channel.waitForUIScriptToBeStarted();
       log.info("registration request received");
+      if (session.getCachedCapabilityResponse() == null){
+        throw new InstrumentsFailedToStartException("Didn't get the capability back.");
+      }
     } catch (InterruptedException e) {
       log.info("instruments-4");
       throw new InstrumentsFailedToStartException("instruments was interrupted while starting.");

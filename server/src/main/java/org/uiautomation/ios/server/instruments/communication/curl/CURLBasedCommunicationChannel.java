@@ -108,7 +108,7 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
         throws Exception {
       log.info("got a request on the script thread.");
       if (request.getInputStream() != null) {
-        log.info("no body");
+        log.info("body");
         StringWriter writer = new StringWriter();
         IOUtils.copy(request.getInputStream(), writer, "UTF-8");
         String json = writer.toString();
@@ -126,13 +126,10 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
               getDriver().getSession(resp.getSessionId()).getDualDriver().getNativeDriver();
           nativeDriver.communication().registerUIAScript();
         } else {
-          log.info("not first reposne "+r);
           getCommunicationChannel(request).addResponse(r);
         }
-        log.info("wait for next command");
         UIAScriptRequest nextCommand = getCommunicationChannel(request).getNextCommand();
         String script = nextCommand.getScript();
-        log.info("got " + script);
 
         response.setContentType("text/html");
         response.setCharacterEncoding("UTF-8");
