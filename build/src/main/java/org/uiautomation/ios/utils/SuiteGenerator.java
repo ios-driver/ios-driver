@@ -150,9 +150,9 @@ public class SuiteGenerator implements ISuiteListener, IMethodInterceptor {
 
     }
 
-    File cla = new File("subsuites.properties");
+    File cla = new File("/subsuites.properties");
     FileWriter write = new FileWriter(cla);
-    log("creating " + cla.getAbsolutePath());
+    log("result of the subsuite creation : " + cla.getAbsolutePath());
     p.store(write, "ios-driver internal build.File generated automatically.Do not edit manually. ");
   }
 
