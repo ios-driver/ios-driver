@@ -123,6 +123,7 @@ public class SuiteGenerator implements ISuiteListener, IMethodInterceptor {
     List<ClassTestTime> old = new ArrayList<>();
     Properties previousMetrics = new Properties();
     try {
+      File metricsFolder = new File("server/target/metrics");
       FileReader reader = new FileReader("");
       previousMetrics.load(reader);
     } catch (Exception e) {
