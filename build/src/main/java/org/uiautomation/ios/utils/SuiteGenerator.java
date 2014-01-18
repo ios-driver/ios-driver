@@ -121,14 +121,14 @@ public class SuiteGenerator implements ISuiteListener, IMethodInterceptor {
 
   private void split(int nbSlaves, File previousRunMetricsFolder) throws IOException {
     List<ClassTestTime> old = new ArrayList<>();
+    Properties p = new Properties();
+    try {
+      FileReader reader = new FileReader("");
+      p.load(reader);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
     for (String clazz : classesToRun) {
-      Properties p = new Properties();
-      try {
-        FileReader reader = new FileReader("");
-        p.load(reader);
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
 
       String s = p.getProperty(clazz);
       if (s == null) {
