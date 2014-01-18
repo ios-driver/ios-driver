@@ -77,7 +77,13 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>6.8.5</version>
-            <!--<scope>test</scope>-->
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.uiautomation</groupId>
+            <artifactId>build</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>test</scope>
         </dependency>
 
 

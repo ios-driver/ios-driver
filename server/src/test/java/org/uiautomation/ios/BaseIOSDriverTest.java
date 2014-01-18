@@ -29,7 +29,6 @@ import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
 import org.uiautomation.ios.utils.RealTimeTestMonitor;
 
-@Listeners(RealTimeTestMonitor.class)
 public abstract class BaseIOSDriverTest {
 
   private IOSServer server;
