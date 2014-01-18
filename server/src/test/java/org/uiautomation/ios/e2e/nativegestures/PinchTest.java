@@ -32,7 +32,11 @@ public class PinchTest extends BaseIOSDriverTest {
 
   @BeforeClass
   public void startDriver() {
-    driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.ppNQASampleAppCap());
+    try {
+      driver = getDriver(SampleApps.ppNQASampleAppCap());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   @AfterClass
@@ -43,7 +47,7 @@ public class PinchTest extends BaseIOSDriverTest {
   }
 
   @Test
-  public void testPinchClose(){
+  public void testPinchClose() {
 
     Point closeFrom = new Point(756, 612);
     Point closeTo = new Point(856, 612);
@@ -51,14 +55,17 @@ public class PinchTest extends BaseIOSDriverTest {
     IOSTouchScreen iosTouchScreen = IOSDriverAugmenter.augment(driver);
     iosTouchScreen.pinchCloseFromToForDuration(closeFrom, closeTo, 3);
 
-    waitForElement(driver, By.xpath("//UIAStaticText[contains(@name, 'scale: 0.011 - velocity: 0.000')]"), 6);
+    waitForElement(driver,
+                   By.xpath("//UIAStaticText[contains(@name, 'scale: 0.011 - velocity: 0.000')]"),
+                   6);
 
-    Assert.assertTrue(driver.findElementByXPath("//UIAStaticText[contains(@name, 'scale: 0.011 - velocity: 0.000')]").isDisplayed());
+    Assert.assertTrue(driver.findElementByXPath(
+        "//UIAStaticText[contains(@name, 'scale: 0.011 - velocity: 0.000')]").isDisplayed());
 
   }
 
   @Test
-  public void testPinchOpen(){
+  public void testPinchOpen() {
 
     Point openFrom = new Point(856, 612);
     Point openTo = new Point(756, 612);
@@ -68,7 +75,8 @@ public class PinchTest extends BaseIOSDriverTest {
 
     waitForElement(driver, By.xpath("//UIAStaticText[contains(@name, 'scale: 10.000')]"), 6);
 
-    Assert.assertTrue(driver.findElementByXPath("//UIAStaticText[contains(@name, 'scale: 10.000')]").isDisplayed());
+    Assert.assertTrue(driver.findElementByXPath("//UIAStaticText[contains(@name, 'scale: 10.000')]")
+                          .isDisplayed());
 
   }
 }
