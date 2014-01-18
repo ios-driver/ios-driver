@@ -214,7 +214,13 @@ public class IOSServer {
       init();
     }
     if (!server.isRunning()) {
-      server.start();
+      try {
+        server.start();
+      }catch (Exception e){
+        System.err.println("SERVER ERROR "+e.getMessage());
+        Thread.sleep(10000);
+        server.start();
+      }
     }
     startFolderMonitor();
     startHubRegistration();
