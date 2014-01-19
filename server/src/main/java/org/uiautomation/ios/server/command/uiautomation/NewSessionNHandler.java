@@ -22,6 +22,7 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
+import org.uiautomation.ios.server.simulator.InstrumentsFailedToStartException;
 
 import java.util.logging.Logger;
 
@@ -38,15 +39,34 @@ public class NewSessionNHandler extends BaseNativeCommandHandler {
     try {
       JSONObject payload = getRequest().getPayload();
       IOSCapabilities cap = new IOSCapabilities(payload.getJSONObject("desiredCapabilities"));
-      session = getServer().createSession(cap);
-      session.start();
+      ServerSideSession session = null;
+      try {
+        session = getServer().createSession(cap);
+        session.start();
+      } catch (InstrumentsFailedToStartException e) {
+        log.warning("Couldn't start instrument :" + e.getMessage());
+        if (session != null) {
+          session.stop();
+        }
+        session = getServer().createSession(cap);
+        session.start();
+      }
+
+      if (session.hasCrashed()) {
+        log.warning("app has crashed :" + session.getCrashDetails());
+        if (session != null) {
+          session.stop();
+        }
+        session = getServer().createSession(cap);
+        session.start();
+      }
 
       log.info("session started");
       Response resp = new Response();
       resp.setSessionId(session.getSessionId());
       resp.setStatus(0);
       resp.setValue("");
-      log.info("returning "+resp);
+      log.info("returning " + resp);
       return resp;
     } catch (Exception e) {
       e.printStackTrace();
@@ -56,8 +76,6 @@ public class NewSessionNHandler extends BaseNativeCommandHandler {
       throw new SessionNotCreatedException(e.getMessage(), e);
     }
   }
-
-  
 
   @Override
   public JSONObject configurationDescription() throws JSONException {

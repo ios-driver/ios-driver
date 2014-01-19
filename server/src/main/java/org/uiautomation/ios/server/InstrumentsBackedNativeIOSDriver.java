@@ -39,12 +39,13 @@ public class InstrumentsBackedNativeIOSDriver extends ServerSideNativeDriver {
     };
   }
 
-  public void start() {
+  public void start() throws InstrumentsFailedToStartException {
     try {
       instruments.start();
       Runtime.getRuntime().addShutdownHook(shutdownHook);
     } catch (InstrumentsFailedToStartException e) {
       stop();
+      throw e;
     }
   }
 

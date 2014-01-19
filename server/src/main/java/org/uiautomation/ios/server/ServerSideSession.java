@@ -30,6 +30,7 @@ import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
 import org.uiautomation.ios.server.logging.IOSLogManager;
 import org.uiautomation.ios.server.services.IOSDualDriver;
+import org.uiautomation.ios.server.simulator.InstrumentsFailedToStartException;
 import org.uiautomation.ios.server.utils.ZipUtils;
 import org.uiautomation.ios.utils.ApplicationCrashDetails;
 import org.uiautomation.ios.utils.ClassicCommands;
@@ -236,7 +237,7 @@ public class ServerSideSession extends Session {
     return driver;
   }
 
-  public void start() {
+  public void start() throws InstrumentsFailedToStartException {
     driver.start();
   }
 

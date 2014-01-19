@@ -26,6 +26,7 @@ import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.server.InstrumentsBackedNativeIOSDriver;
 import org.uiautomation.ios.server.ServerSideSession;
+import org.uiautomation.ios.server.simulator.InstrumentsFailedToStartException;
 import org.uiautomation.ios.utils.IOSVersion;
 import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
 import org.uiautomation.ios.wkrdp.internal.AlertDetector;
@@ -81,7 +82,7 @@ public class IOSDualDriver {
     }
   }
 
-  public void start() {
+  public void start() throws InstrumentsFailedToStartException {
     // force stop session if running for too long
     final int sessionTimeoutMillis = session.getOptions().getSessionTimeoutMillis();
 
