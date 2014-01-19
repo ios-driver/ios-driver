@@ -36,7 +36,7 @@ public class DefaultCommandListener implements CommandOutputListener {
 
   @Override
   public void stderr(String log) {
-    this.log.warning(label+"\t"+log);
+    this.log.info(label+"\t"+log);
   }
 
 }

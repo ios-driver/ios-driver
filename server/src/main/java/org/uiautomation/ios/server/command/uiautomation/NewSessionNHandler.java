@@ -44,7 +44,7 @@ public class NewSessionNHandler extends BaseNativeCommandHandler {
     int nbTries = 0;
     ServerSideSession session = createSession(cap);
     while (session == null && nbTries < MAX_TRIES) {
-      log.warning("Couldn't start instruments properly");
+      log.warning("Couldn't start instruments properly"+ lastException.getMessage());
       session = createSession(cap);
       nbTries++;
     }
@@ -68,7 +68,7 @@ public class NewSessionNHandler extends BaseNativeCommandHandler {
     } catch (Exception e) {
       lastException = e;
       if (session != null) {
-        session.stop();
+        session.getIOSServerManager().stop(session.getSessionId());
       }
     }
     return null;

@@ -31,7 +31,6 @@ import java.util.logging.Logger;
 
 public class GetCapabilitiesNHandler extends UIAScriptHandler {
 
-  // TODO freynaud
   private static final Logger log = Logger.getLogger(GetCapabilitiesNHandler.class.getName());
 
   private static final JSTemplate template = new JSTemplate(
@@ -48,18 +47,15 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
 
   @Override
   public synchronized Response handle() throws Exception {
-    log.info("will handle GetCapabilitiesNHandler::handle");
     Response r = getSession().getCachedCapabilityResponse();
-    if (r==null){
+    if (r == null) {
       log.warning("Didn't know the capabilities. Should have known at registration.");
-      //r = super.handle();
-      //getSession().setCapabilityCachedResponse(r);
-      throw new InstrumentsFailedToStartException("The driver never recieved the capabilities or the "
-                                                  + "device. Most likely instruments crashed.");
+      throw new InstrumentsFailedToStartException(
+          "The driver never recieved the capabilities or the "
+          + "device. Most likely instruments crashed.");
     }
     return r;
   }
-
 
 
   class AddAllSupportedLocalesDecorator extends PostHandleDecorator {
@@ -70,7 +66,7 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
     }
 
     @Override
-    public synchronized  void decorate(Response response) {
+    public synchronized void decorate(Response response) {
 
       if (getSession().hasBeenDecorated()) {
         return;
@@ -99,7 +95,7 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
       o.put("javascriptEnabled", true);
       o.put("cssSelectors", true);
       o.put("takesElementScreenshot", false);
-      
+
       o.put(IOSCapabilities.SIMULATOR, true);
       o.put(IOSCapabilities.DEVICE, session.getCapabilities().getDevice());
       o.put(IOSCapabilities.VARIATION, session.getCapabilities().getDeviceVariation());
