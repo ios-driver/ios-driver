@@ -106,16 +106,16 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
 
     private void getResponse(HttpServletRequest request, HttpServletResponse response)
         throws Exception {
-      log.info("got a request on the script thread.");
+      log.fine("got a request on the script thread.");
       if (request.getInputStream() != null) {
         StringWriter writer = new StringWriter();
         IOUtils.copy(request.getInputStream(), writer, "UTF-8");
         String json = writer.toString();
         json = Normalizer.normalize(json, LanguageDictionary.form);
         UIAScriptResponse r = new UIAScriptResponse(json);
-        log.info("content : "+r);
+        log.fine("content : "+r);
         if (r.isFirstResponse()) {
-          log.info("got first response");
+          log.fine("got first response");
           Response resp = r.getResponse();
           ServerSideSession session = getDriver().getSession(resp.getSessionId());
           session.setCapabilityCachedResponse(resp);
