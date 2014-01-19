@@ -59,11 +59,7 @@ public abstract class BaseCommunicationChannel implements CommunicationChannel {
       if (ready) {
         return true;
       }
-      long b = System.currentTimeMillis();
-      boolean ok = condition.await(15, TimeUnit.SECONDS);
-      long total = System.currentTimeMillis() - b;
-      log.info("returning "+ok+" after "+total +"ms");
-      return ok;
+      return condition.await(15, TimeUnit.SECONDS);
     } finally {
       lock.unlock();
     }
@@ -103,8 +99,8 @@ public abstract class BaseCommunicationChannel implements CommunicationChannel {
 
     } catch (IllegalStateException e) {
       try {
-        System.out.println("ALREADY PRESENT:"+responseQueue.take().getRaw());
-        System.out.println("TRY TO ADD:"+r.getRaw());
+        System.out.println("ALREADY PRESENT:" + responseQueue.take().getRaw());
+        System.out.println("TRY TO ADD:" + r.getRaw());
       } catch (InterruptedException e1) {
         e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
       }

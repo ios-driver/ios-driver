@@ -168,7 +168,11 @@ public class IOSServer {
   }
 
   private void initServer() {
-    server = new Server(new InetSocketAddress("0.0.0.0", options.getPort()));
+    String host = System.getProperty("ios-driver.host");
+    if (host == null){
+      host = "0.0.0.0";
+    }
+    server = new Server(new InetSocketAddress(host, options.getPort()));
 
     ServletContextHandler wd = new ServletContextHandler(server, "/wd/hub", true, false);
     wd.addServlet(CURLBasedCommunicationChannel.UIAScriptServlet.class, "/uiascriptproxy/*");
