@@ -108,7 +108,6 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
         throws Exception {
       log.info("got a request on the script thread.");
       if (request.getInputStream() != null) {
-        log.info("body");
         StringWriter writer = new StringWriter();
         IOUtils.copy(request.getInputStream(), writer, "UTF-8");
         String json = writer.toString();

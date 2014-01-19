@@ -126,7 +126,7 @@ public class InstrumentsApple implements Instruments {
 
       log.info("waiting for registration request");
       success = channel.waitForUIScriptToBeStarted();
-      log.info("registration request received");
+      log.info("registration request received"+session.getCachedCapabilityResponse());
       if (session.getCachedCapabilityResponse() == null){
         throw new InstrumentsFailedToStartException("Didn't get the capability back.");
       }
