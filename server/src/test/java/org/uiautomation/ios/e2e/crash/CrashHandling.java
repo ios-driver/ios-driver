@@ -34,7 +34,7 @@ import org.uiautomation.ios.utils.ClassicCommands;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/*
+
 public class CrashHandling {
 
   private IOSServer server;
@@ -42,7 +42,7 @@ public class CrashHandling {
   private RemoteWebDriver driver;
   private IOSCapabilities cap;
 
-  @BeforeMethod(timeOut = 30000)
+  @BeforeMethod
   public void startServer() throws Exception {
     String[] args = {"-port", "4444", "-host", "localhost",
                      "-app", SampleApps.getPPNQASampleApp(), "-simulators"};
@@ -235,4 +235,3 @@ public class CrashHandling {
     }
   }
 }
-*/
