@@ -27,34 +27,50 @@ import java.util.logging.Logger;
 
 public class NewSessionNHandler extends BaseNativeCommandHandler {
 
-  private ServerSideSession session;
+
+  private static final int MAX_TRIES = 3;
   private static final Logger log = Logger.getLogger(NewSessionNHandler.class.getName());
+  private Exception lastException;
 
   public NewSessionNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
 
   public Response handle() throws Exception {
+
+    JSONObject payload = getRequest().getPayload();
+    IOSCapabilities cap = new IOSCapabilities(payload.getJSONObject("desiredCapabilities"));
+
+    int nbTries = 0;
+    ServerSideSession session = createSession(cap);
+    while (session == null && nbTries < MAX_TRIES) {
+      session = createSession(cap);
+      nbTries++;
+    }
+
+    if (session == null) {
+      throw new SessionNotCreatedException(lastException.getMessage(), lastException);
+    }
+    Response resp = new Response();
+    resp.setSessionId(session.getSessionId());
+    resp.setStatus(0);
+    resp.setValue("");
+    return resp;
+  }
+
+  private ServerSideSession createSession(IOSCapabilities cap) {
+    ServerSideSession session = null;
     try {
-      JSONObject payload = getRequest().getPayload();
-      IOSCapabilities cap = new IOSCapabilities(payload.getJSONObject("desiredCapabilities"));
       session = getServer().createSession(cap);
       session.start();
-
-      log.info("session started");
-      Response resp = new Response();
-      resp.setSessionId(session.getSessionId());
-      resp.setStatus(0);
-      resp.setValue("");
-      log.info("returning "+resp);
-      return resp;
+      return session;
     } catch (Exception e) {
-      e.printStackTrace();
+      lastException = e;
       if (session != null) {
         session.stop();
       }
-      throw new SessionNotCreatedException(e.getMessage(), e);
     }
+    return null;
   }
 
   @Override
