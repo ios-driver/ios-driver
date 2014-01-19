@@ -59,7 +59,11 @@ public abstract class BaseCommunicationChannel implements CommunicationChannel {
       if (ready) {
         return true;
       }
-      return condition.await(30, TimeUnit.SECONDS);
+      long b = System.currentTimeMillis();
+      boolean ok = condition.await(15, TimeUnit.SECONDS);
+      long total = System.currentTimeMillis() - b;
+      log.info("returning "+ok+" after "+total +"ms");
+      return ok;
     } finally {
       lock.unlock();
     }
