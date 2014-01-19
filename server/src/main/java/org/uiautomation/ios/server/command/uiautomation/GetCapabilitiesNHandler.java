@@ -22,6 +22,7 @@ import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.command.PostHandleDecorator;
 import org.uiautomation.ios.server.command.UIAScriptHandler;
+import org.uiautomation.ios.server.simulator.InstrumentsFailedToStartException;
 import org.uiautomation.ios.server.utils.JSTemplate;
 
 import java.util.List;
@@ -51,8 +52,10 @@ public class GetCapabilitiesNHandler extends UIAScriptHandler {
     Response r = getSession().getCachedCapabilityResponse();
     if (r==null){
       log.warning("Didn't know the capabilities. Should have known at registration.");
-      r = super.handle();
-      getSession().setCapabilityCachedResponse(r);
+      //r = super.handle();
+      //getSession().setCapabilityCachedResponse(r);
+      throw new InstrumentsFailedToStartException("The driver never recieved the capabilities or the "
+                                                  + "device. Most likely instruments crashed.");
     }
     return r;
   }
