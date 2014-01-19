@@ -127,11 +127,10 @@ public class InstrumentsApple implements Instruments {
       log.info("waiting for registration request");
       success = channel.waitForUIScriptToBeStarted();
       log.info("registration request received"+session.getCachedCapabilityResponse());
-      if (session.getCachedCapabilityResponse() == null){
+      if (!success){
         throw new InstrumentsFailedToStartException("Didn't get the capability back.");
       }
     } catch (InterruptedException e) {
-      log.info("instruments-4");
       throw new InstrumentsFailedToStartException("instruments was interrupted while starting.");
     } finally {
       // appears only in ios6. : Automation Instrument ran into an exception
@@ -139,7 +138,6 @@ public class InstrumentsApple implements Instruments {
       if (!success) {
         instruments.forceStop();
         deviceManager.cleanupDevice();
-        throw new InstrumentsFailedToStartException("Instruments crashed.");
       }
       putMobileSafariAppBackInInstallDir();
     }
