@@ -93,7 +93,7 @@ public class IOSDualDriver {
 
     if (session.getApplication().isSafari()) {
       String sdkVersion = session.getCapabilities().getSDKVersion();
-      if (sdkVersion != null && Float.parseFloat(sdkVersion) >= 7.0) {
+      if (sdkVersion != null && new IOSVersion(sdkVersion).isGreaterOrEqualTo("7.0")) {
         // to get Safari out of his home page and become responsive we need to click
         // on one of the home icons, click on the "about:blank" we added in prefs
         for (int i = 0; i < 3; i++) {
