@@ -56,7 +56,7 @@ public class TextFieldTest extends BaseIOSDriverTest {
 
   }
 
-  @AfterClass
+  @AfterClass(alwaysRun = true)
   public void stopDriver() {
     if (driver != null) {
       driver.quit();

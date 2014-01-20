@@ -59,9 +59,10 @@ public abstract class BaseIOSDriverTest {
     return driver;
   }
 
-  @AfterClass
+  @AfterClass(alwaysRun = true)
   public void stopServer() throws Exception {
-    server.stop();
+    if (server != null)
+      server.stop();
   }
 
 

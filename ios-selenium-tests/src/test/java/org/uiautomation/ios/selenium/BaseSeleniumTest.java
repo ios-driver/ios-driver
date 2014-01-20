@@ -38,10 +38,11 @@ public abstract class BaseSeleniumTest {
     driver.get("about:blank");
   }
 
-  @AfterClass
+  @AfterClass(alwaysRun = true)
   public void tearDown() throws Exception {
     try {
-      driver.quit();
+      if (driver != null)
+        driver.quit();
     } catch (Exception e) {
       System.err.println("cannot quit properly: " + e);
     }
@@ -50,7 +51,8 @@ public abstract class BaseSeleniumTest {
     } catch (Exception e) {
       System.err.println("cannot stop IOServer propery: " + e);
     }
-    appServer.stop();
+    if (appServer != null)
+      appServer.stop();
   }
   
   private void startIOSServer() throws Exception {
@@ -72,7 +74,8 @@ public abstract class BaseSeleniumTest {
   }
 
   public void stopIOSServer() throws Exception {
-    server.stop();
+    if (server != null)
+      server.stop();
   }
 
   protected void stopDriver() {

@@ -47,10 +47,12 @@ public class ElementFindingMultiDeviceTest {
     pages = new Pages(appServer);
   }
 
-  @AfterClass
+  @AfterClass(alwaysRun = true)
   public void tearDown() throws Exception {
-    server.stop();
-    appServer.stop();
+    if (server != null)
+      server.stop();
+    if (appServer != null)
+      appServer.stop();
   }
 
   @DataProvider(name = "capabilities")
