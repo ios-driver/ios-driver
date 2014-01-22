@@ -125,16 +125,21 @@ public class ClassicCommands {
     }
     return f;
   }
+  
+  private static List<String> installedSDKs;
 
-  public static List<String> getInstalledSDKs() {
-    List<String> c = new ArrayList<>();
-    c.add("xcodebuild");
-    c.add("-showsdks");
-    Command com = new Command(c, false);
-    ShowSDKsParser l = new ShowSDKsParser();
-    com.registerListener(l);
-    com.executeAndWait();
-    return l.getSDKs();
+  public synchronized static List<String> getInstalledSDKs() {
+    if (installedSDKs == null) {
+      List<String> c = new ArrayList<>();
+      c.add("xcodebuild");
+      c.add("-showsdks");
+      Command com = new Command(c, false);
+      ShowSDKsParser l = new ShowSDKsParser();
+      com.registerListener(l);
+      com.executeAndWait();
+      installedSDKs = l.getSDKs();
+    }
+    return installedSDKs;
   }
 
   public static String getDefaultSDK() {
