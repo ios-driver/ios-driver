@@ -106,7 +106,8 @@ UIAKeyboard.prototype.moreLetters = function () {
  */
 UIAKeyboard.prototype.shift = function () {
     var root = UIAutomation.cache.get('1');
-    var more = root.element(-1,
+    var keyboard = root.keyboard();
+    var more = keyboard.element(-1,
                             {"l10n": "none",
                                 "expected": "shift",
                                 "matching": "exact",
@@ -119,10 +120,12 @@ UIAKeyboard.prototype.shift = function () {
  */
 UIAKeyboard.prototype.hide = function () {
     var root = UIAutomation.cache.get('1');
+    // TODO: should find elements within the parent UIAWindow of the UIAKeyboard
     var hide = root.element(-1,
                             {"OR": [
-                                {"l10n": "none", "expected": "Done", "matching": "exact", "method": "name"},
-                                {"l10n": "none", "expected": "Hide keyboard", "matching": "exact", "method": "name"}
+                                // put "Hide keyboard" first so it doesn't find first a possible "Done" button in the app
+                                {"l10n": "none", "expected": "Hide keyboard", "matching": "exact", "method": "name"},
+                                {"l10n": "none", "expected": "Done", "matching": "exact", "method": "name"}                                                      
                             ]});
     hide.tap();
     // and wait for the keyboard to disapear.
