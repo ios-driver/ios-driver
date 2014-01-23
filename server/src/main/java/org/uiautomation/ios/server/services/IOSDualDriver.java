@@ -15,16 +15,13 @@
 package org.uiautomation.ios.server.services;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.SessionNotCreatedException;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
-import org.uiautomation.ios.UIAModels.UIAButton;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
-import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
-import org.uiautomation.ios.UIAModels.predicate.Criteria;
-import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
-import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.server.InstrumentsBackedNativeIOSDriver;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.simulator.InstrumentsFailedToStartException;
@@ -126,29 +123,32 @@ public class IOSDualDriver {
 
     boolean ok = false;
     setMode(WorkingMode.Native);
-    for (int i=0;i<retry;i++){
-      
+    for (int i = 0; i < retry; i++) {
+
       try {
         // to get Safari out of his home page and become responsive we need to click
         // on one of the home icons, click on the "about:blank" we added in prefs
-        WebElement b = getNativeDriver().findElement(By.xpath("//UIAWindow/UIAButton"));
+        WebElement
+            b =
+            getNativeDriver().findElement(By.xpath("//UIAWindow/UIAScrollView/UIAButton"));
         b.click();
-    
-        // click on the Go! button on the keyboard
-        log.fine("clicking on about:blank button: " + i);
-        Criteria c = new AndCriteria(new NameCriteria("Go"), new TypeCriteria(UIAButton.class));
-        UIAButton go = getNativeDriver().findElement(c);
-        go.click();
+
+//        // click on the Go! button on the keyboard
+//        log.fine("clicking on about:blank button: " + i);
+//        Criteria c = new AndCriteria(new NameCriteria("Go"), new TypeCriteria(UIAButton.class));
+//        UIAButton go = getNativeDriver().findElement(c);
+//        go.click();
         ok = true;
-      } catch (NoSuchElementException e) {
+      } catch (WebDriverException e){
+        sleep(2000); // allow some time to take effect
         // else keep trying as sometimes the click doesn't take effect on slow machines
         log.fine("about:blank button gone, proceeding");
         break;
       }
-      sleep(2000); // allow some time to take effect
     }
-    if (!ok){
-      throw new SessionNotCreatedException("coudln't find the about:blank button after "+retry+" retries.");
+    if (!ok) {
+      throw new SessionNotCreatedException(
+          "coudln't find the about:blank button after " + retry + " retries.");
     }
     setMode(WorkingMode.Web);
   }
