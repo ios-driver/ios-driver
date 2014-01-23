@@ -62,7 +62,7 @@ public class AlertTest extends BaseIOSDriverTest {
     goToAlertScreen();
   }
 
-  @AfterClass(alwaysRun = true)
+  @AfterClass
   public void stopDriver() {
     try {
       if (driver != null) {

@@ -321,7 +321,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
     };
   }
 
-  @Test(dataProvider = "capabilities")
+  @Test(dataProvider = "capabilities",timeOut = 0)
   public void supportApplicationWithMultipleDeviceFamily(DeviceType device,
                                                          DeviceVariation variation,
                                                          int expectedW,

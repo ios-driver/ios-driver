@@ -51,10 +51,14 @@ public class ActionSheetTest extends BaseIOSDriverTest {
     goToAlertScreen();
   }
 
-  @AfterClass(alwaysRun = true)
+  @AfterClass
   public void stopDriver() {
     if (driver != null) {
-      driver.quit();
+      try {
+        driver.quit();
+      } catch (Exception e) {
+        // ignore
+      }
     }
   }
 
