@@ -42,10 +42,14 @@ public class UIAKeyboardTest extends BaseIOSDriverTest {
     textview = getTextView();
   }
 
-  @AfterClass(alwaysRun = true)
+  @AfterClass
   public void stopDriver() {
     if (driver != null) {
-      driver.quit();
+      try {
+        driver.quit();
+      } catch (Exception e) {
+        // ignore
+      }
     }
   }
 

@@ -83,11 +83,11 @@ public class ServerSideL10NTest {
     Assert.assertEquals(c.getValue(), "(.*){1}英尺");
   }
 
-  @Test(enabled = false)
+  @Test
   public void apostrophe() throws JSONException {
     ServerSideL10NFactory factory = create(AppleLanguage.fr);
     NameCriteria c = factory.nameCriteria("detailViewNavTitle");
-    Assert.assertEquals(c.getValue(), "Détail de l'apostrophe Montagne");
+    Assert.assertEquals(c.getValue(), "Détail de l'apostrophe \" Montagne");
   }
 
   @Test
