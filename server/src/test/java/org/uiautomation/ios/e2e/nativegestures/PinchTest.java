@@ -39,7 +39,7 @@ public class PinchTest extends BaseIOSDriverTest {
     }
   }
 
-  @AfterClass(alwaysRun = true)
+  @AfterClass
   public void stopDriver() {
     if (driver != null) {
       driver.quit();

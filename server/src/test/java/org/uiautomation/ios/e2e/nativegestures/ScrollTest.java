@@ -35,7 +35,7 @@ public class ScrollTest extends BaseIOSDriverTest {
     driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.ppNQASampleAppCap());
 }
 
-  @AfterClass(alwaysRun = true)
+  @AfterClass
   public void stopDriver() {
     if (driver != null) {
       driver.quit();
