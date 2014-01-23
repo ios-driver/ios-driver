@@ -327,10 +327,11 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
 
   @Test
   public void testShouldBeAbleToReturnAnArrayOfWebElements() {
+    // 1 more new window in UICatalog. 2 becomes 3.
     List<WebElement>
         items =
         (List<WebElement>) executeScript("return UIATarget.localTarget().frontMostApp().windows()");
-    assertEquals(items.size(), 2);
+    assertEquals(items.size(), 3);
   }
 
   @Test
