@@ -14,6 +14,8 @@
 package org.uiautomation.ios.utils;
 
 import com.google.common.collect.ImmutableList;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,21 +39,36 @@ public class SimulatorSettings {
   public static void main(String[] args) throws Exception {
     ImmutableList<String> sdkVersions = ImmutableList.of("6.1", "7.0");
     for (String sdkVersion : sdkVersions) {
-      String exactSdkVersion;
-      String globalPreferences;
+      SimulatorSettings settings = new SimulatorSettings(sdkVersion);
+      String exactSdkVersion = settings.exactSdkVersion;
+      
+      String globalPreferences = "not available";
       try {
-        SimulatorSettings settings = new SimulatorSettings(sdkVersion);
-        JSONObject json = new PlistFileUtils(settings.globalPreferencePlist).toJSON();
-        exactSdkVersion = settings.exactSdkVersion;
-        globalPreferences = json.toString(2);
+        globalPreferences = new PlistFileUtils(settings.globalPreferencePlist).toJSON().toString(2);
       } catch (WebDriverException e) {
-        exactSdkVersion = sdkVersion;
-        globalPreferences = "not available";
       }
-      System.out.println(String.format("globalPreferences %s (%s): %s",
-          sdkVersion,
-          exactSdkVersion,
-          globalPreferences));
+      System.out.println(String.format("\nglobalPreferences %s (%s): %s",
+          sdkVersion, exactSdkVersion, globalPreferences));
+      
+      String safariPreferences = "not available";
+      try {
+        safariPreferences = new PlistFileUtils(settings.getMobileSafariPreferencesFile()).toJSON().toString(2);
+      } catch (WebDriverException e) {
+      }
+      System.out.println(String.format("\nsafariPreferences %s (%s): %s",
+          sdkVersion, exactSdkVersion, safariPreferences));
+      
+      String miscPreferences = "not available";
+      String miscPlistFile = "Applications/90428432-F387-4323-B697-3596C419CD1B/Library/Safari/SuspendState.plist";
+      try {
+        miscPreferences = new PlistFileUtils(new File(settings.contentAndSettingsFolder, miscPlistFile))
+            .toJSON().toString(2);
+      } catch (WebDriverException e) {
+      }
+      System.out.println(String.format("\n%s %s (%s): %s",
+          miscPlistFile, sdkVersion, exactSdkVersion, miscPreferences));
+      
+      // showAllPlistFiles(settings.contentAndSettingsFolder);
     }
   }
 
@@ -81,7 +98,7 @@ public class SimulatorSettings {
       clients.put(bundleId, options);
       writeOnDisk(clients, f);
     } catch (Exception e) {
-      throw new WebDriverException("cannot set location in " + f.getAbsolutePath());
+      throw new WebDriverException("cannot set location in " + f.getAbsolutePath(), e);
     }
   }
 
@@ -102,21 +119,24 @@ public class SimulatorSettings {
       preferences.put("KeyboardCheckSpelling", false);
       writeOnDisk(preferences, preferenceFile);
     } catch (Exception e) {
-      throw new WebDriverException("cannot set options in " + preferenceFile.getAbsolutePath());
+      throw new WebDriverException("cannot set options in " + preferenceFile.getAbsolutePath(), e);
     }
   }
 
   public void setMobileSafariOptions() {
-    File folder = new File(contentAndSettingsFolder + "/Library/Preferences/");
-    File preferenceFile = new File(folder, "com.apple.mobilesafari.plist");
-
+    File preferenceFile = getMobileSafariPreferencesFile();
     try {
       JSONObject preferences = new JSONObject();
       preferences.put("WarnAboutFraudulentWebsites", false);
       writeOnDisk(preferences, preferenceFile);
     } catch (Exception e) {
-      throw new WebDriverException("cannot set options in " + preferenceFile.getAbsolutePath());
+      throw new WebDriverException("cannot set options in " + preferenceFile.getAbsolutePath(), e);
     }
+  }
+  
+  private File getMobileSafariPreferencesFile() {
+      File folder = new File(contentAndSettingsFolder + "/Library/Preferences/");
+      return new File(folder, "com.apple.mobilesafari.plist");
   }
 
   /**
@@ -143,6 +163,16 @@ public class SimulatorSettings {
       throws WebDriverException {
     String value = getSimulateDeviceValue(device, variation, desiredSDKVersion);
     setDefaultSimulatorPreference("SimulateDevice", value);
+  }
+  
+  public void setSimulatorScale(String scale) {
+    if (scale != null) {
+      // error check scale value
+      float fScale = Float.parseFloat(scale);
+      if (fScale <= 0)
+        throw new WebDriverException("invalid simulator scale: " + scale);
+      setDefaultSimulatorPreference("SimulatorWindowLastScale", scale);
+    }
   }
 
   /**
@@ -216,9 +246,10 @@ public class SimulatorSettings {
   private String getSimulateDeviceValue(DeviceType device, DeviceVariation variation, String desiredSDKVersion)
       throws WebDriverException {
     if (!DeviceVariation.compatibleWithSDKVersion(device, variation, desiredSDKVersion)) {
-      throw new WebDriverException(String.format("%s incompatible with SDK %s",
+      DeviceVariation compatibleVariation = DeviceVariation.getCompatibleVersion(device, desiredSDKVersion);
+      throw new WebDriverException(String.format("%s variation incompatible with SDK %s, a compatible variation is %s",
           DeviceVariation.deviceString(device, variation),
-          desiredSDKVersion));
+          desiredSDKVersion, compatibleVariation));
     }
     return DeviceVariation.deviceString(device, variation);
   }
@@ -295,6 +326,35 @@ public class SimulatorSettings {
     File f = new File(PLUTIL);
     if (!f.exists() || !f.canExecute()) {
       throw new WebDriverException("Cannot access " + PLUTIL);
+    }
+  }
+
+  public void installTrustStore(String trustStore) {
+    if (trustStore == null)
+      return;
+          
+    // executes:
+    // mkdir ~/"Library/Application Support/iPhone Simulator/7.0/Library/Keychains"
+    // cp libs/ios/TrustStore.sqlite3 ~/"Library/Application Support/iPhone Simulator/7.0/Library/Keychains"
+    File keychainsDir = new File(contentAndSettingsFolder + "/Library/Keychains");
+    log.info("installing -trustStore: " + trustStore + " in " + keychainsDir.getAbsolutePath());
+    File sourceFile = new File(trustStore);
+    if (!sourceFile.exists()) {
+      log.severe("-trustStore: source trust store file doesn't exist: " + sourceFile.getAbsolutePath());
+      return;
+    }
+    File destFile = new File(keychainsDir, "TrustStore.sqlite3");
+    try {
+      if (!keychainsDir.exists()) {
+        if (!keychainsDir.mkdir()) {
+          log.severe("-trustStore: could not create Keychains dir: " + keychainsDir.getAbsolutePath());
+          return;
+        }
+      }
+      FileUtils.copyFile(sourceFile, destFile, false);
+    } catch (Exception e) {
+      log.severe("cannot install trust store file " + sourceFile.getAbsolutePath()
+              + " to " + destFile.getAbsolutePath() + ": " + e);
     }
   }
 }

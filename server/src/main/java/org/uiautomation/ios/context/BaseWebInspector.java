@@ -53,13 +53,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-
 public abstract class BaseWebInspector implements MessageListener, ConnectListener {
 
   private static final Logger log = Logger.getLogger(BaseWebInspector.class.getName());
   protected final ServerSideSession session;
   private boolean newPage = true;
-  public static final Long defaultPageLoadTimeoutInMs = 30000L;
+  public static final Long defaultPageLoadTimeoutInMs = 60000L;
   private final DOMContext context;
 
   protected BaseWebInspector(ServerSideSession session) {
@@ -607,8 +606,8 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
     sendCommand(DOM.highlightNode(nodeId));
   }
 
-  public void deleteCookie(String name, String domain) {
-    sendCommand(Page.deleteCookie(name, domain));
+  public void deleteCookie(String name, String url) {
+    sendCommand(Page.deleteCookie(name, url));
   }
 
   public List<Cookie> getCookies() {

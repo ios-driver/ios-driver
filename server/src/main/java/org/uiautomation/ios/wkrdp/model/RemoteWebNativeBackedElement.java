@@ -21,10 +21,8 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.UIAModels.UIAButton;
 import org.uiautomation.ios.UIAModels.UIAElement;
 import org.uiautomation.ios.UIAModels.UIAScrollView;
-import org.uiautomation.ios.UIAModels.UIATextField;
 import org.uiautomation.ios.UIAModels.UIAWebView;
 import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
@@ -32,12 +30,12 @@ import org.uiautomation.ios.UIAModels.predicate.LabelCriteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.OrCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
-import org.uiautomation.ios.UIAModels.predicate.ValueCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.context.BaseWebInspector;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.ContentResult;
+import org.uiautomation.ios.utils.IOSVersion;
 import org.uiautomation.ios.utils.XPath2Engine;
 
 import java.util.ArrayList;
@@ -125,39 +123,44 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     script.append("var ratio = webviewSize.size.width / " + dim.getWidth() + ";");
     int top = po.getY();
     int left = po.getX();
-    script.append("var top = (" + top + "*ratio )+1;");
-    script.append("var left = (" + left + "*ratio)+1;");
+    // switch +1 to +2 in next, with +1 some clicks in text fields didn't bring up the
+    // keyboard, the text field would get focus, but the keyboard would not launch
+    // also with this change 17 miscellaneous selenium tests got fixed
+    script.append("var top = (" + top + "*ratio)+2;");
+    script.append("var left = (" + left + "*ratio)+2;");
 
     script.append("var x = left;");
     boolean ipad = session.getCapabilities().getDevice() == DeviceType.ipad;
+    boolean ios7 = new IOSVersion(session.getCapabilities().getSDKVersion()).isGreaterOrEqualTo("7.0");
 
     if (isSafari()) {
-      if (ipad) {
-        // for ipad, the adress bar h is fixed @ 96px.
-        script.append("var y = top+96;");
+      if (ios7) {
+        script.append("var orientation = UIATarget.localTarget().deviceOrientation();");
+        script.append("var landscape = orientation == UIA_DEVICE_ORIENTATION_LANDSCAPELEFT || orientation == UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT;");
+        // TODO: why is the webView shifted by 20
+        script.append("var y = webviewSize.origin.y + (landscape? 20 : -20) + top;");
       } else {
-
-        ImmutableList<ContentResult> results =
-            session.getApplication().getCurrentDictionary().getPotentialMatches("Address");
-        if (results.size() != 1) {
-          log.warning("translation returned " + results.size());
+        if (ipad) {
+          // for ipad, the adress bar h is fixed @ 96px.
+          script.append("var y = top+96;");
+        } else {
+          ImmutableList<ContentResult> results =
+              session.getApplication().getCurrentDictionary().getPotentialMatches("Address");
+          if (results.size() != 1) {
+            log.warning("translation returned " + results.size());
+          }
+          ContentResult result = results.get(0);
+          String addressL10ned = result.getL10nFormatted();
+          Criteria
+              c2 =
+              new AndCriteria(new TypeCriteria(UIAElement.class), new NameCriteria(addressL10ned),
+                  new LabelCriteria(addressL10ned));
+          script.append("var addressBar = root.element(-1," + c2.stringify().toString() + ");");
+          script.append("var addressBarSize = addressBar.rect();");
+          script.append("var delta = addressBarSize.origin.y +39;");
+          script.append("if (delta<20){delta=20;};");
+          script.append("var y = top+delta;");
         }
-        ContentResult result = results.get(0);
-        String addressL10ned = result.getL10nFormatted();
-        Criteria
-            ios6address =
-            new AndCriteria(new TypeCriteria(UIAElement.class), new NameCriteria(addressL10ned),
-                new LabelCriteria(addressL10ned));
-        Criteria
-            ios7address =
-            new AndCriteria(new TypeCriteria(UIAButton.class));
-        Criteria c2 = ios7address;//;new OrCriteria(ios6address,ios7address);
-
-        script.append("var addressBar = root.element(-1," + c2.stringify().toString() + ");");
-        script.append("var addressBarSize = addressBar.rect();");
-        script.append("var delta = addressBarSize.origin.y +39;");
-        script.append("if (delta<20){delta=20;};");
-        script.append("var y = top+delta;");
       }
     } else {
       Criteria wv = new TypeCriteria(UIAScrollView.class);
@@ -182,10 +185,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     // web stuff.
     scrollIntoViewIfNeeded();
     Point location = getLocation();
-    String script = "UIATarget.localTarget().tap({'x':x_coord,'y':y_coord});";
-    script = script.replace("x_coord", String.valueOf(location.getX()))
-        .replace("y_coord", String.valueOf(location.getY()));
-    return script;
+    return "UIATarget.localTarget().tap({'x':" + location.getX() + ",'y':" + location.getY() + "});";
   }
 
   private String getKeyboardTypeStringSegement(String value) {
@@ -202,7 +202,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
   private String getReferenceToTapByXpath(XPath2Engine xPath2Engine, String xpath) {
     StringBuilder script = new StringBuilder();
     script.append("UIAutomation.cache.get(");
-    script.append((String) xPath2Engine.findElementByXpath(xpath).get("ELEMENT"));
+    script.append(xPath2Engine.findElementByXpath(xpath).get("ELEMENT"));
     script.append(", false).tap();");
     return script.toString();
   }
@@ -216,6 +216,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     script.append("var keyboard = UIAutomation.cache.get('1').keyboard();");
 
     Boolean keyboardResigned = false;
+    boolean ios7 = new IOSVersion(session.getCapabilities().getSDKVersion()).isGreaterOrEqualTo("7.0");
 
     StringBuilder current = new StringBuilder();
     XPath2Engine xpathEngine = null;
@@ -236,7 +237,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
             // (like keyboard.shift)
             script.append(getReferenceToTapByXpath(xpathEngine, "//UIAKeyboard/UIAKey[" +
                 ( nativeDriver.getCapabilities().getDevice() == DeviceType.ipad ?
-                    "11]" : "last()-3]")
+                    (ios7? "13" : "11") : (ios7? "last()-2" : "last()-3")) + ']'
             ));
             break;
           case 1:
@@ -245,7 +246,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
             // TODO another smelly xpath.
             script.append(getReferenceToTapByXpath(xpathEngine, "//UIAKeyboard/UIAButton[" +
                 ( nativeDriver.getCapabilities().getDevice() == DeviceType.ipad ?
-                    "1]" : "2]")
+                    "1" : (ios7? "4" : "2")) + ']'
             ));
             keyboardResigned = true;
             break;
@@ -293,7 +294,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
   }
 
   // TODO actually handle more locales
-  private String replaceLettersWithNumbersKeypad(String str, String locale) {
+  private static String replaceLettersWithNumbersKeypad(String str, String locale) {
     if (locale.toLowerCase().startsWith("en")) {
       return str.replaceAll("[AaBbCc]", "2").replaceAll("[DdEeFf]", "3").replaceAll("[GgHhIi]", "4")
           .replaceAll("[JjKkLl]", "5").replaceAll("[MmNnOo]", "6").replaceAll("[PpQqRrSs]", "7")

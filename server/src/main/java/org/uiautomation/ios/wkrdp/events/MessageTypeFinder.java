@@ -13,10 +13,11 @@
  */
 package org.uiautomation.ios.wkrdp.events;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.json.JSONObject;
 import org.uiautomation.ios.wkrdp.events.inserted.ChildIframeInserted;
-
-import java.util.logging.Logger;
 
 public class MessageTypeFinder {
 
@@ -39,13 +40,14 @@ public class MessageTypeFinder {
     }
 
     if (isFrameOrIFrame(message)) {
-      log.fine("ChildIframeInserted " + message);
+      if (log.isLoggable(Level.FINE))
+        log.fine("ChildIframeInserted " + message);
       return ChildIframeInserted.class;
     }
 
-    log.finer("message not handled " + message);
+    if (log.isLoggable(Level.FINER))
+      log.finer("message not handled: " + message);
     return RawEvent.class;
-
   }
 
   private boolean isFrameOrIFrame(JSONObject message) {
@@ -55,12 +57,14 @@ public class MessageTypeFinder {
 
     if (NODE_INSERTED.equals(method) && params != null
         && "IFRAME".equals(params.optJSONObject("node").optString("nodeName"))) {
-      log.fine("ChildIframeInserted " + message);
+      if (log.isLoggable(Level.FINE))
+        log.fine("ChildIframeInserted " + message);
       return true;
     }
     if (NODE_INSERTED.equals(method) && params != null
         && "FRAME".equals(params.optJSONObject("node").optString("nodeName"))) {
-      log.fine("ChildIframeInserted " + message);
+      if (log.isLoggable(Level.FINE))
+        log.fine("ChildIframeInserted " + message);
       return true;
     }
     return false;

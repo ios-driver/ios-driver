@@ -23,6 +23,7 @@ import org.dom4j.io.SAXReader;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -59,7 +60,8 @@ public class MessageFactory {
 
       Constructor<?> c = impl.getConstructor(argsClass);
       IOSMessage message = (IOSMessage) c.newInstance(args);
-      log.fine("Message: " + message);
+      if (log.isLoggable(Level.FINEST))
+        log.finest("Message: " + message);
       return message;
     } catch (Exception e1) {
       e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.

@@ -27,6 +27,7 @@ import org.uiautomation.ios.wkrdp.ResponseFinder;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -170,7 +171,8 @@ public abstract class WebKitRemoteDebugProtocol {
       } else if (response.optBoolean("wasThrown", false)) {
         throw new WebDriverException("remote JS exception " + response.toString(2));
       } else {
-        log.fine(System.currentTimeMillis() + "\t\t" + (System.currentTimeMillis() - start) + "ms\t"
+        if (log.isLoggable(Level.FINE))
+          log.fine(System.currentTimeMillis() + "\t\t" + (System.currentTimeMillis() - start) + "ms\t"
                  + command.getString("method") + " " + command);
         JSONObject res = response.getJSONObject("result");
         if (res == null) {

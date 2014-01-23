@@ -13,6 +13,7 @@
  */
 package org.uiautomation.ios.server.simulator;
 
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
@@ -157,6 +158,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   /**
    * stopping the simulator at the end of the test.
    */
+  @Override
   public void cleanupDevice() {
     restoreExiledSDKs();
     ClassicCommands.killall(SIMULATOR_PROCESS_NAME);
@@ -196,5 +198,15 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   public void resetContentAndSettings() {
     simulatorSettings.resetContentAndSettings();
 
+  }
+
+  @Override
+  public void setSimulatorScale(String scale) {
+    simulatorSettings.setSimulatorScale(scale);
+  }
+
+  @Override
+  public void installTrustStore(String trustStore) {
+    simulatorSettings.installTrustStore(trustStore);
   }
 }

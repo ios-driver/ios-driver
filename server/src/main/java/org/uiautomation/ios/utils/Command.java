@@ -14,21 +14,15 @@
 
 package org.uiautomation.ios.utils;
 
-import com.google.common.base.Joiner;
+import java.io.*;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.openqa.selenium.WebDriverException;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.logging.Logger;
+import com.google.common.base.Joiner;
 
 public class Command {
 
@@ -81,7 +75,8 @@ public class Command {
    * Starts the command. Doesn't wait for it to finish. Doesn't wait for stdout and stderr either.
    */
   public void start() {
-    log.fine(String.format("Starting command: %s", commandString()));
+    if (log.isLoggable(Level.FINE))
+      log.fine(String.format("Starting command: %s", commandString()));
     ProcessBuilder builder = new ProcessBuilder(args);
     if (workingDir != null) {
       builder.directory(workingDir);
@@ -93,17 +88,14 @@ public class Command {
       throw new WebDriverException("failed to start process " + args, e);
     }
 
-    final InputStream normal = process.getInputStream();
-    final InputStream error = process.getErrorStream();
-
-    threads.add(listen(normal, out, true));
-    threads.add(listen(error, err, false));
+    threads.add(listen(process.getInputStream(), out, true));
+    threads.add(listen(process.getErrorStream(), err, false));
   }
 
   /**
    * @param maxWaitMillis max time to wait for the command to finish, -1 for not limit
    */
-  public int waitFor(int maxWaitMillis) {
+  public int waitFor(final int maxWaitMillis) {
     Timer forceStopTimer = null;
     try {
       if (maxWaitMillis > 0) {
@@ -111,6 +103,7 @@ public class Command {
         forceStopTimer.schedule(new TimerTask() {
           @Override
           public void run() {
+            log.info("destroying process after waiting for " + maxWaitMillis + "ms: " + commandString());
             process.destroy();
           }
         }, maxWaitMillis);
@@ -130,7 +123,8 @@ public class Command {
   }
 
   private Thread listen(final InputStream in, final List<String> out, final boolean normal) {
-    Thread t = new Thread(new Runnable() {
+    Thread t = new Thread() {
+      @Override
       public void run() {
         BufferedReader reader = null;
         try {
@@ -143,16 +137,18 @@ public class Command {
             add(line, normal);
           }
         } catch (IOException e) {
-          log.warning("Error reading the output of the process :" + e.getMessage());
+          if (!"Stream closed".equals(e.getMessage()))
+            log.warning("Error reading the output of the process: " + e);
         }
       }
-    });
+    };
     t.start();
     return t;
   }
 
   private void add(String line, boolean normal) {
-    log.finer(String.format("%s %s: %s", args.get(0), normal ? "stdout" : "stderr", line));
+    if (log.isLoggable(Level.FINER))
+      log.finer(String.format("%s %s: %s", args.get(0), normal ? "stdout" : "stderr", line));
     if (normal) {
       out.add(line);
     } else {
@@ -189,6 +185,7 @@ public class Command {
     return Joiner.on(" ").join(args);
   }
 
+  @Override
   public String toString() {
     StringBuilder b = new StringBuilder();
     b.append(commandString());

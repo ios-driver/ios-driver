@@ -100,30 +100,35 @@ public class InstrumentsApple implements Instruments {
     String language = caps.getLanguage();
     String instrumentsVersion = version.getVersion();
     boolean instrumentsIs50OrHigher = new IOSVersion(instrumentsVersion).isGreaterOrEqualTo("5.0");
+    boolean isSDK70OrHigher = new IOSVersion(desiredSDKVersion).isGreaterOrEqualTo("7.0");
     boolean putDefaultFirst = instrumentsIs50OrHigher;
     
     // the 5.0 instruments can't start MobileSafari
     // workaround is to remove the MobileSafari app from the install directory and put
     // it back after instruments starts it
     boolean tempRemoveMobileSafari = instrumentsIs50OrHigher && application.isSafari() && application.isSimulator();
+    
     if (tempRemoveMobileSafari)
       moveMobileSafariAppOutOfInstallDir();
 
     deviceManager.setVariation(deviceType, variation);
-    this.application.setDefaultDevice(deviceType, putDefaultFirst);
+    deviceManager.setSimulatorScale(caps.getSimulatorScale());
+    application.setDefaultDevice(deviceType, putDefaultFirst);
+    if (application.isSafari() && isSDK70OrHigher && application.isSimulator())
+      application.setSafariBuiltinFavorites();
     deviceManager.setSDKVersion();
     deviceManager.resetContentAndSettings();
     deviceManager.setL10N(locale, language);
     deviceManager.setKeyboardOptions();
     deviceManager.setLocationPreference(true);
     deviceManager.setMobileSafariOptions();
-    if (application.isSimulator())
-      installTrustStore();
+    
+    deviceManager.installTrustStore(session.getOptions().getTrustStore());
 
     boolean success = false;
     try {
       instruments.start();
-
+      
       log.fine("waiting for registration request");
       success = channel.waitForUIScriptToBeStarted();
       log.fine("registration request received"+session.getCachedCapabilityResponse());
@@ -138,10 +143,10 @@ public class InstrumentsApple implements Instruments {
       if (!success) {
         instruments.forceStop();
         deviceManager.cleanupDevice();
+        throw new InstrumentsFailedToStartException("Instruments crashed.");
       }
       putMobileSafariAppBackInInstallDir();
     }
-
   }
 
   @Override
@@ -217,36 +222,6 @@ public class InstrumentsApple implements Instruments {
     return output;
   }
   
-  private void installTrustStore() {
-    String trustStore = session.getOptions().getTrustStore();
-    if (trustStore != null) {
-      log.info("installing -trustStore: " + trustStore);
-      // executes:
-      // mkdir ~/"Library/Application Support/iPhone Simulator/7.0/Library/Keychains"
-      // cp libs/ios/TrustStore.sqlite3 ~/"Library/Application Support/iPhone Simulator/7.0/Library/Keychains"
-      File keychainsDir = new File(System.getProperty("user.home") + "/Library/Application Support/iPhone Simulator/"
-        + desiredSDKVersion + "/Library/Keychains");
-      File sourceFile = new File(trustStore);
-      if (!sourceFile.exists()) {
-          log.severe("-trustStore: source trust store file doesn't exist: " + sourceFile.getAbsolutePath());
-          return;
-      }
-      File destFile = new File(keychainsDir, "TrustStore.sqlite3");
-      try {
-        if (!keychainsDir.exists()) {
-            if (!keychainsDir.mkdir()) {
-                log.severe("-trustStore: could not create Keychains dir: " + keychainsDir.getAbsolutePath());
-                return;
-            }
-        }
-        FileUtils.copyFile(sourceFile, destFile, false);
-      } catch (Exception e) {
-        log.severe("cannot install trust store file " + sourceFile.getAbsolutePath()
-                + " to " + destFile.getAbsolutePath() + ": " + e);
-      }
-    }
-  }
-  
   /**
    * @return true if MobileSafari was moved out, false otherwise
    */
@@ -267,15 +242,24 @@ public class InstrumentsApple implements Instruments {
     // delete MobileSafari in install dir
     try {
       FileUtils.deleteDirectory(safariFolder);
+      if (!howToMoveSafariBackMessageGiven) {
+        howToMoveSafariBackMessageGiven = true;
+        String to = safariFolder.getAbsolutePath();
+        log.info("temporarily moving MobileSafari out of the install directory, if you need to restore it yourself use:\n$ cp -rf " + copy + ' ' + to);
+      }
     } catch (IOException e) {
-      log.log(Level.WARNING, "couldn't delete MobileSafari app install dir: " + e.getMessage(), e);
-      log.warning("make sure ios-driver has read/write permissions to that folder by executing those 2 commands:\n" + 
-              "sudo chmod a+rw " + safariFolder.getParentFile().getAbsolutePath() + '\n' +
-              "sudo chmod -R a+rw " + safariFolder.getAbsolutePath());
+      log.log(Level.SEVERE, "----------------------------------------------------------------------------");
+      log.log(Level.SEVERE, "couldn't delete MobileSafari app install dir: " + e.getMessage(), e);
+      log.log(Level.SEVERE, "make sure ios-driver has read/write permissions to that folder by executing those 2 commands:" + 
+              "\nsudo chmod a+rw " + safariFolder.getParentFile().getAbsolutePath() +
+              "\nsudo chmod -R a+rw " + safariFolder.getAbsolutePath());
+      log.log(Level.SEVERE, "----------------------------------------------------------------------------");
     }
     
     return true;
   }
+  
+  private boolean howToMoveSafariBackMessageGiven;
 
   private void putMobileSafariAppBackInInstallDir() {
     if (safariFolder.exists()) {

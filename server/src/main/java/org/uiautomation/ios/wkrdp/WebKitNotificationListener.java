@@ -28,6 +28,7 @@ import org.uiautomation.ios.wkrdp.message.WebkitPage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 // TODO freynaud delete the interface ?
@@ -70,18 +71,22 @@ public class WebKitNotificationListener implements MessageListener {
       List<WebkitPage> messagePages = m.getPages();
       List<WebkitPage> driverPages = driver.getPages();
       boolean equals = WebkitPage.equals(messagePages, driverPages);
-      log.fine(
+      if (log.isLoggable(Level.FINE)) {
+        log.fine(
           "pages " + (equals ? "equals" : "CHANGED") + ": " + driverPages + " -> " + messagePages
           + ": " + m);
+      }
       if (equals) {
         return;
       }
 
       if (session == null || session.getApplication().isSafari()) {
         int change = m.getPages().size() - driver.getPages().size();
-        log.fine(
+        if (log.isLoggable(Level.FINE)) {
+          log.fine(
             "ApplicationSentListingMessage: message pages: " + m.getPages().size() + ", change: "
             + change);
+        }
 
         // a new page appeared. The driver needs to know.
         if (change > 0) {

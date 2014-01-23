@@ -153,9 +153,6 @@ public class ServerSideSession extends Session {
 
   private void updateCapabilitiesWithSensibleDefaults() {
     // update capabilities and put default values in the missing fields.
-    if (capabilities.getDeviceVariation() == null) {
-      capabilities.setDeviceVariation(DeviceVariation.Regular);
-    }
     capabilities.setBundleId(application.getBundleId());
     // TODO device.getSDK()
     if (capabilities.getSDKVersion() == null) {
@@ -170,8 +167,14 @@ public class ServerSideSession extends Session {
       if (!server.getHostInfo().getInstalledSDKs().contains(version)) {
         throw new SessionNotCreatedException(
             "Cannot start on version " + version + ".Installed: "
-            + server.getHostInfo().getInstalledSDKs());
+                + server.getHostInfo().getInstalledSDKs());
       }
+    }
+    if (capabilities.getDeviceVariation() == null) {
+      // use a variation that matches the SDK, Regular wouldn't work for iOS 7
+      String sdkVersion = capabilities.getSDKVersion();
+      capabilities.setDeviceVariation(DeviceVariation.getCompatibleVersion(
+              capabilities.getDevice(), sdkVersion));
     }
   }
 

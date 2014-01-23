@@ -13,6 +13,7 @@
  */
 package org.uiautomation.ios.wkrdp.internal;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.json.JSONObject;
@@ -100,7 +101,8 @@ public class AlertDetector implements ResponseFinder {
       }
 
     }
-    log.fine("interrupted done " + (System.currentTimeMillis() - start) + "ms");
+    if (log.isLoggable(Level.FINE))
+      log.fine("interrupted done " + (System.currentTimeMillis() - start) + "ms");
   }
 
   @Override

@@ -39,7 +39,7 @@ public class LocationContextTest extends BaseIOSDriverTest {
     driver = getDriver(SampleApps.geoCoderCap());
   }
 
-  @AfterClass
+  @AfterClass(alwaysRun = true)
   public void stopDriver() {
     if (driver != null) {
       driver.quit();

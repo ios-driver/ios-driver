@@ -49,7 +49,7 @@ public class SmokeIOSDriverTest extends BaseIOSDriverTest {
     }
   }
 
-  @AfterClass
+  @AfterClass(alwaysRun = true)
   public void stopDriver() {
     if (driver != null) {
       driver.quit();

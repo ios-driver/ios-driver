@@ -35,7 +35,7 @@ public class WebDriverSelectorMapping extends BaseIOSDriverTest {
     element.click();
   }
 
-  @AfterClass
+  @AfterClass(alwaysRun = true)
   public void stopDriver() {
     if (driver != null) {
       driver.quit();

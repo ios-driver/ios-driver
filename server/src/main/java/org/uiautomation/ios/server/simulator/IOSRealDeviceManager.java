@@ -146,5 +146,13 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
     // no-op
   }
 
+  @Override
+  public void setSimulatorScale(String scale) {
+    // not-applicable
+  }
 
+  @Override
+  public void installTrustStore(String trustStore) {
+   // not-applicable
+  }
 }

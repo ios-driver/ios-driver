@@ -35,7 +35,7 @@ public class CriteriaKeepsOrderTest extends BaseIOSDriverTest {
     driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.intlMountainsCap("en"));
   }
 
-  @AfterClass
+  @AfterClass(alwaysRun = true)
   public void stopDriver() {
     if (driver != null) {
       driver.quit();

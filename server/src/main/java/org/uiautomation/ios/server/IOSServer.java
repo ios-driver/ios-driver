@@ -15,14 +15,12 @@
 package org.uiautomation.ios.server;
 
 import com.beust.jcommander.JCommander;
-
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.inspector.IDEServlet;
 import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.configuration.Configuration;
@@ -38,20 +36,21 @@ import org.uiautomation.ios.server.servlet.ResourceServlet;
 import org.uiautomation.ios.server.servlet.StaticResourceServlet;
 import org.uiautomation.ios.server.utils.FolderMonitor;
 import org.uiautomation.ios.server.utils.ZipUtils;
+import org.uiautomation.ios.utils.BuildInfo;
 import org.uiautomation.ios.utils.IOSVersion;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class IOSServer {
 
   public static final String DRIVER = IOSServerManager.class.getName();
   private static final Logger log = Logger.getLogger(IOSServer.class.getName());
-
-  private boolean initialized = false;
   private final IOSServerConfiguration options;
+  private boolean initialized = false;
   private Server server;
   private IOSServerManager driver;
   private FolderMonitor folderMonitor;
@@ -83,6 +82,7 @@ public class IOSServer {
     try {
       server.start();
     } catch (Exception e) {
+      log.log(Level.SEVERE, "cannot start ios-driver server: " + e, e);
       Runtime.getRuntime().exit(1);
     }
   }
@@ -115,7 +115,7 @@ public class IOSServer {
     }
 
     StringBuilder b = new StringBuilder();
-    b.append(String.format("\nBeta features enabled (enabled by -beta flag ): %b", Configuration.BETA_FEATURE));
+    b.append(String.format("\nBeta features enabled (enabled by -beta flag): %b", Configuration.BETA_FEATURE));
     b.append(String.format("\nSimulator enabled (enabled by -simulators flag): %b", Configuration.SIMULATORS_ENABLED));
     b.append(String.format("\nInspector: http://0.0.0.0:%d/inspector/", options.getPort()));
     b.append(String.format("\nTests can access the server at http://0.0.0.0:%d/wd/hub", options.getPort()));
@@ -125,22 +125,16 @@ public class IOSServer {
     b.append(String.format("\nCapabilities: http://0.0.0.0:%d/wd/hub/capabilities/all", options.getPort()));
     b.append(String.format("\nMonitoring '%s' for new applications", options.getAppFolderToMonitor()));
     b.append(String.format("\nArchived apps: %s", driver.getApplicationStore().getFolder().getAbsolutePath()));
-
+    b.append("\nBuild info: " + BuildInfo.toBuildInfoString());
+    b.append("\nRunning on: " + driver.getHostInfo().getOSInfo());
+    b.append("\nUsing java: " + driver.getHostInfo().getJavaVersion());
     if (Configuration.SIMULATORS_ENABLED) {
       addSimulatorDetails(b);
     }
 
     b.append("\n\nApplications :\n--------------- \n");
     for (APPIOSApplication app : driver.getSupportedApplications()) {
-      String name = app.getMetadata(IOSCapabilities.BUNDLE_NAME).isEmpty()
-          ? app.getMetadata(IOSCapabilities.BUNDLE_DISPLAY_NAME)
-          : app.getMetadata(IOSCapabilities.BUNDLE_NAME);
-      b.append(String.format("\tCFBundleName=%s", name));
-      String version = app.getMetadata(IOSCapabilities.BUNDLE_VERSION);
-      if (version != null && !version.isEmpty()) {
-        b.append(String.format(",CFBundleVersion=%s", version));
-      }
-      b.append("\n");
+      b.append("\t" + app + "\n");
     }
     log.info(b.toString());
   }
@@ -148,8 +142,9 @@ public class IOSServer {
   private void addSimulatorDetails(StringBuilder b) {
     File xcodeInstall = driver.getHostInfo().getXCodeInstall();
     String hostSDK = driver.getHostInfo().getSDK();
-    b.append(String.format("\nUsing Xcode install : %s", driver.getHostInfo().getXCodeInstall().getPath()));
-    b.append(String.format("\nUsing IOS version %s", hostSDK));
+    b.append(String.format("\nUsing Xcode install: %s", driver.getHostInfo().getXCodeInstall().getPath()));
+    b.append(String.format("\nUsing instruments: %s", driver.getHostInfo().getInstrumentsVersion()));
+    b.append(String.format("\nUsing iOS version %s", hostSDK));
 
     boolean safari = false;
     // automatically add safari for host SDK and above as instruments starts simulator on host SDK version
@@ -200,7 +195,7 @@ public class IOSServer {
 
   // TODO freynaud - if xcode change, the safari copy should be wiped out.
   private APPIOSApplication copyOfSafari(File xcodeInstall, String sdk) {
-    File copy = new File(System.getProperty("user.home")+"/.ios-driver/safariCopies", "safari-"+sdk+".app");
+    File copy = new File(System.getProperty("user.home") + "/.ios-driver/safariCopies", "safari-" + sdk + ".app");
     if (!copy.exists()) {
       File safariFolder = APPIOSApplication.findSafariLocation(xcodeInstall, sdk);
       copy.mkdirs();
@@ -215,6 +210,7 @@ public class IOSServer {
 
   public void start() throws Exception {
     if (!initialized) {
+      initialized = true;
       init();
     }
     if (!server.isRunning()) {
@@ -248,11 +244,19 @@ public class IOSServer {
     }
     if (selfRegisteringRemote != null) {
       selfRegisteringRemote.stop();
+      selfRegisteringRemote = null;
     }
     if (folderMonitor != null) {
       folderMonitor.stop();
+      folderMonitor = null;
     }
-    driver.stop();
-    server.stop();
+    if (driver != null) {
+      driver.stop();
+      driver = null;
+    }
+    if (server != null) {
+      server.stop();
+      server = null;
+    }
   }
 }

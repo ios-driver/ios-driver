@@ -16,7 +16,6 @@ package org.uiautomation.ios;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,6 +31,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 
@@ -79,7 +79,7 @@ public class IOSCapabilities extends DesiredCapabilities {
   public static final String IOS_SEARCH_CONTEXT = "iosSearchContext";
   public static final String UUID = "uuid";
   public static final String IOS_TOUCH_SCREEN = "iosTouchScreen";
-
+  public static final String SIMULATOR_SCALE = "simulatorScale";
   // default selenium bindings for mobile safari
   public static final String BROWSER_NAME = "browserName";
 
@@ -90,7 +90,6 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   public IOSCapabilities() {
     setCapability(TIME_HACK, false);
-    initDefaultDeviceVariation();
     setCapability(SIMULATOR, true);
   }
 
@@ -110,7 +109,6 @@ public class IOSCapabilities extends DesiredCapabilities {
         setCapability(key, decode(value));
       }
     }
-    initDefaultDeviceVariation();
   }
 
   public IOSCapabilities(Map<String, ?> from) {
@@ -244,7 +242,12 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   public String getLanguage() {
     Object o = getCapability(LANGUAGE);
-    return ((String) o);
+
+    if (o == null) {
+      return Locale.getDefault().getLanguage();
+    } else {
+      return o.toString();
+    }
   }
 
   public void setLanguage(String language) {
@@ -326,19 +329,6 @@ public class IOSCapabilities extends DesiredCapabilities {
     }
   }
 
-  private void initDefaultDeviceVariation() {
-    if (getCapability(DEVICE) != null && getDeviceVariation() == null) {
-      switch (getDevice()) {
-        case iphone:
-          setDeviceVariation(DeviceVariation.iPhoneRetina);
-          break;
-        case ipad:
-          setDeviceVariation(DeviceVariation.iPad);
-          break;
-      }
-    }
-  }
-
   public DeviceVariation getDeviceVariation() {
     Object o = getCapability(VARIATION);
     return o == null ? null : DeviceVariation.valueOf(o);
@@ -356,6 +346,20 @@ public class IOSCapabilities extends DesiredCapabilities {
     setCapability(UUID, deviceUUID);
   }
 
+  public URL getAppURL() {
+    String app = (String) getCapability("app");
+    try {
+      return app == null ? null : new URL(app);
+    } catch (MalformedURLException e) {
+      throw new WebDriverException(
+          "The 'app' key is supposed to point to a URL. " + app + " is not a URL.");
+    }
+  }
+
+  public String getSimulatorScale() {
+    return (String) getCapability(SIMULATOR_SCALE);
+  }
+
   public LoggingPreferences getLoggingPreferences() throws JSONException {
     LoggingPreferences ret = new LoggingPreferences();
     JSONObject json = (JSONObject) getCapability(CapabilityType.LOGGING_PREFS);
@@ -367,16 +371,6 @@ public class IOSCapabilities extends DesiredCapabilities {
       }
     }
     return ret;
-  }
-
-  public URL getAppURL() {
-    String app = (String) getCapability("app");
-    try {
-      return app == null ? null : new URL(app);
-    } catch (MalformedURLException e) {
-      throw new WebDriverException(
-          "The 'app' key is supposed to point to a URL." + app + " is not a URL.");
-    }
   }
 
   public void setSDKVersion(String sdkVersion) {

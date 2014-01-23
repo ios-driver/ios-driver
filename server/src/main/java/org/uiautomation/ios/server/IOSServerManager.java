@@ -23,6 +23,7 @@ import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.application.ResourceCache;
 import org.uiautomation.ios.server.configuration.Configuration;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,6 @@ import java.util.logging.Logger;
 
 public class IOSServerManager {
 
-  private static final Logger log = Logger.getLogger(IOSServerManager.class.getName());
   public final ApplicationStore apps;
   private final List<ServerSideSession> sessions = new ArrayList<>();
   private final HostInfo hostInfo;
@@ -42,12 +42,25 @@ public class IOSServerManager {
   // TODO freynaud cleanup
   public IOSServerManager(IOSServerConfiguration options) {
     this.options = options;
-    try {
-      LogManager.getLogManager()
-          .readConfiguration(IOSServerManager.class.getResourceAsStream("/ios-logging.properties"));
-    } catch (Exception e) {
-      System.err.println("Cannot configure logger.");
+    
+    // setup logging
+    String loggingConfigFile = System.getProperty("java.util.logging.config.file");
+    if (loggingConfigFile != null) {
+      if (!new File(loggingConfigFile).exists()) {
+        System.err.println("logging file not found: " + new File(loggingConfigFile).getAbsolutePath());
+        loggingConfigFile = null; // to revert to builtin one
+      }
     }
+    if (loggingConfigFile == null) {
+      // do not use builtin ios-logging.properties if -Djava.util.logging.config.file set
+      try {
+        LogManager.getLogManager()
+          .readConfiguration(IOSServerManager.class.getResourceAsStream("/ios-logging.properties"));
+      } catch (Exception e) {
+        System.err.println("Cannot configure logger.");
+      }
+    }
+    
     this.hostInfo = new HostInfo(options);
 
     devices = new DeviceStore();
@@ -135,7 +148,8 @@ public class IOSServerManager {
     List<APPIOSApplication> matchingApps = findAllMatchingApplications(desiredCapabilities);
     if (matchingApps.size() == 0) {
       throw new SessionNotCreatedException("desired app not found on server: "
-            + desiredCapabilities.getRawCapabilities());
+            + desiredCapabilities.getRawCapabilities() + ".\n    Available apps: "
+            + getSupportedApplications());
     }
     // if more than one matches it returns the last in the list (highest version for MobileSafari)
     APPIOSApplication app = matchingApps.get(matchingApps.size() - 1);
@@ -167,7 +181,7 @@ public class IOSServerManager {
       }
     }
     throw new SessionNotCreatedException(
-        desiredCapabilities.getRawCapabilities() + "not available. Available are " + devices);
+        desiredCapabilities.getRawCapabilities() + " no devices available.\n    Known devices: " + devices);
   }
 
   public ApplicationStore getApplicationStore() {

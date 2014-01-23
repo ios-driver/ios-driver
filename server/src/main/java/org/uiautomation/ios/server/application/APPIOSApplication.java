@@ -18,8 +18,8 @@ import com.dd.plist.BinaryPropertyListWriter;
 import com.dd.plist.NSArray;
 import com.dd.plist.NSDictionary;
 import com.dd.plist.NSNumber;
+import com.dd.plist.NSObject;
 import com.dd.plist.PropertyListParser;
-
 import com.google.common.collect.ImmutableList;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,8 +32,17 @@ import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.IOSVersion;
 import org.uiautomation.ios.utils.PlistFileUtils;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import static org.uiautomation.ios.IOSCapabilities.*;
@@ -80,8 +89,23 @@ public class APPIOSApplication {
     }
   }
 
+  /**
+   * @return a String of the form "CFBundleName={name},CFBundleVersion={version},app-path"
+   */
+  @Override
   public String toString() {
-    return ".APP:" + getApplicationPath().getAbsolutePath();
+    StringBuilder info = new StringBuilder();
+    String name = getMetadata(IOSCapabilities.BUNDLE_NAME).isEmpty()
+       ? getMetadata(IOSCapabilities.BUNDLE_DISPLAY_NAME)
+       : getMetadata(IOSCapabilities.BUNDLE_NAME);
+    info.append(String.format("CFBundleName=%s", name));
+    String version = getMetadata(IOSCapabilities.BUNDLE_VERSION);
+    if (version != null && !version.isEmpty()) {
+      info.append(String.format(",CFBundleVersion=%s", version));
+    }
+    info.append(',');
+    info.append(getApplicationPath().getAbsolutePath());
+    return info.toString();
   }
 
   /**
@@ -204,18 +228,21 @@ public class APPIOSApplication {
     return resourceByResourceName;
   }
 
-  private String getFirstIconFile(String bundleIcons){
-    if(!metadata.has(bundleIcons)){
-      return "";
+  private String getFirstIconFile(String bundleIcons) {
+    if (!metadata.has(bundleIcons)) {
+        return "";
     }
-    try{
-      HashMap icons = (HashMap)metadata.get(bundleIcons);
-      HashMap primaryIcon = (HashMap)icons.get("CFBundlePrimaryIcon");
-      ArrayList iconFiles = (ArrayList)primaryIcon.get("CFBundleIconFiles");
-      return iconFiles.get(0).toString();
-    }
-    catch (JSONException e) {
-      throw new WebDriverException("property 'CFBundleIcons' can't be returned. " + e.getMessage(), e);
+    try {
+        HashMap icons = (HashMap) metadata.get(bundleIcons);
+        HashMap primaryIcon = (HashMap) icons.get("CFBundlePrimaryIcon");
+        ArrayList iconFiles = (ArrayList) primaryIcon.get("CFBundleIconFiles");
+        if (iconFiles != null) {
+            return iconFiles.get(0).toString();
+        } else {
+            return "";
+        }
+    } catch (JSONException e) {
+        throw new WebDriverException("property 'CFBundleIcons' can't be returned. " + e.getMessage(), e);
     }
   }
 
@@ -339,12 +366,44 @@ public class APPIOSApplication {
       throw new WebDriverException("Cannot change the default device for the app." + e.getMessage(), e);
     }
   }
+  
+  /** 
+   * Modifies the BuiltinFavorites....plist in safariCopies/safari.app to contain only "about:blank"
+   */
+  public void setSafariBuiltinFavorites() {
+    File[] files = app.listFiles(new FilenameFilter() {
+      @Override
+      public boolean accept(File dir, String name) {
+        return name.startsWith("BuiltinFavorites") && name.endsWith(".plist");     
+      }
+    });
+    for (File plist: files) {
+      setSafariBuiltinFavories(plist);
+    }
+  }
+  
+  private void setSafariBuiltinFavories (File builtinFavoritesPList) {
+    try {
+      PListFormat format = getFormat(builtinFavoritesPList);
+     
+      NSArray root = new NSArray(1);
+      NSDictionary favorite = new NSDictionary();
+      favorite.put("Title", "about:blank");
+      favorite.put("URL", "about:blank");
+      root.setValue(0, favorite);
+         
+      write(builtinFavoritesPList, root, format);
+    } catch (Exception e) {
+      throw new WebDriverException("Cannot set " + builtinFavoritesPList.getAbsolutePath()
+          + ": " + e.getMessage(), e);
+    }
+  }
 
   enum PListFormat{
     binary, text, xml
   }
 
-  private void write(File dest, NSDictionary content, PListFormat format) throws IOException {
+  private void write(File dest, NSObject content, PListFormat format) throws IOException {
     switch (format) {
     case binary:
       BinaryPropertyListWriter.write(dest, content);
@@ -353,10 +412,15 @@ public class APPIOSApplication {
       PropertyListParser.saveAsXML(content, dest);
       break;
     case text:
-      PropertyListParser.saveAsASCII(content, dest);
+      if (content instanceof NSDictionary)
+        PropertyListParser.saveAsASCII((NSDictionary) content, dest);
+      else if (content instanceof NSArray)
+        PropertyListParser.saveAsASCII((NSArray) content, dest);
+      else
+        throw new IllegalArgumentException("Invalid content type for ascii: " + content.getClass());
       break;
     default:
-      throw new RuntimeException("Invalid plist output format");
+      throw new IllegalArgumentException("Invalid plist output format: " + format);
     }
   }
 

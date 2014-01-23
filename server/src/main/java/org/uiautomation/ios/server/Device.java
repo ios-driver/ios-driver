@@ -57,4 +57,8 @@ public abstract class Device {
   public synchronized void release() {
     busy = false;
   }
+  
+  public final boolean isBusy() {
+      return busy;
+  }
 }

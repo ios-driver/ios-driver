@@ -33,7 +33,7 @@ import java.util.logging.Logger;
 
 public class DefaultMessageHandler implements MessageHandler {
 
-  private final static long timeoutInMs = 5000;
+  private final static long timeoutInMs = 10 * 1000;
   private final List<MessageListener> listeners = new CopyOnWriteArrayList<MessageListener>();
   private Set<Thread> threads = new HashSet<Thread>();
   private boolean stopped;
@@ -105,9 +105,10 @@ public class DefaultMessageHandler implements MessageHandler {
     ResponseFinderList all = new ResponseFinderList(finders, timeoutInMs);
     try {
       JSONObject res = all.findResponse(id);
+      if (log.isLoggable(Level.FINE)) {
       log.fine(
-          "response " + id + " , " + (System.currentTimeMillis() - start) + "ms. " + res
-              .toString());
+          "response " + id + " , " + (System.currentTimeMillis() - start) + "ms. " + res);
+      }
 
       return res;
     } catch (RuntimeException e) {

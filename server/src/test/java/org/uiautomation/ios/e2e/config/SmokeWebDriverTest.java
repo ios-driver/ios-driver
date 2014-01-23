@@ -44,7 +44,7 @@ public class SmokeWebDriverTest extends BaseIOSDriverTest {
     driver = new RemoteWebDriver(getRemoteURL(), SampleApps.uiCatalogCap());
   }
 
-  @AfterClass
+  @AfterClass(alwaysRun = true)
   public void stopDriver() {
     if (driver != null) {
       driver.quit();

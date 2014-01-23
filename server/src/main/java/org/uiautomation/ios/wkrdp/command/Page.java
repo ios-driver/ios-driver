@@ -62,11 +62,11 @@ public class Page {
   }
 
 
-  public static JSONObject deleteCookie(String cookieName, String domain) {
+  public static JSONObject deleteCookie(String cookieName, String url) {
     try {
       JSONObject cmd = new JSONObject();
       cmd.put("method", "Page.deleteCookie");
-      cmd.put("params", new JSONObject().put("cookieName", cookieName).put("domain", domain));
+      cmd.put("params", new JSONObject().put("cookieName", cookieName).put("url", url));
       return cmd;
     } catch (JSONException e) {
       throw new WebDriverException(e);

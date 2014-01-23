@@ -22,8 +22,12 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class ClassicCommands {
+    
+  public static void main(String[] args) {
+    System.out.println(getSimulatorProductVersion("7.0"));  
+  }
 
-  private static final Logger log = Logger.getLogger(ClassicCommands.class.getName());
+  static final Logger log = Logger.getLogger(ClassicCommands.class.getName());
 
   /**
    * returns the version of the currently selected ( xcode-select -switch ) Xcode.
@@ -121,25 +125,91 @@ public class ClassicCommands {
     }
     return f;
   }
+  
+  private static List<String> installedSDKs;
 
-  public static List<String> getInstalledSDKs() {
-    List<String> c = new ArrayList<>();
-    c.add("xcodebuild");
-    c.add("-showsdks");
-    Command com = new Command(c, false);
-    ShowSDKsPasrer l = new ShowSDKsPasrer();
-    com.registerListener(l);
-    com.executeAndWait();
-    return l.getSDKs();
+  public synchronized static List<String> getInstalledSDKs() {
+    if (installedSDKs == null) {
+      List<String> c = new ArrayList<>();
+      c.add("xcodebuild");
+      c.add("-showsdks");
+      Command com = new Command(c, false);
+      ShowSDKsParser l = new ShowSDKsParser();
+      com.registerListener(l);
+      com.executeAndWait();
+      installedSDKs = l.getSDKs();
+    }
+    return installedSDKs;
   }
 
   public static String getDefaultSDK() {
     List<String> sdks = getInstalledSDKs();
     return sdks.get(sdks.size() - 1);
   }
+  
+  /**
+   * @return the simulator ProductVersion for the corresponding SDKVersion (i.e. "7.0.3" for "7.0")
+   */
+  public static String getSimulatorProductVersion(String sdkVersion) {
+    List<String> c = new ArrayList<>();
+    c.add("xcodebuild");
+    c.add("-version");
+    c.add("-sdk");
+    Command com = new Command(c, false);
+    SimulatorProductVersionParser l = new SimulatorProductVersionParser(sdkVersion);
+    com.registerListener(l);
+    com.executeAndWait();
+    return l.getProductVersion();
+  }
 }
 
-class ShowSDKsPasrer implements CommandOutputListener {
+class SimulatorProductVersionParser implements CommandOutputListener {
+  // gets ProductVersion by parsing:
+  // iPhoneSimulator7.0.sdk - Simulator - iOS 7.0 (iphonesimulator7.0)
+  // SDKVersion: 7.0
+  // Path: /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.0.sdk
+  // PlatformPath: /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform
+  // ProductBuildVersion: 11B508
+  // ProductCopyright: 1983-2013 Apple Inc.
+  // ProductName: iPhone OS
+  // ProductVersion: 7.0.3
+
+  private final String sdkVersion;
+  private String productVersion;
+  private boolean inSdkVersion;
+
+  SimulatorProductVersionParser(String sdkVersion) {
+    this.sdkVersion = sdkVersion;
+  }
+
+  String getProductVersion() {
+    if (productVersion == null)
+      throw new WebDriverException("couldn't find simulator product version for " + sdkVersion);
+    return productVersion;
+  }
+
+  @Override
+  public void stdout(String line) {
+    ClassicCommands.log.fine(line);
+    // SDKVersion: 7.0
+    if (line.startsWith("SDKVersion:")) {
+      String version = line.substring(12).trim();
+      inSdkVersion = sdkVersion.equals(version);
+    }
+    if (inSdkVersion) {
+      // ProductVersion: 7.0.3
+      if (line.startsWith("ProductVersion:"))
+        productVersion = line.substring(16).trim();
+    }
+  }
+
+  @Override
+  public void stderr(String line) {
+    ClassicCommands.log.warning(line);
+  }
+}
+
+class ShowSDKsParser implements CommandOutputListener {
 
   private static final String pattern = "iphonesimulator";
 

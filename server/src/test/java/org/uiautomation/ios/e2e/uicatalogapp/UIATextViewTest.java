@@ -41,7 +41,7 @@ public class UIATextViewTest extends BaseIOSDriverTest {
     textview = getTextView();
   }
 
-  @AfterClass
+  @AfterClass(alwaysRun = true)
   public void stopDriver() {
     if (driver != null) {
       driver.quit();

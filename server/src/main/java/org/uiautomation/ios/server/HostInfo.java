@@ -22,7 +22,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HostInfo {
+public final class HostInfo {
 
   private final String osName;
   private final String osArch;
@@ -32,7 +32,6 @@ public class HostInfo {
   private final List<String> installedSimulators;
   private final File xCodeInstall;
   private final InstrumentsVersion instrumentsVersion;
-  private final BuildInfo info = new BuildInfo();
   private final int port;
 
   public HostInfo(IOSServerConfiguration config) {
@@ -75,5 +74,13 @@ public class HostInfo {
 
   public int getPort() {
     return port;
+  }
+  
+  public String getOSInfo() {
+      return osName + ' ' + osVersion + " (" + osArch + ')';
+  }
+  
+  public String getJavaVersion() {
+      return javaVersion;
   }
 }

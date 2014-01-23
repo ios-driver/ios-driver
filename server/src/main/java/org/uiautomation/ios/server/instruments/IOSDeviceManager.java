@@ -37,4 +37,8 @@ public interface IOSDeviceManager {
   void setMobileSafariOptions();
 
   void setSDKVersion();
+
+  void setSimulatorScale(String scale);
+
+  void installTrustStore(String trustStore);
 }

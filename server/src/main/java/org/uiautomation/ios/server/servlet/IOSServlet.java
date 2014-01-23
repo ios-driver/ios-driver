@@ -45,8 +45,7 @@ public class IOSServlet extends DriverBasedServlet {
     try {
       process(request, response);
     } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      log.warning(e.toString());
     }
   }
 
@@ -56,8 +55,7 @@ public class IOSServlet extends DriverBasedServlet {
     try {
       process(request, response);
     } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      log.warning(e.toString());
     }
   }
 
@@ -68,8 +66,7 @@ public class IOSServlet extends DriverBasedServlet {
     try {
       process(request, response);
     } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      log.warning(e.toString());
     }
   }
 
@@ -133,13 +130,10 @@ public class IOSServlet extends DriverBasedServlet {
   private Response getResponse(WebDriverLikeRequest request) {
     Level level = Level.INFO;
     long startTime = System.currentTimeMillis();
-    String command = "";
     WebDriverLikeCommand wdlc = null;
     try {
       wdlc = request.getGenericCommand();
-      log.fine("command :  " + wdlc);
       Handler h = CommandMapping.get(wdlc).createHandler(getDriver(), request);
-      command = wdlc.method() + "\t " + wdlc.path();
       return h.handleAndRunDecorators();
     } catch (WebDriverException we) {
       Response response = new Response();
@@ -156,18 +150,15 @@ public class IOSServlet extends DriverBasedServlet {
         response.setValue(o);
       } catch (JSONException e) {
         level = Level.SEVERE;
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        log.warning(e.toString());
       }
       return response;
     } catch (Exception e) {
       level = Level.SEVERE;
       throw new WebDriverException("bug." + e.getMessage(), e);
     } finally {
-      String message = String.format("REQUEST: %s\tCOMMAND: %dms.\t%s",
-          request.toString(),
-          System.currentTimeMillis() - startTime,
-          command);
+      String message = String.format("%s  in %dms", request.toString(),
+          System.currentTimeMillis() - startTime);
       log.log(level, message);
     }
   }

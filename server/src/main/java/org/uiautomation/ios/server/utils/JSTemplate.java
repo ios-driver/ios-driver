@@ -15,6 +15,7 @@
 package org.uiautomation.ios.server.utils;
 
 import java.util.Formatter;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -72,7 +73,8 @@ public class JSTemplate {
           args.length, numArgs));
     }
     String js = new Formatter().format(format, args).toString();
-    log.fine(String.format("JS: %s", js));
+    if (log.isLoggable(Level.FINE))
+      log.fine(String.format("JS: %s", js));
     return js;
   }
 }

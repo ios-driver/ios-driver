@@ -27,6 +27,9 @@ import java.util.jar.Manifest;
 public class BuildInfo {
 
   private static final Properties BUILD_PROPERTIES = loadBuildProperties();
+  
+  private static boolean runningFromSource;
+  private static String sourceOrigin;
 
   private static Properties loadBuildProperties() {
     Properties properties = new Properties();
@@ -34,6 +37,12 @@ public class BuildInfo {
     try {
       Manifest manifest = null;
       URL url = BuildInfo.class.getProtectionDomain().getCodeSource().getLocation();
+      String path = url.getPath();
+      if (path.endsWith("server/target/classes/")) {
+        runningFromSource = true;
+        sourceOrigin = new File(path.substring(0, path.length() - 22)).getAbsolutePath();
+        return properties;
+      }
       File file = new File(url.toURI());
       JarFile jar = new JarFile(file);
       manifest = jar.getManifest();
@@ -43,7 +52,7 @@ public class BuildInfo {
         properties.put(String.valueOf(e.getKey()), String.valueOf(e.getValue()));
       }
     } catch (Exception e) {
-      //throw new InstantiationError("Cannot load info for jar manifest." + e.getMessage());
+      System.err.println ("Cannot load info for jar manifest: " + e);
     }
 
     return properties;
@@ -51,5 +60,13 @@ public class BuildInfo {
 
   public static String getAttribute(String key) {
     return BUILD_PROPERTIES.getProperty(key, "unknown");
+  }
+  
+  public static String toBuildInfoString() {
+    if (runningFromSource)
+      return "running from source located at: " + sourceOrigin;
+    return "ios-driver " + BuildInfo.getAttribute("version") + " (built:" +
+        BuildInfo.getAttribute("buildTimestamp") + ",sha:" +
+        BuildInfo.getAttribute("sha") + ')';
   }
 }

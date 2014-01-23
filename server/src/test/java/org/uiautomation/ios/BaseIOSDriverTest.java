@@ -23,11 +23,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Listeners;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
-import org.uiautomation.ios.utils.RealTimeTestMonitor;
 
 public abstract class BaseIOSDriverTest {
 
@@ -46,7 +44,7 @@ public abstract class BaseIOSDriverTest {
                      "-aut", SampleApps.gettestNoContentFile(),
                      "-aut", SampleApps.getPPNQASampleApp(),
                      /*"-beta",*/ "-folder", "applications",
-                     "-sessionTimeout", "120",
+                     "-sessionTimeout", "60",
                      "-simulators"
     };
     config = IOSServerConfiguration.create(args);
@@ -64,7 +62,6 @@ public abstract class BaseIOSDriverTest {
   @AfterClass
   public void stopServer() throws Exception {
     server.stop();
-
   }
 
 
@@ -78,6 +75,7 @@ public abstract class BaseIOSDriverTest {
   }
 
   public void waitForElement(WebDriver driver, org.openqa.selenium.By by, long timeOut) {
+
     WebElement element = (new WebDriverWait(driver, timeOut)).until(ExpectedConditions.visibilityOfElementLocated(by));
 
   }

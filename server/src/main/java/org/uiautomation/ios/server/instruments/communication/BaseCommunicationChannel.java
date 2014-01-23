@@ -26,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.uiautomation.ios.IOSCapabilities.COMMAND_TIMEOUT_MILLIS;
@@ -112,7 +113,8 @@ public abstract class BaseCommunicationChannel implements CommunicationChannel {
   protected UIAScriptResponse waitForResponse() {
     try {
       UIAScriptResponse res = responseQueue.poll(COMMAND_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
-      log.fine(String.format("Raw response: %s", res.getRaw()));
+      if (log.isLoggable(Level.FINE))
+        log.fine(String.format("Raw response: %s", res.getRaw()));
       return res;
     } catch (InterruptedException e) {
       throw new WebDriverException("timeout getting the response", e);
