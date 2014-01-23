@@ -26,20 +26,20 @@ import org.uiautomation.ios.server.simulator.InstrumentsFailedToStartException;
 
 import java.util.logging.Logger;
 
-public class NewSessionNHandler extends BaseNativeCommandHandler {
+public final class NewSessionNHandler extends BaseNativeCommandHandler {
 
-  private ServerSideSession session;
   private static final Logger log = Logger.getLogger(NewSessionNHandler.class.getName());
 
   public NewSessionNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
 
+  @Override
   public Response handle() throws Exception {
+    ServerSideSession session = null;
     try {
       JSONObject payload = getRequest().getPayload();
       IOSCapabilities cap = new IOSCapabilities(payload.getJSONObject("desiredCapabilities"));
-      ServerSideSession session = null;
       try {
         session = getServer().createSession(cap);
         session.start();
