@@ -25,7 +25,7 @@ public class TimeoutAdder implements ISuiteListener {
 
   @Override
   public void onStart(ISuite suite) {
-    suite.getXmlSuite().setTimeOut("30000");
+    suite.getXmlSuite().setTimeOut("60000");
     List<XmlTest> l = suite.getXmlSuite().getTests();
     for (XmlTest test : l) {
       test.setPreserveOrder("true");
