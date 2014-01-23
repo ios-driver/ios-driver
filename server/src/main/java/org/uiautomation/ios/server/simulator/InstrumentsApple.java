@@ -32,7 +32,11 @@ import org.uiautomation.ios.server.instruments.communication.curl.CURLBasedCommu
 import org.uiautomation.ios.server.services.Instruments;
 import org.uiautomation.ios.server.services.InstrumentsAppleScreenshotService;
 import org.uiautomation.ios.server.services.TakeScreenshotService;
-import org.uiautomation.ios.utils.*;
+import org.uiautomation.ios.utils.ApplicationCrashListener;
+import org.uiautomation.ios.utils.ClassicCommands;
+import org.uiautomation.ios.utils.Command;
+import org.uiautomation.ios.utils.IOSVersion;
+import org.uiautomation.ios.utils.ScriptHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -88,8 +92,9 @@ public class InstrumentsApple implements Instruments {
 
     screenshotService = new InstrumentsAppleScreenshotService(this, sessionId);
     deviceManager = new IOSSimulatorManager(caps, this);
-    
-    safariFolder = APPIOSApplication.findSafariLocation(ClassicCommands.getXCodeInstall(), desiredSDKVersion);
+
+    safariFolder =
+        APPIOSApplication.findSafariLocation(ClassicCommands.getXCodeInstall(), desiredSDKVersion);
   }
 
   @Override
@@ -102,37 +107,41 @@ public class InstrumentsApple implements Instruments {
     boolean instrumentsIs50OrHigher = new IOSVersion(instrumentsVersion).isGreaterOrEqualTo("5.0");
     boolean isSDK70OrHigher = new IOSVersion(desiredSDKVersion).isGreaterOrEqualTo("7.0");
     boolean putDefaultFirst = instrumentsIs50OrHigher;
-    
+
     // the 5.0 instruments can't start MobileSafari
     // workaround is to remove the MobileSafari app from the install directory and put
     // it back after instruments starts it
-    boolean tempRemoveMobileSafari = instrumentsIs50OrHigher && application.isSafari() && application.isSimulator();
-    
-    if (tempRemoveMobileSafari)
+    boolean
+        tempRemoveMobileSafari =
+        instrumentsIs50OrHigher && application.isSafari() && application.isSimulator();
+
+    if (tempRemoveMobileSafari) {
       moveMobileSafariAppOutOfInstallDir();
+    }
 
     deviceManager.setVariation(deviceType, variation);
     deviceManager.setSimulatorScale(caps.getSimulatorScale());
     application.setDefaultDevice(deviceType, putDefaultFirst);
-    if (application.isSafari() && isSDK70OrHigher && application.isSimulator())
+    if (application.isSafari() && isSDK70OrHigher && application.isSimulator()) {
       application.setSafariBuiltinFavorites();
+    }
     deviceManager.setSDKVersion();
     deviceManager.resetContentAndSettings();
     deviceManager.setL10N(locale, language);
     deviceManager.setKeyboardOptions();
     deviceManager.setLocationPreference(true);
     deviceManager.setMobileSafariOptions();
-    
+
     deviceManager.installTrustStore(session.getOptions().getTrustStore());
 
     boolean success = false;
     try {
       instruments.start();
-      
+
       log.fine("waiting for registration request");
       success = channel.waitForUIScriptToBeStarted();
-      log.fine("registration request received"+session.getCachedCapabilityResponse());
-      if (!success){
+      log.fine("registration request received" + session.getCachedCapabilityResponse());
+      if (!success) {
         throw new InstrumentsFailedToStartException("Didn't get the capability back.");
       }
     } catch (InterruptedException e) {
@@ -143,7 +152,6 @@ public class InstrumentsApple implements Instruments {
       if (!success) {
         instruments.forceStop();
         deviceManager.cleanupDevice();
-        throw new InstrumentsFailedToStartException("Instruments crashed.");
       }
       putMobileSafariAppBackInInstallDir();
     }
@@ -218,16 +226,19 @@ public class InstrumentsApple implements Instruments {
     return screenshotService;
   }
 
-  public File getOutput(){
+  public File getOutput() {
     return output;
   }
-  
+
   /**
    * @return true if MobileSafari was moved out, false otherwise
    */
   private boolean moveMobileSafariAppOutOfInstallDir() {
     // make backup copy before deleting
-    File copy = new File(System.getProperty("user.home")+"/.ios-driver/safariCopies", "MobileSafari-" + desiredSDKVersion + ".app");
+    File
+        copy =
+        new File(System.getProperty("user.home") + "/.ios-driver/safariCopies",
+                 "MobileSafari-" + desiredSDKVersion + ".app");
     if (!copy.exists()) {
       copy.mkdirs();
       try {
@@ -238,41 +249,52 @@ public class InstrumentsApple implements Instruments {
         return false; // don't remove existing copy in this case
       }
     }
-    
+
     // delete MobileSafari in install dir
     try {
       FileUtils.deleteDirectory(safariFolder);
       if (!howToMoveSafariBackMessageGiven) {
         howToMoveSafariBackMessageGiven = true;
         String to = safariFolder.getAbsolutePath();
-        log.info("temporarily moving MobileSafari out of the install directory, if you need to restore it yourself use:\n$ cp -rf " + copy + ' ' + to);
+        log.info(
+            "temporarily moving MobileSafari out of the install directory, if you need to restore it yourself use:\n$ cp -rf "
+            + copy + ' ' + to);
       }
     } catch (IOException e) {
-      log.log(Level.SEVERE, "----------------------------------------------------------------------------");
+      log.log(Level.SEVERE,
+              "----------------------------------------------------------------------------");
       log.log(Level.SEVERE, "couldn't delete MobileSafari app install dir: " + e.getMessage(), e);
-      log.log(Level.SEVERE, "make sure ios-driver has read/write permissions to that folder by executing those 2 commands:" + 
+      log.log(Level.SEVERE,
+              "make sure ios-driver has read/write permissions to that folder by executing those 2 commands:"
+              +
               "\nsudo chmod a+rw " + safariFolder.getParentFile().getAbsolutePath() +
               "\nsudo chmod -R a+rw " + safariFolder.getAbsolutePath());
-      log.log(Level.SEVERE, "----------------------------------------------------------------------------");
+      log.log(Level.SEVERE,
+              "----------------------------------------------------------------------------");
     }
-    
+
     return true;
   }
-  
+
   private boolean howToMoveSafariBackMessageGiven;
 
   private void putMobileSafariAppBackInInstallDir() {
     if (safariFolder.exists()) {
-      log.fine("not restoring MobileSafari.app, folder already exists: " + safariFolder.getAbsolutePath());
+      log.fine("not restoring MobileSafari.app, folder already exists: " + safariFolder
+          .getAbsolutePath());
       return;
     }
-    
-    File copy = new File(System.getProperty("user.home")+"/.ios-driver/safariCopies", "MobileSafari-" + desiredSDKVersion + ".app");
+
+    File
+        copy =
+        new File(System.getProperty("user.home") + "/.ios-driver/safariCopies",
+                 "MobileSafari-" + desiredSDKVersion + ".app");
     safariFolder.mkdir();
     try {
       FileUtils.copyDirectory(copy, safariFolder);
     } catch (IOException e) {
-      log.warning("cannot copy MobileSafari app back to: " + safariFolder.getAbsolutePath() + ": " + e); 
+      log.warning(
+          "cannot copy MobileSafari app back to: " + safariFolder.getAbsolutePath() + ": " + e);
     }
   }
 }
