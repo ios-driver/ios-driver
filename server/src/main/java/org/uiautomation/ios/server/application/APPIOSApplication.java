@@ -366,7 +366,9 @@ public class APPIOSApplication {
       throw new WebDriverException("Cannot change the default device for the app." + e.getMessage(), e);
     }
   }
-  
+
+  // TODO : fails for 64_bits
+  // visible running NewSessionTests::supportApplicationWithMultipleDeviceFamily
   /** 
    * Modifies the BuiltinFavorites....plist in safariCopies/safari.app to contain only "about:blank"
    */
