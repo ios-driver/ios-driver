@@ -13,6 +13,7 @@
  */
 package org.uiautomation.ios.wkrdp.internal;
 
+import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.utils.PlistManager;
 import org.uiautomation.ios.wkrdp.MessageListener;
@@ -53,7 +54,7 @@ public class SimulatorProtocolImpl extends WebKitRemoteDebugProtocol {
       }
       socket = new Socket(LOCALHOST_IPV6, port);
     } catch (IOException e) {
-      throw new WebDriverException(
+      throw new SessionNotCreatedException(
           "Cannot connect to the simulator socket on port 27753. Check that you don't have a firewall blocking it.",
           e);
     }

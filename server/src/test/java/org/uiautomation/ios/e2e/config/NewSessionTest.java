@@ -45,7 +45,7 @@ import static org.uiautomation.ios.IOSCapabilities.LOCALE;
 
 public class NewSessionTest extends BaseIOSDriverTest {
 
-  @Test(timeOut = 0)
+  @Test
   public void base() {
     RemoteIOSDriver driver = null;
     try {
@@ -66,7 +66,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
     }
   }
 
-  @Test(timeOut = 0)
+  @Test
   public void noVersion() {
     RemoteIOSDriver driver = null;
     try {
@@ -85,7 +85,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
 
   RemoteIOSDriver driver = null;
 
-  @Test(timeOut = 0)
+  @Test
   public void appWithNoContentCanStart() throws Exception {
     try {
       driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.noContentCap());
@@ -107,7 +107,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
     }
   }
 
-  @Test(timeOut = 0)
+  @Test
   public void startDefaultLanguageLocale() {
     RemoteIOSDriver driver = null;
     try {
@@ -128,7 +128,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
 
   }
 
-  @Test(timeOut = 0)
+  @Test
   public void startSpecifiedLanguageLocale() {
     RemoteIOSDriver driver = null;
     try {
@@ -150,7 +150,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
   }
 
   // TODO freynaud should load english instead ?
-  @Test(expectedExceptions = SessionNotCreatedException.class,timeOut = 0)
+  @Test(expectedExceptions = SessionNotCreatedException.class)
   public void recognizeUnsupportedLanguageLocale() {
     RemoteIOSDriver driver = null;
     try {
@@ -166,7 +166,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
 
   }
 
-  @Test(expectedExceptions = SessionNotCreatedException.class,timeOut = 0)
+  @Test(expectedExceptions = SessionNotCreatedException.class)
   public void doesntExist() {
     RemoteIOSDriver driver = null;
     try {
@@ -192,7 +192,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
     }
   }
 
-  @Test(expectedExceptions = SessionNotCreatedException.class,timeOut = 0)
+  @Test(expectedExceptions = SessionNotCreatedException.class)
   public void wrongVersion() {
     RemoteIOSDriver driver = null;
     try {
@@ -205,7 +205,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
     }
   }
 
-  @Test(expectedExceptions = SessionNotCreatedException.class,timeOut = 0)
+  @Test(expectedExceptions = SessionNotCreatedException.class)
   public void wrongSDK() {
     RemoteIOSDriver driver = null;
     try {
@@ -219,14 +219,16 @@ public class NewSessionTest extends BaseIOSDriverTest {
     }
   }
 
-  @Test(timeOut = 0)
+  @Test
   public void correctSDK() {
+    System.out.println("starting");
     RemoteIOSDriver driver = null;
     try {
       IOSCapabilities cap = IOSCapabilities.iphone("InternationalMountains");
       String sdk = ClassicCommands.getDefaultSDK();
       cap.setSDKVersion(sdk);
       driver = new RemoteIOSDriver(getRemoteURL(), cap);
+      System.out.println("driver done");
       IOSCapabilities actual = driver.getCapabilities();
 
       Assert.assertEquals(actual.getSDKVersion(), sdk);
@@ -237,7 +239,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
     }
   }
 
-  @Test(timeOut = 0)
+  @Test
   public void supportAllInstalledSDKs() {
     RemoteIOSDriver driver = null;
     List<String> sdks = ClassicCommands.getInstalledSDKs();
@@ -262,7 +264,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
     }
   }
 
-  @Test(timeOut = 0)
+  @Test
   public void correctDevice() {
     RemoteIOSDriver driver = null;
     try {
@@ -289,7 +291,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
     }
   }
 
-  @Test(timeOut = 0)
+  @Test
   public void canUseAnyFlagFromInfoPlistMatches() {
     IOSCapabilities cap = IOSCapabilities.iphone("UICatalog");
     cap.setCapability(IOSCapabilities.MAGIC_PREFIX + "CFBundleDevelopmentRegion", "en");
@@ -321,7 +323,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
     };
   }
 
-  @Test(dataProvider = "capabilities",timeOut = 0)
+  @Test(dataProvider = "capabilities")
   public void supportApplicationWithMultipleDeviceFamily(DeviceType device,
                                                          DeviceVariation variation,
                                                          int expectedW,

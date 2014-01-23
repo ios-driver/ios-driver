@@ -83,6 +83,6 @@ public final class SessionTimeoutTest {
     }
     Assert.assertNull(element);
     long elapsedSeconds = (System.currentTimeMillis() - startTime) / 1000;
-    Assert.assertTrue(elapsedSeconds > 20 && elapsedSeconds < 40, "Elapsed: " + elapsedSeconds);
+    Assert.assertTrue(elapsedSeconds >= 20 && elapsedSeconds < 40, "Elapsed: " + elapsedSeconds);
   }
 }
