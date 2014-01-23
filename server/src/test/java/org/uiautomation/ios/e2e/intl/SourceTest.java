@@ -14,6 +14,7 @@
 
 package org.uiautomation.ios.e2e.intl;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -69,12 +70,15 @@ public class SourceTest extends BaseIOSDriverTest {
       o = Orientation.fromInterfaceOrientation(log.getInt("deviceOrientation"));
       Assert.assertEquals(o, Orientation.PORTRAIT);
       tree = log.getJSONObject("tree");
+      System.out.println(tree.toString(2));
 
       Assert.assertEquals(tree.getString("type"), "UIAApplication");
       Assert.assertEquals(tree.get("value"), JSONObject.NULL);
       Assert.assertEquals(tree.get("label"), "Montagnes");
       Assert.assertEquals(tree.get("name"), "Montagnes");
-      Assert.assertEquals(tree.optJSONArray("children").length(), 2);
+
+     // there is a new UIAWindow in the app in ios7. 2 becomes 3.
+      Assert.assertEquals(tree.optJSONArray("children").length(), 3);
     } finally {
       if (driver != null) {
         driver.quit();
