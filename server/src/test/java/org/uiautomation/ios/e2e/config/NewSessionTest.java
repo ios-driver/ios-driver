@@ -45,7 +45,7 @@ import static org.uiautomation.ios.IOSCapabilities.LOCALE;
 
 public class NewSessionTest extends BaseIOSDriverTest {
 
-  @Test
+  @Test(timeOut = 0)
   public void base() {
     RemoteIOSDriver driver = null;
     try {
@@ -66,7 +66,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
     }
   }
 
-  @Test
+  @Test(timeOut = 0)
   public void noVersion() {
     RemoteIOSDriver driver = null;
     try {
@@ -85,7 +85,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
 
   RemoteIOSDriver driver = null;
 
-  @Test
+  @Test(timeOut = 0)
   public void appWithNoContentCanStart() throws Exception {
     try {
       driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.noContentCap());
@@ -107,7 +107,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
     }
   }
 
-  @Test
+  @Test(timeOut = 0)
   public void startDefaultLanguageLocale() {
     RemoteIOSDriver driver = null;
     try {
@@ -128,7 +128,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
 
   }
 
-  @Test
+  @Test(timeOut = 0)
   public void startSpecifiedLanguageLocale() {
     RemoteIOSDriver driver = null;
     try {
@@ -150,7 +150,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
   }
 
   // TODO freynaud should load english instead ?
-  @Test(expectedExceptions = SessionNotCreatedException.class)
+  @Test(expectedExceptions = SessionNotCreatedException.class,timeOut = 0)
   public void recognizeUnsupportedLanguageLocale() {
     RemoteIOSDriver driver = null;
     try {
@@ -166,7 +166,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
 
   }
 
-  @Test(expectedExceptions = SessionNotCreatedException.class)
+  @Test(expectedExceptions = SessionNotCreatedException.class,timeOut = 0)
   public void doesntExist() {
     RemoteIOSDriver driver = null;
     try {
@@ -192,7 +192,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
     }
   }
 
-  @Test(expectedExceptions = SessionNotCreatedException.class)
+  @Test(expectedExceptions = SessionNotCreatedException.class,timeOut = 0)
   public void wrongVersion() {
     RemoteIOSDriver driver = null;
     try {
@@ -205,7 +205,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
     }
   }
 
-  @Test(expectedExceptions = SessionNotCreatedException.class)
+  @Test(expectedExceptions = SessionNotCreatedException.class,timeOut = 0)
   public void wrongSDK() {
     RemoteIOSDriver driver = null;
     try {
@@ -219,7 +219,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
     }
   }
 
-  @Test
+  @Test(timeOut = 0)
   public void correctSDK() {
     RemoteIOSDriver driver = null;
     try {
@@ -237,7 +237,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
     }
   }
 
-  @Test
+  @Test(timeOut = 0)
   public void supportAllInstalledSDKs() {
     RemoteIOSDriver driver = null;
     List<String> sdks = ClassicCommands.getInstalledSDKs();
@@ -262,7 +262,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
     }
   }
 
-  @Test
+  @Test(timeOut = 0)
   public void correctDevice() {
     RemoteIOSDriver driver = null;
     try {
@@ -289,7 +289,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
     }
   }
 
-  @Test
+  @Test(timeOut = 0)
   public void canUseAnyFlagFromInfoPlistMatches() {
     IOSCapabilities cap = IOSCapabilities.iphone("UICatalog");
     cap.setCapability(IOSCapabilities.MAGIC_PREFIX + "CFBundleDevelopmentRegion", "en");
