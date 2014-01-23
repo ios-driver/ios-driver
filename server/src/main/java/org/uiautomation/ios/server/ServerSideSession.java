@@ -137,17 +137,6 @@ public class ServerSideSession extends Session {
     if (locale == null || locale.trim().length() == 0) {
       // then use the default locale "en_GB"
       capabilities.setLocale(DEFAULT_LOCALE);
-
-      AppleLocale[] values = AppleLocale.values();
-      boolean localeFound = false;
-      for (AppleLocale value : values) {
-        if (value.name().equals(locale)) {
-          localeFound = true;
-        }
-      }
-      if (!localeFound) {
-        throw new NoSuchLocaleException(locale);
-      }
     }
   }
 
