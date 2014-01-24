@@ -58,8 +58,7 @@ public class ElementFindingMultiDeviceTest {
   @DataProvider(name = "capabilities")
   public Object[][] createData1() {
     return new Object[][]{
-
-        {DeviceType.iphone, DeviceVariation.iPhone},
+        // not available in iOS7: {DeviceType.iphone, DeviceVariation.iPhone},
         {DeviceType.iphone, DeviceVariation.iPhoneRetina},
         {DeviceType.iphone, DeviceVariation.iPhoneRetina_4inch},
         {DeviceType.iphone, DeviceVariation.iPhoneRetina_4inch_64bit},
