@@ -171,13 +171,12 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
       script.append("var y = top+offsetY;");
       //script.append("var y = top+64;");
     }
-    script.append("return new Array(parseInt(x), parseInt(y), parseInt(top));");
+    script.append("return new Array(parseInt(x), parseInt(y));");
 
     Object response = ((JavascriptExecutor) nativeDriver).executeScript(String.valueOf(script));
 
     int x = ((ArrayList<Long>) response).get(0).intValue();
     int y = ((ArrayList<Long>) response).get(1).intValue();
-    top = ((ArrayList<Long>) response).get(2).intValue();
 
     return new Point(x, y);
   }
