@@ -39,7 +39,7 @@ public class SimulatorSettings {
   public static void main(String[] args) throws Exception {
     ImmutableList<String> sdkVersions = ImmutableList.of("6.1", "7.0");
     for (String sdkVersion : sdkVersions) {
-      SimulatorSettings settings = new SimulatorSettings(sdkVersion);
+      SimulatorSettings settings = new SimulatorSettings(sdkVersion, false);
       String exactSdkVersion = settings.exactSdkVersion;
       
       String globalPreferences = "not available";
@@ -77,11 +77,13 @@ public class SimulatorSettings {
   private static final String TEMPLATE = "/globalPlist.json";
 
   private final String exactSdkVersion;
+  private final boolean is64bit;
   private final File contentAndSettingsFolder;
   private final File globalPreferencePlist;
 
-  public SimulatorSettings(String sdkVersion) {
+  public SimulatorSettings(String sdkVersion, boolean is64bit) {
     this.exactSdkVersion = sdkVersion;
+    this.is64bit = is64bit;
     this.contentAndSettingsFolder = getContentAndSettingsFolder();
     this.globalPreferencePlist = getGlobalPreferenceFile();
   }
@@ -214,8 +216,10 @@ public class SimulatorSettings {
   }
 
   private File getContentAndSettingsFolder() {
-    File f =  new File(getContentAndSettingsParentFolder(), exactSdkVersion);
-    return f;
+    String folder = exactSdkVersion;
+    if (is64bit)
+      folder += "-64";
+    return new File(getContentAndSettingsParentFolder(), folder);
    }
 
   private boolean deleteRecursive(File folder) {

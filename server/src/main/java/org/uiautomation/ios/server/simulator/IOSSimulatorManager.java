@@ -53,12 +53,12 @@ public class IOSSimulatorManager implements IOSDeviceManager {
    * manages a single instance of the instruments process. Only 1 process can run at a given time.
    */
   public IOSSimulatorManager(IOSCapabilities capabilities, Instruments instruments) {
-
     this.sdks = ClassicCommands.getInstalledSDKs();
     this.desiredSDKVersion = validateSDK(capabilities.getSDKVersion());
 
     xcodeInstall = ClassicCommands.getXCodeInstall();
-    simulatorSettings = new SimulatorSettings(desiredSDKVersion);
+    boolean is64bit = DeviceVariation.is64bit(capabilities.getDeviceVariation());
+    simulatorSettings = new SimulatorSettings(desiredSDKVersion, is64bit);
     bundleId = capabilities.getBundleId();
     this.instruments = instruments;
     this.developer =

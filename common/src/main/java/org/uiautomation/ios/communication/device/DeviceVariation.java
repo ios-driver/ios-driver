@@ -136,6 +136,12 @@ public enum DeviceVariation {
     }
     return result;
   }
+  
+  public static boolean is64bit(DeviceVariation variation) {
+    if (variation == null)
+      return false;
+    return variation.toString().endsWith("_64bit");
+  }
 
   public static DeviceVariation valueOf(Object o) {
     if (o instanceof DeviceVariation) {
