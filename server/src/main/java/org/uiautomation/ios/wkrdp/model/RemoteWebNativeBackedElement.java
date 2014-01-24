@@ -136,9 +136,9 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     if (isSafari()) {
       if (ios7) {
         script.append("var orientation = UIATarget.localTarget().deviceOrientation();");
-        script.append("var landscape = orientation == UIA_DEVICE_ORIENTATION_LANDSCAPELEFT || orientation == UIA_DEVICE_ORIENTATION_LANDSCAPERIGHT;");
+        script.append("var plus = orientation == UIA_DEVICE_ORIENTATION_LANDSCAPELEFT || orientation == UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN;");
         // TODO: why is the webView shifted by 20
-        script.append("var y = webviewSize.origin.y + (landscape? 20 : -20) + top;");
+        script.append("var y = webviewSize.origin.y + (plus? 20 : -20) + top;");
       } else {
         if (ipad) {
           // for ipad, the adress bar h is fixed @ 96px.
@@ -171,12 +171,13 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
       script.append("var y = top+offsetY;");
       //script.append("var y = top+64;");
     }
-    script.append("return new Array(parseInt(x), parseInt(y));");
+    script.append("return new Array(parseInt(x), parseInt(y), parseInt(top));");
 
     Object response = ((JavascriptExecutor) nativeDriver).executeScript(String.valueOf(script));
 
     int x = ((ArrayList<Long>) response).get(0).intValue();
     int y = ((ArrayList<Long>) response).get(1).intValue();
+    top = ((ArrayList<Long>) response).get(2).intValue();
 
     return new Point(x, y);
   }
