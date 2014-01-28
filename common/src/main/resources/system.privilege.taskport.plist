@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>allow-root</key>
+	<true/>
+	<key>class</key>
+	<string>user</string>
+	<key>comment</key>
+	<string>Used by task_for_pid(...).
+		Task_for_pid is called by programs requesting full control over another program
+		for things like debugging or performance analysis. This authorization only applies
+		if the requesting and target programs are run by the same user; it will never
+		authorize access to the program of another user.  WARNING: administrators are advised not to modify this right.</string>
+	<key>default-button</key>
+	<dict>
+		<key>ar</key>
+		<string>التحكم</string>
+		<key>ca</key>
+		<string>Prendre el control</string>
+		<key>cs</key>
+		<string>Převzít kontrolu</string>
+		<key>da</key>
+		<string>Overtag kontrol</string>
+		<key>de</key>
+		<string>Steuerung übernehmen</string>
+		<key>el</key>
+		<string>Ανάληψη ελέγχου</string>
+		<key>en</key>
+		<string>Take Control</string>
+		<key>es</key>
+		<string>Controlar</string>
+		<key>fi</key>
+		<string>Ota hallintaan</string>
+		<key>fr</key>
+		<string>Prendre le contrôle</string>
+		<key>he</key>
+		<string>השתלט</string>
+		<key>hr</key>
+		<string>Preuzmi kontrolu</string>
+		<key>hu</key>
+		<string>Vezérlés átvétele</string>
+		<key>it</key>
+		<string>Prendi il controllo</string>
+		<key>ja</key>
+		<string>制御</string>
+		<key>ko</key>
+		<string>제어하기</string>
+		<key>nb</key>
+		<string>Ta kontroll</string>
+		<key>nl</key>
+		<string>Beheer</string>
+		<key>pl</key>
+		<string>Przejmij kontrolę</string>
+		<key>pt</key>
+		<string>Recuperar Controle</string>
+		<key>pt-PT</key>
+		<string>Recuperar controlo</string>
+		<key>ro</key>
+		<string>Preia controlul</string>
+		<key>ru</key>
+		<string>Управлять</string>
+		<key>sk</key>
+		<string>Prevziať kontrolu</string>
+		<key>sv</key>
+		<string>Ta kontroll</string>
+		<key>th</key>
+		<string>ควบคุม</string>
+		<key>tr</key>
+		<string>Yönetimi Ele Geçir</string>
+		<key>uk</key>
+		<string>Отримати контроль</string>
+		<key>zh-Hans</key>
+		<string>控制</string>
+		<key>zh-Hant</key>
+		<string>控制</string>
+	</dict>
+	<key>default-prompt</key>
+	<dict>
+		<key>ar</key>
+		<string>يحاول __APPNAME__ أن يسيطر على عملية أخرى.</string>
+		<key>ca</key>
+		<string>__APPNAME__ està intentant prendre el control d’un altre procés.</string>
+		<key>cs</key>
+		<string>__APPNAME__ se pokouší převzít kontrolu nad jiným procesem.</string>
+		<key>da</key>
+		<string>__APPNAME__ forsøger at overtage kontrollen af en anden proces.</string>
+		<key>de</key>
+		<string>__APPNAME__ versucht, die Steuerung eines anderen Vorgangs zu übernehmen.</string>
+		<key>el</key>
+		<string>Η εφαρμογή __APPNAME__ προσπαθεί να λάβει τον έλεγχο άλλης διεργασίας.</string>
+		<key>en</key>
+		<string>__APPNAME__ is trying to take control of another process.</string>
+		<key>es</key>
+		<string>__APPNAME__ está intentando controlar otro proceso.</string>
+		<key>fi</key>
+		<string>__APPNAME__ yrittää ottaa hallintaan toista prosessia.</string>
+		<key>fr</key>
+		<string>__APPNAME__ essaye de prendre le contrôle d’un autre processus.</string>
+		<key>he</key>
+		<string>״ __APPNAME__״ מבקש להשתלט על תהליך אחר.</string>
+		<key>hr</key>
+		<string>__APPNAME__ pokušava preuzeti kontrolu nad drugim procesom.</string>
+		<key>hu</key>
+		<string>A(z) __APPNAME__ megpróbálja átvenni egy másik folyamat vezérlését.</string>
+		<key>it</key>
+		<string>__APPNAME__ sta cercando di prendere il controllo di un altro processo.</string>
+		<key>ja</key>
+		<string>__APPNAME__ は、ほかのプロセスを制御しようとしています。</string>
+		<key>ko</key>
+		<string>__APPNAME__이(가) 다른 프로세스를 제어하려고 합니다.</string>
+		<key>nb</key>
+		<string>__APPNAME__ prøver å styre en annen prosess.</string>
+		<key>nl</key>
+		<string>__APPNAME__ probeert het beheer van een ander proces over te nemen.</string>
+		<key>pl</key>
+		<string>__APPNAME__ próbuje przejąć kontrolę nad innym procesem.</string>
+		<key>pt</key>
+		<string>__APPNAME__ está tentando assumir o controle de outro processo.</string>
+		<key>pt-PT</key>
+		<string>O __APPNAME__ está a tentar controlar outro processo.</string>
+		<key>ro</key>
+		<string>__APPNAME__ încearcă să preia controlul unui alt proces.</string>
+		<key>ru</key>
+		<string>Программа «__APPNAME__» пытается взять под контроль другой процесс.</string>
+		<key>sk</key>
+		<string>__APPNAME__ sa pokúša prevziať kontrolu nad iným procesom.</string>
+		<key>sv</key>
+		<string>__APPNAME__ försöker ta kontroll över en annan process.</string>
+		<key>th</key>
+		<string>__APPNAME__ กำลังพยายามเข้าควบคุมการดำเนินการอื่น</string>
+		<key>tr</key>
+		<string>__APPNAME__, başka bir işlemin yönetimini ele geçirmeye çalışıyor.</string>
+		<key>uk</key>
+		<string>Програма «__APPNAME__» намагається отримати контроль над іншим процесом.</string>
+		<key>zh-Hans</key>
+		<string>“__APPNAME__”正试图控制另一进程。</string>
+		<key>zh-Hant</key>
+		<string>“__APPNAME__”正在嘗試控制另一個程序。</string>
+	</dict>
+	<key>group</key>
+	<string>_developer</string>
+	<key>shared</key>
+	<true/>
+	<key>timeout</key>
+	<integer>36000</integer>
+</dict>
+</plist>
