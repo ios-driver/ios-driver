@@ -99,6 +99,7 @@ public class PageLoadingTest extends BaseSeleniumTest {
     driver.get(pages.formPage);
 
     driver.findElement(By.id("imageButton")).submit();
+    waitFor(pageTitleToBe(driver, "We Arrive Here"));
     Assert.assertEquals(driver.getTitle(), "We Arrive Here");
 
     driver.navigate().back();
