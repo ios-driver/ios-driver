@@ -430,8 +430,6 @@ public class FormHandlingTest extends BaseSeleniumTest {
     WebElement element = driver.findElement(By.cssSelector("#nested_form input[type='text']"));
     final String curURL = driver.getCurrentUrl();
     element.sendKeys("something" + Keys.ENTER);
-
-    element.click();
     new WebDriverWait(driver, 3).until(new ExpectedCondition<Boolean>() {
       @Override
       public Boolean apply(WebDriver webDriver) {
