@@ -206,10 +206,8 @@ public class RemoteIOSDriver extends RemoteWebDriver
 
   @Override
   public Keyboard getKeyboard() {
-    return (RemoteUIAKeyboard)findElement(new TypeCriteria(UIAKeyboard.class));
+    return new LazyKeyboard(this);
   }
-
-
 
   @Override
   public void rotate(ScreenOrientation orientation) {
@@ -375,5 +373,38 @@ public class RemoteIOSDriver extends RemoteWebDriver
                     "toY", Integer.toString(to.getY()),
                     "duration", durationInSecs));
     executor.execute(request);
+  }
+}
+
+/**
+ * Accesses the actual keyboard only when needed. Classes like TouchActions() do
+ * a driver.getKeyboard() on the constructor and that call will fail if the
+ * keyboard is not showing.
+ */
+final class LazyKeyboard implements Keyboard {
+
+  private final RemoteIOSDriver driver;
+
+  LazyKeyboard(RemoteIOSDriver driver) {
+    this.driver = driver;
+  }
+
+  @Override
+  public void sendKeys(CharSequence... keysToSend) {
+    getCurrentKeyboard().sendKeys(keysToSend);
+  }
+
+  @Override
+  public void pressKey(CharSequence keyToPress) {
+    getCurrentKeyboard().pressKey(keyToPress);
+  }
+
+  @Override
+  public void releaseKey(CharSequence keyToRelease) {
+    getCurrentKeyboard().releaseKey(keyToRelease);
+  }
+
+  private Keyboard getCurrentKeyboard() {
+    return (Keyboard) driver.findElement(new TypeCriteria(UIAKeyboard.class));
   }
 }
