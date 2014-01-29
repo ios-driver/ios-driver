@@ -19,7 +19,7 @@
     <parent>
         <artifactId>ios-driver</artifactId>
         <groupId>org.uiautomation</groupId>
-        <version>0.6.5</version>
+        <version>0.6.6-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -29,7 +29,7 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>6.8.5</version>
+            <version>${testngVersion}</version>
         </dependency>
     </dependencies>
 

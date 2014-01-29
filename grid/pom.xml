@@ -5,7 +5,7 @@
     <parent>
         <artifactId>ios-driver</artifactId>
         <groupId>org.uiautomation</groupId>
-        <version>0.6.5</version>
+        <version>0.6.6-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>ios-grid</artifactId>
@@ -20,7 +20,7 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-server</artifactId>
-            <version>2.35.0</version>
+            <version>${seleniumVersion}</version>
         </dependency>
     </dependencies>
 

@@ -6,7 +6,7 @@
         <groupId>org.uiautomation</groupId>
         <artifactId>ios-driver</artifactId>
         <relativePath>..</relativePath>
-        <version>0.6.5</version>
+        <version>0.6.6-SNAPSHOT</version>
     </parent>
     <artifactId>ios-client</artifactId>
 
@@ -19,7 +19,7 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>6.8.5</version>
+            <version>${testngVersion}</version>
             <scope>test</scope>
         </dependency>
 

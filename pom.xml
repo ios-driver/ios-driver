@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.uiautomation</groupId>
     <artifactId>ios-driver</artifactId>
-    <version>0.6.5</version>
+    <version>0.6.6-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>IOS automation</name>
     <description>bridge over the apple JS UIAutomation and the webkit remote debug protocol
@@ -98,6 +98,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <testngVersion>6.8.5</testngVersion>
+        <seleniumVersion>2.35.0</seleniumVersion>
     </properties>
 </project>
 

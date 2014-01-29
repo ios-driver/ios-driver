@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.uiautomation</groupId>
         <artifactId>ios-driver</artifactId>
-        <version>0.6.5</version>
+        <version>0.6.6-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>ios-common</artifactId>
@@ -14,7 +14,7 @@
         <dependency>
             <artifactId>selenium-remote-driver</artifactId>
             <groupId>org.seleniumhq.selenium</groupId>
-            <version>2.35.0</version>
+            <version>${seleniumVersion}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>jna</artifactId>
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>6.8.5</version>
+            <version>${testngVersion}</version>
             <!--<scope>test</scope>-->
         </dependency>
     </dependencies>
