@@ -19,7 +19,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
@@ -32,27 +31,17 @@ import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 import java.util.List;
 
 public class FindElementTest extends BaseIOSDriverTest {
-
-  private RemoteIOSDriver driver;
 
   @BeforeClass
   public void startDriver() {
     driver = getDriver(SampleApps.uiCatalogCap());
   }
 
-  @AfterClass(alwaysRun = true)
-  public void stopDriver() {
-    if (driver != null) {
-      driver.quit();
-    }
-  }
-
-  private String buttonsName = "Buttons, Various uses of UIButton";
+  private static final String buttonsName = "Buttons, Various uses of UIButton";
 
   @Test
   public void findElementByCriteria() throws InterruptedException {

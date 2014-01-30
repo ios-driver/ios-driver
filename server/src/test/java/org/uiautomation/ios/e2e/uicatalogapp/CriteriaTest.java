@@ -15,7 +15,6 @@
 package org.uiautomation.ios.e2e.uicatalogapp;
 
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
@@ -30,29 +29,18 @@ import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.PropertyEqualCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 public class CriteriaTest extends BaseIOSDriverTest {
-
-  private RemoteIOSDriver driver;
 
   @BeforeClass
   public void startDriver() throws InterruptedException {
     driver = getDriver(SampleApps.uiCatalogCap());
   }
 
-  @AfterClass(alwaysRun = true)
-  public void stopDriver() {
-    if (driver != null) {
-      driver.quit();
-    }
-  }
-
-  private String buttonName = "Buttons, Various uses of UIButton";
+  private static final String buttonName = "Buttons, Various uses of UIButton";
 
   @Test
   public void exactMatch() {
-
     Criteria c1 = new TypeCriteria(UIATableCell.class);
     PropertyEqualCriteria c2 = new NameCriteria(buttonName);
     Assert.assertEquals(c2.getMatchingStrategy(), MatchingStrategy.exact);
@@ -60,7 +48,6 @@ public class CriteriaTest extends BaseIOSDriverTest {
     UIAElement element = driver.findElement(c);
     Assert.assertEquals(element.getName(), buttonName);
   }
-
 
   @Test
   public void regexMatch() throws InterruptedException {
@@ -70,7 +57,6 @@ public class CriteriaTest extends BaseIOSDriverTest {
     Criteria c = new AndCriteria(c1, c2);
     UIAElement element = driver.findElement(c);
     Assert.assertEquals(element.getName(), buttonName);
-
   }
 
   @Test
@@ -104,7 +90,6 @@ public class CriteriaTest extends BaseIOSDriverTest {
     test = new LocationCriteria(x, y);
     res = driver.findElement(test);
     Assert.assertEquals(res.getName(), buttonName);
-
   }
 
 }

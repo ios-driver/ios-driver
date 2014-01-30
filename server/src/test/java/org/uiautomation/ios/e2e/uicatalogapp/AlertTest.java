@@ -53,24 +53,10 @@ public class AlertTest extends BaseIOSDriverTest {
   private static final String alert3Buttons = "//UIAStaticText[@name='Show Custom']";
   private static final String alertPassword = "//UIAStaticText[@name='Secure Text Input']";
 
-
-  private RemoteIOSDriver driver;
-
   @BeforeClass
   public void startDriver() {
     driver = getDriver(SampleApps.uiCatalogCap());
     goToAlertScreen();
-  }
-
-  @AfterClass
-  public void stopDriver() {
-    try {
-      if (driver != null) {
-        driver.quit();
-      }
-    } catch (Exception e) {
-      System.err.println("Error stopping the driver :" + e.getMessage());
-    }
   }
 
   private void goToAlertScreen() {
@@ -84,7 +70,6 @@ public class AlertTest extends BaseIOSDriverTest {
 
   @Test
   public void alertGetText() throws Exception {
-    RemoteWebDriver d = (RemoteWebDriver) driver;
     By b = By.xpath(alertOK);
     WebElement el = driver.findElement(b);
     el.click();

@@ -15,7 +15,6 @@
 package org.uiautomation.ios.e2e.uicatalogapp;
 
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
@@ -27,25 +26,16 @@ import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 
 public class UIATextViewTest extends BaseIOSDriverTest {
 
-  private RemoteIOSDriver driver;
   private UIATextView textview;
 
   @BeforeClass
   public void startDriver() {
     driver = getDriver(SampleApps.uiCatalogCap());
     textview = getTextView();
-  }
-
-  @AfterClass(alwaysRun = true)
-  public void stopDriver() {
-    if (driver != null) {
-      driver.quit();
-    }
   }
 
   private UIATextView getTextView() {
@@ -95,6 +85,4 @@ public class UIATextViewTest extends BaseIOSDriverTest {
     textview.setValue(v);
     Assert.assertEquals(textview.getValue(), v);
   }
-
-
 }

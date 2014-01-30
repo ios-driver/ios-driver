@@ -16,7 +16,6 @@ package org.uiautomation.ios.e2e.uicatalogapp;
 
 import org.openqa.selenium.WebDriverException;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
@@ -28,12 +27,10 @@ import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 
 public class UIAKeyboardTest extends BaseIOSDriverTest {
 
-  private RemoteIOSDriver driver;
   private UIATextView textview;
 
   @BeforeClass
@@ -41,18 +38,6 @@ public class UIAKeyboardTest extends BaseIOSDriverTest {
     driver = getDriver(SampleApps.uiCatalogCap());
     textview = getTextView();
   }
-
-  @AfterClass
-  public void stopDriver() {
-    if (driver != null) {
-      try {
-        driver.quit();
-      } catch (Exception e) {
-        // ignore
-      }
-    }
-  }
-
 
   private UIATextView getTextView() {
     String name = "TextView, Use of UITextField";
@@ -64,7 +49,6 @@ public class UIAKeyboardTest extends BaseIOSDriverTest {
     Criteria fieldC = new TypeCriteria(UIATextView.class);
     UIATextView res = (UIATextView) driver.findElement(fieldC);
     return res;
-
   }
 
   @Test

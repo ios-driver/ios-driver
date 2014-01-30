@@ -59,22 +59,24 @@ public class CrashHandling {
     driver = new RemoteWebDriver(getRemoteURL(), cap);
   }
 
-  @AfterMethod
+  @AfterMethod(alwaysRun = true)
   public void closeDriver() throws Exception {
-    try {
-      if (driver != null) {
+    if (driver != null) {
+      try {
         driver.quit();
-        driver = null;
+      } catch (Exception e) {
+        e.printStackTrace();
       }
-    } catch (Exception ignored) {
+      driver = null;
     }
 
-    try {
-      if (server != null) {
+    if (server != null) {
+      try {
         server.stop();
-        server = null;
+      } catch (Exception e) {
+        e.printStackTrace();
       }
-    } catch (Exception ignored) {
+      server = null;
     }
   }
 
