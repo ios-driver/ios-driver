@@ -16,7 +16,6 @@ package org.uiautomation.ios.e2e.intl;
 
 import org.openqa.selenium.By;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
@@ -33,24 +32,12 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 public class ServerSideCriteriaTest extends BaseIOSDriverTest {
 
-  private RemoteIOSDriver driver;
-
   @BeforeClass
   public void startDriver() {
-
     driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.intlMountainsCap("fr"));
   }
 
-  @AfterClass(alwaysRun = true)
-  public void stopDriver() {
-    if (driver != null) {
-      driver.quit();
-    }
-  }
-
-  private
-  String
-      expected =
+  private static final String expected =
       "Bien que 8,848 mètres de haut, Montagne 1 aient été montés la première fois 29 May 1953.";
 
   @Test
@@ -65,12 +52,10 @@ public class ServerSideCriteriaTest extends BaseIOSDriverTest {
     UIAElement text = driver.findElement(criteria);
     String actual = text.getName();
     Assert.assertEquals(actual, expected);
-
   }
 
   @Test(dependsOnMethods = {"findElementDriver"})
   public void findElementElement() {
-
     UIAApplication app = (UIAApplication) driver.findElement(By.tagName("UIAApplication"));
 
     NameCriteria
@@ -79,7 +64,6 @@ public class ServerSideCriteriaTest extends BaseIOSDriverTest {
     UIAElement text = app.findElement(criteria);
     String actual = text.getName();
     Assert.assertEquals(actual, expected);
-
   }
 
 }

@@ -19,15 +19,14 @@ import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.UIATableCell;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.client.uiamodels.impl.augmenter.IOSDriverAugmenter;
 import org.uiautomation.ios.utils.ClassicCommands;
 
@@ -38,22 +37,9 @@ import java.util.List;
 
 public class SmokeIOSDriverTest extends BaseIOSDriverTest {
 
-  private RemoteWebDriver driver;
-
   @BeforeClass
   public void startDriver() {
-    try {
-      driver = new RemoteWebDriver(getRemoteURL(), SampleApps.uiCatalogCap());
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  @AfterClass(alwaysRun = true)
-  public void stopDriver() {
-    if (driver != null) {
-      driver.quit();
-    }
+    driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
   }
 
   @Test
@@ -89,7 +75,6 @@ public class SmokeIOSDriverTest extends BaseIOSDriverTest {
     Assert
         .assertEquals(actual.getCapability(IOSCapabilities.BUNDLE_ID), "com.yourcompany.UICatalog");
     Assert.assertEquals(actual.getCapability(IOSCapabilities.BUNDLE_VERSION), "2.10");
-
   }
 
   @Test
@@ -100,6 +85,5 @@ public class SmokeIOSDriverTest extends BaseIOSDriverTest {
     TakesScreenshot d = (TakesScreenshot) (IOSDriverAugmenter.augment(driver));
     to = d.getScreenshotAs(OutputType.FILE);
     Assert.assertTrue(to.exists());
-
   }
 }

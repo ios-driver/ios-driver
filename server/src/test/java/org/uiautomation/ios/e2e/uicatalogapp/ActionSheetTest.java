@@ -20,11 +20,8 @@ import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import org.uiautomation.ios.BaseIOSDriverTest;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.UIAElement;
@@ -34,32 +31,16 @@ import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 public class ActionSheetTest extends BaseIOSDriverTest {
 
   private static final String actionOk = "(//UIAStaticText[@name='Show Simple'])[1]";
   private static final String actionOKCancel = "(//UIAStaticText[@name='Show OK-Cancel'])[1]";
 
-
-  private RemoteIOSDriver driver;
-
-
   @BeforeClass
   public void startDriver() {
     driver = getDriver(SampleApps.uiCatalogCap());
     goToAlertScreen();
-  }
-
-  @AfterClass
-  public void stopDriver() {
-    if (driver != null) {
-      try {
-        driver.quit();
-      } catch (Exception e) {
-        // ignore
-      }
-    }
   }
 
   private void goToAlertScreen() {
@@ -73,7 +54,6 @@ public class ActionSheetTest extends BaseIOSDriverTest {
 
   @Test
   public void cannotInteractIfActionSheet() throws Exception {
-    RemoteWebDriver d = (RemoteWebDriver) driver;
     By b = By.xpath(actionOk);
     WebElement el = driver.findElement(b);
     el.click();
@@ -89,7 +69,6 @@ public class ActionSheetTest extends BaseIOSDriverTest {
 
   @Test
   public void okCancel() throws Exception {
-    RemoteWebDriver d = (RemoteWebDriver) driver;
     By b = By.xpath(actionOKCancel);
     WebElement el = driver.findElement(b);
     el.click();
@@ -106,7 +85,6 @@ public class ActionSheetTest extends BaseIOSDriverTest {
 
   @Test
   public void findWhenAlertAreGone() throws Exception {
-    RemoteWebDriver d = (RemoteWebDriver) driver;
     By b = By.xpath(actionOKCancel);
     WebElement el = driver.findElement(b);
     el.click();
@@ -122,9 +100,7 @@ public class ActionSheetTest extends BaseIOSDriverTest {
     el.click();
     driver.switchTo().alert();
     alert.accept();
-
   }
-
 
   private Alert waitForAlert(WebDriver driver) {
     long timeoutInMs = 2000;

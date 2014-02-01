@@ -18,9 +18,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Rotatable;
 import org.openqa.selenium.ScreenOrientation;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
@@ -39,18 +37,9 @@ import java.util.Map;
 
 public class AugmenterTest extends BaseIOSDriverTest {
 
-  RemoteWebDriver driver;
-
   @BeforeClass
   public void startDriver() {
-    driver = new RemoteWebDriver(getRemoteURL(), SampleApps.uiCatalogCap());
-  }
-
-  @AfterClass(alwaysRun = true)
-  public void stopDriver() {
-    if (driver != null) {
-      driver.quit();
-    }
+    driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
   }
 
   @Test
@@ -61,7 +50,7 @@ public class AugmenterTest extends BaseIOSDriverTest {
     Assert.assertEquals(conf.get("ok"), true);
   }
 
-  private String buttonName = "Buttons, Various uses of UIButton";
+  private static final String buttonName = "Buttons, Various uses of UIButton";
 
   @Test
   public void iosSearchContext() {

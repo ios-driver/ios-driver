@@ -20,7 +20,6 @@ import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
@@ -33,14 +32,12 @@ import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.EmptyCriteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 import java.io.File;
 import java.util.List;
 
 public class RemoteUIAElementTest extends BaseIOSDriverTest {
 
-  private RemoteIOSDriver driver;
   private String buttonsName = "Buttons, Various uses of UIButton";
   private Criteria c1 = new TypeCriteria(UIATableCell.class);
   private Criteria c2 = new NameCriteria(buttonsName);
@@ -50,14 +47,6 @@ public class RemoteUIAElementTest extends BaseIOSDriverTest {
   public void startDriver() {
     driver = getDriver(SampleApps.uiCatalogCap());
   }
-
-  @AfterClass(alwaysRun = true)
-  public void stopDriver() {
-    if (driver != null) {
-      driver.quit();
-    }
-  }
-
 
   @Test
   public void findElement() {
@@ -110,7 +99,6 @@ public class RemoteUIAElementTest extends BaseIOSDriverTest {
     Assert.assertTrue(size > 35);
   }
 
-
   @Test
   public void isVisibleTests() {
 
@@ -127,8 +115,6 @@ public class RemoteUIAElementTest extends BaseIOSDriverTest {
 
     WebElement text = navBar.findElement(By.className("UIAStaticText"));
     Assert.assertTrue(text.isDisplayed(), "nav bar text");
-
-
   }
 
   @Test//(dependsOnMethods ="isVisibleTests")
@@ -155,7 +141,6 @@ public class RemoteUIAElementTest extends BaseIOSDriverTest {
     Assert.assertTrue(text.isDisplayed(), "nav bar text");
     text.click();
   }
-
 
   // TODO freynaud find a test for stale.
   @Test(expectedExceptions = StaleElementReferenceException.class, enabled = false)

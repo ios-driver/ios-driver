@@ -23,7 +23,6 @@ import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 import java.net.MalformedURLException;
 
@@ -36,17 +35,10 @@ public final class AppCapabilityTest extends BaseIOSDriverTest {
   public void canSpecifyAppToUseAsCapability() throws MalformedURLException {
     IOSCapabilities caps = SampleApps.uiCatalogCap();
     caps.setCapability("app", SampleApps.getUICatalogZipURL());
-    RemoteIOSDriver driver = null;
-    try {
-      driver = getDriver(caps);
-      String expected = "UIATableCell";
-      WebElement element = driver.findElement(By.tagName(expected));
-      Assert.assertEquals(element.getClass(), RemoteWebElement.class);
-      Assert.assertEquals(element.getTagName(), expected);
-    } finally {
-      if (driver != null) {
-        driver.quit();
-      }
-    }
+    driver = getDriver(caps);
+    String expected = "UIATableCell";
+    WebElement element = driver.findElement(By.tagName(expected));
+    Assert.assertEquals(element.getClass(), RemoteWebElement.class);
+    Assert.assertEquals(element.getTagName(), expected);
   }
 }

@@ -133,13 +133,16 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     boolean ipad = session.getCapabilities().getDevice() == DeviceType.ipad;
     boolean ios7 = new IOSVersion(session.getCapabilities().getSDKVersion()).isGreaterOrEqualTo("7.0");
 
-    if (isSafari()) {
-      if (ios7) {
+    if (ios7) {
+      script.append("var y = webviewSize.origin.y + top;");
+      if (isSafari()) {
         script.append("var orientation = UIATarget.localTarget().deviceOrientation();");
         script.append("var plus = orientation == UIA_DEVICE_ORIENTATION_LANDSCAPELEFT || orientation == UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN;");
-        // TODO: why is the webView shifted by 20
-        script.append("var y = webviewSize.origin.y + (plus? 20 : -20) + top;");
-      } else {
+          // TODO: why is the webView shifted by 20
+        script.append("y += plus? 20 : -20;");
+      }
+    } else {
+      if (isSafari()) {
         if (ipad) {
           // for ipad, the adress bar h is fixed @ 96px.
           script.append("var y = top+96;");
@@ -161,16 +164,17 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
           script.append("if (delta<20){delta=20;};");
           script.append("var y = top+delta;");
         }
+      } else {
+        Criteria wv = new TypeCriteria(UIAScrollView.class);
+        script.append("var webview = root.element(-1," + wv.stringify().toString() + ");");
+        script.append("var size = webview.rect();");
+        script.append("var offsetY = size.origin.y;");
+        // UIAWebView.y
+        script.append("var y = top+offsetY;");
+        //script.append("var y = top+64;");
       }
-    } else {
-      Criteria wv = new TypeCriteria(UIAScrollView.class);
-      script.append("var webview = root.element(-1," + wv.stringify().toString() + ");");
-      script.append("var size = webview.rect();");
-      script.append("var offsetY = size.origin.y;");
-      // UIAWebView.y
-      script.append("var y = top+offsetY;");
-      //script.append("var y = top+64;");
     }
+    
     script.append("return new Array(parseInt(x), parseInt(y));");
 
     Object response = ((JavascriptExecutor) nativeDriver).executeScript(String.valueOf(script));

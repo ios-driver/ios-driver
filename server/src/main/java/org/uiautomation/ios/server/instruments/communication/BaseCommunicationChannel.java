@@ -49,25 +49,25 @@ public abstract class BaseCommunicationChannel implements CommunicationChannel {
     this.sessionId = sessionId;
   }
 
-  protected String getSessionId() {
+  protected final String getSessionId() {
     return sessionId;
   }
 
   @Override
-  public boolean waitForUIScriptToBeStarted() throws InterruptedException {
+  public final boolean waitForUIScriptToBeStarted() throws InterruptedException {
     try {
       lock.lock();
       if (ready) {
         return true;
       }
-      return condition.await(15, TimeUnit.SECONDS);
+      return condition.await(30, TimeUnit.SECONDS);
     } finally {
       lock.unlock();
     }
   }
 
   @Override
-  public void registerUIAScript() {
+  public final void registerUIAScript() {
     try {
       lock.lock();
       ready = true;
@@ -77,7 +77,7 @@ public abstract class BaseCommunicationChannel implements CommunicationChannel {
     }
   }
 
-  protected void handleLastCommand(UIAScriptRequest request) {
+  protected final void handleLastCommand(UIAScriptRequest request) {
     // Stop is a fire and forget response. It will kill the instruments script,
     // so the script cannot
     // send a response.
@@ -91,13 +91,11 @@ public abstract class BaseCommunicationChannel implements CommunicationChannel {
       UIAScriptResponse r = new UIAScriptResponse(json);
       setNextResponse(r);
     }
-
   }
 
-  public void setNextResponse(UIAScriptResponse r) {
+  public final void setNextResponse(UIAScriptResponse r) {
     try {
       responseQueue.add(r);
-
     } catch (IllegalStateException e) {
       try {
         System.out.println("ALREADY PRESENT:" + responseQueue.take().getRaw());
@@ -109,8 +107,7 @@ public abstract class BaseCommunicationChannel implements CommunicationChannel {
     }
   }
 
-
-  protected UIAScriptResponse waitForResponse() {
+  protected final UIAScriptResponse waitForResponse() {
     try {
       UIAScriptResponse res = responseQueue.poll(COMMAND_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
       if (log.isLoggable(Level.FINE))
@@ -120,5 +117,4 @@ public abstract class BaseCommunicationChannel implements CommunicationChannel {
       throw new WebDriverException("timeout getting the response", e);
     }
   }
-
 }

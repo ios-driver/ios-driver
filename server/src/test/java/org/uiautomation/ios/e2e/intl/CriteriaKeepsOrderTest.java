@@ -15,7 +15,6 @@
 package org.uiautomation.ios.e2e.intl;
 
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
@@ -28,18 +27,9 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 public class CriteriaKeepsOrderTest extends BaseIOSDriverTest {
 
-  private RemoteIOSDriver driver;
-
   @BeforeClass
   public void startDriver() {
     driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.intlMountainsCap("en"));
-  }
-
-  @AfterClass(alwaysRun = true)
-  public void stopDriver() {
-    if (driver != null) {
-      driver.quit();
-    }
   }
 
   @Test
@@ -56,7 +46,6 @@ public class CriteriaKeepsOrderTest extends BaseIOSDriverTest {
 
   @Test
   public void complexOrCriteriaReturnsFirstMatch() {
-
     Criteria mountain1 = new NameCriteria("Mountain 1");
     Criteria mountain2 = new NameCriteria("Mountain 2");
     Criteria mountain3 = new NameCriteria("Mountain 3");

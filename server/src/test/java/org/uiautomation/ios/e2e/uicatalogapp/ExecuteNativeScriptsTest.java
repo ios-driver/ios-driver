@@ -35,33 +35,22 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
 import org.uiautomation.ios.SampleApps;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
 
-  private RemoteIOSDriver driver;
-
   @BeforeClass
   public void startDriver() {
     driver = getDriver(SampleApps.uiCatalogCap());
   }
 
-  @AfterClass(alwaysRun = true)
-  public void stopDriver() {
-    if (driver != null) {
-      driver.quit();
-    }
-  }
-
-  private String buttonsName = "Buttons, Various uses of UIButton";
+  private static final String buttonsName = "Buttons, Various uses of UIButton";
 
   @Test
   public void testShouldBeAbleToExecuteSimpleJavascriptAndReturnAString() {
@@ -87,12 +76,10 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
 
     assertNotNull(result);
     assertTrue(result instanceof WebElement);
-
   }
 
   @Test
   public void testShouldBeAbleToExecuteSimpleJavascriptAndReturnABoolean() {
-
     Object result = executeScript("return true;");
 
     assertNotNull(result);
@@ -102,7 +89,6 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
 
   @Test
   public void testShouldBeAbleToExecuteSimpleJavascriptAndReturnAStringsArray() {
-
     List<Object> expectedResult = new ArrayList<Object>();
     expectedResult.add("zero");
     expectedResult.add("one");
@@ -129,7 +115,6 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
 
   @Test
   public void testShouldBeAbleToExecuteJavascriptAndReturnABasicObjectLiteral() {
-
     Object result = executeScript("return {abc: '123', tired: false};");
     assertTrue(result instanceof Map, "result was: " + result + " (" + result.getClass() + ")");
     Map<String, Object> map = (Map<String, Object>) result;
@@ -180,7 +165,6 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
 
   @Test
   public void testShouldBeAbleToExecuteSimpleJavascriptAndReturnAComplexObject() {
-
     Object
         result =
         executeScript("return UIATarget.localTarget().frontMostApp().windows()[0].rect()");
@@ -212,7 +196,6 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
 
   @Test
   public void testPassingAndReturningALongShouldReturnAWholeNumber() {
-
     Long expectedResult = 1L;
     Object result = executeScript("return arguments[0];", expectedResult);
     assertTrue((result instanceof Integer || result instanceof Long),
@@ -231,7 +214,6 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
 
   @Test
   public void testShouldThrowAnExceptionWhenTheJavascriptIsBad() {
-
     try {
       executeScript("return squiggle();");
       fail("Expected an exception");
@@ -336,7 +318,6 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
 
   @Test
   public void testJavascriptStringHandlingShouldWorkAsExpected() {
-
     String value = (String) executeScript("return '';");
     assertEquals("", value);
 
@@ -349,7 +330,6 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
 
   @Test(enabled = false)
   public void testShouldBeAbleToExecuteABigChunkOfJavascriptCode() throws IOException {
-
     // File jqueryFile = InProject.locate("common/src/web/jquery-1.3.2.js");
     // String jquery = Files.toString(jqueryFile, Charset.forName("US-ASCII"));
     // assertTrue(jquery.length() > 50000,
@@ -380,7 +360,6 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
 
   @Test
   public void testCanHandleAnArrayOfElementsAsAnObjectArray() {
-
     List<WebElement> forms = driver.findElements(By.xpath("//UIATableCell"));
     Object[] args = new Object[]{forms};
 
@@ -393,7 +372,6 @@ public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
 
   @Test
   public void testCanPassAMapAsAParameter() {
-
     List<Integer> nums = ImmutableList.of(1, 2);
     Map<String, Object> args = ImmutableMap.of("bar", "test", "foo", nums);
 

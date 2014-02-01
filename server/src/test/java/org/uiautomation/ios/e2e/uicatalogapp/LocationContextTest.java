@@ -17,35 +17,21 @@ package org.uiautomation.ios.e2e.uicatalogapp;
 import org.openqa.selenium.html5.Location;
 import org.openqa.selenium.html5.LocationContext;
 import org.openqa.selenium.remote.Augmenter;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
-import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.UIAModels.UIAElement;
-
-import static org.junit.Assert.assertEquals;
 
 
 public class LocationContextTest extends BaseIOSDriverTest {
 
-  private RemoteWebDriver driver;
   private UIAElement element;
 
   @BeforeClass
   public void startDriver() {
     driver = getDriver(SampleApps.geoCoderCap());
   }
-
-  @AfterClass(alwaysRun = true)
-  public void stopDriver() {
-    if (driver != null) {
-      driver.quit();
-    }
-  }
-
 
   @Test(enabled = false)
   public void testShouldSetAndGetLocation() {

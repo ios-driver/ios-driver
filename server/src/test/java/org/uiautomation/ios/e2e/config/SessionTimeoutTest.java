@@ -45,7 +45,7 @@ public final class SessionTimeoutTest {
     server.start();
   }
 
-  @AfterClass
+  @AfterClass(alwaysRun = true)
   public void stopServer() throws Exception {
     if (server != null) {
       server.stop();

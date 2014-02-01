@@ -23,7 +23,7 @@ public abstract class BaseSeleniumTest {
   protected AppServer appServer;
 
   @BeforeClass
-  public void setup() throws Exception {
+  public void beforeClass() throws Exception {
     startIOSServer();
     startTestServer();
     IOSCapabilities safari = IOSCapabilities.iphone("Safari");
@@ -39,18 +39,9 @@ public abstract class BaseSeleniumTest {
   }
 
   @AfterClass(alwaysRun = true)
-  public void tearDown() throws Exception {
-    try {
-      if (driver != null)
-        driver.quit();
-    } catch (Exception e) {
-      System.err.println("cannot quit properly: " + e);
-    }
-    try {
-      stopIOSServer();
-    } catch (Exception e) {
-      System.err.println("cannot stop IOServer propery: " + e);
-    }
+  public void afterClass() {
+    stopDriver();
+    stopIOSServer();
     if (appServer != null)
       appServer.stop();
   }
@@ -73,20 +64,25 @@ public abstract class BaseSeleniumTest {
     driver = new RemoteIOSDriver(new URL(url), caps);
   }
 
-  public void stopIOSServer() throws Exception {
-    if (server != null)
-      server.stop();
+  private void stopIOSServer() {
+    if (server != null) {
+      try {
+        server.stop();
+      } catch (Exception e) {
+        System.err.println("cannot stop IOServer propery: " + e);
+      }
+      server = null;
+    }
   }
 
-  protected void stopDriver() {
+  protected final void stopDriver() {
     if (driver != null) {
       try {
         driver.quit();
       } catch (Exception e) {
-        System.err.println("cannot quit properly :" + e.getMessage());
+        System.err.println("cannot quit properly: " + e.getMessage());
       }
       driver = null;
     }
   }
-
 }

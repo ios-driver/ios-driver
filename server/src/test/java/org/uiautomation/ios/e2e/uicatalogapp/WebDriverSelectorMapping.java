@@ -16,9 +16,7 @@ package org.uiautomation.ios.e2e.uicatalogapp;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
@@ -26,20 +24,11 @@ import org.uiautomation.ios.SampleApps;
 
 public class WebDriverSelectorMapping extends BaseIOSDriverTest {
 
-  private RemoteWebDriver driver;
-
   @BeforeClass
   public void startDriver() {
     driver = getDriver(SampleApps.intlMountainsCap("en"));
     WebElement element = driver.findElement(By.className("UIATableCell"));
     element.click();
-  }
-
-  @AfterClass(alwaysRun = true)
-  public void stopDriver() {
-    if (driver != null) {
-      driver.quit();
-    }
   }
 
   private

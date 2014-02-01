@@ -25,17 +25,8 @@ public class ServerSerializeExceptionTest extends BaseIOSDriverTest {
 
   @Test(expectedExceptions = WebDriverException.class)
   public void clientGetsServerException() {
-    RemoteIOSDriver driver = null;
-    try {
-      IOSCapabilities cap = SampleApps.intlMountainsCap("de");
-      driver = new RemoteIOSDriver(getRemoteURL(), cap);
-
-    } finally {
-      if (driver != null) {
-        driver.quit();
-      }
-    }
-
+    IOSCapabilities cap = SampleApps.intlMountainsCap("de");
+    driver = new RemoteIOSDriver(getRemoteURL(), cap);
   }
 
 }

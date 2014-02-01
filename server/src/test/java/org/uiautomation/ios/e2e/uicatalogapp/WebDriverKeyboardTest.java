@@ -18,7 +18,6 @@ import java.util.List;
 
 import org.openqa.selenium.*;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
@@ -30,35 +29,25 @@ import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 public class WebDriverKeyboardTest extends BaseIOSDriverTest {
-
-  private WebDriver driver;
 
   @BeforeClass
   public void startDriver() {
     driver = getDriver(SampleApps.uiCatalogCap());
   }
-
-  @AfterClass(alwaysRun = true)
-  public void stopDriver() {
-    if (driver != null) {
-      driver.quit();
-    }
-  }
-
+  
   private UIATextField getTextField() {
     String name = "TextFields, Uses of UITextField";
     Criteria c1 = new TypeCriteria(UIATableCell.class);
     Criteria c2 = new NameCriteria(name);
     Criteria c = new AndCriteria(c1, c2);
-    UIAElement element = ((RemoteIOSDriver) driver).findElement(c);
+    UIAElement element = driver.findElement(c);
     element.tap();
     Criteria
         fieldC =
         new AndCriteria(new TypeCriteria(UIATextField.class), new NameCriteria("Normal"));
-    UIATextField textfield = (UIATextField) ((RemoteIOSDriver) driver).findElement(fieldC);
+    UIATextField textfield = (UIATextField) driver.findElement(fieldC);
     return textfield;
   }
 

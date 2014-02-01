@@ -27,18 +27,9 @@ import org.uiautomation.ios.client.uiamodels.impl.RemoteUIAWebView;
 
 public class FlickTest extends BaseIOSDriverTest {
 
-  private RemoteIOSDriver driver = null;
-
   @BeforeClass
   public void startDriver() {
     driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.ppNQASampleAppCap());
-  }
-
-  @AfterClass
-  public void stopDriver() {
-    if (driver != null) {
-      driver.quit();
-    }
   }
 
   @Test
@@ -49,7 +40,6 @@ public class FlickTest extends BaseIOSDriverTest {
 
     waitForElement(driver, By.xpath("//UIAStaticText[contains(@name, 'Swiped Right')]"), 6);
     Assert.assertTrue(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Swiped Right')]").isDisplayed());
-
   }
 
   //TODO : Fix this test
@@ -83,6 +73,4 @@ public class FlickTest extends BaseIOSDriverTest {
     waitForElement(driver, By.xpath("//UIAStaticText[contains(@name, 'Swiped Down')]"), 6);
     Assert.assertTrue(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Swiped Down')]").isDisplayed());
   }
-
-
 }

@@ -24,38 +24,28 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.Augmenter;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.RemoteWebElement;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.utils.ClassicCommands;
 
 public class SmokeWebDriverTest extends BaseIOSDriverTest {
 
-  private RemoteWebDriver driver;
-
   @BeforeClass
   public void startDriver() {
-    driver = new RemoteWebDriver(getRemoteURL(), SampleApps.uiCatalogCap());
-  }
-
-  @AfterClass(alwaysRun = true)
-  public void stopDriver() {
-    if (driver != null) {
-      driver.quit();
-    }
+    driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
   }
 
   @Test
   public void returnWebElements() throws MalformedURLException {
     String expected = "UIATableCell";
     WebElement element = driver.findElement(By.tagName(expected));
-    Assert.assertEquals(element.getClass(), RemoteWebElement.class);
+    Assert.assertTrue(element instanceof RemoteWebElement);
     String clazz = element.getTagName();
     Assert.assertEquals(clazz, expected);
   }
@@ -76,7 +66,6 @@ public class SmokeWebDriverTest extends BaseIOSDriverTest {
     Assert
         .assertEquals(actual.getCapability(IOSCapabilities.BUNDLE_ID), "com.yourcompany.UICatalog");
     Assert.assertEquals(actual.getCapability(IOSCapabilities.BUNDLE_VERSION), "2.10");
-
   }
 
   @Test
