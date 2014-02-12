@@ -47,7 +47,7 @@ public class IOSServerManager {
     String loggingConfigFile = System.getProperty("java.util.logging.config.file");
     if (loggingConfigFile != null) {
       if (!new File(loggingConfigFile).exists()) {
-        System.err.println("logging file not found: " + new File(loggingConfigFile).getAbsolutePath());
+        System.err.println("ERROR: logging file not found: " + new File(loggingConfigFile).getAbsolutePath());
         loggingConfigFile = null; // to revert to builtin one
       }
     }
