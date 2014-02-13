@@ -32,7 +32,7 @@ public class IPAApplication extends APPIOSApplication {
   private final File ipa;
   private static final Logger log = Logger.getLogger(IPAApplication.class.getName());
 
-  private IPAApplication(File ipa, String pathToApp) {
+  protected IPAApplication(File ipa, String pathToApp) {
     super(pathToApp);
     this.ipa = ipa;
   }

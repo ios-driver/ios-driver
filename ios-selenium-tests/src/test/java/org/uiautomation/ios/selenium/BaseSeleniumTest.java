@@ -52,7 +52,7 @@ public abstract class BaseSeleniumTest {
   }
 
   private void startTestServer() {
-    appServer = new WebbitAppServer();
+    appServer = new WebbitAppServer(config.getHost());
     appServer.start();
 
     pages = new Pages(appServer);

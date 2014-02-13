@@ -20,6 +20,7 @@ import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
+import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
 import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
 import org.uiautomation.ios.wkrdp.model.RemoteWebNativeBackedElement;
 
@@ -40,8 +41,9 @@ public class SetValueHandler extends BaseWebCommandHandler {
     RemoteWebElement element = getWebDriver().createElement(ref);
 
     JSONArray array = getRequest().getPayload().getJSONArray("value");
-    if (log.isLoggable(Level.FINE))
+    if (log.isLoggable(Level.FINE)) {
       log.fine("payload : " + getRequest().getPayload().toString(2));
+    }
     String value = "";
 
     for (int i = 0; i < array.length(); i++) {
@@ -49,6 +51,10 @@ public class SetValueHandler extends BaseWebCommandHandler {
     }
 
     boolean useNativeEvents = (Boolean) getConfiguration("nativeEvents");
+
+    if (RemoteIOSWebDriver.TMP) {
+      useNativeEvents = false;
+    }
 
     if (useNativeEvents && (element instanceof RemoteWebNativeBackedElement)) {
       ((RemoteWebNativeBackedElement) element).setValueNative(value);

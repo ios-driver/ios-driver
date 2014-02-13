@@ -49,7 +49,7 @@ import static org.uiautomation.ios.IOSCapabilities.*;
 
 // TODO freynaud create IOSApp vs Running App that has locale + language
 public class APPIOSApplication {
-    
+
   public static void main(String[] args) throws Exception {
     showAppData("MobileSafari6.1", APPIOSApplication.findSafariApp(ClassicCommands.getXCodeInstall(), "6.1"));
     showAppData("MobileSafari7.0", APPIOSApplication.findSafariApp(ClassicCommands.getXCodeInstall(), "7.0"));
@@ -60,7 +60,7 @@ public class APPIOSApplication {
     System.out.println("  path: " + app.getApplicationPath().getAbsolutePath());
     System.out.println("  metadata: " + app.getMetadata().toString(2));
   }
-  
+
   //
 
   private static final Logger log = Logger.getLogger(APPIOSApplication.class.getName());
@@ -75,6 +75,13 @@ public class APPIOSApplication {
    * @throws WebDriverException
    */
   public APPIOSApplication(String pathToApp) {
+    if (pathToApp == null) {
+      metadata = null;
+      app = null;
+      dictionaries = null;
+      languages = null;
+      return;
+    }
     this.app = new File(pathToApp);
     if (!app.exists()) {
       throw new WebDriverException(pathToApp + "isn't an IOS app.");
@@ -307,7 +314,7 @@ public class APPIOSApplication {
     }
     return true;
   }
-  
+
   public static File findSafariLocation(File xcodeInstall, String sdkVersion) {
     IOSVersion version = new IOSVersion(sdkVersion);
     String v = version.getMajor()+"."+version.getMinor();
@@ -369,31 +376,31 @@ public class APPIOSApplication {
 
   // TODO : fails for 64_bits
   // visible running NewSessionTests::supportApplicationWithMultipleDeviceFamily
-  /** 
+  /**
    * Modifies the BuiltinFavorites....plist in safariCopies/safari.app to contain only "about:blank"
    */
   public void setSafariBuiltinFavorites() {
     File[] files = app.listFiles(new FilenameFilter() {
       @Override
       public boolean accept(File dir, String name) {
-        return name.startsWith("BuiltinFavorites") && name.endsWith(".plist");     
+        return name.startsWith("BuiltinFavorites") && name.endsWith(".plist");
       }
     });
     for (File plist: files) {
       setSafariBuiltinFavories(plist);
     }
   }
-  
+
   private void setSafariBuiltinFavories (File builtinFavoritesPList) {
     try {
       PListFormat format = getFormat(builtinFavoritesPList);
-     
+
       NSArray root = new NSArray(1);
       NSDictionary favorite = new NSDictionary();
       favorite.put("Title", "about:blank");
       favorite.put("URL", "about:blank");
       root.setValue(0, favorite);
-         
+
       write(builtinFavoritesPList, root, format);
     } catch (Exception e) {
       throw new WebDriverException("Cannot set " + builtinFavoritesPList.getAbsolutePath()

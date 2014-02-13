@@ -13,7 +13,8 @@
  */
 package org.uiautomation.ios.server;
 
-import org.libimobiledevice.ios.driver.binding.IMobileDeviceFactory;
+import org.libimobiledevice.ios.driver.binding.exceptions.LibImobileException;
+import org.libimobiledevice.ios.driver.binding.services.DeviceService;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.LogManager;
-import java.util.logging.Logger;
+
 
 public class IOSServerManager {
 
@@ -42,12 +43,13 @@ public class IOSServerManager {
   // TODO freynaud cleanup
   public IOSServerManager(IOSServerConfiguration options) {
     this.options = options;
-    
+
     // setup logging
     String loggingConfigFile = System.getProperty("java.util.logging.config.file");
     if (loggingConfigFile != null) {
       if (!new File(loggingConfigFile).exists()) {
-        System.err.println("ERROR: logging file not found: " + new File(loggingConfigFile).getAbsolutePath());
+        System.err
+            .println("logging file not found: " + new File(loggingConfigFile).getAbsolutePath());
         loggingConfigFile = null; // to revert to builtin one
       }
     }
@@ -55,26 +57,30 @@ public class IOSServerManager {
       // do not use builtin ios-logging.properties if -Djava.util.logging.config.file set
       try {
         LogManager.getLogManager()
-          .readConfiguration(IOSServerManager.class.getResourceAsStream("/ios-logging.properties"));
+            .readConfiguration(
+                IOSServerManager.class.getResourceAsStream("/ios-logging.properties"));
       } catch (Exception e) {
         System.err.println("Cannot configure logger.");
       }
     }
-    
+
     this.hostInfo = new HostInfo(options);
 
-    devices = new DeviceStore();
+    apps = new ApplicationStore(options.getAppFolderToMonitor());
+    devices = new DeviceStore(apps);
 
     if (Configuration.BETA_FEATURE) {
-      IMobileDeviceFactory.INSTANCE.setDeviceDetectionCallback(devices);
-      IMobileDeviceFactory.INSTANCE.startDetection();
+      try {
+        DeviceService.INSTANCE.startDetection(devices);
+      } catch (LibImobileException e) {
+        e.printStackTrace();
+      }
     }
 
     if (Configuration.SIMULATORS_ENABLED) {
       devices.add(new SimulatorDevice());
     }
 
-    apps = new ApplicationStore(options.getAppFolderToMonitor());
   }
 
   public static boolean matches(Map<String, Object> appCapabilities,
@@ -87,7 +93,7 @@ public class IOSServerManager {
   private static boolean matches(IOSCapabilities applicationCapabilities,
                                  IOSCapabilities desiredCapabilities) {
     return APPIOSApplication.canRun(desiredCapabilities, applicationCapabilities) &&
-        Device.canRun(desiredCapabilities, applicationCapabilities);
+           Device.canRun(desiredCapabilities, applicationCapabilities);
   }
 
   public void stop() {
@@ -97,7 +103,11 @@ public class IOSServerManager {
     sessions.clear();
 
     if (Configuration.BETA_FEATURE) {
-      IMobileDeviceFactory.INSTANCE.stopDetection();
+      try {
+        DeviceService.INSTANCE.stopDetection();
+      } catch (LibImobileException e) {
+        e.printStackTrace();
+      }
     }
   }
 

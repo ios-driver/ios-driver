@@ -14,8 +14,11 @@
 
 package org.uiautomation.ios.wkrdp.internal;
 
-import org.libimobiledevice.ios.driver.binding.sdk.IDeviceSDK;
-import org.libimobiledevice.ios.driver.binding.sdk.WebInspectorService;
+import org.libimobiledevice.ios.driver.binding.exceptions.LibImobileException;
+import org.libimobiledevice.ios.driver.binding.exceptions.SDKException;
+import org.libimobiledevice.ios.driver.binding.services.DeviceService;
+import org.libimobiledevice.ios.driver.binding.services.IOSDevice;
+import org.libimobiledevice.ios.driver.binding.services.WebInspectorService;
 import org.uiautomation.ios.wkrdp.MessageListener;
 import org.uiautomation.ios.wkrdp.ResponseFinder;
 
@@ -29,21 +32,38 @@ public class RealDeviceProtocolImpl extends WebKitRemoteDebugProtocol {
   public RealDeviceProtocolImpl(String uuid, MessageListener listener,
                                 ResponseFinder... finders) {
     super(listener, finders);
-    IDeviceSDK device = new IDeviceSDK(uuid);
+    IOSDevice device = null;
+    System.out.println("about to create "+uuid);
+    try {
+      device = DeviceService.get(uuid);
+      System.out.println("created "+uuid);
+    } catch (SDKException e) {
+      e.printStackTrace();
+    } catch (LibImobileException e) {
+      e.printStackTrace();
+    }
     inspector = new WebInspectorService(device);
     start();
   }
 
   @Override
   public void start() {
-    inspector.startWebInspector();
+    try {
+      inspector.startWebInspector();
+    } catch (LibImobileException e) {
+      e.printStackTrace();
+    }
     startListenerThread();
   }
 
   @Override
   public void stop() {
     stopListenerThread();
-    inspector.stopWebInspector();
+    try {
+      inspector.stopWebInspector();
+    } catch (LibImobileException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
@@ -56,6 +76,10 @@ public class RealDeviceProtocolImpl extends WebKitRemoteDebugProtocol {
 
   @Override
   protected void sendMessage(String message) {
-    inspector.sendMessage(message);
+    try {
+      inspector.sendMessage(message);
+    } catch (LibImobileException e) {
+      e.printStackTrace();
+    }
   }
 }
