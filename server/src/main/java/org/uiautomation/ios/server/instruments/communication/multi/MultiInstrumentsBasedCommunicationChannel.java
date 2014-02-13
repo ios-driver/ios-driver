@@ -14,7 +14,7 @@
 
 package org.uiautomation.ios.server.instruments.communication.multi;
 
-import org.libimobiledevice.ios.driver.binding.sdk.InstrumentsService;
+import org.libimobiledevice.ios.driver.binding.services.InstrumentsService;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.command.UIAScriptResponse;
 import org.uiautomation.ios.server.instruments.communication.BaseCommunicationChannel;
@@ -62,7 +62,7 @@ public class MultiInstrumentsBasedCommunicationChannel extends BaseCommunication
 
       String escaped = r.getScript().replace("'", "\"");
       String script = String.format(templ, escaped);
-      instruments.executeScriptNonManaged(script);
+      //instruments.executeScriptNonManaged(script);
     } catch (Exception e) {
       e.printStackTrace();
     }

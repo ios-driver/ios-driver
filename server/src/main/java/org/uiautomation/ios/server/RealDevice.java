@@ -13,8 +13,7 @@
  */
 
 package org.uiautomation.ios.server;
-
-import org.libimobiledevice.ios.driver.binding.DeviceInfo;
+import org.libimobiledevice.ios.driver.binding.model.DeviceInfo;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.server.application.APPIOSApplication;
@@ -109,8 +108,8 @@ public class RealDevice extends Device {
   }
 
   @Override
-  public String toString(){
-    return "Device[" + uuid + ",name:" + name + (isBusy()? ",busy" : ",available") + ']';
+  public String toString() {
+    return "Device[" + uuid + ",name:" + name + (isBusy() ? ",busy" : ",available") + ']';
   }
 }
 

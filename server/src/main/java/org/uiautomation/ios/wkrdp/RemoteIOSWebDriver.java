@@ -18,10 +18,21 @@ import com.google.common.collect.ImmutableList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.openqa.selenium.*;
+import org.libimobiledevice.ios.driver.binding.LibImobileDeviceWrapperFactory;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.remote.Response;
+import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.context.BaseWebInspector;
 import org.uiautomation.ios.context.WebInspector;
-import org.uiautomation.ios.server.*;
+import org.uiautomation.ios.server.DOMContext;
+import org.uiautomation.ios.server.IOSServerManager;
+import org.uiautomation.ios.server.RealDevice;
+import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.wkrdp.internal.RealDeviceProtocolImpl;
 import org.uiautomation.ios.wkrdp.internal.SimulatorProtocolImpl;
@@ -44,31 +55,51 @@ import java.util.logging.Logger;
 
 public class RemoteIOSWebDriver {
 
+  public static boolean TMP = true;
+
+  private LibImobileDeviceWrapperFactory factory = LibImobileDeviceWrapperFactory.INSTANCE;
+
   public static void main(String[] args) throws Exception {
     try {
       LogManager.getLogManager()
-        .readConfiguration(IOSServerManager.class.getResourceAsStream("/ios-logging.properties"));
+          .readConfiguration(IOSServerManager.class.getResourceAsStream("/ios-logging.properties"));
     } catch (Exception e) {
       System.err.println("Cannot configure logger.");
     }
 
-    RemoteIOSWebDriver driver = new RemoteIOSWebDriver(null);
-    //driver.connect(uiCatalog);
-    // driver.switchTo(driver.getPages().get(0)); 
-    driver.get("http://ebay.co.uk/");
-    RemoteWebElement body = driver.findElementByCssSelector("body");
-    driver.get("http://google.co.uk/");
-    body = driver.findElementByCssSelector("body");
+    Runnable r = new Runnable() {
+      @Override
+      public void run() {
+        RemoteIOSWebDriver driver = new RemoteIOSWebDriver(null);
+        driver.connect(safari);
+        driver.switchTo(driver.getPages().get(0));
+        driver.get("http://perdu.com");
+        RemoteWebElement body = null;
+        try {
+          body = driver.findElementByCssSelector("body");
+          System.out.println(body.getText());
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+        driver.quit();
+      }
+    };
 
-    driver.stop();
+    new Thread(r).start();
+    //new Thread(r).start();
 
-    driver = new RemoteIOSWebDriver(null);
-    //driver.connect(uiCatalog);
-    driver.switchTo(driver.getPages().get(0));
-    driver.get("http://ebay.co.uk/");
-    body = driver.findElementByCssSelector("body");
-    driver.get("http://google.co.uk/");
-    body = driver.findElementByCssSelector("body");
+//    driver.get("http://google.co.uk/");
+//    body = driver.findElementByCssSelector("body");
+//
+//    driver.stop();
+//
+//    driver = new RemoteIOSWebDriver(null);
+//    //driver.connect(uiCatalog);
+//    driver.switchTo(driver.getPages().get(0));
+//    driver.get("http://ebay.co.uk/");
+//    body = driver.findElementByCssSelector("body");
+//    driver.get("http://google.co.uk/");
+//    body = driver.findElementByCssSelector("body");
   }
 
   static String safari = "com.apple.mobilesafari";
@@ -88,6 +119,7 @@ public class RemoteIOSWebDriver {
   private static final Logger log = Logger.getLogger(RemoteIOSWebDriver.class.getName());
   private List<WebkitPage> pages = new ArrayList<WebkitPage>();
   private final WebKitSynchronizer sync;
+  private static boolean ok = true;
 
   public RemoteIOSWebDriver(ServerSideSession session, ResponseFinder... finders) {
     this.session = session;
@@ -99,25 +131,66 @@ public class RemoteIOSWebDriver {
         Configuration.off();
       }
       String uuid = ((RealDevice) session.getDevice()).getUuid();
-      protocol = new RealDeviceProtocolImpl(uuid,notification, finders);
+      protocol = new RealDeviceProtocolImpl(uuid, notification, finders);
 
     } else {
       protocol = new SimulatorProtocolImpl(notification, finders);
 
     }
 
-    session.getLogManager().onProtocolCreated(protocol);
+
+
+    //protocol = new RealDeviceProtocolImpl("ff4827346ed6b54a98f51e69a261a140ae2bf6b3", notification, finders);
+    if (session != null) {
+      session.getLogManager().onProtocolCreated(protocol);
+    }
 
     protocol.register();
     sync.waitForSimToRegister();
     sync.waitForSimToSendApps();
-    
+
     log.fine("connectionKey=" + connectionKey);
 
     if (applications.size() == 1) {
       connect(applications.get(0).getBundleId());
     } else {
       log.warning("session created but application size=" + applications.size());
+    }
+
+
+    Response r = session.getCachedCapabilityResponse();
+    if (r == null){
+      r = new Response();
+      r.setSessionId(session.getSessionId());
+      Map<String, Object> o = new HashMap<>();
+      List<String> ls = session.getApplication().getSupportedLanguagesCodes();
+
+      o.put("supportedLocales", ls);
+      o.put("takesScreenshot", true);
+      o.put(IOSCapabilities.CONFIGURABLE, true);
+      o.put(IOSCapabilities.ELEMENT_TREE, true);
+      o.put(IOSCapabilities.IOS_SEARCH_CONTEXT, true);
+      o.put(IOSCapabilities.IOS_TOUCH_SCREEN, true);
+
+      o.put("rotatable", true);
+      o.put("locationContextEnabled", true);
+
+      o.put("browserName", session.getCapabilities().getBundleName());
+      o.put("browserVersion", session.getApplication().getCapabilities().getBundleVersion());
+
+      o.put("platform", "IOS");
+      o.put("platformName", "IOS");
+      o.put("platformVersion", session.getCapabilities().getSDKVersion());
+
+      o.put("javascriptEnabled", true);
+      o.put("cssSelectors", true);
+      o.put("takesElementScreenshot", false);
+
+      o.put(IOSCapabilities.SIMULATOR, false);
+      o.put(IOSCapabilities.DEVICE, session.getCapabilities().getDevice());
+      o.put(IOSCapabilities.VARIATION, session.getCapabilities().getDeviceVariation());
+      r.setValue(o);
+      session.setCapabilityCachedResponse(r);
     }
   }
 
@@ -209,7 +282,7 @@ public class RemoteIOSWebDriver {
   }
 
   public void switchTo(WebkitPage page) {
-    log.warning("connecting to "+page.asJSON());
+    log.warning("connecting to " + page.asJSON());
     currentInspector = connect(page);
     inspectors.put(page.getPageId(), currentInspector);
     log.fine("pageId=" + page.getPageId());
@@ -262,7 +335,7 @@ public class RemoteIOSWebDriver {
   public String getTitle() {
     return currentInspector.getTitle();
   }
-  
+
   public int getCurrentPageID() {
     return currentInspector.getPageIdentifier();
   }
@@ -296,6 +369,7 @@ public class RemoteIOSWebDriver {
   }
 
   public void quit() {
+    stop();
     //To change body of implemented methods use File | Settings | File Templates.
   }
 

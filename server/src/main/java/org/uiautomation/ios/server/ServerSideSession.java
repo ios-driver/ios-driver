@@ -24,7 +24,6 @@ import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.application.AppleLanguage;
-import org.uiautomation.ios.server.application.AppleLocale;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
@@ -156,14 +155,14 @@ public class ServerSideSession extends Session {
       if (!server.getHostInfo().getInstalledSDKs().contains(version)) {
         throw new SessionNotCreatedException(
             "Cannot start on version " + version + ".Installed: "
-                + server.getHostInfo().getInstalledSDKs());
+            + server.getHostInfo().getInstalledSDKs());
       }
     }
     if (capabilities.getDeviceVariation() == null) {
       // use a variation that matches the SDK, Regular wouldn't work for iOS 7
       String sdkVersion = capabilities.getSDKVersion();
       capabilities.setDeviceVariation(DeviceVariation.getCompatibleVersion(
-              capabilities.getDevice(), sdkVersion));
+          capabilities.getDevice(), sdkVersion));
     }
   }
 
@@ -270,7 +269,7 @@ public class ServerSideSession extends Session {
     return decorated;
   }
 
-  public void setDecorated(boolean dec){
+  public void setDecorated(boolean dec) {
     decorated = dec;
   }
 }

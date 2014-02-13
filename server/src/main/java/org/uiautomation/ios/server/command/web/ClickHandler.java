@@ -21,6 +21,7 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
 import org.uiautomation.ios.server.command.uiautomation.SetImplicitWaitTimeoutNHandler;
+import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
 import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
 import org.uiautomation.ios.wkrdp.model.RemoteWebNativeBackedElement;
 
@@ -37,6 +38,9 @@ public class ClickHandler extends BaseWebCommandHandler {
 
     boolean useNativeEvents = (Boolean) getConfiguration("nativeEvents");
 
+    if (RemoteIOSWebDriver.TMP){
+      useNativeEvents = false;
+    }
     if (useNativeEvents && (element instanceof RemoteWebNativeBackedElement)) {
       ((RemoteWebNativeBackedElement) element).nativeClick();
       // native tapping in a webview delays triggering the event for 300ms (because iOS is looking to see if it's a gesture)

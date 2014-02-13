@@ -16,40 +16,34 @@ package org.uiautomation.ios.server;
 
 import com.google.common.collect.ImmutableList;
 
-import org.libimobiledevice.ios.driver.binding.DeviceDetectionCallback;
-import org.libimobiledevice.ios.driver.binding.DeviceInfo;
+import org.libimobiledevice.ios.driver.binding.ApplicationInfo;
+import org.libimobiledevice.ios.driver.binding.exceptions.LibImobileException;
+import org.libimobiledevice.ios.driver.binding.exceptions.SDKException;
+import org.libimobiledevice.ios.driver.binding.model.DeviceInfo;
+import org.libimobiledevice.ios.driver.binding.services.DeviceCallBack;
+import org.libimobiledevice.ios.driver.binding.services.DeviceService;
+import org.libimobiledevice.ios.driver.binding.services.IOSDevice;
+import org.libimobiledevice.ios.driver.binding.services.InstallerService;
+import org.uiautomation.ios.server.application.IPAShellApplication;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
-public class DeviceStore implements DeviceDetectionCallback {
+public class DeviceStore extends DeviceCallBack {
 
   private static final Logger log = Logger.getLogger(DeviceStore.class.getName());
   private final List<RealDevice> reals = new CopyOnWriteArrayList<RealDevice>();
   private final List<SimulatorDevice> sims = new CopyOnWriteArrayList<SimulatorDevice>();
+  private final ApplicationStore apps;
 
-
-  @Override
-  public void onAdded(String uuid) {
-    DeviceInfo info = new DeviceInfo(uuid);
-    RealDevice d = new RealDevice(info);
-    log.info("new device detected (" + uuid + ")" + info.getDeviceName());
-    reals.add(d);
+  public DeviceStore(
+      ApplicationStore apps) {
+    super();
+    this.apps = apps;
   }
 
-  @Override
-  public void onRemoved(String uuid) {
-    for (RealDevice d : reals) {
-      if (d.getUuid().equals(uuid)) {
-        log.info("Removing " + uuid + " for the devices pool");
-        reals.remove(d);
-
-      }
-    }
-    log.warning("device " + uuid + " has been unplugged, but was never there ?");
-  }
 
   /**
    * @return immutable copy of the currently available devices.
@@ -75,4 +69,39 @@ public class DeviceStore implements DeviceDetectionCallback {
   }
 
 
+  @Override
+  protected void onDeviceAdded(String uuid) {
+    try {
+      IOSDevice device = DeviceService.get(uuid);
+      DeviceInfo info = new DeviceInfo(uuid);
+      RealDevice d = new RealDevice(info);
+      log.info("new device detected (" + uuid + ")" + info.getDeviceName());
+      reals.add(d);
+      InstallerService s = new InstallerService(device);
+      String id = "com.apple.mobilesafari";
+      ApplicationInfo safari = s.getApplication(id);
+      String v = (String) safari.getProperty("CFBundleVersion");
+      log.info("device " + info.getDeviceName() + " = safari " + v);
+
+      IPAShellApplication ipa = new IPAShellApplication(id, v);
+      apps.add(ipa);
+
+    } catch (SDKException e) {
+      e.printStackTrace();
+    } catch (LibImobileException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Override
+  protected void onDeviceRemoved(String uuid) {
+    for (RealDevice d : reals) {
+      if (d.getUuid().equals(uuid)) {
+        log.info("Removing " + uuid + " for the devices pool");
+        reals.remove(d);
+
+      }
+    }
+    log.warning("device " + uuid + " has been unplugged, but was never there ?");
+  }
 }

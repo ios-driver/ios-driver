@@ -15,8 +15,11 @@
 package org.uiautomation.ios.server.simulator;
 
 import org.libimobiledevice.ios.driver.binding.ApplicationInfo;
-import org.libimobiledevice.ios.driver.binding.IMobileDeviceFactory;
-import org.libimobiledevice.ios.driver.binding.IOSDevice;
+import org.libimobiledevice.ios.driver.binding.LibImobileDeviceWrapperFactory;
+import org.libimobiledevice.ios.driver.binding.exceptions.LibImobileException;
+import org.libimobiledevice.ios.driver.binding.exceptions.SDKException;
+import org.libimobiledevice.ios.driver.binding.services.DeviceService;
+import org.libimobiledevice.ios.driver.binding.services.IOSDevice;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
@@ -35,9 +38,9 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
   //private final RealDevice device;
   private final IOSCapabilities capabilities;
   private final IPAApplication app;
+  private IOSDevice device;
   //private final DeviceInstallerService service;
-  private IMobileDeviceFactory factory = IMobileDeviceFactory.INSTANCE;
-  private final IOSDevice device;
+  private LibImobileDeviceWrapperFactory factory = LibImobileDeviceWrapperFactory.INSTANCE;
   private final String bundleId;
   private final List<String> keysToConsiderInThePlistToHaveEquality;
 
@@ -47,7 +50,13 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
    * @param app          the app that will be ran.
    */
   public IOSRealDeviceManager(IOSCapabilities capabilities, RealDevice device, IPAApplication app) {
-    this.device = factory.get(device.getUuid());
+    try {
+      this.device = DeviceService.get(device.getUuid());
+    } catch (SDKException e) {
+      e.printStackTrace();
+    } catch (LibImobileException e) {
+      e.printStackTrace();
+    }
     bundleId = capabilities.getBundleId();
     this.capabilities = capabilities;
     this.app = app;

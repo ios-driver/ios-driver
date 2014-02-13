@@ -105,11 +105,17 @@ public class WebKitNotificationListener implements MessageListener {
           // TODO there can be more than one 'new' UIWebView, picking the first one for now.
           WebkitPage newOne = m.getPages().get(0);
 
-          int index =
-              driver.getPages().size() == 0 ? 0
-                                            :
-              session.getDualDriver().getRemoteWebDriver().getWindowHandleIndex()
-              + 1;
+          boolean debug = true;
+          int index;
+          if (debug == true){
+            index = 0;
+          }else {
+            index =
+                driver.getPages().size() == 0 ? 0
+                                              :
+                session.getDualDriver().getRemoteWebDriver().getWindowHandleIndex()
+                + 1;
+          }
           pages.add(index, newOne);
 
           driver.setPages(pages);

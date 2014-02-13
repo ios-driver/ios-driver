@@ -18,6 +18,7 @@ import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.server.Device;
 import org.uiautomation.ios.server.RealDevice;
 import org.uiautomation.ios.server.ServerSideSession;
+import org.uiautomation.ios.server.instruments.NoOpInstruments;
 import org.uiautomation.ios.server.simulator.InstrumentsApple;
 import org.uiautomation.ios.server.simulator.InstrumentsLibImobile;
 
@@ -34,13 +35,14 @@ public class InstrumentsFactory {
     List<String> envtParams = caps.getExtraSwitches();
 
     if (device instanceof RealDevice) {
-      RealDevice d = (RealDevice) device;
-      return
-          new InstrumentsLibImobile(d.getUuid(),
-                                    session.getOptions().getPort(),
-                                    session.getApplication().getDotAppAbsolutePath(),
-                                    session.getSessionId(),
-                                    session.getApplication().getBundleId());
+//      RealDevice d = (RealDevice) device;
+      return new NoOpInstruments();
+//      return null;
+//          new InstrumentsLibImobile(d.getUuid(),
+//                                    session.getOptions().getPort(),
+//                                    session.getApplication().getDotAppAbsolutePath(),
+//                                    session.getSessionId(),
+//                                    session.getApplication().getBundleId());
 
 
     } else {

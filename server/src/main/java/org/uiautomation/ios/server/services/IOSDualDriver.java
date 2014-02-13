@@ -111,7 +111,9 @@ public class IOSDualDriver {
       String sdkVersion = session.getCapabilities().getSDKVersion();
       IOSVersion version = new IOSVersion(sdkVersion);
       if (sdkVersion != null && version.isGreaterOrEqualTo("7.0")) {
+        if (!RemoteIOSWebDriver.TMP){
         forceWebViewToReloadManually(3);
+        }
       }
     }
   }
@@ -185,6 +187,9 @@ public class IOSDualDriver {
   }
 
   private void checkWebModeIsAvailable() {
+    if (session.getApplication().isSafari()){
+      return;
+    }
     if (webDriver != null) {
       return;
     } else {

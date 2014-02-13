@@ -193,9 +193,15 @@ public class IOSServer {
     server.setHandler(handlers);
   }
 
+  public static File getTmpIOSFolder(){
+    File f =  new File(System.getProperty("user.home") + "/.ios-driver/");
+    f.mkdirs();
+    return f;
+  }
+
   // TODO freynaud - if xcode change, the safari copy should be wiped out.
   private APPIOSApplication copyOfSafari(File xcodeInstall, String sdk) {
-    File copy = new File(System.getProperty("user.home") + "/.ios-driver/safariCopies", "safari-" + sdk + ".app");
+    File copy = new File(getTmpIOSFolder().getAbsolutePath(),"safariCopies/safari-" + sdk + ".app");
     if (!copy.exists()) {
       File safariFolder = APPIOSApplication.findSafariLocation(xcodeInstall, sdk);
       copy.mkdirs();
