@@ -16,6 +16,7 @@ package org.uiautomation.ios;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -85,6 +86,7 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   // TODO: make a parameter?
   public static final int COMMAND_TIMEOUT_MILLIS = 10 * 60 * 1000; // 10 minutes
+  public static final String START_SCRIPT = "startScript";
 
   // private final Map<String, Object> raw = new HashMap<String, Object>();
 
@@ -313,6 +315,10 @@ public class IOSCapabilities extends DesiredCapabilities {
         return DeviceType.valueOf(capability);
       }
     });
+  }
+
+  public List<String> getStartScript() {
+    return getList(START_SCRIPT);
   }
 
   public void setSupportedLanguages(List<String> supportedLanguages) {

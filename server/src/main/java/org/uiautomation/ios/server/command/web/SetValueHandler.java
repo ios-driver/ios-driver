@@ -20,6 +20,7 @@ import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.BaseWebCommandHandler;
+import org.uiautomation.ios.server.instruments.NoOpInstruments;
 import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
 import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
 import org.uiautomation.ios.wkrdp.model.RemoteWebNativeBackedElement;
@@ -52,7 +53,7 @@ public class SetValueHandler extends BaseWebCommandHandler {
 
     boolean useNativeEvents = (Boolean) getConfiguration("nativeEvents");
 
-    if (RemoteIOSWebDriver.TMP) {
+    if (getNativeDriver().getInstruments() instanceof NoOpInstruments){
       useNativeEvents = false;
     }
 

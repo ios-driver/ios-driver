@@ -15,17 +15,33 @@
 package org.uiautomation.ios.server.instruments;
 
 import org.openqa.selenium.remote.Response;
+import org.uiautomation.ios.IOSCapabilities;
+import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
 import org.uiautomation.ios.server.services.Instruments;
 import org.uiautomation.ios.server.services.TakeScreenshotService;
 import org.uiautomation.ios.server.simulator.InstrumentsFailedToStartException;
+import org.uiautomation.ios.utils.Command;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class NoOpInstruments implements Instruments {
 
+  private final IOSCapabilities caps;
+
+  public NoOpInstruments(IOSCapabilities caps) {
+    this.caps = caps;
+  }
+
   @Override
   public void start() throws InstrumentsFailedToStartException {
-    System.out.println("launch safari here ");
+      List<String> safariStartingScript = caps.getStartScript();
+      if (safariStartingScript!=null){
+        Command c = new Command(safariStartingScript,true);
+        c.executeAndWait();
+      }
   }
 
   @Override
