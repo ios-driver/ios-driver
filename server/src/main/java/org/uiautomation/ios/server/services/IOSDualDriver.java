@@ -15,7 +15,6 @@
 package org.uiautomation.ios.server.services;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.SessionNotCreatedException;
@@ -24,6 +23,7 @@ import org.openqa.selenium.WebElement;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.server.InstrumentsBackedNativeIOSDriver;
 import org.uiautomation.ios.server.ServerSideSession;
+import org.uiautomation.ios.server.instruments.NoOpInstruments;
 import org.uiautomation.ios.server.simulator.InstrumentsFailedToStartException;
 import org.uiautomation.ios.utils.IOSVersion;
 import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
@@ -111,8 +111,8 @@ public class IOSDualDriver {
       String sdkVersion = session.getCapabilities().getSDKVersion();
       IOSVersion version = new IOSVersion(sdkVersion);
       if (sdkVersion != null && version.isGreaterOrEqualTo("7.0")) {
-        if (!RemoteIOSWebDriver.TMP){
-        forceWebViewToReloadManually(3);
+        if (!(getNativeDriver().getInstruments() instanceof NoOpInstruments)) {
+          forceWebViewToReloadManually(3);
         }
       }
     }
@@ -141,7 +141,7 @@ public class IOSDualDriver {
 //        UIAButton go = getNativeDriver().findElement(c);
 //        go.click();
         ok = true;
-      } catch (WebDriverException e){
+      } catch (WebDriverException e) {
         sleep(2000); // allow some time to take effect
         // else keep trying as sometimes the click doesn't take effect on slow machines
         log.fine("about:blank button gone, proceeding");
@@ -187,7 +187,7 @@ public class IOSDualDriver {
   }
 
   private void checkWebModeIsAvailable() {
-    if (session.getApplication().isSafari()){
+    if (session.getApplication().isSafari()) {
       return;
     }
     if (webDriver != null) {

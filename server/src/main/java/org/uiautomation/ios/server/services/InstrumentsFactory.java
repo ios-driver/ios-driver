@@ -36,7 +36,7 @@ public class InstrumentsFactory {
 
     if (device instanceof RealDevice) {
 //      RealDevice d = (RealDevice) device;
-      return new NoOpInstruments();
+      return new NoOpInstruments(session.getCapabilities());
 //      return null;
 //          new InstrumentsLibImobile(d.getUuid(),
 //                                    session.getOptions().getPort(),
