@@ -178,7 +178,6 @@ public abstract class WebKitRemoteDebugProtocol {
         if (res == null) {
           System.err.println("GOT a null result from " + response.toString(2));
         }
-        System.err.println("RESPONDE for "+commandId + res);
         return res;
       }
     } catch (JSONException e) {

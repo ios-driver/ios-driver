@@ -23,7 +23,7 @@ import org.openqa.selenium.WebElement;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.server.InstrumentsBackedNativeIOSDriver;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.server.instruments.NoOpInstruments;
+import org.uiautomation.ios.server.instruments.NoInstrumentsImplementationAvailable;
 import org.uiautomation.ios.server.simulator.InstrumentsFailedToStartException;
 import org.uiautomation.ios.utils.IOSVersion;
 import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
@@ -111,7 +111,7 @@ public class IOSDualDriver {
       String sdkVersion = session.getCapabilities().getSDKVersion();
       IOSVersion version = new IOSVersion(sdkVersion);
       if (sdkVersion != null && version.isGreaterOrEqualTo("7.0")) {
-        if (!(getNativeDriver().getInstruments() instanceof NoOpInstruments)) {
+        if (!(getNativeDriver().getInstruments() instanceof NoInstrumentsImplementationAvailable)) {
           forceWebViewToReloadManually(3);
         }
       }

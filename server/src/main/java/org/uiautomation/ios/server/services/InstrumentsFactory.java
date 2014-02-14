@@ -18,11 +18,9 @@ import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.server.Device;
 import org.uiautomation.ios.server.RealDevice;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.server.instruments.NoOpInstruments;
+import org.uiautomation.ios.server.instruments.NoInstrumentsImplementationAvailable;
 import org.uiautomation.ios.server.simulator.InstrumentsApple;
-import org.uiautomation.ios.server.simulator.InstrumentsLibImobile;
 
-import java.io.File;
 import java.util.List;
 
 public class InstrumentsFactory {
@@ -36,14 +34,13 @@ public class InstrumentsFactory {
 
     if (device instanceof RealDevice) {
 //      RealDevice d = (RealDevice) device;
-      return new NoOpInstruments(session.getCapabilities());
+      return new NoInstrumentsImplementationAvailable(session.getCapabilities());
 //      return null;
 //          new InstrumentsLibImobile(d.getUuid(),
 //                                    session.getOptions().getPort(),
 //                                    session.getApplication().getDotAppAbsolutePath(),
 //                                    session.getSessionId(),
 //                                    session.getApplication().getBundleId());
-
 
     } else {
 
