@@ -14,27 +14,11 @@
 
 package org.uiautomation.ios.server.simulator;
 
-import com.dd.plist.NSDictionary;
-import com.dd.plist.NSString;
-import com.dd.plist.XMLPropertyListParser;
-
-
-import org.libimobiledevice.ios.driver.binding.services.DeviceService;
-import org.libimobiledevice.ios.driver.binding.services.InstrumentsService;
 import org.openqa.selenium.remote.Response;
-import org.uiautomation.ios.server.Device;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
-import org.uiautomation.ios.server.command.UIAScriptResponse;
 import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
-import org.uiautomation.ios.server.instruments.communication.multi.MultiInstrumentsBasedCommunicationChannel;
 import org.uiautomation.ios.server.services.Instruments;
 import org.uiautomation.ios.server.services.TakeScreenshotService;
-import org.uiautomation.ios.utils.ScriptHelper;
-import org.uiautomation.ios.wkrdp.MessageHandler;
-
-import java.util.logging.Logger;
-
-import static org.uiautomation.ios.server.instruments.communication.CommunicationMode.MULTI;
 
 public class InstrumentsLibImobile implements Instruments/*, MessageHandler*/ {
 

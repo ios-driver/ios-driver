@@ -277,6 +277,9 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   private List<String> getList(String key) {
     Object o = getCapability(key);
+    if (o == null){
+      return null;
+    }
     if (o instanceof List<?>) {
       return Lists.transform((List<?>) o, new Function<Object, String>() {
         @Override
