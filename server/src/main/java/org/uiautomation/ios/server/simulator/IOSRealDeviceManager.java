@@ -15,7 +15,6 @@
 package org.uiautomation.ios.server.simulator;
 
 import org.libimobiledevice.ios.driver.binding.model.ApplicationInfo;
-import org.libimobiledevice.ios.driver.binding.LibImobileDeviceWrapperFactory;
 import org.libimobiledevice.ios.driver.binding.exceptions.LibImobileException;
 import org.libimobiledevice.ios.driver.binding.exceptions.SDKException;
 import org.libimobiledevice.ios.driver.binding.services.DeviceService;
@@ -40,7 +39,6 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
   private final IPAApplication app;
   private IOSDevice device;
   //private final DeviceInstallerService service;
-  private LibImobileDeviceWrapperFactory factory = LibImobileDeviceWrapperFactory.INSTANCE;
   private final String bundleId;
   private final List<String> keysToConsiderInThePlistToHaveEquality;
 

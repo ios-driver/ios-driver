@@ -14,7 +14,6 @@
 
 package org.uiautomation.ios.server.instruments.communication.multi;
 
-import org.libimobiledevice.ios.driver.binding.services.InstrumentsService;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.command.UIAScriptResponse;
 import org.uiautomation.ios.server.instruments.communication.BaseCommunicationChannel;
@@ -31,13 +30,13 @@ public class MultiInstrumentsBasedCommunicationChannel extends BaseCommunication
       Logger.getLogger(MultiInstrumentsBasedCommunicationChannel.class.getName());
 
   private final String sessionId;
-  private final InstrumentsService instruments;
+ // private final InstrumentsService instruments;
 
-  public MultiInstrumentsBasedCommunicationChannel(int port, String aut, String sessionId,
-                                                   InstrumentsService instruments) {
+  public MultiInstrumentsBasedCommunicationChannel(int port, String aut, String sessionId
+                                                   /*InstrumentsService instruments*/) {
     super(sessionId);
     this.sessionId = sessionId;
-    this.instruments = instruments;
+   // this.instruments = instruments;
   }
 
   @Override

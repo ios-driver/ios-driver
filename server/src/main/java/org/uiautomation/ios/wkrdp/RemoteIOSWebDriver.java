@@ -18,7 +18,6 @@ import com.google.common.collect.ImmutableList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.libimobiledevice.ios.driver.binding.LibImobileDeviceWrapperFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.Dimension;
@@ -55,9 +54,6 @@ import java.util.logging.Logger;
 
 public class RemoteIOSWebDriver {
 
-  public static boolean TMP = true;
-
-  private LibImobileDeviceWrapperFactory factory = LibImobileDeviceWrapperFactory.INSTANCE;
 
   public static void main(String[] args) throws Exception {
     try {
