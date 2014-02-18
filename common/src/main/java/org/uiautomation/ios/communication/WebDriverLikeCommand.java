@@ -37,7 +37,7 @@ public enum WebDriverLikeCommand {
   GET_SESSION("GET", "/session/:sessionId", JSONObject.class),
   DELETE_SESSION("DELETE", "/session/:sessionId", null),
   SET_TIMEOUT("POST", "/session/:sessionId/timeouts", Void.class),
-  //POST /session/:sessionId/timeouts/async_script
+  SET_SCRIPT_TIMEOUT("POST", "/session/:sessionId/timeouts/async_script", Void.class),
   IMPLICIT_WAIT("POST", "/session/:sessionId/timeouts/implicit_wait", Void.class),
   GET_WINDOW_HANDLE("GET", "/session/:sessionId/window_handle", String.class),
   WINDOW_HANDLES("GET", "/session/:sessionId/window_handles", Set.class),
@@ -47,7 +47,7 @@ public enum WebDriverLikeCommand {
   BACK("POST", "/session/:sessionId/back", Void.class),
   REFRESH("POST", "/session/:sessionId/refresh", Void.class),
   EXECUTE_SCRIPT("POST", "/session/:sessionId/execute", Object.class),
-  // POST /session/:sessionId/execute_async
+  EXECUTE_ASYNC_SCRIPT("POST", "/session/:sessionId/execute_async", Object.class),
   SCREENSHOT("GET", "/session/:sessionId/screenshot", Void.class),
   //GET /session/:sessionId/ime/available_engines
   //GET /session/:sessionId/ime/active_engine

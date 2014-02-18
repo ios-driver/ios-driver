@@ -37,6 +37,7 @@ public enum CommandMapping {
   SESSIONS(GetSessionsNHandler.class),
   DELETE_SESSION(StopSessionNHandler.class),
   SET_TIMEOUT(SetTimeoutNHandler.class, SetTimeoutHandler.class),
+  SET_SCRIPT_TIMEOUT(SetScriptTimeoutNHandler.class, SetScriptTimeoutHandler.class),
   IMPLICIT_WAIT(SetImplicitWaitTimeoutNHandler.class, SetImplicitWaitTimeoutHandler.class),
   GET_TIMEOUT(GetTimeoutNHandler.class),
 
@@ -56,6 +57,7 @@ public enum CommandMapping {
   SUBMIT(NotImplementedNativeHandler.class, SubmitHandler.class),
   TAG_NAME(".type()", DefaultUIAScriptNHandler.class, GetTagNameHandler.class),
   EXECUTE_SCRIPT(ExecuteScriptNHandler.class, ExecuteScriptHandler.class),
+  EXECUTE_ASYNC_SCRIPT(ExecuteAsyncScriptNHandler.class, ExecuteAsyncScriptHandler.class),
   EQUAL(NotImplementedNativeHandler.class, IsEqualHandler.class),
   SOURCE(LogElementTreeNHandler.class, GetPageSourceHandler.class),
   TREE(LogElementTreeNHandler.class),

@@ -25,6 +25,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
+import org.uiautomation.ios.server.command.uiautomation.SetScriptTimeoutNHandler;
 import org.uiautomation.ios.server.DOMContext;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.wkrdp.ConnectListener;
@@ -250,57 +251,43 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
   public Object executeScript(String script, JSONArray args) {
 
     try {
-      RemoteWebElement document = getDocument();
-      RemoteWebElement window = context.getWindow();
-      JSONObject cmd = new JSONObject();
-
-      JSONArray arguments = new JSONArray();
-      int nbParam = args.length();
-      for (int i = 0; i < nbParam; i++) {
-        Object arg = args.get(i);
-        if (arg instanceof JSONObject) {
-          JSONObject jsonArg = (JSONObject) arg;
-          if (jsonArg.optString("ELEMENT") != null) {
-            // TODO use driver factory to check the  pageId
-            NodeId n = new NodeId(Integer.parseInt(jsonArg.optString("ELEMENT").split("_")[1]));
-            RemoteWebElement rwep = new RemoteWebElement(n, this);
-            arguments.put(new JSONObject().put("objectId", rwep.getRemoteObject().getId()));
-          }
-        } else if (arg instanceof JSONArray) {
-          JSONArray jsonArr = (JSONArray) arg;
-          // maybe by executing some JS returning the array, and using that result
-          // as a param ?
-          throw new WebDriverException("no support argument = array.");
-        } else {
-          arguments.put(new JSONObject().put("value", arg));
-        }
-
-      }
-
-      if (!context.isOnMainFrame()) {
-        arguments.put(new JSONObject().put("objectId", document.getRemoteObject().getId()));
-        arguments.put(new JSONObject().put("objectId", window.getRemoteObject().getId()));
-
-        String contextObject = "{'document': arguments[" + nbParam + "], 'window': arguments[" + (nbParam + 1) + "]}";
-        script = "with (" + contextObject + ") {" + script + "}";
-
-      }
-
-      cmd.put("method", "Runtime.callFunctionOn");
-      cmd.put(
-          "params",
-          new JSONObject().put("objectId", document.getRemoteObject().getId())
-              .put("functionDeclaration", "(function() { " + script + "})")
-              .put("arguments", arguments)
-              .put("returnByValue", false));
-      JSONObject response = sendCommand(cmd);
-      checkForJSErrors(response);
+      JSONArray arguments = processScriptArguments(args);
+      JSONObject response = getScriptResponse(script, arguments);
       Object o = cast(response);
       return o;
     } catch (JSONException e) {
       throw new WebDriverException(e);
     }
 
+  }
+
+  public JSONObject getScriptResponse(String script) throws JSONException {
+    return getScriptResponse(script, new JSONArray());
+  }
+
+  public JSONObject getScriptResponse(String script, JSONArray arguments) throws JSONException {
+    RemoteWebElement document = getDocument();
+
+    if (!context.isOnMainFrame()) {
+      arguments.put(new JSONObject().put("objectId", document.getRemoteObject().getId()));
+      arguments.put(new JSONObject().put("objectId", context.getWindow().getRemoteObject().getId()));
+
+      String contextObject = "{'document': arguments[" + arguments.length() + "], 'window': arguments[" + (arguments.length() + 1) + "]}";
+      script = "with (" + contextObject + ") {" + script + "}";
+
+    }
+
+    JSONObject cmd = new JSONObject();
+    cmd.put("method", "Runtime.callFunctionOn");
+    cmd.put(
+        "params",
+        new JSONObject().put("objectId", document.getRemoteObject().getId())
+            .put("functionDeclaration", "(function() { " + script + "})")
+            .put("arguments", arguments)
+            .put("returnByValue", false));
+    JSONObject response = sendCommand(cmd);
+    checkForJSErrors(response);
+    return response;
   }
 
   public void checkForJSErrors(JSONObject response) throws JSONException {
@@ -311,7 +298,34 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
     }
   }
 
-  public <T> T cast(JSONObject response) {
+  public JSONArray processScriptArguments(JSONArray args) throws JSONException {
+    JSONArray arguments = new JSONArray();
+    int nbParam = args.length();
+    for (int i = 0; i < nbParam; i++) {
+      Object arg = args.get(i);
+      if (arg instanceof JSONObject) {
+        JSONObject jsonArg = (JSONObject) arg;
+        if (jsonArg.optString("ELEMENT") != null) {
+          // TODO use driver factory to check the  pageId
+          NodeId n = new NodeId(Integer.parseInt(jsonArg.optString("ELEMENT").split("_")[1]));
+          RemoteWebElement rwep = new RemoteWebElement(n, this);
+          arguments.put(new JSONObject().put("objectId", rwep.getRemoteObject().getId()));
+        }
+      } else if (arg instanceof JSONArray) {
+        JSONArray jsonArr = (JSONArray) arg;
+        JSONObject array = getScriptResponse("return " + jsonArr.toString() + ";");
+
+        arguments.put(new JSONObject().put("objectId", getResponseBody(array).getString("objectId")));
+      } else {
+        arguments.put(new JSONObject().put("value", arg));
+      }
+
+    }
+
+    return arguments;
+  }
+
+  public JSONObject getResponseBody(JSONObject response) {
     JSONObject body = null;
     try {
       body = response.has("result") ? response.getJSONObject("result")
@@ -323,6 +337,12 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
     if (body == null) {
       throw new RuntimeException("Error parsting " + response);
     }
+
+    return body;
+  }
+
+  public <T> T cast(JSONObject response) {
+    JSONObject body = getResponseBody(response);
 
     try {
       return cast_(body);
@@ -385,8 +405,61 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
   }
 
 
-  public Object executeAsyncScript(String script, Object... args) {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+  public Object executeAsyncScript(String script, JSONArray args) {
+    try {
+
+      // These are arrays so they can be passed back and forth as references with objectIds
+      // The relevant information is always going to be on index 0
+      String resultReadyObjectId = getResponseBody(getScriptResponse("return [];")).getString("objectId");
+      String resultObjectId = getResponseBody(getScriptResponse("return [];")).getString("objectId");
+
+      JSONArray arguments = processScriptArguments(args);
+      Boolean realResultFound = false;
+      Object realResult = null;
+      long whenToTimeout = System.currentTimeMillis() + SetScriptTimeoutNHandler.TIMEOUT;
+
+      JSONObject callbackFunction = getScriptResponse(
+        "var async_results = arguments[0]," +
+        "    async_results_ready = arguments[1];" +
+        "return function(result) {" +
+        " async_results_ready[0] = true;" +
+        " async_results[0] = result;" +
+        "};",
+      new JSONArray()
+        .put(new JSONObject().put("objectId", resultObjectId))
+        .put(new JSONObject().put("objectId", resultReadyObjectId)));
+
+      arguments.put(new JSONObject().put("objectId", getResponseBody(callbackFunction).getString("objectId")));
+      getScriptResponse(script, arguments);
+
+      while (!realResultFound) {
+        Thread.sleep(10);
+
+        realResultFound = (Boolean) cast(getScriptResponse(
+          "return !! arguments[0][0];",
+          new JSONArray().put(new JSONObject().put("objectId", resultReadyObjectId))
+        ));
+
+        if (realResultFound) {
+          realResult = cast(getScriptResponse(
+            "return arguments[0][0];",
+            new JSONArray().put(new JSONObject().put("objectId", resultObjectId))
+          ));
+        } else {
+          if (System.currentTimeMillis() > whenToTimeout) {
+            throw new TimeoutException("Timeout waiting for async script callback.");
+          }
+        }
+      }
+
+      return realResult;
+    } catch (JSONException e) {
+      throw new WebDriverException(e);
+    } catch (TimeoutException e) {
+      throw new WebDriverException(e);
+    } catch (InterruptedException e) {
+      throw new WebDriverException(e);
+    }
   }
 
   public int getInnerWidth() throws JSONException {
