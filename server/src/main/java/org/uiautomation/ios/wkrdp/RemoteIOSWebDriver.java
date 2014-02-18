@@ -364,7 +364,6 @@ public class RemoteIOSWebDriver {
   }
 
   public void quit() {
-    stop();
     //To change body of implemented methods use File | Settings | File Templates.
   }
 

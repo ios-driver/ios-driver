@@ -419,15 +419,15 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
       long whenToTimeout = System.currentTimeMillis() + SetScriptTimeoutNHandler.TIMEOUT;
 
       JSONObject callbackFunction = getScriptResponse(
-        "var async_results = arguments[0]," +
-        "    async_results_ready = arguments[1];" +
-        "return function(result) {" +
-        " async_results_ready[0] = true;" +
-        " async_results[0] = result;" +
-        "};",
-      new JSONArray()
-        .put(new JSONObject().put("objectId", resultObjectId))
-        .put(new JSONObject().put("objectId", resultReadyObjectId)));
+          "var async_results = arguments[0]," +
+          "    async_results_ready = arguments[1];" +
+          "return function(result) {" +
+          " async_results_ready[0] = true;" +
+          " async_results[0] = result;" +
+          "};",
+          new JSONArray()
+              .put(new JSONObject().put("objectId", resultObjectId))
+              .put(new JSONObject().put("objectId", resultReadyObjectId)));
 
       arguments.put(new JSONObject().put("objectId", getResponseBody(callbackFunction).getString("objectId")));
       getScriptResponse(script, arguments);
@@ -436,14 +436,14 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
         Thread.sleep(10);
 
         realResultFound = (Boolean) cast(getScriptResponse(
-          "return !! arguments[0][0];",
-          new JSONArray().put(new JSONObject().put("objectId", resultReadyObjectId))
+            "return !! arguments[0][0];",
+            new JSONArray().put(new JSONObject().put("objectId", resultReadyObjectId))
         ));
 
         if (realResultFound) {
           realResult = cast(getScriptResponse(
-            "return arguments[0][0];",
-            new JSONArray().put(new JSONObject().put("objectId", resultObjectId))
+              "return arguments[0][0];",
+              new JSONArray().put(new JSONObject().put("objectId", resultObjectId))
           ));
         } else {
           if (System.currentTimeMillis() > whenToTimeout) {
