@@ -197,7 +197,7 @@ public class ClassicCommands {
     c.add(String.format("%d", pid));
 
     Command com = new Command(c, false);
-    com.executeAndWait();
+    com.executeAndWait(true);
   }
 
 
