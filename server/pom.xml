@@ -193,7 +193,7 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
-                    <finalName>ios-server-${project.version}-${maven.build.timestamp}</finalName>
+                    <finalName>ios-server-standalone-${project.version}-${maven.build.timestamp}</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                 </configuration>
             </plugin>
