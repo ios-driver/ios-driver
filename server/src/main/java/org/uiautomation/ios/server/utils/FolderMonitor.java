@@ -54,7 +54,7 @@ public class FolderMonitor implements Runnable {
           StandardWatchEventKinds.ENTRY_DELETE);
     } catch (NoSuchFileException e) {
       stop();
-      log.warning("invalid location: " + iosServerConfiguration.getAppFolderToMonitor());
+      log.warning("invalid location: " + new File(iosServerConfiguration.getAppFolderToMonitor()).getAbsolutePath());
     }
   }
 
@@ -128,7 +128,7 @@ public class FolderMonitor implements Runnable {
     try {
       ZipUtils.unzip(file, new File(iosServerConfiguration.getAppFolderToMonitor()));
     } catch (IOException e) {
-      log.warning("Problem unzipping " + file.getName() + ", " + e.toString());
+      log.warning("Problem unzipping " + file.getAbsolutePath() + ", " + e.toString());
     }
   }
 
@@ -166,7 +166,10 @@ public class FolderMonitor implements Runnable {
       stopped = true;
     }
     try {
-      thread.join();
+      if (thread != null) {
+        thread.join();
+        thread = null;
+      }
     } catch (InterruptedException e) {
       e.printStackTrace();
     }

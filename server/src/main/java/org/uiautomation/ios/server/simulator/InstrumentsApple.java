@@ -268,14 +268,16 @@ public class InstrumentsApple implements Instruments {
     } catch (IOException e) {
       log.log(Level.SEVERE,
               "----------------------------------------------------------------------------");
-      log.log(Level.SEVERE, "couldn't delete MobileSafari app install dir: " + e.getMessage(), e);
-      log.log(Level.SEVERE,
-              "make sure ios-driver has read/write permissions to that folder by executing those 2 commands:"
-              +
-              "\nsudo chmod a+rw " + safariFolder.getParentFile().getAbsolutePath() +
-              "\nsudo chmod -R a+rw " + safariFolder.getAbsolutePath());
+      StringBuilder sb = new StringBuilder();
+      sb.append("couldn't delete MobileSafari app install dir: " + e.getMessage());
+      sb.append("\nmake sure ios-driver has read/write permissions to that folder by executing those 2 commands:");
+      sb.append("\n\t$ sudo chmod a+rw " + safariFolder.getParentFile().getAbsolutePath());
+      sb.append("\n\t$ sudo chmod -R a+rw " + safariFolder.getAbsolutePath());
+      String em = sb.toString();
+      log.log(Level.SEVERE, em, e);
       log.log(Level.SEVERE,
               "----------------------------------------------------------------------------");
+      throw new WebDriverException(em);
     }
 
     return true;
