@@ -65,6 +65,7 @@ public class InstrumentsApple implements Instruments {
   private final String desiredSDKVersion;
   private final File safariFolder;
   private final ServerSideSession session;
+  private long instrumentsPid = -1;
 
   public InstrumentsApple(String uuid, InstrumentsVersion version, int port, String sessionId,
                           IOSRunningApplication application,
@@ -137,11 +138,18 @@ public class InstrumentsApple implements Instruments {
     boolean success = false;
     try {
       instruments.start();
+      // for the no delay instruments, the command launches a script that in turn launches instruments.
+      // need to keep the pid of intruments itself to be able to kill it.
+
+      // let the process spawn
+      Thread.sleep(2000);
+      instrumentsPid = ClassicCommands.getHighestPidForName("instruments");
 
       log.fine("waiting for registration request");
       success = channel.waitForUIScriptToBeStarted(timeout);
       log.fine("registration request received" + session.getCachedCapabilityResponse());
       if (!success) {
+        log.warning("instruments crashed (" + timeout + " sec)".toUpperCase());
         throw new InstrumentsFailedToStartException(
             "Didn't get the capability back.Most likely, instruments crashed at startup.");
       }
@@ -162,10 +170,7 @@ public class InstrumentsApple implements Instruments {
   public void stop() {
     deviceManager.cleanupDevice();
     instruments.forceStop();
-    long pid = InstrumentsNoDelayLoader.getInstance(version).getPid(sessionId);
-    ClassicCommands.kill(pid);
-
-    ClassicCommands.killall("instruments");
+    ClassicCommands.kill(instrumentsPid);
     channel.stop();
     putMobileSafariAppBackInInstallDir();
   }
@@ -212,7 +217,7 @@ public class InstrumentsApple implements Instruments {
   }
 
   private String getInstrumentsClient() {
-    return InstrumentsNoDelayLoader.getInstance(version).getInstruments(sessionId).getAbsolutePath();
+    return InstrumentsNoDelayLoader.getInstance(version).getInstruments().getAbsolutePath();
   }
 
   @Override
@@ -268,16 +273,14 @@ public class InstrumentsApple implements Instruments {
     } catch (IOException e) {
       log.log(Level.SEVERE,
               "----------------------------------------------------------------------------");
-      StringBuilder sb = new StringBuilder();
-      sb.append("couldn't delete MobileSafari app install dir: " + e.getMessage());
-      sb.append("\nmake sure ios-driver has read/write permissions to that folder by executing those 2 commands:");
-      sb.append("\n\t$ sudo chmod a+rw " + safariFolder.getParentFile().getAbsolutePath());
-      sb.append("\n\t$ sudo chmod -R a+rw " + safariFolder.getAbsolutePath());
-      String em = sb.toString();
-      log.log(Level.SEVERE, em, e);
+      log.log(Level.SEVERE, "couldn't delete MobileSafari app install dir: " + e.getMessage(), e);
+      log.log(Level.SEVERE,
+              "make sure ios-driver has read/write permissions to that folder by executing those 2 commands:"
+              +
+              "\nsudo chmod a+rw " + safariFolder.getParentFile().getAbsolutePath() +
+              "\nsudo chmod -R a+rw " + safariFolder.getAbsolutePath());
       log.log(Level.SEVERE,
               "----------------------------------------------------------------------------");
-      throw new WebDriverException(em);
     }
 
     return true;

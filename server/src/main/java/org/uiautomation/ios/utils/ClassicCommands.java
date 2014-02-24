@@ -18,14 +18,12 @@ import org.uiautomation.ios.server.instruments.InstrumentsVersion;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
 public class ClassicCommands {
 
-  public static void main(String[] args) {
-    System.out.println(getSimulatorProductVersion("7.0"));
-  }
 
   static final Logger log = Logger.getLogger(ClassicCommands.class.getName());
 
@@ -162,6 +160,33 @@ public class ClassicCommands {
     return l.getProductVersion();
   }
 
+  public static long getHighestPidForName(String processName) {
+    List<String> c = new ArrayList<>();
+    c.add("pgrep");
+    c.add(processName);
+    Command com = new Command(c, false);
+    final List<Integer> res = new ArrayList<>();
+    com.registerListener(new CommandOutputListener() {
+      @Override
+      public void stdout(String log) {
+        res.add(Integer.parseInt(log));
+      }
+
+      @Override
+      public void stderr(String log) {
+
+      }
+    });
+    com.executeAndWait(true);
+
+    if (res.size() == 0) {
+      return -1;
+    }
+    Collections.sort(res);
+    return res.get(0);
+  }
+
+
   public static void kill(long pid) {
     if (pid <= 0) {
       return;
@@ -174,6 +199,11 @@ public class ClassicCommands {
     Command com = new Command(c, false);
     com.executeAndWait();
   }
+
+
+ 
+
+
 }
 
 class SimulatorProductVersionParser implements CommandOutputListener {

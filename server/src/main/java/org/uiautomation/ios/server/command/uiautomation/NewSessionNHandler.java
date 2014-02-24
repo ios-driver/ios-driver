@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 public final class NewSessionNHandler extends BaseNativeCommandHandler {
 
   private static final Logger log = Logger.getLogger(NewSessionNHandler.class.getName());
-  private static final long TIMEOUT_SEC = 30;
+  private static final long TIMEOUT_SEC = 20;
   private static final long MAX_RETRIES = 3;
 
 
