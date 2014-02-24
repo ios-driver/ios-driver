@@ -34,7 +34,7 @@ public class NoInstrumentsImplementationAvailable implements Instruments {
   }
 
   @Override
-  public void start() throws InstrumentsFailedToStartException {
+  public void start(long timeOut) throws InstrumentsFailedToStartException {
       List<String> safariStartingScript = caps.getStartScript();
       if (safariStartingScript!=null){
         Command c = new Command(safariStartingScript,true);

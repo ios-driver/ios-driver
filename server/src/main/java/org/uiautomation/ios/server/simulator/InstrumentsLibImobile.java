@@ -22,8 +22,9 @@ import org.uiautomation.ios.server.services.TakeScreenshotService;
 
 public class InstrumentsLibImobile implements Instruments/*, MessageHandler*/ {
 
+
   @Override
-  public void start() throws InstrumentsFailedToStartException {
+  public void start(long timeOut) throws InstrumentsFailedToStartException {
 
   }
 
