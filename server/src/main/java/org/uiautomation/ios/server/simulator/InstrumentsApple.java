@@ -142,7 +142,6 @@ public class InstrumentsApple implements Instruments {
       success = channel.waitForUIScriptToBeStarted(timeout);
       log.fine("registration request received" + session.getCachedCapabilityResponse());
       if (!success) {
-        log.warning("instruments crashed ("+timeout+" sec)".toUpperCase());
         throw new InstrumentsFailedToStartException(
             "Didn't get the capability back.Most likely, instruments crashed at startup.");
       }
@@ -163,6 +162,10 @@ public class InstrumentsApple implements Instruments {
   public void stop() {
     deviceManager.cleanupDevice();
     instruments.forceStop();
+    long pid = InstrumentsNoDelayLoader.getInstance(version).getPid(sessionId);
+    ClassicCommands.kill(pid);
+
+    ClassicCommands.killall("instruments");
     channel.stop();
     putMobileSafariAppBackInInstallDir();
   }
@@ -209,7 +212,7 @@ public class InstrumentsApple implements Instruments {
   }
 
   private String getInstrumentsClient() {
-    return InstrumentsNoDelayLoader.getInstance(version).getInstruments().getAbsolutePath();
+    return InstrumentsNoDelayLoader.getInstance(version).getInstruments(sessionId).getAbsolutePath();
   }
 
   @Override

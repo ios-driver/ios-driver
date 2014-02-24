@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class ClassicCommands {
-    
+
   public static void main(String[] args) {
-    System.out.println(getSimulatorProductVersion("7.0"));  
+    System.out.println(getSimulatorProductVersion("7.0"));
   }
 
   static final Logger log = Logger.getLogger(ClassicCommands.class.getName());
@@ -62,8 +62,8 @@ public class ClassicCommands {
 
   public static boolean isRunning(String processName) {
     try {
-    return psgrep(processName).size() > 0;
-    }catch (Exception e){
+      return psgrep(processName).size() > 0;
+    } catch (Exception e) {
       e.printStackTrace();
       return false;
     }
@@ -125,7 +125,7 @@ public class ClassicCommands {
     }
     return f;
   }
-  
+
   private static List<String> installedSDKs;
 
   public synchronized static List<String> getInstalledSDKs() {
@@ -146,7 +146,7 @@ public class ClassicCommands {
     List<String> sdks = getInstalledSDKs();
     return sdks.get(sdks.size() - 1);
   }
-  
+
   /**
    * @return the simulator ProductVersion for the corresponding SDKVersion (i.e. "7.0.3" for "7.0")
    */
@@ -160,6 +160,19 @@ public class ClassicCommands {
     com.registerListener(l);
     com.executeAndWait();
     return l.getProductVersion();
+  }
+
+  public static void kill(long pid) {
+    if (pid <= 0) {
+      return;
+    }
+    List<String> c = new ArrayList<>();
+    c.add("kill");
+    c.add("-9");
+    c.add(String.format("%d", pid));
+
+    Command com = new Command(c, false);
+    com.executeAndWait();
   }
 }
 
@@ -183,8 +196,9 @@ class SimulatorProductVersionParser implements CommandOutputListener {
   }
 
   String getProductVersion() {
-    if (productVersion == null)
+    if (productVersion == null) {
       throw new WebDriverException("couldn't find simulator product version for " + sdkVersion);
+    }
     return productVersion;
   }
 
@@ -198,8 +212,9 @@ class SimulatorProductVersionParser implements CommandOutputListener {
     }
     if (inSdkVersion) {
       // ProductVersion: 7.0.3
-      if (line.startsWith("ProductVersion:"))
+      if (line.startsWith("ProductVersion:")) {
         productVersion = line.substring(16).trim();
+      }
     }
   }
 

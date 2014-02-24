@@ -18,8 +18,11 @@ import org.apache.commons.io.IOUtils;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.server.instruments.InstrumentsVersion;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -27,7 +30,6 @@ public class InstrumentsNoDelayLoader {
 
   private static InstrumentsNoDelayLoader instance;
   private InstrumentsVersion version;
-  private File executable;
   private File workingDirectory;
 
   private InstrumentsNoDelayLoader(InstrumentsVersion version) {
@@ -40,7 +42,8 @@ public class InstrumentsNoDelayLoader {
       throw new WebDriverException(
           "Cannot create dir to extract instruments stuff : " + workingDirectory);
     }
-    this.executable = extract(version);
+
+    extract(version);
   }
 
   public static synchronized InstrumentsNoDelayLoader getInstance(InstrumentsVersion version) {
@@ -67,7 +70,7 @@ public class InstrumentsNoDelayLoader {
   /**
    * extract the binaries for the specified version of instruments.
    */
-  private File extract(InstrumentsVersion version) {
+  private void extract(InstrumentsVersion version) {
     if (version.getBuild() == null) {
       throw new WebDriverException("you are running a version of XCode that is too old " + version);
     }
@@ -77,9 +80,7 @@ public class InstrumentsNoDelayLoader {
     extractFromJar("ScriptAgentShim.dylib");
     extractFromJar("SimShim.dylib");
     extractFromJar("README");
-    File instruments = new File(workingDirectory, "instruments");
-    instruments.setExecutable(true);
-    return instruments;
+
   }
 
   private File extractFromJar(String resource) {
@@ -103,7 +104,50 @@ public class InstrumentsNoDelayLoader {
     return f;
   }
 
-  public File getInstruments() {
-    return executable;
+
+  public File getInstruments(String sessionId) {
+    return getScript(sessionId);
+  }
+
+  public long getPid(String sessionId) {
+    File tmp = new File(System.getProperty("user.home") + "/.ios-driver/");
+    File pidFile = new File(tmp.getAbsolutePath(), sessionId + ".pid");
+
+    try {
+      FileReader reader = new FileReader(pidFile);
+      BufferedReader br = new BufferedReader(reader);
+      String s = br.readLine();
+      return Long.parseLong(s);
+    } catch (Exception e) {
+      return -1;
+    } finally {
+      if (pidFile.exists()) {
+        pidFile.delete();
+      }
+    }
+  }
+
+  private File getScript(String sessionId) {
+    File tmp = new File(System.getProperty("user.home") + "/.ios-driver/");
+    if (!tmp.exists()) {
+      tmp.mkdirs();
+    }
+    File instruments = new File(workingDirectory, "instruments_" + sessionId);
+    File pidFile = new File(tmp.getAbsolutePath(), sessionId + ".pid");
+    try {
+      FileWriter writer = new FileWriter(instruments);
+      writer.write("LIB_PATH=$(cd `dirname $0`; pwd)\n"
+                   + "XCODE_PATH=$(xcode-select --print-path)\n"
+                   + "\n"
+                   + "DYLD_INSERT_LIBRARIES=\"$LIB_PATH/InstrumentsShim.dylib\" \\\n"
+                   + "LIB_PATH=$LIB_PATH \\\n"
+                   + "\"$XCODE_PATH\"/usr/bin/instruments \"$@\" &\n"
+                   + "echo $! > " + pidFile.getAbsolutePath());
+      writer.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    instruments.setExecutable(true);
+    return instruments;
   }
 }
