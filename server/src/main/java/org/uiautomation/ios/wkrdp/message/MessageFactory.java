@@ -61,7 +61,7 @@ public class MessageFactory {
       Constructor<?> c = impl.getConstructor(argsClass);
       IOSMessage message = (IOSMessage) c.newInstance(args);
       if (log.isLoggable(Level.FINEST))
-        log.finest("Message: " + message);
+        log.warning("Message: " + message);
       return message;
     } catch (Exception e1) {
       e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.

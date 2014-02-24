@@ -21,7 +21,7 @@ import org.uiautomation.ios.server.command.UIAScriptResponse;
 // TODO freynaud should send Request and Response directly, not UIRequest UIResponse
 public interface CommunicationChannel {
 
-  boolean waitForUIScriptToBeStarted() throws InterruptedException;
+  boolean waitForUIScriptToBeStarted(long timeOut) throws InterruptedException;
 
   void registerUIAScript();
 

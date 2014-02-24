@@ -98,7 +98,7 @@ public class InstrumentsApple implements Instruments {
   }
 
   @Override
-  public void start() throws InstrumentsFailedToStartException {
+  public void start(long timeout) throws InstrumentsFailedToStartException {
     DeviceType deviceType = caps.getDevice();
     DeviceVariation variation = caps.getDeviceVariation();
     String locale = caps.getLocale();
@@ -139,10 +139,12 @@ public class InstrumentsApple implements Instruments {
       instruments.start();
 
       log.fine("waiting for registration request");
-      success = channel.waitForUIScriptToBeStarted();
+      success = channel.waitForUIScriptToBeStarted(timeout);
       log.fine("registration request received" + session.getCachedCapabilityResponse());
       if (!success) {
-        throw new InstrumentsFailedToStartException("Didn't get the capability back.");
+        log.warning("instruments crashed ("+timeout+" sec)".toUpperCase());
+        throw new InstrumentsFailedToStartException(
+            "Didn't get the capability back.Most likely, instruments crashed at startup.");
       }
     } catch (InterruptedException e) {
       throw new InstrumentsFailedToStartException("instruments was interrupted while starting.");

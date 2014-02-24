@@ -29,6 +29,9 @@ import java.util.logging.Logger;
 public final class NewSessionNHandler extends BaseNativeCommandHandler {
 
   private static final Logger log = Logger.getLogger(NewSessionNHandler.class.getName());
+  private static final long TIMEOUT_SEC = 30;
+  private static final long MAX_RETRIES = 3;
+
 
   public NewSessionNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -40,25 +43,19 @@ public final class NewSessionNHandler extends BaseNativeCommandHandler {
     try {
       JSONObject payload = getRequest().getPayload();
       IOSCapabilities cap = new IOSCapabilities(payload.getJSONObject("desiredCapabilities"));
-      try {
-        session = getServer().createSession(cap);
-        session.start();
-      } catch (InstrumentsFailedToStartException e) {
-        log.warning("Couldn't start instrument :" + e.getMessage());
+
+      long timeOut = TIMEOUT_SEC;
+      for (int i = 0; i < MAX_RETRIES; i++) {
+        session = safeStart(timeOut, cap);
+        timeOut = (i + 1) * TIMEOUT_SEC;
+
         if (session != null) {
-          session.stop();
+          break;
         }
-        session = getServer().createSession(cap);
-        session.start();
       }
 
-      if (session.hasCrashed()) {
-        log.warning("app has crashed :" + session.getCrashDetails());
-        if (session != null) {
-          session.stop();
-        }
-        session = getServer().createSession(cap);
-        session.start();
+      if (session == null) {
+        throw new SessionNotCreatedException("failed starting after " + MAX_RETRIES + "retries");
       }
 
       log.info("session started");
@@ -75,6 +72,31 @@ public final class NewSessionNHandler extends BaseNativeCommandHandler {
       }
       throw new SessionNotCreatedException(e.getMessage(), e);
     }
+  }
+
+
+  private ServerSideSession safeStart(long timeOut, IOSCapabilities cap)
+      throws InstrumentsFailedToStartException {
+    ServerSideSession session = null;
+    try {
+      session = getServer().createSession(cap);
+      session.start(timeOut);
+      return session;
+    } catch (InstrumentsFailedToStartException e) {
+      log.warning("Instruments failed to start in the allocated time ( " + timeOut + "sec):" + e
+          .getMessage());
+      if (session != null) {
+        session.stop();
+      }
+    }
+
+    if (session.hasCrashed()) {
+      log.warning("app has crashed at startup :" + session.getCrashDetails());
+      if (session != null) {
+        session.stop();
+      }
+    }
+    return null;
   }
 
   @Override

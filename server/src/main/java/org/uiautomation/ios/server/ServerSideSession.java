@@ -57,7 +57,6 @@ public class ServerSideSession extends Session {
   private Device device;
   private boolean sessionCrashed;
   private ApplicationCrashDetails applicationCrashDetails;
-  private java.net.URL URL;
   private final IOSLogManager logManager;
   private Response capabilityCachedResponse;
   private boolean decorated = false;
@@ -229,8 +228,8 @@ public class ServerSideSession extends Session {
     return driver;
   }
 
-  public void start() throws InstrumentsFailedToStartException {
-    driver.start();
+  public void start(long timeOut) throws InstrumentsFailedToStartException {
+    driver.start(timeOut);
   }
 
   public void stop() {

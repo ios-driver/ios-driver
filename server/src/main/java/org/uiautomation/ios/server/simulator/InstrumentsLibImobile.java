@@ -80,7 +80,7 @@ public class InstrumentsLibImobile implements Instruments, MessageHandler {
 
 
   @Override
-  public void start() throws InstrumentsFailedToStartException {
+  public void start(long timeOut) throws InstrumentsFailedToStartException {
 
     String script = new ScriptHelper().generateScriptContent(port, aut, sessionId, MULTI);
     //instruments.startApp(bundleId);
@@ -88,7 +88,7 @@ public class InstrumentsLibImobile implements Instruments, MessageHandler {
     instruments.executeScriptNonManaged(script);
     //System.out.println("started script ");
     try {
-      channel.waitForUIScriptToBeStarted();
+      channel.waitForUIScriptToBeStarted(timeOut);
       //System.out.println("script said hello");
     } catch (InterruptedException e) {
       throw new InstrumentsFailedToStartException("Error starting script " + e.getMessage(), e);

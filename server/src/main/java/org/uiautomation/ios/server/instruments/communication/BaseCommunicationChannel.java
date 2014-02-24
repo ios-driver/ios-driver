@@ -54,13 +54,13 @@ public abstract class BaseCommunicationChannel implements CommunicationChannel {
   }
 
   @Override
-  public final boolean waitForUIScriptToBeStarted() throws InterruptedException {
+  public final boolean waitForUIScriptToBeStarted(long timeOut) throws InterruptedException {
     try {
       lock.lock();
       if (ready) {
         return true;
       }
-      return condition.await(30, TimeUnit.SECONDS);
+      return condition.await(timeOut, TimeUnit.SECONDS);
     } finally {
       lock.unlock();
     }

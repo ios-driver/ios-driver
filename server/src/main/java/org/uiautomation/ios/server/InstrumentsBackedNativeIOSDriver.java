@@ -39,9 +39,9 @@ public class InstrumentsBackedNativeIOSDriver extends ServerSideNativeDriver {
     };
   }
 
-  public void start() throws InstrumentsFailedToStartException {
+  public void start(long timeOut) throws InstrumentsFailedToStartException {
     try {
-      instruments.start();
+      instruments.start(timeOut);
       Runtime.getRuntime().addShutdownHook(shutdownHook);
     } catch (InstrumentsFailedToStartException e) {
       stop();

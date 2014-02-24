@@ -21,7 +21,7 @@ import org.uiautomation.ios.server.simulator.InstrumentsFailedToStartException;
 
 public interface Instruments {
 
-  void start() throws InstrumentsFailedToStartException;
+  void start(long timeOut) throws InstrumentsFailedToStartException;
   void stop();
 
   Response executeCommand(UIAScriptRequest request);

@@ -80,7 +80,7 @@ public class IOSDualDriver {
     }
   }
 
-  public void start() throws InstrumentsFailedToStartException {
+  public void start(long timeOut) throws InstrumentsFailedToStartException {
     // force stop session if running for too long
     final int sessionTimeoutMillis = session.getOptions().getSessionTimeoutMillis();
 
@@ -102,7 +102,7 @@ public class IOSDualDriver {
       e.printStackTrace();
     }
     nativeDriver = new InstrumentsBackedNativeIOSDriver(url, session);
-    nativeDriver.start();
+    nativeDriver.start(timeOut);
 
     if (session.getApplication().isSafari()) {
       setMode(WorkingMode.Web);
