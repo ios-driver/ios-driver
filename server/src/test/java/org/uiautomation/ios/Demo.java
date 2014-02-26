@@ -42,7 +42,6 @@ public class Demo {
     String[] a = {"-port", "4445", "-host", "localhost",
                   "-aut", SampleApps.getUICatalogFile(),
                   "-aut", SampleApps.getUICatalogIpad(),
-                  "-simulators",
                   "-aut", "/Users/freynaud/eBay3.1_19.app"};
 
     IOSServerConfiguration config = IOSServerConfiguration.create(a);

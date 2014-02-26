@@ -13,7 +13,7 @@ import org.uiautomation.ios.server.IOSServerConfiguration;
 
 public abstract class BaseSeleniumTest {
 
-  private static final String[] args = {"-port", "4444", "-host", "localhost", /*"-beta",*/ "-simulators"};
+  private static final String[] args = {"-port", "4444", "-host", "localhost"};
   private static final IOSServerConfiguration config = IOSServerConfiguration.create(args);
   private static final String url = "http://" + config.getHost() + ":" + config.getPort() + "/wd/hub";
  

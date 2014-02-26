@@ -134,8 +134,12 @@ public class ClassicCommands {
       Command com = new Command(c, false);
       ShowSDKsParser l = new ShowSDKsParser();
       com.registerListener(l);
-      com.executeAndWait();
-      installedSDKs = l.getSDKs();
+      try {
+        com.executeAndWait();
+        installedSDKs = l.getSDKs();
+      } catch (Exception e) {
+        installedSDKs = new ArrayList<>();
+      }
     }
     return installedSDKs;
   }
@@ -199,9 +203,6 @@ public class ClassicCommands {
     Command com = new Command(c, false);
     com.executeAndWait(true);
   }
-
-
- 
 
 
 }

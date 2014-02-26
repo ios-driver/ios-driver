@@ -17,6 +17,8 @@ package org.uiautomation.ios.server;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 
+import org.uiautomation.ios.utils.ClassicCommands;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +37,6 @@ public class IOSServerConfiguration {
 
   @Parameter(description = "enable beta feature.Might be unstable.", names = "-beta")
   private boolean beta = false;
-
-  @Parameter(description = "enable simulators, this requires running on a Mac with Xcode and some configuration prerequisites [see the wiki for more details]", names = "-simulators")
-  private boolean simulators = false;
 
   @Parameter(description = "port the server will listen on.", names = "-port")
   private int port = 5555;
@@ -62,22 +61,25 @@ public class IOSServerConfiguration {
   private List<String> supportedApps = new ArrayList<String>();
 
   @Parameter(
-      description = "location of a folder to monitor where applications will be stored. Absolute path expected. " +
-          "Any apps in the folder on launch will be automatically added to the desired capabilities. " +
+      description =
+          "location of a folder to monitor where applications will be stored. Absolute path expected. "
+          +
+          "Any apps in the folder on launch will be automatically added to the desired capabilities. "
+          +
           "Real device archived apps will also be backed up to this location, by default it will use the running folder /applications",
       names = {"-folder"}, required = false)
   private String appFolderToMonitor = null;
-  
+
   @Parameter(
       description = "maximum session duration in seconds. Session will be forcefully terminated if it takes longer.",
       names = "-sessionTimeout")
   private int sessionTimeoutSeconds = 30 * 60; // 30 minutes
-  
+
   @Parameter(
       description = "location of the TrustStore.sqlite3 to use for the simulator.",
       names = "-trustStore")
   private String trustStore = null;
-  
+
   public String getRegistrationURL() {
     return registrationURL;
   }
@@ -131,24 +133,27 @@ public class IOSServerConfiguration {
     this.beta = beta;
   }
 
-  public boolean hasSimulators(){
-    return simulators;
+  public boolean hasSimulators() {
+    if (!"Mac OS X".equals(System.getProperty("os.name"))) {
+      return false;
+    }
+    if (ClassicCommands.getInstalledSDKs().size() == 0) {
+      return false;
+    }
+    return true;
   }
 
-  public void setSimulators(boolean simulators){
-    this.simulators = simulators;
-  }
 
   public String getAppFolderToMonitor() {
-    if (appFolderToMonitor ==  null){
+    if (appFolderToMonitor == null) {
       File folder = new File("applications");
       appFolderToMonitor = folder.getAbsolutePath();
     }
     return appFolderToMonitor;
   }
-  
+
   public int getSessionTimeoutMillis() {
-	return sessionTimeoutSeconds * 1000;
+    return sessionTimeoutSeconds * 1000;
   }
 
   public String getProxy() {
@@ -158,7 +163,7 @@ public class IOSServerConfiguration {
   public void setProxy(String proxy) {
     this.proxy = proxy;
   }
-  
+
   public String getTrustStore() {
     return trustStore;
   }
