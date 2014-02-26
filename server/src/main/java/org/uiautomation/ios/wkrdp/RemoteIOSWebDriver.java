@@ -45,6 +45,7 @@ import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
 import org.uiautomation.ios.wkrdp.model.RemoteWebNativeBackedElement;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -246,10 +247,10 @@ public class RemoteIOSWebDriver {
         protocol.connect(bundleId);
         sync.waitForSimToSendPages();
         log.fine("bundleId=" + bundleId);
-        switchTo(getPages().get(0));
+        switchTo(Collections.max(getPages()));
         if (getPages().size() > 1) {
           log.warning("Application started, but already have " + getPages().size()
-                      + " webviews. Connecting to the first one.");
+                      + " webviews. Connecting to the one with highest page id.");
         }
         return;
       }

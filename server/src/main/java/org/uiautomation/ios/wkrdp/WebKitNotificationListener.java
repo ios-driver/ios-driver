@@ -27,6 +27,7 @@ import org.uiautomation.ios.wkrdp.message.WebkitApplication;
 import org.uiautomation.ios.wkrdp.message.WebkitPage;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -102,21 +103,10 @@ public class WebKitNotificationListener implements MessageListener {
           if (m.getPages().size() == 0) {
             throw new WebDriverException(m.getPages().size() + " new pages.");
           }
-          // TODO there can be more than one 'new' UIWebView, picking the first one for now.
-          WebkitPage newOne = m.getPages().get(0);
 
-          boolean debug = true;
-          int index;
-          if (debug == true){
-            index = 0;
-          }else {
-            index =
-                driver.getPages().size() == 0 ? 0
-                                              :
-                session.getDualDriver().getRemoteWebDriver().getWindowHandleIndex()
-                + 1;
-          }
-          pages.add(index, newOne);
+          // TODO there can be more than one 'new' UIWebView, picking the max one for now.
+          WebkitPage newOne = Collections.max(m.getPages());
+          pages.addAll(m.getPages());
 
           driver.setPages(pages);
 
