@@ -59,12 +59,10 @@ public final class NewSessionNHandler extends BaseNativeCommandHandler {
             "failed starting after " + MAX_RETRIES + "retries.Final wait was " + timeOut);
       }
 
-      log.info("session started");
       Response resp = new Response();
       resp.setSessionId(session.getSessionId());
       resp.setStatus(0);
       resp.setValue("");
-      log.info("returning " + resp);
       return resp;
     } catch (Exception e) {
       e.printStackTrace();

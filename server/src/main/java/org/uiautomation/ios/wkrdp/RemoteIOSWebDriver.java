@@ -278,7 +278,6 @@ public class RemoteIOSWebDriver {
   }
 
   public void switchTo(WebkitPage page) {
-    log.warning("connecting to " + page.asJSON());
     currentInspector = connect(page);
     inspectors.put(page.getPageId(), currentInspector);
     log.fine("pageId=" + page.getPageId());
