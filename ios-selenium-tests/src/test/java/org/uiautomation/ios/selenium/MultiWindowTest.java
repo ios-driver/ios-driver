@@ -18,11 +18,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.uiautomation.ios.UIAModels.UIAElement;
-import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
-import org.uiautomation.ios.UIAModels.predicate.Criteria;
-import org.uiautomation.ios.UIAModels.predicate.LocationCriteria;
-import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 
 public class MultiWindowTest extends BaseSeleniumTest {
 

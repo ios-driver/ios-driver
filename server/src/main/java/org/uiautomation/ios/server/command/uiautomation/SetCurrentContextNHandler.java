@@ -16,7 +16,10 @@ package org.uiautomation.ios.server.command.uiautomation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchWindowException;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.communication.Path;
@@ -25,7 +28,10 @@ import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.CommandMapping;
 import org.uiautomation.ios.server.IOSServerManager;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
-import org.uiautomation.ios.server.services.IOSDualDriver;
+import org.uiautomation.ios.utils.IOSVersion;
+import org.uiautomation.ios.wkrdp.message.WebkitPage;
+
+import java.util.List;
 
 public class SetCurrentContextNHandler extends BaseNativeCommandHandler {
 
@@ -58,15 +64,49 @@ public class SetCurrentContextNHandler extends BaseNativeCommandHandler {
         int delta = getWebDriver().getWindowHandleIndexDifference(pageId);
         if (delta != 0) {
           if (getSession().getApplication().isSafari()) {
-            getNativeDriver().executeScript(
-                "new SafariPageNavigator().enter().goToWebView(" + delta + ");");
+            String sdk = getSession().getCapabilities().getSDKVersion();
+            String version = new IOSVersion(sdk).getMajor();
+
+            switch (version) {
+              case "6":
+                getNativeDriver().executeScript(
+                    "new SafariPageNavigator().enter().goToWebView(" + delta + ");");
+                break;
+              case "7":
+                List<WebkitPage> pages = getWebDriver().getPages();
+
+                WebkitPage desired = null;
+                for (WebkitPage page : pages) {
+                  if (pageId.equals(String.format("%d", page.getPageId()))) {
+                    desired = page;
+                    break;
+                  }
+                }
+                if (desired == null) {
+                  throw new WebDriverException("unknown pageId:" + pageId);
+                }
+                String title = desired.getTitle();
+                By locator = By.xpath("//UIAStaticText[@name='" + title + "']");
+                getNativeDriver().executeScript(
+                    "new SafariPageNavigator().enter();");
+
+                WebElement element = getNativeDriver().findElement(locator);
+                try {
+                  getIOSDualDriver().setMode(WorkingMode.Native);
+                  element.click();
+                } finally {
+                  getIOSDualDriver().setMode(WorkingMode.Web);
+                }
+                break;
+              default:
+                throw new WebDriverException("Cannot switch pages on version " + version);
+            }
           } else {
             // TODO?
           }
         }
         getWebDriver().switchTo(pageId);
       }
-
     }
     // Set the current implicit wait timeout, if one has been set.
     // This is to persist the implicit wait timeout after switching to webview and back.
@@ -94,6 +134,7 @@ public class SetCurrentContextNHandler extends BaseNativeCommandHandler {
     resp.setValue(new JSONObject());
     return resp;
   }
+
 
   @Override
   public JSONObject configurationDescription() throws JSONException {
