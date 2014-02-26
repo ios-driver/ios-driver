@@ -55,7 +55,8 @@ public final class NewSessionNHandler extends BaseNativeCommandHandler {
       }
 
       if (session == null) {
-        throw new SessionNotCreatedException("failed starting after " + MAX_RETRIES + "retries");
+        throw new SessionNotCreatedException(
+            "failed starting after " + MAX_RETRIES + "retries.Final wait was " + timeOut);
       }
 
       log.info("session started");
