@@ -41,7 +41,7 @@ import java.net.URL;
 public class MockGenerator {
 
   public static void main_tree(String[] args) throws Exception {
-    String[] param = {"-port", "4444", "-host", "localhost", "-simulators"};
+    String[] param = {"-port", "4444", "-host", "localhost"};
     IOSServerConfiguration config = IOSServerConfiguration.create(param);
     IOSServer server = new IOSServer(config);
     server.start();
@@ -65,7 +65,7 @@ public class MockGenerator {
   }
 
   public static void main(String[] args) throws Exception {
-    String[] param = {"-port", "4444", "-host", "localhost", "-simulators"};
+    String[] param = {"-port", "4444", "-host", "localhost"};
     IOSServerConfiguration config = IOSServerConfiguration.create(param);
     IOSServer server = new IOSServer(config);
     server.start();

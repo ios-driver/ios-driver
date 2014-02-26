@@ -45,7 +45,7 @@ public class CrashHandling {
   @BeforeMethod
   public void startServer() throws Exception {
     String[] args = {"-port", "4444", "-host", "localhost",
-                     "-app", SampleApps.getPPNQASampleApp(), "-simulators"};
+                     "-app", SampleApps.getPPNQASampleApp()};
     config = IOSServerConfiguration.create(args);
 
     server = new IOSServer(config);

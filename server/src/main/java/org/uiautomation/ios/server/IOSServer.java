@@ -116,7 +116,7 @@ public class IOSServer {
 
     StringBuilder b = new StringBuilder();
     b.append(String.format("\nBeta features enabled (enabled by -beta flag): %b", Configuration.BETA_FEATURE));
-    b.append(String.format("\nSimulator enabled (enabled by -simulators flag): %b", Configuration.SIMULATORS_ENABLED));
+    b.append(String.format("\nSimulator enabled : %b", Configuration.SIMULATORS_ENABLED));
     b.append(String.format("\nInspector: http://0.0.0.0:%d/inspector/", options.getPort()));
     b.append(String.format("\nTests can access the server at http://0.0.0.0:%d/wd/hub", options.getPort()));
     b.append(String.format("\nServer status: http://0.0.0.0:%d/wd/hub/status", options.getPort()));
