@@ -34,7 +34,7 @@ import static org.junit.Assert.assertTrue;
  */
 
 
-@Test(enabled = false,groups = "broken on xcode5.0")
+
 //http://stackoverflow.com/questions/18792965/uiautomations-draginsidewithoptions-has-no-effect-on-ios7-simulator
 public class TouchFlickTest extends BaseSeleniumTest {
 
@@ -55,7 +55,7 @@ public class TouchFlickTest extends BaseSeleniumTest {
   }
 
   @NeedsFreshDriver
-  @Test
+  @Test(enabled = false,groups = "broken on xcode5.0")
   public void testCanFlickHorizontallyFromWebElement() {
     driver.get(pages.longContentPage);
 
@@ -74,7 +74,7 @@ public class TouchFlickTest extends BaseSeleniumTest {
   }
 
   @NeedsFreshDriver
-  @Test
+  @Test(enabled = false,groups = "broken on xcode5.0")
   public void testCanFlickHorizontallyFastFromWebElement() {
     driver.get(pages.longContentPage);
 
@@ -92,7 +92,7 @@ public class TouchFlickTest extends BaseSeleniumTest {
   }
 
   @NeedsFreshDriver
-  @Test
+  @Test(enabled = false,groups = "broken on xcode5.0")
   public void testCanFlickHorizontally() {
     driver.get(pages.clicksPage);
     driver.get(pages.longContentPage);
@@ -109,7 +109,7 @@ public class TouchFlickTest extends BaseSeleniumTest {
   }
 
   @NeedsFreshDriver
-  @Test
+  @Test(enabled = false,groups = "broken on xcode5.0")
   public void testCanFlickHorizontallyFast() {
     driver.get(pages.longContentPage);
 
@@ -125,7 +125,7 @@ public class TouchFlickTest extends BaseSeleniumTest {
   }
 
   @NeedsFreshDriver
-  @Test
+  @Test(enabled = false,groups = "broken on xcode5.0")
   public void testCanFlickVerticallyFromWebElement() {
     driver.get(pages.longContentPage);
 
@@ -143,7 +143,7 @@ public class TouchFlickTest extends BaseSeleniumTest {
   }
 
   @NeedsFreshDriver
-  @Test
+  @Test(enabled = false,groups = "broken on xcode5.0")
   public void testCanFlickVerticallyFastFromWebElement() {
     driver.get(pages.longContentPage);
 
@@ -161,7 +161,7 @@ public class TouchFlickTest extends BaseSeleniumTest {
   }
 
   @NeedsFreshDriver
-  @Test
+  @Test(enabled = false,groups = "broken on xcode5.0")
   public void testCanFlickVertically() {
     driver.get(pages.longContentPage);
 
@@ -178,7 +178,7 @@ public class TouchFlickTest extends BaseSeleniumTest {
   }
 
   @NeedsFreshDriver
-  @Test
+  @Test(enabled = false,groups = "broken on xcode5.0")
   public void testCanFlickVerticallyFast() {
     driver.get(pages.longContentPage);
 
