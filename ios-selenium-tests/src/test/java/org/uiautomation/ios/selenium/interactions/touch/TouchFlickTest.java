@@ -32,6 +32,10 @@ import static org.junit.Assert.assertTrue;
 /**
  * Tests the basic flick operations on touch enabled devices.
  */
+
+
+@Test(enabled = false,groups = "broken on xcode5.0")
+//http://stackoverflow.com/questions/18792965/uiautomations-draginsidewithoptions-has-no-effect-on-ios7-simulator
 public class TouchFlickTest extends BaseSeleniumTest {
 
   // Flick speed is measured in pixels per second.  What constitutes "normal" versus "fast" is entirely up to the
