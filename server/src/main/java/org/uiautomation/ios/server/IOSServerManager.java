@@ -28,13 +28,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.LogManager;
 
 
 public class IOSServerManager {
 
   public final ApplicationStore apps;
-  private final List<ServerSideSession> sessions = new ArrayList<>();
+  private final List<ServerSideSession> sessions = new CopyOnWriteArrayList<>();
   private final HostInfo hostInfo;
   private final ResourceCache cache = new ResourceCache();
   private final IOSServerConfiguration options;
