@@ -91,7 +91,7 @@
         - it's a proven, stable API that is about to become a W3C standard
         - it decouples the remote implementation from the local client. Selenium already comes with
         Java,
-        C#, Python, Ruby clients. You can reuse whichever one your confortable and focus on the
+        C#, Python, Ruby clients. You can reuse whichever one your comfortable and focus on the
         business
         logic of your tests instead of having to learn a new API.
 
@@ -99,17 +99,29 @@
 
         <p>ios-driver is built upon 2 different frameworks from Apple. </p>
 
-        <p>For <b>native apps</b>, it uses the UIAutomation framework from Apple.<a
-                href="http://developer.apple.com/library/ios/#documentation/DeveloperTools/Reference/UIAutomationRef/_index.html">doc</a>You
+        <p>For <b>native apps</b>, it uses the UIAutomation framework from Apple<a
+                href="http://developer.apple.com/library/ios/#documentation/DeveloperTools/Reference/UIAutomationRef/_index.html"> (more here).</a> You
             need xcode with an IOS SDK &gt; 5.0.
             To check :</p>
 
 <pre><code>$ xcodebuild -showsdks
 </code></pre>
 
-        <p>it should return something like :</p>
+        <p>After running the above command it will return something like: </p>
 
 <pre><code>Mac OS X SDKs:
+    OS X SDKs:
+    OS X 10.8                     	-sdk macosx10.8
+    OS X 10.9                     	-sdk macosx10.9
+
+    iOS SDKs:
+    iOS 7.0                       	-sdk iphoneos7.0
+
+    iOS Simulator SDKs:
+    Simulator - iOS 7.0           	-sdk iphonesimulator7.0
+
+
+    <!--
     Mac OS X 10.6 -sdk macosx10.6
     Mac OS X 10.7 -sdk macosx10.7
 
@@ -122,6 +134,7 @@
     Simulator - iOS 5.1 -sdk iphonesimulator5.1
     Simulator - iOS 6.0 -sdk iphonesimulator6.0
     Simulator - iOS 6.1 -sdk iphonesimulator6.1
+    -->
 </code></pre>
 
         <p>If you have iOS 5.0 or above in the Simulator SDKs, the UIAutomation part of
@@ -144,68 +157,75 @@
 
 <h3 id="testapp">Getting a test application</h3>
 
-<p>( for the doc example, I'll use the apple app <a
-        href="http://developer.apple.com/library/ios/#samplecode/InternationalMountains/Introduction/Intro.html">InternationalMountains</a>
-    You need to attach an app that will work with UIAutomation.
-    You can use xcodebuild command line ( from you CI for instance ) or use the xcode UI.
+<p>We use an example application <a href="http://developer.apple.com/library/ios/#samplecode/InternationalMountains/Introduction/Intro.html">InternationalMountains</a>  from Apple in this documentation.
+    You can also use any other app that will work with UIAutomation.
+    You can use xCodebuild command line (from you CI for instance) or use the xCode UI to generate the .app file.
 </p>
 
 <p>With the UI :
-    from the menu bar, Product &gt; Profile</p>
+    from the Menu bar choose <strong>Product &gt; Profile</strong></p>
+    <img src="images/xcode1.png">
+    <img src="images/xcode2.png">
 
-<p>Select Automation. That will build the app and start Instruments. You can close
+<p>Select Automation. That will build the app and start Instruments. After the build is complete, you can close
     Instruments.
-    From xcode, select Organizer &gt; Projects
+    From xcode, select <strong>Window &gt; Organizer and then Projects</strong>.<br>
+   <p> <img src="images/xcode3.png"></p>
+
+
     You will have the application in the folder mentioned in Derived data.
     It will be a folder that looks like :
     ~/Library/Developer/Xcode/DerivedData/InternationalMountains-cjnsqcubuvgivjgopgboswocznce/</p>
 
-<p>from there navigate to /Build/Products/Debug-iphonesimulator
-    and take you application. ( YourAppName.app )</p>
+<p>From there navigate to /Build/Products/Debug-iphonesimulator or /Build/Products/Release-iphonesimulator
+    and take copy of the .app file to a more convenient location (i.e. ~/Documents/build/myapp.app)</p>
 
-<p>Save it in a more convenient path, for instance ~/Documents/build/myapp.app</p>
 
 <h3 id="launching">Launching ios-driver</h3>
 
 <p>Download ios-server-<span class="version"></span>.jar</p>
+    <p>Download the current version of the ios-server <a href="https://github.com/ios-driver/ios-driver/releases/download/0.6.5/ios-server-0.6.5-jar-with-dependencies.jar"> here.</a></p>
 
-<p>Before the first run you will need to update the MobileSafari Info.plist to allow ios-driver to edit it</p>
+<p>Before the first run you will need to update the MobileSafari Info.plist to allow ios-driver to edit it:</p>
     <pre  class="prettyprint">
         sudo chmod 666 /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator*.sdk/Applications/MobileSafari.app/Info.plist
     </pre>
 
-<p>cd to the folder where you downloaded the jar, and run </p>
+<p>Go to the folder where you downloaded the jar, and run the following command:  </p>
 
-<pre><code>$ java -jar ios-server-xxx.jar -aut ~/Documents/build/myapp.app -port
-    4444
+<pre><code>$ java -jar ios-server-0.6.5-jar-with-dependencies.jar -aut ~/Documents/build/myapp.app -port
+    4444 -simulators
 </code></pre>
 
         <p>You should see in the following log of the terminal :</p>
 
 <pre>
 
-43:49:493 INFO IOSServer.init
-server status: http://0.0.0.0:4444/inspector/
+Beta features enabled ( enabled by -beta flag ): false
+Simulator enabled ( enabled by -simulators flag): true
+Inspector: http://0.0.0.0:4444/inspector/
 tests can access the server at http://0.0.0.0:4444/wd/hub
 server status: http://0.0.0.0:4444/wd/hub/status
-using xcode install : /Applications/Xcode46-DP2.app
-using IOS version 6.1
+Connected devices: http://0.0.0.0:4444/wd/hub/devices/all
+Applications: http://0.0.0.0:4444/wd/hub/applications/all
+Capabilities: http://0.0.0.0:4444/wd/hub/capabilities/all
+Monitoring '/Users/mpalotas/Downloads/applications' for new applications
+Archived apps /Users/mpalotas/Downloads/applications
+using xcode install : /Applications/Xcode.app
+using IOS version 7.0
 ios >= 6.0. Safari and hybrid apps are supported.
 
 Applications :
 ---------------
-	CFBundleName=Geocoder,CFBundleVersion=1.2
 	CFBundleName=InternationalMountains,CFBundleVersion=1.1
-	CFBundleName=Safari,CFBundleVersion=8536.25
-	CFBundleName=UICatalog,CFBundleVersion=2.10
-	CFBundleName=UICatalog,CFBundleVersion=2.10
-	CFBundleName=Safari,CFBundleVersion=8536.25
+	CFBundleName=Safari,CFBundleVersion=9537.53
 
-2013-01-29 20:43:49.506:INFO::jetty-7.2.0.v20101020
-2013-01-29 20:43:49.568:INFO::Started SelectChannelConnector@0.0.0.0:4444
+2014-03-05 15:47:30.136:INFO::jetty-7.x.y-SNAPSHOT
+2014-03-05 15:47:30.242:INFO::Started SelectChannelConnector@0.0.0.0:4444
+
 </pre>
 
-        <p>check that the application is recognized by opening a browser and navigating to :
+        <p>Check that the application is recognized by opening a browser and navigating to :
             http://localhost:4444/wd/hub/status</p>
 
         <p>You should see a json object with all the info about the app.</p>
@@ -214,26 +234,26 @@ Applications :
 
 
 <pre><code>
-
-
-{
+    {
     "class": "org.openqa.selenium.remote.Response",
-    "hCode": 228832089,
-    "sessionId": "3dcc2e66-ebf8-4e96-8579-82f06c6b2b61",
+    "hCode": 960985732,
+    "sessionId": null,
+    "state": null,
     "status": 0,
     "value": {
-        "build": {
-            "revision": "b0e9250cafe9870fc3b0a0224cb6e8d242aa1374",
-            "time": "20130129-1201",
-            "version": "X.Y.0"
-        },
-    "ios": {"simulatorVersion": "6.1"},
-    "java": {"version": "1.6.0_37"},
-    "os": {
-        "arch": "x86_64",
-        "name": "Mac OS X",
-        "version": "10.8.1"
+    "build": {
+    "revision": "120cf4311807e2e137e519f4c4877cf6340d0cbc",
+    "time": "20130927-1435",
+    "version": "0.6.5"
     },
+    "ios": {"simulatorVersion": "7.0"},
+    "java": {"version": "1.7.0_25"},
+    "os": {
+    "arch": "x86_64",
+    "name": "Mac OS X",
+    "version": "10.9.1"
+    },
+    "state": "success",
     "supportedApps": [
     {
     "CFBundleDevelopmentRegion": "en",
@@ -247,21 +267,31 @@ Applications :
     "CFBundleSupportedPlatforms": ["iPhoneSimulator"],
     "CFBundleVersion": "1.1",
     "DTPlatformName": "iphonesimulator",
-    "DTSDKName": "iphonesimulator5.1",
+    "DTSDKName": "iphonesimulator7.0",
     "LSRequiresIPhoneOS": true,
     "NSMainNibFile": "MainWindow",
     "UIDeviceFamily": [1],
-    "applicationPath": "/Users/freynaud/build/InternationalMountains.app",
-    "resources": {"CFBundleIconFile": "/wd/hub/resources/hash=-674408620"},
-    "sdkVersion": "6.1",
-    "simulator": true,
-    "supportedDevices": ["iphone"],
-    "supportedLanguages": [
-        "zh",
-        "fr",
-        "en"
+    "applicationPath": "/Users/mpalotas/Downloads/InternationalMountains.app",
+    "device": "iphone",
+    "deviceAlt": [
+    "iphone",
+    "ipod"
     ],
-}
+    "device_Alt": [
+    "iphone",
+    "ipad"
+    ],
+    "resources": {"CFBundleIconFile": "/wd/hub/resources/hash=-674408620"},
+    "sdkVersion": "7.0",
+    "sdkVersion_Alt": [
+    "5.0",
+    "5.1",
+    "6.0",
+    "6.1"
+    ],
+    ...
+    ...
+    ...
 
 
 </code></pre>
@@ -269,7 +299,7 @@ Applications :
 <h3 id="cli">Command line parameters</h3>
 
 <h4>-beta</h4>
-<p>Enables beta functionality, this is funcationality which is still under development and may not work in all instances. Currently a lot of the beta functionality is centered around real device support.</p>
+<p>Enables beta functionality, this is functionality which is still under development and may not work in all instances. Currently a lot of the beta functionality is centered around real device support.</p>
 
 <h4>-host</h4>
 <p>IP of the node, this needs to be specified as guessing the correct IP can lead to problems - it's complicated by the host machine possibly having multiple addresses.</p>
@@ -292,14 +322,22 @@ Applications :
 <h4>-proxy</h4>
 <p>specify a custom remote proxy to use with ios-driver nodes, see <a href='./scale.html'>Scale</a>  for more details.</p>
 
+<h4>-simulators</h4>
+<p>this flag nust be enabled at the moment when the server is started up</p>
+
 <h4>-sessionTimeout</h4>
 <p>Specify the maximum session timeout [seconds], the default is 1800 seconds [30 minutes].</p>
 
 
+<!--
 <h3>Configuring the system to support multiple SDK for the simulator</h3>
         doc todo.
+-->
 
 <h3 id="real">Real Devices</h3>
+<p>Real device support is in beta at the moment. The current release does not support real devices, but we expect this to be enabled very very soon</p>
+
+<!--
 <p>In order to run tests on real devices you need to enable beta functionality by specifying -beta when you launch ios-driver.</p>
 
 <p>When you connect a device the server will output something like:</p>
@@ -322,7 +360,7 @@ com.apple.mobilesafari on iphone(Simulator)
 { "CFBundleDevelopmentRegion": "English", "CFBundleDisplayName": "Safari", "CFBundleExecutable": "MobileSafari", "CFBundleIcons": {"CFBundlePrimaryIcon": { "CFBundleIconFiles": [ "icon~iphone.png", "icon~ipad.png", "icon@2x~iphone.png", "icon@2x~ipad.png", "icon-table.png", "icon-table@2x.png", "icon-spotlight~ipad.png", "icon-spotlight@2x~ipad.png" ], "UIPrenderedIcon": true }}, "CFBundleIdentifier": "com.apple.mobilesafari", "CFBundleInfoDictionaryVersion": "6.0", "CFBundlePackageType": "APPL", "CFBundleShortVersionString": "6.0", "CFBundleSignature": "????", "CFBundleSupportedPlatforms": ["iPhoneSimulator"], "CFBundleURLTypes~ipad": [ { "CFBundleURLIsPrivate": true, "CFBundleURLName": "Web App URL", "CFBundleURLSchemes": ["webclip"] }, { "CFBundleURLName": "Web site URL", "CFBundleURLSchemes": [ "http", "https" ] }, { "CFBundleURLName": "FTP URL", "CFBundleURLSchemes": ["ftp"] }, { "CFBundleURLName": "Web Search URL", "CFBundleURLSchemes": ["x-web-search"] } ], "CFBundleURLTypes~iphone": [ { "CFBundleURLIsPrivate": true, "CFBundleURLName": "Web App URL", "CFBundleURLSchemes": ["webclip"] }, { "CFBundleURLName": "Web site URL", "CFBundleURLSchemes": [ "http", "https" ] }, { "CFBundleURLName": "Radar URL", "CFBundleURLSchemes": [ "rdar", "radar" ] }, { "CFBundleURLName": "FTP URL", "CFBundleURLSchemes": ["ftp"] }, { "CFBundleURLName": "Web Search URL", "CFBundleURLSchemes": ["x-web-search"] } ], "CFBundleURLTypes~ipod": [ { "CFBundleURLIsPrivate": true, "CFBundleURLName": "Web App URL", "CFBundleURLSchemes": ["webclip"] }, { "CFBundleURLName": "Web site URL", "CFBundleURLSchemes": [ "http", "https" ] }, { "CFBundleURLName": "Radar URL", "CFBundleURLSchemes": [ "rdar", "radar" ] }, { "CFBundleURLName": "FTP URL", "CFBundleURLSchemes": ["ftp"] }, { "CFBundleURLName": "Web Search URL", "CFBundleURLSchemes": ["x-web-search"] } ], "CFBundleVersion": "8536.25", "DTPlatformName": "iphonesimulator", "DTSDKName": "iphonesimulator6.1", "LSRequiresIPhoneOS": true, "SBMatchingApplicationGenres": [ "Productivity", "Utilities" ], "SBUsesNetwork": 3, "SafariProductVersion": "6.0", "UIApplicationDisableLegacyAutorotationKey": true, "UIBackgroundModes": [ "audio", "continuousFallback" ], "UIDeviceFamily": [ 2, 1 ], "UIHasPrefs": true, "UISupportedInterfaceOrientations": [ "UIInterfaceOrientationPortrait", "UIInterfaceOrientationLandscapeLeft", "UIInterfaceOrientationLandscapeRight" ], "UISupportedInterfaceOrientations~ipad": [ "UIInterfaceOrientationPortrait", "UIInterfaceOrientationLandscapeLeft", "UIInterfaceOrientationLandscapeRight", "UIInterfaceOrientationPortraitUpsideDown" ], "applicationPath": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk/Applications/MobileSafari.app", "device": "iphone", "deviceAlt": [ "ipad", "iphone", "ipod" ], "device_Alt": [ "iphone", "ipad" ], "sdkVersion": "6.1", "sdkVersion_Alt": [ "5.0", "5.1", "6.0", "6.1" ], "simulator": true, "supportedLanguages": [ "ko", "no", "cs", "pl", "el", "sv", "in_ID", "ja", "es", "pt_PT", "hu", "fi", "uk", "de", "ca", "ms", "pt", "ru", "en", "sk", "th", "en_GB", "zh_TW", "nl", "fr", "zh_CN", "tr", "it", "da", "iw_IL", "hr", "vi", "ar", "ro" ], "timeHack": false, "variation": "Regular" }
 </pre>
 <p>If you can see the application listed you're ready to start testing on a real device!</p>
-
+-->
 </section>
 </div>
 
