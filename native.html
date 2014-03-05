@@ -11,17 +11,16 @@
     <script type="text/javascript" src="javascripts/properties.js"></script>
     <title>ios-driver</title>
 
-<script type="text/javascript">
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-38099992-1']);
-  _gaq.push(['_trackPageview']);
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-</script>
+        ga('create', 'UA-48692411-1', 'ios-driver.github.io');
+        ga('send', 'pageview');
+
+    </script>
 <script type="text/javascript">
 $(document).ready(function($){
     
@@ -45,7 +44,7 @@ $(document).ready(function($){
 <div id="header_wrap" class="outer">
     <header class="inner">
         <a id="forkme_banner" href="https://github.com/freynaud/ios-driver">View on GitHub</a>
-        <a id="download_me" href="https://s3-eu-west-1.amazonaws.com/ios-driver/ios-server-0.5.0.jar">Download 0.5.0</a>
+        <a id="download_me" href="FROMJS">Download latest</a>
 
         <h1 id="project_title">ios-driver</h1>
 
@@ -81,15 +80,14 @@ $(document).ready(function($){
         <p>Make sure you've been through the  <a href="setup.html" id="setup2">setup</a> page and that all
             the requirements are met</p>
 
-        <p>Start the server and connect the Intl moutains demo app from Apple through the following command</p>
+        <p>Start the server and connect the Internationl Mountains demo app from Apple through the following command</p>
 <pre>
-$java -jar ios-server-0.5.0.jar -aut ~/Documents/build/InternationalMountains.app -port 4444
-    </code></pre>
+java -jar ios-server-0.6.5-jar-with-dependencies.jar -aut ~/Downloads/InternationalMountains.app -port 4444 -simulators    </code></pre>
 
         <p>The following code starts the app, finds some elements, clicks on the first element, prints some text, takes a screenshot and
             quits.</p>
 
-<pre class="prettyprint" >
+<pre class="prettyprint" ><code>
 public static void main(String[] args) throws MalformedURLException {
     // create a selenium desiredCapabilities object with the right values.
     DesiredCapabilities cap = IOSCapabilities.iphone("InternationalMountains", "1.1");
@@ -97,8 +95,10 @@ public static void main(String[] args) throws MalformedURLException {
     RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), cap);
 
     // check that the 9 mountains of the app are there.
-    List cells = driver.findElements(By.className("UIATableCell"));
+    List&lt;Weblement&gt; cells = driver.findElements(By.className("UIATableCell"));
     Assert.assertEquals(9,cells.size());
+
+
 
     // get the 1st mountain
     WebElement first = cells.get(0);
@@ -117,10 +117,11 @@ public static void main(String[] args) throws MalformedURLException {
 
     // end the test
     driver.quit();
-}
+    }
+</code>
 </pre>
 
-        <p>will print out :</p>
+        <p>This will print out :</p>
 
 <pre>
 Mountain 1 was first climbed on 29 May 1953 and has a height of 8,848 meters
@@ -177,7 +178,7 @@ public static void main(String[] args) throws MalformedURLException {
     RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), cap);
 
     // check that the 9 mountains of the app are there.
-    List<WebElement> cells = driver.findElements(By.className("UIATableCell"));
+    List&lt;WebElement&gt; cells = driver.findElements(By.className("UIATableCell"));
     Assert.assertEquals(9,cells.size());
 
     // get the 1st mountain
@@ -222,7 +223,7 @@ public static void main(String[] args) throws MalformedURLException {
         <p>First, have a look at the <a href="inspector.html">inspector</a>, it will give you a lot of information about the
         internals of the application under test.</p>
 
-        <p>UIAutomation elements don't have id. You need to use some of their other properties to
+        <p>UIAutomation elements don't have IDs. You need to use some of their other properties to
             identify them.The webdriver protocol isn't meant to be used for non-web applications, so
             there is a bit of mapping involved.</p>
 
@@ -261,7 +262,7 @@ public static void main(String[] args) throws MalformedURLException {
 
         <h5>UIAccessibilityIdentification</h5>
 
-        <p>The closest thing to id would be <a href='http://developer.apple.com/library/ios/#documentation/uikit/reference/UIAccessibilityIdentification_Protocol/Introduction/Introduction.html' >
+        <p>The closest thing to an ID would be <a href='http://developer.apple.com/library/ios/#documentation/uikit/reference/UIAccessibilityIdentification_Protocol/Introduction/Introduction.html' >
             UIAccessibilityIdentification</a>. Therefore this is what is mapped to id.The following
         3 criterias are similar :</p>
 
@@ -366,10 +367,10 @@ public void findElementByTagName() throws InterruptedException, JSONException {
 
         </pre>
 
-        <h3 id="advAlert">Advance Alert handling</h3>
+        <h3 id="advAlert">Advanced Alert handling</h3>
 
         <p>Native alerts are like any other native element, they're part of the tree and are
-            composed of UIAButton, UIAStaticText etc.alert can be inspected with the inspector</p>
+            composed of UIAButton, UIAStaticText etc. Alerts can be inspected with the inspector</p>
         <img src="images/alertInspector.png" alt="alert inspector" height='480' >
 
         <p>as such, you can use regular calls to interact with the alert :
@@ -388,7 +389,7 @@ public void enterPasswordInAlert()  {
 </pre>
         <h3 id="capabilities" >DesiredCapabilities for IOS :</h3>
 
-        <p>The map of parameters ( the DesiredCapabilities object ) accept a set of parameters that
+        <p>The map of parameters (the DesiredCapabilities object) accepts a set of parameters that
             will
             define the configuration the simulator/device will start with:</p>
 
@@ -418,7 +419,6 @@ cap.setCapability(IOS_SWITCHES, Arrays.asList(new String[]{"-e", "A", "YES","-e"
                </pre>
             </li>
             <li>sdkVersion : {string} 5.0 | .. | 6.1</li>
-            <li> TODO doc : magic prefix plist_</li>
         </lu>
 
         <h3 id="rawJS">Executing raw instruments JS :</h3>
@@ -437,7 +437,7 @@ cap.setCapability(IOS_SWITCHES, Arrays.asList(new String[]{"-e", "A", "YES","-e"
 public void testShouldBeAbleToReturnAnArrayOfWebElements() {
     WebDriver driver = new RemoteWebDriver(...);
     // ...
-    List<WebElement> items = (List<WebElement>) executeScript("return UIATarget.localTarget().frontMostApp().windows()");
+    List&lt;WebElement&gt; items = (List&lt;WebElement&gt;) executeScript("return UIATarget.localTarget().frontMostApp().windows()");
     assertEquals(items.size(), 2);
     driver.quit();
 }

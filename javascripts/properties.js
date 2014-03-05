@@ -14,8 +14,8 @@
 
 $(document).ready(function ($) {
                   
-                  var version = "0.6.5";
-                  var downloadFile = "https://github.com/ios-driver/ios-driver/releases/download/0.6.5/ios-server-0.6.5-jar-with-dependencies.jar";
+                  var version = "0.6.6-LATEST";
+                  var downloadFile = "http://ios-driver-ci.ebaystratus.com/userContent/ios-server-standalone-latest.jar";
                   var github = "https://github.com/ios-driver/ios-driver/";
                   
                   $("#download_me").attr('href', downloadFile);
