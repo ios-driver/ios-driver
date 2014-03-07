@@ -99,7 +99,7 @@
         <p>For <b>native apps</b>, it uses the UIAutomation framework from Apple<a
                 href="http://developer.apple.com/library/ios/#documentation/DeveloperTools/Reference/UIAutomationRef/_index.html"> (more here).</a> You
             need xcode with an IOS SDK &gt; 5.0.
-            To check :</p>
+            <br>To check if you have the correct setup:</p>
 
 <pre><code>$ xcodebuild -showsdks
 </code></pre>
@@ -188,13 +188,12 @@
         sudo chmod 666 /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator*.sdk/Applications/MobileSafari.app/Info.plist
     </pre>
 
-<p>Go to the folder where you downloaded the jar, and run the following command:  </p>
+<p>Go to the folder where you downloaded the jar, and run the following command (replace <strong>xyz</strong> with the version / filename of the jar that you are using):  </p>
 
-<pre><code>$ java -jar ios-server-0.6.5-jar-with-dependencies.jar -aut ~/Documents/build/myapp.app -port
-    4444 -simulators
+<pre><code>$ java -jar ios-server-<strong>xyz</strong>-standalone.jar -aut ~/Documents/build/myapp.app -port 4444 -simulators
 </code></pre>
 
-        <p>You should see in the following log of the terminal :</p>
+        <p>You should see something like the following log in the terminal :</p>
 
 <pre>
 
@@ -311,7 +310,7 @@ Applications :
     The default location is [running folder]/applications</p>
 
 <h4>-app, -aut</h4>
-<p>Location of the application under test. Absolute path or URL expected.</p>    
+<p>Location of the application under test. Absolute path or URL expected.You can use either flag.</p>
 
 <h4>-hub</h4>
 <p>The registration url of your Selenium grid hub, for example: http://localhost:4444/grid/register. If specified ios-driver will register as a node on your grid. It does not include the nodes capabilities on registration as we also provide a custom remote proxy which polls the node looking for updated capabilities, see <a href='./scale.html'>Scale</a>  for more details.</p>

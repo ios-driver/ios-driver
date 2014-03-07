@@ -80,9 +80,9 @@ $(document).ready(function($){
         <p>Make sure you've been through the  <a href="setup.html" id="setup2">setup</a> page and that all
             the requirements are met</p>
 
-        <p>Start the server and connect the Internationl Mountains demo app from Apple through the following command</p>
+        <p>Start the server and connect the International Mountains demo app from Apple through the following command</p>
 <pre>
-java -jar ios-server-0.6.5-jar-with-dependencies.jar -aut ~/Downloads/InternationalMountains.app -port 4444 -simulators    </code></pre>
+java -jar ios-server-xyz-standalone.jar -aut ~/Downloads/InternationalMountains.app -port 4444 -simulators    </code></pre>
 
         <p>The following code starts the app, finds some elements, clicks on the first element, prints some text, takes a screenshot and
             quits.</p>
@@ -127,7 +127,7 @@ public static void main(String[] args) throws MalformedURLException {
 Mountain 1 was first climbed on 29 May 1953 and has a height of 8,848 meters
 </pre>
 
-        <p>and you now have a screenshot of the old mountain details :</p>
+        <p>and you now have a screenshot of mountain details screen:</p>
         <img src="images/screenshot.png" alt="step2.png" height='480' width='320'>
 
 
@@ -136,10 +136,12 @@ Mountain 1 was first climbed on 29 May 1953 and has a height of 8,848 meters
         <p>IOS automation is very content based. There are no IDs like for web pages. This makes testing of
             localized pages a bit trickier. Fortunately the localization data is embedded into the
             app, so the server can access it if you know the key for the content. </p>
-        <p> In the previous example, the app started in the default language, English and the locator is
-            hardcoded to English. Let's start it in Chinese, and make the test content free.</p>
+        <p> In the previous example, the app started in the default language, English and the locator in the test<br>
+            <code> By selector = By.xpath("//UIAStaticText[contains(@name,'climbed')]");
+            </code><br>
+            is hardcoded to English. Let's start it in Chinese (zh), and make the test content free.</p>
 
-        <p> To specify the language : </p>
+        <p> First specify the language in the capabilities: </p>
 
 
 <pre>
@@ -150,7 +152,7 @@ Mountain 1 was first climbed on 29 May 1953 and has a height of 8,848 meters
 </pre>
 
 
-        <p> and make the locator content free : </p>
+        <p> then make the locator content free: (there is more information on how to identify i.e. 'sentenceFormat' in the <strong><a href="inspector.html">inspector section.</a></strong> </p>
 
 <pre>
     // access the content
@@ -216,11 +218,11 @@ public static void main(String[] args) throws MalformedURLException {
         <p>The previous example had some "magic" values. UIATableCell, UIAStaticText, sentenceFormat. If you're
             the developer of the app, those value will make sense. If you're not, you can use the inspector to
             find them. The inspector allows you to have the 'inspect element' feature you use to write a selenium
-            web test. Read more about it here : <a href="inspector.html" id="inspector2">Inspector</a></p>
+            web test. Read more about it here: <a href="inspector.html" id="inspector2">Inspector</a></p>
 
 
         <h3 id="locator">Creating locators :</h3>
-        <p>First, have a look at the <a href="inspector.html">inspector</a>, it will give you a lot of information about the
+        <p>First, have a look at the <a href="inspector.html">inspector</a>, by opening it in your browser under <a href="http://localhost:4444/inspector/" target="_blank">http://localhost:4444/inspector/</a> it will give you a lot of information about the
         internals of the application under test.</p>
 
         <p>UIAutomation elements don't have IDs. You need to use some of their other properties to
