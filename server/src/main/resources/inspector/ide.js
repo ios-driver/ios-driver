@@ -121,7 +121,7 @@ setHTMLSource = function (newSource) {
 resize = function () {
 
     var neededSpace = frame_w;
-    console.log('frame_w '+frame_w);
+    //console.log('frame_w '+frame_w);
 
     var leftInPixel = findFrameSizeInPixels();
     scale = leftInPixel / neededSpace;

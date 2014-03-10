@@ -52,6 +52,7 @@ public class IDEMainView implements View {
     List<String> cssList = new ArrayList<>();
     cssList.add(getResource("inspector/css/inspector.css"));
     cssList.add(getResource("inspector/css/ide.css"));
+    cssList.add(getResource("inspector/third_party/pretty/prettify.css"));
     cssList.add(getResource("inspector/third_party/jquery.layout.css"));
     cssList.add(getResource("inspector/third_party/jquery-ui-1.10.3.custom/css/smoothness/jquery-ui-1.10.3.custom.min.css"));
 
@@ -64,7 +65,7 @@ public class IDEMainView implements View {
     jsList.add(getResource("inspector/layout.js"));
     jsList.add(getResource("inspector/third_party/jquery.jstree.js"));
     jsList.add(getResource("inspector/third_party/jquery.xpath.js"));
-    jsList.add(getResource("inspector/prettify.js"));
+    jsList.add(getResource("inspector/third_party/pretty/prettify.js"));
     jsList.add(getResource("inspector/Logger.js"));
     jsList.add(getResource("inspector/Recorder.js"));
     jsList.add(getResource("inspector/inspector.js"));

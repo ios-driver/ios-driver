@@ -392,7 +392,7 @@ Inspector.prototype.onMouseMove = function (event) {
         var y = event.pageY - parentOffset.top;
         x = x / scale;
         y = y / scale;
-        console.log(x + "," + y);
+        //console.log(x + "," + y);
         var finder = new NodeFinder(this.root);
         var node = finder.getNodeByPosition(x, y);
         if (node) {

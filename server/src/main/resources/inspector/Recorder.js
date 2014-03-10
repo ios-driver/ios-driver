@@ -22,6 +22,7 @@ function Recorder(inspector) {
     this.session = secondPart.split("/")[0];
     this.log.info(this.session);
     this.on = document.URL.indexOf("mode=record") !== -1;
+    this.javaCode = "";
 }
 
 Recorder.prototype.active = function (state) {
@@ -29,18 +30,16 @@ Recorder.prototype.active = function (state) {
 }
 Recorder.prototype.recordClick = function (locator) {
     this.index++;
-    var el = "WebElement element" + this.index + " = driver.findElement(By.xpath('" + locator
-        + "');"
+    var el = "WebElement element" + this.index + " = driver.findElement(By.xpath(\"" + locator
+        + "\");"
 
-    var base = $("#java").html();
-    if (base !== "") {
-        base += "\n";
-    }
-    var content = base + el;
-    content += "\nelement" + this.index + ".click();";
-    this.log.debug(content);
-    $("#java").html(content);
+    this.javaCode += el + "\n";
+    this.javaCode += "element" + this.index + ".click();\n";
+
+    this.log.debug(this.javaCode);
+    $("#java_container").html("<pre  class='prettyprint  lang-java'> " + this.javaCode + "</pre>");
     if (prettyPrint) {
+        console.log("pretty!")
         prettyPrint();
     }
     console.log("click : " + el);
