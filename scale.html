@@ -69,33 +69,34 @@ $(document).ready(function($){
 
 
 <pre  class="prettyprint">
-java -jar ios-driver.jar -hub http://127.0.0.1:4444/grid/register -host 127.0.0.1 -port 5555
+java -jar ios-server-standalone-xyz.jar -hub http://&lt;ipaddress of grid hub&gt;:4444/grid/register -host 127.0.0.1 -port 5555
 </pre>
 
 <p>You can also specify a custom proxy to use on the grid, for example:</p>
 
 
 <pre  class="prettyprint">
-java -jar ios-driver.jar -hub http://127.0.0.1:4444/grid/register -proxy org.uiautomation.ios.grid.IOSRemoteProxy -host 127.0.0.1 -port 5555
+java -jar ios-server-standalone-xyz.jar -hub http://&lt;ipadress of grid hub&gt;:4444/grid/register -proxy org.uiautomation.ios.grid.IOSRemoteProxy -host 127.0.0.1 -port 5555
 </pre>
 
 <img src="images/IOSRemoteProxy.png" alt="step2.png" width='640'>
 
-<h3>IOSRemoteProxy</h3>
-<p>IOSRemoteProxy is a custom remote proxy which is designed to work with ios-driver nodes. In particular it polls the node to see if the capabilities have been updated, this will allow you to use ios-driver as part of your CI process where new version of apps could be added to ios-drivers capabilities. Have a look at the <a href='./setup.html#cli'>-folder</a> parameter option if you'd like to dynamically pick up new apps. If IOSRemoteProxy discovers new capabilites on the node, it will mark the node as down, wait for any running tests to complete and will then re-register the node with the updated capabilities making them available for testing.</p>
+<h3>Starting the Selenium GRID / IOSRemoteProxy</h3>
+<p>In order to start Selenium Grid and to have it work with ios-driver, you need to start it with IOSRemoteProxy. The remote proxy polls the node to see if the capabilities have been updated.
+    This will allow you to use ios-driver as part of your CI process where new a version of apps can be added to ios-drivers capabilities. Have a look at the <a href='./setup.html#cli'>-folder</a> parameter option if you'd like to dynamically pick up new apps.
+    If IOSRemoteProxy discovers new capabilities on the node, it will mark the node as down, wait for any running tests to complete and will then re-register the node with the updated capabilities making them available for testing.</p>
 
+<h3>Where to get IOSRemoteProxy?</h3>
+    <p>Currently you need to build IOSRemoteProxy yourself but we aere planning to put it into the ios-driver very soon. All you need to build it is maven and ios-driver checked out locally on your machine</p>
 <h3>Building IOSRemoteProxy</h3>
+    <ul>
+        <li>go to the folder where ios-driver is checked out to: i.e. ~/ios-driver</li>
+        <li><code>cd grid</code></li>
+        <li>in a terminal window enter: <code>mvn package</code></li>
+        <li>copy the resulting ios-grid.jar from ios-driver/grid/target to the location where you run the hub</li>
+        <li>now you can start the grid hub with the following command: <code>java -cp ios-grid.jar:selenium-server-standalone.jar org.openqa.grid.selenium.GridLauncher -role hub</code></li>
+    </ul>
 
-<pre class="prettyprint">
-> cd ios-driver/grid/
-
-> mvn package
-
-copy the resulting ios-grid.jar file from ios-driver/grid/target to the location where you run the hub. 
-Run hub like:
-
-> java -cp ios-grid.jar:selenium-server-standalone.jar org.openqa.grid.selenium.GridLauncher -role hub
-</pre>
 
 
 </section>
