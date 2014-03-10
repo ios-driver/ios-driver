@@ -14,12 +14,6 @@
 
 $(document).ready(function () {
     $(".ui-layout-south").tabs();
-    $("#record").button({ icons: { primary: "ui-icon-gear" } });
-    $("#record").click(function () {
-        var recorderOn = $(this).prop('checked');
-        console.log("recorder on: " + recorderOn);
-        inspector.recorder.active(recorderOn);
-    });
 
     /*var i = 0;
      $("#record").click(function () {
@@ -41,6 +35,7 @@ $(document).ready(function () {
 
     var southH = 200;
     layout.sizePane("south", southH);
+    layout.close("south");
 
     var topLayout = layout.center.children.layout1;
     topLayout.sizePane("west", 450);
@@ -57,6 +52,16 @@ $(document).ready(function () {
     });
 
     resize();
+
+    $("#record").button({ icons: { primary: "ui-icon-gear" } });
+    $("#record").click(function () {
+        var recorderOn = $(this).prop('checked');
+        console.log("recorder on: " + recorderOn);
+        inspector.recorder.active(recorderOn);
+        if (recorderOn) {
+            layout.open("south");
+        }
+    });
 
 });
 
