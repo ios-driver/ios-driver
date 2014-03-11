@@ -154,6 +154,12 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
   }
 
   @Override
+  public String getDeviceSpecification(DeviceType device, DeviceVariation variation) {
+    // not-applicable
+    return null;
+  }
+
+  @Override
   public void setSimulatorScale(String scale) {
     // not-applicable
   }

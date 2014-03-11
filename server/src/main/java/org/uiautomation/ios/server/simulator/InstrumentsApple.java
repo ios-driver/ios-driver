@@ -84,6 +84,8 @@ public class InstrumentsApple implements Instruments {
     String appPath = application.getDotAppAbsolutePath();
     File scriptPath = new ScriptHelper().getScript(port, appPath, sessionId, CURL);
     output = createTmpOutputFolder();
+    
+    deviceManager = new IOSSimulatorManager(caps, this);
 
     instruments = createInstrumentCommand(scriptPath);
     instruments.registerListener(new ApplicationCrashListener(session));
@@ -92,7 +94,6 @@ public class InstrumentsApple implements Instruments {
     channel = new CURLBasedCommunicationChannel(sessionId);
 
     screenshotService = new InstrumentsAppleScreenshotService(this, sessionId);
-    deviceManager = new IOSSimulatorManager(caps, this);
 
     safariFolder =
         APPIOSApplication.findSafariLocation(ClassicCommands.getXCodeInstall(), desiredSDKVersion);
@@ -188,6 +189,10 @@ public class InstrumentsApple implements Instruments {
     if (uuid != null) {
       args.add("-w");
       args.add(uuid);
+    } else if (application.isSimulator() && Integer.parseInt(version.getBuild()) >= 55044) {
+      // newer instruments require to specify the simulator SDK and device type
+      args.add("-w");
+      args.add(deviceManager.getDeviceSpecification(caps.getDevice(), caps.getDeviceVariation()));
     }
     args.add("-t");
     args.add(template.getAbsolutePath());
@@ -274,7 +279,7 @@ public class InstrumentsApple implements Instruments {
       log.log(Level.SEVERE,
               "----------------------------------------------------------------------------");
       StringBuilder sb = new StringBuilder();
-      sb.append("couldn't delete MobileSafari app install dir: " + e.getMessage());
+      sb.append("\n---------> R E A D   T H I S:\ncouldn't delete MobileSafari app install dir: " + e.getMessage());
       sb.append("\nmake sure ios-driver has read/write permissions to that folder by executing those 2 commands:");
       sb.append("\n\t$ sudo chmod a+rw " + safariFolder.getParentFile().getAbsolutePath());
       sb.append("\n\t$ sudo chmod -R a+rw " + safariFolder.getAbsolutePath());

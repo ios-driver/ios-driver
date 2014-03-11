@@ -33,6 +33,8 @@ public interface IOSDeviceManager {
   void setLocationPreference(boolean authorized);
 
   void setVariation(DeviceType device, DeviceVariation variation);
+  
+  String getDeviceSpecification(DeviceType device, DeviceVariation variation);
 
   void setMobileSafariOptions();
 

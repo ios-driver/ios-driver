@@ -193,6 +193,11 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   public void setVariation(DeviceType device, DeviceVariation variation) {
     simulatorSettings.setVariation(device, variation, desiredSDKVersion);
   }
+  
+  @Override
+  public String getDeviceSpecification(DeviceType device, DeviceVariation variation) {
+    return simulatorSettings.getDeviceSpecification(device, variation, desiredSDKVersion);
+  }
 
   @Override
   public void resetContentAndSettings() {
