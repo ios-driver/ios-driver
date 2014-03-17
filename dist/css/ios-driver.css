@@ -1,0 +1,37 @@
+#download_me {
+    background-color: #428bca;
+    display: block;
+    position: absolute;
+    top: 30px;
+    right: -50px;
+    top: -15 px\0/; /* ie8 and 9 */
+    right: -32 px\0/; /* ie8 and 9 */
+    width: 200px;
+    -ms-transform: rotate(45deg); /* IE9 */
+    -moz-transform: rotate(45deg); /* FF3.5/3.6 */
+    -o-transform: rotate(45deg); /* Opera 10.5 */
+    -webkit-transform: rotate(45deg); /* Saf3.1+ */
+    transform: rotate(45deg); /* Newer browsers */
+    /*filter: progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=0.7071067811865476, M12=-0.7071067811865475, M21=0.7071067811865475, M22=0.7071067811865476); *//* IE6,IE7, but produces nasty results, so I disabled it */
+    -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(SizingMethod='auto expand', M11=0.7071067811865476, M12=-0.7071067811865475, M21=0.7071067811865475, M22=0.7071067811865476)"; /* IE8 */
+    text-align: center;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+:root .element {
+    top: 15 px\0/IE9;
+}
+
+/* back to right value in IE9 */
+
+#download_me:link, #banner:visited, #banner:hover, #banner:active {
+    color: black;
+}
+
+a.anchor {
+    display: block;
+    position: relative;
+    top: -50px;
+    visibility: hidden;
+}

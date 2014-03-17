@@ -1,0 +1,76 @@
+<div class="row row-offcanvas row-offcanvas-left">
+
+    <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+        <div class="list-group">
+            <a href="#inspector" class="list-group-item active">Inspector</a>
+            <a href="#l10n" class="list-group-item">Localization</a>
+        </div>
+    </div>
+    <!--/span-->
+
+
+    <div class="col-xs-12 col-sm-9">
+        <p class="pull-left visible-xs">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle
+                nav
+            </button>
+        </p>
+
+        <div class="row">
+            <div class="col-12 col-sm-12 col-lg-12">
+                <a id="base" class="anchor"></a>
+
+                <h2>Inspector</h2>
+
+                <p>The inspector allows you to examine the elements of a native app in the same
+                    style as you would with i.e. Firebug or the Chrome inspector.</p>
+
+                <p>To access the inspector, set a breakpoint in the test code and execute it in
+                    Debug mode.</p>
+
+
+                <p>When the application has stopped there, open a browser and go to
+                    <a href="http://localhost:5555/inspector/" target="_blank">http://localhost:5555/inspector/</a> (change the port to match the one you started
+                    your server on)
+                    <br/>You will see the app with its object tree displayed.</p>
+
+                <p>Mouse over the element you're interested in to find its attributes and be able
+                    to create locators.</p>
+
+                <p>If you hit the &lt;ESC&gt;. button, an xpath helper will appear, giving you access to
+                    real time validation of your xpath locators.</p>
+
+
+            </div>
+
+            <img class="col-12 col-sm-12 col-lg-12" src="images/inspector.png" alt="inspector"/>
+
+
+            <div class="col-12 col-sm-12 col-lg-12">
+                <a id="l10n" class="anchor"></a>
+
+                <h2>Working with localized apps</h2>
+
+                <p>The inspector also allows you to inspect the internals of an app, and access
+                    its content files. Instead of using the content directly, you can use the key
+                    the content was generated from. The tests using the keys will be independent from the localization
+                    and more robust as content changes have no impact on the test itself.</p>
+
+                <p>When an element's key is found by ios-driver, the inspector will turn blue
+                    instead of the normal yellow, and some extra information will be displayed on
+                    the right hand side. The 'key' attribute can be used to create localization
+                    ready locators. </p>
+                <p><strong>More information about how to write localization independent tests can be found <a href="documentation.html?page=native#l10n"> here.</a></strong></p>
+
+                <img class="col-12 col-sm-12 col-lg-12" src="images/inspector_l10n.png"
+                     alt="inspector"/>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<!--/row-->
+<hr>

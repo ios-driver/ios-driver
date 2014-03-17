@@ -1,0 +1,113 @@
+<div class="row row-offcanvas row-offcanvas-left">
+
+    <div class="col-xs-6 col-sm-3 sidebar-offcanvas "  id="sidebar" role="navigation">
+        <div class="list-group">
+            <a href="#about" class="list-group-item active">About</a>
+            <a href="#feature" class="list-group-item">Features</a>
+            <a href="#real" class="list-group-item">Device vs Simulator</a>
+            <a href="#scale" class="list-group-item">Scaling</a>
+            <a href="#download" class="list-group-item">Download</a>
+        </div>
+    </div>
+    <!--/span-->
+
+
+    <div class="col-xs-12 col-sm-9">
+        <p class="pull-left visible-xs">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle
+                nav
+            </button>
+        </p>
+        <div class="jumbotron">
+            <h1>ios-driver</h1>
+
+            <p>Test any IOS native, hybrid, or mobile web application using Selenium / WebDriver.</p>
+        </div>
+        <div class="row">
+            <div class="col-12 col-sm-12 col-lg-6">
+                <h2 id="about">About</h2>
+
+                <p> Automate any IOS native, hybrid, or mobile web application using the Selenium / WebDriver
+                    API. ios-driver is fully compatible with the Selenium / Webdriver API. IOS automation is therefore as easy as
+                    automation for a browser.<br> ios-driver fully integrates with Selenium Grid so you can reuse your existing
+                    web automation infrastructure including your helper and utility classes (i.e. data creation, page objects etc.).
+                .</p>
+
+            </div>
+
+
+
+            <!--/span-->
+            <div class="col-12 col-sm-12 col-lg-6">
+                <a id="features" class="anchor"></a>
+
+                <h2>Features</h2>
+
+                <ul>
+                    <li>Implements the JSON wire protocol</li>
+                    <li>Runs on emulators and devices</li>
+                    <li>Can be run as a regular node in a Selenium Grid</li>
+                    <li>Can be used in an existing Selenium Grid to manage device / simulator
+                        farm
+                    </li>
+                    <li>First class support for localized native apps (same test works for all the
+                        localized versions )
+                    </li>
+                    <li>No need to change the source</li>
+                    <li>Off the shelf support for ios devices</li>
+                    <li>No need to jailbreak the device</li>
+                    <li>No additional apps needed on the device</li>
+
+                </ul>
+            </div>
+
+
+            <div class="col-12 col-sm-12 col-lg-6">
+                <h2 id="real">Real Device vs Simulator</h2>
+
+                <p> Using Simulator is the default way to use ios-driver.It offers more
+                    flexibility, and it is faster that tests on real device.However, if your
+                    specific needs require tests on real device, ios-driver also supports devices without having to make any modifications!</p>
+
+            </div>
+
+            <!--/span-->
+            <div class="col-6 col-sm-6 col-lg-4">
+                <a id="download" class="anchor"></a>
+
+                <h2>Download</h2>
+
+                <p>release :<a href="DEFAULT" class="download_stable version_stable">DEFAULT</a>
+                </p>
+
+                <p>snapshot: <a href="DEFAULT" class="download version">DEFAULT</a>
+                </p>
+
+                <!--<p><a class="btn btn-default" href="#" role="button">View details &raquo;</a>-->
+                <!--</p>-->
+            </div>
+
+            <div class="col-12 col-sm-12 col-lg-12">
+                <a id="scale" class="anchor"></a>
+
+                <h2>Scaling</h2>
+
+                <p> ios-driver has been built with scaling in mind. GUI based tests are slow by
+                    nature slow and if run sequentially
+                    take too long to provide fast feedback.
+                    By following the Selenium / webdriver protocol, ios-driver can be
+                    used as a Selenium grid node, and the tests can be run in parallel on the same
+                    architecture as for the web.<br>
+                    Below you can see a screenshot of mixed mode tests with ipad, Firefox, Safari and a real ios device.
+                <img src="images/scale.png" alt="step2.png" width='640'>
+                </p>
+            </div>
+
+        </div>
+        <!--/row-->
+    </div>
+    <!--/span-->
+
+</div>
+<!--/row-->
+<hr>

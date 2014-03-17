@@ -1,0 +1,82 @@
+<div class="row row-offcanvas row-offcanvas-left">
+
+    <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+        <div class="list-group">
+            <a href="#hub" class="list-group-item active">Starting the hub</a>
+            <a href="#node" class="list-group-item">Starting a node</a>
+        </div>
+    </div>
+    <!--/span-->
+
+
+    <div class="col-xs-12 col-sm-9">
+        <p class="pull-left visible-xs">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle
+                nav
+            </button>
+        </p>
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-9">
+                <h1>ios-driver and Selenium GRID</h1>
+                <p>You can run ios-driver as a regular node in a Selenium Grid. This allows you to scale your ios tests and to
+                    reuse your existing Selenium Grid infrastructure. It also makes cross platform tests between the web and ios very simple,
+                    as you are using the same infrastructure and code. (Note: by using <a href="http://selendroid.io" target="_blank">Selendroid</a>
+                     you can also do the same thing for Android and bring the Web, IOS and Android together).
+                </p>
+                <a id="hub" class="anchor"></a>
+                <h2>Starting the Selenium Grid hub with IOSRemoteProxy</h2>
+
+                <p><b>You need to specify a custom proxy to use on the hub to handle all the ios
+                    specific logic. You can download IOSRemoteProxy <a class="download_proxy" href="DEFAULT">
+                        here</a>.</b>
+
+                <p> This proxy (that you need to include when starting the hub, and activate when
+                    you start a node ) polls the node to see if the capabilities have been updated.
+                    This will allow you to use ios-driver as part of your CI process where new a
+                    version of apps can be added to ios-drivers capabilities. Have a look at the <a
+                            href='?page=setup#cli'>-folder</a> parameter option if you'd like to
+                    dynamically pick up new apps.
+
+                <p> If IOSRemoteProxy discovers new capabilities on the node, it will mark the node
+                    as down, wait for any running tests to complete and will then re-register the
+                    node with the updated capabilities making them available for testing.</p>
+
+                </p>
+
+                <p>Now you can start the grid hub with the following command:</p>
+                        <pre class="prettyprint lang-java">
+$java -cp ios-grid-<strong class="version">DEFAULT</strong>.jar:selenium-server-standalone.jar \
+    org.openqa.grid.selenium.GridLauncher -role hub
+                        </pre>
+            </div>
+
+
+            <div class="col-12 col-sm-12 col-lg-12">
+                <a id="node" class="anchor"></a>
+                <h2 >Starting a node</h2>
+
+                <p>You can then add ios-driver as a node to the running grid hub. In order to connect to a
+                    grid, you can specify the below command line parameters when running
+                    ios-driver.</p>
+
+
+
+
+<pre class="prettyprint lang-sh">
+$java -jar ios-server-standalone-<strong class="version">DEFAULT</strong>.jar \
+    -hub http://&lt;ipadress of grid hub&gt;:4444/grid/register \
+    -proxy org.uiautomation.ios.grid.IOSRemoteProxy \
+    -host yourIp -port 5555
+</pre>
+
+                <img src="images/IOSRemoteProxy.png" alt="step2.png" width='640'>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<!--/row-->
+<hr>

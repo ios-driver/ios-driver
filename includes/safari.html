@@ -1,0 +1,275 @@
+<div class="row row-offcanvas row-offcanvas-left">
+
+<div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+    <div class="list-group">
+        <a href="#basics" class="list-group-item active">Basics</a>
+        <a href="#bindings" class="list-group-item">Bindings</a>
+        <a href="#nativeType" class="list-group-item">Native sendKeys</a>
+        <a href="#alerts" class="list-group-item">Alerts</a>
+        <a href="#orientation" class="list-group-item">Device Orientation</a>
+        <a href="#device" class="list-group-item">iPad Support</a>
+        <a href="#select" class="list-group-item">Select/html dropdown</a>
+    </div>
+</div>
+<!--/span-->
+
+
+<div class="col-xs-12 col-sm-9">
+<p class="pull-left visible-xs">
+    <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle
+        nav
+    </button>
+</p>
+
+
+<div class="row">
+    <div class="col-12 col-sm-12 col-lg-12">
+        <a id="basics" class="anchor"></a>
+
+        <h2>Basics</h2>
+
+        <p>You can use ios-driver to test web pages on mobile safari. Because ios-driver
+            internally
+            uses two different
+            drivers, a native one and a web one, your tests can use native events (i.e
+            typing text
+            using the
+            keyboard) and web based selectors.</p>
+
+
+        <p>Before the first run you will need to update the MobileSafari Info.plist to allow
+            ios-driver to edit it. To do this, please execute the following commands in a terminal window.</p>
+    <pre class="prettyprint lang-sh">
+$xcodeVersion=`xcode-select --print-path`
+$sudo chmod a+rw "$xcodeVersion/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.0.sdk/Applications"
+$sudo chmod -R a+rw "$xcodeVersion/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.0.sdk/Applications/MobileSafari.app"
+   </pre>
+
+        <p>From there on you can run your test against mobile safari on a simulator. To open the
+            eBay home page using the Java client, the code looks like this: </p>
+
+              <pre class="prettyprint lang-java">
+public static void main(String[] args) throws Exception {
+    DesiredCapabilities safari = IOSCapabilities.iphone("Safari");
+    RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:5555/wd/hub"), safari);
+
+    driver.get("http://www.ebay.co.uk/");
+
+    System.out.println(driver.getTitle());
+    driver.quit();
+}
+    </pre>
+
+        <p>will print</p>
+    <pre>
+         eBay Mobile | Electronics, Cars, Clothing, Collectibles and Daily Deals online.
+    </pre>
+
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-12 col-sm-12 col-lg-12">
+        <a id="bindings" class="anchor"></a>
+
+        <h2>Bindings</h2>
+
+        <p>ios-driver follows the web driver API, so you can use your favorite client bindings to
+            write your test. Assuming you're running ios-driver locally and on the default port, you
+            can create a connection as follows. </p>
+
+        <p>Python</p>
+  <pre class="prettyprint">
+  from selenium import webdriver
+  # iphone
+  driver = webdriver.Remote("http://localhost:5555/wd/hub", webdriver.DesiredCapabilities.IPHONE)
+  # ipad
+  driver = webdriver.Remote("http://localhost:5555/wd/hub", webdriver.DesiredCapabilities.IPAD)
+  </pre>
+
+        <p>Java</p>
+  <pre class="prettyprint">
+  // iphone
+  WebDriver driver = new IPhoneDriver("http://localhost:5555/wd/hub");
+  // ipad
+  WebDriver driver = new RemoteWebDriver("http://localhost:5555/wd/hub", DesiredCapabilities.ipad());
+  </pre>
+
+        <p>C#</p>
+  <pre class="prettyprint">
+  // iphone
+  IWebDriver driver = new RemoteWebDriver("http://localhost:5555/wd/hub", DesiredCapabilities.IPhone());
+  // ipad
+  IWebDriver driver = new RemoteWebDriver("http://localhost:5555/wd/hub", DesiredCapabilities.IPad());
+  </pre>
+
+        <p>Ruby</p>
+  <pre class="prettyprint">
+  # iphone
+  driver = Selenium::WebDriver.for :remote, :url => "http://localhost:5555/wd/hub", :desired_capabilities => :iphone
+  #ipad
+  driver = Selenium::WebDriver.for :remote, :url => "http://localhost:5555/wd/hub", :desired_capabilities => :ipad
+  </pre>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 col-sm-12 col-lg-12">
+        <a id="nativeType" class="anchor"></a>
+
+        <h2>Native sendKeys</h2>
+
+        <iframe width="640" height="480" src="http://www.youtube.com/embed/cpYE5g4qAVw"
+                frameborder="0" allowfullscreen></iframe>
+
+    <pre class="prettyprint">
+    public static void main(String[] args) throws Exception {
+
+        DesiredCapabilities safari = IOSCapabilities.iphone("Safari");
+        RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), safari);
+
+        driver.get("http://hp.mobileweb.ebay.co.uk/home");
+        WebElement search = driver.findElement(By.id("srchDv"));
+        search.sendKeys("ipod");
+        search.submit();
+
+        waitFor(pageTitleToBe(driver, "ipod | eBay Mobile Web"));
+
+        driver.quit();
+    }
+    </pre>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 col-sm-12 col-lg-12">
+        <a id="alerts" class="anchor"></a>
+
+        <h2>Alerts</h2>
+
+        <p>ios-driver can use its native part to get away from the javascript sandbox and handle
+            alerts for example :</p>
+
+        <iframe width="640" height="480" src="http://www.youtube.com/embed/2qR7mGs2Gn0"
+                frameborder="0" allowfullscreen></iframe>
+     <pre class="prettyprint">
+
+@Test
+public void testHandlesTwoAlertsFromOneInteraction() {
+    driver.findElement(By.id("double-prompt")).click();
+
+    Alert alert1 = waitFor(alertToBePresent(driver));
+    alert1.sendKeys("brie");
+    alert1.accept();
+
+    Alert alert2 = waitFor(alertToBePresent(driver));
+    alert2.sendKeys("cheddar");
+    alert2.accept();
+
+    waitFor(elementTextToEqual(driver, By.id("text1"), "brie"));
+    waitFor(elementTextToEqual(driver, By.id("text2"), "cheddar"));
+}
+
+</pre>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 col-sm-12 col-lg-12">
+        <a id="orientation" class="anchor"></a>
+
+        <h2>Device Orientation</h2>
+
+        <iframe width="640" height="480" src="http://www.youtube.com/embed/FK17niDWoqA"
+                frameborder="0" allowfullscreen></iframe>
+   <pre class="prettyprint">
+
+public static void main(String[] args) throws Exception {
+
+   DesiredCapabilities safari = IOSCapabilities.ipad("Safari");
+   RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), safari);
+
+   driver.get("http://hp.mobileweb.ebay.co.uk/home");
+
+   ((Rotatable)new Augmenter().augment(driver)).rotate(ScreenOrientation.LANDSCAPE);
+
+   WebElement search = driver.findElement(By.id("srchDv"));
+   search.sendKeys("ipod");
+   search.submit();
+
+   waitFor(pageTitleToBe(driver, "ipod | eBay Mobile Web"));
+
+   driver.quit();
+}
+
+   </pre>
+
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 col-sm-12 col-lg-12">
+        <a id="device" class="anchor"></a>
+
+        <h2>iPad Support</h2>
+
+        <p></p>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 col-sm-12 col-lg-12">
+        <h2 id="select">Select/html dropdown</h2>
+
+        <p>Select are currently not working with native events enabled. So you need to disable them
+            when interacting with them.The code will typically look like :</p>
+
+         <pre class="prettyprint">
+ // switching off native clicks
+Configurable c = IOSDriverAugmenter.augment(driver);
+c.setConfiguration(WebDriverLikeCommand.CLICK, "nativeEvents", false);
+
+// find the select
+WebElement select = driver.findElement(By.name("selectomatic"));
+
+// and its options
+List<WebElement> options = select.findElements(By.tagName("option"));
+
+             // select the 2nd option in the list.
+             options.get(1).click();
+
+             // turnign native clicks back on.
+             c.setConfiguration(WebDriverLikeCommand.CLICK, "nativeEvents", true);
+         </pre>
+        <p>or, if you're using the Select helper class from the selenium support project
+            (<a href="https://github.com/SeleniumHQ/selenium/blob/master/java/client/src/org/openqa/selenium/support/ui/Select.java">Select.java</a>)
+            : </p>
+
+        <pre class="prettyprint">
+ // switching off native clicks
+Configurable c = IOSDriverAugmenter.augment(driver);
+c.setConfiguration(WebDriverLikeCommand.CLICK, "nativeEvents", false);
+
+// use Select from Selenium support ui.
+Select select = new Select(driver.findElement(By.name("selectomatic")));
+List<WebElement> options = select.getOptions();
+
+            // select the 2nd option in the list.
+            select.setSelected(options.get(1));
+
+            // turning native clicks back on.
+            c.setConfiguration(WebDriverLikeCommand.CLICK, "nativeEvents", true);
+         </pre>
+
+    </div>
+</div>
+</div>
+</div>
+<!--/row-->
+<hr>

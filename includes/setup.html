@@ -1,0 +1,246 @@
+<div class="row row-offcanvas row-offcanvas-left">
+
+<div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+    <div class="list-group">
+        <a href="#tech" class="list-group-item active">Technical overview</a>
+        <a href="#sysreq" class="list-group-item">System requirements</a>
+        <a href="#testapp" class="list-group-item">Getting a test application</a>
+        <a href="#launch" class="list-group-item">Launching ios-driver</a>
+        <!--<a href="#cli" class="list-group-item">Command Line Parameters</a>-->
+        <!--<a href="#real" class="list-group-item">Real Devices</a>-->
+    </div>
+</div>
+<!--/span-->
+
+
+<div class="col-xs-12 col-sm-9">
+<p class="pull-left visible-xs">
+    <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle
+        nav
+    </button>
+</p>
+
+<div class="row">
+<div class="col-12 col-sm-12 col-lg-12">
+    <a id="tech" class="anchor"></a>
+
+    <p> Selenium / Webdriver is a great automation tool for browsers. It comes with a very clean API
+        that
+
+    <h2>Technical overview</h2>
+
+    <p> Webdriver is a great automation tool for browsers. It comes with a very clean API that
+        describes
+        how
+        users can interact with a browser. The same API can be used for ios automation as well. In
+        the
+        end,
+        whatever you test, as long as the user interacts with a GUI, it is always about
+    <ol>
+        <li>finding an element</li>
+        <li>and then interacting with the element</li>
+    </ol>
+
+    Using that API for ios automation has two main advantages:
+    <ol>
+        <li>it is a proven and stable API that is about to become a W3C standard</li>
+        <li>it decouples the remote implementation from the local client</li>
+    </ol>
+    Selenium already comes with
+    Java,
+    C#, Python, Ruby clients. You can reuse whichever one your comfortable with and focus on the
+    business
+    logic of your tests instead of having to learn a new API.</p>
+
+
+</div>
+
+<div class="col-12 col-sm-12 col-lg-12">
+    <a id="sysreq" class="anchor"></a>
+
+    <h2>System requirements for OSX</h2>
+
+    <p> ios-driver is built upon 2 different frameworks from Apple.</p>
+
+    <p>For <b>native apps</b>, it uses the UIAutomation framework from Apple<a
+            href="http://developer.apple.com/library/ios/#documentation/DeveloperTools/Reference/UIAutomationRef/_index.html">
+        (more here).</a> You
+        need xcode with an IOS SDK &gt; 5.0.
+        <br>To check if you have the correct setup:</p>
+
+<pre class="prettyprint  lang-sh">
+
+    $ xcodebuild -showsdks
+
+
+</pre>
+
+    <p>After running the above command it will return something like: </p>
+
+<pre class="prettyprint  lang-sh">
+
+OS X SDKs:
+	OS X 10.8                     	-sdk macosx10.8
+	OS X 10.9                     	-sdk macosx10.9
+
+iOS SDKs:
+	iOS 7.0                       	-sdk iphoneos7.0
+
+iOS Simulator SDKs:
+	Simulator - iOS 7.0           	-sdk iphonesimulator7.0
+
+
+</pre>
+
+
+    <p>The server is written in Java and requires Java 7.To check that you have the
+        correct version :</p>
+<pre class="prettyprint  lang-sh">
+
+    $ java -version
+
+
+</pre>
+
+    <p>will return the version you're currently running, or prompt you to install it.</p>
+</div>
+
+
+<div class="col-12 col-sm-12 col-lg-12">
+    <a id="testapp" class="anchor"></a>
+    <h2 >Getting a test application</h2>
+
+    <p> We use an example application from Apple : InternationalMountains. You can also use any
+        other app that will work with UIAutomation.
+
+        To use the InternationalMountains app, download it from <a
+                href="files/InternationalMountains.app.zip">here</a> , and unzip it.
+    </p>
+
+    <p> You can also try <a
+            href="files/UICatalog.app.zip">UICatalog</a> which has an example of the UI element
+        available on iOS.</p>
+
+</div>
+
+<div class="col-12 col-sm-12 col-lg-12">
+    <a id="launch" class="anchor"></a>
+    <h2 >Launching ios-driver</h2>
+
+    <p>Download ios-server-<span class="version"></span>.jar</p>
+
+    <p>Download the latest version of the ios-server <a
+            href="http://ios-driver-ci.ebaystratus.com/userContent/ios-server-standalone-latest.jar">
+        here.</a></p>
+
+
+    <p>Go to the folder where you downloaded the jar, and run the following command: </p>
+
+<pre><code>$ java -jar ios-server-<strong class="version">DEFAULT</strong>-standalone.jar -aut
+    path/to/aut.app -port 4444 -simulators
+</code></pre>
+
+    <p>You should see something like the following log in the terminal :</p>
+
+<pre>
+
+Beta features enabled ( enabled by -beta flag ): false
+Simulator enabled ( enabled by -simulators flag): true
+Inspector: http://0.0.0.0:4444/inspector/
+tests can access the server at http://0.0.0.0:4444/wd/hub
+server status: http://0.0.0.0:4444/wd/hub/status
+Connected devices: http://0.0.0.0:4444/wd/hub/devices/all
+Applications: http://0.0.0.0:4444/wd/hub/applications/all
+Capabilities: http://0.0.0.0:4444/wd/hub/capabilities/all
+Monitoring '/Users/mpalotas/Downloads/applications' for new applications
+Archived apps /Users/mpalotas/Downloads/applications
+using xcode install : /Applications/Xcode.app
+using IOS version 7.0
+ios >= 6.0. Safari and hybrid apps are supported.
+
+Applications :
+---------------
+	CFBundleName=InternationalMountains,CFBundleVersion=1.1
+	CFBundleName=Safari,CFBundleVersion=9537.53
+
+2014-03-05 15:47:30.136:INFO::jetty-7.x.y-SNAPSHOT
+2014-03-05 15:47:30.242:INFO::Started SelectChannelConnector@0.0.0.0:4444
+
+</pre>
+
+    <p>Check that the application is recognized by opening a browser and navigating to :
+        http://localhost:4444/wd/hub/status</p>
+
+    <p>You should see a json object with all the info about the app.</p>
+
+
+
+
+<pre><code>
+    {
+    "class": "org.openqa.selenium.remote.Response",
+    "hCode": 960985732,
+    "sessionId": null,
+    "state": null,
+    "status": 0,
+    "value": {
+    "build": {
+    "revision": "120cf4311807e2e137e519f4c4877cf6340d0cbc",
+    "time": "20130927-1435",
+    "version": "0.6.5"
+    },
+    "ios": {"simulatorVersion": "7.0"},
+    "java": {"version": "1.7.0_25"},
+    "os": {
+    "arch": "x86_64",
+    "name": "Mac OS X",
+    "version": "10.9.1"
+    },
+    "state": "success",
+    "supportedApps": [
+    {
+    "CFBundleDevelopmentRegion": "en",
+    "CFBundleExecutable": "InternationalMountains",
+    "CFBundleIconFile": "Icon.png",
+    "CFBundleIdentifier": "com.yourcompany.InternationalMountains",
+    "CFBundleInfoDictionaryVersion": "6.0",
+    "CFBundleName": "InternationalMountains",
+    "CFBundlePackageType": "APPL",
+    "CFBundleSignature": "????",
+    "CFBundleSupportedPlatforms": ["iPhoneSimulator"],
+    "CFBundleVersion": "1.1",
+    "DTPlatformName": "iphonesimulator",
+    "DTSDKName": "iphonesimulator7.0",
+    "LSRequiresIPhoneOS": true,
+    "NSMainNibFile": "MainWindow",
+    "UIDeviceFamily": [1],
+    "applicationPath": "/Users/mpalotas/Downloads/InternationalMountains.app",
+    "device": "iphone",
+    "deviceAlt": [
+    "iphone",
+    "ipod"
+    ],
+    "device_Alt": [
+    "iphone",
+    "ipad"
+    ],
+    "resources": {"CFBundleIconFile": "/wd/hub/resources/hash=-674408620"},
+    "sdkVersion": "7.0",
+    "sdkVersion_Alt": [
+    "5.0",
+    "5.1",
+    "6.0",
+    "6.1"
+    ],
+    ...
+    ...
+    ...
+
+
+</code></pre>
+</div>
+</div>
+</div>
+</div>
+<!--/row-->
+<hr>

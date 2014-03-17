@@ -1,0 +1,549 @@
+<div class="row row-offcanvas row-offcanvas-left">
+
+<div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+    <div class="list-group">
+        <a href="#firstTest" class="list-group-item active">First Test</a>
+        <a href="#l10n" class="list-group-item">Localized Apps</a>
+        <a href="#locator" class="list-group-item">Element Locators</a>
+        <a href="#debugElement" class="list-group-item">Element Debug</a>
+        <a href="#advAlert" class="list-group-item">Alert Handling</a>
+        <a href="#capabilities" class="list-group-item">Capabilities</a>
+        <a href="#rawJS" class="list-group-item">UIAutomation script</a>
+        <a href="#augment" class="list-group-item">Extensions</a>
+
+    </div>
+</div>
+<!--/span-->
+
+
+<div class="col-xs-12 col-sm-9">
+<p class="pull-left visible-xs">
+    <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle
+        nav
+    </button>
+</p>
+
+<div class="row">
+    <div class="col-12 col-sm-12 col-lg-12">
+        <a class="anchor" id="firstTest"></a>
+
+        <h2>Writing the first test for native ios apps</h2>
+
+        <p>Make sure you have gone through the <a href="?page=setup" id="setup2">setup</a> page
+            and that all the technical requirements are met</p>
+
+        <p>Start the server and connect the International Mountains demo app from Apple
+            through the following command</p>
+<pre class="prettyprint lang-sh">
+
+    $java -jar ios-server-<strong class="version">DEFAULT</strong>.jar -aut ~/InternationalMountains.app -port 5555 -simulators
+
+
+</pre>
+
+        <p>The following code is an example for:
+        <ol>
+            <li>how to start the the app</li>
+            <li>find some elements</li>
+            <li>click on the first element</li>
+            <li>print some text</li>
+            <li>take a screenshot</li>
+            <li>quit</li>
+        </ol>
+        </p>
+
+<pre class="prettyprint lang-java"><code>
+    public static void main(String[] args) throws MalformedURLException {
+    // create a selenium desiredCapabilities object with the right values.
+    DesiredCapabilities cap = IOSCapabilities.iphone("InternationalMountains", "1.1");
+    // start the application
+    RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:5555/wd/hub"), cap);
+
+    // check that the 9 mountains of the app are there.
+    List&lt;Weblement&gt; cells = driver.findElements(By.className("UIATableCell"));
+    Assert.assertEquals(9,cells.size());
+
+
+    // get the 1st mountain
+    WebElement first = cells.get(0);
+    first.click();
+
+    // take a screenshot using the normal selenium api.
+    TakesScreenshot screen =(TakesScreenshot)new Augmenter().augment(driver);
+    File ss = new File("screenshot.png");
+    screen.getScreenshotAs(OutputType.FILE).renameTo(ss);
+    System.out.println("screenshot take :"+ss.getAbsolutePath());
+
+    // access the content
+    By selector = By.xpath("//UIAStaticText[contains(@name,'climbed')]");
+    WebElement text = driver.findElement(selector);
+    System.out.println(text.getAttribute("name"));
+
+    // end the test
+    driver.quit();
+    }
+</code>
+</pre>
+        <p>This will print out :</p>
+
+<pre>
+Mountain 1 was first climbed on 29 May 1953 and has a height of 8,848 meters
+</pre>
+
+        <p>and you now have a screenshot of mountain details screen:</p>
+        <img src="images/screenshot.png" alt="step2.png" height='480' width='320'></div>
+
+
+</div>
+
+
+<div class="col-12 col-sm-12 col-lg-12">
+    <a class="anchor" id="l10n"></a>
+
+    <h2>Native tests and localization</h2>
+
+    <p>IOS automation is very content based. There are no IDs like for web pages. This makes
+        testing of
+        localized pages a bit trickier. Fortunately the localization data is embedded into
+        the
+        app, so the server can access it if you know the key for the content. </p>
+
+    <p> In the previous example, the app started in the default language, English and the
+        locator in the test
+        <code class="prettyprint">
+            By selector = By.xpath("//UIAStaticText[contains(@name,'climbed')]");
+        </code>
+        is hardcoded to English. Let's start it in Chinese (zh), and make the test content
+        free.</p>
+
+
+    <br><h5>First specify the language in the capabilities: </h5>
+
+
+<pre class="prettyprint">
+
+    DesiredCapabilities cap = IOSCapabilities.iphone("InternationalMountains", "1.1");
+    cap.setCapability(IOSCapabilities.LANGUAGE,"zh");
+
+</pre>
+
+
+    <br><h5>Then make the locator content free: (there is more information on how to identify
+    i.e. 'sentenceFormat' in the <strong><a href="?page=inspector#l10n">inspector
+        section.</a></strong>
+</h5>
+
+<pre class="prettyprint">
+    // access the content
+    By contentFree = By.xpath("//UIAStaticText[matches(@name,l10n('sentenceFormat'))]");
+    WebElement text = driver.findElement(contentFree);
+
+
+</pre>
+
+
+    <p>The complete test code is now content free, and you can switch between en, fr and zh
+        without having
+        to maintain your own localization dictionary. You can now start building your
+        generic page objects,
+        and focus on the functionality rather than the content. </p>
+
+    Complete code for zh :
+<pre class="prettyprint">
+
+
+public static void main(String[] args) throws MalformedURLException {
+    // create a selenium desiredCapabilities object with the right values.
+    DesiredCapabilities cap = IOSCapabilities.iphone("InternationalMountains", "1.1");
+    cap.setCapability(IOSCapabilities.LANGUAGE,"zh");
+
+    // start the application
+    RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), cap);
+
+    // check that the 9 mountains of the app are there.
+    List&lt;WebElement&gt; cells = driver.findElements(By.className("UIATableCell"));
+    Assert.assertEquals(9,cells.size());
+
+    // get the 1st mountain
+    WebElement first = cells.get(0);
+    first.click();
+
+    // take a screenshot using the normal selenium api.
+    TakesScreenshot screen =(TakesScreenshot)new Augmenter().augment(driver);
+    File ss = new File("screenshot-zh.png");
+    screen.getScreenshotAs(OutputType.FILE).renameTo(ss);
+    System.out.println("screenshot take :"+ss.getAbsolutePath());
+
+    // access the content
+    By contentFree = By.xpath("//UIAStaticText[matches(@name,l10n('sentenceFormat'))]");
+    WebElement text = driver.findElement(contentFree);
+    System.out.println(text.getAttribute("name"));
+
+    // end the test
+    driver.quit();
+    }
+</pre>
+
+    will print out :
+<pre>
+      screenshot take :/Users/freynaud/Documents/workspace/ios-driver/screenshot-zh.png
+      山 1 是8,848米高。它第一次攀登了在29 May 1953。
+</pre>
+
+    <p>and produce the following screenshot :</p>
+
+    <img src="images/screenshot-zh.png" alt="step2.png" height='480' width='320'>
+
+
+    <p>The previous example had some "magic" values. UIATableCell, UIAStaticText,
+        sentenceFormat. If you're
+        the developer of the app, those value will make sense. If you're not, you can use
+        the inspector to
+        find them. The inspector allows you to have the 'inspect element' feature you use to
+        write a selenium
+        web test. Read more about it here: <a href="inspector.html"
+                                              id="inspector2">Inspector</a>
+    </p>
+
+</div>
+
+
+<div class="col-12 col-sm-12 col-lg-12">
+    <a id="locator" class="anchor"></a>
+
+    <h2>Creating locators :</h2>
+
+    <p>First, have a look at the <a href="?page=inspector">inspector</a>, by opening it in your
+        browser under <a href="http://localhost:5555/inspector/" target="_blank">http://localhost:4444/inspector/</a>
+        it will give you a lot of information about the internals of the application under test.</p>
+
+    <p>UIAutomation elements don't have IDs. You need to use some of their other properties to
+        identify them.The webdriver protocol isn't meant to be used for non-web applications, so
+        there is a bit of mapping involved.</p>
+
+
+    <h5>name, value, label</h5>
+
+    <p>are mapped to linkText and partialLinkText</p>
+        <pre class="prettyprint">
+
+            By b = By.linkText("name=theName");
+            WebElement element = driver.findElement(b);
+
+            By b = By.linkText("value=theValue");
+            WebElement element = driver.findElement(b);
+
+            By b = By.linkText("label=theLabel");
+            WebElement element = driver.findElement(b);
+
+        </pre>
+
+    <p>partial/ regex matches are achieved using partialLinkText</p>
+
+        <pre class="prettyprint">
+            By b = By.partialLinkText("name=portionOfTheName");
+            WebElement element = driver.findElement(b);
+
+            // or regex.
+            By b = By.partialLinkText("name=portion(.*)Name");
+            WebElement element = driver.findElement(b);
+
+            // and can also handle localization
+            By b = By.partialLinkText("name=l10n('yourContentKey')");
+            WebElement element = driver.findElement(b);
+
+        </pre>
+
+    <h5>UIAccessibilityIdentification</h5>
+
+    <p>The closest thing to an ID would be <a
+            href='http://developer.apple.com/library/ios/#documentation/uikit/reference/UIAccessibilityIdentification_Protocol/Introduction/Introduction.html'>
+        UIAccessibilityIdentification</a>. Therefore this is what is mapped to id.The following
+        3 criterias are similar :</p>
+
+        <pre class="prettyprint">
+
+            By b = By.id("signInButton");
+            WebElement element = driver.findElement(b);
+
+            By b = By.name("signInButton");
+            WebElement element = driver.findElement(b);
+
+            By b = By.linkText("name=signInButton");
+            WebElement element = driver.findElement(b);
+
+        </pre>
+
+    <h5>type</h5>
+
+    <p>selection based on the element type are done with class name.</p>
+        <pre class="prettyprint">
+            By b = By.className("UIAButton");
+            WebElement element = driver.findElement(b);
+        </pre>
+
+    <h5>xpath</h5>
+
+    <p>xpath2 is the most powerful mechanism for selectors in ios-driver. It allows to combine all
+        the criteria above.</p>
+
+    <p>To match ""山 1 是8,848米高。它第一次攀登了在29 May 1953" from the Intl mountain demo app for
+        instance you can use :</p>
+        <pre class="prettyprint">
+
+            By b =  By.xpath("//*[matches(@name,l10n('meterFormat'))]");
+            // or
+            By b =  By.xpath("//UIAStaticText[matches(@name,l10n('meterFormat'))]");
+            // or
+            By b =  By.xpath("//UIAStaticText[@name,'山 1 是8,848米高。它第一次攀登了在29 May 1953')]");
+            // or
+            By b =  By.xpath("//UIAStaticText[contains(@name,'山')]");
+
+
+       </pre>
+
+    <p>will match any UIElement with name matching the value behind the meterFormat content key.</p>
+
+</div>
+
+<div class="col-12 col-sm-12 col-lg-12">
+    <a id="debugElement" class="anchor"></a>
+
+    <h2>Finding debug information about a native WebElement</h2>
+
+    <p> It is possible to programatically get all the information about a native WebElement and its
+        children,without using the UI of the web inspector.This is achieved using the getAttribute
+        method and querying the 'tree' attribute.</p>
+
+          <pre class="prettyprint lang-java">
+
+@Test
+public void findElementByTagName() throws InterruptedException, JSONException {
+    WebElement element = driver.findElement(By.tagName("UIATableCell"));
+    Assert.assertEquals(element.getAttribute("name"), "Buttons, Various uses of UIButton");
+    JSONObject tree = new JSONObject(element.getAttribute("tree"));
+    System.out.println(tree.toString(2));
+}
+       </pre>
+
+    will print :
+
+        <pre class="prettyprint lang-js">
+
+{
+  "ref": 4,
+  "label": null,
+  "value": null
+  "name": "Buttons, Various uses of UIButton",
+  "type": "UIATableCell",
+  "children": [{
+    "ref": 5,
+    "type": "UIAStaticText",
+    "value": "Buttons, Various uses of UIButton"
+    "label": "Buttons, Various uses of UIButton",
+    "name": "Buttons, Various uses of UIButton",
+    "rect": {
+      "origin": {
+        "x": 0,
+        "y": 64
+      },
+      "size": {
+        "height": 44,
+        "width": 320
+      }
+    },
+  }],
+  "rect": {
+    "origin": {
+      "x": 0,
+      "y": 64
+    },
+    "size": {
+      "height": 44,
+      "width": 320
+    }
+  }
+}
+            </pre>
+</div>
+
+<div class="col-12 col-sm-12 col-lg-12">
+    <a id="advAlert" class="anchor"></a>
+
+    <h2 id="">Advanced Alert handling</h2>
+
+    <p>Native alerts are like any other native element, they're part of the tree and are
+        composed of UIAButton, UIAStaticText etc. Alerts can be inspected with the inspector</p>
+    <img src="images/alert7.png" alt="alert inspector" height='480'>
+
+    <p>as such, you can use regular calls to interact with the alert :
+
+<pre class="prettyprint">
+
+@Test
+public void enterPasswordInAlert()  {
+    // if no alert, next line throws a NoSuchElementException
+    WebElement alert = driver.findElement(By.className("UIAAlert"));
+
+    // browse inside the alert.
+    alert.findElement(By.className("UIASecureTextField")).sendKeys("password");
+    alert.findElement(By.xpath("//UIAButton[@name='OK']")).click();
+}
+</pre>
+</div>
+
+<div class="col-12 col-sm-12 col-lg-12">
+    <a id="capabilities" class="anchor"></a>
+
+    <h2>Desired capabilities</h2>
+
+    <p>The map of parameters (the DesiredCapabilities object) accepts a set of parameters that
+        will
+        define the configuration the simulator/device will start with:</p>
+
+    <lu>
+        <li>device: iphone (default) | ipad</li>
+        <li>language: en | fr | zh . The list of supported languages depends on your
+            application.
+        </li>
+        <li>locale: en_GB ...</li>
+        <li>CFBundleName : UIACatalog | Safari ... name for your application, specified in its
+            info.plist
+        </li>
+        <li>CFBundleVersion : {string} version of the app to start ( optional )</li>
+        <li>variation: (Regular | Retina35 | Retina4) for iphone. (Regular | Retina) for ipad
+        </li>
+        <li>simulator : true</li>
+        <li>ios.switches :
+            An array of system parameters that will be passed to the app when it
+            is launched. Useful if the app can be configured to point to a QA envt with system
+            variable for instance.
+            <p>Assuming you want to start your app with the following 2 system
+                variables : A=YES and B=NO , you would write :</p>
+               <pre class="prettyprint">
+IOSCapabilities cap = IOSCapabilities.iphone("myApp");
+cap.setCapability(SIMULATOR, true);
+cap.setCapability(IOS_SWITCHES, Arrays.asList(new String[]{"-e", "A", "YES","-e","B","NO" }));
+               </pre>
+        </li>
+        <li>sdkVersion : {string} 7.0</li>
+    </lu>
+
+    </pre>
+</div>
+<div class="col-12 col-sm-12 col-lg-12">
+    <a id="rawJS" class="anchor"></a>
+
+    <h2>Raw UIAutomation scripts</h2>
+
+    <p>The underlying framework running the native part is instruments. Instruments tests are
+        written in JS. It's possible to execute instruments scripts directly by using the default
+        webdriver client. The arguments and returned objects follow the webdriver convention.</p>
+
+    <p>For example :</p>
+<pre class="prettyprint">
+
+/**
+*  instruments scripts can return a list of element. the elements can be used later on in the tests.
+*/
+@Test
+public void testShouldBeAbleToReturnAnArrayOfWebElements() {
+    WebDriver driver = new RemoteWebDriver(...);
+    // ...
+    List&lt;WebElement&gt; items = (List&lt;WebElement&gt;) executeScript("return UIATarget.localTarget().frontMostApp().windows()");
+    assertEquals(items.size(), 2);
+    driver.quit();
+}
+
+/**
+* Elements can be passed as parameter for the raw instruments scripts.
+*/
+@Test
+public void testShouldBeAbleToPassAWebElementAsArgument() {
+    WebDriver driver = new RemoteWebDriver(...);
+    // ...
+    WebElement cell = driver.findElement(By.xpath("//UIATableCell[@name='" + buttonsName + "']"));
+    String res = (String) executeScript("return arguments[0].type();", cell);
+    assertEquals(res, "UIATableCell");
+    driver.quit();
+}
+
+private Object executeScript(String script, Object... args) {
+    return ((JavascriptExecutor) driver).executeScript(script, args);
+}
+</pre>
+
+    <p>Some instruments JS methods do not work as expected and have been overwritten in ios-driver.
+        You
+        can find the documentation about those differences and all the additional functions can be
+        found
+        <a href="jsdoc/module-ios-driver.html">here.</a></p>
+
+</div>
+
+<div class="col-12 col-sm-12 col-lg-12">
+    <a id="augment" class="anchor"></a>
+
+    <h2>ios-driver specific methods.</h2>
+
+    <p>Some ios specific methods do not map directly to the webdriver ones. For those, you can use
+        the
+        Augmenter class to add the missing functionalities.</p>
+
+
+    <h5>Configurable</h5>
+
+    <p>Allows to change the configuration of a command at runtime. For instance you can switch
+        between
+        native and atoms based clicks on an hybrid app doing the following :</p>
+
+<pre class="prettyprint">
+// cast to the interface we need.
+Configurable config = IOSDriverAugmenter.augment(driver);
+
+// find the current state
+Map<String,Object> conf = config.getConfiguration(WebDriverLikeCommand.CLICK);
+System.out.println("default:"  + conf);
+
+// change to use JS based events.
+config.setConfiguration(WebDriverLikeCommand.CLICK, "nativeEvents", false);
+
+//... do some testing
+
+// use native events again.
+config.setConfiguration(WebDriverLikeCommand.CLICK, "nativeEvents", true);
+</pre>
+
+    <p>will print
+    <pre>default:{nativeEvents=true}</pre>
+    , then will disable native events for the click
+    methods, and activate them back. Native event are slower, but much accurate, so this is
+    typically
+    done to go through a flow quick, and then activate them again when you reach the page that needs
+    to
+    be tested.</p>
+    <p>protocol call :</p>
+<pre class="prettyprint">
+// set the configuration for a command
+"POST", "/session/:sessionId/ios-driver/configure/command/:command"
+// get the configuration for a command
+"GET", "/session/:sessionId/ios-driver/configure/command/:command"
+</pre>
+    <h5>IOSSearchContext</h5>
+
+    <p>Criteria based search instead of By.</p>
+
+    <h5>ElementTree</h5>
+
+    <p>Gives access to the logElementTree function from instruments. This method also takes a
+        screenshot
+        of the app, and loads the localization files.</p>
+
+</div>
+
+
+</div>
+</div>
+</div>
+<!--/row-->
+<hr>

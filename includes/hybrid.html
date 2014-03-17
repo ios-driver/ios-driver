@@ -1,0 +1,62 @@
+<div class="row row-offcanvas row-offcanvas-left">
+
+    <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+        <div class="list-group">
+            <a href="#hybrid" class="list-group-item active">Hybrid apps</a>
+        </div>
+    </div>
+    <!--/span-->
+
+
+    <div class="col-xs-12 col-sm-9">
+        <p class="pull-left visible-xs">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle
+                nav
+            </button>
+        </p>
+
+        <div class="row">
+            <div class="col-12 col-sm-12 col-lg-12">
+                <h2 id="hybrid">Hybrid apps</h2>
+
+                <p>Hybrid support means you can test a native app that has some embedded webviews,
+                    and when such a
+                    webview is reached, you can interact with the webview using a classic
+                    implementation of webdriver that
+                    lets you browse the dom, use css selector etc.</p>
+
+                <p>To use the hybrid app support, start the app like a native one, and once you
+                    encounter a webview,
+                    you can switch to the web mode using the webdriver window switching API.</p>
+
+<pre class="prettyprint lang-java">
+public static void main(String[] args) throws Exception {
+      IOSCapabilities catalog = IOSCapabilities.iphone("UICatalog");
+
+      RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:5555/wd/hub"), catalog);
+      // by default, the app starts in native mode.
+      WebElement web = driver.findElement(By.xpath("//UIATableCell[contains(@name,'Web')]"));
+      web.click();
+
+      // now that a webview is displayed, switch to web mode.
+      driver.switchTo().window("Web");
+
+      // and select items using natural web selectors.
+      final By cssSelector = By.cssSelector("a[href='http://store.apple.com/']");
+
+      // reuse whatever contrust your webdriver tests are using.
+      WebElement el = waitFor(elementToExist(driver, cssSelector));
+      Assert.assertEquals(el.getAttribute("href"), "http://store.apple.com/");
+
+      driver.quit();
+}
+</pre>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<!--/row-->
+<hr>
