@@ -46,13 +46,12 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   private final File xcodeInstall;
   private final String desiredSDKVersion;
   private final SimulatorSettings simulatorSettings;
-  private final Instruments instruments;
   private final File developer;
 
   /**
    * manages a single instance of the instruments process. Only 1 process can run at a given time.
    */
-  public IOSSimulatorManager(IOSCapabilities capabilities, Instruments instruments) {
+  public IOSSimulatorManager(IOSCapabilities capabilities) {
     this.sdks = ClassicCommands.getInstalledSDKs();
     this.desiredSDKVersion = validateSDK(capabilities.getSDKVersion());
 
@@ -60,88 +59,8 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     boolean is64bit = DeviceVariation.is64bit(capabilities.getDeviceVariation());
     simulatorSettings = new SimulatorSettings(desiredSDKVersion, is64bit);
     bundleId = capabilities.getBundleId();
-    this.instruments = instruments;
     this.developer =
         new File(xcodeInstall, "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer");
-  }
-
-  @Override
-  public void setSDKVersion() {
-    if (!isDefaultSDK()) {
-      warmup();
-      forceDefaultSDK();
-    }
-  }
-
-  private boolean isDefaultSDK() {
-    String defaultSDK = ClassicCommands.getDefaultSDK();
-    return new IOSVersion(defaultSDK).equals(desiredSDKVersion);
-  }
-
-  private void warmup() {
-    if (instruments instanceof InstrumentsApple) {
-      ((InstrumentsApple) instruments).startWithDummyScript();
-    } else {
-      throw new RuntimeException("NI");
-    }
-  }
-  
-  private boolean exiledSDKsNeeded;
-
-  private void forceDefaultSDK() {
-    for (String version : sdks) {
-      if (new IOSVersion(version).isGreaterThan(desiredSDKVersion)) {
-        File f = new File(developer, "SDKs/iPhoneSimulator" + version + ".sdk");
-        if (!f.exists()) {
-          System.err.println("doesn't exist " + f);
-        } else {
-          File renamed = new File(developer, "/exiledSDKs/iPhoneSimulator" + version + ".sdk");
-          boolean ok = f.renameTo(renamed);
-          if (!ok) {
-            throw new WebDriverException(
-                "Starting the non default SDK requires some more setup.Failed to move " + f
-                + " to " + renamed + getErrorMessageMoveSDK(f));
-          }
-          exiledSDKsNeeded = true;
-        }
-        f.mkdirs();
-      }
-    }
-  }
-
-  private String getErrorMessageMoveSDK(File sdkVersion) {
-    File sdk = new File(developer, "SDKs");
-    File exiled = new File(developer, "exiledSDKs");
-    String msg = "Cannot move folders from " + sdk + " to " + exiled;
-    msg += "\nMake sure the rights are correct by running the following commands:";
-    msg += "\nsudo chmod a+rwx " + sdk;
-    if (sdkVersion != null)
-      msg += "\nsudo chmod a+rwx " + sdkVersion.getAbsolutePath();
-    msg += "\nsudo mkdir " + exiled;
-    msg += "\nsudo chmod -R a+rw " + exiled;
-    return msg;
-  }
-
-  public void restoreExiledSDKs() {
-    File exiled = new File(developer, "exiledSDKs/");
-    if (!exiled.exists()) {
-      if (exiledSDKsNeeded) {
-          log.warning(exiled.getAbsolutePath() + " doesn't exist." + getErrorMessageMoveSDK(null));
-      }
-      return;
-    }
-    for (String s : exiled.list()) {
-      File sdk = new File(exiled, s);
-      File original = new File(sdk.getParentFile().getParentFile() + "/SDKs/" + s);
-      if (original.listFiles().length == 0) {
-        original.delete();
-      }
-      boolean ok = sdk.renameTo(original);
-      if (!ok) {
-        throw new WebDriverException(
-            "Error restoring the SDK to its original directory. The SDK will be missing in xcode.");
-      }
-    }
   }
 
   private String validateSDK(String sdk) {
@@ -160,7 +79,6 @@ public class IOSSimulatorManager implements IOSDeviceManager {
    */
   @Override
   public void cleanupDevice() {
-    restoreExiledSDKs();
     ClassicCommands.killall(SIMULATOR_PROCESS_NAME);
   }
 

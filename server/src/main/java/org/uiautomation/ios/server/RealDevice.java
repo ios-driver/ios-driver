@@ -13,11 +13,18 @@
  */
 
 package org.uiautomation.ios.server;
+
+import org.libimobiledevice.ios.driver.binding.exceptions.SDKException;
+import org.libimobiledevice.ios.driver.binding.model.ApplicationInfo;
 import org.libimobiledevice.ios.driver.binding.model.DeviceInfo;
+import org.libimobiledevice.ios.driver.binding.services.InstallerService;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
+import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.application.APPIOSApplication;
-import org.uiautomation.ios.server.application.IPAApplication;
+
+import java.util.List;
 
 public class RealDevice extends Device {
 
@@ -27,7 +34,7 @@ public class RealDevice extends Device {
   private final String buildVersion;
   private final String productType;
   private final String iosVersion;
-  /*private final DeviceInstallerService installer;*/
+  private final InstallerService installer;
 
   public RealDevice(DeviceInfo info) {
     this.uuid = info.getUniqueDeviceID();
@@ -36,7 +43,11 @@ public class RealDevice extends Device {
     this.buildVersion = info.getBuildVersion();
     this.productType = info.getProductType();
     this.iosVersion = info.getProductVersion();
-    /*installer = new DeviceInstallerService(uuid);*/
+    try {
+      installer = new InstallerService(info.getDevice());
+    } catch (SDKException e) {
+      throw new WebDriverException(e);
+    }
   }
 
 
@@ -92,24 +103,37 @@ public class RealDevice extends Device {
   public IOSCapabilities getCapability() {
     IOSCapabilities res = new IOSCapabilities();
     res.setCapability(IOSCapabilities.SIMULATOR, false);
-    //res.setCapability(IOSCapabilities.UI_SDK_VERSION, iosVersion);
-    //res.setCapability(IOSCapabilities.DEVICE, type);
-    //res.setCapability(IOSCapabilities.VARIATION, DeviceVariation.valueOf(this.productType.replace(",", "")));
-    //res.setCapability(IOSCapabilities.UUID, uuid);
+    res.setCapability(IOSCapabilities.UI_SDK_VERSION, iosVersion);
+    res.setCapability(IOSCapabilities.DEVICE, type);
+//    res.setCapability(IOSCapabilities.VARIATION, DeviceVariation.valueOf(this.productType.replace(",", "")));
+    res.setCapability(IOSCapabilities.UUID, uuid);
     return res;
   }
 
   @Override
   public boolean canRun(APPIOSApplication app) {
-    if (!(app instanceof IPAApplication)) {
+    /*if (!(app instanceof IPAApplication)) {
       return false;
     }
-    return true;
+    return true;*/
+    try {
+      return installer.getApplication(app.getBundleId()) != null;
+    } catch (SDKException e) {
+      return false;
+    }
   }
 
   @Override
   public String toString() {
     return "Device[" + uuid + ",name:" + name + (isBusy() ? ",in use by ios-driver" : ",available") + ']';
+  }
+
+  public List<ApplicationInfo> getApplications() {
+    try {
+      return installer.listApplications(InstallerService.ApplicationType.USER);
+    } catch (SDKException e) {
+      throw new WebDriverException(e);
+    }
   }
 }
 

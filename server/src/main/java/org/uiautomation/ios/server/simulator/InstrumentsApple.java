@@ -15,6 +15,10 @@
 package org.uiautomation.ios.server.simulator;
 
 import org.apache.commons.io.FileUtils;
+import org.libimobiledevice.ios.driver.binding.exceptions.LibImobileException;
+import org.libimobiledevice.ios.driver.binding.exceptions.SDKException;
+import org.libimobiledevice.ios.driver.binding.services.DeviceService;
+import org.libimobiledevice.ios.driver.binding.services.IOSDevice;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.IOSCapabilities;
@@ -23,6 +27,7 @@ import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
+import org.uiautomation.ios.server.application.IPAApplication;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.command.UIAScriptResponse;
 import org.uiautomation.ios.server.instruments.IOSDeviceManager;
@@ -84,8 +89,21 @@ public class InstrumentsApple implements Instruments {
     String appPath = application.getDotAppAbsolutePath();
     File scriptPath = new ScriptHelper().getScript(port, appPath, sessionId, CURL);
     output = createTmpOutputFolder();
-    
-    deviceManager = new IOSSimulatorManager(caps, this);
+
+    if (uuid == null) {
+      deviceManager = new IOSSimulatorManager(caps);
+    } else {
+      IPAApplication ipa = (IPAApplication) application.getUnderlyingApplication();
+      IOSDevice d = null;
+      try {
+        d = DeviceService.get(uuid);
+      } catch (SDKException e) {
+        e.printStackTrace();
+      } catch (LibImobileException e) {
+        e.printStackTrace();
+      }
+      deviceManager = new IOSRealDeviceManager(caps, d, ipa);
+    }
 
     instruments = createInstrumentCommand(scriptPath);
     instruments.registerListener(new ApplicationCrashListener(session));
@@ -127,7 +145,6 @@ public class InstrumentsApple implements Instruments {
     if (application.isSafari() && isSDK70OrHigher && application.isSimulator()) {
       application.setSafariBuiltinFavorites();
     }
-    deviceManager.setSDKVersion();
     deviceManager.resetContentAndSettings();
     deviceManager.setL10N(locale, language);
     deviceManager.setKeyboardOptions();
@@ -174,12 +191,6 @@ public class InstrumentsApple implements Instruments {
     ClassicCommands.kill(instrumentsPid);
     channel.stop();
     putMobileSafariAppBackInInstallDir();
-  }
-
-  public void startWithDummyScript() {
-    File script = new ScriptHelper().createTmpScript("UIALogger.logMessage('warming up');");
-    Command c = createInstrumentCommand(script);
-    c.executeAndWait();
   }
 
   private Command createInstrumentCommand(File script) {
@@ -279,8 +290,11 @@ public class InstrumentsApple implements Instruments {
       log.log(Level.SEVERE,
               "----------------------------------------------------------------------------");
       StringBuilder sb = new StringBuilder();
-      sb.append("\n---------> R E A D   T H I S:\ncouldn't delete MobileSafari app install dir: " + e.getMessage());
-      sb.append("\nmake sure ios-driver has read/write permissions to that folder by executing those 2 commands:");
+      sb.append(
+          "\n---------> R E A D   T H I S:\ncouldn't delete MobileSafari app install dir: " + e
+              .getMessage());
+      sb.append(
+          "\nmake sure ios-driver has read/write permissions to that folder by executing those 2 commands:");
       sb.append("\n\t$ sudo chmod a+rw " + safariFolder.getParentFile().getAbsolutePath());
       sb.append("\n\t$ sudo chmod -R a+rw " + safariFolder.getAbsolutePath());
       String em = sb.toString();

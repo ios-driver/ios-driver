@@ -17,14 +17,12 @@ package org.uiautomation.ios;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.uiautomation.ios.UIAModels.UIAPickerWheel;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
-import org.uiautomation.ios.client.uiamodels.impl.augmenter.IOSDriverAugmenter;
+import org.uiautomation.ios.communication.device.DeviceType;
+import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.IOSServer;
 import org.uiautomation.ios.server.IOSServerConfiguration;
-import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
 
 import java.net.URL;
 import java.util.Arrays;
@@ -39,41 +37,49 @@ public class Demo {
   private final static boolean useQA = true;
 
   public static void main(String[] args) throws Exception {
-    String[] a = {"-port", "4445", "-host", "localhost",
-                  "-aut", SampleApps.getUICatalogFile(),
-                  "-aut", SampleApps.getUICatalogIpad(),
-                  "-aut", "/Users/freynaud/eBay3.1_19.app"};
+    String[] a = {"-port", "4444", "-host", "localhost",
+                  //"-aut", SampleApps.getUICatalogFile(),
+                  //"-aut", SampleApps.getUICatalogIpad(),
+                  "-beta",
+                  "-aut" , "/Users/freynaud/eBay_ipad3.3.26.app"
+//                  "-aut", "/Users/freynaud/eBay.ipa",
+//                  "-aut", "/Users/freynaud/UICatalog.ipa"
+};
 
     IOSServerConfiguration config = IOSServerConfiguration.create(a);
 
     IOSServer server = new IOSServer(config);
     server.start();
 
-    IOSCapabilities cap = IOSCapabilities.iphone("eBay");
-    cap.setCapability(IOSCapabilities.SIMULATOR, true);
+    final IOSCapabilities cap = IOSCapabilities.iphone("UICatalog");
+    cap.setCapability(IOSCapabilities.SIMULATOR, false);
 
     if (useQA) {
       cap.setCapability(IOSCapabilities.IOS_SWITCHES,
                         Arrays.asList(new String[]{"-e", "useQA", "YES"}));
     }
 
-    RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4445/wd/hub"), cap);
-    WebElement agree = driver.findElement(By.name("l10n('Agree')"));
-    agree.click();
-    WebElement searchField = driver.findElement(By.linkText("value=Search eBay"));
-    searchField.sendKeys("ihpone5");
-    WebElement search = driver.findElement(By.xpath("//UIAButton[@label='search']"));
-    search.click();
+    RemoteIOSDriver driver = new RemoteIOSDriver(new URL("http://localhost:4445/wd/hub"), cap);
+    System.out.println(driver.logElementTree(null, false).toString(2));
 
-    driver.quit();
-    server.stop();
+    RemoteIOSDriver driver2 = new RemoteIOSDriver(new URL("http://localhost:4445/wd/hub"), cap);
+    System.out.println(driver2.logElementTree(null, false).toString(2));
+    System.out.println(driver.logElementTree(null, false).toString(2));
 
 
-  }
+//    WebElement agree = driver.findElement(By.name("l10n('Agree')"));
+//    agree.click();
+//    WebElement searchField = driver.findElement(By.linkText("value=Search eBay"));
+//    searchField.sendKeys("ihpone5");
+//    WebElement search = driver.findElement(By.xpath("//UIAButton[@label='search']"));
+//    search.click();
+//
+//    driver.quit();
+  server.stop();
+}
 
 
   public static void main2(String[] args) throws Exception {
-
 
     String[] a = {"-port", "5555", "-host", "127.0.0.1",
                   //"-aut", SampleApps.getUICatalogFile(),
@@ -183,7 +189,6 @@ public class Demo {
     }
 
 
-
   }
 
   public static void main3(String[] args) throws Exception {
@@ -207,8 +212,8 @@ public class Demo {
     server.stop();
   }
 
-  private static String userId = "francois_uk1";
-  private static String password = "password";
+private static String userId = "francois_uk1";
+private static String password = "password";
 
 
 }

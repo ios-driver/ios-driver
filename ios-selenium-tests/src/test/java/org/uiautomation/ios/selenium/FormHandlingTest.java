@@ -49,6 +49,8 @@ public class FormHandlingTest extends BaseSeleniumTest {
   @Test
   public void testShouldClickOnSubmitInputElements() {
     driver.get(pages.formPage);
+    Configurable config = IOSDriverAugmenter.augment(driver);
+    config.setConfiguration(WebDriverLikeCommand.CLICK, "nativeEvents", false);
     driver.findElement(By.id("submitButton")).click();
     waitFor(pageTitleToBe(driver, "We Arrive Here"));
     assertEquals(driver.getTitle(), ("We Arrive Here"));
