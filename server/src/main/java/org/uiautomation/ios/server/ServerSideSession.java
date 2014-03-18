@@ -25,6 +25,7 @@ import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.application.AppleLanguage;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
+import org.uiautomation.ios.server.application.IPAShellApplication;
 import org.uiautomation.ios.server.configuration.Configuration;
 import org.uiautomation.ios.server.configuration.DriverConfigurationStore;
 import org.uiautomation.ios.server.logging.IOSLogManager;
@@ -81,13 +82,16 @@ public class ServerSideSession extends Session {
     ensureLanguage();
     ensureLocale();
 
-    // extract application from capabilities if necessary
-    URL url = desiredCapabilities.getAppURL();
-    if (url != null) {
-      application = extractFromCapabilities();
-    } else {
-      application = server.findAndCreateInstanceMatchingApplication(desiredCapabilities);
-    }
+
+      // extract application from capabilities if necessary
+      URL url = desiredCapabilities.getAppURL();
+      if (url != null) {
+        application = extractFromCapabilities();
+      } else {
+        application = server.findAndCreateInstanceMatchingApplication(desiredCapabilities);
+      }
+
+
 
     try {
       device = server.findAndReserveMatchingDevice(desiredCapabilities);

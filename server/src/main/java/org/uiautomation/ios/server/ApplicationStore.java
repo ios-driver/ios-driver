@@ -58,7 +58,8 @@ public class ApplicationStore {
 
   public APPIOSApplication getApplication(String applicationPath) {
     for (APPIOSApplication a : all) {
-      if (applicationPath.equals(a.getApplicationPath().getAbsolutePath())) {
+      if (a.getApplicationPath() != null && applicationPath
+          .equals(a.getApplicationPath().getAbsolutePath())) {
         return a;
       }
     }

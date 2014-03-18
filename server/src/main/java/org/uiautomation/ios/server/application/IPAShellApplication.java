@@ -15,6 +15,7 @@
 package org.uiautomation.ios.server.application;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.server.Device;
@@ -75,5 +76,11 @@ public class IPAShellApplication extends IPAApplication {
   public String toString(){
     return bundleId +"::"+ version;
   }
+
+  @Override
+  public JSONObject getMetadata(){
+    return new JSONObject();
+  }
+
 
 }

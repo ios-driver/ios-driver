@@ -15,14 +15,10 @@
 package org.uiautomation.ios.server.simulator;
 
 import org.libimobiledevice.ios.driver.binding.model.ApplicationInfo;
-import org.libimobiledevice.ios.driver.binding.exceptions.LibImobileException;
-import org.libimobiledevice.ios.driver.binding.exceptions.SDKException;
-import org.libimobiledevice.ios.driver.binding.services.DeviceService;
 import org.libimobiledevice.ios.driver.binding.services.IOSDevice;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
-import org.uiautomation.ios.server.RealDevice;
 import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.application.IPAApplication;
 import org.uiautomation.ios.server.instruments.IOSDeviceManager;
@@ -47,14 +43,8 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
    * @param device       the device that will host the test
    * @param app          the app that will be ran.
    */
-  public IOSRealDeviceManager(IOSCapabilities capabilities, RealDevice device, IPAApplication app) {
-    try {
-      this.device = DeviceService.get(device.getUuid());
-    } catch (SDKException e) {
-      e.printStackTrace();
-    } catch (LibImobileException e) {
-      e.printStackTrace();
-    }
+  public IOSRealDeviceManager(IOSCapabilities capabilities, IOSDevice device, IPAApplication app) {
+    this.device = device;
     bundleId = capabilities.getBundleId();
     this.capabilities = capabilities;
     this.app = app;
@@ -166,6 +156,6 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
 
   @Override
   public void installTrustStore(String trustStore) {
-   // not-applicable
+    // not-applicable
   }
 }
