@@ -109,7 +109,7 @@ public class RealDevice extends Device {
 
   @Override
   public String toString() {
-    return "Device[" + uuid + ",name:" + name + (isBusy() ? ",busy" : ",available") + ']';
+    return "Device[" + uuid + ",name:" + name + (isBusy() ? ",in use by ios-driver" : ",available") + ']';
   }
 }
 

@@ -249,20 +249,36 @@ public class IOSServer {
       return;
     }
     if (selfRegisteringRemote != null) {
-      selfRegisteringRemote.stop();
-      selfRegisteringRemote = null;
+      try {
+        selfRegisteringRemote.stop();
+        selfRegisteringRemote = null;
+      } catch (Exception e) {
+        log.warning("exception stopping: " + e);
+      }
     }
     if (folderMonitor != null) {
-      folderMonitor.stop();
-      folderMonitor = null;
+      try {
+        folderMonitor.stop();
+        folderMonitor = null;
+      } catch (Exception e) {
+        log.warning("exception stopping: " + e);
+      }
     }
     if (driver != null) {
-      driver.stop();
-      driver = null;
+      try {
+        driver.stop();
+        driver = null;
+      } catch (Exception e) {
+        log.warning("exception stopping: " + e);
+      }
     }
     if (server != null) {
-      server.stop();
-      server = null;
+      try {
+        server.stop();
+        server = null;
+      } catch (Exception e) {
+        log.warning("exception stopping: " + e);
+      }
     }
   }
 }
