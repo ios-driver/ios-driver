@@ -216,7 +216,8 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
 
 
     StringBuilder script = new StringBuilder();
-    script.append("var keyboard = UIAutomation.cache.get('1').keyboard();");
+    script.append("var keyboard; var waiter = 10; while(waiter-- > 0){try{ " +
+            "keyboard = UIAutomation.cache.get('1').keyboard(); break;}catch(e){UIATarget.localTarget().delay(1);}}; ");
 
     Boolean keyboardResigned = false;
     boolean ios7 = new IOSVersion(session.getCapabilities().getSDKVersion()).isGreaterOrEqualTo("7.0");

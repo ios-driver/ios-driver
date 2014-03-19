@@ -95,6 +95,9 @@ public abstract class WebKitRemoteDebugProtocol {
     handler.addListener(listener);
   }
 
+  public String getConnectionId() {
+    return connectionId;
+  }
 
   public void register() {
     if (connectionId != null) {

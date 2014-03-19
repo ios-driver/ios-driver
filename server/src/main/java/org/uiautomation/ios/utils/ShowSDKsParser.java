@@ -26,11 +26,14 @@ public class ShowSDKsParser implements CommandOutputListener {
 
   private List<String> sdks = new ArrayList<>();
   private boolean ok = true;
+  private boolean needToFirstLaunchXcode = false;
 
   public void stdout(String log) {
     String sdk = extractSDK(log);
     if (sdk != null) {
       sdks.add(sdk);
+    } else if (log.contains("Agreeing to the Xcode/iOS license requires admin privileges")) {
+      needToFirstLaunchXcode = true;
     }
   }
 
@@ -60,5 +63,9 @@ public class ShowSDKsParser implements CommandOutputListener {
       throw new WebDriverException("there was an error.stderr is not empty");
     }
     return sdks;
+  }
+
+  public boolean isNeedToFirstLaunchXcode() {
+    return needToFirstLaunchXcode;
   }
 }

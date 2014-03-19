@@ -32,8 +32,10 @@ import org.uiautomation.ios.setup.IOSSafariSimulatorManager;
 import org.uiautomation.ios.utils.IOSVersion;
 import org.uiautomation.ios.wkrdp.WebKitRemoteDebugProtocolFactory;
 import org.uiautomation.ios.wkrdp.internal.WebKitRemoteDebugProtocol;
+import org.uiautomation.ios.wkrdp.message.WebkitApplication;
 
 import java.net.URL;
+import java.util.List;
 import java.util.Timer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -238,7 +240,10 @@ public class IOSDualDriver {
     int currentPageID = webDriver.getCurrentPageID();
     webDriver.stop();
     WebKitRemoteDebugProtocol p = WebKitRemoteDebugProtocolFactory.create(session, nativeDriver);
+    
+    List<WebkitApplication> applications = webDriver.getApplications();
     webDriver = new RemoteIOSWebDriver(session, p);
+    webDriver.setApplications(applications);
     webDriver.start();
     webDriver.switchTo(String.valueOf(currentPageID));
   }

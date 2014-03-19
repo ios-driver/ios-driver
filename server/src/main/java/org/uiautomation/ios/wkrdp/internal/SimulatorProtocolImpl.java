@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
@@ -67,17 +68,31 @@ public class SimulatorProtocolImpl extends WebKitRemoteDebugProtocol {
    * sends the message to the AUT.
    */
   protected void sendMessage(String xml) {
+    byte[] bytes = null;
     try {
-      byte[] bytes = xml.getBytes("UTF-8");
-      OutputStream os = socket.getOutputStream();
-      os.write((byte) ((bytes.length >> 24) & 0xFF));
-      os.write((byte) ((bytes.length >> 16) & 0xFF));
-      os.write((byte) ((bytes.length >> 8) & 0xFF));
-      os.write((byte) (bytes.length & 0xFF));
-      os.write(bytes);
+      bytes = xml.getBytes("UTF-8");
+      writeBytes(bytes);
+    } catch (SocketException se) {
+      // when we get a socket exception, let's try to re-establish
+      stop();
+      start();
+      try {
+        writeBytes(bytes);
+      } catch (IOException e) {
+        throw new WebDriverException(e);
+      }
     } catch (IOException e) {
       throw new WebDriverException(e);
     }
+  }
+
+  private void writeBytes(byte[] bytes) throws IOException {
+    OutputStream os = socket.getOutputStream();
+    os.write((byte) ((bytes.length >> 24) & 0xFF));
+    os.write((byte) ((bytes.length >> 16) & 0xFF));
+    os.write((byte) ((bytes.length >> 8) & 0xFF));
+    os.write((byte) (bytes.length & 0xFF));
+    os.write(bytes);
   }
 
   /**
