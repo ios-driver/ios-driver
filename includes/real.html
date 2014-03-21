@@ -1,0 +1,78 @@
+<div class="row row-offcanvas row-offcanvas-left">
+
+    <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+        <div class="list-group">
+            <a href="#device" class="list-group-item active">Preparing the device</a>
+            <a href="#ipa" class="list-group-item">Preparing the app</a>
+        </div>
+    </div>
+    <!--/span-->
+
+
+    <div class="col-xs-12 col-sm-9">
+        <p class="pull-left visible-xs">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle
+                nav
+            </button>
+        </p>
+
+        <div class="row">
+            <div class="col-12 col-sm-12 col-lg-12">
+                <a id="device" class="anchor"></a>
+
+                <h2>Device</h2>
+
+                <p>Check Apple's <a
+                        href="https://developer.apple.com/library/ios/recipes/xcode_help-devices_organizer/articles/provision_device_for_development-generic.html">doc</a>
+                </p>
+
+
+            </div>
+
+            <div class="col-12 col-sm-12 col-lg-12">
+                <a id="ipa" class="anchor"></a>
+
+                <h2>Preparing the application.</h2>
+
+                <p>You need to compile and package the app using your developer provisioning
+                    profile.This is a requirement from Apple's <a
+                            href="https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/UsingtheAutomationInstrument/UsingtheAutomationInstrument.html">UIAutomation.
+                    </a>. Ideally, you should get the ipa file with the proper provisioning provile
+                    from your CI server.If you don't, you can follow the following steps to generate
+                    what you need from XCode.</p>
+
+
+                <p>Start XCode and load the code of the application you want to test. Select the
+                    application in the left panel, and choose Product > Archive.</p>
+                <img class="col-12 col-sm-12 col-lg-12" src="images/ipa1.png"
+                     alt="generate ipa"/>
+
+                <p>That should automatically open Xcode's archive panel. Select the archive you just
+                    created and choose Distribute.</p>
+                <img class="col-12 col-sm-12 col-lg-12" src="images/ipa2.png"
+                     alt="generate ipa"/>
+
+                <p>This will trigger a prompt to choose what kind of distribution you want. For
+                    testing, it is "Save for entreprise or Ad Hoc Deployment".Click Next</p>
+                <img class="col-12 col-sm-12 col-lg-12" src="images/ipa3.png"
+                     alt="generate ipa"/>
+
+                <p>Choose a dev provisioning profile of type Development ( You need an IOS dev
+                    account to get this profile ).</p>
+                <img class="col-12 col-sm-12 col-lg-12" src="images/ipa4.png"
+                     alt="generate ipa"/>
+
+                <p>Click export. The generated ipa file is what you need to provide when ios-driver
+                    starts.</p>
+                <img class="col-12 col-sm-12 col-lg-12" src="images/ipa5.png"
+                     alt="generate ipa"/>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<!--/row-->
+<hr>
