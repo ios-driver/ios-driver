@@ -128,10 +128,6 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
     // no-op
   }
 
-  @Override
-  public void setSDKVersion() {
-    // no-op
-  }
 
   @Override
   public void setLocationPreference(boolean authorized) {
