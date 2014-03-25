@@ -142,6 +142,8 @@ public class InstrumentsApple implements Instruments {
     deviceManager.setVariation(deviceType, variation);
     deviceManager.setSimulatorScale(caps.getSimulatorScale());
     application.setDefaultDevice(deviceType, putDefaultFirst);
+
+
     if (application.isSafari() && isSDK70OrHigher && application.isSimulator()) {
       application.setSafariBuiltinFavorites();
     }

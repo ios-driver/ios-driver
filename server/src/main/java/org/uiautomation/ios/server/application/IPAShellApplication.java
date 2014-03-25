@@ -76,11 +76,13 @@ public class IPAShellApplication extends IPAApplication {
   public String toString(){
     return bundleId +"::"+ version;
   }
+  @Override
+  public boolean isSimulator(){
+    return false;
+  }
 
   @Override
   public JSONObject getMetadata(){
     return new JSONObject();
   }
-
-
 }
