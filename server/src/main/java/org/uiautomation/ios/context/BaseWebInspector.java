@@ -272,7 +272,7 @@ public abstract class BaseWebInspector implements MessageListener, ConnectListen
       arguments.put(new JSONObject().put("objectId", document.getRemoteObject().getId()));
       arguments.put(new JSONObject().put("objectId", context.getWindow().getRemoteObject().getId()));
 
-      String contextObject = "{'document': arguments[" + arguments.length() + "], 'window': arguments[" + (arguments.length() + 1) + "]}";
+      String contextObject = "{'document': arguments[" + (arguments.length() - 2) + "], 'window': arguments[" + (arguments.length() - 1) + "]}";
       script = "with (" + contextObject + ") {" + script + "}";
 
     }
