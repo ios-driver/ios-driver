@@ -71,7 +71,7 @@ public class ScriptHelper {
 
   // TODO freynaud AUT is only used for the capabilities. It should be a response decorator of getCaps
   public String generateScriptContent(int port, String aut, String opaqueKey,
-                                      CommunicationMode mode) {
+                                      CommunicationMode mode,boolean acceptSslCerts) {
     StringBuilder scriptContent = new StringBuilder();
 
     scriptContent.append(Joiner.on("\n").join(
@@ -80,6 +80,7 @@ public class ScriptHelper {
         String.format("var CONFIG_AUT = \"%s\";", aut),
         String.format("var CONFIG_MODE = \"%s\";", mode),
         String.format("var CONFIG_SESSION = \"%s\";", opaqueKey),
+        String.format("var ACCEPT_SSL_CERTS = %s;", acceptSslCerts),
         ""
     ));
 
@@ -105,9 +106,9 @@ public class ScriptHelper {
     }
   }
 
-  public File getScript(int port, String aut, String opaqueKey, CommunicationMode mode) {
+  public File getScript(int port, String aut, String opaqueKey, CommunicationMode mode,boolean acceptSslCerts) {
     try {
-      String content = generateScriptContent(port, aut, opaqueKey, mode);
+      String content = generateScriptContent(port, aut, opaqueKey, mode,acceptSslCerts);
       return createTmpScript(content);
     } catch (Exception e) {
       throw new WebDriverException("cannot generate the script for instrument.", e);

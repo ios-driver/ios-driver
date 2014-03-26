@@ -114,3 +114,11 @@ UIAAlert.prototype.cancelButton = function () {
     }
     return res;
 }
+
+
+UIAAlert.prototype.isSSLWarning = function(){
+    if (this.name() === "Cannot Verify Server Identity"){
+        return true;
+    }
+    return false;
+}

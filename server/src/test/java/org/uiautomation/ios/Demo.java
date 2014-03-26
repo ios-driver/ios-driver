@@ -17,6 +17,7 @@ package org.uiautomation.ios;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.communication.device.DeviceType;
