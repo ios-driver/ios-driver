@@ -8,11 +8,13 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
+import org.uiautomation.ios.server.command.uiautomation.SetScriptTimeoutNHandler;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -1072,5 +1074,38 @@ public class ExecutingJavascriptTests extends BaseSeleniumTest {
     // replacement.
     assertEquals(actualFrameTitle, executeScript("return (document.title);"));
     assertEquals(actualFrameTitle, executeScript("return (window.document.title);"));
+  }
+
+  @Test
+  public void testCanSetScriptTimeout() {
+    if (!(driver instanceof JavascriptExecutor)) {
+      return;
+    }
+
+    driver.manage().timeouts().setScriptTimeout(10, TimeUnit.MILLISECONDS);
+    assertEquals((int) SetScriptTimeoutNHandler.TIMEOUT, 10);
+  }
+
+  @Test
+  public void testAsyncScriptsWillTimeoutAndFail() {
+    if (!(driver instanceof JavascriptExecutor)) {
+      return;
+    }
+
+    driver.manage().timeouts().setScriptTimeout(10, TimeUnit.MILLISECONDS);
+
+    driver.get(pages.xhtmlTestPage);
+
+    try {
+      // For some reason, setting the setTimeout to a shorter time of say, 50ms, although still greater then the 10ms specified above, does not trigger a timeout.
+      // It probably has to do with how often the timeout checks are all performed but it's worth noting that the timeout is not super strict, but just something to fall back
+      // on so the user doesn't get trapped in a non-callback-calling async script execution. I don't know if there is any reason for it to be more strict in this context.
+      // - samuel
+      ((JavascriptExecutor) driver).executeAsyncScript("var cb = arguments[arguments.length - 1]; window.setTimeout(function(){cb();}, 100);");
+      fail("Expected an exception");
+    } catch (Exception e) {
+      // This is expected
+      assertFalse(e.getMessage().startsWith("null "), e.getMessage());
+    }
   }
 }
