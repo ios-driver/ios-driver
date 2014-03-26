@@ -23,6 +23,7 @@ var UIAutomation = {
     SESSION: CONFIG_SESSION,
     AUT: CONFIG_AUT,
     COMMUNICATION_MODE: CONFIG_MODE,
+    ACCEPT_SSL_CERTS: ACCEPT_SSL_CERTS,
     CAPABILITIES: -1,
 
     /**
@@ -203,16 +204,17 @@ var UIAutomation = {
     /**
      * wires the alert handler. If the handler isn't attached, all alerts are ignored, and clicked
      * away.
+     * return false = discard the alert automatically
+     * return true = keep the alert opened
      */
     setAlertHandler: function () {
         var ignoreAllAlerts = false;
+        var acceptAllSSL = this.ACCEPT_SSL_CERTS;
         UIATarget.onAlert = function onAlert(alert) {
-
-            //log(alert);
-            //log(alert.tree());
-            //UIAutomation.cache.setAlert(alert);
+            if (alert.isSSLWarning()) {
+                return !acceptAllSSL;
+            }
             return !ignoreAllAlerts;
-            //return ignoreAllAlerts;
         }
     },
 

@@ -20,6 +20,7 @@ import org.libimobiledevice.ios.driver.binding.exceptions.SDKException;
 import org.libimobiledevice.ios.driver.binding.services.DeviceService;
 import org.libimobiledevice.ios.driver.binding.services.IOSDevice;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
@@ -87,7 +88,8 @@ public class InstrumentsApple implements Instruments {
     template = ClassicCommands.getAutomationTemplate();
 
     String appPath = application.getDotAppAbsolutePath();
-    File scriptPath = new ScriptHelper().getScript(port, appPath, sessionId, CURL);
+
+    File scriptPath = new ScriptHelper().getScript(port, appPath, sessionId, CURL,caps.isAcceptAllCerts());
     output = createTmpOutputFolder();
 
     if (uuid == null) {

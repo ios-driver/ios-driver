@@ -389,4 +389,15 @@ public class IOSCapabilities extends DesiredCapabilities {
   public void setDevice(DeviceType device) {
     setCapability(DEVICE, device);
   }
+
+  public boolean isAcceptAllCerts() {
+    Object o = getCapability(CapabilityType.ACCEPT_SSL_CERTS);
+    if (o == null) {
+      return false;
+    } else if (o instanceof Boolean) {
+      return (Boolean) o;
+    } else {
+      return Boolean.parseBoolean((String) o);
+    }
+  }
 }
