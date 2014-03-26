@@ -199,6 +199,7 @@ public class InstrumentsApple implements Instruments {
     List<String> args = new ArrayList<>();
 
     args.add(getInstrumentsClient());
+    args.add("-v");
     if (uuid != null) {
       args.add("-w");
       args.add(uuid);
