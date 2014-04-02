@@ -86,13 +86,14 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   // TODO: make a parameter?
   public static final int COMMAND_TIMEOUT_MILLIS = 10 * 60 * 1000; // 10 minutes
-  public static final String START_SCRIPT = "startScript";
+  public static final String INSTRUMENTS = "instruments";
 
   // private final Map<String, Object> raw = new HashMap<String, Object>();
 
   public IOSCapabilities() {
     setCapability(TIME_HACK, false);
     setCapability(SIMULATOR, true);
+    setCapability(INSTRUMENTS, true);
   }
 
   public IOSCapabilities(JSONObject json) throws JSONException {
@@ -152,14 +153,7 @@ public class IOSCapabilities extends DesiredCapabilities {
   }
 
   public Boolean isSimulator() {
-    Object o = getCapability(SIMULATOR);
-    if (o == null) {
-      return null;
-    } else if (o instanceof Boolean) {
-      return (Boolean) o;
-    } else {
-      return Boolean.parseBoolean((String) o);
-    }
+    return getBooleanCapability(SIMULATOR);
   }
 
   public String getBundleId() {
@@ -265,14 +259,7 @@ public class IOSCapabilities extends DesiredCapabilities {
   }
 
   public boolean isTimeHack() {
-    Object o = getCapability(TIME_HACK);
-    if (o == null) {
-      return false;
-    } else if (o instanceof Boolean) {
-      return (Boolean) o;
-    } else {
-      return Boolean.parseBoolean((String) o);
-    }
+    return getBooleanCapability(TIME_HACK);
   }
 
   private List<String> getList(String key) {
@@ -320,8 +307,8 @@ public class IOSCapabilities extends DesiredCapabilities {
     });
   }
 
-  public List<String> getStartScript() {
-    return getList(START_SCRIPT);
+  public boolean isInstrumentsAvailable() {
+    return getBooleanCapability(INSTRUMENTS);
   }
 
   public void setSupportedLanguages(List<String> supportedLanguages) {
@@ -329,6 +316,7 @@ public class IOSCapabilities extends DesiredCapabilities {
   }
 
 
+  @Override
   public Object getCapability(String key) {
     Object o = getRawCapabilities().get(key);
     if (o != null && o.equals(JSONObject.NULL)) {
@@ -391,7 +379,11 @@ public class IOSCapabilities extends DesiredCapabilities {
   }
 
   public boolean isAcceptAllCerts() {
-    Object o = getCapability(CapabilityType.ACCEPT_SSL_CERTS);
+    return getBooleanCapability(CapabilityType.ACCEPT_SSL_CERTS);
+  }
+
+  private boolean getBooleanCapability(String key) {
+    Object o = getCapability(key);
     if (o == null) {
       return false;
     } else if (o instanceof Boolean) {

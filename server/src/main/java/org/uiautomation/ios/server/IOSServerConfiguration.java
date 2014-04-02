@@ -21,7 +21,10 @@ import org.uiautomation.ios.utils.ClassicCommands;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /*
  * Class IOSServerConfiguration Configures with the given configurable arguments: -port <port> #
@@ -80,6 +83,9 @@ public class IOSServerConfiguration {
       names = "-trustStore")
   private String trustStore = null;
 
+  @Parameter(description = "supported real device uuid to whitelist", names = "-uuid")
+  private List<String> uuidWhitelist = new ArrayList<String>();
+  
   public String getRegistrationURL() {
     return registrationURL;
   }
@@ -166,5 +172,9 @@ public class IOSServerConfiguration {
 
   public String getTrustStore() {
     return trustStore;
+  }
+
+  public Set<String> getUuidWhitelist() {
+    return Collections.unmodifiableSet(new HashSet<>(uuidWhitelist));
   }
 }
