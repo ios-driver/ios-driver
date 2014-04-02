@@ -171,7 +171,7 @@ public class IOSDualDriver {
     if (webDriver == null) {
       String version = session.getCapabilities().getSDKVersion();
       if (new IOSVersion(version).isGreaterOrEqualTo("6.0")) {
-        webDriver = new RemoteIOSWebDriver(session, new AlertDetector(nativeDriver));
+        webDriver = newWebDriver();
       } else {
         log.warning("Cannot create a driver. Version too old " + version);
       }
@@ -209,9 +209,14 @@ public class IOSDualDriver {
   public void restartWebkit() {
     int currentPageID = webDriver.getCurrentPageID();
     webDriver.stop();
-    webDriver = new RemoteIOSWebDriver(session, new AlertDetector(nativeDriver));
+    webDriver = newWebDriver();
     webDriver.switchTo(String.valueOf(currentPageID));
   }
 
+  private RemoteIOSWebDriver newWebDriver() {
+    return (getNativeDriver().getInstruments() instanceof NoInstrumentsImplementationAvailable) ?
+        new RemoteIOSWebDriver(session) :
+        new RemoteIOSWebDriver(session, new AlertDetector(nativeDriver));
+  }
 
 }

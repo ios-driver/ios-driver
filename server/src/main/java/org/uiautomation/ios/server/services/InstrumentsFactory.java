@@ -33,10 +33,11 @@ public class InstrumentsFactory {
     List<String> envtParams = caps.getExtraSwitches();
 
     if (device instanceof RealDevice) {
+      RealDevice d = (RealDevice) device;
       if ("com.apple.mobilesafari".equals(session.getCapabilities().getBundleId())) {
-        return new NoInstrumentsImplementationAvailable(session.getCapabilities());
+        return new NoInstrumentsImplementationAvailable(d.getUuid());
       } else {
-        return new InstrumentsApple(((RealDevice) device).getUuid(),
+        return new InstrumentsApple(d.getUuid(),
                                     session.getIOSServerManager().getHostInfo()
                                         .getInstrumentsVersion(),
                                     session.getOptions().getPort(),
@@ -47,7 +48,6 @@ public class InstrumentsFactory {
                                     session
         );
       }
-//      RealDevice d = (RealDevice) device;
 //      return null;
 //          new InstrumentsLibImobile(d.getUuid(),
 //                                    session.getOptions().getPort(),

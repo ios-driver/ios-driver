@@ -16,9 +16,9 @@ package org.uiautomation.ios.server;
 
 import com.google.common.collect.ImmutableList;
 
-import org.libimobiledevice.ios.driver.binding.model.ApplicationInfo;
 import org.libimobiledevice.ios.driver.binding.exceptions.LibImobileException;
 import org.libimobiledevice.ios.driver.binding.exceptions.SDKException;
+import org.libimobiledevice.ios.driver.binding.model.ApplicationInfo;
 import org.libimobiledevice.ios.driver.binding.model.DeviceInfo;
 import org.libimobiledevice.ios.driver.binding.services.DeviceCallBack;
 import org.libimobiledevice.ios.driver.binding.services.DeviceService;
@@ -28,6 +28,7 @@ import org.uiautomation.ios.server.application.IPAShellApplication;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
@@ -37,11 +38,12 @@ public class DeviceStore extends DeviceCallBack {
   private final List<RealDevice> reals = new CopyOnWriteArrayList<RealDevice>();
   private final List<SimulatorDevice> sims = new CopyOnWriteArrayList<SimulatorDevice>();
   private final ApplicationStore apps;
+  private final Set<String> uuidWhitelist;
 
-  public DeviceStore(
-      ApplicationStore apps) {
+  public DeviceStore(ApplicationStore apps, Set<String> uuidWhitelist) {
     super();
     this.apps = apps;
+    this.uuidWhitelist = uuidWhitelist;
   }
 
 
@@ -71,11 +73,16 @@ public class DeviceStore extends DeviceCallBack {
 
   @Override
   protected void onDeviceAdded(String uuid) {
+    if (!uuidWhitelist.isEmpty() && !uuidWhitelist.contains(uuid)) {
+      log.info("device detected but not whitelisted");
+      return;
+    }
+
     try {
       IOSDevice device = DeviceService.get(uuid);
       DeviceInfo info = new DeviceInfo(uuid);
       RealDevice d = new RealDevice(info);
-      log.info("new device detected (" + uuid + ")" + info.getDeviceName());
+      log.info("new device detected (" + uuid + ") " + info.getDeviceName());
       reals.add(d);
       InstallerService s = new InstallerService(device);
       String id = "com.apple.mobilesafari";
@@ -95,6 +102,11 @@ public class DeviceStore extends DeviceCallBack {
 
   @Override
   protected void onDeviceRemoved(String uuid) {
+    if (!uuidWhitelist.isEmpty() && !uuidWhitelist.contains(uuid)) {
+      log.info("device removed but not whitelisted");
+      return;
+    }
+
     for (RealDevice d : reals) {
       if (d.getUuid().equals(uuid)) {
         log.info("Removing " + uuid + " for the devices pool");

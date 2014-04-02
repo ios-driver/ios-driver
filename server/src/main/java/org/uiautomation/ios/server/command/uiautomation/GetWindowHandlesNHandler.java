@@ -21,8 +21,9 @@ import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.IOSServerManager;
-import org.uiautomation.ios.server.ServerSideSession;
+import org.uiautomation.ios.server.InstrumentsBackedNativeIOSDriver;
 import org.uiautomation.ios.server.command.BaseNativeCommandHandler;
+import org.uiautomation.ios.server.instruments.NoInstrumentsImplementationAvailable;
 import org.uiautomation.ios.wkrdp.message.WebkitPage;
 
 import java.util.HashSet;
@@ -36,13 +37,12 @@ public class GetWindowHandlesNHandler extends BaseNativeCommandHandler {
 
   @Override
   public Response handle() throws Exception {
-
-    ServerSideSession sss = getServer().getSession(getRequest().getSession());
-
     Set<String> handles = new HashSet<String>();
     handles.add(WorkingMode.Native.toString());
 
-    if (sss.getDualDriver().getNativeDriver().findElements(new TypeCriteria(UIAWebView.class)).size() > 0) {
+    InstrumentsBackedNativeIOSDriver nativeDriver = getNativeDriver();
+    if ((nativeDriver.getInstruments() instanceof NoInstrumentsImplementationAvailable) ||
+        (nativeDriver.findElements(new TypeCriteria(UIAWebView.class)).size() > 0)) {
       for (WebkitPage page : getWebDriver().getPages()) {
         handles.add(WorkingMode.Web + "_" + page.getPageId());
       }
