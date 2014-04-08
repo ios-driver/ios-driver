@@ -16,7 +16,7 @@ package org.uiautomation.ios.server.instruments;
 
 import com.google.common.collect.ImmutableList;
 
-import com.sun.media.imageioimpl.plugins.tiff.TIFFImageWriterSpi;
+//import com.sun.media.imageioimpl.plugins.tiff.TIFFImageWriterSpi;
 
 import org.apache.commons.codec.binary.Base64;
 import org.openqa.selenium.WebDriverException;
@@ -85,7 +85,7 @@ public class NoInstrumentsImplementationAvailable implements Instruments {
   }
 
   private static class IDeviceScreenshotService implements TakeScreenshotService {
-    private static final TIFFImageWriterSpi TIFF_WRITER = new TIFFImageWriterSpi();
+    //private static final TIFFImageWriterSpi TIFF_WRITER = new TIFFImageWriterSpi();
 
     private final String uuid;
 
@@ -119,9 +119,9 @@ public class NoInstrumentsImplementationAvailable implements Instruments {
 
     private static void ensureTiffWriterIsRegistered() {
       IIORegistry registry = IIORegistry.getDefaultInstance();
-      if (!registry.contains(TIFF_WRITER)) {
+      /*if (!registry.contains(TIFF_WRITER)) {
         registry.registerServiceProvider(TIFF_WRITER);
-      }
+      }*/
     }
   }
 }
