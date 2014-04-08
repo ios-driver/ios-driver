@@ -68,7 +68,7 @@ public class IOSServerManager {
     this.hostInfo = new HostInfo(options);
 
     apps = new ApplicationStore(options.getAppFolderToMonitor());
-    devices = new DeviceStore(apps);
+    devices = new DeviceStore(apps, options.getUuidWhitelist());
 
     if (Configuration.BETA_FEATURE) {
       try {

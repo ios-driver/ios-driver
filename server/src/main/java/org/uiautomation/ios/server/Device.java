@@ -42,6 +42,12 @@ public abstract class Device {
       }
       // TODO freynaud check device family.
     }
+
+    if (desiredCapabilities.getDeviceUUID() != null &&
+        !desiredCapabilities.getDeviceUUID().equals(deviceCapability.getDeviceUUID())) {
+      return false;
+    }
+
     return true;
   }
 
