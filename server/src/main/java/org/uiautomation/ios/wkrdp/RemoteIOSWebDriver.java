@@ -444,8 +444,8 @@ public class RemoteIOSWebDriver {
     return currentInspector.executeScript(script, args);
   }
 
-  public Object executeAsyncScript(String script, Object... args) {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+  public Object executeAsyncScript(String script, JSONArray args) {
+    return currentInspector.executeAsyncScript(script, args);
   }
 
   // TODO remove.

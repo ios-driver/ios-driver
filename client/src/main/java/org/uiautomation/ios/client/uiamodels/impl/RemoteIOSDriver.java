@@ -195,6 +195,23 @@ public class RemoteIOSDriver extends RemoteWebDriver
     return executor.execute(request);
   }
 
+  @Override
+  public Object executeAsyncScript(String script, Object... args) {
+    // Escape the quote marks
+    script = script.replaceAll("\"", "\\\"");
+
+    Iterable<Object>
+        convertedArgs =
+        Iterables.transform(Lists.newArrayList(args), new WebElementToJsonConverter());
+    Map<String, ?>
+        params =
+        ImmutableMap.of("script", script, "args", Lists.newArrayList(convertedArgs));
+    WebDriverLikeRequest
+        request =
+        executor.buildRequest(WebDriverLikeCommand.EXECUTE_ASYNC_SCRIPT, params);
+
+    return executor.execute(request);
+  }
 
   @Override
   public <X> X getScreenshotAs(OutputType<X> target) throws WebDriverException {
