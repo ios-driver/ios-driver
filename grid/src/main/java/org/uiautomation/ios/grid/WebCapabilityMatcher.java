@@ -33,7 +33,7 @@ public class WebCapabilityMatcher extends DefaultCapabilityMatcher {
         return false;
       }
     }
-    return true;
+    return potentialMatch;
   }
 
 
