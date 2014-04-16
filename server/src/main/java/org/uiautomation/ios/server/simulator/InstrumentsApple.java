@@ -220,7 +220,7 @@ public class InstrumentsApple implements Instruments {
     args.add("UIARESULTSPATH");
     args.add(output.getAbsolutePath());
     args.addAll(envtParams);
-    return new Command(args, true);
+    return new Command(args, false);
   }
 
   private File createTmpOutputFolder() {
