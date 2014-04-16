@@ -99,7 +99,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <testngVersion>6.8.5</testngVersion>
-        <seleniumVersion>2.35.0</seleniumVersion>
+        <seleniumVersion>2.41.0</seleniumVersion>
     </properties>
 </project>
 
