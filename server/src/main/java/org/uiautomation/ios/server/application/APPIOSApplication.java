@@ -482,7 +482,7 @@ public class APPIOSApplication {
   }
 
   public static boolean canRun(IOSCapabilities desiredCapabilities, IOSCapabilities appCapability) {
-    if (desiredCapabilities.isSimulator() != null &&
+    if (desiredCapabilities.getCapability(IOSCapabilities.SIMULATOR) != null &&
         desiredCapabilities.isSimulator() != appCapability.isSimulator()) {
       return false;
     }

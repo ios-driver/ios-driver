@@ -28,7 +28,7 @@ public abstract class Device {
   public static boolean canRun(IOSCapabilities desiredCapabilities,
                                IOSCapabilities deviceCapability) {
 
-    if (desiredCapabilities.isSimulator() != null &&
+    if (desiredCapabilities.getCapability(IOSCapabilities.SIMULATOR) != null &&
         desiredCapabilities.isSimulator() != deviceCapability.isSimulator()) {
       return false;
     }
