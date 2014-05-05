@@ -16,8 +16,8 @@ do
 	rsync -vv $MODULE/target/surefire-reports/testng-results.xml $USER@$MACHINE:$PARENT_WORKSPACE/$MODULE/target/testng-results-$NODE_NAME.xml
         if [ $? -eq 0 ]
 	then
-	      echo "all good" 
-	      exit 0
+	      echo "all good - results copied"
+	      break
 	else
 	             RETRIES=$( expr $RETRIES + 1 )
                      echo "ERROR.Retrying later"
@@ -32,8 +32,8 @@ do
 	find . -name '*.metrics' -exec scp {} $USER@$MACHINE:$PARENT_WORKSPACE/$MODULE/target/duration_per_class-$NODE_NAME-$PARENT_BUILD_NAME.metrics \;
 	if [ $? -eq 0 ]
 	then
-	      echo "all good"
-	      exit 0
+	      echo "all good - metrics copied"
+	      break
 	else
 	             RETRIES=$( expr $RETRIES + 1 )
 	             sleep 30
