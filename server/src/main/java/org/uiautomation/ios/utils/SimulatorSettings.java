@@ -150,7 +150,11 @@ public class SimulatorSettings {
   }
 
   private String getSDKSubfolder(String desiredSDKVersion) {
-    return SDK_LOCATION + "iPhoneSimulator" + desiredSDKVersion + ".sdk";
+    String suffix = desiredSDKVersion;
+    if("7.0.3".equals(desiredSDKVersion)){
+      suffix = "7.0";
+    }
+    return SDK_LOCATION + "iPhoneSimulator" + suffix + ".sdk";
   }
 
   public String getDeviceSpecification(DeviceType device, DeviceVariation variation,
