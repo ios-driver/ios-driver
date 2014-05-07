@@ -90,7 +90,7 @@ public class DeviceStore extends DeviceCallBack {
       String v = (String) safari.getProperty("CFBundleVersion");
       log.info("device " + info.getDeviceName() + " = safari " + v);
 
-      IPAShellApplication ipa = new IPAShellApplication(id, v);
+      IPAShellApplication ipa = new IPAShellApplication(id, v,safari);
       apps.add(ipa);
 
     } catch (SDKException e) {

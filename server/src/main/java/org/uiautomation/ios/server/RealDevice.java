@@ -23,6 +23,7 @@ import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.application.APPIOSApplication;
+import org.uiautomation.ios.server.application.IPAApplication;
 
 import java.util.List;
 
@@ -112,10 +113,9 @@ public class RealDevice extends Device {
 
   @Override
   public boolean canRun(APPIOSApplication app) {
-    /*if (!(app instanceof IPAApplication)) {
+    if (!(app instanceof IPAApplication)) {
       return false;
     }
-    return true;*/
     try {
       return installer.getApplication(app.getBundleId()) != null;
     } catch (SDKException e) {

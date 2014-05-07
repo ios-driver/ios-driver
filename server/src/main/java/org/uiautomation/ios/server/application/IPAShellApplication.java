@@ -14,11 +14,12 @@
 
 package org.uiautomation.ios.server.application;
 
-import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.libimobiledevice.ios.driver.binding.model.ApplicationInfo;
+import org.openqa.selenium.remote.BeanToJsonConverter;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
-import org.uiautomation.ios.server.Device;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,13 +31,19 @@ public class IPAShellApplication extends IPAApplication {
 
   private final String bundleId;
   private final String version;
+  private ApplicationInfo info;
 
-  public IPAShellApplication(String bundleId, String version) {
+  public IPAShellApplication(String bundleId, String version, ApplicationInfo info) {
     super(null, null);
     this.version = version;
     this.bundleId = bundleId;
-
+    try {
+      this.metadata = new JSONObject(new BeanToJsonConverter().convert(getCapabilities()));
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
   }
+
 
   protected IPAShellApplication(File ipa, String pathToApp) {
     super(ipa, pathToApp);
@@ -44,6 +51,7 @@ public class IPAShellApplication extends IPAApplication {
     bundleId = null;
     version = null;
   }
+
 
   @Override
   public String getBundleId() {
@@ -62,27 +70,29 @@ public class IPAShellApplication extends IPAApplication {
 
   @Override
   public IOSCapabilities getCapabilities() {
-    IOSCapabilities res =  IOSCapabilities.iphone("Safari");
+    IOSCapabilities res = IOSCapabilities.iphone("Safari");
     res.setBundleId(bundleId);
     res.setBundleName("Safari");
     res.setSupportedLanguages(getSupportedLanguagesCodes());
-    res.setCapability(IOSCapabilities.SUPPORTED_DEVICES,new JSONArray().put(DeviceType.iphone));
+    List<DeviceType> supported = new ArrayList<>();
+    supported.add(DeviceType.iphone);
+    res.setCapability(IOSCapabilities.SUPPORTED_DEVICES, supported);
+    List<Integer> families = new ArrayList<>();
+    families.add(1);
+    res.setCapability(IOSCapabilities.DEVICE_FAMILLY, families);
     res.setCapability(IOSCapabilities.SIMULATOR, false);
 
     return res;
   }
 
   @Override
-  public String toString(){
-    return bundleId +"::"+ version;
-  }
-  @Override
-  public boolean isSimulator(){
-    return false;
+  public String toString() {
+    return bundleId + "::" + version;
   }
 
   @Override
-  public JSONObject getMetadata(){
-    return new JSONObject();
+  public boolean isSimulator() {
+    return false;
   }
+
 }

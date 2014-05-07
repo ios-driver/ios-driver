@@ -65,7 +65,7 @@ public class APPIOSApplication {
 
   private static final Logger log = Logger.getLogger(APPIOSApplication.class.getName());
 
-  private final JSONObject metadata;
+  protected JSONObject metadata;
   private final File app;
   private final ImmutableList<LanguageDictionary> dictionaries;
   private final ImmutableList<AppleLanguage> languages;
@@ -253,7 +253,7 @@ public class APPIOSApplication {
     }
   }
 
-  private JSONObject getFullPlist() throws Exception {
+  protected JSONObject getFullPlist() throws Exception {
     File plist = new File(app, "Info.plist");
     PlistFileUtils util = new PlistFileUtils(plist);
     return util.toJSON();

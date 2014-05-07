@@ -85,7 +85,7 @@ public class IOSServerConfiguration {
 
   @Parameter(description = "supported real device uuid to whitelist", names = "-uuid")
   private List<String> uuidWhitelist = new ArrayList<String>();
-  
+
   public String getRegistrationURL() {
     return registrationURL;
   }
