@@ -68,11 +68,9 @@ public class MultiInstrumentsBasedCommunicationChannel extends BaseCommunication
   }
 
   public void handle(String message) {
-    //System.out.println("MESSAGE : " + message);
     if (message.startsWith("IOS_DRIVER_RESPONSE:")) {
 
       String raw = message.replace("IOS_DRIVER_RESPONSE:", "");
-      System.out.println(raw);
       UIAScriptResponse response = new UIAScriptResponse(raw);
       if (response.isFirstResponse()) {
         registerUIAScript();

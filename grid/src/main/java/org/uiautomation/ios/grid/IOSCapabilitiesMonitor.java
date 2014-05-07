@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class IOSCapabilitiesMonitor implements Runnable {
 
@@ -44,6 +45,7 @@ public class IOSCapabilitiesMonitor implements Runnable {
   private URL node;
   private List<DesiredCapabilities> registeredCapabilities;
   private int noResponse;
+  private static final Logger log = Logger.getLogger(IOSCapabilitiesMonitor.class.getName());
 
   public IOSCapabilitiesMonitor(IOSRemoteProxy proxy) {
     this.proxy = proxy;
@@ -82,7 +84,7 @@ public class IOSCapabilitiesMonitor implements Runnable {
         proxy.setAvailable(true);
         List<DesiredCapabilities> latestCapabilities = latest.getCapabilities();
         if (!registeredCapabilities.toString().equals(latestCapabilities.toString())) {
-          System.out.println("New capabilities registered on " + node.toString() + ". Updating...");
+          log.info("New capabilities registered on " + node.toString() + ". Updating...");
           updateCapabilities(latest);
         }
         Thread.sleep(2000);

@@ -33,10 +33,8 @@ public class RealDeviceProtocolImpl extends WebKitRemoteDebugProtocol {
                                 ResponseFinder... finders) {
     super(listener, finders);
     IOSDevice device = null;
-    System.out.println("about to create "+uuid);
     try {
       device = DeviceService.get(uuid);
-      System.out.println("created "+uuid);
     } catch (SDKException e) {
       e.printStackTrace();
     } catch (LibImobileException e) {

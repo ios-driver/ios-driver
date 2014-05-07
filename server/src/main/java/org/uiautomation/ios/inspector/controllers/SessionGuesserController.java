@@ -63,7 +63,6 @@ public class SessionGuesserController implements IDECommandController {
 
     JSONObject o = Helper.extractObject(response);
     String id = o.optString("sessionId");
-    System.out.println(o.toString(2));
     if (id == null) {
       throw new WebDriverException("cannot guess the sessionId for the IDE to use.");
     }

@@ -44,12 +44,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class WebDriverLikeCommandExecutor {
 
   private final URL remoteURL;
   private ErrorHandler errorHandler = new ErrorHandler();
   private final RemoteWebDriver driver;
+  private static final Logger log = Logger.getLogger(WebDriverLikeCommandExecutor.class.getName());
 
   public WebDriverLikeCommandExecutor(RemoteWebDriver driver) {
     URL remoteServer;
@@ -93,7 +95,7 @@ public class WebDriverLikeCommandExecutor {
     try{
     return cast(response.getValue());
     }catch (ClassCastException e){
-      System.out.println(e.getMessage()+" for "+response.getValue());
+      log.warning(e.getMessage()+" for "+response.getValue());
       throw e;
     }
   }

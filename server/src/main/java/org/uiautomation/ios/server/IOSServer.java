@@ -99,7 +99,6 @@ public class IOSServer {
     driver = new IOSServerManager(options);
     for (String app : this.options.getSupportedApps()) {
       File appFile = new File(app);
-      System.out.println(appFile.exists());
       if (Configuration.BETA_FEATURE && !appFile.exists()) {
         // if an url download and extract it
         try {

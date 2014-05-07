@@ -166,8 +166,6 @@ public class NoInstrumentsImplementationAvailable implements Instruments {
     private String getPNGAsString() throws SDKException {
       long start = System.currentTimeMillis();
       byte[] raw = service.takeScreenshot();
-//      System.out.println("base : "+raw.length);
-      System.out.println("SDK : \t\t" + (System.currentTimeMillis() - start) + " ms");
 
       TiffImageParser parser = new TiffImageParser();
       try {

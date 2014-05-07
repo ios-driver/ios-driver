@@ -63,7 +63,6 @@ public class SourceTest extends BaseIOSDriverTest {
     o = Orientation.fromInterfaceOrientation(log.getInt("deviceOrientation"));
     Assert.assertEquals(o, Orientation.PORTRAIT);
     tree = log.getJSONObject("tree");
-    System.out.println(tree.toString(2));
 
     Assert.assertEquals(tree.getString("type"), "UIAApplication");
     Assert.assertEquals(tree.get("value"), JSONObject.NULL);

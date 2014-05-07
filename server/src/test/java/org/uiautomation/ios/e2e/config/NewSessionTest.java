@@ -20,7 +20,9 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
@@ -43,7 +45,7 @@ import static org.uiautomation.ios.IOSCapabilities.LANGUAGE;
 import static org.uiautomation.ios.IOSCapabilities.LOCALE;
 
 public class NewSessionTest extends BaseIOSDriverTest {
-    
+
   @AfterMethod(alwaysRun = true)
   public void afterMethod() throws Exception {
     stopDriver();
@@ -154,9 +156,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
     String sdk = ClassicCommands.getDefaultSDK();
     cap.setSDKVersion(sdk);
     driver = new RemoteIOSDriver(getRemoteURL(), cap);
-    System.out.println("driver done");
     IOSCapabilities actual = driver.getCapabilities();
-
     Assert.assertEquals(actual.getSDKVersion(), sdk);
   }
 
@@ -212,24 +212,24 @@ public class NewSessionTest extends BaseIOSDriverTest {
 
   @DataProvider(name = "capabilities")
   public Object[][] createData1() {
-    return new Object[][] {
+    return new Object[][]{
 
-        { DeviceType.iphone, DeviceVariation.iPhone, 320, 480 },
-        { DeviceType.iphone, DeviceVariation.iPhoneRetina, 640, 960 },
-        { DeviceType.iphone, DeviceVariation.iPhoneRetina_4inch, 640, 1136 },
-        { DeviceType.iphone, DeviceVariation.iPhoneRetina_4inch_64bit, 640, 1136 },
-        { DeviceType.ipad, DeviceVariation.iPad, 768, 1024 },
-        { DeviceType.ipad, DeviceVariation.iPadRetina, 1536, 2048 },
-        { DeviceType.ipad, DeviceVariation.iPadRetina_64bit, 1536, 2048 },
+        {DeviceType.iphone, DeviceVariation.iPhone, 320, 480},
+        {DeviceType.iphone, DeviceVariation.iPhoneRetina, 640, 960},
+        {DeviceType.iphone, DeviceVariation.iPhoneRetina_4inch, 640, 1136},
+        {DeviceType.iphone, DeviceVariation.iPhoneRetina_4inch_64bit, 640, 1136},
+        {DeviceType.ipad, DeviceVariation.iPad, 768, 1024},
+        {DeviceType.ipad, DeviceVariation.iPadRetina, 1536, 2048},
+        {DeviceType.ipad, DeviceVariation.iPadRetina_64bit, 1536, 2048},
 
     };
   }
 
   @Test(dataProvider = "capabilities")
   public void supportApplicationWithMultipleDeviceFamily(DeviceType device,
-      DeviceVariation variation,
-      int expectedW,
-      int expectedH) throws Exception {
+                                                         DeviceVariation variation,
+                                                         int expectedW,
+                                                         int expectedH) throws Exception {
 
     String sdk = ClassicCommands.getDefaultSDK();
     if (!DeviceVariation.compatibleWithSDKVersion(device, variation, sdk)) {
@@ -255,7 +255,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
       if (o == Orientation.UIA_DEVICE_ORIENTATION_FACEUP
           || o == Orientation.UIA_DEVICE_ORIENTATION_FACEDOWN
           || (o == Orientation.UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN
-          && device == DeviceType.iphone)) {
+              && device == DeviceType.iphone)) {
         continue;
       }
       driver.rotate(o);
