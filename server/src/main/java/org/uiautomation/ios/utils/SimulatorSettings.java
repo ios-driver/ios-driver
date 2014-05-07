@@ -13,8 +13,6 @@
  */
 package org.uiautomation.ios.utils;
 
-import com.google.common.collect.ImmutableList;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
@@ -23,67 +21,42 @@ import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
+import org.uiautomation.ios.server.HostInfo;
 import org.uiautomation.ios.server.command.uiautomation.NewSessionNHandler;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class SimulatorSettings {
-    
-  public static void main(String[] args) throws Exception {
-    ImmutableList<String> sdkVersions = ImmutableList.of("6.1", "7.0");
-    for (String sdkVersion : sdkVersions) {
-      SimulatorSettings settings = new SimulatorSettings(sdkVersion, false);
-      String exactSdkVersion = settings.exactSdkVersion;
-      
-      String globalPreferences = "not available";
-      try {
-        globalPreferences = new PlistFileUtils(settings.globalPreferencePlist).toJSON().toString(2);
-      } catch (WebDriverException e) {
-      }
-      System.out.println(String.format("\nglobalPreferences %s (%s): %s",
-          sdkVersion, exactSdkVersion, globalPreferences));
-      
-      String safariPreferences = "not available";
-      try {
-        safariPreferences = new PlistFileUtils(settings.getMobileSafariPreferencesFile()).toJSON().toString(2);
-      } catch (WebDriverException e) {
-      }
-      System.out.println(String.format("\nsafariPreferences %s (%s): %s",
-          sdkVersion, exactSdkVersion, safariPreferences));
-      
-      String miscPreferences = "not available";
-      String miscPlistFile = "Applications/90428432-F387-4323-B697-3596C419CD1B/Library/Safari/SuspendState.plist";
-      try {
-        miscPreferences = new PlistFileUtils(new File(settings.contentAndSettingsFolder, miscPlistFile))
-            .toJSON().toString(2);
-      } catch (WebDriverException e) {
-      }
-      System.out.println(String.format("\n%s %s (%s): %s",
-          miscPlistFile, sdkVersion, exactSdkVersion, miscPreferences));
-      
-      // showAllPlistFiles(settings.contentAndSettingsFolder);
-    }
-  }
+
 
   private static final Logger log = Logger.getLogger(SimulatorSettings.class.getName());
   private static final String PLUTIL = "/usr/bin/plutil";
   private static final String TEMPLATE = "/globalPlist.json";
+  private static final
+  String
+      SDK_LOCATION =
+      "Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/";
 
   private final String exactSdkVersion;
   private final boolean is64bit;
   private final File contentAndSettingsFolder;
   private final File globalPreferencePlist;
+  private final HostInfo info;
 
-  public SimulatorSettings(String sdkVersion, boolean is64bit) {
+  public SimulatorSettings(HostInfo info, String sdkVersion, boolean is64bit) {
     this.exactSdkVersion = sdkVersion;
     this.is64bit = is64bit;
+    this.info = info;
     this.contentAndSettingsFolder = getContentAndSettingsFolder();
     this.globalPreferencePlist = getGlobalPreferenceFile();
   }
@@ -135,10 +108,10 @@ public class SimulatorSettings {
       throw new WebDriverException("cannot set options in " + preferenceFile.getAbsolutePath(), e);
     }
   }
-  
+
   private File getMobileSafariPreferencesFile() {
-      File folder = new File(contentAndSettingsFolder + "/Library/Preferences/");
-      return new File(folder, "com.apple.mobilesafari.plist");
+    File folder = new File(contentAndSettingsFolder + "/Library/Preferences/");
+    return new File(folder, "com.apple.mobilesafari.plist");
   }
 
   /**
@@ -158,29 +131,44 @@ public class SimulatorSettings {
   }
 
   /**
-   * update the preference to have the simulator start in the correct more ( ie retina vs normal,
+   * update the preference to have the simulator start in the correct mode ( ie retina vs normal,
    * iphone screen size ).
    */
   public void setVariation(DeviceType device, DeviceVariation variation, String desiredSDKVersion)
       throws WebDriverException {
     String value = getSimulateDeviceValue(device, variation, desiredSDKVersion);
     setDefaultSimulatorPreference("SimulateDevice", value);
+
+    String subfolder = getSDKSubfolder(desiredSDKVersion);
+    File sdk = new File(info.getXCodeInstall(), subfolder);
+
+    if (!sdk.exists()) {
+      throw new WebDriverException(
+          "Cannot point simulator to requested sdk version " + sdk.getAbsolutePath());
+    }
+    setDefaultSimulatorPreference("currentSDKRoot", sdk.getAbsolutePath());
   }
-  
-  public String getDeviceSpecification(DeviceType device, DeviceVariation variation, String desiredSDKVersion) {
-      // i.e. 'iPad Retina (64-bit) - Simulator - iOS 7.1'
-      IOSVersion iosVersion = new IOSVersion(desiredSDKVersion);
-      String version = iosVersion.getMajor() + '.' + iosVersion.getMinor();
-      return getSimulateDeviceValue(device, variation, desiredSDKVersion) + " - Simulator - iOS "
-              + version;
+
+  private String getSDKSubfolder(String desiredSDKVersion) {
+    return SDK_LOCATION + "iPhoneSimulator" + desiredSDKVersion + ".sdk";
   }
-  
+
+  public String getDeviceSpecification(DeviceType device, DeviceVariation variation,
+                                       String desiredSDKVersion) {
+    // i.e. 'iPad Retina (64-bit) - Simulator - iOS 7.1'
+    IOSVersion iosVersion = new IOSVersion(desiredSDKVersion);
+    String version = iosVersion.getMajor() + '.' + iosVersion.getMinor();
+    return getSimulateDeviceValue(device, variation, desiredSDKVersion) + " - Simulator - iOS "
+           + version;
+  }
+
   public void setSimulatorScale(String scale) {
     if (scale != null) {
       // error check scale value
       float fScale = Float.parseFloat(scale);
-      if (fScale <= 0)
+      if (fScale <= 0) {
         throw new WebDriverException("invalid simulator scale: " + scale);
+      }
       setDefaultSimulatorPreference("SimulatorWindowLastScale", scale);
     }
   }
@@ -225,10 +213,11 @@ public class SimulatorSettings {
 
   private File getContentAndSettingsFolder() {
     String folder = exactSdkVersion;
-    if (is64bit)
+    if (is64bit) {
       folder += "-64";
+    }
     return new File(getContentAndSettingsParentFolder(), folder);
-   }
+  }
 
   private boolean deleteRecursive(File folder) {
     if (folder.isDirectory()) {
@@ -255,13 +244,17 @@ public class SimulatorSettings {
     return getContentAndSettingsFolder().exists();
   }
 
-  private String getSimulateDeviceValue(DeviceType device, DeviceVariation variation, String desiredSDKVersion)
+  private String getSimulateDeviceValue(DeviceType device, DeviceVariation variation,
+                                        String desiredSDKVersion)
       throws WebDriverException {
     if (!DeviceVariation.compatibleWithSDKVersion(device, variation, desiredSDKVersion)) {
-      DeviceVariation compatibleVariation = DeviceVariation.getCompatibleVersion(device, desiredSDKVersion);
-      throw new WebDriverException(String.format("%s variation incompatible with SDK %s, a compatible variation is %s",
-          DeviceVariation.deviceString(device, variation),
-          desiredSDKVersion, compatibleVariation));
+      DeviceVariation
+          compatibleVariation =
+          DeviceVariation.getCompatibleVersion(device, desiredSDKVersion);
+      throw new WebDriverException(
+          String.format("%s variation incompatible with SDK %s, a compatible variation is %s",
+                        DeviceVariation.deviceString(device, variation),
+                        desiredSDKVersion, compatibleVariation));
     }
     return DeviceVariation.deviceString(device, variation);
   }
@@ -342,9 +335,10 @@ public class SimulatorSettings {
   }
 
   public void installTrustStore(String trustStore) {
-    if (trustStore == null)
+    if (trustStore == null) {
       return;
-          
+    }
+
     // executes:
     // mkdir ~/"Library/Application Support/iPhone Simulator/7.0/Library/Keychains"
     // cp libs/ios/TrustStore.sqlite3 ~/"Library/Application Support/iPhone Simulator/7.0/Library/Keychains"
@@ -352,21 +346,23 @@ public class SimulatorSettings {
     log.info("installing -trustStore: " + trustStore + " in " + keychainsDir.getAbsolutePath());
     File sourceFile = new File(trustStore);
     if (!sourceFile.exists()) {
-      log.severe("-trustStore: source trust store file doesn't exist: " + sourceFile.getAbsolutePath());
+      log.severe(
+          "-trustStore: source trust store file doesn't exist: " + sourceFile.getAbsolutePath());
       return;
     }
     File destFile = new File(keychainsDir, "TrustStore.sqlite3");
     try {
       if (!keychainsDir.exists()) {
         if (!keychainsDir.mkdir()) {
-          log.severe("-trustStore: could not create Keychains dir: " + keychainsDir.getAbsolutePath());
+          log.severe(
+              "-trustStore: could not create Keychains dir: " + keychainsDir.getAbsolutePath());
           return;
         }
       }
       FileUtils.copyFile(sourceFile, destFile, false);
     } catch (Exception e) {
       log.severe("cannot install trust store file " + sourceFile.getAbsolutePath()
-              + " to " + destFile.getAbsolutePath() + ": " + e);
+                 + " to " + destFile.getAbsolutePath() + ": " + e);
     }
   }
 }

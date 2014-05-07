@@ -18,6 +18,7 @@ import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
+import org.uiautomation.ios.server.HostInfo;
 import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.instruments.IOSDeviceManager;
 import org.uiautomation.ios.server.services.Instruments;
@@ -51,13 +52,13 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   /**
    * manages a single instance of the instruments process. Only 1 process can run at a given time.
    */
-  public IOSSimulatorManager(IOSCapabilities capabilities) {
+  public IOSSimulatorManager(IOSCapabilities capabilities,HostInfo info) {
     this.sdks = ClassicCommands.getInstalledSDKs();
     this.desiredSDKVersion = validateSDK(capabilities.getSDKVersion());
 
     xcodeInstall = ClassicCommands.getXCodeInstall();
     boolean is64bit = DeviceVariation.is64bit(capabilities.getDeviceVariation());
-    simulatorSettings = new SimulatorSettings(desiredSDKVersion, is64bit);
+    simulatorSettings = new SimulatorSettings(info,desiredSDKVersion, is64bit);
     bundleId = capabilities.getBundleId();
     this.developer =
         new File(xcodeInstall, "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer");

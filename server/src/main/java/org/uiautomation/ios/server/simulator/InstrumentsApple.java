@@ -93,7 +93,7 @@ public class InstrumentsApple implements Instruments {
     output = createTmpOutputFolder();
 
     if (uuid == null) {
-      deviceManager = new IOSSimulatorManager(caps);
+      deviceManager = new IOSSimulatorManager(caps,session.getIOSServerManager().getHostInfo());
     } else {
       IPAApplication ipa = (IPAApplication) application.getUnderlyingApplication();
       IOSDevice d = null;
