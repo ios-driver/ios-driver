@@ -20,7 +20,6 @@ import org.libimobiledevice.ios.driver.binding.exceptions.SDKException;
 import org.libimobiledevice.ios.driver.binding.services.DeviceService;
 import org.libimobiledevice.ios.driver.binding.services.IOSDevice;
 import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
@@ -89,11 +88,13 @@ public class InstrumentsApple implements Instruments {
 
     String appPath = application.getDotAppAbsolutePath();
 
-    File scriptPath = new ScriptHelper().getScript(port, appPath, sessionId, CURL,caps.isAcceptAllCerts());
+    File
+        scriptPath =
+        new ScriptHelper().getScript(port, appPath, sessionId, CURL, caps.isAcceptAllCerts());
     output = createTmpOutputFolder();
 
     if (uuid == null) {
-      deviceManager = new IOSSimulatorManager(caps,session.getIOSServerManager().getHostInfo());
+      deviceManager = new IOSSimulatorManager(caps, session.getIOSServerManager().getHostInfo());
     } else {
       IPAApplication ipa = (IPAApplication) application.getUnderlyingApplication();
       IOSDevice d = null;
@@ -145,7 +146,6 @@ public class InstrumentsApple implements Instruments {
     deviceManager.setSimulatorScale(caps.getSimulatorScale());
     application.setDefaultDevice(deviceType, putDefaultFirst);
 
-
     if (application.isSafari() && isSDK70OrHigher && application.isSimulator()) {
       application.setSafariBuiltinFavorites();
     }
@@ -192,7 +192,13 @@ public class InstrumentsApple implements Instruments {
   public void stop() {
     deviceManager.cleanupDevice();
     instruments.forceStop();
-    ClassicCommands.kill(instrumentsPid);
+    try {
+      ClassicCommands.kill(instrumentsPid);
+    } catch (Exception e) {
+      if (!session.hasCrashed()) {
+        log.warning("couldn't kill " + instrumentsPid);
+      }
+    }
     channel.stop();
     putMobileSafariAppBackInInstallDir();
   }

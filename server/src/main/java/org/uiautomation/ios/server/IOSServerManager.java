@@ -206,9 +206,6 @@ public class IOSServerManager {
   public ServerSideSession getSession(String opaqueKey) {
     for (ServerSideSession session : sessions) {
       if (session.getSessionId().equals(opaqueKey)) {
-        if (session.hasCrashed()) {
-          throw new WebDriverException(session.getCrashDetails().toString());
-        }
         return session;
       }
     }

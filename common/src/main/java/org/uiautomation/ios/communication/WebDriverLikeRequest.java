@@ -132,4 +132,8 @@ public class WebDriverLikeRequest {
     return getVariableValue(":sessionId");
   }
 
+  public boolean hasSession() {
+    return hasVariable(":sessionId");
+  }
+
 }

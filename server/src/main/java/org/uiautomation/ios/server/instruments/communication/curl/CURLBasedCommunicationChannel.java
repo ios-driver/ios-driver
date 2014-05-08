@@ -20,10 +20,10 @@ import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.LanguageDictionary;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.command.UIAScriptResponse;
-import org.uiautomation.ios.server.command.uiautomation.GetCapabilitiesNHandler;
 import org.uiautomation.ios.server.instruments.communication.BaseCommunicationChannel;
 import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
 import org.uiautomation.ios.server.servlet.DriverBasedServlet;
+import org.uiautomation.ios.utils.ApplicationCrashDetails;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -87,8 +87,7 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
       try {
         getResponse(request, response);
       } catch (Exception e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        log.warning("CURL communication between server and instruments crashed "+e.getMessage());
       }
     }
 
@@ -106,6 +105,7 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
 
     private void getResponse(HttpServletRequest request, HttpServletResponse response)
         throws Exception {
+
       log.fine("got a request on the script thread.");
       if (request.getInputStream() != null) {
         StringWriter writer = new StringWriter();
@@ -113,7 +113,8 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
         String json = writer.toString();
         json = Normalizer.normalize(json, LanguageDictionary.form);
         UIAScriptResponse r = new UIAScriptResponse(json);
-        log.fine("content : "+r);
+        log.fine("content : " + r);
+
         if (r.isFirstResponse()) {
           log.fine("got first response");
           Response resp = r.getResponse();
@@ -125,6 +126,10 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
               getDriver().getSession(resp.getSessionId()).getDualDriver().getNativeDriver();
           nativeDriver.communication().registerUIAScript();
         } else {
+          if (isCrashed(request)) {
+            r.getResponse().setStatus(13);
+            r.getResponse().setValue(getCrashDetails(request).toString());
+          }
           getCommunicationChannel(request).addResponse(r);
         }
         UIAScriptRequest nextCommand = getCommunicationChannel(request).getNextCommand();
@@ -136,6 +141,16 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
         response.getWriter().print(script);
         response.getWriter().close();
       }
+    }
+
+    private boolean isCrashed(HttpServletRequest request) {
+      String opaqueKey = request.getParameter("sessionId");
+      return getDriver().getSession(opaqueKey).hasCrashed();
+    }
+
+    private ApplicationCrashDetails getCrashDetails(HttpServletRequest request) {
+      String opaqueKey = request.getParameter("sessionId");
+      return getDriver().getSession(opaqueKey).getCrashDetails();
     }
 
     private CURLBasedCommunicationChannel getCommunicationChannel(HttpServletRequest request)

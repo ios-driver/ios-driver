@@ -110,10 +110,13 @@ public class CrashHandling {
   @Test
   public void isExceptionThrownOnEveryActionAfterCrash() throws InterruptedException {
     WebElement crashButton = driver.findElement(By.name("Crash me!"));
-    crashButton.click();
-    // give instruments some time to realise there has been a crash and report it
-    Thread.sleep(1000);
 
+    try {
+      crashButton.click();
+    } catch (Exception e) {
+      // ignore.
+    }
+    Thread.sleep(1000);
     catchCrashException(crashButton);
     catchCrashException(crashButton);
     catchCrashException(crashButton);

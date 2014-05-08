@@ -23,6 +23,7 @@ import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.server.CommandMapping;
+import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.command.Handler;
 
 import java.io.IOException;
@@ -85,7 +86,7 @@ public class IOSServlet extends DriverBasedServlet {
         response.setStatus(301);
         String session = resp.getSessionId();
 
-        if (session == null || session.isEmpty()){
+        if (session == null || session.isEmpty()) {
           response.setStatus(500);
         }
 
@@ -109,8 +110,7 @@ public class IOSServlet extends DriverBasedServlet {
       } else {
         response.getWriter().print(s);
       }
-    }
-    catch (WebDriverException e) {
+    } catch (WebDriverException e) {
       response.setStatus(500);
       response.getWriter().print(serializeException(e));
       throw new WebDriverException("Error processing response." + e.getMessage(), e);
@@ -128,6 +128,20 @@ public class IOSServlet extends DriverBasedServlet {
   }
 
   private Response getResponse(WebDriverLikeRequest request) {
+
+
+    // if the application under test has crashed, the result is an error.
+    if (request.hasSession()) {
+      ServerSideSession session = getDriver().getSession(request.getSession());
+      if (session.hasCrashed()) {
+        Response response = new Response();
+        response.setStatus(13);
+        response.setValue(session.getCrashDetails().toString());
+        return response;
+      }
+    }
+
+    // otherwise,forward to the driver to get the response.
     Level level = Level.INFO;
     long startTime = System.currentTimeMillis();
     WebDriverLikeCommand wdlc = null;
@@ -158,7 +172,7 @@ public class IOSServlet extends DriverBasedServlet {
       throw new WebDriverException("bug." + e.getMessage(), e);
     } finally {
       String message = String.format("%s  in %dms", request.toString(),
-          System.currentTimeMillis() - startTime);
+                                     System.currentTimeMillis() - startTime);
       log.log(level, message);
     }
   }
