@@ -182,7 +182,7 @@ public abstract class WebKitRemoteDebugProtocol {
       }
     } catch (JSONException e) {
       throw new WebDriverException(e);
-    } catch (Exception e){
+    } catch (NullPointerException e){
       throw new WebDriverException("the server didn't respond. Is the app still alive ?");
     }
   }
