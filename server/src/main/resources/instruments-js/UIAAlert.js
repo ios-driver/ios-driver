@@ -62,7 +62,7 @@ UIAAlert.prototype.getText = function () {
     if (texts.length > 1) {
         return texts[1].name();
     } else {
-        throw new UIAutomationException("this alerts doesn't have any text");
+        throw new UIAutomationException("this alert doesn't have any text."+this.tree(false));
     }
 }
 /**
