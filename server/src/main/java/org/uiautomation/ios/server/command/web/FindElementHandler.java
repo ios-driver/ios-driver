@@ -15,6 +15,7 @@ package org.uiautomation.ios.server.command.web;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.InvalidSelectorException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
@@ -40,8 +41,11 @@ public class FindElementHandler extends BaseWebCommandHandler {
       try {
         rwe = findElement();
         break;
+      } catch (InvalidSelectorException e) {
+        // no recovery here.
+        throw e;
       } catch (NoSuchElementException e) {
-        //ignore.
+        //ignore and try again.
       } catch (RemoteExceptionException e2) {
         // looking on the root element, but document became invalid.
         // Something (alert during onload ) might have prevented the page

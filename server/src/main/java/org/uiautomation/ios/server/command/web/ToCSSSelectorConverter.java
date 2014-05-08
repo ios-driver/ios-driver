@@ -13,6 +13,7 @@
  */
 package org.uiautomation.ios.server.command.web;
 
+import org.openqa.selenium.InvalidSelectorException;
 import org.openqa.selenium.WebDriverException;
 
 public class ToCSSSelectorConverter {
@@ -29,6 +30,10 @@ public class ToCSSSelectorConverter {
       return value;
     }
     if ("class name".equals(type)) {
+      // detect composite class name
+      if (isCompoundName(value)) {
+        throw new InvalidSelectorException("Compound class names aren't allowed");
+      }
       return "." + value;
     }
     if ("class name".equals(type)) {
@@ -38,5 +43,9 @@ public class ToCSSSelectorConverter {
       return "[name='" + value + "']";
     }
     throw new WebDriverException("NI , selector type " + type);
+  }
+
+  private static boolean isCompoundName(String value) {
+    return value != null && value.split(" ").length != 1;
   }
 }

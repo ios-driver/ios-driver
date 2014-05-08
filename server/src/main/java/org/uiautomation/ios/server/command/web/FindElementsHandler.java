@@ -16,6 +16,7 @@ package org.uiautomation.ios.server.command.web;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.InvalidSelectorException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
@@ -46,6 +47,10 @@ public class FindElementsHandler extends BaseWebCommandHandler {
         if (elements.size() != 0) {
           break;
         }
+
+      } catch (InvalidSelectorException e) {
+        // no recovery here.
+        throw e;
       } catch (NoSuchElementException e) {
         //ignore.
       } catch (RemoteExceptionException e2) {
