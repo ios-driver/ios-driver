@@ -140,6 +140,7 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
             "Web", MatchingStrategy.starts)));
     webCell.tap();
 
+    Thread.sleep(5000);
     driver.switchTo().window("Web");
     Thread.sleep(5000);
     driver.get("http://ebay.co.uk");
