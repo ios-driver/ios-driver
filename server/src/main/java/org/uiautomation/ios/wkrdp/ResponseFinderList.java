@@ -65,6 +65,8 @@ public class ResponseFinderList {
             }
           } catch (InterruptedException e) {
             log.fine("search was interrupted.");
+          } catch (Exception e){
+            log.warning(e.getMessage());
           }
 
         }

@@ -75,7 +75,6 @@ public class AlertDetector implements ResponseFinder {
         }
       }
     } catch (Exception e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
     } finally {
       setFinished(true);
     }
@@ -111,7 +110,6 @@ public class AlertDetector implements ResponseFinder {
       throw new RuntimeException("Bug");
     }
     if (ex != null) {
-      //alert.dismiss();
       throw ex;
     }
     return null;

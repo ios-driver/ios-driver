@@ -64,7 +64,7 @@ import java.util.Set;
 // TakesScreenshot, Rotatable, BrowserConnection, HasTouchScreen, WebStorage, LocationContext, ApplicationCache
 public class RemoteIOSDriver extends RemoteWebDriver
     implements TakesScreenshot, Rotatable, LocationContext, ElementTree,
-    IOSSearchContext, Configurable, HasTouchScreen, IOSTouchScreen {
+               IOSSearchContext, Configurable, HasTouchScreen, IOSTouchScreen {
 
   private String remoteURL;
   private Map<String, Object> requestedCapabilities;
@@ -73,14 +73,20 @@ public class RemoteIOSDriver extends RemoteWebDriver
   private DriverConfiguration configuration;
   protected WebDriverLikeCommandExecutor executor;
   private TouchScreen touchScreen;
-
+  private boolean up = false;
 
 
   protected RemoteIOSDriver() {
     super();
     executor = new WebDriverLikeCommandExecutor(this);
     touchScreen = new RemoteTouchScreen(getExecuteMethod());
+    up = true;
+  }
 
+
+  @Override
+  protected void stopClient() {
+    up = false;
   }
 
   public RemoteIOSDriver(URL url, IOSCapabilities cap) {
