@@ -224,13 +224,17 @@ public class FrameSwitchingTest extends BaseSeleniumTest {
 
   //@Ignore(ANDROID)
   @Test
-  // TODO freynaud
   public void testShouldContinueToReferToTheSameFrameOnceItHasBeenSelected() {
     driver.get(pages.framesetPage);
 
     driver.switchTo().frame(2);
     WebElement checkbox = driver.findElement(By.xpath("//input[@name='checky']"));
     checkbox.click();
+
+    // IOS click takes some time to register. Need to wait for the result of that click before
+    // continuing.
+    waitFor(WaitingConditions.elementSelectionToBe(checkbox,true));
+
     checkbox.submit();
 
     // TODO(simon): this should not be needed, and is only here because IE's
