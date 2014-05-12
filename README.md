@@ -25,8 +25,11 @@ Building from source :
 -----------------------
 
 clone the project
+
 clone the submobule ( git submodule init, git submodule update )
+
 switch to the dev branch
+
 build without the tests : mvn package -DskipTests
 
 The server standalone will be in project/server/target
