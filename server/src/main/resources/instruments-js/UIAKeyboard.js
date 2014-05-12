@@ -93,11 +93,21 @@ UIAKeyboard.prototype.getSpecialKey = function (key) {
  */
 UIAKeyboard.prototype.moreLetters = function () {
     var root = UIAutomation.cache.get('1');
+    var ios6 = {
+        "expected": "more, letters",
+        "l10n": "none",
+        "matching": "exact",
+        "method": "name"
+    };
+
+    var ios7 = {
+        "expected": "Next keyboard",
+        "l10n": "none",
+        "matching": "exact",
+        "method": "name"
+    };
     var more = root.element(-1,
-                            {"l10n": "none",
-                                "expected": "more, letters",
-                                "matching": "exact",
-                                "method": "name"});
+                            {"OR": [ios6, ios7]});
     more.tap();
 }
 
@@ -108,10 +118,10 @@ UIAKeyboard.prototype.shift = function () {
     var root = UIAutomation.cache.get('1');
     var keyboard = root.keyboard();
     var more = keyboard.element(-1,
-                            {"l10n": "none",
-                                "expected": "shift",
-                                "matching": "exact",
-                                "method": "name"});
+                                {"l10n": "none",
+                                    "expected": "shift",
+                                    "matching": "exact",
+                                    "method": "name"});
     more.tap();
 }
 
@@ -125,7 +135,7 @@ UIAKeyboard.prototype.hide = function () {
                             {"OR": [
                                 // put "Hide keyboard" first so it doesn't find first a possible "Done" button in the app
                                 {"l10n": "none", "expected": "Hide keyboard", "matching": "exact", "method": "name"},
-                                {"l10n": "none", "expected": "Done", "matching": "exact", "method": "name"}                                                      
+                                {"l10n": "none", "expected": "Done", "matching": "exact", "method": "name"}
                             ]});
     hide.tap();
     // and wait for the keyboard to disapear.

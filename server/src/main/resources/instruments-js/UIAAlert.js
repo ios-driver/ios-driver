@@ -122,3 +122,10 @@ UIAAlert.prototype.isSSLWarning = function(){
     }
     return false;
 }
+
+UIAAlert.prototype.isAlternateKeyboard = function(){
+    if (this.name() === "Alternate Keyboards"){
+        return true;
+    }
+    return false;
+}

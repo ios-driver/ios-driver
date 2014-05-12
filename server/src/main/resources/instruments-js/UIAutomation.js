@@ -214,6 +214,9 @@ var UIAutomation = {
             if (alert.isSSLWarning()) {
                 return !acceptAllSSL;
             }
+            if (alert.isAlternateKeyboard()){
+                return false;
+            }
             return !ignoreAllAlerts;
         }
     },
