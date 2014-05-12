@@ -18,6 +18,7 @@ import org.libimobiledevice.ios.driver.binding.services.DeviceService;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
+import org.uiautomation.ios.UIAModels.configuration.DriverConfiguration;
 import org.uiautomation.ios.server.application.APPIOSApplication;
 import org.uiautomation.ios.server.application.AppleLanguage;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
@@ -81,7 +82,6 @@ public class IOSServerManager {
     if (Configuration.SIMULATORS_ENABLED) {
       devices.add(new SimulatorDevice());
     }
-
   }
 
   public static boolean matches(Map<String, Object> appCapabilities,
@@ -214,5 +214,9 @@ public class IOSServerManager {
 
   public List<APPIOSApplication> getSupportedApplications() {
     return apps.getApplications();
+  }
+
+  public IOSServerConfiguration getIOSServerConfiguration(){
+    return options;
   }
 }

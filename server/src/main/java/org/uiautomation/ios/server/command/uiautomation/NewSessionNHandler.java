@@ -29,16 +29,19 @@ import java.util.logging.Logger;
 public final class NewSessionNHandler extends BaseNativeCommandHandler {
 
   private static final Logger log = Logger.getLogger(NewSessionNHandler.class.getName());
-  private static final long TIMEOUT_SEC = 20;
+  public static final long TIMEOUT_SEC_DEFAULT = 20;
+  private long TIMEOUT_SEC = TIMEOUT_SEC_DEFAULT;
   private static final long MAX_RETRIES = 3;
 
 
   public NewSessionNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
+    TIMEOUT_SEC = driver.getIOSServerConfiguration().getNewSessionTimeoutSec();
   }
 
   @Override
   public Response handle() throws Exception {
+
     ServerSideSession session = null;
     try {
       JSONObject payload = getRequest().getPayload();
@@ -47,7 +50,7 @@ public final class NewSessionNHandler extends BaseNativeCommandHandler {
       long timeOut = TIMEOUT_SEC;
       for (int i = 0; i < MAX_RETRIES; i++) {
         session = safeStart(timeOut, cap);
-        timeOut = (i + 1) * TIMEOUT_SEC;
+        timeOut = (i + 2) * TIMEOUT_SEC;
 
         if (session != null) {
           break;

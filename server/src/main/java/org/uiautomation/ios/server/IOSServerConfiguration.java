@@ -17,6 +17,7 @@ package org.uiautomation.ios.server;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 
+import org.uiautomation.ios.server.command.uiautomation.NewSessionNHandler;
 import org.uiautomation.ios.utils.ClassicCommands;
 
 import java.io.File;
@@ -43,6 +44,12 @@ public class IOSServerConfiguration {
 
   @Parameter(description = "port the server will listen on.", names = "-port")
   private int port = 5555;
+
+  @Parameter(
+      required = false,
+      names = "-newSessionTimeoutSec",
+      description = "time the server will wait for the app to launch before assuming it has crashed.You may increase the value if your app is slow to start.")
+  private long newSessionTimeoutSec = NewSessionNHandler.TIMEOUT_SEC_DEFAULT;
 
   @Parameter(
       description = "if specified, will send a registration request to the given url. Example : http://localhost:4444/grid/register",
@@ -176,5 +183,10 @@ public class IOSServerConfiguration {
 
   public Set<String> getUuidWhitelist() {
     return Collections.unmodifiableSet(new HashSet<>(uuidWhitelist));
+  }
+
+
+  public long getNewSessionTimeoutSec(){
+    return newSessionTimeoutSec;
   }
 }
