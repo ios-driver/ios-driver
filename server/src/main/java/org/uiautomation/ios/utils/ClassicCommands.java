@@ -260,7 +260,7 @@ class ShowSDKsParser implements CommandOutputListener {
   private static final String pattern = "iphonesimulator";
 
   private List<String> sdks = new ArrayList<>();
-  private boolean ok = true;
+  private boolean stderrOutput = false;
 
   public void stdout(String log) {
     String sdk = extractSDK(log);
@@ -287,11 +287,11 @@ class ShowSDKsParser implements CommandOutputListener {
   }
 
   public void stderr(String log) {
-    ok = false;
+    stderrOutput = true;
   }
 
   public List<String> getSDKs() {
-    if (!ok) {
+    if (stderrOutput && sdks.size() == 0) {
       throw new WebDriverException("there was an error.stderr is not empty");
     }
     return sdks;
