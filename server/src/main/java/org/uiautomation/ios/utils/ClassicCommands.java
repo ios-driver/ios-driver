@@ -135,7 +135,13 @@ public class ClassicCommands {
       ShowSDKsParser l = new ShowSDKsParser();
       com.registerListener(l);
       try {
-        com.executeAndWait();
+        // ignoring errors as showSDK can return warnings about plugins. If that's the case, return
+        // code!=0 , but it still should work as look as there are SDKs installed.
+        boolean ignoreError = true;
+        int exit = com.executeAndWait(ignoreError);
+        if (exit != 0) {
+          log.warning("there was an error executing xcodebuild -showsdks Exit code=" + exit);
+        }
         installedSDKs = l.getSDKs();
       } catch (Exception e) {
         installedSDKs = new ArrayList<>();
@@ -207,97 +213,6 @@ public class ClassicCommands {
 
 }
 
-class SimulatorProductVersionParser implements CommandOutputListener {
-  // gets ProductVersion by parsing:
-  // iPhoneSimulator7.0.sdk - Simulator - iOS 7.0 (iphonesimulator7.0)
-  // SDKVersion: 7.0
-  // Path: /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.0.sdk
-  // PlatformPath: /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform
-  // ProductBuildVersion: 11B508
-  // ProductCopyright: 1983-2013 Apple Inc.
-  // ProductName: iPhone OS
-  // ProductVersion: 7.0.3
-
-  private final String sdkVersion;
-  private String productVersion;
-  private boolean inSdkVersion;
-
-  SimulatorProductVersionParser(String sdkVersion) {
-    this.sdkVersion = sdkVersion;
-  }
-
-  String getProductVersion() {
-    if (productVersion == null) {
-      throw new WebDriverException("couldn't find simulator product version for " + sdkVersion);
-    }
-    return productVersion;
-  }
-
-  @Override
-  public void stdout(String line) {
-    ClassicCommands.log.fine(line);
-    // SDKVersion: 7.0
-    if (line.startsWith("SDKVersion:")) {
-      String version = line.substring(12).trim();
-      inSdkVersion = sdkVersion.equals(version);
-    }
-    if (inSdkVersion) {
-      // ProductVersion: 7.0.3
-      if (line.startsWith("ProductVersion:")) {
-        productVersion = line.substring(16).trim();
-      }
-    }
-  }
-
-  @Override
-  public void stderr(String line) {
-    ClassicCommands.log.warning(line);
-  }
-}
-
-class ShowSDKsParser implements CommandOutputListener {
-
-  private static final String pattern = "iphonesimulator";
-
-  private List<String> sdks = new ArrayList<>();
-  private boolean ok = true;
-
-  public void stdout(String log) {
-    String sdk = extractSDK(log);
-    if (sdk != null) {
-      sdks.add(sdk);
-    }
-  }
-
-  private String extractSDK(String log) {
-    if (log.contains(pattern)) {
-      int index = log.indexOf(pattern) + pattern.length();
-      String raw = log.substring(index);
-      return decorate(raw);
-    } else {
-      return null;
-    }
-  }
-
-  private String decorate(String raw) {
-    if (raw.equals("7.0")) {
-      return "7.0.3";
-    }
-    return raw;
-  }
-
-  public void stderr(String log) {
-    ok = false;
-  }
-
-  public List<String> getSDKs() {
-    if (!ok) {
-      throw new WebDriverException("there was an error.stderr is not empty");
-    }
-    return sdks;
-  }
-}
-
 class Grep implements CommandOutputListener {
 
   private final String pattern;
@@ -323,3 +238,8 @@ class Grep implements CommandOutputListener {
     }
   }
 }
+
+
+
+
+
