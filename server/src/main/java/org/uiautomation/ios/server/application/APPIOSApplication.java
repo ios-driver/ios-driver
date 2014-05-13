@@ -47,22 +47,7 @@ import java.util.logging.Logger;
 
 import static org.uiautomation.ios.IOSCapabilities.*;
 
-// TODO freynaud create IOSApp vs Running App that has locale + language
 public class APPIOSApplication {
-
-  public static void main(String[] args) throws Exception {
-    showAppData("MobileSafari6.1", APPIOSApplication.findSafariApp(ClassicCommands.getXCodeInstall(), "6.1"));
-    showAppData("MobileSafari7.0", APPIOSApplication.findSafariApp(ClassicCommands.getXCodeInstall(), "7.0"));
-  }
-
-  private static void showAppData(String label, APPIOSApplication app) throws JSONException {
-    System.out.println(label + ':');
-    System.out.println("  path: " + app.getApplicationPath().getAbsolutePath());
-    System.out.println("  metadata: " + app.getMetadata().toString(2));
-  }
-
-  //
-
   private static final Logger log = Logger.getLogger(APPIOSApplication.class.getName());
 
   protected JSONObject metadata;
