@@ -67,7 +67,7 @@ public class RemoteIOSWebDriver {
     Runnable r = new Runnable() {
       @Override
       public void run() {
-        RemoteIOSWebDriver driver = new RemoteIOSWebDriver(null);
+        RemoteIOSWebDriver driver = new RemoteIOSWebDriver(null, new ArrayList<ResponseFinder>());
         driver.connect(safari);
         driver.switchTo(driver.getPages().get(0));
         driver.get("http://perdu.com");
@@ -118,7 +118,7 @@ public class RemoteIOSWebDriver {
   private final WebKitSynchronizer sync;
   private static boolean ok = true;
 
-  public RemoteIOSWebDriver(ServerSideSession session, ResponseFinder... finders) {
+  public RemoteIOSWebDriver(ServerSideSession session, List<ResponseFinder> finders) {
     this.session = session;
     connectionKey = UUID.randomUUID().toString();
     sync = new WebKitSynchronizer(this);
@@ -132,62 +132,6 @@ public class RemoteIOSWebDriver {
 
     } else {
       protocol = new SimulatorProtocolImpl(notification, finders);
-
-    }
-
-
-
-    //protocol = new RealDeviceProtocolImpl("ff4827346ed6b54a98f51e69a261a140ae2bf6b3", notification, finders);
-    if (session != null) {
-      session.getLogManager().onProtocolCreated(protocol);
-    }
-
-    protocol.register();
-    sync.waitForSimToRegister();
-    sync.waitForSimToSendApps();
-
-    log.fine("connectionKey=" + connectionKey);
-
-    if (applications.size() == 1) {
-      connect(applications.get(0).getBundleId());
-    } else {
-      log.warning("session created but application size=" + applications.size());
-    }
-
-
-    Response r = session.getCachedCapabilityResponse();
-    if (r == null){
-      r = new Response();
-      r.setSessionId(session.getSessionId());
-      Map<String, Object> o = new HashMap<>();
-      List<String> ls = session.getApplication().getSupportedLanguagesCodes();
-
-      o.put("supportedLocales", ls);
-      o.put("takesScreenshot", true);
-      o.put(IOSCapabilities.CONFIGURABLE, true);
-      o.put(IOSCapabilities.ELEMENT_TREE, true);
-      o.put(IOSCapabilities.IOS_SEARCH_CONTEXT, true);
-      o.put(IOSCapabilities.IOS_TOUCH_SCREEN, true);
-
-      o.put("rotatable", true);
-      o.put("locationContextEnabled", true);
-
-      o.put("browserName", session.getCapabilities().getBundleName());
-      o.put("browserVersion", session.getApplication().getCapabilities().getBundleVersion());
-
-      o.put("platform", "IOS");
-      o.put("platformName", "IOS");
-      o.put("platformVersion", session.getCapabilities().getSDKVersion());
-
-      o.put("javascriptEnabled", true);
-      o.put("cssSelectors", true);
-      o.put("takesElementScreenshot", false);
-
-      o.put(IOSCapabilities.SIMULATOR, false);
-      o.put(IOSCapabilities.DEVICE, session.getCapabilities().getDevice());
-      o.put(IOSCapabilities.VARIATION, session.getCapabilities().getDeviceVariation());
-      r.setValue(o);
-      session.setCapabilityCachedResponse(r);
     }
   }
 
@@ -206,6 +150,24 @@ public class RemoteIOSWebDriver {
 
   public void start() {
     protocol.start();
+
+    if (session != null) {
+      session.getLogManager().onProtocolCreated(protocol);
+    }
+
+    protocol.register();
+    sync.waitForSimToRegister();
+    sync.waitForSimToSendApps();
+
+    log.fine("connectionKey=" + connectionKey);
+
+    if (applications.size() == 1) {
+      connect(applications.get(0).getBundleId());
+    } else {
+      log.warning("session created but application size=" + applications.size());
+    }
+
+
   }
 
   public void stop() {

@@ -54,6 +54,11 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
   }
 
   @Override
+  public void prepare() {
+    // no op
+  }
+
+  @Override
   public void install(APPIOSApplication aut) {
 //    if (aut instanceof IPAApplication) {
 //      ApplicationInfo app = device.getApplication(bundleId);
@@ -139,11 +144,6 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
     // no-op
   }
 
-  @Override
-  public String getDeviceSpecification(DeviceType device, DeviceVariation variation) {
-    // not-applicable
-    return null;
-  }
 
   @Override
   public void setSimulatorScale(String scale) {

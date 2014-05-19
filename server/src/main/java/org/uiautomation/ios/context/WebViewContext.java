@@ -27,13 +27,13 @@ import org.uiautomation.ios.wkrdp.internal.SimulatorProtocolImpl;
 public class WebViewContext {
 
   private final WebInspectorSet windowSet = new WebInspectorSet();
-  private final SimulatorProtocolImpl protocol;
+//  private final SimulatorProtocolImpl protocol;
   private final String bundleId;
 
   public WebViewContext(String bundleId, MessageListener listener, ResponseFinder... finders)
       throws Exception {
     this.bundleId = bundleId;
-    protocol = new SimulatorProtocolImpl(listener, finders);
+//    protocol = new SimulatorProtocolImpl(listener, finders);
   }
 }
 

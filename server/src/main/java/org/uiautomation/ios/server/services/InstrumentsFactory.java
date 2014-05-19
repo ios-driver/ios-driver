@@ -35,7 +35,7 @@ public class InstrumentsFactory {
     if (device instanceof RealDevice) {
       RealDevice d = (RealDevice) device;
       if ("com.apple.mobilesafari".equals(session.getCapabilities().getBundleId())) {
-        return new NoInstrumentsImplementationAvailable(d.getUuid());
+        return new NoInstrumentsImplementationAvailable(session);
       } else {
         return new InstrumentsApple(d.getUuid(),
                                     session.getIOSServerManager().getHostInfo()

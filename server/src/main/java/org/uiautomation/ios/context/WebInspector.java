@@ -28,24 +28,24 @@ public class WebInspector extends BaseWebInspector {
 
   private static final Logger log = Logger.getLogger(WebInspector.class.getName());
 
-  private final WebViewContext context;
+//  private final WebViewContext context;
   private final int pageIdentifierKey;
   private final static String senderBase = "E0F4C128-F4FF-4D45-A538-BA382CD660";
-  private final String senderKey;
-  private final String connectionKey;
-  private final String bundleId;
+//  private final String senderKey;
+//  private final String connectionKey;
+//  private final String bundleId;
   private final WebKitRemoteDebugProtocol inspector;
 
   public WebInspector(WebViewContext webViewContext, int pageIdentifierKey,
                       WebKitRemoteDebugProtocol inspector, String bundleId,
                       String connectionKey, ServerSideSession session) {
     super(session);
-    this.bundleId = bundleId;
-    this.connectionKey = connectionKey;
-    this.context = webViewContext;
+//    this.bundleId = bundleId;
+//    this.connectionKey = connectionKey;
+//    this.context = webViewContext;
     this.inspector = inspector;
     this.pageIdentifierKey = pageIdentifierKey;
-    this.senderKey = generateSenderString(pageIdentifierKey);
+//    this.senderKey = generateSenderString(pageIdentifierKey);
   }
 
   @Override

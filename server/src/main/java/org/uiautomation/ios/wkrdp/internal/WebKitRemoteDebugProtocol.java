@@ -25,6 +25,7 @@ import org.uiautomation.ios.wkrdp.MessageListener;
 import org.uiautomation.ios.wkrdp.RemoteExceptionException;
 import org.uiautomation.ios.wkrdp.ResponseFinder;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -87,7 +88,7 @@ public abstract class WebKitRemoteDebugProtocol {
 
 
   public WebKitRemoteDebugProtocol(MessageListener listener,
-                                   ResponseFinder... finders) {
+                                   List<ResponseFinder> finders) {
     this.handler = new DefaultMessageHandler(listener, finders);
   }
 

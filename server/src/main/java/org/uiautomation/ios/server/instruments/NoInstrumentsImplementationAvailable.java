@@ -26,6 +26,9 @@ import org.libimobiledevice.ios.driver.binding.services.IOSDevice;
 import org.libimobiledevice.ios.driver.binding.services.ScreenshotService;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
+import org.uiautomation.ios.IOSCapabilities;
+import org.uiautomation.ios.server.RealDevice;
+import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
 import org.uiautomation.ios.server.instruments.communication.CommunicationChannel;
 import org.uiautomation.ios.server.services.Instruments;
@@ -38,6 +41,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.imageio.spi.IIORegistry;
@@ -51,12 +56,13 @@ public class NoInstrumentsImplementationAvailable implements Instruments {
 
   private final Command installOpenUrlApp;
   private final Command runOpenUrlApp;
-  private final String uuid;
+  private final ServerSideSession session;
   private final ScreenshotSDK screenshotService;
   private final IOSDevice device;
 
-  public NoInstrumentsImplementationAvailable(String uuid) {
-    this.uuid = uuid;
+  public NoInstrumentsImplementationAvailable(ServerSideSession session) {
+    this.session = session;
+    String uuid = ((RealDevice) session.getDevice()).getUuid();
     try {
       device = DeviceService.get(uuid);
       screenshotService = new ScreenshotSDK(device);
@@ -81,6 +87,40 @@ public class NoInstrumentsImplementationAvailable implements Instruments {
     //  installOpenUrlApp.executeAndWait();
     //  runOpenUrlApp.executeAndWait();
     //}
+    Response r = session.getCachedCapabilityResponse();
+    if (r == null) {
+      r = new Response();
+      r.setSessionId(session.getSessionId());
+      Map<String, Object> o = new HashMap<>();
+      List<String> ls = session.getApplication().getSupportedLanguagesCodes();
+
+      o.put("supportedLocales", ls);
+      o.put("takesScreenshot", true);
+      o.put(IOSCapabilities.CONFIGURABLE, true);
+      o.put(IOSCapabilities.ELEMENT_TREE, true);
+      o.put(IOSCapabilities.IOS_SEARCH_CONTEXT, true);
+      o.put(IOSCapabilities.IOS_TOUCH_SCREEN, true);
+
+      o.put("rotatable", true);
+      o.put("locationContextEnabled", true);
+
+      o.put("browserName", session.getCapabilities().getBundleName());
+      o.put("browserVersion", session.getApplication().getCapabilities().getBundleVersion());
+
+      o.put("platform", "IOS");
+      o.put("platformName", "IOS");
+      o.put("platformVersion", session.getCapabilities().getSDKVersion());
+
+      o.put("javascriptEnabled", true);
+      o.put("cssSelectors", true);
+      o.put("takesElementScreenshot", false);
+
+      o.put(IOSCapabilities.SIMULATOR, false);
+      o.put(IOSCapabilities.DEVICE, session.getCapabilities().getDevice());
+      o.put(IOSCapabilities.VARIATION, session.getCapabilities().getDeviceVariation());
+      r.setValue(o);
+      session.setCapabilityCachedResponse(r);
+    }
   }
 
   @Override
