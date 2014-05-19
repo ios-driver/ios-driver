@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -41,9 +42,8 @@ public class SimulatorProtocolImpl extends WebKitRemoteDebugProtocol {
   private final int port = 27753;
 
   public SimulatorProtocolImpl(MessageListener listener,
-                               ResponseFinder... finders) {
+                               List<ResponseFinder> finders) {
     super(listener, finders);
-    start();
   }
 
 

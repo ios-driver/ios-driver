@@ -136,7 +136,7 @@ public class SimulatorSettings {
    */
   public void setVariation(DeviceType device, DeviceVariation variation, String desiredSDKVersion)
       throws WebDriverException {
-    String value = getSimulateDeviceValue(device, variation, desiredSDKVersion);
+    String value = AppleMagicString.getSimulateDeviceValue(device, variation, desiredSDKVersion);
     setDefaultSimulatorPreference("SimulateDevice", value);
 
     String subfolder = getSDKSubfolder(desiredSDKVersion);
@@ -157,14 +157,7 @@ public class SimulatorSettings {
     return SDK_LOCATION + "iPhoneSimulator" + suffix + ".sdk";
   }
 
-  public String getDeviceSpecification(DeviceType device, DeviceVariation variation,
-                                       String desiredSDKVersion) {
-    // i.e. 'iPad Retina (64-bit) - Simulator - iOS 7.1'
-    IOSVersion iosVersion = new IOSVersion(desiredSDKVersion);
-    String version = iosVersion.getMajor() + '.' + iosVersion.getMinor();
-    return getSimulateDeviceValue(device, variation, desiredSDKVersion) + " - Simulator - iOS "
-           + version;
-  }
+
 
   public void setSimulatorScale(String scale) {
     if (scale != null) {
@@ -248,20 +241,7 @@ public class SimulatorSettings {
     return getContentAndSettingsFolder().exists();
   }
 
-  private String getSimulateDeviceValue(DeviceType device, DeviceVariation variation,
-                                        String desiredSDKVersion)
-      throws WebDriverException {
-    if (!DeviceVariation.compatibleWithSDKVersion(device, variation, desiredSDKVersion)) {
-      DeviceVariation
-          compatibleVariation =
-          DeviceVariation.getCompatibleVersion(device, desiredSDKVersion);
-      throw new WebDriverException(
-          String.format("%s variation incompatible with SDK %s, a compatible variation is %s",
-                        DeviceVariation.deviceString(device, variation),
-                        desiredSDKVersion, compatibleVariation));
-    }
-    return DeviceVariation.deviceString(device, variation);
-  }
+
 
   private JSONObject loadGlobalPreferencesTemplate() throws JSONException, IOException {
     InputStream is = NewSessionNHandler.class.getResourceAsStream(TEMPLATE);

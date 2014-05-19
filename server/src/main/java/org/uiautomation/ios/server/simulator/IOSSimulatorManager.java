@@ -99,6 +99,11 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   }
 
   @Override
+  public void prepare() {
+    // no op
+  }
+
+  @Override
   public void install(APPIOSApplication aut) {
     //no-op instruments installs automatically for simulator.
   }
@@ -111,11 +116,6 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   @Override
   public void setVariation(DeviceType device, DeviceVariation variation) {
     simulatorSettings.setVariation(device, variation, desiredSDKVersion);
-  }
-  
-  @Override
-  public String getDeviceSpecification(DeviceType device, DeviceVariation variation) {
-    return simulatorSettings.getDeviceSpecification(device, variation, desiredSDKVersion);
   }
 
   @Override

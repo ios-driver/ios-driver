@@ -45,10 +45,10 @@ public class DefaultMessageHandler implements MessageHandler {
       defaultFinder =
       new DefaultWebKitResponseFinder(timeoutInMs);
 
-  public DefaultMessageHandler(MessageListener listener, ResponseFinder... finders) {
+  public DefaultMessageHandler(MessageListener listener, List<ResponseFinder> finders) {
     listeners.add(listener);
 
-    Collections.addAll(this.extraFinders, finders);
+    this.extraFinders.addAll(finders);
   }
 
   private static int threadCount;

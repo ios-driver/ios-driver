@@ -20,6 +20,8 @@ import org.uiautomation.ios.server.application.APPIOSApplication;
 
 public interface IOSDeviceManager {
 
+  public void prepare();
+
   public void install(APPIOSApplication aut);
 
   public void setL10N(String locale, String language);
@@ -34,7 +36,6 @@ public interface IOSDeviceManager {
 
   void setVariation(DeviceType device, DeviceVariation variation);
 
-  String getDeviceSpecification(DeviceType device, DeviceVariation variation);
 
   void setMobileSafariOptions();
 
