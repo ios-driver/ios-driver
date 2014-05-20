@@ -13,7 +13,7 @@
  */
 package org.uiautomation.ios.logging;
 
-import org.uiautomation.ios.context.WebInspector;
+import org.uiautomation.ios.wkrdp.WebInspector;
 import org.uiautomation.ios.wkrdp.ConnectListener;
 import org.uiautomation.ios.wkrdp.command.Network;
 import org.uiautomation.ios.wkrdp.command.Page;

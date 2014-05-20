@@ -12,7 +12,7 @@
  * the License.
  */
 
-package org.uiautomation.ios.context;
+package org.uiautomation.ios.wkrdp;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,12 +26,7 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.command.uiautomation.SetScriptTimeoutNHandler;
-import org.uiautomation.ios.wkrdp.DOMContext;
 import org.uiautomation.ios.ServerSideSession;
-import org.uiautomation.ios.wkrdp.ConnectListener;
-import org.uiautomation.ios.wkrdp.MessageListener;
-import org.uiautomation.ios.wkrdp.RemoteExceptionException;
-import org.uiautomation.ios.wkrdp.WebKitSeemsCorruptedException;
 import org.uiautomation.ios.wkrdp.command.DOM;
 import org.uiautomation.ios.wkrdp.command.Page;
 import org.uiautomation.ios.wkrdp.events.ChildNodeRemoved;

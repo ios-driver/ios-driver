@@ -14,8 +14,6 @@
 
 package org.uiautomation.ios.wkrdp;
 
-import org.uiautomation.ios.context.WebInspector;
-
 public interface ConnectListener {
 
   public void onConnect(WebInspector inspector);

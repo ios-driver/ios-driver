@@ -15,7 +15,7 @@ package org.uiautomation.ios.wkrdp.internal;
 
 import org.json.JSONObject;
 import org.openqa.selenium.TimeoutException;
-import org.uiautomation.ios.context.WebInspector;
+import org.uiautomation.ios.wkrdp.WebInspector;
 import org.uiautomation.ios.wkrdp.ConnectListener;
 import org.uiautomation.ios.wkrdp.MessageHandler;
 import org.uiautomation.ios.wkrdp.MessageListener;
