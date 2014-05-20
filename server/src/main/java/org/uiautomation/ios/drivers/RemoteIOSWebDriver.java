@@ -191,8 +191,7 @@ public class RemoteIOSWebDriver {
       if (page.equals(webkitPage)) {
         protocol.attachToPage(page.getPageId());
 
-        WebInspector inspector = new WebInspector(
-            null, webkitPage.getPageId(), protocol, bundleId, connectionKey, session);
+        WebInspector inspector = new WebInspector(webkitPage.getPageId(), protocol, session);
         protocol.addListener(inspector);
         return inspector;
       }

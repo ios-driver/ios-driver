@@ -25,8 +25,7 @@ public class WebInspector extends BaseWebInspector {
   private final int pageIdentifierKey;
   private final WebKitRemoteDebugProtocol inspector;
 
-  public WebInspector(int pageIdentifierKey, WebKitRemoteDebugProtocol inspector,
-                      ServerSideSession session) {
+  public WebInspector(int pageIdentifierKey, WebKitRemoteDebugProtocol inspector,ServerSideSession session) {
     super(session);
     this.inspector = inspector;
     this.pageIdentifierKey = pageIdentifierKey;

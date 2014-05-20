@@ -57,6 +57,14 @@ public class NoInstrumentsImplementationAvailable implements Instruments {
   private final ScreenshotSDK screenshotService;
   private final IOSDevice device;
 
+  /**
+   * this implementation is only relevant for real device safari, when instruments cannot be used.
+   */
+  @Override
+  public boolean isCompatible(ServerSideSession session) {
+    return session.isSafariRealDevice();
+  }
+
   public NoInstrumentsImplementationAvailable(ServerSideSession session) {
     this.session = session;
     String uuid = ((RealDevice) session.getDevice()).getUuid();
@@ -139,6 +147,7 @@ public class NoInstrumentsImplementationAvailable implements Instruments {
   public TakeScreenshotService getScreenshotService() {
     return screenshotService;
   }
+
 
   private static class IDeviceScreenshotService implements TakeScreenshotService {
     //private static final TIFFImageWriterSpi TIFF_WRITER = new TIFFImageWriterSpi();

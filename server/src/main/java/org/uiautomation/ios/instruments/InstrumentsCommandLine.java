@@ -16,13 +16,15 @@ package org.uiautomation.ios.instruments;
 
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
+import org.uiautomation.ios.Device;
 import org.uiautomation.ios.IOSCapabilities;
+import org.uiautomation.ios.RealDevice;
 import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.application.IOSRunningApplication;
 import org.uiautomation.ios.command.UIAScriptRequest;
 import org.uiautomation.ios.command.UIAScriptResponse;
-import org.uiautomation.ios.instruments.commandExecutor.UIAutomationCommandExecutor;
 import org.uiautomation.ios.instruments.commandExecutor.CURLIAutomationCommandExecutor;
+import org.uiautomation.ios.instruments.commandExecutor.UIAutomationCommandExecutor;
 import org.uiautomation.ios.utils.AppleMagicString;
 import org.uiautomation.ios.utils.ApplicationCrashListener;
 import org.uiautomation.ios.utils.ClassicCommands;
@@ -54,22 +56,25 @@ public class InstrumentsCommandLine implements Instruments {
   private final ServerSideSession session;
   private long instrumentsPid = -1;
 
-  public InstrumentsCommandLine(String uuid, InstrumentsVersion version, int port, String sessionId,
-                                IOSRunningApplication application,
-                                List<String> envtParams, IOSCapabilities caps,
-                                ServerSideSession session) {
-    this.uuid = uuid;
-    this.caps = caps;
-    this.version = version;
-    this.sessionId = sessionId;
-    this.application = application;
-    this.envtParams = envtParams;
+  public InstrumentsCommandLine(ServerSideSession session) {
+    Device device = session.getDevice();
+    if (device instanceof RealDevice) {
+      uuid = ((RealDevice) device).getUuid();
+    } else {
+      uuid = null;
+    }
+    this.caps = session.getCapabilities();
+    this.version = session.getIOSServerManager().getHostInfo().getInstrumentsVersion();
+    this.sessionId = session.getSessionId();
+    this.application = session.getApplication();
+    this.envtParams = caps.getExtraSwitches();
     this.session = session;
     this.desiredSDKVersion = caps.getSDKVersion();
     template = ClassicCommands.getAutomationTemplate();
 
     String appPath = application.getDotAppAbsolutePath();
 
+    int port = session.getOptions().getPort();
     File
         scriptPath =
         new ScriptHelper().getScript(port, appPath, sessionId, CURL, caps.isAcceptAllCerts());
@@ -191,6 +196,18 @@ public class InstrumentsCommandLine implements Instruments {
   public TakeScreenshotService getScreenshotService() {
     return screenshotService;
   }
+
+  @Override
+  public boolean isCompatible(ServerSideSession session) {
+    if (session.isSafariRealDevice()) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+
+
 
   public File getOutput() {
     return output;

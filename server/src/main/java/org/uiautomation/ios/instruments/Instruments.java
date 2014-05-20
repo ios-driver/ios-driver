@@ -15,6 +15,7 @@
 package org.uiautomation.ios.instruments;
 
 import org.openqa.selenium.remote.Response;
+import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.command.UIAScriptRequest;
 import org.uiautomation.ios.instruments.commandExecutor.UIAutomationCommandExecutor;
 
@@ -28,4 +29,6 @@ public interface Instruments {
   UIAutomationCommandExecutor getChannel();
 
   TakeScreenshotService getScreenshotService();
+
+  boolean isCompatible(ServerSideSession session);
 }

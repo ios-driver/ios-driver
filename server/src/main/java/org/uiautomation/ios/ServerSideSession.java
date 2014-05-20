@@ -19,8 +19,6 @@ import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
 import org.uiautomation.ios.UIAModels.configuration.DriverConfiguration;
-import org.uiautomation.ios.communication.WebDriverLikeCommand;
-import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.application.APPIOSApplication;
 import org.uiautomation.ios.application.AppleLanguage;
 import org.uiautomation.ios.application.IOSRunningApplication;
@@ -28,13 +26,15 @@ import org.uiautomation.ios.application.NoSuchLanguageCodeException;
 import org.uiautomation.ios.application.NoSuchLocaleException;
 import org.uiautomation.ios.command.configuration.Configuration;
 import org.uiautomation.ios.command.configuration.DriverConfigurationStore;
-import org.uiautomation.ios.logging.IOSLogManager;
+import org.uiautomation.ios.communication.WebDriverLikeCommand;
+import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.drivers.IOSDualDriver;
 import org.uiautomation.ios.instruments.InstrumentsFailedToStartException;
-import org.uiautomation.ios.utils.ZipUtils;
+import org.uiautomation.ios.logging.IOSLogManager;
 import org.uiautomation.ios.utils.ApplicationCrashDetails;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.IOSVersion;
+import org.uiautomation.ios.utils.ZipUtils;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -82,16 +82,13 @@ public class ServerSideSession extends Session {
     ensureLanguage();
     ensureLocale();
 
-
-      // extract application from capabilities if necessary
-      URL url = desiredCapabilities.getAppURL();
-      if (url != null) {
-        application = extractFromCapabilities();
-      } else {
-        application = server.findAndCreateInstanceMatchingApplication(desiredCapabilities);
-      }
-
-
+    // extract application from capabilities if necessary
+    URL url = desiredCapabilities.getAppURL();
+    if (url != null) {
+      application = extractFromCapabilities();
+    } else {
+      application = server.findAndCreateInstanceMatchingApplication(desiredCapabilities);
+    }
 
     try {
       device = server.findAndReserveMatchingDevice(desiredCapabilities);
@@ -187,6 +184,16 @@ public class ServerSideSession extends Session {
       throw new SessionNotCreatedException("cannot create app from " + appURL + ": " + ex);
     }
 
+  }
+
+  public boolean isSafariRealDevice() {
+    Device device = getDevice();
+    if (device instanceof RealDevice) {
+      if ("com.apple.mobilesafari".equals(getCapabilities().getBundleId())) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public IOSCapabilities getCapabilities() {

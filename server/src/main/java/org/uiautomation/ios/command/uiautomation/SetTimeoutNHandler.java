@@ -16,27 +16,23 @@ package org.uiautomation.ios.command.uiautomation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
-import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.IOSServerManager;
-import org.uiautomation.ios.command.PreHandleDecorator;
 import org.uiautomation.ios.command.UIAScriptHandler;
+import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.utils.JSTemplate;
-import org.uiautomation.ios.utils.hack.TimeSpeeder;
 
 public class SetTimeoutNHandler extends UIAScriptHandler {
 
   protected static final String kTimeoutName = "ms";
   private static final JSTemplate template = new JSTemplate(
-      "UIAutomation.setTimeout('%:type$s',%:"+ kTimeoutName +"$d);" +
+      "UIAutomation.setTimeout('%:type$s',%:" + kTimeoutName + "$d);" +
       "UIAutomation.createJSONResponse('%:sessionId$s',0,'')",
       "type", kTimeoutName, "sessionId");
 
   public SetTimeoutNHandler(IOSServerManager driver, WebDriverLikeRequest request)
       throws Exception {
     super(driver, request);
-    addDecorator(new CorrectTimeout(driver, this));
   }
 
   protected String getVariableToCorrect() {
@@ -60,29 +56,6 @@ public class SetTimeoutNHandler extends UIAScriptHandler {
     return super.handle();
   }
 
-  class CorrectTimeout extends PreHandleDecorator {
-
-    private SetTimeoutNHandler handler;
-
-    public CorrectTimeout(IOSServerManager driver, SetTimeoutNHandler handler) {
-      super(driver);
-      this.handler = handler;
-    }
-
-    @Override
-    public void decorate(WebDriverLikeRequest request) {
-      try {
-        int timeout = request.getPayload().getInt(handler.getVariableToCorrect());
-        float timeCorrection = TimeSpeeder.getInstance().getSecondDuration();
-        float correctTimeout = timeout * timeCorrection;
-        request.getPayload().put(handler.getVariableToCorrect(), (int) correctTimeout);
-      } catch (Exception e) {
-        throw new WebDriverException(
-            "error correcting the timeout to take the timespeeder into account."
-            + e.getMessage(), e);
-      }
-    }
-  }
 
   @Override
   public JSONObject configurationDescription() throws JSONException {

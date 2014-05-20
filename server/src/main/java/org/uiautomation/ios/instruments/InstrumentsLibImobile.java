@@ -15,6 +15,7 @@
 package org.uiautomation.ios.instruments;
 
 import org.openqa.selenium.remote.Response;
+import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.command.UIAScriptRequest;
 import org.uiautomation.ios.instruments.commandExecutor.UIAutomationCommandExecutor;
 
@@ -44,6 +45,17 @@ public class InstrumentsLibImobile implements Instruments/*, MessageHandler*/ {
   @Override
   public TakeScreenshotService getScreenshotService() {
     return null;
+  }
+
+  @Override
+  public boolean isCompatible(ServerSideSession session) {
+    if (session.isSafariRealDevice()) {
+      return false;
+    }
+    if (session.getCapabilities().isSimulator()) {
+      return false;
+    }
+    return true;
   }
 
 //  private static final Logger log = Logger.getLogger(InstrumentsLibImobile.class.getName());

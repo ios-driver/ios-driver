@@ -14,60 +14,54 @@
 
 package org.uiautomation.ios.instruments;
 
-import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.Device;
-import org.uiautomation.ios.RealDevice;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.ServerSideSession;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class InstrumentsFactory {
 
 
-  public static Instruments getInstruments(ServerSideSession session) {
-    IOSCapabilities caps = session.getCapabilities();
-    Device device = session.getDevice();
+  private final static List<Class> implementations = new ArrayList();
 
-    List<String> envtParams = caps.getExtraSwitches();
-
-    if (device instanceof RealDevice) {
-      RealDevice d = (RealDevice) device;
-      if ("com.apple.mobilesafari".equals(session.getCapabilities().getBundleId())) {
-        return new NoInstrumentsImplementationAvailable(session);
-      } else {
-        return new InstrumentsCommandLine(d.getUuid(),
-                                    session.getIOSServerManager().getHostInfo()
-                                        .getInstrumentsVersion(),
-                                    session.getOptions().getPort(),
-                                    session.getSessionId(),
-                                    session.getApplication(),
-                                    envtParams,
-                                    caps,
-                                    session
-        );
-      }
-//      return null;
-//          new InstrumentsLibImobile(d.getUuid(),
-//                                    session.getOptions().getPort(),
-//                                    session.getApplication().getDotAppAbsolutePath(),
-//                                    session.getSessionId(),
-//                                    session.getApplication().getBundleId());
-
-    } else {
-
-      return new InstrumentsCommandLine(null,
-                                  session.getIOSServerManager().getHostInfo()
-                                      .getInstrumentsVersion(),
-                                  session.getOptions().getPort(),
-                                  session.getSessionId(),
-                                  session.getApplication(),
-                                  envtParams,
-                                  caps,
-                                  session
-      );
+  static {
+    implementations.add(InstrumentsCommandLine.class);
+    implementations.add(NoInstrumentsImplementationAvailable.class);
+  }
 
 
+  public static void registerNewImplementation(Class clazz) {
+    implementations.add(0, clazz);
+  }
+
+  private static Instruments getImplementation(Class clazz, ServerSideSession serverSideSession) {
+    try {
+      Constructor c = clazz.getConstructor(ServerSideSession.class);
+      return (Instruments)c.newInstance(serverSideSession);
+    } catch (NoSuchMethodException e) {
+      throw new WebDriverException(
+          "The instruments implementation must have a constructor taking a ServerSideSession as a parameter.");
+    } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+      throw new WebDriverException(e);
     }
+  }
+
+
+  public static Instruments getInstruments(ServerSideSession session) {
+    for (Class implClazz : implementations) {
+      try {
+        Instruments instruments = getImplementation(implClazz, session);
+        if (instruments.isCompatible(session)) {
+          return instruments;
+        }
+      } catch (Exception ignore) {
+
+      }
+    }
+    throw new WebDriverException("Cannot find a valid implementation for the session" + session);
   }
 
 

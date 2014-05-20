@@ -16,14 +16,10 @@ package org.uiautomation.ios.command.uiautomation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.remote.Response;
-import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.IOSServerManager;
-import org.uiautomation.ios.command.PostHandleDecorator;
 import org.uiautomation.ios.command.UIAScriptHandler;
+import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.utils.JSTemplate;
-import org.uiautomation.ios.utils.hack.TimeSpeeder;
 
 public class GetTimeoutNHandler extends UIAScriptHandler {
 
@@ -37,29 +33,8 @@ public class GetTimeoutNHandler extends UIAScriptHandler {
     super(driver, request);
     String type = request.getPayload().getString("type");
     setJS(template.generate(request.getSession(), type));
-    addDecorator(new CorrectTimeout(driver));
   }
 
-  class CorrectTimeout extends PostHandleDecorator {
-
-    public CorrectTimeout(IOSServerManager driver) {
-      super(driver);
-    }
-
-    @Override
-    public void decorate(Response response) {
-      try {
-        Integer timeout = (Integer) response.getValue();
-        float timeCorrection = TimeSpeeder.getInstance().getSecondDuration();
-        float correctTimeout = timeout / timeCorrection;
-        response.setValue((int) correctTimeout);
-      } catch (Exception e) {
-        throw new WebDriverException(
-            "error correcting the timeout to take the timespeeder into account." + e.getMessage(),
-            e);
-      }
-    }
-  }
 
   @Override
   public JSONObject configurationDescription() throws JSONException {
