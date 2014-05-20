@@ -15,7 +15,7 @@ package org.uiautomation.ios.server.instruments.communication.curl;
 
 import org.apache.commons.io.IOUtils;
 import org.openqa.selenium.remote.Response;
-import org.uiautomation.ios.server.InstrumentsBackedNativeIOSDriver;
+import org.uiautomation.ios.server.RemoteIOSNativeDriver;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.LanguageDictionary;
 import org.uiautomation.ios.server.command.UIAScriptRequest;
@@ -121,7 +121,7 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
           ServerSideSession session = getDriver().getSession(resp.getSessionId());
           session.setCapabilityCachedResponse(resp);
           //GetCapabilitiesNHandler.setCachedResponse(resp);
-          InstrumentsBackedNativeIOSDriver
+          RemoteIOSNativeDriver
               nativeDriver =
               getDriver().getSession(resp.getSessionId()).getDualDriver().getNativeDriver();
           nativeDriver.communication().registerUIAScript();
@@ -156,7 +156,7 @@ public class CURLBasedCommunicationChannel extends BaseCommunicationChannel {
     private CURLBasedCommunicationChannel getCommunicationChannel(HttpServletRequest request)
         throws Exception {
       String opaqueKey = request.getParameter("sessionId");
-      InstrumentsBackedNativeIOSDriver
+      RemoteIOSNativeDriver
           nativeDriver =
           getDriver().getSession(opaqueKey).getDualDriver().getNativeDriver();
 

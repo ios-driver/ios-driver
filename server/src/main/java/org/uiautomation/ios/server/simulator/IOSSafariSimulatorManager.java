@@ -16,19 +16,18 @@ package org.uiautomation.ios.server.simulator;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.server.HostInfo;
+import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.APPIOSApplication;
+import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.utils.ClassicCommands;
+import org.uiautomation.ios.utils.IOSVersion;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Created by freynaud on 19/05/2014.
- */
+
 public class IOSSafariSimulatorManager extends IOSSimulatorManager {
 
   private static final Logger log = Logger.getLogger(IOSSafariSimulatorManager.class.getName());
@@ -39,17 +38,43 @@ public class IOSSafariSimulatorManager extends IOSSimulatorManager {
   private final File safariFolder;
   private boolean howToMoveSafariBackMessageGiven;
 
-  public IOSSafariSimulatorManager(IOSCapabilities capabilities,
-                                   HostInfo info) {
-    super(capabilities, info);
-    this.desiredSDKVersion = capabilities.getSDKVersion();
+  public IOSSafariSimulatorManager(ServerSideSession session) {
+
+    super(session);
+    this.desiredSDKVersion = session.getCapabilities().getSDKVersion();
     safariFolder =
         APPIOSApplication.findSafariLocation(ClassicCommands.getXCodeInstall(), desiredSDKVersion);
   }
 
 
   @Override
-  public void prepare() {
+  public void setup(){
+    copySafariToAllowInstallByInstruments();
+    setFavorite();
+
+    super.setup();
+    simulatorSettings.setMobileSafariOptions();
+    simulatorSettings.installTrustStore(session.getOptions().getTrustStore());
+  }
+
+  @Override
+  public void teardown(){
+    super.teardown();
+    putMobileSafariAppBackInInstallDir();
+  }
+
+
+
+  private void setFavorite(){
+    boolean isSDK70OrHigher = new IOSVersion(session.getCapabilities().getSDKVersion()).isGreaterOrEqualTo(
+        "7.0");
+    IOSRunningApplication application = session.getApplication();
+    if (application.isSafari() && isSDK70OrHigher && application.isSimulator()) {
+      application.setSafariBuiltinFavorites();
+    }
+  }
+
+  private void copySafariToAllowInstallByInstruments() {
     // make backup copy before deleting
     File
         copy =
@@ -95,11 +120,6 @@ public class IOSSafariSimulatorManager extends IOSSimulatorManager {
     }
   }
 
-  @Override
-  public void cleanupDevice(){
-    super.cleanupDevice();
-    putMobileSafariAppBackInInstallDir();
-  }
 
   private void putMobileSafariAppBackInInstallDir() {
     if (safariFolder.exists()) {

@@ -13,15 +13,15 @@
  */
 package org.uiautomation.ios.server.simulator;
 
-import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.HostInfo;
+import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.APPIOSApplication;
+import org.uiautomation.ios.server.application.IOSRunningApplication;
 import org.uiautomation.ios.server.instruments.IOSDeviceManager;
-import org.uiautomation.ios.server.services.Instruments;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.IOSVersion;
 import org.uiautomation.ios.utils.SimulatorSettings;
@@ -40,29 +40,65 @@ import java.util.logging.Logger;
  */
 public class IOSSimulatorManager implements IOSDeviceManager {
 
-  public static final String SIMULATOR_PROCESS_NAME = "iPhone Simulator";
   private static final Logger log = Logger.getLogger(IOSSimulatorManager.class.getName());
+
+  public static final String SIMULATOR_PROCESS_NAME = "iPhone Simulator";
   private final List<String> sdks;
   private final String bundleId;
   private final File xcodeInstall;
   private final String desiredSDKVersion;
-  private final SimulatorSettings simulatorSettings;
-  private final File developer;
+  protected final SimulatorSettings simulatorSettings;
+  private final IOSCapabilities caps;
+  protected final ServerSideSession session;
+  private final HostInfo info;
 
   /**
    * manages a single instance of the instruments process. Only 1 process can run at a given time.
    */
-  public IOSSimulatorManager(IOSCapabilities capabilities,HostInfo info) {
+  public IOSSimulatorManager(ServerSideSession session) {
+    this.session = session;
+    this.info = session.getIOSServerManager().getHostInfo();
     this.sdks = ClassicCommands.getInstalledSDKs();
-    this.desiredSDKVersion = validateSDK(capabilities.getSDKVersion());
+    this.caps = session.getCapabilities();
+    this.desiredSDKVersion = validateSDK(caps.getSDKVersion());
 
     xcodeInstall = ClassicCommands.getXCodeInstall();
-    boolean is64bit = DeviceVariation.is64bit(capabilities.getDeviceVariation());
-    simulatorSettings = new SimulatorSettings(info,desiredSDKVersion, is64bit);
-    bundleId = capabilities.getBundleId();
-    this.developer =
-        new File(xcodeInstall, "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer");
+    boolean is64bit = DeviceVariation.is64bit(caps.getDeviceVariation());
+    simulatorSettings = new SimulatorSettings(info, desiredSDKVersion, is64bit);
+    bundleId = caps.getBundleId();
   }
+
+
+  @Override
+  public void setup() {
+    DeviceType deviceType = caps.getDevice();
+    IOSRunningApplication application = session.getApplication();
+    DeviceVariation variation = caps.getDeviceVariation();
+    String locale = caps.getLocale();
+    String language = caps.getLanguage();
+    String instrumentsVersion = info.getInstrumentsVersion().getVersion();
+    boolean instrumentsIs50OrHigher = new IOSVersion(instrumentsVersion).isGreaterOrEqualTo("5.0");
+
+    boolean putDefaultFirst = instrumentsIs50OrHigher;
+
+
+    simulatorSettings.setVariation(deviceType, variation, desiredSDKVersion);
+    simulatorSettings.setSimulatorScale(caps.getSimulatorScale());
+
+    application.setDefaultDevice(deviceType, putDefaultFirst);
+
+
+    simulatorSettings.resetContentAndSettings();
+    simulatorSettings.setL10N(locale, language);
+    simulatorSettings.setKeyboardOptions();
+    simulatorSettings.setLocationPreference(/*whitelist*/true, bundleId);
+  }
+
+  @Override
+  public void teardown() {
+    ClassicCommands.killall(SIMULATOR_PROCESS_NAME);
+  }
+
 
   private String validateSDK(String sdk) {
     if (!sdks.contains(sdk)) {
@@ -71,66 +107,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     return sdk;
   }
 
-  private boolean isSimulatorRunning() {
-    return ClassicCommands.isRunning(SIMULATOR_PROCESS_NAME);
-  }
 
-  /**
-   * stopping the simulator at the end of the test.
-   */
-  @Override
-  public void cleanupDevice() {
-    ClassicCommands.killall(SIMULATOR_PROCESS_NAME);
-  }
 
-  @Override
-  public void setKeyboardOptions() {
-    simulatorSettings.setKeyboardOptions();
-  }
 
-  @Override
-  public void setMobileSafariOptions() {
-    simulatorSettings.setMobileSafariOptions();
-  }
-
-  @Override
-  public void setLocationPreference(boolean authorized) {
-    simulatorSettings.setLocationPreference(authorized, bundleId);
-  }
-
-  @Override
-  public void prepare() {
-    // no op
-  }
-
-  @Override
-  public void install(APPIOSApplication aut) {
-    //no-op instruments installs automatically for simulator.
-  }
-
-  @Override
-  public void setL10N(String locale, String language) {
-    simulatorSettings.setL10N(locale, language);
-  }
-
-  @Override
-  public void setVariation(DeviceType device, DeviceVariation variation) {
-    simulatorSettings.setVariation(device, variation, desiredSDKVersion);
-  }
-
-  @Override
-  public void resetContentAndSettings() {
-    simulatorSettings.resetContentAndSettings();
-
-  }
-
-  @Override
-  public void setSimulatorScale(String scale) {
-    simulatorSettings.setSimulatorScale(scale);
-  }
-
-  @Override
-  public void installTrustStore(String trustStore) {
-    simulatorSettings.installTrustStore(trustStore);
-  }
 }

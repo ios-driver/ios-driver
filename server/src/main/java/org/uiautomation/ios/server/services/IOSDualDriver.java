@@ -14,8 +14,6 @@
 
 package org.uiautomation.ios.server.services;
 
-import org.libimobiledevice.ios.driver.binding.services.DeviceService;
-import org.libimobiledevice.ios.driver.binding.services.IOSDevice;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NoSuchWindowException;
@@ -27,16 +25,12 @@ import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.server.HostInfo;
-import org.uiautomation.ios.server.InstrumentsBackedNativeIOSDriver;
-import org.uiautomation.ios.server.RealDevice;
+import org.uiautomation.ios.server.IOSDeviceManagerFactory;
+import org.uiautomation.ios.server.RemoteIOSNativeDriver;
 import org.uiautomation.ios.server.ServerSideSession;
 import org.uiautomation.ios.server.application.IOSRunningApplication;
-import org.uiautomation.ios.server.application.IPAApplication;
 import org.uiautomation.ios.server.instruments.IOSDeviceManager;
 import org.uiautomation.ios.server.instruments.NoInstrumentsImplementationAvailable;
-import org.uiautomation.ios.server.simulator.IOSRealDeviceManager;
-import org.uiautomation.ios.server.simulator.IOSSafariSimulatorManager;
-import org.uiautomation.ios.server.simulator.IOSSimulatorManager;
 import org.uiautomation.ios.server.simulator.InstrumentsFailedToStartException;
 import org.uiautomation.ios.utils.IOSVersion;
 import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
@@ -62,7 +56,7 @@ public class IOSDualDriver {
   private IOSDeviceManager deviceManager;
 
   // Instruments
-  private InstrumentsBackedNativeIOSDriver nativeDriver;
+  private RemoteIOSNativeDriver nativeDriver;
 
   // WKRDP
   private RemoteIOSWebDriver webDriver;
@@ -85,25 +79,9 @@ public class IOSDualDriver {
 
   private void init() {
     IOSCapabilities cap = session.getCapabilities();
-    HostInfo info = session.getIOSServerManager().getHostInfo();
 
     // Create the device manager that does the setup and teardown
-    if (isSimulator()) {
-      if (session.getApplication().isSafari()) {
-        deviceManager = new IOSSafariSimulatorManager(cap, info);
-      } else {
-        deviceManager = new IOSSimulatorManager(cap, info);
-      }
-    } else {
-      IPAApplication ipa = (IPAApplication) session.getApplication().getUnderlyingApplication();
-      RealDevice d = (RealDevice) session.getDevice();
-      try {
-        IOSDevice device = DeviceService.get(d.getUuid());
-        deviceManager = new IOSRealDeviceManager(cap, device, ipa);
-      } catch (Exception e) {
-        throw new WebDriverException("Error getting device : " + e.getMessage());
-      }
-    }
+    deviceManager = IOSDeviceManagerFactory.create(session);
 
     // Create the instruments based comm
     URL url = null;
@@ -114,7 +92,7 @@ public class IOSDualDriver {
     } catch (Exception e) {
       e.printStackTrace();
     }
-    nativeDriver = new InstrumentsBackedNativeIOSDriver(url, session);
+    nativeDriver = new RemoteIOSNativeDriver(url, session);
 
     if (!(getNativeDriver().getInstruments() instanceof NoInstrumentsImplementationAvailable)) {
       finders.add(new AlertDetector(getNativeDriver()));
@@ -124,7 +102,7 @@ public class IOSDualDriver {
   }
 
   public void stop() {
-    deviceManager.cleanupDevice();
+    deviceManager.teardown();
     nativeDriver.stop();
 
     if (webDriver != null) {
@@ -138,7 +116,7 @@ public class IOSDualDriver {
 
   private void forceStop() {
     try {
-      deviceManager.cleanupDevice();
+      deviceManager.teardown();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -193,29 +171,12 @@ public class IOSDualDriver {
         tempRemoveMobileSafari =
         instrumentsIs50OrHigher && application.isSafari() && application.isSimulator();
 
-    deviceManager.prepare();
-
-    deviceManager.setVariation(deviceType, variation);
-    deviceManager.setSimulatorScale(caps.getSimulatorScale());
-    if (application.isSimulator()) {
-      application.setDefaultDevice(deviceType, putDefaultFirst);
-    }
-
-    if (application.isSafari() && isSDK70OrHigher && application.isSimulator()) {
-      application.setSafariBuiltinFavorites();
-    }
-    deviceManager.resetContentAndSettings();
-    deviceManager.setL10N(locale, language);
-    deviceManager.setKeyboardOptions();
-    deviceManager.setLocationPreference(true);
-    deviceManager.setMobileSafariOptions();
-
-    deviceManager.installTrustStore(session.getOptions().getTrustStore());
+    deviceManager.setup();
 
     try {
       nativeDriver.start(timeOut);
     } catch (InstrumentsFailedToStartException e) {
-      deviceManager.cleanupDevice();
+      deviceManager.teardown();
     }
 
     if (session.getApplication().isSafari()) {
@@ -278,7 +239,7 @@ public class IOSDualDriver {
     }
   }
 
-  public InstrumentsBackedNativeIOSDriver getNativeDriver() {
+  public RemoteIOSNativeDriver getNativeDriver() {
     return nativeDriver;
   }
 
@@ -327,7 +288,7 @@ public class IOSDualDriver {
     int currentPageID = webDriver.getCurrentPageID();
     webDriver.stop();
     webDriver = new RemoteIOSWebDriver(session, finders);
-//    webDriver.start();
+    webDriver.start();
     webDriver.switchTo(String.valueOf(currentPageID));
   }
 

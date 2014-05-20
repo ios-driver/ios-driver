@@ -14,32 +14,14 @@
 
 package org.uiautomation.ios.server.instruments;
 
-import org.uiautomation.ios.communication.device.DeviceType;
-import org.uiautomation.ios.communication.device.DeviceVariation;
-import org.uiautomation.ios.server.application.APPIOSApplication;
-
+/**
+ * Responsible for setting up the ios device so that the test can start ( settign the right
+ * language,installing or reseting the app etc )
+ */
 public interface IOSDeviceManager {
 
-  public void prepare();
+  public void setup();
 
-  public void install(APPIOSApplication aut);
+  public void teardown();
 
-  public void setL10N(String locale, String language);
-
-  public void resetContentAndSettings();
-
-  public void cleanupDevice();
-
-  public void setKeyboardOptions();
-
-  void setLocationPreference(boolean authorized);
-
-  void setVariation(DeviceType device, DeviceVariation variation);
-
-
-  void setMobileSafariOptions();
-
-  void setSimulatorScale(String scale);
-
-  void installTrustStore(String trustStore);
 }

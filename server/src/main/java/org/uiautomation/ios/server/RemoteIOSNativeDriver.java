@@ -23,12 +23,12 @@ import org.uiautomation.ios.server.simulator.InstrumentsFailedToStartException;
 
 import java.net.URL;
 
-public class InstrumentsBackedNativeIOSDriver extends ServerSideNativeDriver {
+public class RemoteIOSNativeDriver extends ServerSideNativeDriver {
 
   private final Instruments instruments;
   private final Thread shutdownHook;
 
-  public InstrumentsBackedNativeIOSDriver(URL url, ServerSideSession session) {
+  public RemoteIOSNativeDriver(URL url, ServerSideSession session) {
     super(url, new SessionId(session.getSessionId()));
     instruments = InstrumentsFactory.getInstruments(session);
     shutdownHook = new Thread() {
