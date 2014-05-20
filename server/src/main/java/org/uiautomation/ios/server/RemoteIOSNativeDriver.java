@@ -28,9 +28,9 @@ public class RemoteIOSNativeDriver extends ServerSideNativeDriver {
   private final Instruments instruments;
   private final Thread shutdownHook;
 
-  public RemoteIOSNativeDriver(URL url, ServerSideSession session) {
+  public RemoteIOSNativeDriver(URL url, ServerSideSession session,Instruments impl) {
     super(url, new SessionId(session.getSessionId()));
-    instruments = InstrumentsFactory.getInstruments(session);
+    this.instruments = impl;
     shutdownHook = new Thread() {
       @Override
       public void run() {

@@ -48,7 +48,7 @@ public abstract class BaseIOSDriverTest {
     }
   }
   
-  @AfterClass(alwaysRun = true)
+  @AfterClass
   public final void afterClass() throws Exception {
     stopDriver();    
     stopServer();

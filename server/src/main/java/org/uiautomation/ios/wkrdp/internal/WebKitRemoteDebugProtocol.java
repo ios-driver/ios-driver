@@ -36,7 +36,7 @@ import java.util.logging.Logger;
  * app.
  *
  * @see WebKitRemoteDebugProtocol#sendWebkitCommand(org.json.JSONObject, int) to use the protocol
- *      itself.
+ * itself.
  */
 public abstract class WebKitRemoteDebugProtocol {
 
@@ -87,9 +87,8 @@ public abstract class WebKitRemoteDebugProtocol {
   }
 
 
-  public WebKitRemoteDebugProtocol(MessageListener listener,
-                                   List<ResponseFinder> finders) {
-    this.handler = new DefaultMessageHandler(listener, finders);
+  public WebKitRemoteDebugProtocol(List<ResponseFinder> finders) {
+    this.handler = new DefaultMessageHandler(finders);
   }
 
   public void addListener(MessageListener listener) {
@@ -172,9 +171,11 @@ public abstract class WebKitRemoteDebugProtocol {
       } else if (response.optBoolean("wasThrown", false)) {
         throw new WebDriverException("remote JS exception " + response.toString(2));
       } else {
-        if (log.isLoggable(Level.FINE))
-          log.fine(System.currentTimeMillis() + "\t\t" + (System.currentTimeMillis() - start) + "ms\t"
-                 + command.getString("method") + " " + command);
+        if (log.isLoggable(Level.FINE)) {
+          log.fine(
+              System.currentTimeMillis() + "\t\t" + (System.currentTimeMillis() - start) + "ms\t"
+              + command.getString("method") + " " + command);
+        }
         JSONObject res = response.getJSONObject("result");
         if (res == null) {
           System.err.println("GOT a null result from " + response.toString(2));
@@ -183,7 +184,7 @@ public abstract class WebKitRemoteDebugProtocol {
       }
     } catch (JSONException e) {
       throw new WebDriverException(e);
-    } catch (NullPointerException e){
+    } catch (NullPointerException e) {
       throw new WebDriverException("the server didn't respond. Is the app still alive ?");
     }
   }

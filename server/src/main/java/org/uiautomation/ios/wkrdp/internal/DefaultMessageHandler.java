@@ -25,7 +25,10 @@ import org.uiautomation.ios.wkrdp.message.ApplicationDataMessage;
 import org.uiautomation.ios.wkrdp.message.IOSMessage;
 import org.uiautomation.ios.wkrdp.message.MessageFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,9 +48,7 @@ public class DefaultMessageHandler implements MessageHandler {
       defaultFinder =
       new DefaultWebKitResponseFinder(timeoutInMs);
 
-  public DefaultMessageHandler(MessageListener listener, List<ResponseFinder> finders) {
-    listeners.add(listener);
-
+  public DefaultMessageHandler(List<ResponseFinder> finders) {
     this.extraFinders.addAll(finders);
   }
 
@@ -106,8 +107,8 @@ public class DefaultMessageHandler implements MessageHandler {
     try {
       JSONObject res = all.findResponse(id);
       if (log.isLoggable(Level.FINE)) {
-      log.fine(
-          "response " + id + " , " + (System.currentTimeMillis() - start) + "ms. " + res);
+        log.fine(
+            "response " + id + " , " + (System.currentTimeMillis() - start) + "ms. " + res);
       }
 
       return res;
@@ -121,8 +122,8 @@ public class DefaultMessageHandler implements MessageHandler {
   public void addListener(MessageListener listener) {
     listeners.add(listener);
     log.log(Level.INFO,
-        "DefaultMessageHandler addListener type: " + listener.getClass().getName(),
-        new Exception("log the stack"));
+            "DefaultMessageHandler addListener type: " + listener.getClass().getName(),
+            new Exception("log the stack"));
     // Let all interested listeners know if this is a new WebInspector.
     if (listener instanceof WebInspector) {
       WebInspector inspector = (WebInspector) listener;

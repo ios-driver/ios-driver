@@ -16,7 +16,6 @@ package org.uiautomation.ios.wkrdp.internal;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.utils.PlistManager;
-import org.uiautomation.ios.wkrdp.MessageListener;
 import org.uiautomation.ios.wkrdp.ResponseFinder;
 
 import java.io.ByteArrayOutputStream;
@@ -41,9 +40,8 @@ public class SimulatorProtocolImpl extends WebKitRemoteDebugProtocol {
   private final String LOCALHOST_IPV6 = "::1";
   private final int port = 27753;
 
-  public SimulatorProtocolImpl(MessageListener listener,
-                               List<ResponseFinder> finders) {
-    super(listener, finders);
+  public SimulatorProtocolImpl(List<ResponseFinder> finders) {
+    super(finders);
   }
 
 
@@ -129,9 +127,11 @@ public class SimulatorProtocolImpl extends WebKitRemoteDebugProtocol {
   public void stop() {
     stopListenerThread();
     try {
-      socket.close();
+      if (socket != null) {
+        socket.close();
+      }
     } catch (Exception e) {
-      e.printStackTrace();
+      log.warning("couldn't stop the wkrdp properly." + e.getMessage());
     }
   }
 

@@ -24,17 +24,10 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.remote.Response;
-import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.context.BaseWebInspector;
 import org.uiautomation.ios.context.WebInspector;
 import org.uiautomation.ios.server.DOMContext;
-import org.uiautomation.ios.server.IOSServerManager;
-import org.uiautomation.ios.server.RealDevice;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.server.configuration.Configuration;
-import org.uiautomation.ios.wkrdp.internal.RealDeviceProtocolImpl;
-import org.uiautomation.ios.wkrdp.internal.SimulatorProtocolImpl;
 import org.uiautomation.ios.wkrdp.internal.WebKitRemoteDebugProtocol;
 import org.uiautomation.ios.wkrdp.internal.WebKitSynchronizer;
 import org.uiautomation.ios.wkrdp.message.WebkitApplication;
@@ -50,89 +43,33 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 public class RemoteIOSWebDriver {
 
-
-  public static void main(String[] args) throws Exception {
-    try {
-      LogManager.getLogManager()
-          .readConfiguration(IOSServerManager.class.getResourceAsStream("/ios-logging.properties"));
-    } catch (Exception e) {
-      System.err.println("Cannot configure logger.");
-    }
-
-    Runnable r = new Runnable() {
-      @Override
-      public void run() {
-        RemoteIOSWebDriver driver = new RemoteIOSWebDriver(null, new ArrayList<ResponseFinder>());
-        driver.connect(safari);
-        driver.switchTo(driver.getPages().get(0));
-        driver.get("http://perdu.com");
-        RemoteWebElement body = null;
-        try {
-          body = driver.findElementByCssSelector("body");
-          System.out.println(body.getText());
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-        driver.quit();
-      }
-    };
-
-    new Thread(r).start();
-    //new Thread(r).start();
-
-//    driver.get("http://google.co.uk/");
-//    body = driver.findElementByCssSelector("body");
-//
-//    driver.stop();
-//
-//    driver = new RemoteIOSWebDriver(null);
-//    //driver.connect(uiCatalog);
-//    driver.switchTo(driver.getPages().get(0));
-//    driver.get("http://ebay.co.uk/");
-//    body = driver.findElementByCssSelector("body");
-//    driver.get("http://google.co.uk/");
-//    body = driver.findElementByCssSelector("body");
-  }
-
-  static String safari = "com.apple.mobilesafari";
-  static String uiCatalog = "com.yourcompany.UICatalog";
-
-  //private SimulatorSession simulator;
-  //private Object usbProtocol;
   private String bundleId;
 
-  private WebKitRemoteDebugProtocol protocol;
+  private final WebKitRemoteDebugProtocol protocol;
   private WebkitDevice device;
-  private List<WebkitApplication> applications = new ArrayList<WebkitApplication>();
+  private List<WebkitApplication> applications = new ArrayList<>();
   private final ServerSideSession session;
   private final String connectionKey;
   private BaseWebInspector currentInspector;
-  private Map<Integer, BaseWebInspector> inspectors = new HashMap<Integer, BaseWebInspector>();
+  private Map<Integer, BaseWebInspector> inspectors = new HashMap<>();
   private static final Logger log = Logger.getLogger(RemoteIOSWebDriver.class.getName());
-  private List<WebkitPage> pages = new ArrayList<WebkitPage>();
+  private List<WebkitPage> pages = new ArrayList<>();
   private final WebKitSynchronizer sync;
-  private static boolean ok = true;
+  private boolean isStarted = false;
 
-  public RemoteIOSWebDriver(ServerSideSession session, List<ResponseFinder> finders) {
+  public RemoteIOSWebDriver(ServerSideSession session, WebKitRemoteDebugProtocol protocol) {
     this.session = session;
     connectionKey = UUID.randomUUID().toString();
     sync = new WebKitSynchronizer(this);
-    MessageListener notification = new WebKitNotificationListener(this, sync, session);
-    if (session != null && session.getDevice() instanceof RealDevice) {
-      if (!Configuration.BETA_FEATURE) {
-        Configuration.off();
-      }
-      String uuid = ((RealDevice) session.getDevice()).getUuid();
-      protocol = new RealDeviceProtocolImpl(uuid, notification, finders);
+    this.protocol = protocol;
 
-    } else {
-      protocol = new SimulatorProtocolImpl(notification, finders);
-    }
+    MessageListener messageListener = new WebKitNotificationListener(this, sync, session);
+    protocol.addListener(messageListener);
+
   }
 
   public void setPages(List<WebkitPage> pages) {
@@ -143,10 +80,10 @@ public class RemoteIOSWebDriver {
     return pages;
   }
 
-  /*public boolean isConnected() {
-    log.fine("Applications  " + applications.size());
-    return !applications.isEmpty();
-  }*/
+
+  public boolean isStarted(){
+    return isStarted;
+  }
 
   public void start() {
     protocol.start();
@@ -166,11 +103,12 @@ public class RemoteIOSWebDriver {
     } else {
       log.warning("session created but application size=" + applications.size());
     }
-
+    isStarted = true;
 
   }
 
   public void stop() {
+    isStarted = false;
     protocol.stop();
   }
 
