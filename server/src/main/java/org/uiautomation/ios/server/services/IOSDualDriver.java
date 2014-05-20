@@ -20,26 +20,19 @@ import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
-import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
-import org.uiautomation.ios.communication.device.DeviceType;
-import org.uiautomation.ios.communication.device.DeviceVariation;
-import org.uiautomation.ios.server.HostInfo;
 import org.uiautomation.ios.server.IOSDeviceManagerFactory;
 import org.uiautomation.ios.server.RemoteIOSNativeDriver;
 import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.server.application.IOSRunningApplication;
+import org.uiautomation.ios.server.WebKitRemoteDebugProtocolFactory;
 import org.uiautomation.ios.server.instruments.IOSDeviceManager;
 import org.uiautomation.ios.server.instruments.NoInstrumentsImplementationAvailable;
 import org.uiautomation.ios.server.simulator.InstrumentsFailedToStartException;
 import org.uiautomation.ios.utils.IOSVersion;
 import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
-import org.uiautomation.ios.wkrdp.ResponseFinder;
-import org.uiautomation.ios.wkrdp.internal.AlertDetector;
+import org.uiautomation.ios.wkrdp.internal.WebKitRemoteDebugProtocol;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
@@ -49,57 +42,46 @@ public class IOSDualDriver {
   private static final Logger log = Logger.getLogger(IOSDualDriver.class.getName());
   private final ServerSideSession session;
   private final Timer stopSessionTimer = new Timer(true);
-  private final IOSCapabilities caps;
-  private final HostInfo info;
 
   // Setup TearDown
   private IOSDeviceManager deviceManager;
-
   // Instruments
   private RemoteIOSNativeDriver nativeDriver;
-
   // WKRDP
   private RemoteIOSWebDriver webDriver;
 
-
-  private List<ResponseFinder> finders = new ArrayList<>();
 
   private WorkingMode mode = WorkingMode.Native;
 
   public IOSDualDriver(ServerSideSession session) {
     this.session = session;
-    this.caps = session.getCapabilities();
-    info = session.getIOSServerManager().getHostInfo();
-    init();
-  }
-
-  private boolean isSimulator() {
-    return session.getCapabilities().isSimulator();
-  }
-
-  private void init() {
-    IOSCapabilities cap = session.getCapabilities();
 
     // Create the device manager that does the setup and teardown
     deviceManager = IOSDeviceManagerFactory.create(session);
 
     // Create the instruments based comm
-    URL url = null;
+
+    Instruments instruments = InstrumentsFactory.getInstruments(session);
+    nativeDriver = new RemoteIOSNativeDriver(getURL(), session, instruments);
+
+    // the WKRDP comm is created lazily.
+    WebKitRemoteDebugProtocol p = WebKitRemoteDebugProtocolFactory.create(session, nativeDriver);
+    webDriver = new RemoteIOSWebDriver(session, p);
+
+  }
+
+  private URL getURL() {
+    URL url;
     try {
       url =
           new URL("http://localhost:" + session.getIOSServerManager().getHostInfo().getPort()
                   + "/wd/hub");
     } catch (Exception e) {
-      e.printStackTrace();
+      throw new WebDriverException(e);
     }
-    nativeDriver = new RemoteIOSNativeDriver(url, session);
-
-    if (!(getNativeDriver().getInstruments() instanceof NoInstrumentsImplementationAvailable)) {
-      finders.add(new AlertDetector(getNativeDriver()));
-    }
-
-    // the WKRDP comm is created lazily.
+    return url;
   }
+
 
   public void stop() {
     deviceManager.teardown();
@@ -111,7 +93,6 @@ public class IOSDualDriver {
     }
 
     stopSessionTimer.cancel();
-
   }
 
   private void forceStop() {
@@ -154,29 +135,13 @@ public class IOSDualDriver {
       }
     }, sessionTimeoutMillis);
 
-    DeviceType deviceType = caps.getDevice();
-    IOSRunningApplication application = session.getApplication();
-    DeviceVariation variation = caps.getDeviceVariation();
-    String locale = caps.getLocale();
-    String language = caps.getLanguage();
-    String instrumentsVersion = info.getInstrumentsVersion().getVersion();
-    boolean instrumentsIs50OrHigher = new IOSVersion(instrumentsVersion).isGreaterOrEqualTo("5.0");
-    boolean isSDK70OrHigher = new IOSVersion(caps.getSDKVersion()).isGreaterOrEqualTo("7.0");
-    boolean putDefaultFirst = instrumentsIs50OrHigher;
-
-    // the 5.0 instruments can't start MobileSafari
-    // workaround is to remove the MobileSafari app from the install directory and put
-    // it back after instruments starts it
-    boolean
-        tempRemoveMobileSafari =
-        instrumentsIs50OrHigher && application.isSafari() && application.isSimulator();
-
     deviceManager.setup();
 
     try {
       nativeDriver.start(timeOut);
     } catch (InstrumentsFailedToStartException e) {
       deviceManager.teardown();
+      throw e;
     }
 
     if (session.getApplication().isSafari()) {
@@ -244,12 +209,10 @@ public class IOSDualDriver {
   }
 
   public synchronized RemoteIOSWebDriver getRemoteWebDriver() {
-    if (webDriver == null) {
+    if (!webDriver.isStarted()) {
       String version = session.getCapabilities().getSDKVersion();
       if (new IOSVersion(version).isGreaterOrEqualTo("6.0")) {
-        webDriver = new RemoteIOSWebDriver(session, finders);
         webDriver.start();
-
       } else {
         log.warning("Cannot create a driver. Version too old " + version);
       }
@@ -277,7 +240,6 @@ public class IOSDualDriver {
         throw new NoSuchWindowException("The app currently doesn't have a webview displayed.");
       }
     }
-
   }
 
   public WorkingMode getWorkingMode() {
@@ -287,10 +249,9 @@ public class IOSDualDriver {
   public void restartWebkit() {
     int currentPageID = webDriver.getCurrentPageID();
     webDriver.stop();
-    webDriver = new RemoteIOSWebDriver(session, finders);
+    WebKitRemoteDebugProtocol p = WebKitRemoteDebugProtocolFactory.create(session, nativeDriver);
+    webDriver = new RemoteIOSWebDriver(session, p);
     webDriver.start();
     webDriver.switchTo(String.valueOf(currentPageID));
   }
-
-
 }

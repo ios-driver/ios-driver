@@ -19,7 +19,6 @@ import org.libimobiledevice.ios.driver.binding.exceptions.SDKException;
 import org.libimobiledevice.ios.driver.binding.services.DeviceService;
 import org.libimobiledevice.ios.driver.binding.services.IOSDevice;
 import org.libimobiledevice.ios.driver.binding.services.WebInspectorService;
-import org.uiautomation.ios.wkrdp.MessageListener;
 import org.uiautomation.ios.wkrdp.ResponseFinder;
 
 import java.util.List;
@@ -31,9 +30,8 @@ public class RealDeviceProtocolImpl extends WebKitRemoteDebugProtocol {
 
   private final WebInspectorService inspector;
 
-  public RealDeviceProtocolImpl(String uuid, MessageListener listener,
-                                List<ResponseFinder> finders) {
-    super(listener, finders);
+  public RealDeviceProtocolImpl(String uuid, List<ResponseFinder> finders) {
+    super(finders);
     IOSDevice device = null;
     try {
       device = DeviceService.get(uuid);

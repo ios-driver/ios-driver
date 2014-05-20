@@ -35,6 +35,9 @@ public class ServerSideCriteriaTest extends BaseIOSDriverTest {
   @BeforeClass
   public void startDriver() {
     driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.intlMountainsCap("fr"));
+    Criteria c1 = new TypeCriteria(UIATableCell.class);
+    UIAElement element = driver.findElement(c1);
+    element.tap();
   }
 
   private static final String expected =
@@ -42,10 +45,6 @@ public class ServerSideCriteriaTest extends BaseIOSDriverTest {
 
   @Test
   public void findElementDriver() {
-    Criteria c1 = new TypeCriteria(UIATableCell.class);
-    UIAElement element = driver.findElement(c1);
-    element.tap();
-
     NameCriteria
         criteria =
         new NameCriteria("sentenceFormat", L10NStrategy.serverL10N, MatchingStrategy.regex);
@@ -54,7 +53,7 @@ public class ServerSideCriteriaTest extends BaseIOSDriverTest {
     Assert.assertEquals(actual, expected);
   }
 
-  @Test(dependsOnMethods = {"findElementDriver"})
+  @Test
   public void findElementElement() {
     UIAApplication app = (UIAApplication) driver.findElement(By.tagName("UIAApplication"));
 
