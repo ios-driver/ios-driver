@@ -12,45 +12,29 @@
  * the License.
  */
 
-package org.uiautomation.ios.context;
+package org.uiautomation.ios.wkrdp;
 
 
 import org.json.JSONObject;
 import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.wkrdp.internal.WebKitRemoteDebugProtocol;
 
-import java.util.logging.Logger;
-
 public class WebInspector extends BaseWebInspector {
 
-  private static final Logger log = Logger.getLogger(WebInspector.class.getName());
 
-//  private final WebViewContext context;
   private final int pageIdentifierKey;
-  private final static String senderBase = "E0F4C128-F4FF-4D45-A538-BA382CD660";
-//  private final String senderKey;
-//  private final String connectionKey;
-//  private final String bundleId;
   private final WebKitRemoteDebugProtocol inspector;
 
-  public WebInspector(WebViewContext webViewContext, int pageIdentifierKey,
-                      WebKitRemoteDebugProtocol inspector, String bundleId,
-                      String connectionKey, ServerSideSession session) {
+  public WebInspector(int pageIdentifierKey, WebKitRemoteDebugProtocol inspector,
+                      ServerSideSession session) {
     super(session);
-//    this.bundleId = bundleId;
-//    this.connectionKey = connectionKey;
-//    this.context = webViewContext;
     this.inspector = inspector;
     this.pageIdentifierKey = pageIdentifierKey;
-//    this.senderKey = generateSenderString(pageIdentifierKey);
   }
 
   @Override
   public JSONObject sendCommand(JSONObject command) {
-    JSONObject
-        res =
-        inspector.sendWebkitCommand(command, pageIdentifierKey);
-    return res;
+    return inspector.sendWebkitCommand(command, pageIdentifierKey);
   }
 
   @Override
@@ -58,12 +42,4 @@ public class WebInspector extends BaseWebInspector {
     return pageIdentifierKey;
   }
 
-  private String generateSenderString(int pageIdentifierKey) {
-    if (pageIdentifierKey < 10) {
-      return senderBase + "0" + pageIdentifierKey;
-    } else {
-      return senderBase + pageIdentifierKey;
-    }
-
-  }
 }

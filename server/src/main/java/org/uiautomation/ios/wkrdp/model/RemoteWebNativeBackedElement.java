@@ -31,7 +31,7 @@ import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.communication.device.DeviceType;
-import org.uiautomation.ios.context.BaseWebInspector;
+import org.uiautomation.ios.wkrdp.BaseWebInspector;
 import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.application.ContentResult;
 import org.uiautomation.ios.utils.IOSVersion;

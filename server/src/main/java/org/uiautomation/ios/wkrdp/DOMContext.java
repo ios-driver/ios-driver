@@ -17,7 +17,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.context.BaseWebInspector;
 import org.uiautomation.ios.wkrdp.events.ChildNodeRemoved;
 import org.uiautomation.ios.wkrdp.events.Event;
 import org.uiautomation.ios.wkrdp.events.EventHistory;
