@@ -24,8 +24,8 @@ import org.uiautomation.ios.inspector.controllers.WebViewContentController;
 import org.uiautomation.ios.inspector.model.Cache;
 import org.uiautomation.ios.inspector.model.CacheDefaultImpl;
 import org.uiautomation.ios.inspector.views.View;
-import org.uiautomation.ios.server.IOSServer;
-import org.uiautomation.ios.server.IOSServerManager;
+import org.uiautomation.ios.IOSServer;
+import org.uiautomation.ios.IOSServerManager;
 
 import java.io.IOException;
 import java.net.MalformedURLException;

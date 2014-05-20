@@ -59,7 +59,7 @@ public class WebDriverLikeCommandExecutor {
       HttpCommandExecutor exe = (HttpCommandExecutor) driver.getCommandExecutor();
       remoteServer = exe.getAddressOfRemoteServer();
     } else {
-      throw new WebDriverException("ios driver only supports http communication.");
+      throw new WebDriverException("ios driver only supports http commandExecutor.");
     }
     this.remoteURL = remoteServer;
     this.driver = driver;

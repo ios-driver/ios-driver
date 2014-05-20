@@ -15,7 +15,7 @@
 package org.uiautomation.ios.wkrdp.internal;
 
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.wkrdp.RemoteIOSWebDriver;
+import org.uiautomation.ios.drivers.RemoteIOSWebDriver;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;

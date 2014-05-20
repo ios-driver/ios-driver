@@ -8,7 +8,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
-import org.uiautomation.ios.server.command.uiautomation.SetScriptTimeoutNHandler;
+import org.uiautomation.ios.command.uiautomation.SetScriptTimeoutNHandler;
 
 import java.io.IOException;
 import java.util.ArrayList;

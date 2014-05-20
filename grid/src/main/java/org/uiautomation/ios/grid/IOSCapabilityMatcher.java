@@ -16,7 +16,7 @@ package org.uiautomation.ios.grid;
 
 
 import org.openqa.grid.internal.utils.CapabilityMatcher;
-import org.uiautomation.ios.server.IOSServerManager;
+import org.uiautomation.ios.IOSServerManager;
 
 import java.util.Map;
 

@@ -15,7 +15,7 @@
 package org.uiautomation.ios.utils;
 
 
-import org.uiautomation.ios.server.ServerSideSession;
+import org.uiautomation.ios.ServerSideSession;
 
 import java.util.logging.Logger;
 

@@ -8,8 +8,8 @@ import org.openqa.selenium.environment.webserver.WebbitAppServer;
 import org.testng.annotations.*;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
-import org.uiautomation.ios.server.IOSServer;
-import org.uiautomation.ios.server.IOSServerConfiguration;
+import org.uiautomation.ios.IOSServer;
+import org.uiautomation.ios.IOSServerConfiguration;
 
 public abstract class BaseSeleniumTest {
 

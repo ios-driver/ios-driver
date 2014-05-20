@@ -21,8 +21,8 @@ import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
-import org.uiautomation.ios.server.HostInfo;
-import org.uiautomation.ios.server.command.uiautomation.NewSessionNHandler;
+import org.uiautomation.ios.HostInfo;
+import org.uiautomation.ios.command.uiautomation.NewSessionNHandler;
 
 import java.io.BufferedWriter;
 import java.io.File;

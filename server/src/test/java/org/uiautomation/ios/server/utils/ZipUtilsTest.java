@@ -22,6 +22,7 @@ import junit.framework.Assert;
 
 import org.testng.annotations.Test;
 import org.uiautomation.ios.SampleApps;
+import org.uiautomation.ios.utils.ZipUtils;
 
 public final class ZipUtilsTest {
 

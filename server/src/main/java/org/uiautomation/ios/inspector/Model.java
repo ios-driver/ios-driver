@@ -17,7 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
-import org.uiautomation.ios.server.application.APPIOSApplication;
+import org.uiautomation.ios.application.APPIOSApplication;
 
 import java.io.File;
 import java.io.FileInputStream;

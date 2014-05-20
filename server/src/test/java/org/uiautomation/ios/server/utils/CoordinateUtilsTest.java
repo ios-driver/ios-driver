@@ -20,6 +20,7 @@ import junit.framework.Assert;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.remote.Response;
 import org.testng.annotations.Test;
+import org.uiautomation.ios.utils.CoordinateUtils;
 
 public class CoordinateUtilsTest {
 
