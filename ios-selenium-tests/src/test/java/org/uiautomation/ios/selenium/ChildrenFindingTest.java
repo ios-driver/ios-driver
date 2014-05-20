@@ -13,6 +13,7 @@ import static org.testng.Assert.fail;
 
 public class ChildrenFindingTest extends BaseSeleniumTest {
 
+
   @Test
   public void testFindElementByXPath() {
     driver.get(pages.nestedPage);
