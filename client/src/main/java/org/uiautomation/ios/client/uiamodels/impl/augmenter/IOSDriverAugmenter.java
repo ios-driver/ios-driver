@@ -45,7 +45,7 @@ public class IOSDriverAugmenter {
    */
   public static RemoteIOSDriver getIOSDriver(RemoteWebDriver driver) {
     if (!(driver.getCommandExecutor() instanceof HttpCommandExecutor)) {
-      throw new WebDriverException("ios only supports http communication.");
+      throw new WebDriverException("ios only supports http commandExecutor.");
     }
     HttpCommandExecutor e = (HttpCommandExecutor) driver.getCommandExecutor();
     RemoteIOSDriver

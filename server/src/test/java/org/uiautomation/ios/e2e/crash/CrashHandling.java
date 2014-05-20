@@ -27,8 +27,8 @@ import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.client.uiamodels.impl.augmenter.ElementTree;
 import org.uiautomation.ios.client.uiamodels.impl.augmenter.IOSDriverAugmenter;
-import org.uiautomation.ios.server.IOSServer;
-import org.uiautomation.ios.server.IOSServerConfiguration;
+import org.uiautomation.ios.IOSServer;
+import org.uiautomation.ios.IOSServerConfiguration;
 import org.uiautomation.ios.utils.ClassicCommands;
 
 import java.net.MalformedURLException;

@@ -30,8 +30,8 @@ import org.uiautomation.ios.communication.Helper;
 import org.uiautomation.ios.communication.HttpClientFactory;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
-import org.uiautomation.ios.server.IOSServer;
-import org.uiautomation.ios.server.IOSServerConfiguration;
+import org.uiautomation.ios.IOSServer;
+import org.uiautomation.ios.IOSServerConfiguration;
 
 import java.io.File;
 import java.io.FileWriter;

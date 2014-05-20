@@ -15,8 +15,8 @@ import org.uiautomation.ios.UIAModels.Orientation;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
-import org.uiautomation.ios.server.IOSServer;
-import org.uiautomation.ios.server.IOSServerConfiguration;
+import org.uiautomation.ios.IOSServer;
+import org.uiautomation.ios.IOSServerConfiguration;
 
 import java.net.URL;
 import java.util.ArrayList;

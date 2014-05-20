@@ -15,7 +15,8 @@
 package org.uiautomation.ios.wkrdp;
 
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.server.ServerSideSession;
+import org.uiautomation.ios.ServerSideSession;
+import org.uiautomation.ios.drivers.RemoteIOSWebDriver;
 import org.uiautomation.ios.wkrdp.internal.WebKitSynchronizer;
 import org.uiautomation.ios.wkrdp.message.ApplicationConnectedMessage;
 import org.uiautomation.ios.wkrdp.message.ApplicationDataMessage;

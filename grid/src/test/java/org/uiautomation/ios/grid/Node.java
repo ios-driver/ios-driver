@@ -14,7 +14,7 @@
 
 package org.uiautomation.ios.grid;
 
-import org.uiautomation.ios.server.IOSServer;
+import org.uiautomation.ios.IOSServer;
 
 public class Node {
 

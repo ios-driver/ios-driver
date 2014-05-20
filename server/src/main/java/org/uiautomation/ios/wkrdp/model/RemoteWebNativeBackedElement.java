@@ -28,13 +28,12 @@ import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
 import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.LabelCriteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
-import org.uiautomation.ios.UIAModels.predicate.OrCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.context.BaseWebInspector;
-import org.uiautomation.ios.server.ServerSideSession;
-import org.uiautomation.ios.server.application.ContentResult;
+import org.uiautomation.ios.ServerSideSession;
+import org.uiautomation.ios.application.ContentResult;
 import org.uiautomation.ios.utils.IOSVersion;
 import org.uiautomation.ios.utils.XPath2Engine;
 

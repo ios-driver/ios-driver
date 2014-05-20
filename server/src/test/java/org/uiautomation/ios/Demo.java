@@ -17,13 +17,8 @@ package org.uiautomation.ios;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
-import org.uiautomation.ios.communication.device.DeviceType;
-import org.uiautomation.ios.communication.device.DeviceVariation;
-import org.uiautomation.ios.server.IOSServer;
-import org.uiautomation.ios.server.IOSServerConfiguration;
 
 import java.net.URL;
 import java.util.Arrays;

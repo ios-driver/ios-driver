@@ -15,7 +15,7 @@
 package org.uiautomation.ios.context;
 
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
-import org.uiautomation.ios.server.application.APPIOSApplication;
+import org.uiautomation.ios.application.APPIOSApplication;
 
 public class ApplicationContext {
 

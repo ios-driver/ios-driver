@@ -14,7 +14,7 @@
 package org.uiautomation.ios.utils;
 
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.server.instruments.InstrumentsVersion;
+import org.uiautomation.ios.instruments.InstrumentsVersion;
 
 import java.io.File;
 import java.util.ArrayList;

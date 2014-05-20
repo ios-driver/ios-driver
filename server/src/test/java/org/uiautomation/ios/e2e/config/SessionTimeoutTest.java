@@ -23,8 +23,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.server.IOSServer;
-import org.uiautomation.ios.server.IOSServerConfiguration;
+import org.uiautomation.ios.IOSServer;
+import org.uiautomation.ios.IOSServerConfiguration;
 
 import java.net.MalformedURLException;
 import java.net.URL;
