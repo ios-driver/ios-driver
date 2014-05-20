@@ -1,2 +1,0 @@
-## excluded-groups=manual,slow,broken
-org\.automation\.ios\.e2e\..*
