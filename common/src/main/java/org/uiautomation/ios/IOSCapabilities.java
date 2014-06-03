@@ -27,13 +27,10 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 
+import javax.xml.bind.DatatypeConverter;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 
 public class IOSCapabilities extends DesiredCapabilities {
@@ -83,6 +80,7 @@ public class IOSCapabilities extends DesiredCapabilities {
   public static final String SIMULATOR_SCALE = "simulatorScale";
   // default selenium bindings for mobile safari
   public static final String BROWSER_NAME = "browserName";
+  public static final String BOOTSTRAP_FILES = "bootstrapFiles";
 
   // TODO: make a parameter?
   public static final int COMMAND_TIMEOUT_MILLIS = 10 * 60 * 1000; // 10 minutes
@@ -256,6 +254,27 @@ public class IOSCapabilities extends DesiredCapabilities {
       res.addAll(getList(IOS_SWITCHES));
     }
     return res;
+  }
+
+  public Map<String, byte[]> getBootstrapFiles() {
+    JSONObject o = (JSONObject) getRawCapabilities().get(BOOTSTRAP_FILES);
+    if (o == null) {
+      return new HashMap<String, byte[]>();
+    }
+
+    Map<String, byte[]> files = new HashMap<String, byte[]>();
+    for (Iterator<String> pathsIter = o.keys(); pathsIter.hasNext();) {
+      String path = pathsIter.next();
+      String base64Content;
+      try {
+        base64Content = o.getString(path);
+      } catch (JSONException e) {
+        throw new WebDriverException(o.toString() + " should only contain base64 encoded strings for values.");
+      }
+      files.put(path, DatatypeConverter.parseBase64Binary(base64Content));
+    }
+
+    return files;
   }
 
   public boolean isTimeHack() {

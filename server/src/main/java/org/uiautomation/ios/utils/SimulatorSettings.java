@@ -24,12 +24,7 @@ import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.HostInfo;
 import org.uiautomation.ios.command.uiautomation.NewSessionNHandler;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -200,6 +195,18 @@ public class SimulatorSettings {
     boolean ok = contentAndSettingsFolder.mkdirs();
     if (!ok) {
       System.err.println("couldn't re-create: " + contentAndSettingsFolder);
+    }
+  }
+
+  public void writeContentFile(String path, byte[] fileContents) {
+    File newFile = new File(getContentAndSettingsFolder(), path);
+    newFile.getParentFile().mkdirs();
+    try {
+      newFile.createNewFile();
+      FileOutputStream out = new FileOutputStream(newFile);
+      out.write(fileContents);
+    } catch (IOException e) {
+      System.err.println("could not create " + path);
     }
   }
 

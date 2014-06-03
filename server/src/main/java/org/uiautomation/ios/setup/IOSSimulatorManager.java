@@ -26,6 +26,7 @@ import org.uiautomation.ios.utils.SimulatorSettings;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 // java version ( simplified )
@@ -85,8 +86,10 @@ public class IOSSimulatorManager implements IOSDeviceManager {
 
     application.setDefaultDevice(deviceType, putDefaultFirst);
 
-
     simulatorSettings.resetContentAndSettings();
+    for (Map.Entry<String, byte[]> entry : caps.getBootstrapFiles().entrySet()) {
+      simulatorSettings.writeContentFile(entry.getKey(), entry.getValue());
+    }
     simulatorSettings.setL10N(locale, language);
     simulatorSettings.setKeyboardOptions();
     simulatorSettings.setLocationPreference(/*whitelist*/true, bundleId);
