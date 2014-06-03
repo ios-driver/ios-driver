@@ -56,7 +56,7 @@ public class ShowSDKsParser implements CommandOutputListener {
   }
 
   public List<String> getSDKs() {
-    if (!ok) {
+    if (!ok && sdks.size() == 0) {
       throw new WebDriverException("there was an error.stderr is not empty");
     }
     return sdks;
