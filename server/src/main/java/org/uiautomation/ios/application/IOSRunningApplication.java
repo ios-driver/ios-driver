@@ -39,7 +39,7 @@ public class IOSRunningApplication {
   }
 
   public boolean isSafari() {
-      return "com.apple.mobilesafari".equals(getBundleId());
+    return underlyingApplication.isSafari();
   }
   
   public boolean isSimulator() {

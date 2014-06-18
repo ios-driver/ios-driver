@@ -39,7 +39,7 @@ import java.util.Set;
 public class IOSServerConfiguration {
 
 
-  @Parameter(description = "enable beta feature.Might be unstable.", names = "-beta")
+  @Parameter(description = "enable beta feature.Might be unstable.", names = {"-beta","-real"})
   private boolean beta = false;
 
   @Parameter(description = "port the server will listen on.", names = "-port")

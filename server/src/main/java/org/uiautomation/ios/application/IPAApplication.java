@@ -14,7 +14,10 @@
 
 package org.uiautomation.ios.application;
 
+import org.libimobiledevice.ios.driver.binding.model.ProvisioningProfileInfo;
+import org.libimobiledevice.ios.driver.binding.services.ProvisioningService;
 import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.IOSCapabilities;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -141,5 +144,21 @@ public class IPAApplication extends APPIOSApplication {
 
   public File getIPAFile() {
     return ipa;
+  }
+
+  public File getEmbeddedProfile() {
+    return new File(getApplicationPath(),"embedded.mobileprovision");
+  }
+
+  @Override
+  public IOSCapabilities getCapabilities(){
+    IOSCapabilities res = super.getCapabilities();
+    try {
+      ProvisioningProfileInfo info = ProvisioningService.getProfile(getEmbeddedProfile());
+      res.setCapability(IOSCapabilities.PROVISIONNED,info.getDevices());
+      return res;
+    } catch (Exception e) {
+      throw new WebDriverException("Cannot extract probile. corrupted ipa ?");
+    }
   }
 }

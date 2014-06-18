@@ -15,7 +15,6 @@
 package org.uiautomation.ios.setup;
 
 
-import org.libimobiledevice.ios.driver.binding.exceptions.LibImobileException;
 import org.libimobiledevice.ios.driver.binding.exceptions.SDKException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.ServerSideSession;
@@ -36,13 +35,9 @@ public class IOSDeviceManagerFactory {
     } else {
       try {
         return new IOSRealDeviceManager(session);
-      } catch (LibImobileException e) {
-        e.printStackTrace();
       } catch (SDKException e) {
         throw new WebDriverException(e);
       }
     }
-
-    throw new WebDriverException("Cannot instantiate the DeviceManager for " + session);
   }
 }

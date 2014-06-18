@@ -13,7 +13,7 @@
  */
 package org.uiautomation.ios;
 
-import org.libimobiledevice.ios.driver.binding.exceptions.LibImobileException;
+import org.libimobiledevice.ios.driver.binding.exceptions.SDKException;
 import org.libimobiledevice.ios.driver.binding.services.DeviceService;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
@@ -71,8 +71,9 @@ public class IOSServerManager {
 
     if (Configuration.BETA_FEATURE) {
       try {
+
         DeviceService.INSTANCE.startDetection(devices);
-      } catch (LibImobileException e) {
+      } catch (SDKException e) {
         e.printStackTrace();
       }
     }
@@ -104,7 +105,7 @@ public class IOSServerManager {
     if (Configuration.BETA_FEATURE) {
       try {
         DeviceService.INSTANCE.stopDetection();
-      } catch (LibImobileException e) {
+      } catch (SDKException e) {
         e.printStackTrace();
       }
     }
@@ -131,7 +132,7 @@ public class IOSServerManager {
     return hostInfo.getPort();
   }
 
-  public ServerSideSession createSession(IOSCapabilities cap) {
+  public ServerSideSession createSession(IOSCapabilities cap) throws Exception {
     ServerSideSession session = new ServerSideSession(this, cap, options);
     sessions.add(session);
     return session;
@@ -157,17 +158,18 @@ public class IOSServerManager {
     List<APPIOSApplication> matchingApps = findAllMatchingApplications(desiredCapabilities);
     if (matchingApps.size() == 0) {
       throw new SessionNotCreatedException("desired app not found on server: "
-            + desiredCapabilities.getRawCapabilities() + ".\n    Available apps: "
-            + getSupportedApplications());
+                                           + desiredCapabilities.getRawCapabilities()
+                                           + ".\n    Available apps: "
+                                           + getSupportedApplications());
     }
     // if more than one matches it returns the last in the list (highest version for MobileSafari)
     APPIOSApplication app = matchingApps.get(matchingApps.size() - 1);
     AppleLanguage lang = AppleLanguage.create(desiredCapabilities.getLanguage());
     return app.createInstance(lang);
   }
-  
+
   public List<APPIOSApplication> findAllMatchingApplications(
-        IOSCapabilities desiredCapabilities) {
+      IOSCapabilities desiredCapabilities) {
     List<APPIOSApplication> matchingApps = new ArrayList<>();
     for (APPIOSApplication app : getApplicationStore().getApplications()) {
       IOSCapabilities appCapabilities = app.getCapabilities();
@@ -190,7 +192,8 @@ public class IOSServerManager {
       }
     }
     throw new SessionNotCreatedException(
-        desiredCapabilities.getRawCapabilities() + " no devices available.\n    Known devices: " + devices);
+        desiredCapabilities.getRawCapabilities() + " no devices available.\n    Known devices: "
+        + devices);
   }
 
   public ApplicationStore getApplicationStore() {
@@ -214,7 +217,7 @@ public class IOSServerManager {
     return apps.getApplications();
   }
 
-  public IOSServerConfiguration getIOSServerConfiguration(){
+  public IOSServerConfiguration getIOSServerConfiguration() {
     return options;
   }
 }

@@ -19,7 +19,6 @@ import com.google.common.collect.ImmutableList;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.sanselan.ImageReadException;
 import org.apache.sanselan.formats.tiff.TiffImageParser;
-import org.libimobiledevice.ios.driver.binding.exceptions.LibImobileException;
 import org.libimobiledevice.ios.driver.binding.exceptions.SDKException;
 import org.libimobiledevice.ios.driver.binding.services.DeviceService;
 import org.libimobiledevice.ios.driver.binding.services.IOSDevice;
@@ -65,16 +64,13 @@ public class NoInstrumentsImplementationAvailable implements Instruments {
     return session.isSafariRealDevice();
   }
 
-  public NoInstrumentsImplementationAvailable(ServerSideSession session) {
+  public NoInstrumentsImplementationAvailable(ServerSideSession session)
+      throws SDKException {
     this.session = session;
     String uuid = ((RealDevice) session.getDevice()).getUuid();
-    try {
-      device = DeviceService.get(uuid);
-      screenshotService = new ScreenshotSDK(device);
-    } catch (SDKException | LibImobileException e) {
-      throw new WebDriverException(
-          "Cannot init screenshot service for " + uuid + " : " + e.getMessage());
-    }
+
+    device = DeviceService.get(uuid);
+    screenshotService = new ScreenshotSDK(device);
 
     installOpenUrlApp = new Command(ImmutableList.of(
         "ideviceinstaller", "-i", "openURL.ipa", "-u", uuid), true);
@@ -157,29 +153,47 @@ public class NoInstrumentsImplementationAvailable implements Instruments {
 
     @Override
     public String getScreenshot() {
-      TiffImageParser tiffParser = new TiffImageParser();
-      ByteArrayOutputStream pngBytes = new ByteArrayOutputStream();
-
       try {
-        byte[] rawTiff = service.takeScreenshot();
-        BufferedImage image = tiffParser.getBufferedImage(rawTiff, new HashMap<String, Object>());
-        ImageIO.write(image, "png", pngBytes);
-      } catch (IOException | ImageReadException | SDKException e) {
-        throw new WebDriverException("Unable to take screenshot", e);
+        return getPNGAsString();
+      } catch (Exception e) {
+        throw new WebDriverException("Couldn't take the screenshot : " + e.getMessage(), e);
+      }
+    }
+
+
+    private String getPNGAsString() throws SDKException {
+      long start = System.currentTimeMillis();
+      byte[] raw = service.takeScreenshot();
+
+      TiffImageParser parser = new TiffImageParser();
+      try {
+        start = System.currentTimeMillis();
+        BufferedImage image = parser.getBufferedImage(raw, new HashMap<String, Object>());
+        File f = new File("screen.png");
+        System.out.println("loading :\t" + (System.currentTimeMillis() - start) + " ms");
+        start = System.currentTimeMillis();
+        ImageIO.write(image, "png", f);
+        System.out.println("writing : \t" + (System.currentTimeMillis() - start) + " ms");
+//        System.out.println("space : "+f.getTotalSpace());
+
+      } catch (ImageReadException e) {
+        e.printStackTrace();
+      } catch (IOException e) {
+        e.printStackTrace();
       }
 
-      return Base64.encodeBase64String(pngBytes.toByteArray());
+      return Base64.encodeBase64String(raw);
     }
   }
 
 
-  public static void main(String[] args) throws SDKException, LibImobileException {
+  public static void main(String[] args) throws SDKException {
     ScreenshotSDK
         s =
         new ScreenshotSDK(DeviceService.get("ff4827346ed6b54a98f51e69a261a140ae2bf6b3"));
-    s.getScreenshot();
-    s.getScreenshot();
-    s.getScreenshot();
-    s.getScreenshot();
+    s.getPNGAsString();
+    s.getPNGAsString();
+    s.getPNGAsString();
+    s.getPNGAsString();
   }
 }

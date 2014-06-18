@@ -37,31 +37,28 @@ public class InstrumentsFactory {
     implementations.add(0, clazz);
   }
 
-  private static Instruments getImplementation(Class clazz, ServerSideSession serverSideSession) {
+  private static Instruments getImplementation(Class clazz, ServerSideSession serverSideSession) throws Exception{
     try {
       Constructor c = clazz.getConstructor(ServerSideSession.class);
       return (Instruments)c.newInstance(serverSideSession);
     } catch (NoSuchMethodException e) {
       throw new WebDriverException(
           "The instruments implementation must have a constructor taking a ServerSideSession as a parameter.");
-    } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-      throw new WebDriverException(e);
+    } catch (InvocationTargetException e){
+      throw (Exception)e.getTargetException();
     }
   }
 
 
-  public static Instruments getInstruments(ServerSideSession session) {
+  public static Instruments getInstruments(ServerSideSession session) throws Exception {
     for (Class implClazz : implementations) {
-      try {
+
         Instruments instruments = getImplementation(implClazz, session);
         if (instruments.isCompatible(session)) {
           return instruments;
         }
-      } catch (Exception ignore) {
-
-      }
     }
-    throw new WebDriverException("Cannot find a valid implementation for the session" + session);
+    throw new WebDriverException("Cannot find a valid implementation for the session " + session);
   }
 
 

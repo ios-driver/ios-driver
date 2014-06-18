@@ -53,7 +53,7 @@ public class IOSDualDriver {
 
   private WorkingMode mode = WorkingMode.Native;
 
-  public IOSDualDriver(ServerSideSession session) {
+  public IOSDualDriver(ServerSideSession session) throws Exception {
     this.session = session;
 
     // Create the device manager that does the setup and teardown

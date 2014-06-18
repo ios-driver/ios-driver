@@ -20,7 +20,9 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.libimobiledevice.ios.driver.binding.raw.JNAInit;
 import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.application.MobileSafariLocator;
 import org.uiautomation.ios.inspector.IDEServlet;
 import org.uiautomation.ios.application.APPIOSApplication;
 import org.uiautomation.ios.command.configuration.Configuration;
@@ -67,6 +69,7 @@ public class IOSServer {
   }
 
   public static void main(String[] args) throws Exception {
+    JNAInit.init();
     final IOSServer server = new IOSServer(args);
 
     Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -152,7 +155,7 @@ public class IOSServer {
       IOSVersion version = new IOSVersion(s);
       if (version.isGreaterOrEqualTo("6.0")) {
         safari = true;
-        driver.addSupportedApplication(copyOfSafari(xcodeInstall, s));
+        driver.addSupportedApplication(MobileSafariLocator.locateSafariInstall(s));
       }
     }
     if (safari) {
@@ -199,20 +202,7 @@ public class IOSServer {
     return f;
   }
 
-  // TODO freynaud - if xcode change, the safari copy should be wiped out.
-  private APPIOSApplication copyOfSafari(File xcodeInstall, String sdk) {
-    File copy = new File(getTmpIOSFolder().getAbsolutePath(),"safariCopies/safari-" + sdk + ".app");
-    if (!copy.exists()) {
-      File safariFolder = APPIOSApplication.findSafariLocation(xcodeInstall, sdk);
-      copy.mkdirs();
-      try {
-        FileUtils.copyDirectory(safariFolder, copy);
-      } catch (IOException e) {
-        log.warning("Cannot create the copy of safari : " + e.getMessage());
-      }
-    }
-    return new APPIOSApplication(copy.getAbsolutePath());
-  }
+
 
   public void start() throws Exception {
     if (!initialized) {

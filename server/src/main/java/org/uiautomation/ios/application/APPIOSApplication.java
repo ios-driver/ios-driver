@@ -392,6 +392,10 @@ public class APPIOSApplication {
     }
   }
 
+  public boolean isSafari() {
+    return "com.apple.mobilesafari".equals(getBundleId());
+  }
+
   enum PListFormat{
     binary, text, xml
   }

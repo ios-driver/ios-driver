@@ -207,8 +207,6 @@ public class InstrumentsCommandLine implements Instruments {
   }
 
 
-
-
   public File getOutput() {
     return output;
   }
