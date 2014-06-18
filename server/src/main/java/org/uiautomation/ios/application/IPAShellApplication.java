@@ -31,12 +31,14 @@ public class IPAShellApplication extends IPAApplication {
 
   private final String bundleId;
   private final String version;
-  private ApplicationInfo info;
+  private final ApplicationInfo info;
+  private String pathToApp;
 
   public IPAShellApplication(String bundleId, String version, ApplicationInfo info) {
     super(null, null);
     this.version = version;
     this.bundleId = bundleId;
+    this.info = info;
     try {
       this.metadata = new JSONObject(new BeanToJsonConverter().convert(getCapabilities()));
     } catch (JSONException e) {
@@ -50,6 +52,7 @@ public class IPAShellApplication extends IPAApplication {
 
     bundleId = null;
     version = null;
+    info = null;
   }
 
 
@@ -94,5 +97,12 @@ public class IPAShellApplication extends IPAApplication {
   public boolean isSimulator() {
     return false;
   }
+
+  @Override
+  public File getApplicationPath() {
+    APPIOSApplication app = MobileSafariLocator.locateSafari((String)info.getProperty("DTPlatformVersion"));
+    return app.getApplicationPath();
+  }
+
 
 }

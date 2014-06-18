@@ -14,7 +14,6 @@
 
 package org.uiautomation.ios.wkrdp.internal;
 
-import org.libimobiledevice.ios.driver.binding.exceptions.LibImobileException;
 import org.libimobiledevice.ios.driver.binding.exceptions.SDKException;
 import org.libimobiledevice.ios.driver.binding.services.DeviceService;
 import org.libimobiledevice.ios.driver.binding.services.IOSDevice;
@@ -37,8 +36,6 @@ public class RealDeviceProtocolImpl extends WebKitRemoteDebugProtocol {
       device = DeviceService.get(uuid);
     } catch (SDKException e) {
       e.printStackTrace();
-    } catch (LibImobileException e) {
-      e.printStackTrace();
     }
     inspector = new WebInspectorService(device);
   }
@@ -47,7 +44,7 @@ public class RealDeviceProtocolImpl extends WebKitRemoteDebugProtocol {
   public void start() {
     try {
       inspector.startWebInspector();
-    } catch (LibImobileException e) {
+    } catch (SDKException e) {
       e.printStackTrace();
     }
     startListenerThread();
@@ -58,7 +55,7 @@ public class RealDeviceProtocolImpl extends WebKitRemoteDebugProtocol {
     stopListenerThread();
     try {
       inspector.stopWebInspector();
-    } catch (LibImobileException e) {
+    } catch (SDKException e) {
       e.printStackTrace();
     }
   }
@@ -75,7 +72,7 @@ public class RealDeviceProtocolImpl extends WebKitRemoteDebugProtocol {
   protected void sendMessage(String message) {
     try {
       inspector.sendMessage(message);
-    } catch (LibImobileException e) {
+    } catch (SDKException e) {
       e.printStackTrace();
     }
   }

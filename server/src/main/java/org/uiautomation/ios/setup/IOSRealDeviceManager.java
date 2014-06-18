@@ -14,11 +14,13 @@
 
 package org.uiautomation.ios.setup;
 
-import org.libimobiledevice.ios.driver.binding.exceptions.LibImobileException;
 import org.libimobiledevice.ios.driver.binding.exceptions.SDKException;
 import org.libimobiledevice.ios.driver.binding.model.ApplicationInfo;
 import org.libimobiledevice.ios.driver.binding.services.DeviceService;
 import org.libimobiledevice.ios.driver.binding.services.IOSDevice;
+import org.libimobiledevice.ios.driver.binding.services.InstallCallback;
+import org.libimobiledevice.ios.driver.binding.services.InstallerService;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.RealDevice;
 import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.application.APPIOSApplication;
@@ -39,9 +41,10 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
   //private final DeviceInstallerService service;
   private final String bundleId;
   private final List<String> keysToConsiderInThePlistToHaveEquality;
+  private final InstallerService installer;
 
 
-  public IOSRealDeviceManager(ServerSideSession session) throws LibImobileException, SDKException {
+  public IOSRealDeviceManager(ServerSideSession session) throws SDKException {
     this.session = session;
     app = session.getApplication();
     ipa = (IPAApplication) app.getUnderlyingApplication();
@@ -49,6 +52,7 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
 
     IOSDevice device = DeviceService.get(d.getUuid());
     this.device = device;
+    installer = new InstallerService(device);
     bundleId = session.getCapabilities().getBundleId();
 
     keysToConsiderInThePlistToHaveEquality = new ArrayList<String>();
@@ -58,7 +62,11 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
   @Override
   public void setup() {
 
-    install(app.getUnderlyingApplication());
+    try {
+      install(app.getUnderlyingApplication());
+    } catch (SDKException e) {
+      throw new WebDriverException("error installing to device " + e.getMessage(), e);
+    }
     setL10N(session.getCapabilities().getLocale(), session.getCapabilities().getLanguage());
   }
 
@@ -68,30 +76,48 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
   }
 
 
-  private void install(APPIOSApplication aut) {
-//    if (aut instanceof IPAApplication) {
-//      ApplicationInfo app = device.getApplication(bundleId);
-//      // not installed ? install the app.
-//      if (app == null) {
-//        device.install(((IPAApplication) aut).getIPAFile());
-//        return;
-//      }
-//
-//      // already there and correct version
-//      if (isCorrectVersion(app)) {
-//        return;
-//      }
-//
-//      // TODO upgrade ?
-//      // needs to re-install
-//      log.fine("uninstalling " + bundleId );
-//      device.uninstall(bundleId);
-//      log.fine("installing " + bundleId );
-//      device.install(((IPAApplication) aut).getIPAFile());
-//      log.fine(bundleId + " installed.");
-//    } else {
-//      throw new WebDriverException("only IPA apps can be used on a real device.");
-//    }
+  private void install(APPIOSApplication aut) throws SDKException {
+    if (aut.isSafari()) {
+      return;
+    }
+
+    if (aut instanceof IPAApplication) {
+
+      final InstallCallback cb = new InstallCallback() {
+        @Override
+        protected void onUpdate(String operation, int percent, String message) {
+          sout(operation, percent, message);
+        }
+      };
+
+      ApplicationInfo app = null;
+
+      try {
+        app = installer.getApplication(bundleId);
+      } catch (Exception e) {
+        //ignore.
+      }
+      // not installed ? install the app.
+      if (app == null) {
+        installer.install(((IPAApplication) aut).getIPAFile(), cb);
+        return;
+      }
+
+      // already there and correct version
+      if (isCorrectVersion(app)) {
+        return;
+      }
+
+      // TODO upgrade ?
+      // needs to re-install
+      log.fine("uninstalling " + bundleId);
+      installer.uninstall(bundleId);
+      log.fine("installing " + bundleId);
+      installer.install(((IPAApplication) aut).getIPAFile(), cb);
+      log.fine(bundleId + " installed.");
+    } else {
+      throw new WebDriverException("only IPA apps can be used on a real device.");
+    }
   }
 
   /**

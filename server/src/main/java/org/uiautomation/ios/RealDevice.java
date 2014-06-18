@@ -19,9 +19,9 @@ import org.libimobiledevice.ios.driver.binding.model.ApplicationInfo;
 import org.libimobiledevice.ios.driver.binding.model.DeviceInfo;
 import org.libimobiledevice.ios.driver.binding.services.InstallerService;
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.application.APPIOSApplication;
 import org.uiautomation.ios.application.IPAApplication;
+import org.uiautomation.ios.communication.device.DeviceType;
 
 import java.util.List;
 
@@ -114,16 +114,13 @@ public class RealDevice extends Device {
     if (!(app instanceof IPAApplication)) {
       return false;
     }
-    try {
-      return installer.getApplication(app.getBundleId()) != null;
-    } catch (SDKException e) {
-      return false;
-    }
+    return true;
   }
 
   @Override
   public String toString() {
-    return "Device[" + uuid + ",name:" + name + (isBusy() ? ",in use by ios-driver" : ",available") + ']';
+    return "Device[" + uuid + ",name:" + name + (isBusy() ? ",in use by ios-driver" : ",available")
+           + ']';
   }
 
   public List<ApplicationInfo> getApplications() {

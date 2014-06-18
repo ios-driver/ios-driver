@@ -86,6 +86,7 @@ public class IOSCapabilities extends DesiredCapabilities {
   // TODO: make a parameter?
   public static final int COMMAND_TIMEOUT_MILLIS = 10 * 60 * 1000; // 10 minutes
   public static final String INSTRUMENTS = "instruments";
+  public static final String PROVISIONNED = "provisionnedDevices";
 
   // private final Map<String, Object> raw = new HashMap<String, Object>();
 

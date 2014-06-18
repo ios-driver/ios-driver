@@ -18,10 +18,10 @@ import org.json.JSONObject;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.IOSServerManager;
 import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.command.BaseNativeCommandHandler;
+import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.instruments.InstrumentsFailedToStartException;
 
 import java.util.logging.Logger;
@@ -77,8 +77,9 @@ public final class NewSessionNHandler extends BaseNativeCommandHandler {
   }
 
 
+  // TODO freynaud : restart only makes sense for some exceptions like instruments fails.
   private ServerSideSession safeStart(long timeOut, IOSCapabilities cap)
-      throws InstrumentsFailedToStartException {
+      throws InstrumentsFailedToStartException, Exception {
     ServerSideSession session = null;
     try {
       session = getServer().createSession(cap);
@@ -90,15 +91,21 @@ public final class NewSessionNHandler extends BaseNativeCommandHandler {
       if (session != null) {
         session.stop();
       }
-    }
-
-    if (session.hasCrashed()) {
-      log.warning("app has crashed at startup :" + session.getCrashDetails());
+      throw e;
+    } catch (Exception e) {
+      log.warning("Error creating the session." + e.getMessage());
       if (session != null) {
         session.stop();
       }
+      throw e;
+    } finally {
+      if (session != null && session.hasCrashed()) {
+        log.warning("app has crashed at startup :" + session.getCrashDetails());
+        if (session != null) {
+          session.stop();
+        }
+      }
     }
-    return null;
   }
 
   @Override

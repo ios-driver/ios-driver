@@ -61,9 +61,7 @@ public class ServerSideSession extends Session {
   private Response capabilityCachedResponse;
   private boolean decorated = false;
 
-  ServerSideSession(IOSServerManager server, IOSCapabilities desiredCapabilities,
-                    IOSServerConfiguration options)
-      throws NoSuchLocaleException, NoSuchLanguageCodeException {
+  ServerSideSession(IOSServerManager server, IOSCapabilities desiredCapabilities,IOSServerConfiguration options) throws Exception {
     super(UUID.randomUUID().toString());
     this.server = server;
     this.capabilities = desiredCapabilities;

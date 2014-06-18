@@ -16,16 +16,20 @@ package org.uiautomation.ios;
 
 import com.google.common.collect.ImmutableList;
 
-import org.libimobiledevice.ios.driver.binding.exceptions.LibImobileException;
 import org.libimobiledevice.ios.driver.binding.exceptions.SDKException;
 import org.libimobiledevice.ios.driver.binding.model.ApplicationInfo;
 import org.libimobiledevice.ios.driver.binding.model.DeviceInfo;
 import org.libimobiledevice.ios.driver.binding.services.DeviceCallBack;
 import org.libimobiledevice.ios.driver.binding.services.DeviceService;
 import org.libimobiledevice.ios.driver.binding.services.IOSDevice;
+import org.libimobiledevice.ios.driver.binding.services.ImageMountingService;
+import org.libimobiledevice.ios.driver.binding.services.InformationService;
 import org.libimobiledevice.ios.driver.binding.services.InstallerService;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.application.IPAShellApplication;
+import org.uiautomation.ios.utils.DDILocator;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -77,11 +81,11 @@ public class DeviceStore extends DeviceCallBack {
       log.info("device detected but not whitelisted");
       return;
     }
-
+    RealDevice d = null;
     try {
       IOSDevice device = DeviceService.get(uuid);
       DeviceInfo info = new DeviceInfo(uuid);
-      RealDevice d = new RealDevice(info);
+      d = new RealDevice(info);
       log.info("new device detected (" + uuid + ") " + info.getDeviceName());
       reals.add(d);
       InstallerService s = new InstallerService(device);
@@ -90,13 +94,36 @@ public class DeviceStore extends DeviceCallBack {
       String v = (String) safari.getProperty("CFBundleVersion");
       log.info("device " + info.getDeviceName() + " = safari " + v);
 
-      IPAShellApplication ipa = new IPAShellApplication(id, v,safari);
+      IPAShellApplication ipa = new IPAShellApplication(id, v, safari);
       apps.add(ipa);
 
-    } catch (SDKException e) {
-      e.printStackTrace();
-    } catch (LibImobileException e) {
-      e.printStackTrace();
+      InformationService i = new InformationService(device);
+      if (!i.isDevModeEnabled()) {
+        log.warning(
+            "The device " + uuid + " is not set to dev mode. It can't be used for testing.");
+
+        File ddi = DDILocator.locateDDI(device);
+        mount(device, ddi);
+        log.info("DDI mounted.Device now in dev mode.");
+      }
+
+
+    } catch (SDKException | WebDriverException e) {
+      if (d != null) {
+        reals.remove(d);
+      }
+    }
+  }
+
+  private void mount(IOSDevice device, File ddi) throws SDKException {
+    ImageMountingService service = null;
+    try {
+      service = new ImageMountingService(device);
+      service.mount(ddi);
+    } finally {
+      if (service != null) {
+        service.free();
+      }
     }
   }
 
@@ -110,10 +137,11 @@ public class DeviceStore extends DeviceCallBack {
     for (RealDevice d : reals) {
       if (d.getUuid().equals(uuid)) {
         log.info("Removing " + uuid + " for the devices pool");
-        reals.remove(d);
-
+        boolean ok = reals.remove(d);
+        if (!ok) {
+          log.warning("device " + uuid + " has been unplugged, but was never there ?");
+        }
       }
     }
-    log.warning("device " + uuid + " has been unplugged, but was never there ?");
   }
 }

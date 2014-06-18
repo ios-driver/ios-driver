@@ -24,12 +24,13 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.wkrdp.BaseWebInspector;
-import org.uiautomation.ios.wkrdp.WebInspector;
 import org.uiautomation.ios.ServerSideSession;
+import org.uiautomation.ios.wkrdp.BaseWebInspector;
 import org.uiautomation.ios.wkrdp.DOMContext;
 import org.uiautomation.ios.wkrdp.MessageListener;
+import org.uiautomation.ios.wkrdp.WebInspector;
 import org.uiautomation.ios.wkrdp.WebKitNotificationListener;
+import org.uiautomation.ios.wkrdp.internal.RealDeviceProtocolImpl;
 import org.uiautomation.ios.wkrdp.internal.WebKitRemoteDebugProtocol;
 import org.uiautomation.ios.wkrdp.internal.WebKitSynchronizer;
 import org.uiautomation.ios.wkrdp.message.WebkitApplication;
@@ -83,7 +84,7 @@ public class RemoteIOSWebDriver {
   }
 
 
-  public boolean isStarted(){
+  public boolean isStarted() {
     return isStarted;
   }
 
@@ -103,10 +104,30 @@ public class RemoteIOSWebDriver {
     if (applications.size() == 1) {
       connect(applications.get(0).getBundleId());
     } else {
-      log.warning("session created but application size=" + applications.size());
+      showWarning();
     }
     isStarted = true;
 
+  }
+
+  private void showWarning() {
+    // Safari.
+    if (session.getApplication().isSafari()) {
+      if (applications.size() == 0) {
+        if (protocol instanceof RealDeviceProtocolImpl) {
+          throw new WebDriverException("is Safari started and with the focus ? ");
+        } else {
+          throw new WebDriverException("session created but application size=" + applications.size()
+                                       + ".The simulator wasn't closed properly.Try restarting your computer.");
+        }
+      } else {
+        throw new WebDriverException("session created but application size=" + applications.size()
+                                     + ".It should be 1. Do you have multiple tabs opened ?");
+      }
+      // Native app
+    } else {
+      log.warning("session created but application size=" + applications.size()+".Does the app have a webview ?");
+    }
   }
 
   public void stop() {
