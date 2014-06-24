@@ -30,7 +30,7 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>
-            <version>7.2.0.v20101020</version>
+            <version>8.1.14.v20131031</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
@@ -42,6 +42,12 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>${testngVersion}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>snakeyaml</artifactId>
+                    <groupId>org.yaml</groupId>
+                </exclusion>
+            </exclusions>
             <!--<scope>test</scope>-->
         </dependency>
     </dependencies>
