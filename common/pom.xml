@@ -20,7 +20,16 @@
                     <artifactId>jna</artifactId>
                     <groupId>net.java.dev.jna</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>commons-codec</artifactId>
+                    <groupId>commons-codec</groupId>
+                </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <artifactId>commons-codec</artifactId>
+            <groupId>commons-codec</groupId>
+            <version>1.9</version>
         </dependency>
         <dependency>
             <groupId>org.webbitserver</groupId>
