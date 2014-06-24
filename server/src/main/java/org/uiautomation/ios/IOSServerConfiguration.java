@@ -39,7 +39,7 @@ import java.util.Set;
 public class IOSServerConfiguration {
 
 
-  @Parameter(description = "enable beta feature.Might be unstable.", names = {"-beta","-real"})
+  @Parameter(description = "enable beta feature.Might be unstable.", names = {"-beta", "-real"})
   private boolean beta = false;
 
   @Parameter(description = "port the server will listen on.", names = "-port")
@@ -69,6 +69,14 @@ public class IOSServerConfiguration {
   @Parameter(description = "location of the application under test. Absolute path or URL expected.",
              names = {"-app", "-aut"}, required = false)
   private List<String> supportedApps = new ArrayList<String>();
+
+  public List<String> getServlets() {
+    return servlets;
+  }
+
+  @Parameter(description = "list of extra servlet that can be added to the server..",
+             names = {"-servlets"}, required = false)
+  private List<String> servlets = new ArrayList<String>();
 
   @Parameter(
       description =
@@ -186,7 +194,7 @@ public class IOSServerConfiguration {
   }
 
 
-  public long getNewSessionTimeoutSec(){
+  public long getNewSessionTimeoutSec() {
     return newSessionTimeoutSec;
   }
 }

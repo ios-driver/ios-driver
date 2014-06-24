@@ -15,18 +15,18 @@
 package org.uiautomation.ios;
 
 import com.beust.jcommander.JCommander;
-import org.apache.commons.io.FileUtils;
+
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.libimobiledevice.ios.driver.binding.raw.JNAInit;
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.application.MobileSafariLocator;
-import org.uiautomation.ios.inspector.IDEServlet;
 import org.uiautomation.ios.application.APPIOSApplication;
+import org.uiautomation.ios.application.MobileSafariLocator;
 import org.uiautomation.ios.command.configuration.Configuration;
 import org.uiautomation.ios.grid.SelfRegisteringRemote;
+import org.uiautomation.ios.inspector.IDEServlet;
 import org.uiautomation.ios.instruments.commandExecutor.CURLIAutomationCommandExecutor;
 import org.uiautomation.ios.servlet.ApplicationsServlet;
 import org.uiautomation.ios.servlet.ArchiveServlet;
@@ -36,10 +36,10 @@ import org.uiautomation.ios.servlet.IOSServlet;
 import org.uiautomation.ios.servlet.InstrumentsLogServlet;
 import org.uiautomation.ios.servlet.ResourceServlet;
 import org.uiautomation.ios.servlet.StaticResourceServlet;
-import org.uiautomation.ios.utils.FolderMonitor;
-import org.uiautomation.ios.utils.ZipUtils;
 import org.uiautomation.ios.utils.BuildInfo;
+import org.uiautomation.ios.utils.FolderMonitor;
 import org.uiautomation.ios.utils.IOSVersion;
+import org.uiautomation.ios.utils.ZipUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -118,16 +118,23 @@ public class IOSServer {
     }
 
     StringBuilder b = new StringBuilder();
-    b.append(String.format("\nBeta features enabled (enabled by -beta flag): %b", Configuration.BETA_FEATURE));
+    b.append(String.format("\nBeta features enabled (enabled by -beta flag): %b",
+                           Configuration.BETA_FEATURE));
     b.append(String.format("\nSimulator enabled : %b", Configuration.SIMULATORS_ENABLED));
     b.append(String.format("\nInspector: http://0.0.0.0:%d/inspector/", options.getPort()));
-    b.append(String.format("\nTests can access the server at http://0.0.0.0:%d/wd/hub", options.getPort()));
+    b.append(String.format("\nTests can access the server at http://0.0.0.0:%d/wd/hub",
+                           options.getPort()));
     b.append(String.format("\nServer status: http://0.0.0.0:%d/wd/hub/status", options.getPort()));
-    b.append(String.format("\nConnected devices: http://0.0.0.0:%d/wd/hub/devices/all", options.getPort()));
-    b.append(String.format("\nApplications: http://0.0.0.0:%d/wd/hub/applications/all", options.getPort()));
-    b.append(String.format("\nCapabilities: http://0.0.0.0:%d/wd/hub/capabilities/all", options.getPort()));
-    b.append(String.format("\nMonitoring '%s' for new applications", options.getAppFolderToMonitor()));
-    b.append(String.format("\nArchived apps: %s", driver.getApplicationStore().getFolder().getAbsolutePath()));
+    b.append(String.format("\nConnected devices: http://0.0.0.0:%d/wd/hub/devices/all",
+                           options.getPort()));
+    b.append(String.format("\nApplications: http://0.0.0.0:%d/wd/hub/applications/all",
+                           options.getPort()));
+    b.append(String.format("\nCapabilities: http://0.0.0.0:%d/wd/hub/capabilities/all",
+                           options.getPort()));
+    b.append(
+        String.format("\nMonitoring '%s' for new applications", options.getAppFolderToMonitor()));
+    b.append(String.format("\nArchived apps: %s",
+                           driver.getApplicationStore().getFolder().getAbsolutePath()));
     b.append("\nBuild info: " + BuildInfo.toBuildInfoString());
     b.append("\nRunning on: " + driver.getHostInfo().getOSInfo());
     b.append("\nUsing java: " + driver.getHostInfo().getJavaVersion());
@@ -145,8 +152,10 @@ public class IOSServer {
   private void addSimulatorDetails(StringBuilder b) {
     File xcodeInstall = driver.getHostInfo().getXCodeInstall();
     String hostSDK = driver.getHostInfo().getSDK();
-    b.append(String.format("\nUsing Xcode install: %s", driver.getHostInfo().getXCodeInstall().getPath()));
-    b.append(String.format("\nUsing instruments: %s", driver.getHostInfo().getInstrumentsVersion()));
+    b.append(String.format("\nUsing Xcode install: %s",
+                           driver.getHostInfo().getXCodeInstall().getPath()));
+    b.append(
+        String.format("\nUsing instruments: %s", driver.getHostInfo().getInstrumentsVersion()));
     b.append(String.format("\nUsing iOS version %s", hostSDK));
 
     boolean safari = false;
@@ -167,7 +176,7 @@ public class IOSServer {
 
   private void initServer() {
     String host = System.getProperty("ios-driver.host");
-    if (host == null){
+    if (host == null) {
       host = "0.0.0.0";
     }
     server = new Server(new InetSocketAddress(host, options.getPort()));
@@ -189,6 +198,17 @@ public class IOSServer {
 
     ServletContextHandler extra = new ServletContextHandler(server, "/", true, false);
     extra.addServlet(IDEServlet.class, "/inspector/*");
+    for (String clazz : options.getServlets()) {
+      try {
+        Class c = Class.forName(clazz);
+        String path = "/extra/" + c.getSimpleName() + "/*";
+        extra.addServlet(c, "/extra/" + c.getSimpleName() + "/*");
+        log.info("Servlet " + c + " visible @ " + path);
+      } catch (ClassNotFoundException e) {
+        throw new WebDriverException(
+            "cannot plug servlet " + clazz + ". Cause : " + e.getMessage());
+      }
+    }
     extra.setAttribute(DRIVER, driver);
 
     HandlerList handlers = new HandlerList();
@@ -196,12 +216,11 @@ public class IOSServer {
     server.setHandler(handlers);
   }
 
-  public static File getTmpIOSFolder(){
-    File f =  new File(System.getProperty("user.home") + "/.ios-driver/");
+  public static File getTmpIOSFolder() {
+    File f = new File(System.getProperty("user.home") + "/.ios-driver/");
     f.mkdirs();
     return f;
   }
-
 
 
   public void start() throws Exception {
