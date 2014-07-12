@@ -15,7 +15,6 @@
 package org.uiautomation.ios.instruments;
 
 import com.google.common.collect.ImmutableList;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.sanselan.ImageReadException;
 import org.apache.sanselan.formats.tiff.TiffImageParser;
@@ -33,6 +32,8 @@ import org.uiautomation.ios.command.UIAScriptRequest;
 import org.uiautomation.ios.instruments.commandExecutor.UIAutomationCommandExecutor;
 import org.uiautomation.ios.utils.Command;
 
+import javax.imageio.ImageIO;
+import javax.imageio.spi.IIORegistry;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -40,9 +41,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.imageio.ImageIO;
-import javax.imageio.spi.IIORegistry;
 
 //import com.sun.media.imageioimpl.plugins.tiff.TIFFImageWriterSpi;
 
@@ -217,25 +215,26 @@ public class NoInstrumentsImplementationAvailable implements Instruments {
       try {
         start = System.currentTimeMillis();
         BufferedImage image = parser.getBufferedImage(raw, new HashMap<String, Object>());
-        File f = new File("screen.png");
         System.out.println("loading :\t" + (System.currentTimeMillis() - start) + " ms");
         start = System.currentTimeMillis();
-        ImageIO.write(image, "png", f);
+        byte[] pngBytes = getBufferedImageAsPngBytes(image);
         System.out.println("writing : \t" + (System.currentTimeMillis() - start) + " ms");
-//        System.out.println("space : "+f.getTotalSpace());
-
-      } catch (ImageReadException e) {
-        e.printStackTrace();
-      } catch (IOException e) {
-        e.printStackTrace();
+//      System.out.println("space : "+f.getTotalSpace());
+        return Base64.encodeBase64String(pngBytes);
+      } catch (ImageReadException | IOException e) {
+          throw new IllegalStateException("Unable to take screenshot", e);
       }
-
-      return Base64.encodeBase64String(raw);
     }
+
+    private byte[] getBufferedImageAsPngBytes(BufferedImage image) throws IOException {
+      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+      ImageIO.write(image, "png", outputStream);
+      return outputStream.toByteArray();
+    }
+
   }
 
-
-  public static void main(String[] args) throws SDKException, LibImobileException {
+  public static void main(String[] args) throws Exception {
     ScreenshotSDK
         s =
         new ScreenshotSDK(DeviceService.get("ff4827346ed6b54a98f51e69a261a140ae2bf6b3"));
