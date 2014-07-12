@@ -148,51 +148,7 @@ public class NoInstrumentsImplementationAvailable implements Instruments {
     return screenshotService;
   }
 
-
-  private static class IDeviceScreenshotService implements TakeScreenshotService {
-    //private static final TIFFImageWriterSpi TIFF_WRITER = new TIFFImageWriterSpi();
-
-    private final String uuid;
-
-    private IDeviceScreenshotService(String uuid) {
-      this.uuid = uuid;
-    }
-
-    @Override
-    public String getScreenshot() {
-
-      ensureTiffWriterIsRegistered();
-      File screenshotFile = null;
-      ByteArrayOutputStream imageBytes = new ByteArrayOutputStream();
-
-      try {
-        screenshotFile = File.createTempFile("screenshot", ".tiff");
-        Command takeScreenshot = new Command(ImmutableList.of(
-            "idevicescreenshot", "-u", uuid, screenshotFile.getAbsolutePath()), true);
-        takeScreenshot.executeAndWait();
-        BufferedImage image = ImageIO.read(screenshotFile);
-        ImageIO.write(image, "png", imageBytes);
-      } catch (IOException | WebDriverException e) {
-        throw new IllegalStateException("Unable to take screenshot", e);
-      } finally {
-        if (screenshotFile != null) {
-          screenshotFile.delete();
-        }
-      }
-
-      return Base64.encodeBase64String(imageBytes.toByteArray());
-    }
-
-    private static void ensureTiffWriterIsRegistered() {
-      IIORegistry registry = IIORegistry.getDefaultInstance();
-      /*if (!registry.contains(TIFF_WRITER)) {
-        registry.registerServiceProvider(TIFF_WRITER);
-      }*/
-    }
-  }
-
-  static class ScreenshotSDK implements TakeScreenshotService {
-
+  private static class ScreenshotSDK implements TakeScreenshotService {
     private final ScreenshotService service;
 
     public ScreenshotSDK(IOSDevice device) throws SDKException {
@@ -201,36 +157,18 @@ public class NoInstrumentsImplementationAvailable implements Instruments {
 
     @Override
     public String getScreenshot() {
+      TiffImageParser tiffParser = new TiffImageParser();
+      ByteArrayOutputStream pngBytes = new ByteArrayOutputStream();
+
       try {
-        return getPNGAsString();
-      } catch (Exception e) {
-        throw new WebDriverException("Couldn't take the screenshot : " + e.getMessage(), e);
-      }
-    }
-
-
-    private String getPNGAsString() throws SDKException {
-      long start = System.currentTimeMillis();
-      byte[] raw = service.takeScreenshot();
-
-      TiffImageParser parser = new TiffImageParser();
-      try {
-        start = System.currentTimeMillis();
-        BufferedImage image = parser.getBufferedImage(raw, new HashMap<String, Object>());
-        File f = new File("screen.png");
-        System.out.println("loading :\t" + (System.currentTimeMillis() - start) + " ms");
-        start = System.currentTimeMillis();
-        ImageIO.write(image, "png", f);
-        System.out.println("writing : \t" + (System.currentTimeMillis() - start) + " ms");
-//        System.out.println("space : "+f.getTotalSpace());
-
-      } catch (ImageReadException e) {
-        e.printStackTrace();
-      } catch (IOException e) {
-        e.printStackTrace();
+        byte[] rawTiff = service.takeScreenshot();
+        BufferedImage image = tiffParser.getBufferedImage(rawTiff, new HashMap<String, Object>());
+        ImageIO.write(image, "png", pngBytes);
+      } catch (IOException | ImageReadException | SDKException e) {
+        throw new WebDriverException("Unable to take screenshot", e);
       }
 
-      return Base64.encodeBase64String(raw);
+      return Base64.encodeBase64String(pngBytes.toByteArray());
     }
   }
 
@@ -239,9 +177,9 @@ public class NoInstrumentsImplementationAvailable implements Instruments {
     ScreenshotSDK
         s =
         new ScreenshotSDK(DeviceService.get("ff4827346ed6b54a98f51e69a261a140ae2bf6b3"));
-    s.getPNGAsString();
-    s.getPNGAsString();
-    s.getPNGAsString();
-    s.getPNGAsString();
+    s.getScreenshot();
+    s.getScreenshot();
+    s.getScreenshot();
+    s.getScreenshot();
   }
 }
