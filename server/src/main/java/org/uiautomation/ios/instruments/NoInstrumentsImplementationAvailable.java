@@ -37,6 +37,11 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +55,29 @@ import javax.imageio.spi.IIORegistry;
  * An implementation of {@link Instruments} that does not use instruments.
  */
 public class NoInstrumentsImplementationAvailable implements Instruments {
+  private static final Path IOS_DRIVER_DIR_PATH =
+      Paths.get(System.getProperty("user.home"), ".ios-driver");
+  private static final Path OPEN_URL_FILE_PATH = IOS_DRIVER_DIR_PATH.resolve("openURL.ipa");
+  private static final Path OPEN_URL_RESOURCE_PATH =
+      Paths.get("googlemac", "iPhone", "LatencyLab", "openURL.ipa");
+
+  private static boolean openUrlAppExtracted = false;
+
+  private static void ensureOpenUrlAppIsExtracted() {
+    if (openUrlAppExtracted) {
+      return;
+    }
+
+    ClassLoader cl = Thread.currentThread().getContextClassLoader();
+    try (InputStream openUrlIn = cl.getResourceAsStream(OPEN_URL_RESOURCE_PATH.toString())) {
+      Files.createDirectories(IOS_DRIVER_DIR_PATH);
+      Files.copy(openUrlIn, OPEN_URL_FILE_PATH, StandardCopyOption.REPLACE_EXISTING);
+    } catch (IOException e) {
+      throw new WebDriverException("Unable to extract the openURL app", e);
+    }
+
+    openUrlAppExtracted = true;
+  }
 
   private final Command installOpenUrlApp;
   private final Command runOpenUrlApp;
@@ -77,9 +105,11 @@ public class NoInstrumentsImplementationAvailable implements Instruments {
     }
 
     installOpenUrlApp = new Command(ImmutableList.of(
-        "ideviceinstaller", "-i", "openURL.ipa", "-u", uuid), true);
+        "ideviceinstaller", "-i", OPEN_URL_FILE_PATH.toString(), "-u", uuid), true);
+    // We want the default to be "about:blank" but that's not a supported app scheme.
+    // Instead we'll use "http://", which does not resolve, but Safari opens anyway.
     runOpenUrlApp = new Command(ImmutableList.of(
-        "idevice-app-runner", "-s", "com.google.openURL", "-u", uuid), true);
+        "idevice-app-runner", "-s", "com.google.openURL", "-u", uuid, "--args", "http://"), true);
 
   }
 
@@ -87,11 +117,12 @@ public class NoInstrumentsImplementationAvailable implements Instruments {
   public void start(long timeOut) throws InstrumentsFailedToStartException {
     // Try running the openURL app once, ignoring errors.
     // If running openURL failed, reinstall the app and try again.
-    //int exitCode = runOpenUrlApp.executeAndWait(/*ignoreErrors*/ true);
-    //if (exitCode != 0) {
-    //  installOpenUrlApp.executeAndWait();
-    //  runOpenUrlApp.executeAndWait();
-    //}
+    int exitCode = runOpenUrlApp.executeAndWait(/*ignoreErrors*/ true);
+    if (exitCode != 0) {
+      ensureOpenUrlAppIsExtracted();
+      installOpenUrlApp.executeAndWait();
+      runOpenUrlApp.executeAndWait();
+    }
     Response r = session.getCachedCapabilityResponse();
     if (r == null) {
       r = new Response();
@@ -149,50 +180,7 @@ public class NoInstrumentsImplementationAvailable implements Instruments {
   }
 
 
-  private static class IDeviceScreenshotService implements TakeScreenshotService {
-    //private static final TIFFImageWriterSpi TIFF_WRITER = new TIFFImageWriterSpi();
-
-    private final String uuid;
-
-    private IDeviceScreenshotService(String uuid) {
-      this.uuid = uuid;
-    }
-
-    @Override
-    public String getScreenshot() {
-
-      ensureTiffWriterIsRegistered();
-      File screenshotFile = null;
-      ByteArrayOutputStream imageBytes = new ByteArrayOutputStream();
-
-      try {
-        screenshotFile = File.createTempFile("screenshot", ".tiff");
-        Command takeScreenshot = new Command(ImmutableList.of(
-            "idevicescreenshot", "-u", uuid, screenshotFile.getAbsolutePath()), true);
-        takeScreenshot.executeAndWait();
-        BufferedImage image = ImageIO.read(screenshotFile);
-        ImageIO.write(image, "png", imageBytes);
-      } catch (IOException | WebDriverException e) {
-        throw new IllegalStateException("Unable to take screenshot", e);
-      } finally {
-        if (screenshotFile != null) {
-          screenshotFile.delete();
-        }
-      }
-
-      return Base64.encodeBase64String(imageBytes.toByteArray());
-    }
-
-    private static void ensureTiffWriterIsRegistered() {
-      IIORegistry registry = IIORegistry.getDefaultInstance();
-      /*if (!registry.contains(TIFF_WRITER)) {
-        registry.registerServiceProvider(TIFF_WRITER);
-      }*/
-    }
-  }
-
-  static class ScreenshotSDK implements TakeScreenshotService {
-
+  private static class ScreenshotSDK implements TakeScreenshotService {
     private final ScreenshotService service;
 
     public ScreenshotSDK(IOSDevice device) throws SDKException {
@@ -201,36 +189,18 @@ public class NoInstrumentsImplementationAvailable implements Instruments {
 
     @Override
     public String getScreenshot() {
+      TiffImageParser tiffParser = new TiffImageParser();
+      ByteArrayOutputStream pngBytes = new ByteArrayOutputStream();
+
       try {
-        return getPNGAsString();
-      } catch (Exception e) {
-        throw new WebDriverException("Couldn't take the screenshot : " + e.getMessage(), e);
-      }
-    }
-
-
-    private String getPNGAsString() throws SDKException {
-      long start = System.currentTimeMillis();
-      byte[] raw = service.takeScreenshot();
-
-      TiffImageParser parser = new TiffImageParser();
-      try {
-        start = System.currentTimeMillis();
-        BufferedImage image = parser.getBufferedImage(raw, new HashMap<String, Object>());
-        File f = new File("screen.png");
-        System.out.println("loading :\t" + (System.currentTimeMillis() - start) + " ms");
-        start = System.currentTimeMillis();
-        ImageIO.write(image, "png", f);
-        System.out.println("writing : \t" + (System.currentTimeMillis() - start) + " ms");
-//        System.out.println("space : "+f.getTotalSpace());
-
-      } catch (ImageReadException e) {
-        e.printStackTrace();
-      } catch (IOException e) {
-        e.printStackTrace();
+        byte[] rawTiff = service.takeScreenshot();
+        BufferedImage image = tiffParser.getBufferedImage(rawTiff, new HashMap<String, Object>());
+        ImageIO.write(image, "png", pngBytes);
+      } catch (IOException | ImageReadException | SDKException e) {
+        throw new WebDriverException("Unable to take screenshot", e);
       }
 
-      return Base64.encodeBase64String(raw);
+      return Base64.encodeBase64String(pngBytes.toByteArray());
     }
   }
 
@@ -239,9 +209,9 @@ public class NoInstrumentsImplementationAvailable implements Instruments {
     ScreenshotSDK
         s =
         new ScreenshotSDK(DeviceService.get("ff4827346ed6b54a98f51e69a261a140ae2bf6b3"));
-    s.getPNGAsString();
-    s.getPNGAsString();
-    s.getPNGAsString();
-    s.getPNGAsString();
+    s.getScreenshot();
+    s.getScreenshot();
+    s.getScreenshot();
+    s.getScreenshot();
   }
 }
