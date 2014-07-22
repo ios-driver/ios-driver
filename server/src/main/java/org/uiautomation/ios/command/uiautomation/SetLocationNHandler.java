@@ -16,6 +16,7 @@ package org.uiautomation.ios.command.uiautomation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.IOSServerManager;
 import org.uiautomation.ios.command.UIAScriptHandler;
@@ -31,9 +32,18 @@ public class SetLocationNHandler extends UIAScriptHandler {
   public SetLocationNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
     JSONObject payload = request.getPayload();
+    String latitude;
+    String longitude;
+    try {
+        latitude = String.valueOf(payload.getDouble("latitude"));
+        longitude = String.valueOf(payload.getDouble("longitude"));
+    }
+    catch (JSONException e) {
+        throw new WebDriverException("error parsing request " + request + "\n" + e.getMessage(), e);
+    }
     String js = template.generate(
         request.getSession(),
-        "{'latitude': 45 ,'longitude': 45 }");
+        "{'latitude': " + latitude + " ,'longitude': " + longitude + " }");
     setJS(js);
   }
 
