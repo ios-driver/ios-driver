@@ -60,7 +60,7 @@ configure = function (d, v, o) {
     var SCREEN_TO_TOP_IPHONE = 118;
     var SCREEN_TO_LEFT_IPHONE = 24;
 
-    if (variation === 'Retina4') {
+    if (variation === 'Retina4' || variation === 'iPhoneRetina_4inch') {
         SCREEN_IPHONE_H = 568;
         SCREEN_IPHONE_W = 320;
         FRAME_IPHONE_W = 386;
