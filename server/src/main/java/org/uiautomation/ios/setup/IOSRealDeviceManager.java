@@ -16,8 +16,10 @@ package org.uiautomation.ios.setup;
 
 import org.libimobiledevice.ios.driver.binding.exceptions.SDKException;
 import org.libimobiledevice.ios.driver.binding.model.ApplicationInfo;
+import org.libimobiledevice.ios.driver.binding.services.AppContainerService;
 import org.libimobiledevice.ios.driver.binding.services.DeviceService;
 import org.libimobiledevice.ios.driver.binding.services.IOSDevice;
+import org.libimobiledevice.ios.driver.binding.services.InformationService;
 import org.libimobiledevice.ios.driver.binding.services.InstallCallback;
 import org.libimobiledevice.ios.driver.binding.services.InstallerService;
 import org.openqa.selenium.WebDriverException;
@@ -38,7 +40,7 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
   private final IOSRunningApplication app;
   private final IPAApplication ipa;
   private final ServerSideSession session;
-  //private final DeviceInstallerService service;
+  private final InformationService infoService;
   private final String bundleId;
   private final List<String> keysToConsiderInThePlistToHaveEquality;
   private final InstallerService installer;
@@ -57,6 +59,7 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
 
     keysToConsiderInThePlistToHaveEquality = new ArrayList<String>();
     keysToConsiderInThePlistToHaveEquality.add("CFBundleVersion");
+    infoService = new InformationService(device);
   }
 
   @Override
@@ -64,17 +67,16 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
 
     try {
       install(app.getUnderlyingApplication());
+      setL10N(session.getCapabilities().getLocale(), session.getCapabilities().getLanguage());
     } catch (SDKException e) {
       throw new WebDriverException("error installing to device " + e.getMessage(), e);
     }
-    setL10N(session.getCapabilities().getLocale(), session.getCapabilities().getLanguage());
   }
 
   @Override
   public void teardown() {
 
   }
-
 
   private void install(APPIOSApplication aut) throws SDKException {
     if (aut.isSafari()) {
@@ -105,6 +107,9 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
 
       // already there and correct version
       if (isCorrectVersion(app)) {
+        AppContainerService appContainerService = new AppContainerService((device));
+        appContainerService.clean(aut.getBundleId());
+        appContainerService.free();
         return;
       }
 
@@ -141,11 +146,8 @@ public class IOSRealDeviceManager implements IOSDeviceManager {
     return true;
   }
 
-
-  private void setL10N(String locale, String language) {
-//    device.setLockDownValue("com.apple.international", "Language", language);
-//    device.setLockDownValue("com.apple.international", "Locale", locale);
+  private void setL10N(String locale, String language) throws SDKException {
+    infoService.setLanguage(language);
+    infoService.setLocale(locale);
   }
-
-
 }
