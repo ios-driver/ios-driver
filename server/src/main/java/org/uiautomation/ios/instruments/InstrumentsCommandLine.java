@@ -125,6 +125,13 @@ public class InstrumentsCommandLine implements Instruments {
   @Override
   public void stop() {
 
+    if(session.getDevice() instanceof RealDevice){
+      try {
+        Thread.sleep(1500);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
     instruments.forceStop();
     try {
       ClassicCommands.kill(instrumentsPid);
