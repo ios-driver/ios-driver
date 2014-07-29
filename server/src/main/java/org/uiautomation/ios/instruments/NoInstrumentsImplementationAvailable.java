@@ -17,9 +17,8 @@ package org.uiautomation.ios.instruments;
 import com.google.common.collect.ImmutableList;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.sanselan.ImageReadException;
-import org.apache.sanselan.formats.tiff.TiffImageParser;
 import org.libimobiledevice.ios.driver.binding.exceptions.SDKException;
+import org.libimobiledevice.ios.driver.binding.services.DebugService;
 import org.libimobiledevice.ios.driver.binding.services.DeviceService;
 import org.libimobiledevice.ios.driver.binding.services.IOSDevice;
 import org.libimobiledevice.ios.driver.binding.services.ScreenshotService;
@@ -50,11 +49,10 @@ import javax.imageio.spi.IIORegistry;
  */
 public class NoInstrumentsImplementationAvailable implements Instruments {
 
-  private final Command installOpenUrlApp;
-  private final Command runOpenUrlApp;
   private final ServerSideSession session;
   private final ScreenshotSDK screenshotService;
   private final IOSDevice device;
+  private final DebugService service;
 
   /**
    * this implementation is only relevant for real device safari, when instruments cannot be used.
@@ -71,23 +69,19 @@ public class NoInstrumentsImplementationAvailable implements Instruments {
 
     device = DeviceService.get(uuid);
     screenshotService = new ScreenshotSDK(device);
-
-    installOpenUrlApp = new Command(ImmutableList.of(
-        "ideviceinstaller", "-i", "openURL.ipa", "-u", uuid), true);
-    runOpenUrlApp = new Command(ImmutableList.of(
-        "idevice-app-runner", "-s", "com.google.openURL", "-u", uuid), true);
+    service = new DebugService(device);
 
   }
 
   @Override
   public void start(long timeOut) throws InstrumentsFailedToStartException {
-    // Try running the openURL app once, ignoring errors.
-    // If running openURL failed, reinstall the app and try again.
-    //int exitCode = runOpenUrlApp.executeAndWait(/*ignoreErrors*/ true);
-    //if (exitCode != 0) {
-    //  installOpenUrlApp.executeAndWait();
-    //  runOpenUrlApp.executeAndWait();
-    //}
+
+    try {
+      service.startSafari();
+    } catch (IOException | SDKException e) {
+      throw new WebDriverException("Cannot start safari : " + e.getMessage(), e);
+    }
+
     Response r = session.getCachedCapabilityResponse();
     if (r == null) {
       r = new Response();
@@ -126,7 +120,7 @@ public class NoInstrumentsImplementationAvailable implements Instruments {
 
   @Override
   public void stop() {
-
+    service.stopSafari();
   }
 
   @Override
@@ -144,7 +138,9 @@ public class NoInstrumentsImplementationAvailable implements Instruments {
     return screenshotService;
   }
 
-  private static class ScreenshotSDK implements TakeScreenshotService {
+
+  static class ScreenshotSDK implements TakeScreenshotService {
+
     private final ScreenshotService service;
 
     public ScreenshotSDK(IOSDevice device) throws SDKException {
@@ -154,46 +150,11 @@ public class NoInstrumentsImplementationAvailable implements Instruments {
     @Override
     public String getScreenshot() {
       try {
-        return getPNGAsString();
+        byte[] raw = service.takeScreenshot();
+        return Base64.encodeBase64String(raw);
       } catch (Exception e) {
         throw new WebDriverException("Couldn't take the screenshot : " + e.getMessage(), e);
       }
     }
-
-
-    private String getPNGAsString() throws SDKException {
-      long start = System.currentTimeMillis();
-      byte[] raw = service.takeScreenshot();
-
-      TiffImageParser parser = new TiffImageParser();
-      try {
-        start = System.currentTimeMillis();
-        BufferedImage image = parser.getBufferedImage(raw, new HashMap<String, Object>());
-        File f = new File("screen.png");
-        System.out.println("loading :\t" + (System.currentTimeMillis() - start) + " ms");
-        start = System.currentTimeMillis();
-        ImageIO.write(image, "png", f);
-        System.out.println("writing : \t" + (System.currentTimeMillis() - start) + " ms");
-//        System.out.println("space : "+f.getTotalSpace());
-
-      } catch (ImageReadException e) {
-        e.printStackTrace();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-
-      return Base64.encodeBase64String(raw);
-    }
-  }
-
-
-  public static void main(String[] args) throws SDKException {
-    ScreenshotSDK
-        s =
-        new ScreenshotSDK(DeviceService.get("ff4827346ed6b54a98f51e69a261a140ae2bf6b3"));
-    s.getPNGAsString();
-    s.getPNGAsString();
-    s.getPNGAsString();
-    s.getPNGAsString();
   }
 }
