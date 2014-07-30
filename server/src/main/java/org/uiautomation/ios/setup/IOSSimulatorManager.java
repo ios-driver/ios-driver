@@ -86,7 +86,9 @@ public class IOSSimulatorManager implements IOSDeviceManager {
 
     application.setDefaultDevice(deviceType, putDefaultFirst);
 
-    simulatorSettings.resetContentAndSettings();
+    if (!caps.getReuseContentAndSettings()) {
+      simulatorSettings.resetContentAndSettings();
+    }
     for (Map.Entry<String, byte[]> entry : caps.getBootstrapFiles().entrySet()) {
       simulatorSettings.writeContentFile(entry.getKey(), entry.getValue());
     }

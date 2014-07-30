@@ -81,6 +81,7 @@ public class IOSCapabilities extends DesiredCapabilities {
   // default selenium bindings for mobile safari
   public static final String BROWSER_NAME = "browserName";
   public static final String BOOTSTRAP_FILES = "bootstrapFiles";
+  public static final String REUSE_CONTENT_AND_SETTINGS = "reuseContentAndSettings";
 
   // TODO: make a parameter?
   public static final int COMMAND_TIMEOUT_MILLIS = 10 * 60 * 1000; // 10 minutes
@@ -233,6 +234,16 @@ public class IOSCapabilities extends DesiredCapabilities {
   public void setLocale(String locale) {
     setCapability(LOCALE, locale);
   }
+
+  public boolean getReuseContentAndSettings() {
+    return getBooleanCapability(REUSE_CONTENT_AND_SETTINGS);
+  }
+
+  public void setReuseContentAndSettings(boolean resuseContentAndSettings) {
+    setCapability(REUSE_CONTENT_AND_SETTINGS, resuseContentAndSettings);
+  }
+
+
 
   public String getLanguage() {
     Object o = getCapability(LANGUAGE);
