@@ -14,8 +14,6 @@
 
 package org.uiautomation.ios.instruments;
 
-import com.google.common.collect.ImmutableList;
-
 import org.apache.commons.codec.binary.Base64;
 import org.libimobiledevice.ios.driver.binding.exceptions.SDKException;
 import org.libimobiledevice.ios.driver.binding.services.DebugService;
@@ -29,18 +27,11 @@ import org.uiautomation.ios.RealDevice;
 import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.command.UIAScriptRequest;
 import org.uiautomation.ios.instruments.commandExecutor.UIAutomationCommandExecutor;
-import org.uiautomation.ios.utils.Command;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.imageio.ImageIO;
-import javax.imageio.spi.IIORegistry;
 
 //import com.sun.media.imageioimpl.plugins.tiff.TIFFImageWriterSpi;
 
