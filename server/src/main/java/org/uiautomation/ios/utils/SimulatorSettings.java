@@ -277,9 +277,8 @@ public class SimulatorSettings {
   private void writeOnDisk(JSONObject plistJSON, File destination)
       throws IOException, JSONException {
     if (destination.exists()) {
-      // To be on the safe side. If the emulator already runs, it won't work
-      // anyway.
-      throw new WebDriverException(globalPreferencePlist + " already exists. Cannot create it.");
+      // This is possible if we start with capability "reuseContentAndSettings"
+      log.info(destination + " already exists. Overwriting data");
     }
 
     // make sure the folder is ready for the plist file
