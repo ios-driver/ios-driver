@@ -69,9 +69,8 @@ public class IOSServer {
   }
 
   public static void main(String[] args) throws Exception {
-    JNAInit.init();
-    final IOSServer server = new IOSServer(args);
 
+    final IOSServer server = new IOSServer(args);
     Runtime.getRuntime().addShutdownHook(new Thread() {
       public void run() {
         try {
@@ -225,6 +224,7 @@ public class IOSServer {
 
   public void start() throws Exception {
     if (!initialized) {
+      JNAInit.init();
       initialized = true;
       init();
     }
