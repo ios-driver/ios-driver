@@ -14,25 +14,40 @@
 
 package org.uiautomation.ios;
 
-import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.application.APPIOSApplication;
 import org.uiautomation.ios.application.IPAApplication;
+import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.utils.ClassicCommands;
 
+import java.util.List;
+
 public class SimulatorDevice extends Device {
+
+  private final HostInfo info;
+
+  private SimulatorDevice() {
+    info = null;
+  }
+
+  public SimulatorDevice(HostInfo hostInfo) {
+    this.info = hostInfo;
+  }
 
   @Override
   public IOSCapabilities getCapability() {
     IOSCapabilities res = new IOSCapabilities();
     res.setCapability(IOSCapabilities.SIMULATOR, true);
     res.setCapability(IOSCapabilities.UI_SDK_VERSION, ClassicCommands.getDefaultSDK());
-    res.setCapability(IOSCapabilities.UI_SDK_VERSION + "_Alt",
-                      new String[]{"5.0", "5.1", "6.0", "6.1"});
+    res.setCapability(IOSCapabilities.UI_SDK_VERSION + "_Alt", getAltSDK());
     res.setCapability(IOSCapabilities.DEVICE, DeviceType.iphone);
     res.setCapability(IOSCapabilities.DEVICE + "_Alt",
                       new DeviceType[]{DeviceType.iphone, DeviceType.ipad});
-
     return res;
+  }
+
+  private String[] getAltSDK() {
+    List<String> supported = info.getInstalledSDKs();
+    return supported.toArray(new String[0]);
   }
 
   @Override

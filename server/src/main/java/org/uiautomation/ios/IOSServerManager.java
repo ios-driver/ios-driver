@@ -79,7 +79,7 @@ public class IOSServerManager {
     }
 
     if (Configuration.SIMULATORS_ENABLED) {
-      devices.add(new SimulatorDevice());
+      devices.add(new SimulatorDevice(getHostInfo()));
     }
   }
 
