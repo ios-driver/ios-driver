@@ -44,6 +44,7 @@ import org.uiautomation.ios.utils.ZipUtils;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -104,8 +105,8 @@ public class IOSServer {
       if (Configuration.BETA_FEATURE && !appFile.exists()) {
         // if an url download and extract it
         try {
-          // TODO freynaud ?
-          appFile = ZipUtils.extractAppFromURL(null);
+          URL u = new URL(app);
+          appFile = ZipUtils.extractAppFromURL(u);
         } catch (IOException ignore) {
           log.fine("url: " + app + ": " + ignore);
         }
