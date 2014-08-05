@@ -26,6 +26,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.ApplicationStore;
+import org.uiautomation.ios.Device;
+import org.uiautomation.ios.HostInfo;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.utils.IOSVersion;
@@ -437,6 +440,7 @@ public class APPIOSApplication {
     }
   }
 
+
   public IOSCapabilities getCapabilities() {
     IOSCapabilities cap = new IOSCapabilities();
     cap.setSupportedLanguages(getSupportedLanguagesCodes());
@@ -470,6 +474,14 @@ public class APPIOSApplication {
   }
 
   public static boolean canRun(IOSCapabilities desiredCapabilities, IOSCapabilities appCapability) {
+
+    // check if the app can run the requested SDK
+    String sdk = desiredCapabilities.getSDKVersion();
+    if (sdk!=null){
+      List<String> supported = (List<String>)appCapability.getCapability(IOSCapabilities.UI_SDK_VERSION_ALT);
+      System.out.println("SDK" + sdk+" vs "+supported);
+    }
+
     if (desiredCapabilities.getCapability(IOSCapabilities.SIMULATOR) != null &&
         desiredCapabilities.isSimulator() != appCapability.isSimulator()) {
       return false;

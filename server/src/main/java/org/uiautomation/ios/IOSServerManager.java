@@ -132,7 +132,7 @@ public class IOSServerManager {
     return hostInfo.getPort();
   }
 
-  public ServerSideSession createSession(IOSCapabilities cap) throws Exception {
+  public ServerSideSession createSession(IOSCapabilities cap) throws SessionNotInitializedException {
     ServerSideSession session = new ServerSideSession(this, cap, options);
     sessions.add(session);
     return session;
@@ -168,9 +168,9 @@ public class IOSServerManager {
     return app.createInstance(lang);
   }
 
-  public List<APPIOSApplication> findAllMatchingApplications(
-      IOSCapabilities desiredCapabilities) {
+  public List<APPIOSApplication> findAllMatchingApplications(IOSCapabilities desiredCapabilities) {
     List<APPIOSApplication> matchingApps = new ArrayList<>();
+
     for (APPIOSApplication app : getApplicationStore().getApplications()) {
       IOSCapabilities appCapabilities = app.getCapabilities();
       if (APPIOSApplication.canRun(desiredCapabilities, appCapabilities)) {

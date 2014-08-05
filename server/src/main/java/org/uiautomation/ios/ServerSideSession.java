@@ -61,7 +61,8 @@ public class ServerSideSession extends Session {
   private Response capabilityCachedResponse;
   private boolean decorated = false;
 
-  ServerSideSession(IOSServerManager server, IOSCapabilities desiredCapabilities,IOSServerConfiguration options) throws Exception {
+  ServerSideSession(IOSServerManager server, IOSCapabilities desiredCapabilities,
+                    IOSServerConfiguration options) throws SessionNotInitializedException {
     super(UUID.randomUUID().toString());
     this.server = server;
     this.capabilities = desiredCapabilities;
@@ -80,16 +81,16 @@ public class ServerSideSession extends Session {
     ensureLanguage();
     ensureLocale();
 
-    // extract application from capabilities if necessary
-    URL url = desiredCapabilities.getAppURL();
-    if (url != null) {
-      application = extractFromCapabilities();
-    } else {
-      application = server.findAndCreateInstanceMatchingApplication(desiredCapabilities);
-    }
-
     try {
       device = server.findAndReserveMatchingDevice(desiredCapabilities);
+
+      // extract application from capabilities if necessary
+      URL url = desiredCapabilities.getAppURL();
+      if (url != null) {
+        application = extractFromCapabilities();
+      } else {
+        application = server.findAndCreateInstanceMatchingApplication(desiredCapabilities);
+      }
 
       updateCapabilitiesWithSensibleDefaults();
 
@@ -101,7 +102,7 @@ public class ServerSideSession extends Session {
       if (device != null) {
         device.release();
       }
-      throw e;
+      throw new SessionNotInitializedException(e.getMessage(), e);
     }
   }
 

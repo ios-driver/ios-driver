@@ -38,16 +38,16 @@ public class SimulatorDevice extends Device {
     IOSCapabilities res = new IOSCapabilities();
     res.setCapability(IOSCapabilities.SIMULATOR, true);
     res.setCapability(IOSCapabilities.UI_SDK_VERSION, ClassicCommands.getDefaultSDK());
-    res.setCapability(IOSCapabilities.UI_SDK_VERSION + "_Alt", getAltSDK());
+    res.setCapability(IOSCapabilities.UI_SDK_VERSION_ALT, getAltSDK());
     res.setCapability(IOSCapabilities.DEVICE, DeviceType.iphone);
     res.setCapability(IOSCapabilities.DEVICE + "_Alt",
                       new DeviceType[]{DeviceType.iphone, DeviceType.ipad});
     return res;
   }
 
-  private String[] getAltSDK() {
+  private List<String> getAltSDK() {
     List<String> supported = info.getInstalledSDKs();
-    return supported.toArray(new String[0]);
+    return supported;
   }
 
   @Override
@@ -55,10 +55,12 @@ public class SimulatorDevice extends Device {
     if (app instanceof IPAApplication) {
       return false;
     }
+
     return true;
   }
+
   @Override
-  public String toString(){
-    return "Simulator[" + (isBusy()? "in use by ios-driver" : "available") + ']';
+  public String toString() {
+    return "Simulator[(sdks="+getAltSDK()+")" + (isBusy() ? "in use by ios-driver" : "available") + ']';
   }
 }

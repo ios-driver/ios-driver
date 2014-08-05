@@ -16,6 +16,8 @@ package org.uiautomation.ios;
 
 import org.uiautomation.ios.application.APPIOSApplication;
 
+import java.util.List;
+
 public abstract class Device {
 
   private volatile boolean busy = false;
@@ -26,6 +28,18 @@ public abstract class Device {
 
   public static boolean canRun(IOSCapabilities desiredCapabilities,
                                IOSCapabilities deviceCapability) {
+
+    // if simulator, check that the requested SDK is installed.
+    if (desiredCapabilities.isSimulator() && deviceCapability.isSimulator()) {
+
+      String requestSDK = desiredCapabilities.getSDKVersion();
+      if (requestSDK != null) {
+        List<String> supported = (List<String>) deviceCapability.getCapability(IOSCapabilities.UI_SDK_VERSION_ALT);
+        if (!supported.contains(requestSDK)) {
+          return false;
+        }
+      }
+    }
 
     if (desiredCapabilities.getCapability(IOSCapabilities.SIMULATOR) != null &&
         desiredCapabilities.isSimulator() != deviceCapability.isSimulator()) {
@@ -62,8 +76,8 @@ public abstract class Device {
   public synchronized void release() {
     busy = false;
   }
-  
+
   public final boolean isBusy() {
-      return busy;
+    return busy;
   }
 }

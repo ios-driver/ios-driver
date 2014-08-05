@@ -103,6 +103,7 @@ public class RealDevice extends Device {
     IOSCapabilities res = new IOSCapabilities();
     res.setCapability(IOSCapabilities.SIMULATOR, false);
     res.setCapability(IOSCapabilities.UI_SDK_VERSION, iosVersion);
+    res.setCapability(IOSCapabilities.UI_SDK_VERSION_ALT, iosVersion);
     res.setCapability(IOSCapabilities.DEVICE, type);
 //    res.setCapability(IOSCapabilities.VARIATION, DeviceVariation.valueOf(this.productType.replace(",", "")));
     res.setCapability(IOSCapabilities.UUID, uuid);

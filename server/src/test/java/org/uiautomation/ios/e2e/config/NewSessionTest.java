@@ -138,6 +138,13 @@ public class NewSessionTest extends BaseIOSDriverTest {
   }
 
   @Test(expectedExceptions = SessionNotCreatedException.class)
+  public void sdkNotInstalled() {
+    IOSCapabilities cap = SampleApps.uiCatalogCap();
+    cap.setSDKVersion("5.1");
+    driver = new RemoteIOSDriver(getRemoteURL(), cap);
+  }
+
+  @Test(expectedExceptions = SessionNotCreatedException.class)
   public void wrongVersion() {
     driver =
         new RemoteIOSDriver(getRemoteURL(), IOSCapabilities.iphone("UICatalog", "not a number."));
@@ -208,6 +215,14 @@ public class NewSessionTest extends BaseIOSDriverTest {
     IOSCapabilities actual = driver.getCapabilities();
     Assert.assertEquals(actual.getBundleId(), "com.yourcompany.UICatalog");
     Assert.assertEquals(actual.getBundleVersion(), "2.10");
+  }
+
+
+  @Test(expectedExceptions = SessionNotCreatedException.class)
+  public void canUseAnyFlagFromInfoPlistMatchesNeg() {
+    IOSCapabilities cap = IOSCapabilities.iphone("UICatalog");
+    cap.setCapability(IOSCapabilities.MAGIC_PREFIX + "CFBundleDevelopmentRegion", "en2");
+    driver = new RemoteIOSDriver(getRemoteURL(), cap);
   }
 
   @DataProvider(name = "capabilities")

@@ -41,6 +41,8 @@ public class IOSCapabilities extends DesiredCapabilities {
   public static final String UI_SYSTEM_NAME = "systemName";
   // UIATarget.systemVersion();
   public static final String UI_SDK_VERSION = "sdkVersion";
+  public static final String UI_SDK_VERSION_ALT = "sdkVersion_alt";
+
   // UIATarget.name();
   public static final String UI_NAME = "name";
   // UIAAplication.bundleVersion();
@@ -87,6 +89,7 @@ public class IOSCapabilities extends DesiredCapabilities {
   public static final int COMMAND_TIMEOUT_MILLIS = 10 * 60 * 1000; // 10 minutes
   public static final String INSTRUMENTS = "instruments";
   public static final String PROVISIONNED = "provisionnedDevices";
+
 
   // private final Map<String, Object> raw = new HashMap<String, Object>();
 

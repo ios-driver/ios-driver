@@ -20,6 +20,7 @@ import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.IOSServerManager;
 import org.uiautomation.ios.ServerSideSession;
+import org.uiautomation.ios.SessionNotInitializedException;
 import org.uiautomation.ios.command.BaseNativeCommandHandler;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.instruments.InstrumentsFailedToStartException;
@@ -59,7 +60,7 @@ public final class NewSessionNHandler extends BaseNativeCommandHandler {
 
       if (session == null) {
         throw new SessionNotCreatedException(
-            "failed starting after " + MAX_RETRIES + "retries.Final wait was " + timeOut);
+            "failed starting after " + MAX_RETRIES + " retries.Final wait was " + timeOut);
       }
 
       Response resp = new Response();
@@ -76,24 +77,26 @@ public final class NewSessionNHandler extends BaseNativeCommandHandler {
     }
   }
 
-
-  // TODO freynaud : restart only makes sense for some exceptions like instruments fails.
   private ServerSideSession safeStart(long timeOut, IOSCapabilities cap)
-      throws InstrumentsFailedToStartException, Exception {
+      throws InstrumentsFailedToStartException {
     ServerSideSession session = null;
     try {
+      // init session
       session = getServer().createSession(cap);
+
+      // start session
       session.start(timeOut);
       return session;
+    } catch (SessionNotInitializedException e){
+      log.info("The server cannot run "+cap+" at the moment."+e.getMessage());
+      throw e;
     } catch (InstrumentsFailedToStartException e) {
-      log.warning("Instruments failed to start in the allocated time ( " + timeOut + "sec):" + e
-          .getMessage());
+      log.warning("Instruments failed to start in the allocated time ( " + timeOut + "sec):" + e.getMessage());
       if (session != null) {
         session.stop();
       }
-      throw e;
     } catch (Exception e) {
-      log.warning("Error creating the session." + e.getMessage());
+      log.warning("Error starting the session." + e.getMessage());
       if (session != null) {
         session.stop();
       }
@@ -106,6 +109,7 @@ public final class NewSessionNHandler extends BaseNativeCommandHandler {
         }
       }
     }
+    return null;
   }
 
   @Override
