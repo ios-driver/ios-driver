@@ -100,8 +100,8 @@ public class IPAShellApplication extends IPAApplication {
 
   @Override
   public File getApplicationPath() {
-    APPIOSApplication app = MobileSafariLocator.locateSafari((String)info.getProperty("DTPlatformVersion"));
-    return app.getApplicationPath();
+    // getting the safari app for real device isn't relevant without insturments.
+    return new File("");
   }
 
 
