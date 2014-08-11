@@ -151,10 +151,12 @@ public class ServerSideSession extends Session {
         throw new SessionNotCreatedException(
             version + " is too old. Only support SDK 5.0 and above.");
       }
-      if (!server.getHostInfo().getInstalledSDKs().contains(version)) {
-        throw new SessionNotCreatedException(
-            "Cannot start on version " + version + ".Installed: "
-            + server.getHostInfo().getInstalledSDKs());
+      if (capabilities.isSimulator()){
+        if (!server.getHostInfo().getInstalledSDKs().contains(version)) {
+          throw new SessionNotCreatedException(
+              "Cannot start on version " + version + ".Installed: "
+              + server.getHostInfo().getInstalledSDKs());
+        }
       }
     }
     if (capabilities.getDeviceVariation() == null) {
