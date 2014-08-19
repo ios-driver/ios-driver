@@ -82,6 +82,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
 
 
     simulatorSettings.setVariation(deviceType, variation, desiredSDKVersion);
+    simulatorSettings.setInstrumentsVersion(info.getInstrumentsVersion());
     simulatorSettings.setSimulatorScale(caps.getSimulatorScale());
 
     application.setDefaultDevice(deviceType, putDefaultFirst);
@@ -99,7 +100,8 @@ public class IOSSimulatorManager implements IOSDeviceManager {
 
   @Override
   public void teardown() {
-    ClassicCommands.killall(SIMULATOR_PROCESS_NAME);
+    String simulatorName = info.getInstrumentsVersion().getMajor() < 6 ? SIMULATOR_PROCESS_NAME : "iOS Simulator";
+    ClassicCommands.killall(simulatorName);
   }
 
 
