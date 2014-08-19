@@ -176,11 +176,11 @@ public class InstrumentsCommandLine implements Instruments {
     if (uuid != null) {
       args.add("-w");
       args.add(uuid);
-    } else if (application.isSimulator() && Integer.parseInt(version.getBuild()) >= 55044) {
+    } else if (application.isSimulator() && Double.parseDouble(version.getBuild()) >= 55044) {
       // newer instruments require to specify the simulator SDK and device type
       args.add("-w");
       args.add(AppleMagicString.getDeviceSpecification(caps.getDevice(), caps.getDeviceVariation(),
-                                                       desiredSDKVersion));
+                                                       desiredSDKVersion, version));
     }
     args.add("-t");
     args.add(template.getAbsolutePath());

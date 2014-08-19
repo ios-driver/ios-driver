@@ -18,16 +18,23 @@ package org.uiautomation.ios.utils;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
+import org.uiautomation.ios.instruments.InstrumentsVersion;
 
 public class AppleMagicString {
 
   public static String getDeviceSpecification(DeviceType device, DeviceVariation variation,
-                                       String desiredSDKVersion) {
-    // i.e. 'iPad Retina (64-bit) - Simulator - iOS 7.1'
+                                       String desiredSDKVersion, InstrumentsVersion instrumentsVersion) {
+    // 'iPad Retina (64-bit) - Simulator - iOS 7.1' or 'iPhone 5 (8.0 Simulator)' if Xcode 6 or later is being used
     IOSVersion iosVersion = new IOSVersion(desiredSDKVersion);
     String version = iosVersion.getMajor() + '.' + iosVersion.getMinor();
-    return getSimulateDeviceValue(device, variation, desiredSDKVersion) + " - Simulator - iOS "
-           + version;
+    String name = getSimulateDeviceValue(device, variation, desiredSDKVersion);
+    String specification;
+    if (instrumentsVersion.getMajor() < 6) {
+      specification = name + " - Simulator - iOS " + version;
+    } else {
+      specification = name + " (" + version + " Simulator)";
+    }
+    return specification;
   }
 
   public static  String getSimulateDeviceValue(DeviceType device, DeviceVariation variation,
