@@ -90,6 +90,10 @@ public class InstrumentsVersion implements CommandOutputListener {
     return version;
   }
 
+  public Integer getMajor() {
+    return Integer.parseInt(version.split("\\.")[0]);
+  }
+
   /**
    * the build of instruments command line tool. No available ( returns null ) for older version of
    * instruments. null for XCode 4.3.2 46000 for Xcode 4.5 52076 for Xcode5 DP6

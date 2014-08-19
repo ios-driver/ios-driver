@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+# This script isn't actually output by instruments-without-delay but is a
+# hold-over until it is fixed to work with Xcode 6.
+
+XCODE_PATH=$(xcode-select --print-path)
+
+"$XCODE_PATH"/usr/bin/instruments "$@"

@@ -23,12 +23,14 @@ import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.HostInfo;
 import org.uiautomation.ios.command.uiautomation.NewSessionNHandler;
+import org.uiautomation.ios.instruments.InstrumentsVersion;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SimulatorSettings {
@@ -47,6 +49,9 @@ public class SimulatorSettings {
   private final File contentAndSettingsFolder;
   private final File globalPreferencePlist;
   private final HostInfo info;
+  private String deviceName;
+
+  private InstrumentsVersion instrumentsVersion;
 
   public SimulatorSettings(HostInfo info, String sdkVersion, boolean is64bit) {
     this.exactSdkVersion = sdkVersion;
@@ -131,8 +136,8 @@ public class SimulatorSettings {
    */
   public void setVariation(DeviceType device, DeviceVariation variation, String desiredSDKVersion)
       throws WebDriverException {
-    String value = AppleMagicString.getSimulateDeviceValue(device, variation, desiredSDKVersion);
-    setDefaultSimulatorPreference("SimulateDevice", value);
+    deviceName = AppleMagicString.getSimulateDeviceValue(device, variation, desiredSDKVersion);
+    setDefaultSimulatorPreference("SimulateDevice", deviceName);
 
     String subfolder = getSDKSubfolder(desiredSDKVersion);
     File sdk = new File(info.getXCodeInstall(), subfolder);
@@ -152,7 +157,13 @@ public class SimulatorSettings {
     return SDK_LOCATION + "iPhoneSimulator" + suffix + ".sdk";
   }
 
+  public InstrumentsVersion getInstrumentsVersion() {
+    return instrumentsVersion;
+  }
 
+  public void setInstrumentsVersion(InstrumentsVersion instrumentsVersion) {
+    this.instrumentsVersion = instrumentsVersion;
+  }
 
   public void setSimulatorScale(String scale) {
     if (scale != null) {
@@ -186,15 +197,32 @@ public class SimulatorSettings {
    * The simulator shouldn't be running when that is done.
    */
   public void resetContentAndSettings() {
-    if (hasContentAndSettingsFolder()) {
-      boolean ok = deleteRecursive(getContentAndSettingsFolder());
-      if (!ok) {
-        System.err.println("cannot delete content and settings folder " + contentAndSettingsFolder);
+    if (instrumentsVersion.getMajor() < 6) {
+      if (hasContentAndSettingsFolder()) {
+        boolean ok = deleteRecursive(getContentAndSettingsFolder());
+        if (!ok) {
+          System.err.println("cannot delete content and settings folder " + contentAndSettingsFolder);
+        }
       }
-    }
-    boolean ok = contentAndSettingsFolder.mkdirs();
-    if (!ok) {
-      System.err.println("couldn't re-create: " + contentAndSettingsFolder);
+      boolean ok = contentAndSettingsFolder.mkdirs();
+      if (!ok) {
+        System.err.println("couldn't re-create: " + contentAndSettingsFolder);
+      }
+    } else {
+      // Starting with Xcode 6 and later, we can use simctl to do the hard work for us.
+      DeviceUUIDsMap uuidsMap = new DeviceUUIDsMap();
+      uuidsMap.loadData();
+      String uuid = uuidsMap.getUUID(exactSdkVersion, deviceName);
+      if (uuid == null) {
+        System.err.println("Unable to get UUID for device " + deviceName + " with SDK " + exactSdkVersion);
+      }
+      List<String> simctlArgs = new ArrayList<>();
+      simctlArgs.add("xcrun");
+      simctlArgs.add("simctl");
+      simctlArgs.add("erase");
+      simctlArgs.add(uuid);
+      Command simctlCmd = new Command(simctlArgs, true);
+      simctlCmd.executeAndWait();
     }
   }
 

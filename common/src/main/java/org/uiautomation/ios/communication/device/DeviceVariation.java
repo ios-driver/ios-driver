@@ -34,7 +34,18 @@ public enum DeviceVariation {
 
   iPad,
   iPadRetina,
-  iPadRetina_64bit;
+  iPadRetina_64bit,
+
+  ResizableiPad,
+  ResizableiPhone,
+
+  iPad2,
+  iPadAir,
+
+  iPhone4s,
+  iPhone5,
+  iPhone5s,
+  ;
 
   public static DeviceVariation normalize(DeviceType deviceType, DeviceVariation deviceVariation) {
     switch (deviceVariation) {
@@ -113,6 +124,18 @@ public enum DeviceVariation {
         result = "iPhone Retina (4-inch 64-bit)";
         mismatch = (deviceType != DeviceType.iphone);
         break;
+      case iPhone4s:
+        result = "iPhone 4s";
+        mismatch = (deviceType != DeviceType.iphone);
+        break;
+      case iPhone5:
+        result = "iPhone 5";
+        mismatch = (deviceType != DeviceType.iphone);
+        break;
+      case iPhone5s:
+        result = "iPhone 5s";
+        mismatch = (deviceType != DeviceType.iphone);
+        break;
       case iPad:
         result = "iPad";
         mismatch = (deviceType != DeviceType.ipad);
@@ -124,6 +147,22 @@ public enum DeviceVariation {
       case iPadRetina_64bit:
         result = "iPad Retina (64-bit)";
         mismatch = (deviceType != DeviceType.ipad);
+        break;
+      case iPad2:
+        result = "iPad 2";
+        mismatch = (deviceType != DeviceType.ipad);
+        break;
+      case iPadAir:
+        result = "iPad Air";
+        mismatch = (deviceType != DeviceType.ipad);
+        break;
+      case ResizableiPad:
+        result = "Resizable iPad";
+        mismatch = (deviceType != DeviceType.ipad);
+        break;
+      case ResizableiPhone:
+        result = "Resizable iPhone";
+        mismatch = (deviceType != DeviceType.iphone);
         break;
       default:
         result = "";

@@ -31,7 +31,7 @@ public class DefaultCommandListener implements CommandOutputListener {
   @Override
   public void stdout(String line) {
     if (log.isLoggable(Level.FINE))
-      log.fine(label+"\t"+line);
+      log.warning(label+"\t"+line);
   }
 
   @Override
