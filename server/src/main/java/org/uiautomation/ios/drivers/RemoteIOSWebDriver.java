@@ -126,7 +126,8 @@ public class RemoteIOSWebDriver {
       }
       // Native app
     } else {
-      log.warning("session created but application size=" + applications.size()+".Does the app have a webview ?");
+      log.warning("session created but application size=" + applications.size()
+                  + ".Does the app have a webview ?");
     }
   }
 
