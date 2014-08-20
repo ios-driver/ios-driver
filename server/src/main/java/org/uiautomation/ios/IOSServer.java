@@ -35,6 +35,7 @@ import org.uiautomation.ios.servlet.DeviceServlet;
 import org.uiautomation.ios.servlet.IOSServlet;
 import org.uiautomation.ios.servlet.InstrumentsLogServlet;
 import org.uiautomation.ios.servlet.ResourceServlet;
+import org.uiautomation.ios.servlet.ServerManagerServlet;
 import org.uiautomation.ios.servlet.StaticResourceServlet;
 import org.uiautomation.ios.utils.BuildInfo;
 import org.uiautomation.ios.utils.FolderMonitor;
@@ -51,6 +52,7 @@ import java.util.logging.Logger;
 public class IOSServer {
 
   public static final String DRIVER = IOSServerManager.class.getName();
+  public static final String SERVER = "serverInstance";
   private static final Logger log = Logger.getLogger(IOSServer.class.getName());
   private final IOSServerConfiguration options;
   private boolean initialized = false;
@@ -149,6 +151,10 @@ public class IOSServer {
     log.info(b.toString());
   }
 
+  public IOSServerManager getDriver() {
+    return driver;
+  }
+
   private void addSimulatorDetails(StringBuilder b) {
     File xcodeInstall = driver.getHostInfo().getXCodeInstall();
     String hostSDK = driver.getHostInfo().getSDK();
@@ -190,8 +196,11 @@ public class IOSServer {
     wd.addServlet(ApplicationsServlet.class, "/applications/*");
     wd.addServlet(CapabilitiesServlet.class, "/capabilities/*");
     wd.addServlet(ArchiveServlet.class, "/archive/*");
+    wd.addServlet(ServerManagerServlet.class, "/manage/*");
+
     wd.getServletContext().getContextHandler().setMaxFormContentSize(500000);
     wd.setAttribute(DRIVER, driver);
+    wd.setAttribute(SERVER, this);
 
     ServletContextHandler statics = new ServletContextHandler(server, "/static", true, false);
     statics.addServlet(StaticResourceServlet.class, "/*");
@@ -254,6 +263,17 @@ public class IOSServer {
     }
   }
 
+  public void stopGracefully() throws Exception {
+    if (!initialized) {
+      return;
+    }
+    if (driver != null) {
+      driver.stopGracefully();
+    }
+    stop();
+    log.info("server stopped");
+  }
+
   public void stop() throws Exception {
     if (!initialized) {
       return;
@@ -277,7 +297,6 @@ public class IOSServer {
     if (driver != null) {
       try {
         driver.stop();
-        driver = null;
       } catch (Exception e) {
         log.warning("exception stopping: " + e);
       }
@@ -285,10 +304,16 @@ public class IOSServer {
     if (server != null) {
       try {
         server.stop();
-        server = null;
       } catch (Exception e) {
         log.warning("exception stopping: " + e);
       }
     }
+  }
+
+  public boolean isRunning() {
+    if (server == null) {
+      return false;
+    }
+    return server.isRunning();
   }
 }

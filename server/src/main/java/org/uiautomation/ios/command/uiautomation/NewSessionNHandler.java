@@ -16,6 +16,7 @@ package org.uiautomation.ios.command.uiautomation;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.SessionNotCreatedException;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.IOSServerManager;
@@ -24,6 +25,7 @@ import org.uiautomation.ios.SessionNotInitializedException;
 import org.uiautomation.ios.command.BaseNativeCommandHandler;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.instruments.InstrumentsFailedToStartException;
+import org.uiautomation.ios.utils.ServerIsShutingDownException;
 
 import java.util.logging.Logger;
 
@@ -69,11 +71,14 @@ public final class NewSessionNHandler extends BaseNativeCommandHandler {
       resp.setValue("");
       return resp;
     } catch (Exception e) {
-      e.printStackTrace();
       if (session != null) {
         session.stop();
       }
-      throw new SessionNotCreatedException(e.getMessage(), e);
+      if (e instanceof WebDriverException) {
+        throw e;
+      } else {
+        throw new SessionNotCreatedException(e.getMessage(), e);
+      }
     }
   }
 
@@ -83,15 +88,20 @@ public final class NewSessionNHandler extends BaseNativeCommandHandler {
     try {
       // init session
       session = getServer().createSession(cap);
+      if (session == null) {
+        throw new ServerIsShutingDownException(
+            "The server is currently shutting down and doesn't accept new tests.");
+      }
 
       // start session
       session.start(timeOut);
       return session;
-    } catch (SessionNotInitializedException e){
-      log.info("The server cannot run "+cap+" at the moment."+e.getMessage());
+    } catch (SessionNotInitializedException e) {
+      log.info("The server cannot run " + cap + " at the moment." + e.getMessage());
       throw e;
     } catch (InstrumentsFailedToStartException e) {
-      log.warning("Instruments failed to start in the allocated time ( " + timeOut + "sec):" + e.getMessage());
+      log.warning("Instruments failed to start in the allocated time ( " + timeOut + "sec):" + e
+          .getMessage());
       if (session != null) {
         session.stop();
       }

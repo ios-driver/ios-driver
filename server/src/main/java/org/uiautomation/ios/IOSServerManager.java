@@ -39,9 +39,28 @@ public class IOSServerManager {
   private final ResourceCache cache = new ResourceCache();
   private final IOSServerConfiguration options;
   private DeviceStore devices;
+  private final Object lock = new Object();
+  private State state = State.stopped;
+
+
+  public void waitForState(State expected) {
+    while (getState() != expected) {
+      try {
+        System.out.println("waiting for " + expected + " but got " + state);
+        Thread.sleep(150);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  public static enum State {
+    starting, running, stopping, stopped;
+  }
 
   // TODO freynaud cleanup
   public IOSServerManager(IOSServerConfiguration options) {
+    setState(State.starting);
     this.options = options;
 
     // setup logging
@@ -81,6 +100,7 @@ public class IOSServerManager {
     if (Configuration.SIMULATORS_ENABLED) {
       devices.add(new SimulatorDevice(getHostInfo()));
     }
+    setState(State.running);
   }
 
   public static boolean matches(Map<String, Object> appCapabilities,
@@ -132,7 +152,12 @@ public class IOSServerManager {
     return hostInfo.getPort();
   }
 
-  public ServerSideSession createSession(IOSCapabilities cap) throws SessionNotInitializedException {
+  public ServerSideSession createSession(IOSCapabilities cap)
+      throws SessionNotInitializedException {
+
+    if (getState() != State.running) {
+      return null;
+    }
     ServerSideSession session = new ServerSideSession(this, cap, options);
     sessions.add(session);
     return session;
@@ -219,5 +244,33 @@ public class IOSServerManager {
 
   public IOSServerConfiguration getIOSServerConfiguration() {
     return options;
+  }
+
+  public void stopGracefully() throws InterruptedException {
+    // refuse further requests
+    setState(State.stopping);
+    // wait for requests to be processed
+    while (getSessions().size() != 0) {
+      Thread.sleep(250);
+    }
+    // stops
+    stop();
+    setState(State.stopped);
+  }
+
+  public boolean isRunning() {
+    return getState() == State.running;
+  }
+
+  private void setState(State state) {
+    synchronized (lock) {
+      this.state = state;
+    }
+  }
+
+  private State getState() {
+    synchronized (lock) {
+      return this.state;
+    }
   }
 }
