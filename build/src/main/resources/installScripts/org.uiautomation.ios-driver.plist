@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+        "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>StandardOutPath</key>
+        <string>/Users/freynaud/.ios-driver/logs/ios-service.out.log</string>
+        <key>StandardErrorPath</key>
+        <string>/Users/freynaud/.ios-driver/logs/ios-service.err.log</string>
+        <key>KeepAlive</key>
+        <true/>
+        <key>Label</key>
+        <string>org.uiautomation.ios-driver</string>
+        <key>ProgramArguments</key>
+        <array>
+            <string>java</string>
+            <string>-jar</string>
+            <string>/Users/freynaud/.ios-driver/service/ios-server.jar</string>
+            <string>-real</string>
+        </array>
+        <key>RunAtLoad</key>
+        <true/>
+        <key>SessionCreate</key>
+        <false/>
+        <key>WorkingDirectory</key>
+        <string>/Users/freynaud/.ios-driver/service/</string>
+    </dict>
+</plist>

@@ -263,10 +263,20 @@ public class IOSServer {
     }
   }
 
+
+  public void onShutdown() {
+    log.info("server is about to shutdown");
+    if (selfRegisteringRemote != null) {
+      selfRegisteringRemote.onServerShutDown();
+    }
+
+  }
+
   public void stopGracefully() throws Exception {
     if (!initialized) {
       return;
     }
+    onShutdown();
     if (driver != null) {
       driver.stopGracefully();
     }
