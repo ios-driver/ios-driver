@@ -21,17 +21,19 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.BeanToJsonConverter;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.IOSServerManager;
 import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.application.APPIOSApplication;
 import org.uiautomation.ios.command.BaseNativeCommandHandler;
+import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.utils.BuildInfo;
 import org.uiautomation.ios.utils.ClassicCommands;
 
 import java.util.List;
 
 public class ServerStatusNHandler extends BaseNativeCommandHandler {
+
+  public static final String SUPPORTED_APPS = "supportedApps";
 
   public ServerStatusNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -44,25 +46,10 @@ public class ServerStatusNHandler extends BaseNativeCommandHandler {
    */
   @Override
   public Response handle() throws Exception {
-    JSONObject res = new JSONObject();
+    StatusGenerator gen = new StatusGenerator(getServer());
 
-    res.put("state", "success");
 
-    res.put("os", new JSONObject().put("name", System.getProperty("os.name"))
-        .put("arch", System.getProperty("os.arch"))
-        .put("version", System.getProperty("os.version")));
-
-    res.put("java", new JSONObject().put("version", System.getProperty("java.version")));
-
-    res.put("ios", new JSONObject().put("simulatorVersion", ClassicCommands.getDefaultSDK()));
-
-    res.put("supportedApps", getSupportedApps());
-
-    res.put(
-        "build",
-        new JSONObject().put("version", BuildInfo.getAttribute("version"))
-            .put("time", BuildInfo.getAttribute("buildTimestamp"))
-            .put("revision", BuildInfo.getAttribute("sha")));
+    JSONObject res = gen.generate();
 
     List<ServerSideSession> sessions = getServer().getSessions();
     Response resp = new Response();
@@ -79,40 +66,78 @@ public class ServerStatusNHandler extends BaseNativeCommandHandler {
     return resp;
   }
 
-  private JSONArray getSupportedApps() throws JSONException {
-    JSONArray supportedApps = new JSONArray();
 
-    List<IOSCapabilities> caps = getServer().getAllCapabilities();
-    for (IOSCapabilities cap : caps) {
-      try {
-        String json = new BeanToJsonConverter().convert(cap);
-        JSONObject app = new JSONObject(json);
-        app.put("resources", getAppResources(app));
-        supportedApps.put(app);
-      } catch (JSONException e) {
-        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-      }
-    }
-    return supportedApps;
-  }
 
-  private JSONObject getAppResources(JSONObject app) {
-    JSONObject resources = new JSONObject();
-    if (app.has("applicationPath")) {
-      try {
-        String applicationPath = (String) app.get("applicationPath");
-        APPIOSApplication a = getServer().getApplicationStore().getApplication(applicationPath);
-        for (String key : a.getResources().keySet()) {
-          resources.put(key, "/wd/hub/resources/" + getServer().getCache().getKey(a, key));
-        }
-      } catch (JSONException ignored) {
-      }
-    }
-    return resources;
-  }
 
   @Override
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
+  }
+
+
+  public static class StatusGenerator {
+
+    private final IOSServerManager mgr;
+
+    public StatusGenerator(IOSServerManager serverManager) {
+      mgr = serverManager;
+    }
+
+    public JSONObject generate() throws JSONException {
+      JSONObject res = new JSONObject();
+
+      res.put("state", "success");
+
+      res.put("os", new JSONObject().put("name", System.getProperty("os.name"))
+          .put("arch", System.getProperty("os.arch"))
+          .put("version", System.getProperty("os.version")));
+
+      res.put("java", new JSONObject().put("version", System.getProperty("java.version")));
+
+      res.put("ios", new JSONObject().put("simulatorVersion", ClassicCommands.getDefaultSDK()));
+
+      res.put(SUPPORTED_APPS, getSupportedApps());
+
+
+      res.put(
+          "build",
+          new JSONObject().put("version", BuildInfo.getAttribute("version"))
+              .put("time", BuildInfo.getAttribute("buildTimestamp"))
+              .put("revision", BuildInfo.getAttribute("sha")));
+      return res;
+    }
+
+    private JSONArray getSupportedApps() throws JSONException {
+      JSONArray supportedApps = new JSONArray();
+
+      List<IOSCapabilities> caps = mgr.getAllCapabilities();
+      for (IOSCapabilities cap : caps) {
+        try {
+          String json = new BeanToJsonConverter().convert(cap);
+          JSONObject app = new JSONObject(json);
+          app.put("resources", getAppResources(app));
+          supportedApps.put(app);
+        } catch (JSONException e) {
+          e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+      }
+      return supportedApps;
+    }
+
+    private JSONObject getAppResources(JSONObject app) {
+      JSONObject resources = new JSONObject();
+      if (app.has("applicationPath")) {
+        try {
+          String applicationPath = (String) app.get("applicationPath");
+          APPIOSApplication a = mgr.getApplicationStore().getApplication(applicationPath);
+          for (String key : a.getResources().keySet()) {
+            resources.put(key, "/wd/hub/resources/" + mgr.getCache().getKey(a, key));
+          }
+        } catch (JSONException ignored) {
+        }
+      }
+      return resources;
+    }
+
   }
 }
