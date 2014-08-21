@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Logger;
 
+@Deprecated
 public class IOSRemoteProxy extends DefaultRemoteProxy implements SelfHealingProxy {
 
   private boolean restarting;
@@ -38,7 +39,7 @@ public class IOSRemoteProxy extends DefaultRemoteProxy implements SelfHealingPro
   private int sessionsLimit;
   private static final Logger log = Logger.getLogger(IOSRemoteProxy.class.getName());
 
-  private HtmlRenderer renderer = new IOSHtmlRenderer(this);
+  private HtmlRenderer renderer = new IOSHtmlRenderer(null);
 
   public IOSRemoteProxy(RegistrationRequest request, Registry registry) {
     super(request, registry);
@@ -73,7 +74,6 @@ public class IOSRemoteProxy extends DefaultRemoteProxy implements SelfHealingPro
           return session;
         }
       }
-
     }
   }
 

@@ -244,7 +244,6 @@ var UIAutomation = {
                 if (request === "stop") {
                     ok = false;
                     log("end of the command loop.");
-
                     return;
                 } else {
                     try {

@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class ServerManagerServlet extends HttpServlet {
 
+  public static final String STOP_GRACEFULY = "stopgracefully";
   private static final Logger log = Logger.getLogger(ServerManagerServlet.class.getName());
 
   @Override
@@ -65,7 +66,7 @@ public class ServerManagerServlet extends HttpServlet {
   private void process(HttpServletRequest request, HttpServletResponse response)
       throws Exception {
 
-    if ("/stopgracefully".equalsIgnoreCase(request.getPathInfo())) {
+    if (("/"+STOP_GRACEFULY).equalsIgnoreCase(request.getPathInfo())) {
       new Thread(new Runnable() {
         @Override
         public void run() {

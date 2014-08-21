@@ -37,8 +37,7 @@ public class MobileSafariLocator {
     if (res !=null){
       return res;
     }
-
-    throw new WebDriverException("Cannot find safari for " + sdkVersion + " in the known mobile safari list.");
+   throw new WebDriverException("Cannot find safari for " + sdkVersion + " in the known mobile safari list.");
   }
 
 

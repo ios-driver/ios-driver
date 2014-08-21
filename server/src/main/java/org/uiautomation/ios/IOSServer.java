@@ -20,12 +20,18 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.libimobiledevice.ios.driver.binding.raw.JNAInit;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.JsonToBeanConverter;
 import org.uiautomation.ios.application.APPIOSApplication;
 import org.uiautomation.ios.application.MobileSafariLocator;
 import org.uiautomation.ios.command.configuration.Configuration;
-import org.uiautomation.ios.grid.SelfRegisteringRemote;
+import org.uiautomation.ios.command.uiautomation.ServerStatusNHandler;
+import org.uiautomation.ios.grid.StoppableRegisteringRemote;
 import org.uiautomation.ios.inspector.IDEServlet;
 import org.uiautomation.ios.instruments.commandExecutor.CURLIAutomationCommandExecutor;
 import org.uiautomation.ios.servlet.ApplicationsServlet;
@@ -46,6 +52,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URL;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -59,7 +68,9 @@ public class IOSServer {
   private Server server;
   private IOSServerManager driver;
   private FolderMonitor folderMonitor;
-  private SelfRegisteringRemote selfRegisteringRemote;
+  private StoppableRegisteringRemote remote;
+  private List<Callable<Boolean>> beforeShutdownHooks = new CopyOnWriteArrayList();
+  private List<Callable<Boolean>> afterShutdownHooks = new CopyOnWriteArrayList();
 
   public IOSServer(IOSServerConfiguration options) {
     this.options = options;
@@ -223,6 +234,7 @@ public class IOSServer {
     HandlerList handlers = new HandlerList();
     handlers.setHandlers(new Handler[]{wd, statics, extra});
     server.setHandler(handlers);
+
   }
 
   public static File getTmpIOSFolder() {
@@ -256,42 +268,89 @@ public class IOSServer {
     }
   }
 
-  private void startHubRegistration() {
+  private void startHubRegistration() throws Exception {
     if (options.getRegistrationURL() != null) {
-      selfRegisteringRemote = new SelfRegisteringRemote(options, driver);
-      selfRegisteringRemote.start();
+
+      String url = options.getRegistrationURL();
+      URL hub = new URL(url);
+      org.openqa.grid.common.RegistrationRequest registrationRequest = new org.openqa.grid.common.RegistrationRequest();
+
+      JSONObject status = new ServerStatusNHandler.StatusGenerator(driver).generate();
+      JSONArray caps = status.getJSONArray(ServerStatusNHandler.SUPPORTED_APPS);
+
+      JsonToBeanConverter convertor = new JsonToBeanConverter();
+      for (int i = 0; i < caps.length(); i++) {
+        Capabilities c = convertor.convert(Capabilities.class, caps.get(i).toString());
+        DesiredCapabilities c2 = new DesiredCapabilities(c);
+        registrationRequest.addDesiredCapability(c2);
+      }
+
+      registrationRequest.getConfiguration().put(org.openqa.grid.common.RegistrationRequest.AUTO_REGISTER, true);
+      registrationRequest.getConfiguration().put(org.openqa.grid.common.RegistrationRequest.REGISTER_CYCLE, 5000);
+      registrationRequest.getConfiguration().put(org.openqa.grid.common.RegistrationRequest.PROXY_CLASS, options.getProxy());
+
+      registrationRequest.getConfiguration()
+          .put(org.openqa.grid.common.RegistrationRequest.HUB_HOST, hub.getHost());
+      registrationRequest.getConfiguration()
+          .put(org.openqa.grid.common.RegistrationRequest.HUB_PORT, hub.getPort());
+      registrationRequest.getConfiguration()
+          .put(org.openqa.grid.common.RegistrationRequest.REMOTE_HOST, "http://" + options.getHost() + ":" + options.getPort());
+      registrationRequest.getConfiguration().put(org.openqa.grid.common.RegistrationRequest.MAX_SESSION, 1);
+
+      remote = new StoppableRegisteringRemote(registrationRequest);
+
+      remote.startRegistrationProcess();
     }
   }
 
 
-  public void onShutdown() {
+  public void beforeShutDown() {
     log.info("server is about to shutdown");
-    if (selfRegisteringRemote != null) {
-      selfRegisteringRemote.onServerShutDown();
+    if (remote != null) {
+      remote.stopRegistrationProcess();
     }
+    for (Callable<Boolean> call : beforeShutdownHooks) {
+      try {
+        call.call();
+      } catch (Exception e) {
+        log.warning("Shuddown hook failed :" + e.getMessage());
+      }
+    }
+  }
 
+  public void afterShutDown() {
+    log.info("server is down");
+
+    for (Callable<Boolean> call : afterShutdownHooks) {
+      try {
+        call.call();
+      } catch (Exception e) {
+        log.warning("after shuddown hook failed :" + e.getMessage());
+      }
+    }
   }
 
   public void stopGracefully() throws Exception {
     if (!initialized) {
       return;
     }
-    onShutdown();
+    beforeShutDown();
     if (driver != null) {
       driver.stopGracefully();
     }
     stop();
+    afterShutDown();
     log.info("server stopped");
+
   }
 
   public void stop() throws Exception {
     if (!initialized) {
       return;
     }
-    if (selfRegisteringRemote != null) {
+    if (remote != null) {
       try {
-        selfRegisteringRemote.stop();
-        selfRegisteringRemote = null;
+        remote.stopRegistrationProcess();
       } catch (Exception e) {
         log.warning("exception stopping: " + e);
       }
@@ -325,5 +384,13 @@ public class IOSServer {
       return false;
     }
     return server.isRunning();
+  }
+
+  public void addBeforeShutdownHook(Callable<Boolean> call) {
+    beforeShutdownHooks.add(call);
+  }
+
+  public void addAfterShutdownHook(Callable<Boolean> call) {
+    afterShutdownHooks.add(call);
   }
 }
