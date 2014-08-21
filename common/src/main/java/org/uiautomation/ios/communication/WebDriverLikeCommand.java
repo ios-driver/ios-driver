@@ -13,7 +13,6 @@
  */
 package org.uiautomation.ios.communication;
 
-import org.apache.http.cookie.CookieIdentityComparator;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.Dimension;
@@ -108,7 +107,6 @@ public enum WebDriverLikeCommand {
   // POST /session/:sessionId/buttondown
   // POST /session/:sessionId/buttonup
   // POST /session/:sessionId/doubleclick
-
 
   TOUCH_DOWN("POST", "/session/:sessionId/touch/down", Void.class),
   TOUCH_UP("POST", "/session/:sessionId/touch/up", Void.class),
