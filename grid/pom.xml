@@ -28,32 +28,40 @@
             <artifactId>ios-server</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>org.seleniumhq.selenium</groupId>-->
+            <!--<artifactId>selenium-server</artifactId>-->
+            <!--<version>${seleniumVersion}</version>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<artifactId>selenium-safari-driver</artifactId>-->
+                    <!--<groupId>org.seleniumhq.selenium</groupId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                    <!--<artifactId>selenium-ie-driver</artifactId>-->
+                    <!--<groupId>org.seleniumhq.selenium</groupId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                    <!--<artifactId>selenium-firefox-driver</artifactId>-->
+                    <!--<groupId>org.seleniumhq.selenium</groupId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                    <!--<artifactId>selenium-htmlunit-driver</artifactId>-->
+                    <!--<groupId>org.seleniumhq.selenium</groupId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                    <!--<artifactId>selenium-chrome-driver</artifactId>-->
+                    <!--<groupId>org.seleniumhq.selenium</groupId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
+
         <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-server</artifactId>
-            <version>${seleniumVersion}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>selenium-safari-driver</artifactId>
-                    <groupId>org.seleniumhq.selenium</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>selenium-ie-driver</artifactId>
-                    <groupId>org.seleniumhq.selenium</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>selenium-firefox-driver</artifactId>
-                    <groupId>org.seleniumhq.selenium</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>selenium-htmlunit-driver</artifactId>
-                    <groupId>org.seleniumhq.selenium</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>selenium-chrome-driver</artifactId>
-                    <groupId>org.seleniumhq.selenium</groupId>
-                </exclusion>
-            </exclusions>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>6.8.8</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
