@@ -50,6 +50,21 @@ public class SelfRegisteringRemote implements Runnable {
     stopped = false;
   }
 
+
+  public void onServerShutDown() {
+    synchronized (stoppedLock) {
+      stopped = true;
+    }
+    System.out.println("unregister");
+    try {
+      RegistrationRequest request = new RegistrationRequest(nodeConfig, driver);
+      request.registerToHub();
+    } catch (MalformedURLException e) {
+      log.warning("unregister failed. Wrong url : " + e.getMessage());
+    }
+  }
+
+
   private static JSONObject extractObject(HttpResponse resp) throws IOException, JSONException {
     BufferedReader rd = new BufferedReader(new InputStreamReader(resp.getEntity().getContent()));
     StringBuilder s = new StringBuilder();
@@ -72,7 +87,10 @@ public class SelfRegisteringRemote implements Runnable {
     HttpClient client = httpClientFactory.getHttpClient();
     try {
       URL hubRegistrationURL = new URL(nodeConfig.getRegistrationURL());
-      URL api = new URL("http://" + hubRegistrationURL.getHost() + ":" + hubRegistrationURL.getPort() + "/grid/api/proxy");
+      URL
+          api =
+          new URL("http://" + hubRegistrationURL.getHost() + ":" + hubRegistrationURL.getPort()
+                  + "/grid/api/proxy");
       HttpHost host = new HttpHost(api.getHost(), api.getPort());
 
       String id = "http://" + nodeConfig.getHost() + ":" + nodeConfig.getPort();
@@ -80,7 +98,8 @@ public class SelfRegisteringRemote implements Runnable {
 
       HttpResponse response = client.execute(host, r);
       if (response.getStatusLine().getStatusCode() != 200) {
-        throw new GridException("hub down or not responding. Reason : " + response.getStatusLine().getReasonPhrase());
+        throw new GridException(
+            "hub down or not responding. Reason : " + response.getStatusLine().getReasonPhrase());
       }
       JSONObject o = extractObject(response);
       return (Boolean) o.get("success");
@@ -113,7 +132,7 @@ public class SelfRegisteringRemote implements Runnable {
         try {
           stoppedLock.wait(1000, 0);
         } catch (InterruptedException e) {
-          e.printStackTrace();
+          stopped = true;
         }
       }
     }
