@@ -47,6 +47,7 @@ public class SetValueNHandler extends UIAScriptHandler {
       String corrected = b.toString().replaceAll("\\\\", "\\\\\\\\");
       corrected = corrected.replaceAll("\\n", "\\\\n");
       corrected = corrected.replaceAll("\\t", "\\\\t");
+      corrected = corrected.replace("'", "\\'");
 
       String js = template.generate(
           request.getSession(),
