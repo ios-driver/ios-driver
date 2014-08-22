@@ -60,6 +60,10 @@ public class ServerSideSession extends Session {
   private final IOSLogManager logManager;
   private Response capabilityCachedResponse;
   private boolean decorated = false;
+  private final long creationTime;
+  private long lastCommandTime;
+
+  private boolean running = false;
 
   ServerSideSession(IOSServerManager server, IOSCapabilities desiredCapabilities,
                     IOSServerConfiguration options) throws SessionNotInitializedException {
@@ -104,6 +108,21 @@ public class ServerSideSession extends Session {
       }
       throw new SessionNotInitializedException(e.getMessage(), e);
     }
+    creationTime = System.currentTimeMillis();
+    lastCommandTime = System.currentTimeMillis();
+
+  }
+
+  public void updateLastCommandTime() {
+    lastCommandTime = System.currentTimeMillis();
+  }
+
+  public long getLastCommandTime() {
+    return lastCommandTime;
+  }
+
+  public long getCreationTime() {
+    return creationTime;
   }
 
   private void ensureLanguage() throws NoSuchLanguageCodeException {
@@ -241,9 +260,11 @@ public class ServerSideSession extends Session {
 
   public void start(long timeOut) throws InstrumentsFailedToStartException {
     driver.start(timeOut);
+    running = true;
   }
 
   public void stop() {
+    running = false;
     if (device != null) {
       device.release();
     }
@@ -282,5 +303,9 @@ public class ServerSideSession extends Session {
 
   public void setDecorated(boolean dec) {
     decorated = dec;
+  }
+
+  public boolean isRunning() {
+    return running;
   }
 }

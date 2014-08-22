@@ -126,6 +126,7 @@ public class IOSDualDriver {
     // force stop session if running for too long
     final int sessionTimeoutMillis = session.getOptions().getSessionTimeoutMillis();
 
+    // TODO freynaud ? dup
     stopSessionTimer.schedule(new TimerTask() {
       @Override
       public void run() {
