@@ -17,14 +17,14 @@ package org.uiautomation.ios.command;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
+import org.uiautomation.ios.IOSServerManager;
+import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
-import org.uiautomation.ios.IOSServerManager;
-import org.uiautomation.ios.drivers.RemoteIOSNativeDriver;
-import org.uiautomation.ios.ServerSideSession;
-import org.uiautomation.ios.instruments.commandExecutor.UIAutomationCommandExecutor;
 import org.uiautomation.ios.drivers.IOSDualDriver;
+import org.uiautomation.ios.drivers.RemoteIOSNativeDriver;
 import org.uiautomation.ios.drivers.RemoteIOSWebDriver;
+import org.uiautomation.ios.instruments.commandExecutor.UIAutomationCommandExecutor;
 import org.uiautomation.ios.wkrdp.WebKitSeemsCorruptedException;
 
 import java.util.ArrayList;
@@ -52,6 +52,13 @@ public abstract class BaseCommandHandler implements Handler {
       session = null;
       driver = null;
     }
+  }
+
+  public BaseCommandHandler(IOSServerManager server, ServerSideSession session) {
+    this.server = server;
+    this.session = session;
+    driver = session.getDualDriver();
+    request = null;
   }
 
   protected RemoteIOSWebDriver getWebDriver() {

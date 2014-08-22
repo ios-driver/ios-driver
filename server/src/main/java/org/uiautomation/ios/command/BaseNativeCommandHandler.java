@@ -14,6 +14,7 @@
 
 package org.uiautomation.ios.command;
 
+import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.IOSServerManager;
@@ -23,6 +24,10 @@ public abstract class BaseNativeCommandHandler extends BaseCommandHandler {
 
   public BaseNativeCommandHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
+  }
+
+  public BaseNativeCommandHandler(IOSServerManager driver, ServerSideSession session) {
+    super(driver, session);
   }
 
   protected IOSRunningApplication getAUT() {

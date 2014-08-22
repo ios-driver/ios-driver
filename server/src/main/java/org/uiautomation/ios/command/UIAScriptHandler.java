@@ -14,6 +14,7 @@
 package org.uiautomation.ios.command;
 
 import org.openqa.selenium.remote.Response;
+import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.IOSServerManager;
 
@@ -28,6 +29,9 @@ public abstract class UIAScriptHandler extends BaseNativeCommandHandler {
 
   public UIAScriptHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
+  }
+  public UIAScriptHandler(IOSServerManager driver, ServerSideSession session) {
+    super(driver, session);
   }
 
   protected void setJS(String js) {

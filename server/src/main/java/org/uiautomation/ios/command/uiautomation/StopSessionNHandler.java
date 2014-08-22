@@ -16,20 +16,33 @@ package org.uiautomation.ios.command.uiautomation;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.remote.Response;
+import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.IOSServerManager;
 import org.uiautomation.ios.command.UIAScriptHandler;
 
+import java.util.logging.Logger;
+
 public class StopSessionNHandler extends UIAScriptHandler {
+
+  private static final Logger log = Logger.getLogger(StopSessionNHandler.class.getName());
 
   public StopSessionNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
     setJS("stop");
   }
 
+  public StopSessionNHandler(IOSServerManager server, ServerSideSession session){
+    super(server,session);
+    setJS("stop");
+  }
+
   public Response handle() throws Exception {
     super.handle();
-    String opaqueKey = getRequest().getSession();
+    // TODO freynaud. waiting 1 sec gives time to instruments to stop properly. ( get the stop command,
+    // break the loop and finishing the script. Not waiting result in an instruments crash, but is faster.
+    Thread.sleep(1000);
+    String opaqueKey = getSession().getSessionId();
     getServer().stop(opaqueKey);
 
     Response resp = new Response();
@@ -43,4 +56,6 @@ public class StopSessionNHandler extends UIAScriptHandler {
   public JSONObject configurationDescription() throws JSONException {
     return noConfigDefined();
   }
+
+
 }

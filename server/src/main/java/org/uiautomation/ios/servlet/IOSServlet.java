@@ -20,11 +20,12 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.BeanToJsonConverter;
 import org.openqa.selenium.remote.ErrorCodes;
 import org.openqa.selenium.remote.Response;
-import org.uiautomation.ios.communication.WebDriverLikeCommand;
-import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.CommandMapping;
+import org.uiautomation.ios.IOSServerManager;
 import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.command.Handler;
+import org.uiautomation.ios.communication.WebDriverLikeCommand;
+import org.uiautomation.ios.communication.WebDriverLikeRequest;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -127,12 +128,19 @@ public class IOSServlet extends DriverBasedServlet {
     return o.toString();
   }
 
-  private Response getResponse(WebDriverLikeRequest request) {
-
-
+  private Response getResponse(WebDriverLikeRequest request) throws JSONException {
     // if the application under test has crashed, the result is an error.
     if (request.hasSession()) {
-      ServerSideSession session = getDriver().getSession(request.getSession());
+      ServerSideSession session;
+      try {
+        session = getDriver().getSession(request.getSession());
+        session.updateLastCommandTime();
+      } catch (IOSServerManager.SessionTimedOutException ste) {
+        Response response = new Response();
+        response.setStatus(13);
+        response.setValue(serializeException(ste));
+        return response;
+      }
       if (session.hasCrashed()) {
         Response response = new Response();
         response.setStatus(13);
