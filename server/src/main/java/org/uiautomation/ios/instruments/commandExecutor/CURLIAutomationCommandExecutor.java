@@ -41,8 +41,8 @@ public class CURLIAutomationCommandExecutor extends BaseUIAutomationCommandExecu
   private final String COM_WITH_INSTRUMENTS_DOWN = "Cannot process UIARequest, instruments communication has stopped";
 
 
-  public CURLIAutomationCommandExecutor(String sessionId) {
-    super(sessionId);
+  public CURLIAutomationCommandExecutor(ServerSideSession session) {
+    super(session);
   }
 
   public UIAScriptResponse executeCommand(UIAScriptRequest request) {

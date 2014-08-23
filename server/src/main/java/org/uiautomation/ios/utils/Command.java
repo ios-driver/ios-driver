@@ -14,15 +14,23 @@
 
 package org.uiautomation.ios.utils;
 
-import java.io.*;
-import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.google.common.base.Joiner;
 
 import org.openqa.selenium.WebDriverException;
 
-import com.google.common.base.Joiner;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Command {
 
@@ -47,8 +55,7 @@ public class Command {
   }
 
   /**
-   * Execute the command, and wait for it to finish. Also wait for stdout and stderr listener to
-   * finish processing their streams.
+   * Execute the command, and wait for it to finish. Also wait for stdout and stderr listener to finish processing their streams.
    */
   public int executeAndWait() {
     return executeAndWait(false);
@@ -75,8 +82,9 @@ public class Command {
    * Starts the command. Doesn't wait for it to finish. Doesn't wait for stdout and stderr either.
    */
   public void start() {
-    if (log.isLoggable(Level.FINE))
+    if (log.isLoggable(Level.FINE)) {
       log.fine(String.format("Starting command: %s", commandString()));
+    }
     ProcessBuilder builder = new ProcessBuilder(args);
     if (workingDir != null) {
       builder.directory(workingDir);
@@ -97,19 +105,21 @@ public class Command {
    */
   public int waitFor(final int maxWaitMillis) {
     Timer forceStopTimer = null;
+
     try {
       if (maxWaitMillis > 0) {
         forceStopTimer = new Timer(true);
         forceStopTimer.schedule(new TimerTask() {
           @Override
           public void run() {
-            log.info("destroying process after waiting for " + maxWaitMillis + "ms: " + commandString());
+            log.warning("destroying process after waiting for " + maxWaitMillis + "ms: " + commandString());
             process.destroy();
           }
         }, maxWaitMillis);
       }
       return process.waitFor();
     } catch (InterruptedException e) {
+
       throw new WebDriverException("error waiting for " + args + " to finish.", e);
     } finally {
       if (forceStopTimer != null) {
@@ -137,8 +147,9 @@ public class Command {
             add(line, normal);
           }
         } catch (IOException e) {
-          if (!"Stream closed".equals(e.getMessage()))
+          if (!"Stream closed".equals(e.getMessage())) {
             log.warning("Error reading the output of the process: " + e);
+          }
         }
       }
     };
@@ -147,8 +158,9 @@ public class Command {
   }
 
   private void add(String line, boolean normal) {
-    if (log.isLoggable(Level.FINER))
+    if (log.isLoggable(Level.FINER)) {
       log.finer(String.format("%s %s: %s", args.get(0), normal ? "stdout" : "stderr", line));
+    }
     if (normal) {
       out.add(line);
     } else {

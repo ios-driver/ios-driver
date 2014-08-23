@@ -302,6 +302,7 @@ public class ServerSideSession extends Session {
 
   public void start(long timeOut) throws InstrumentsFailedToStartException {
     driver.start(timeOut);
+    updateLastCommandTime();
     setSessionState(SessionState.running);
   }
 

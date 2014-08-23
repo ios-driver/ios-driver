@@ -17,6 +17,7 @@ package org.uiautomation.ios.instruments.commandExecutor;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.BeanToJsonConverter;
 import org.openqa.selenium.remote.Response;
+import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.command.UIAScriptRequest;
 import org.uiautomation.ios.command.UIAScriptResponse;
 
@@ -42,15 +43,16 @@ public abstract class BaseUIAutomationCommandExecutor implements UIAutomationCom
   private final Lock lock = new ReentrantLock();
   private final Condition condition = lock.newCondition();
   private final String STOP_RESPONSE = "exit from instruments loop ok";
+  private final String UNKNOWN_REASON = "The UI Automation Command executor stopped for an unknown reason";
   private volatile boolean ready = false;
-  private final String sessionId;
+  private final ServerSideSession session;
 
-  public BaseUIAutomationCommandExecutor(String sessionId) {
-    this.sessionId = sessionId;
+  public BaseUIAutomationCommandExecutor(ServerSideSession session) {
+    this.session = session;
   }
 
   protected final String getSessionId() {
-    return sessionId;
+    return session.getSessionId();
   }
 
   @Override
@@ -109,7 +111,7 @@ public abstract class BaseUIAutomationCommandExecutor implements UIAutomationCom
       BeanToJsonConverter converter = new BeanToJsonConverter();
       String json = converter.convert(response);
       UIAScriptResponse r = new UIAScriptResponse(json);
-      //setNextResponse(r);
+      setNextResponse(r);
     }
   }
 
@@ -142,18 +144,33 @@ public abstract class BaseUIAutomationCommandExecutor implements UIAutomationCom
       if (!isReady()) {
         Response r = new Response();
         r.setStatus(13);
-        r.setSessionId(sessionId);
-        r.setValue("ui script engine died");
+        r.setSessionId(getSessionId());
+        if (session.getStopCause() != null) {
+          r.setValue(session.getStopCause().name());
+        } else {
+          r.setValue(UNKNOWN_REASON);
+        }
         UIAScriptResponse response = new UIAScriptResponse(new BeanToJsonConverter().convert(r));
         return response;
       }
 
-      // we have a valid response
+      // we have a "valid" response
       if (res != null) {
+        if (STOP_RESPONSE.equals(res.getResponse().getValue())) {
+          stop();
+          throw new InstrumentsHasStoppedException(session.getStopCause().name());
+        }
         return res;
       }
 
     }
     throw new WebDriverException("timeout getting the response");
+  }
+
+  public static class InstrumentsHasStoppedException extends WebDriverException {
+
+    public InstrumentsHasStoppedException(String message) {
+      super(message);
+    }
   }
 }

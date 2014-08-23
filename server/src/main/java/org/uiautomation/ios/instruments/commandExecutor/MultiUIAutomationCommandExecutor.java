@@ -14,19 +14,17 @@
 
 package org.uiautomation.ios.instruments.commandExecutor;
 
+import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.command.UIAScriptRequest;
 import org.uiautomation.ios.command.UIAScriptResponse;
 
 public class MultiUIAutomationCommandExecutor extends BaseUIAutomationCommandExecutor {
 
-  private final String sessionId;
   // private final InstrumentsService instruments;
 
-  public MultiUIAutomationCommandExecutor(int port, String aut, String sessionId
+  public MultiUIAutomationCommandExecutor(int port, String aut, ServerSideSession session
                                                    /*InstrumentsService instruments*/) {
-    super(sessionId);
-    this.sessionId = sessionId;
-    // this.instruments = instruments;
+    super(session);
   }
 
   @Override

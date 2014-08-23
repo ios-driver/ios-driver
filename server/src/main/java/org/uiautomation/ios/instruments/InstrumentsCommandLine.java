@@ -87,7 +87,7 @@ public class InstrumentsCommandLine implements Instruments {
     instruments.registerListener(new ApplicationCrashListener(session));
     instruments.setWorkingDirectory(output);
 
-    channel = new CURLIAutomationCommandExecutor(sessionId);
+    channel = new CURLIAutomationCommandExecutor(session);
 
     screenshotService = new InstrumentsAppleScreenshotService(this, sessionId);
 
@@ -146,7 +146,6 @@ public class InstrumentsCommandLine implements Instruments {
     if (isProperlyStarted()) {
       log.warning("stopping ICL 1");
 
-      channel.stop();
       try {
         log.warning("stopping ICL 1.1");
         new StopInstrumentsRunLoop(session).handle();
@@ -161,6 +160,7 @@ public class InstrumentsCommandLine implements Instruments {
         e.printStackTrace();
       }
     }
+    channel.stop();
     log.warning("stopping ICL 2");
 
     if (session.getDevice() instanceof RealDevice) {
