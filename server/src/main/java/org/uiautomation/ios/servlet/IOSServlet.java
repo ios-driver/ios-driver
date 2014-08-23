@@ -16,6 +16,7 @@ package org.uiautomation.ios.servlet;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.BeanToJsonConverter;
 import org.openqa.selenium.remote.ErrorCodes;
@@ -157,7 +158,12 @@ public class IOSServlet extends DriverBasedServlet {
       return h.handleAndRunDecorators();
     } catch (WebDriverException we) {
       Response response = new Response();
-      response.setStatus(ErrorCodes.UNHANDLED_ERROR);
+
+      if (we instanceof SessionNotCreatedException) {
+        response.setStatus(ErrorCodes.SESSION_NOT_CREATED);
+      } else {
+        response.setStatus(ErrorCodes.UNHANDLED_ERROR);
+      }
       if (wdlc != null && wdlc.isSessionLess()) {
         response.setSessionId("");
       } else {
