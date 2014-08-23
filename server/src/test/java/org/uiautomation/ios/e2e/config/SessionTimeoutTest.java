@@ -117,10 +117,6 @@ public final class SessionTimeoutTest {
     fail("should have timed out");
   }
 
-  @Test(invocationCount = 1)
-  public void dm() throws InterruptedException {
-    driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
-  }
 
   @Test
   public void canSetTimeoutBetween2CommandsWhenProcessingANativeCommand() throws InterruptedException {
@@ -133,28 +129,9 @@ public final class SessionTimeoutTest {
       Assert.assertTrue(e instanceof WebDriverException);
       String expected = ServerSideSession.StopCause.timeOutBetweenCommand.name();
       String current = e.getMessage();
-      Assert.assertTrue(current.startsWith(expected), "the message is : "+current);
+      Assert.assertTrue(current.startsWith(expected), "the message is : " + current);
       return;
     }
     fail("should have timed out");
   }
-
-
-
-
-//  @Test
-//  public void canSpecifySessionTimeout() {
-//    RemoteWebDriver driver = new RemoteWebDriver(getRemoteURL(), IOSCapabilities.iphone("Safari"));
-//    driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-//    WebElement element = null;
-//    long startTime = System.currentTimeMillis();
-//    try {
-//      element = driver.findElement(By.id("no_such_element"));
-//    } catch (Exception ignore) {
-//      // can throw anything depending on where the force stop happens
-//    }
-//    Assert.assertNull(element);
-//    long elapsedSeconds = (System.currentTimeMillis() - startTime) / 1000;
-//    Assert.assertTrue(elapsedSeconds >= 5 && elapsedSeconds < 20, "Elapsed: " + elapsedSeconds);
-//  }
 }
