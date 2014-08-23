@@ -117,38 +117,30 @@ public final class SessionTimeoutTest {
     fail("should have timed out");
   }
 
+  @Test(invocationCount = 1)
+  public void dm() throws InterruptedException {
+    driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
+  }
 
   @Test
   public void canSetTimeoutBetween2CommandsWhenProcessingANativeCommand() throws InterruptedException {
     driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
-
     Assert.assertEquals(driver.executeScript("return 1;"), 1L);
-    System.out.println("first call ok ");
     try {
-      System.out.println("JS 2 = " + driver.executeScript("UIATarget.localTarget().delay(10);return 1;"));
+      driver.executeScript("UIATarget.localTarget().delay(10);return 1;");
       fail("should have timed out");
     } catch (Exception e) {
-      System.out.println(e.getClass().getCanonicalName());
-      //e.printStackTrace();
       Assert.assertTrue(e instanceof WebDriverException);
       String expected = ServerSideSession.StopCause.timeOutBetweenCommand.name();
       String current = e.getMessage();
-      Assert.assertTrue(current.startsWith(expected), current);
+      Assert.assertTrue(current.startsWith(expected), "the message is : "+current);
       return;
     }
-    fail("should have timed out2");
+    fail("should have timed out");
   }
 
 
-  @Test
-  public void canSetTimeoutSessionStart() {
-    throw new RuntimeException("NI");
-  }
 
-  @Test
-  public void canSetOverwallSessionTimeout() {
-    throw new RuntimeException("NI");
-  }
 
 //  @Test
 //  public void canSpecifySessionTimeout() {

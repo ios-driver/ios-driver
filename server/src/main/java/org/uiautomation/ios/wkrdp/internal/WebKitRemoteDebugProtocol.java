@@ -216,7 +216,7 @@ public abstract class WebKitRemoteDebugProtocol {
     try {
       Thread.sleep(ms);
     } catch (InterruptedException ignore) {
-      Thread.currentThread().interrupt();
+      //Thread.currentThread().interrupt();
     }
   }
 }

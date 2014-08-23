@@ -101,11 +101,6 @@ public class IOSDualDriver {
     } catch (Exception e) {
       e.printStackTrace();
     }
-    /*try {
-      session.getIOSServerManager().stop(session.getSessionId());
-    } catch (Exception e) {
-      e.printStackTrace();
-    }*/
     if (webDriver != null) {
       try {
         webDriver.stop();
@@ -191,7 +186,7 @@ public class IOSDualDriver {
     try {
       Thread.sleep(ms);
     } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
+      //Thread.currentThread().interrupt();
     }
   }
 

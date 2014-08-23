@@ -19,6 +19,7 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.command.UIAScriptHandler;
+import org.uiautomation.ios.instruments.commandExecutor.BaseUIAutomationCommandExecutor;
 
 import java.util.logging.Logger;
 
@@ -34,7 +35,7 @@ public class StopInstrumentsRunLoop extends UIAScriptHandler {
   public Response handle() throws Exception {
     try {
       super.handle();
-    } catch (WebDriverException ok) {
+    } catch (BaseUIAutomationCommandExecutor.InstrumentsHasStoppedException ok) {
       // stop commands never return, as it kills instruments.
     }
     int exit = getNativeDriver().getInstruments().waitForProcessToDie();
