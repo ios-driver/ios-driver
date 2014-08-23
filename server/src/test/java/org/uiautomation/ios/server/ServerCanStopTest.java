@@ -127,7 +127,7 @@ public class ServerCanStopTest {
 
     t.start();
 
-    mgr.stop(session.getSessionId());
+    mgr.registerSessionHasStop(session);
     Assert.assertEquals(mgr.getSessions().size(), 0);
 
     while (mgr.isRunning()) {
@@ -169,7 +169,7 @@ public class ServerCanStopTest {
     ServerSideSession session2 = mgr.createSession(saf);
     Assert.assertNull(session2);
 
-    mgr.stop(session.getSessionId());
+    mgr.registerSessionHasStop(session);
     Assert.assertEquals(mgr.getSessions().size(), 0);
 
     while (mgr.isRunning()) {

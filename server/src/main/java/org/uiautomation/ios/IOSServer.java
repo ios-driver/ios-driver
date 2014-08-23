@@ -319,8 +319,6 @@ public class IOSServer {
   }
 
   public void afterShutDown() {
-    log.info("server is down");
-
     for (Callable<Boolean> call : afterShutdownHooks) {
       try {
         call.call();

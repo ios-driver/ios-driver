@@ -54,8 +54,8 @@ public abstract class BaseCommandHandler implements Handler {
     }
   }
 
-  public BaseCommandHandler(IOSServerManager server, ServerSideSession session) {
-    this.server = server;
+  public BaseCommandHandler(ServerSideSession session) {
+    this.server = session.getIOSServerManager();
     this.session = session;
     driver = session.getDualDriver();
     request = null;

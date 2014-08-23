@@ -63,7 +63,25 @@ public class ServerSideSession extends Session {
   private final long creationTime;
   private long lastCommandTime;
 
-  private boolean running = false;
+
+  private SessionState state = null;
+  private StopCause stopCause = null;
+  private ServerSideSessionMonitor monitor;
+
+  public StopCause getStopCause() {
+    synchronized (this) {
+      return stopCause;
+    }
+  }
+
+
+  public static enum SessionState {
+    created, running, stopped;
+  }
+
+  public static enum StopCause {
+    normal, timeOutBetweenCommand;
+  }
 
   ServerSideSession(IOSServerManager server, IOSCapabilities desiredCapabilities,
                     IOSServerConfiguration options) throws SessionNotInitializedException {
@@ -111,10 +129,33 @@ public class ServerSideSession extends Session {
     creationTime = System.currentTimeMillis();
     lastCommandTime = System.currentTimeMillis();
 
+    monitor = new MaxTimeBetween2CommandsMonitor(this);
+
+    setSessionState(SessionState.created);
+    monitor.startMonitoring();
   }
 
   public void updateLastCommandTime() {
     lastCommandTime = System.currentTimeMillis();
+  }
+
+  private void setSessionState(SessionState state) {
+    synchronized (this) {
+      this.state = state;
+    }
+  }
+
+  public SessionState getSessionState() {
+    synchronized (this) {
+      return state;
+    }
+  }
+
+  public void setStopCause(StopCause cause) {
+    synchronized (this) {
+      this.state = SessionState.stopped;
+      this.stopCause = cause;
+    }
   }
 
   public long getLastCommandTime() {
@@ -170,7 +211,7 @@ public class ServerSideSession extends Session {
         throw new SessionNotCreatedException(
             version + " is too old. Only support SDK 5.0 and above.");
       }
-      if (capabilities.isSimulator()){
+      if (capabilities.isSimulator()) {
         if (!server.getHostInfo().getInstalledSDKs().contains(version)) {
           throw new SessionNotCreatedException(
               "Cannot start on version " + version + ".Installed: "
@@ -228,6 +269,7 @@ public class ServerSideSession extends Session {
     return configuration.configure(command);
   }
 
+
   public IOSRunningApplication getApplication() {
     return application;
   }
@@ -260,11 +302,15 @@ public class ServerSideSession extends Session {
 
   public void start(long timeOut) throws InstrumentsFailedToStartException {
     driver.start(timeOut);
-    running = true;
+    setSessionState(SessionState.running);
   }
 
-  public void stop() {
-    running = false;
+  public synchronized void stop(StopCause cause) {
+    if (getSessionState() == SessionState.stopped) {
+      return;
+    }
+    setStopCause(cause);
+    monitor.stopMonitoring();
     if (device != null) {
       device.release();
     }
@@ -272,6 +318,14 @@ public class ServerSideSession extends Session {
     if (driver != null) {
       driver.stop();
     }
+
+    if (getIOSServerManager() != null) {
+      getIOSServerManager().registerSessionHasStop(this, cause);
+    }
+  }
+
+  public synchronized void stop() {
+    stop(StopCause.normal);
   }
 
   public URL getURL() {
@@ -305,7 +359,12 @@ public class ServerSideSession extends Session {
     decorated = dec;
   }
 
-  public boolean isRunning() {
-    return running;
+
+  public boolean hasTimedOutBetween2Commands() {
+    if (getSessionState() == SessionState.running) {
+      long deadLine = getLastCommandTime() + (getOptions().getMaxIdleTimeBetween2CommandsInSeconds() * 1000);
+      return System.currentTimeMillis() > deadLine;
+    }
+    return false;
   }
 }

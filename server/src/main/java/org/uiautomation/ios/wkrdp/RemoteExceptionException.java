@@ -14,12 +14,13 @@
 package org.uiautomation.ios.wkrdp;
 
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
 
 /**
  * when something goes wrong with the WKRDP. Typically a remote JS error or an access to a non
  * existing node.
  */
-public class RemoteExceptionException extends RuntimeException {
+public class RemoteExceptionException extends WebDriverException {
 
   private int code;
   private String message;

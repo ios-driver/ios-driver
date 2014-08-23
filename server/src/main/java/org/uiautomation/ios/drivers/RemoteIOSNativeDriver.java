@@ -22,11 +22,13 @@ import org.uiautomation.ios.instruments.TakeScreenshotService;
 import org.uiautomation.ios.instruments.InstrumentsFailedToStartException;
 
 import java.net.URL;
+import java.util.logging.Logger;
 
 public class RemoteIOSNativeDriver extends ServerSideNativeDriver {
 
   private final Instruments instruments;
   private final Thread shutdownHook;
+  private static final Logger log = Logger.getLogger(RemoteIOSNativeDriver.class.getName());
 
   public RemoteIOSNativeDriver(URL url, ServerSideSession session,Instruments impl) {
     super(url, new SessionId(session.getSessionId()));
@@ -34,7 +36,7 @@ public class RemoteIOSNativeDriver extends ServerSideNativeDriver {
     shutdownHook = new Thread() {
       @Override
       public void run() {
-        instruments.stop();
+        //instruments.stop();
       }
     };
   }

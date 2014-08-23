@@ -26,7 +26,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.uiautomation.ios.IOSCapabilities.COMMAND_TIMEOUT_MILLIS;
@@ -38,7 +37,7 @@ public abstract class BaseUIAutomationCommandExecutor implements UIAutomationCom
 
   private static final Logger log = Logger.getLogger(BaseUIAutomationCommandExecutor.class.getName());
 
-  private final BlockingQueue<UIAScriptResponse> responseQueue = new ArrayBlockingQueue<>(1);
+  protected final BlockingQueue<UIAScriptResponse> responseQueue = new ArrayBlockingQueue<>(1);
 
   private final Lock lock = new ReentrantLock();
   private final Condition condition = lock.newCondition();
@@ -61,6 +60,15 @@ public abstract class BaseUIAutomationCommandExecutor implements UIAutomationCom
         return true;
       }
       return condition.await(timeOut, TimeUnit.SECONDS);
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  public final void stop() {
+    try {
+      lock.lock();
+      ready = false;
     } finally {
       lock.unlock();
     }
@@ -107,14 +115,32 @@ public abstract class BaseUIAutomationCommandExecutor implements UIAutomationCom
     }
   }
 
+
   protected final UIAScriptResponse waitForResponse() {
-    try {
-      UIAScriptResponse res = responseQueue.poll(COMMAND_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
-      if (log.isLoggable(Level.FINE))
-        log.fine(String.format("Raw response: %s", res.getRaw()));
-      return res;
-    } catch (InterruptedException e) {
-      throw new WebDriverException("timeout getting the response", e);
+    UIAScriptResponse res = null;
+    long deadline = System.currentTimeMillis() + COMMAND_TIMEOUT_MILLIS;
+
+    while (System.currentTimeMillis() < deadline) {
+      try {
+        res = responseQueue.poll(1000, TimeUnit.MILLISECONDS);
+      } catch (InterruptedException ignore) {
+      }
+
+      // we have a valid response
+      if (res != null) {
+        return res;
+      }
+
+      // the executor is now stopped. Not need to wait any further
+      if (ready == false) {
+        Response r = new Response();
+        r.setStatus(13);
+        r.setSessionId(sessionId);
+        r.setValue("ui script engine died");
+        UIAScriptResponse response = new UIAScriptResponse(new BeanToJsonConverter().convert(r));
+        return response;
+      }
     }
+    throw new WebDriverException("timeout getting the response");
   }
 }

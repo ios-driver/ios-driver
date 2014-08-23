@@ -26,8 +26,8 @@ public abstract class BaseNativeCommandHandler extends BaseCommandHandler {
     super(driver, request);
   }
 
-  public BaseNativeCommandHandler(IOSServerManager driver, ServerSideSession session) {
-    super(driver, session);
+  public BaseNativeCommandHandler(ServerSideSession session) {
+    super(session);
   }
 
   protected IOSRunningApplication getAUT() {

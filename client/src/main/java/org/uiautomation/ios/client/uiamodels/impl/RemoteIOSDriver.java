@@ -16,6 +16,7 @@ package org.uiautomation.ios.client.uiamodels.impl;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+
 import org.json.JSONObject;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Dimension;
@@ -144,9 +145,7 @@ public class RemoteIOSDriver extends RemoteWebDriver
       throw new IllegalArgumentException("Cannot find elements when the selector is null.");
     }
 
-    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.ELEMENT_ROOT,
-        ImmutableMap
-            .of("using", by, "value", using));
+    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.ELEMENT_ROOT, ImmutableMap.of("using", by, "value", using));
     return executor.execute(request);
 
   }
@@ -157,9 +156,7 @@ public class RemoteIOSDriver extends RemoteWebDriver
       throw new IllegalArgumentException("Cannot find elements when the selector is null.");
     }
 
-    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.ELEMENTS_ROOT,
-        ImmutableMap
-            .of("using", by, "value", using));
+    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.ELEMENTS_ROOT, ImmutableMap.of("using", by, "value", using));
     return executor.execute(request);
   }
 
@@ -188,15 +185,9 @@ public class RemoteIOSDriver extends RemoteWebDriver
     // Escape the quote marks
     script = script.replaceAll("\"", "\\\"");
 
-    Iterable<Object>
-        convertedArgs =
-        Iterables.transform(Lists.newArrayList(args), new WebElementToJsonConverter());
-    Map<String, ?>
-        params =
-        ImmutableMap.of("script", script, "args", Lists.newArrayList(convertedArgs));
-    WebDriverLikeRequest
-        request =
-        executor.buildRequest(WebDriverLikeCommand.EXECUTE_SCRIPT, params);
+    Iterable<Object> convertedArgs = Iterables.transform(Lists.newArrayList(args), new WebElementToJsonConverter());
+    Map<String, ?> params = ImmutableMap.of("script", script, "args", Lists.newArrayList(convertedArgs));
+    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.EXECUTE_SCRIPT, params);
 
     return executor.execute(request);
   }
@@ -206,15 +197,9 @@ public class RemoteIOSDriver extends RemoteWebDriver
     // Escape the quote marks
     script = script.replaceAll("\"", "\\\"");
 
-    Iterable<Object>
-        convertedArgs =
-        Iterables.transform(Lists.newArrayList(args), new WebElementToJsonConverter());
-    Map<String, ?>
-        params =
-        ImmutableMap.of("script", script, "args", Lists.newArrayList(convertedArgs));
-    WebDriverLikeRequest
-        request =
-        executor.buildRequest(WebDriverLikeCommand.EXECUTE_ASYNC_SCRIPT, params);
+    Iterable<Object> convertedArgs = Iterables.transform(Lists.newArrayList(args), new WebElementToJsonConverter());
+    Map<String, ?> params = ImmutableMap.of("script", script, "args", Lists.newArrayList(convertedArgs));
+    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.EXECUTE_ASYNC_SCRIPT, params);
 
     return executor.execute(request);
   }
@@ -234,42 +219,30 @@ public class RemoteIOSDriver extends RemoteWebDriver
 
   @Override
   public void rotate(ScreenOrientation orientation) {
-    WebDriverLikeRequest
-        request =
-        executor.buildRequest(WebDriverLikeCommand.SET_ORIENTATION,
-            ImmutableMap.of("orientation", orientation));
+    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.SET_ORIENTATION, ImmutableMap.of("orientation", orientation));
     executor.execute(request);
   }
 
   public void rotate(Orientation orientation) {
-    WebDriverLikeRequest
-        request =
-        executor.buildRequest(WebDriverLikeCommand.SET_ORIENTATION,
-            ImmutableMap.of("orientation", orientation));
+    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.SET_ORIENTATION, ImmutableMap.of("orientation", orientation));
     executor.execute(request);
   }
 
   @Override
   public ScreenOrientation getOrientation() {
-    WebDriverLikeRequest
-        request =
-        executor.buildRequest(WebDriverLikeCommand.GET_ORIENTATION);
+    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.GET_ORIENTATION);
     String res = executor.execute(request);
     return ScreenOrientation.valueOf(res);
   }
 
   public Orientation getNativeOrientation() {
-    WebDriverLikeRequest
-        request =
-        executor.buildRequest(WebDriverLikeCommand.GET_ORIENTATION);
+    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.GET_ORIENTATION);
     String res = executor.execute(request);
     return Orientation.valueOf(res);
   }
 
-  public Dimension getScreenSize(){
-    WebDriverLikeRequest
-        request =
-        executor.buildRequest(WebDriverLikeCommand.GET_SCREENRECT);
+  public Dimension getScreenSize() {
+    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.GET_SCREENRECT);
     Map<String, Object> size = executor.execute(request);
 
     Long height = (Long) size.get("height");
@@ -300,13 +273,9 @@ public class RemoteIOSDriver extends RemoteWebDriver
   }
 
 
-  public static JSONObject logElementTree(WebDriverLikeCommandExecutor executor, File screenshot,
-                                          boolean translation) {
-    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.TREE_ROOT,
-        ImmutableMap
-            .of("attachScreenshot",
-                screenshot != null,
-                "translation", translation));
+  public static JSONObject logElementTree(WebDriverLikeCommandExecutor executor, File screenshot, boolean translation) {
+    Map params = ImmutableMap.of("attachScreenshot", screenshot != null, "translation", translation);
+    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.TREE_ROOT, params);
     JSONObject log = executor.execute(request);
     if (screenshot != null) {
       JSONObject screen = log.optJSONObject("screenshot");
@@ -318,42 +287,24 @@ public class RemoteIOSDriver extends RemoteWebDriver
   }
 
   public static List<UIAElement> findElements(WebDriverLikeCommandExecutor executor, Criteria c) {
-    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.ELEMENTS_ROOT,
-        ImmutableMap
-            .of("depth", -1, "criteria",
-                c.stringify()));
+    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.ELEMENTS_ROOT, ImmutableMap.of("depth", -1, "criteria", c.stringify()));
     return executor.execute(request);
   }
 
-  public static <T extends UIAElement> T findElement(WebDriverLikeCommandExecutor executor,
-                                                     Criteria c) {
-    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.ELEMENT_ROOT,
-        ImmutableMap
-            .of("depth", -1, "criteria",
-                c.stringify()));
+  public static <T extends UIAElement> T findElement(WebDriverLikeCommandExecutor executor, Criteria c) {
+    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.ELEMENT_ROOT, ImmutableMap.of("depth", -1, "criteria", c.stringify()));
     return executor.execute(request);
   }
 
-  public static Map<String, Object> getConfiguration(WebDriverLikeCommandExecutor executor,
-                                                     WebDriverLikeCommand command) {
-
-    WebDriverLikeRequest request = executor.buildRequest(
-        WebDriverLikeCommand.GET_CONFIGURATION,
-        null,
-        new HashMap<String, Object>(),
-        ImmutableMap.of("command", command.toString()));
-
+  public static Map<String, Object> getConfiguration(WebDriverLikeCommandExecutor executor, WebDriverLikeCommand command) {
+    Map p = ImmutableMap.of("command", command.toString());
+    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.GET_CONFIGURATION, null, new HashMap<String, Object>(), p);
     return executor.execute(request);
   }
 
-  public static void setConfiguration(WebDriverLikeCommandExecutor executor,
-                                      WebDriverLikeCommand command, String key, Object value) {
-
-    WebDriverLikeRequest
-        request =
-        executor
-            .buildRequest(WebDriverLikeCommand.CONFIGURE, null, ImmutableMap.of(key, value),
-                ImmutableMap.of("command", command.toString()));
+  public static void setConfiguration(WebDriverLikeCommandExecutor executor, WebDriverLikeCommand command, String key, Object value) {
+    Map p = ImmutableMap.of("command", command.toString());
+    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.CONFIGURE, null, ImmutableMap.of(key, value), p);
     executor.execute(request);
   }
 
@@ -362,47 +313,43 @@ public class RemoteIOSDriver extends RemoteWebDriver
   }
 
 
-  public static void dragFromToForDuration(WebDriverLikeCommandExecutor executor, Point from,
-                                      Point to, int durationInSecs){
+  public static void dragFromToForDuration(WebDriverLikeCommandExecutor executor, Point from, Point to, int durationInSecs) {
 
-    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.DRAG_FROM_TO_FOR_DURATION,
-            ImmutableMap.of("fromX", Integer.toString(from.getX()),
-                    "fromY", Integer.toString(from.getY()),
-                    "toX", Integer.toString(to.getX()),
-                    "toY", Integer.toString(to.getY()),
-                    "duration", durationInSecs));
+    Map p = ImmutableMap.of("fromX", Integer.toString(from.getX()),
+                            "fromY", Integer.toString(from.getY()),
+                            "toX", Integer.toString(to.getX()),
+                            "toY", Integer.toString(to.getY()),
+                            "duration", durationInSecs);
+    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.DRAG_FROM_TO_FOR_DURATION, p);
     executor.execute(request);
   }
 
-  public static void pinchCloseFromToForDuration(WebDriverLikeCommandExecutor executor, Point from,
-                                           Point to, int durationInSecs){
+  public static void pinchCloseFromToForDuration(WebDriverLikeCommandExecutor executor, Point from, Point to, int durationInSecs) {
 
-    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.PINCH_CLOSE_FROM_TO_FOR_DURATION,
-            ImmutableMap.of("fromX", Integer.toString(from.getX()),
-                    "fromY", Integer.toString(from.getY()),
-                    "toX", Integer.toString(to.getX()),
-                    "toY", Integer.toString(to.getY()),
-                    "duration", durationInSecs));
+    Map p = ImmutableMap.of("fromX", Integer.toString(from.getX()),
+                            "fromY", Integer.toString(from.getY()),
+                            "toX", Integer.toString(to.getX()),
+                            "toY", Integer.toString(to.getY()),
+                            "duration", durationInSecs);
+    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.PINCH_CLOSE_FROM_TO_FOR_DURATION, p);
     executor.execute(request);
   }
 
-  public static void pinchOpenFromToForDuration(WebDriverLikeCommandExecutor executor, Point from,
-                                                 Point to, int durationInSecs){
+  public static void pinchOpenFromToForDuration(WebDriverLikeCommandExecutor executor, Point from, Point to, int durationInSecs) {
 
-    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.PINCH_OPEN_FROM_TO_FOR_DURATION,
-            ImmutableMap.of("fromX", Integer.toString(from.getX()),
-                    "fromY", Integer.toString(from.getY()),
-                    "toX", Integer.toString(to.getX()),
-                    "toY", Integer.toString(to.getY()),
-                    "duration", durationInSecs));
+    Map p = ImmutableMap.of("fromX", Integer.toString(from.getX()),
+                            "fromY", Integer.toString(from.getY()),
+                            "toX", Integer.toString(to.getX()),
+                            "toY", Integer.toString(to.getY()),
+                            "duration", durationInSecs);
+    WebDriverLikeRequest request = executor.buildRequest(WebDriverLikeCommand.PINCH_OPEN_FROM_TO_FOR_DURATION, p);
     executor.execute(request);
   }
 }
 
 /**
- * Accesses the actual keyboard only when needed. Classes like TouchActions() do
- * a driver.getKeyboard() on the constructor and that call will fail if the
- * keyboard is not showing.
+ * Accesses the actual keyboard only when needed. Classes like TouchActions() do a driver.getKeyboard() on the constructor and that call will fail if
+ * the keyboard is not showing.
  */
 final class LazyKeyboard implements Keyboard {
 

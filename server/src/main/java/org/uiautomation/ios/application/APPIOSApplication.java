@@ -14,21 +14,20 @@
 
 package org.uiautomation.ios.application;
 
+import com.google.common.collect.ImmutableList;
+
 import com.dd.plist.BinaryPropertyListWriter;
 import com.dd.plist.NSArray;
 import com.dd.plist.NSDictionary;
 import com.dd.plist.NSNumber;
 import com.dd.plist.NSObject;
 import com.dd.plist.PropertyListParser;
-import com.google.common.collect.ImmutableList;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.ApplicationStore;
-import org.uiautomation.ios.Device;
-import org.uiautomation.ios.HostInfo;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.utils.IOSVersion;
@@ -47,9 +46,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import static org.uiautomation.ios.IOSCapabilities.*;
+import static org.uiautomation.ios.IOSCapabilities.BUNDLE_ICONS;
+import static org.uiautomation.ios.IOSCapabilities.DEVICE_FAMILLY;
+import static org.uiautomation.ios.IOSCapabilities.ICON;
+import static org.uiautomation.ios.IOSCapabilities.MAGIC_PREFIX;
 
 public class APPIOSApplication {
+
   private static final Logger log = Logger.getLogger(APPIOSApplication.class.getName());
 
   protected JSONObject metadata;
@@ -90,8 +93,8 @@ public class APPIOSApplication {
   public String toString() {
     StringBuilder info = new StringBuilder();
     String name = getMetadata(IOSCapabilities.BUNDLE_NAME).isEmpty()
-       ? getMetadata(IOSCapabilities.BUNDLE_DISPLAY_NAME)
-       : getMetadata(IOSCapabilities.BUNDLE_NAME);
+                  ? getMetadata(IOSCapabilities.BUNDLE_DISPLAY_NAME)
+                  : getMetadata(IOSCapabilities.BUNDLE_NAME);
     info.append(String.format("CFBundleName=%s", name));
     String version = getMetadata(IOSCapabilities.BUNDLE_VERSION);
     if (version != null && !version.isEmpty()) {
@@ -148,7 +151,7 @@ public class APPIOSApplication {
   public LanguageDictionary getDictionary(AppleLanguage language) throws WebDriverException {
     if (!language.exists()) {
       throw new WebDriverException("The application doesn't have any content files.The l10n "
-          + "features cannot be used.");
+                                   + "features cannot be used.");
     }
     for (LanguageDictionary dict : dictionaries) {
       if (dict.getLanguage() == language) {
@@ -214,8 +217,8 @@ public class APPIOSApplication {
    */
   public Map<String, String> getResources() {
     Map<String, String> resourceByResourceName = new HashMap<>();
-    String metadata =  getMetadata(ICON);
-    if(metadata.equals("")){
+    String metadata = getMetadata(ICON);
+    if (metadata.equals("")) {
       metadata = getFirstIconFile(BUNDLE_ICONS);
     }
     resourceByResourceName.put(ICON, metadata);
@@ -224,19 +227,19 @@ public class APPIOSApplication {
 
   private String getFirstIconFile(String bundleIcons) {
     if (!metadata.has(bundleIcons)) {
-        return "";
+      return "";
     }
     try {
-        HashMap icons = (HashMap) metadata.get(bundleIcons);
-        HashMap primaryIcon = (HashMap) icons.get("CFBundlePrimaryIcon");
-        ArrayList iconFiles = (ArrayList) primaryIcon.get("CFBundleIconFiles");
-        if (iconFiles != null) {
-            return iconFiles.get(0).toString();
-        } else {
-            return "";
-        }
+      HashMap icons = (HashMap) metadata.get(bundleIcons);
+      HashMap primaryIcon = (HashMap) icons.get("CFBundlePrimaryIcon");
+      ArrayList iconFiles = (ArrayList) primaryIcon.get("CFBundleIconFiles");
+      if (iconFiles != null) {
+        return iconFiles.get(0).toString();
+      } else {
+        return "";
+      }
     } catch (JSONException e) {
-        throw new WebDriverException("property 'CFBundleIcons' can't be returned. " + e.getMessage(), e);
+      throw new WebDriverException("property 'CFBundleIcons' can't be returned. " + e.getMessage(), e);
     }
   }
 
@@ -304,11 +307,11 @@ public class APPIOSApplication {
 
   public static File findSafariLocation(File xcodeInstall, String sdkVersion) {
     IOSVersion version = new IOSVersion(sdkVersion);
-    String v = version.getMajor()+"."+version.getMinor();
+    String v = version.getMajor() + "." + version.getMinor();
     File safariFolder = new File(xcodeInstall,
-                        "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator"
-                        + v
-                        + ".sdk/Applications/MobileSafari.app");
+                                 "/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator"
+                                 + v
+                                 + ".sdk/Applications/MobileSafari.app");
     if (!safariFolder.exists()) {
       log.warning("safari app doesn't exist: " + safariFolder.getAbsolutePath());
     }
@@ -338,7 +341,7 @@ public class APPIOSApplication {
 
       NSArray rearrangedArray = new NSArray(length);
       NSNumber defaultDevice = null;
-      int index = putDefaultFirst? 1 : 0;
+      int index = putDefaultFirst ? 1 : 0;
       for (int i = 0; i < length; i++) {
         NSNumber d = (NSNumber) devices.objectAtIndex(i);
         if (d.intValue() == device.getDeviceFamily()) {
@@ -352,10 +355,10 @@ public class APPIOSApplication {
         throw new WebDriverException(
             "Cannot find device " + device + " in the supported device list.");
       }
-      rearrangedArray.setValue(putDefaultFirst? 0 : index, defaultDevice);
+      rearrangedArray.setValue(putDefaultFirst ? 0 : index, defaultDevice);
       root.put("UIDeviceFamily", rearrangedArray);
 
-      write(plist,root,format);
+      write(plist, root, format);
     } catch (Exception e) {
       throw new WebDriverException("Cannot change the default device for the app." + e.getMessage(), e);
     }
@@ -363,6 +366,7 @@ public class APPIOSApplication {
 
   // TODO : fails for 64_bits
   // visible running NewSessionTests::supportApplicationWithMultipleDeviceFamily
+
   /**
    * Modifies the BuiltinFavorites....plist in safariCopies/safari.app to contain only "about:blank"
    */
@@ -373,12 +377,12 @@ public class APPIOSApplication {
         return name.startsWith("BuiltinFavorites") && name.endsWith(".plist");
       }
     });
-    for (File plist: files) {
+    for (File plist : files) {
       setSafariBuiltinFavories(plist);
     }
   }
 
-  private void setSafariBuiltinFavories (File builtinFavoritesPList) {
+  private void setSafariBuiltinFavories(File builtinFavoritesPList) {
     try {
       PListFormat format = getFormat(builtinFavoritesPList);
 
@@ -391,7 +395,7 @@ public class APPIOSApplication {
       write(builtinFavoritesPList, root, format);
     } catch (Exception e) {
       throw new WebDriverException("Cannot set " + builtinFavoritesPList.getAbsolutePath()
-          + ": " + e.getMessage(), e);
+                                   + ": " + e.getMessage(), e);
     }
   }
 
@@ -399,41 +403,42 @@ public class APPIOSApplication {
     return "com.apple.mobilesafari".equals(getBundleId());
   }
 
-  enum PListFormat{
+  enum PListFormat {
     binary, text, xml
   }
 
   private void write(File dest, NSObject content, PListFormat format) throws IOException {
     switch (format) {
-    case binary:
-      BinaryPropertyListWriter.write(dest, content);
-      break;
-    case xml:
-      PropertyListParser.saveAsXML(content, dest);
-      break;
-    case text:
-      if (content instanceof NSDictionary)
-        PropertyListParser.saveAsASCII((NSDictionary) content, dest);
-      else if (content instanceof NSArray)
-        PropertyListParser.saveAsASCII((NSArray) content, dest);
-      else
-        throw new IllegalArgumentException("Invalid content type for ascii: " + content.getClass());
-      break;
-    default:
-      throw new IllegalArgumentException("Invalid plist output format: " + format);
+      case binary:
+        BinaryPropertyListWriter.write(dest, content);
+        break;
+      case xml:
+        PropertyListParser.saveAsXML(content, dest);
+        break;
+      case text:
+        if (content instanceof NSDictionary) {
+          PropertyListParser.saveAsASCII((NSDictionary) content, dest);
+        } else if (content instanceof NSArray) {
+          PropertyListParser.saveAsASCII((NSArray) content, dest);
+        } else {
+          throw new IllegalArgumentException("Invalid content type for ascii: " + content.getClass());
+        }
+        break;
+      default:
+        throw new IllegalArgumentException("Invalid plist output format: " + format);
     }
   }
 
   private PListFormat getFormat(File f) throws IOException {
     FileInputStream fis = new FileInputStream(f);
     byte b[] = new byte[8];
-    fis.read(b,0,8);
+    fis.read(b, 0, 8);
     String magicString = new String(b);
     fis.close();
     if (magicString.startsWith("bplist")) {
       return PListFormat.binary;
     } else if (magicString.trim().startsWith("(") || magicString.trim().startsWith("{")
-        || magicString.trim().startsWith("/")) {
+               || magicString.trim().startsWith("/")) {
       return PListFormat.text;
     } else {
       return PListFormat.xml;
@@ -477,9 +482,8 @@ public class APPIOSApplication {
 
     // check if the app can run the requested SDK
     String sdk = desiredCapabilities.getSDKVersion();
-    if (sdk!=null){
-      List<String> supported = (List<String>)appCapability.getCapability(IOSCapabilities.UI_SDK_VERSION_ALT);
-      System.out.println("SDK" + sdk+" vs "+supported);
+    if (sdk != null) {
+      List<String> supported = (List<String>) appCapability.getCapability(IOSCapabilities.UI_SDK_VERSION_ALT);
     }
 
     if (desiredCapabilities.getCapability(IOSCapabilities.SIMULATOR) != null &&
@@ -540,7 +544,7 @@ public class APPIOSApplication {
   public String getApplicationName() {
     String name = getMetadata(IOSCapabilities.BUNDLE_NAME);
     String displayName = getMetadata(IOSCapabilities.BUNDLE_DISPLAY_NAME);
-    return (name != null) && ! name.trim().isEmpty() ? name : displayName;
+    return (name != null) && !name.trim().isEmpty() ? name : displayName;
   }
 
   public List<DeviceType> getSupportedDevices() {

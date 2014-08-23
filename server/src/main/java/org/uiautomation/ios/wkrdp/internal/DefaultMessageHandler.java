@@ -92,11 +92,6 @@ public class DefaultMessageHandler implements MessageHandler {
     // 1) the response is received.
     // 2) the response is never received because there is an alert.
 
-    // ResponseFinder.
-    // startSearch
-    // interruptSearch
-    // waitForResult
-
     long start = System.currentTimeMillis();
 
     List<ResponseFinder> finders = new ArrayList<ResponseFinder>();
@@ -137,6 +132,10 @@ public class DefaultMessageHandler implements MessageHandler {
 
   @Override
   public synchronized void stop() {
+    defaultFinder.stop();
+    for (ResponseFinder f : extraFinders){
+      f.stop();
+    }
     stopped = true;
     for (Thread t : threads) {
       t.interrupt();

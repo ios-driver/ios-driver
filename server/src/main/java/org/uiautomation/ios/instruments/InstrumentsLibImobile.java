@@ -28,6 +28,11 @@ public class InstrumentsLibImobile implements Instruments/*, MessageHandler*/ {
   }
 
   @Override
+  public int waitForProcessToDie() {
+    return 0;
+  }
+
+  @Override
   public void stop() {
 
   }

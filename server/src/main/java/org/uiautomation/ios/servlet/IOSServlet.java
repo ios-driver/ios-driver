@@ -21,7 +21,6 @@ import org.openqa.selenium.remote.BeanToJsonConverter;
 import org.openqa.selenium.remote.ErrorCodes;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.CommandMapping;
-import org.uiautomation.ios.IOSServerManager;
 import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.command.Handler;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
@@ -129,16 +128,15 @@ public class IOSServlet extends DriverBasedServlet {
   }
 
   private Response getResponse(WebDriverLikeRequest request) throws JSONException {
-    // if the application under test has crashed, the result is an error.
+    ServerSideSession session = null;
     if (request.hasSession()) {
-      ServerSideSession session;
       try {
         session = getDriver().getSession(request.getSession());
         session.updateLastCommandTime();
-      } catch (IOSServerManager.SessionTimedOutException ste) {
+      } catch (WebDriverException e) {
         Response response = new Response();
         response.setStatus(13);
-        response.setValue(serializeException(ste));
+        response.setValue(serializeException(e));
         return response;
       }
       if (session.hasCrashed()) {
@@ -159,13 +157,12 @@ public class IOSServlet extends DriverBasedServlet {
       return h.handleAndRunDecorators();
     } catch (WebDriverException we) {
       Response response = new Response();
+      response.setStatus(ErrorCodes.UNHANDLED_ERROR);
       if (wdlc != null && wdlc.isSessionLess()) {
         response.setSessionId("");
       } else {
         response.setSessionId(request.getSession());
       }
-
-      response.setStatus(errorCodes.toStatusCode(we));
 
       try {
         JSONObject o = serializeException(we);

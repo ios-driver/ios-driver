@@ -20,21 +20,21 @@ import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
-import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
-import org.uiautomation.ios.setup.IOSDeviceManagerFactory;
 import org.uiautomation.ios.ServerSideSession;
+import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
 import org.uiautomation.ios.instruments.Instruments;
 import org.uiautomation.ios.instruments.InstrumentsFactory;
-import org.uiautomation.ios.wkrdp.WebKitRemoteDebugProtocolFactory;
-import org.uiautomation.ios.setup.IOSDeviceManager;
-import org.uiautomation.ios.instruments.NoInstrumentsImplementationAvailable;
 import org.uiautomation.ios.instruments.InstrumentsFailedToStartException;
+import org.uiautomation.ios.instruments.NoInstrumentsImplementationAvailable;
+import org.uiautomation.ios.setup.IOSDeviceManager;
+import org.uiautomation.ios.setup.IOSDeviceManagerFactory;
+import org.uiautomation.ios.setup.IOSSafariSimulatorManager;
 import org.uiautomation.ios.utils.IOSVersion;
+import org.uiautomation.ios.wkrdp.WebKitRemoteDebugProtocolFactory;
 import org.uiautomation.ios.wkrdp.internal.WebKitRemoteDebugProtocol;
 
 import java.net.URL;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.logging.Logger;
 
 public class IOSDualDriver {
@@ -84,8 +84,8 @@ public class IOSDualDriver {
 
 
   public void stop() {
-    deviceManager.teardown();
     nativeDriver.stop();
+    deviceManager.teardown();
 
     if (webDriver != null) {
       webDriver.stop();
@@ -101,11 +101,11 @@ public class IOSDualDriver {
     } catch (Exception e) {
       e.printStackTrace();
     }
-    try {
+    /*try {
       session.getIOSServerManager().stop(session.getSessionId());
     } catch (Exception e) {
       e.printStackTrace();
-    }
+    }*/
     if (webDriver != null) {
       try {
         webDriver.stop();
@@ -123,23 +123,13 @@ public class IOSDualDriver {
   }
 
   public void start(long timeOut) throws InstrumentsFailedToStartException {
-    // force stop session if running for too long
-    final int sessionTimeoutMillis = session.getOptions().getSessionTimeoutMillis();
-
-    // TODO freynaud ? dup
-    stopSessionTimer.schedule(new TimerTask() {
-      @Override
-      public void run() {
-        log.warning("forcing stop session that has been running for " + sessionTimeoutMillis / 1000
-                    + " seconds");
-        forceStop();
-      }
-    }, sessionTimeoutMillis);
-
     deviceManager.setup();
 
     try {
       nativeDriver.start(timeOut);
+      if (deviceManager instanceof IOSSafariSimulatorManager) {
+        ((IOSSafariSimulatorManager) deviceManager).tmpFix();
+      }
     } catch (InstrumentsFailedToStartException e) {
       deviceManager.teardown();
       throw e;

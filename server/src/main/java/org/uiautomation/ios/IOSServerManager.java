@@ -17,12 +17,12 @@ import org.libimobiledevice.ios.driver.binding.exceptions.SDKException;
 import org.libimobiledevice.ios.driver.binding.services.DeviceService;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.UIAModels.Session;
 import org.uiautomation.ios.application.APPIOSApplication;
 import org.uiautomation.ios.application.AppleLanguage;
 import org.uiautomation.ios.application.IOSRunningApplication;
 import org.uiautomation.ios.application.ResourceCache;
 import org.uiautomation.ios.command.configuration.Configuration;
-import org.uiautomation.ios.command.uiautomation.StopSessionNHandler;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.TimeoutException;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
@@ -43,23 +42,25 @@ public class IOSServerManager {
   private final HostInfo hostInfo;
   private final ResourceCache cache = new ResourceCache();
   private final IOSServerConfiguration options;
-  private final int DEFAULT_TIME_OUT_FOR_SESSION = 60*1000;
+  private final int TIME_OUT_FOR_SESSION;
   private DeviceStore devices;
   private final Object lock = new Object();
   private State state = State.stopped;
-  private Map<String, String> reasonByOpaqueKey = new ConcurrentHashMap<>();
-  private final TimeoutSessionMonitor monitor;
+  private Map<String, ServerSideSession.StopCause> reasonByOpaqueKey = new ConcurrentHashMap<>();
 
 
   public void waitForState(State expected) {
     while (getState() != expected) {
       try {
-        System.out.println("waiting for " + expected + " but got " + state);
         Thread.sleep(150);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
     }
+  }
+
+  public IOSServerConfiguration getConfiguration() {
+    return options;
   }
 
   public static enum State {
@@ -68,8 +69,11 @@ public class IOSServerManager {
 
   // TODO freynaud cleanup
   public IOSServerManager(IOSServerConfiguration options) {
+    // force stop session if running for too long
+
     setState(State.starting);
     this.options = options;
+    TIME_OUT_FOR_SESSION = options.getSessionTimeoutMillis();
 
     // setup logging
     String loggingConfigFile = System.getProperty("java.util.logging.config.file");
@@ -83,9 +87,7 @@ public class IOSServerManager {
     if (loggingConfigFile == null) {
       // do not use builtin ios-logging.properties if -Djava.util.logging.config.file set
       try {
-        LogManager.getLogManager()
-            .readConfiguration(
-                IOSServerManager.class.getResourceAsStream("/ios-logging.properties"));
+        LogManager.getLogManager().readConfiguration(IOSServerManager.class.getResourceAsStream("/ios-logging.properties"));
       } catch (Exception e) {
         System.err.println("Cannot configure logger.");
       }
@@ -109,67 +111,8 @@ public class IOSServerManager {
       devices.add(new SimulatorDevice(getHostInfo()));
     }
     setState(State.running);
-    monitor = new TimeoutSessionMonitor(this);
-    monitor.start();
   }
 
-
-  private class TimeoutSessionMonitor {
-
-    private final IOSServerManager mgr;
-    private boolean run = true;
-
-    public TimeoutSessionMonitor(IOSServerManager mgr) {
-      this.mgr = mgr;
-    }
-
-    public void start() {
-      new Thread(new Runnable() {
-        @Override
-        public void run() {
-          try {
-            startSyncronous();
-          } catch (Exception e) {
-            log.warning("time out session thread crashed : " + e.getMessage());
-          }
-        }
-      }).start();
-    }
-
-
-    private void startSyncronous() throws InterruptedException {
-      synchronized (mgr) {
-        while (run) {
-          Thread.sleep(5000);
-          closeSessionOlderThan(DEFAULT_TIME_OUT_FOR_SESSION);
-        }
-      }
-    }
-
-    public void stop() {
-      synchronized (mgr) {
-        run = false;
-      }
-    }
-
-
-    private void closeSessionOlderThan(long timeInMs) {
-      long deadLine = System.currentTimeMillis() - timeInMs;
-      for (ServerSideSession session : sessions) {
-        if (session.getLastCommandTime() < deadLine && session.isRunning()) {
-          // session has timed out
-          log.info("session " + session + " has timed out after "+timeInMs+"ms");
-          reasonByOpaqueKey.put(session.getSessionId(), "Session timed out after " + timeInMs);
-          try {
-            new StopSessionNHandler(mgr,session).handle();
-          } catch (Exception e) {
-            log.info("tried closing " + session + " but got" + e.getMessage());
-          }
-          //mgr.stop(session.getSessionId());
-        }
-      }
-    }
-  }
 
   public static boolean matches(Map<String, Object> appCapabilities,
                                 Map<String, Object> desiredCapabilities) {
@@ -232,14 +175,13 @@ public class IOSServerManager {
     return session;
   }
 
-  public void stop(String opaqueKey) {
-    ServerSideSession session = null;
-    try {
-      session = getSession(opaqueKey);
-      session.stop();
-    } catch (SessionTimedOutException e) {
-      // ignore. It's gone already.
-    }
+  public void registerSessionHasStop(Session session) {
+    registerSessionHasStop(session, ServerSideSession.StopCause.normal);
+  }
+
+
+  public void registerSessionHasStop(Session session, ServerSideSession.StopCause cause) {
+    reasonByOpaqueKey.put(session.getSessionId(), cause);
     sessions.remove(session);
   }
 
@@ -303,18 +245,24 @@ public class IOSServerManager {
   }
 
   public ServerSideSession getSession(String opaqueKey) throws SessionTimedOutException {
+    // first, check if the session stopped already
+    /*ServerSideSession.StopCause cause = reasonByOpaqueKey.get(opaqueKey);
+    if (cause != null){
+      throw new WebDriverException(cause.name());
+    }*/
+
+    // check if the session is in the process of
     for (ServerSideSession session : sessions) {
       if (session.getSessionId().equals(opaqueKey)) {
-        return session;
+        if (session.getSessionState() == ServerSideSession.SessionState.stopped) {
+          throw new WebDriverException(session.getStopCause().name());
+        } else {
+          return session;
+        }
       }
     }
-    String reason = reasonByOpaqueKey.get(opaqueKey);
-    if (reason != null) {
-      throw new SessionTimedOutException(reason);
-    } else {
-      throw new WebDriverException("Cannot find session " + opaqueKey + " on the server.");
+    throw new WebDriverException("Cannot find session " + opaqueKey + " on the server.");
 
-    }
   }
 
   public static class SessionTimedOutException extends WebDriverException {

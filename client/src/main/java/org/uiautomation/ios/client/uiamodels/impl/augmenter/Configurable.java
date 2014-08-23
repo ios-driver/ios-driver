@@ -20,7 +20,12 @@ import java.util.Map;
 
 public interface Configurable {
 
+
   public void setConfiguration(WebDriverLikeCommand command, String key, Object value);
 
+  /**
+   * returns the configuration of a specific command
+   */
   public Map<String, Object> getConfiguration(WebDriverLikeCommand command);
+
 }

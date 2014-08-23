@@ -23,6 +23,7 @@ import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.application.IOSRunningApplication;
 import org.uiautomation.ios.command.UIAScriptRequest;
 import org.uiautomation.ios.command.UIAScriptResponse;
+import org.uiautomation.ios.command.uiautomation.StopInstrumentsRunLoop;
 import org.uiautomation.ios.instruments.commandExecutor.CURLIAutomationCommandExecutor;
 import org.uiautomation.ios.instruments.commandExecutor.UIAutomationCommandExecutor;
 import org.uiautomation.ios.utils.AppleMagicString;
@@ -55,6 +56,7 @@ public class InstrumentsCommandLine implements Instruments {
   private final String desiredSDKVersion;
   private final ServerSideSession session;
   private long instrumentsPid = -1;
+  private boolean properlyStarted = false;
 
   public InstrumentsCommandLine(ServerSideSession session) {
     Device device = session.getDevice();
@@ -91,6 +93,13 @@ public class InstrumentsCommandLine implements Instruments {
 
   }
 
+
+  public void dm() {
+    System.out.println("witing for process to finish");
+    int exit = instruments.waitFor(10000);
+    System.out.println("exit :" + exit);
+  }
+
   @Override
   public void start(long timeout) throws InstrumentsFailedToStartException {
     boolean success = false;
@@ -105,6 +114,9 @@ public class InstrumentsCommandLine implements Instruments {
 
       log.fine("waiting for registration request");
       success = channel.waitForUIScriptToBeStarted(timeout);
+      synchronized (this) {
+        properlyStarted = success;
+      }
       log.fine("registration request received" + session.getCachedCapabilityResponse());
       if (!success) {
         log.warning("instruments crashed (" + timeout + " sec)".toUpperCase());
@@ -123,9 +135,33 @@ public class InstrumentsCommandLine implements Instruments {
   }
 
   @Override
-  public void stop() {
+  public int waitForProcessToDie() {
+    return instruments.waitFor(10000);
+  }
 
-    if(session.getDevice() instanceof RealDevice){
+  public boolean isProperlyStarted() {
+    synchronized (this) {
+      return properlyStarted;
+    }
+  }
+
+  @Override
+  public synchronized void stop() {
+    if (isProperlyStarted()) {
+      try {
+
+        new StopInstrumentsRunLoop(session).handle();
+        synchronized (this) {
+          properlyStarted = false;
+        }
+      } catch (Exception e) {
+        // ignore. If we can't kill instruments properly, forcestop will do it.
+        // System.out.println(e.getMessage());
+        e.printStackTrace();
+      }
+    }
+
+    if (session.getDevice() instanceof RealDevice) {
       try {
         Thread.sleep(1500);
       } catch (InterruptedException e) {

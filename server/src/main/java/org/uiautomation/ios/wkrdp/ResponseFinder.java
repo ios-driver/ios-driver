@@ -27,4 +27,6 @@ public interface ResponseFinder {
   public void interruptSearch();
 
   public JSONObject getResponse();
+
+  public void stop();
 }

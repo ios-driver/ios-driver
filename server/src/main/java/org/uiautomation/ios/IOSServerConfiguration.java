@@ -38,18 +38,33 @@ import java.util.Set;
  */
 public class IOSServerConfiguration {
 
+   public static final int SESSION_START_TIME_OUT_SEC = 20;
+   public static final int SESSION_TIME_OUT_SEC = 10*60;
+   public static final int MAX_IDLE_TIME_BTWEEN_COMMAND_SEC = 60;
+   public static final int DEFAULT_PORT=5555;
+
 
   @Parameter(description = "enable beta feature.Might be unstable.", names = {"-beta", "-real"})
   private boolean beta = false;
 
   @Parameter(description = "port the server will listen on.", names = "-port")
-  private int port = 5555;
+  private int port = DEFAULT_PORT;
 
   @Parameter(
       required = false,
       names = "-newSessionTimeoutSec",
       description = "time the server will wait for the app to launch before assuming it has crashed.You may increase the value if your app is slow to start.")
-  private long newSessionTimeoutSec = NewSessionNHandler.TIMEOUT_SEC_DEFAULT;
+  private long newSessionTimeoutSec = SESSION_START_TIME_OUT_SEC;
+
+  @Parameter(
+      description = "maximum session duration in seconds. Session will be forcefully terminated if it takes longer.",
+      names = "-sessionTimeout")
+  private int sessionTimeoutSeconds = SESSION_TIME_OUT_SEC;
+
+  @Parameter(
+      description = "maximum session duration in seconds. Session will be forcefully terminated if it takes longer.",
+      names = "-maxIdleBetweenCommands")
+  private int maxIdleTimeBetween2CommandsInSeconds = MAX_IDLE_TIME_BTWEEN_COMMAND_SEC;
 
   @Parameter(
       description = "if specified, will send a registration request to the given url. Example : http://localhost:4444/grid/register",
@@ -88,10 +103,7 @@ public class IOSServerConfiguration {
       names = {"-folder"}, required = false)
   private String appFolderToMonitor = null;
 
-  @Parameter(
-      description = "maximum session duration in seconds. Session will be forcefully terminated if it takes longer.",
-      names = "-sessionTimeout")
-  private int sessionTimeoutSeconds = 30 * 60; // 30 minutes
+
 
   @Parameter(
       description = "location of the TrustStore.sqlite3 to use for the simulator.",
@@ -196,5 +208,13 @@ public class IOSServerConfiguration {
 
   public long getNewSessionTimeoutSec() {
     return newSessionTimeoutSec;
+  }
+
+  public int getMaxIdleTimeBetween2CommandsInSeconds() {
+    return maxIdleTimeBetween2CommandsInSeconds;
+  }
+
+  public void setMaxIdleTimeBetween2CommandsInSeconds(int maxIdleTimeBetween2CommandsInSeconds) {
+    this.maxIdleTimeBetween2CommandsInSeconds = maxIdleTimeBetween2CommandsInSeconds;
   }
 }

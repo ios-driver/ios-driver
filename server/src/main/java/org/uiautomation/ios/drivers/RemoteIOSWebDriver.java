@@ -242,13 +242,7 @@ public class RemoteIOSWebDriver {
   }
 
   public String getCurrentUrl() {
-    try {
-      return currentInspector
-          .getCurrentUrl();  //To change body of implemented methods use File | Settings | File Templates.
-    } catch (Exception e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-      return null;
-    }
+      return currentInspector.getCurrentUrl();
   }
 
   public String getTitle() {
@@ -289,7 +283,6 @@ public class RemoteIOSWebDriver {
 
   public void quit() {
     stop();
-    //To change body of implemented methods use File | Settings | File Templates.
   }
 
   public List<WebkitPage> getWindowHandles() {

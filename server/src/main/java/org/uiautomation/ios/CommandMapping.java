@@ -35,7 +35,7 @@ public enum CommandMapping {
   NEW_SESSION(NewSessionNHandler.class),
   GET_SESSION(GetCapabilitiesNHandler.class),
   SESSIONS(GetSessionsNHandler.class),
-  DELETE_SESSION(StopSessionNHandler.class),
+  DELETE_SESSION(QuitSessionNHandler.class),
   SET_TIMEOUT(SetTimeoutNHandler.class, SetTimeoutHandler.class),
   SET_SCRIPT_TIMEOUT(SetScriptTimeoutNHandler.class, SetScriptTimeoutHandler.class),
   IMPLICIT_WAIT(SetImplicitWaitTimeoutNHandler.class, SetImplicitWaitTimeoutHandler.class),
