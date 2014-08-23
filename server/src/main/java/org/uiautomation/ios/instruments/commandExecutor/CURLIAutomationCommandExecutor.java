@@ -48,11 +48,6 @@ public class CURLIAutomationCommandExecutor extends BaseUIAutomationCommandExecu
     return waitForResponse();
   }
 
-  @Override
-  public void stop() {
-
-  }
-
   private void addResponse(UIAScriptResponse r) {
     setNextResponse(r);
   }

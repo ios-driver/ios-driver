@@ -57,6 +57,11 @@ public class IOSSafariSimulatorManager extends IOSSimulatorManager {
     simulatorSettings.installTrustStore(session.getOptions().getTrustStore());
   }
 
+
+  public void tmpFix(){
+    putMobileSafariAppBackInInstallDir();
+  }
+
   @Override
   public void teardown(){
     super.teardown();

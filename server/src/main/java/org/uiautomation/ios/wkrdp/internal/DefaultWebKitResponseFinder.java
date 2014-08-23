@@ -14,6 +14,7 @@
 
 package org.uiautomation.ios.wkrdp.internal;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.wkrdp.ResponseFinder;
@@ -37,11 +38,17 @@ public class DefaultWebKitResponseFinder implements ResponseFinder {
   private final long timeout;
 
   private volatile boolean ok = true;
+  private volatile boolean stopped = false;
   private WebDriverException exception;
   private JSONObject response;
 
   public DefaultWebKitResponseFinder(long timeout) {
     this.timeout = timeout;
+  }
+
+  @Override
+  public void stop(){
+    stopped = true;
   }
 
   private void reset() {
@@ -63,6 +70,17 @@ public class DefaultWebKitResponseFinder implements ResponseFinder {
     log.fine("begin search");
     while (ok) {
       synchronized (this) {
+        if (stopped){
+          try {
+            response = new JSONObject()
+                .put("id",id)
+                .put("error",new JSONObject()
+                                    .put("message","Webkit has been terminated"));
+          } catch (JSONException e) {
+            throw new WebDriverException(e);
+          }
+          return;
+        }
         if (System.currentTimeMillis() > end) {
           exception =
               new WebDriverException("timeout (" + timeout + "ms) waiting for a response for request id: " + id);

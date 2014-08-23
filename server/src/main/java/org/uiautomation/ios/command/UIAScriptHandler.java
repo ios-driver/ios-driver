@@ -30,8 +30,8 @@ public abstract class UIAScriptHandler extends BaseNativeCommandHandler {
   public UIAScriptHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
-  public UIAScriptHandler(IOSServerManager driver, ServerSideSession session) {
-    super(driver, session);
+  public UIAScriptHandler(ServerSideSession session) {
+    super(session);
   }
 
   protected void setJS(String js) {

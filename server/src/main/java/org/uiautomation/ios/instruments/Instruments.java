@@ -22,6 +22,7 @@ import org.uiautomation.ios.instruments.commandExecutor.UIAutomationCommandExecu
 public interface Instruments {
 
   void start(long timeOut) throws InstrumentsFailedToStartException;
+  int waitForProcessToDie();
   void stop();
 
   Response executeCommand(UIAScriptRequest request);

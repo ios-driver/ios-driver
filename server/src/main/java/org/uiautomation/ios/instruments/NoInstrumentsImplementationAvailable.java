@@ -110,6 +110,11 @@ public class NoInstrumentsImplementationAvailable implements Instruments {
   }
 
   @Override
+  public int waitForProcessToDie() {
+    return 0;
+  }
+
+  @Override
   public void stop() {
     service.stopSafari();
   }

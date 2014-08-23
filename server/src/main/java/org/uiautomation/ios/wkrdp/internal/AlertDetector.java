@@ -34,6 +34,7 @@ public class AlertDetector implements ResponseFinder {
   private final long timeBeforeLookingForAlert = 750;
   private final RemoteIOSDriver driver;
   private volatile RemoteUIAAlert alert;
+  private volatile boolean stopped = false;
 
   public AlertDetector(RemoteIOSDriver driver) {
     this.driver = driver;
@@ -75,6 +76,7 @@ public class AlertDetector implements ResponseFinder {
         }
       }
     } catch (Exception e) {
+      log.info("Alert finder didn't find anything :" + e.getMessage());
     } finally {
       setFinished(true);
     }
@@ -113,6 +115,12 @@ public class AlertDetector implements ResponseFinder {
       throw ex;
     }
     return null;
+  }
+
+  // TODO freynaud if the underlying response finder has been searched, throw an error ?
+  @Override
+  public void stop() {
+    stopped = true;
   }
 }
 

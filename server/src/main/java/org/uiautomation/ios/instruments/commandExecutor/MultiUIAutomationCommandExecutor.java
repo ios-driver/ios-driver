@@ -37,10 +37,7 @@ public class MultiUIAutomationCommandExecutor extends BaseUIAutomationCommandExe
     return response;
   }
 
-  @Override
-  public void stop() {
-    //instruments.stopApp();
-  }
+
 
   private void sendNextCommand(UIAScriptRequest r) {
     try {

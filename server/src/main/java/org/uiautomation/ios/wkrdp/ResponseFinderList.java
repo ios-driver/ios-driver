@@ -75,7 +75,7 @@ public class ResponseFinderList {
       t.start();
     }
 
-    // when for one to finish
+    // wait for one to finish
     try {
       try {
         lock.lock();
