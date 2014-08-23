@@ -14,6 +14,7 @@
 
 package org.uiautomation.ios.e2e.config;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriverException;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -23,6 +24,7 @@ import org.testng.annotations.Test;
 import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.IOSServer;
 import org.uiautomation.ios.IOSServerConfiguration;
+import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
@@ -44,6 +46,7 @@ public final class SessionTimeoutTest {
   public void startServer() throws Exception {
     String[] args = {"-port", "4444", "-host", "127.0.0.1",
                      "-sessionTimeout", "20",
+                     "-aut", SampleApps.getUICatalogFile(),
                      "-maxIdleBetweenCommands", String.format("%d", idleBetweenCommands)};
     config = IOSServerConfiguration.create(args);
 
@@ -84,20 +87,58 @@ public final class SessionTimeoutTest {
 
 
   @Test
-  public void canSetTimeoutBetween2Commands() throws InterruptedException {
+  public void canSetTimeoutBetween2CommandsWebMode() throws InterruptedException {
     driver = new RemoteIOSDriver(getRemoteURL(), IOSCapabilities.iphone("Safari"));
     Assert.assertNotNull(driver.getCurrentUrl());
+    Thread.sleep(idleBetweenCommands * 1000 - 500);
     Assert.assertNotNull(driver.getCurrentUrl());
     Thread.sleep(idleBetweenCommands * 1000 + 100);
     try {
       driver.getCurrentUrl();
     } catch (WebDriverException e) {
       Assert.assertTrue(e.getMessage().startsWith(ServerSideSession.StopCause.timeOutBetweenCommand.name()));
-      //Thread.sleep(10000);
       return;
     }
     fail("should have timed out");
   }
+
+  @Test
+  public void canSetTimeoutBetween2CommandsNativeMode() throws InterruptedException {
+    driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
+
+    Assert.assertNotNull(driver.findElement(By.xpath("//UIAWindow")));
+    Thread.sleep(idleBetweenCommands * 1000 + 100);
+    try {
+      driver.findElement(By.xpath("//UIAWindow"));
+    } catch (WebDriverException e) {
+      Assert.assertTrue(e.getMessage().startsWith(ServerSideSession.StopCause.timeOutBetweenCommand.name()));
+      return;
+    }
+    fail("should have timed out");
+  }
+
+
+  @Test
+  public void canSetTimeoutBetween2CommandsWhenProcessingANativeCommand() throws InterruptedException {
+    driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
+
+    Assert.assertEquals(driver.executeScript("return 1;"), 1L);
+    System.out.println("first call ok ");
+    try {
+      System.out.println("JS 2 = " + driver.executeScript("UIATarget.localTarget().delay(10);return 1;"));
+      fail("should have timed out");
+    } catch (Exception e) {
+      System.out.println(e.getClass().getCanonicalName());
+      //e.printStackTrace();
+      Assert.assertTrue(e instanceof WebDriverException);
+      String expected = ServerSideSession.StopCause.timeOutBetweenCommand.name();
+      String current = e.getMessage();
+      Assert.assertTrue(current.startsWith(expected), current);
+      return;
+    }
+    fail("should have timed out2");
+  }
+
 
   @Test
   public void canSetTimeoutSessionStart() {

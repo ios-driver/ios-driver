@@ -42,6 +42,7 @@ import static org.uiautomation.ios.instruments.commandExecutor.CommunicationMode
 public class InstrumentsCommandLine implements Instruments {
 
   private static final Logger log = Logger.getLogger(InstrumentsCommandLine.class.getName());
+  private static final int MAX_TIME_FOR_INSTRUMENT_TO_DIE = 2000;
   private final String uuid;
   private final File template;
   private final IOSRunningApplication application;
@@ -94,12 +95,6 @@ public class InstrumentsCommandLine implements Instruments {
   }
 
 
-  public void dm() {
-    System.out.println("witing for process to finish");
-    int exit = instruments.waitFor(10000);
-    System.out.println("exit :" + exit);
-  }
-
   @Override
   public void start(long timeout) throws InstrumentsFailedToStartException {
     boolean success = false;
@@ -136,7 +131,7 @@ public class InstrumentsCommandLine implements Instruments {
 
   @Override
   public int waitForProcessToDie() {
-    return instruments.waitFor(10000);
+    return instruments.waitFor(MAX_TIME_FOR_INSTRUMENT_TO_DIE);
   }
 
   public boolean isProperlyStarted() {
@@ -146,12 +141,18 @@ public class InstrumentsCommandLine implements Instruments {
   }
 
   @Override
-  public synchronized void stop() {
+  public void stop() {
+    log.warning("stopping ICL 0");
     if (isProperlyStarted()) {
-      try {
+      log.warning("stopping ICL 1");
 
+      channel.stop();
+      try {
+        log.warning("stopping ICL 1.1");
         new StopInstrumentsRunLoop(session).handle();
+        log.warning("stopping ICL 1.2");
         synchronized (this) {
+          log.warning("stopping ICL 1.3");
           properlyStarted = false;
         }
       } catch (Exception e) {
@@ -160,6 +161,7 @@ public class InstrumentsCommandLine implements Instruments {
         e.printStackTrace();
       }
     }
+    log.warning("stopping ICL 2");
 
     if (session.getDevice() instanceof RealDevice) {
       try {
@@ -168,6 +170,7 @@ public class InstrumentsCommandLine implements Instruments {
         e.printStackTrace();
       }
     }
+    log.warning("stopping ICL 3");
     instruments.forceStop();
     try {
       ClassicCommands.kill(instrumentsPid);
@@ -176,7 +179,7 @@ public class InstrumentsCommandLine implements Instruments {
         log.warning("couldn't kill " + instrumentsPid);
       }
     }
-    channel.stop();
+    log.warning("stopping ICL 4");
   }
 
   private Command createInstrumentCommand(File script) {

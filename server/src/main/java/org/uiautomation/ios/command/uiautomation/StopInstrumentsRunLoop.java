@@ -15,11 +15,10 @@ package org.uiautomation.ios.command.uiautomation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.ServerSideSession;
-import org.uiautomation.ios.IOSServerManager;
 import org.uiautomation.ios.command.UIAScriptHandler;
-import org.uiautomation.ios.instruments.InstrumentsCommandLine;
 
 import java.util.logging.Logger;
 
@@ -27,19 +26,22 @@ public class StopInstrumentsRunLoop extends UIAScriptHandler {
 
   private static final Logger log = Logger.getLogger(StopInstrumentsRunLoop.class.getName());
 
-  public StopInstrumentsRunLoop( ServerSideSession session){
+  public StopInstrumentsRunLoop(ServerSideSession session) {
     super(session);
     setJS("stop");
   }
 
   public Response handle() throws Exception {
-    super.handle();
-    int exit = getNativeDriver().getInstruments().waitForProcessToDie();
-    if (exit!=0){
-      log.warning("instruments didn't stop properly : return value="+exit);
+    try {
+      super.handle();
+    } catch (WebDriverException ok) {
+      // stop commands never return, as it kills instruments.
     }
-//    Thread.sleep(5000);
-    return  createResponse(new JSONObject());
+    int exit = getNativeDriver().getInstruments().waitForProcessToDie();
+    if (exit != 0) {
+      log.warning("instruments didn't stop properly : return value=" + exit);
+    }
+    return createResponse(new JSONObject());
   }
 
   @Override
