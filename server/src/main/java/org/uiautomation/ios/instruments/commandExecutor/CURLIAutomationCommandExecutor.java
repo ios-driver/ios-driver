@@ -14,12 +14,13 @@
 package org.uiautomation.ios.instruments.commandExecutor;
 
 import org.apache.commons.io.IOUtils;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
-import org.uiautomation.ios.drivers.RemoteIOSNativeDriver;
 import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.application.LanguageDictionary;
 import org.uiautomation.ios.command.UIAScriptRequest;
 import org.uiautomation.ios.command.UIAScriptResponse;
+import org.uiautomation.ios.drivers.RemoteIOSNativeDriver;
 import org.uiautomation.ios.servlet.DriverBasedServlet;
 import org.uiautomation.ios.utils.ApplicationCrashDetails;
 
@@ -37,6 +38,8 @@ import javax.servlet.http.HttpServletResponse;
 public class CURLIAutomationCommandExecutor extends BaseUIAutomationCommandExecutor {
 
   private final BlockingQueue<UIAScriptRequest> requestQueue = new ArrayBlockingQueue<>(1);
+  private final String COM_WITH_INSTRUMENTS_DOWN = "Cannot process UIARequest, instruments communication has stopped";
+
 
   public CURLIAutomationCommandExecutor(String sessionId) {
     super(sessionId);
@@ -44,7 +47,11 @@ public class CURLIAutomationCommandExecutor extends BaseUIAutomationCommandExecu
 
   public UIAScriptResponse executeCommand(UIAScriptRequest request) {
     handleLastCommand(request);
-    requestQueue.add(request);
+    if (isReady()) {
+      requestQueue.add(request);
+    } else {
+      throw new WebDriverException(COM_WITH_INSTRUMENTS_DOWN);
+    }
     return waitForResponse();
   }
 
@@ -80,7 +87,7 @@ public class CURLIAutomationCommandExecutor extends BaseUIAutomationCommandExecu
       try {
         getResponse(request, response);
       } catch (Exception e) {
-        log.warning("CURL commandExecutor between server and instruments crashed "+e.getMessage());
+        log.warning("CURL commandExecutor between server and instruments crashed " + e.getMessage());
       }
     }
 

@@ -41,6 +41,7 @@ public abstract class BaseUIAutomationCommandExecutor implements UIAutomationCom
 
   private final Lock lock = new ReentrantLock();
   private final Condition condition = lock.newCondition();
+  private final String STOP_RESPONSE = "exit from instruments loop ok";
   private volatile boolean ready = false;
   private final String sessionId;
 
@@ -66,6 +67,7 @@ public abstract class BaseUIAutomationCommandExecutor implements UIAutomationCom
   }
 
   public final void stop() {
+    System.out.println("marking the channel down");
     try {
       lock.lock();
       ready = false;
@@ -85,6 +87,16 @@ public abstract class BaseUIAutomationCommandExecutor implements UIAutomationCom
     }
   }
 
+  protected boolean isReady() {
+    try {
+      lock.lock();
+      return ready;
+    } finally {
+      lock.unlock();
+    }
+  }
+
+
   protected final void handleLastCommand(UIAScriptRequest request) {
     // Stop is a fire and forget response. It will kill the instruments script,
     // so the script cannot
@@ -93,11 +105,11 @@ public abstract class BaseUIAutomationCommandExecutor implements UIAutomationCom
       Response response = new Response();
       response.setSessionId(getSessionId());
       response.setStatus(0);
-      response.setValue("ok");
+      response.setValue(STOP_RESPONSE);
       BeanToJsonConverter converter = new BeanToJsonConverter();
       String json = converter.convert(response);
       UIAScriptResponse r = new UIAScriptResponse(json);
-      setNextResponse(r);
+      //setNextResponse(r);
     }
   }
 
@@ -121,18 +133,13 @@ public abstract class BaseUIAutomationCommandExecutor implements UIAutomationCom
     long deadline = System.currentTimeMillis() + COMMAND_TIMEOUT_MILLIS;
 
     while (System.currentTimeMillis() < deadline) {
+      System.out.println("waiting for a UIAResponse");
       try {
         res = responseQueue.poll(1000, TimeUnit.MILLISECONDS);
       } catch (InterruptedException ignore) {
       }
-
-      // we have a valid response
-      if (res != null) {
-        return res;
-      }
-
       // the executor is now stopped. Not need to wait any further
-      if (ready == false) {
+      if (!isReady()) {
         Response r = new Response();
         r.setStatus(13);
         r.setSessionId(sessionId);
@@ -140,6 +147,12 @@ public abstract class BaseUIAutomationCommandExecutor implements UIAutomationCom
         UIAScriptResponse response = new UIAScriptResponse(new BeanToJsonConverter().convert(r));
         return response;
       }
+
+      // we have a valid response
+      if (res != null) {
+        return res;
+      }
+
     }
     throw new WebDriverException("timeout getting the response");
   }
