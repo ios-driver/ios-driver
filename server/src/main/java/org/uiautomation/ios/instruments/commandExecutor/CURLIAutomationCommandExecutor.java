@@ -22,7 +22,6 @@ import org.uiautomation.ios.command.UIAScriptRequest;
 import org.uiautomation.ios.command.UIAScriptResponse;
 import org.uiautomation.ios.drivers.RemoteIOSNativeDriver;
 import org.uiautomation.ios.servlet.DriverBasedServlet;
-import org.uiautomation.ios.utils.ApplicationCrashDetails;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -125,12 +124,6 @@ public class CURLIAutomationCommandExecutor extends BaseUIAutomationCommandExecu
               nativeDriver =
               getDriver().getSession(resp.getSessionId()).getDualDriver().getNativeDriver();
           nativeDriver.communication().registerUIAScript();
-        } else {
-          if (isCrashed(request)) {
-            r.getResponse().setStatus(13);
-            r.getResponse().setValue(getCrashDetails(request).toString());
-          }
-          getCommunicationChannel(request).addResponse(r);
         }
         UIAScriptRequest nextCommand = getCommunicationChannel(request).getNextCommand();
         String script = nextCommand.getScript();
@@ -141,16 +134,6 @@ public class CURLIAutomationCommandExecutor extends BaseUIAutomationCommandExecu
         response.getWriter().print(script);
         response.getWriter().close();
       }
-    }
-
-    private boolean isCrashed(HttpServletRequest request) {
-      String opaqueKey = request.getParameter("sessionId");
-      return getDriver().getSession(opaqueKey).hasCrashed();
-    }
-
-    private ApplicationCrashDetails getCrashDetails(HttpServletRequest request) {
-      String opaqueKey = request.getParameter("sessionId");
-      return getDriver().getSession(opaqueKey).getCrashDetails();
     }
 
     private CURLIAutomationCommandExecutor getCommunicationChannel(HttpServletRequest request)

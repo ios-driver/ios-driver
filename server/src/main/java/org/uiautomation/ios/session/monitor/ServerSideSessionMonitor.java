@@ -1,4 +1,4 @@
-package org.uiautomation.ios;
+package org.uiautomation.ios.session.monitor;
 
 
 public interface ServerSideSessionMonitor {

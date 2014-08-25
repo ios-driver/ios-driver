@@ -12,7 +12,7 @@
  * the License.
  */
 
-package org.uiautomation.ios.e2e.config;
+package org.uiautomation.ios.e2e.abnormalSessionStop;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriverException;

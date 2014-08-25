@@ -261,6 +261,12 @@ public class IOSServerManager {
         }
       }
     }
+
+    // if the session isn't there anymore, try to give a helpful message on why it stopped
+    ServerSideSession.StopCause cause = reasonByOpaqueKey.get(opaqueKey);
+    if (cause != null){
+      throw new WebDriverException(cause.name());
+    }
     throw new WebDriverException("Cannot find session " + opaqueKey + " on the server.");
 
   }

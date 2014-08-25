@@ -1,6 +1,8 @@
-package org.uiautomation.ios;
+package org.uiautomation.ios.session.monitor;
 
 
+
+import org.uiautomation.ios.ServerSideSession;
 
 import java.util.logging.Logger;
 

@@ -12,30 +12,35 @@
  * the License.
  */
 
-package org.uiautomation.ios.e2e.crash;
+package org.uiautomation.ios.e2e.abnormalSessionStop;
 
-import junit.framework.Assert;
 
 import org.json.JSONObject;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.SampleApps;
-import org.uiautomation.ios.client.uiamodels.impl.augmenter.ElementTree;
-import org.uiautomation.ios.client.uiamodels.impl.augmenter.IOSDriverAugmenter;
 import org.uiautomation.ios.IOSServer;
 import org.uiautomation.ios.IOSServerConfiguration;
+import org.uiautomation.ios.SampleApps;
+import org.uiautomation.ios.ServerSideSession;
+import org.uiautomation.ios.client.uiamodels.impl.augmenter.ElementTree;
+import org.uiautomation.ios.client.uiamodels.impl.augmenter.IOSDriverAugmenter;
 import org.uiautomation.ios.utils.ClassicCommands;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import static org.junit.Assert.assertTrue;
+import static org.testng.Assert.fail;
+import static org.testng.AssertJUnit.assertNotNull;
 
-public class CrashHandling {
+
+public class CrashDetectedTest {
 
   private IOSServer server;
   private IOSServerConfiguration config;
@@ -61,6 +66,7 @@ public class CrashHandling {
 
   @AfterMethod(alwaysRun = true)
   public void closeDriver() throws Exception {
+
     if (driver != null) {
       try {
         driver.quit();
@@ -88,23 +94,16 @@ public class CrashHandling {
     }
   }
 
-  @Test
+  @Test(expectedExceptions = WebDriverException.class)
   public void isAppCrashDetected() throws InterruptedException {
     WebElement crashButton = driver.findElement(By.name("Crash me!"));
-
-    boolean crashExceptionThrown = false;
     try {
       crashButton.click();
-      // give instruments some time to realise there has been a crash and report it
-      Thread.sleep(1000);
-      // the application has crashed - we should be notified on the next client request
-      crashButton.click();
+      fail("crash should be detected");
     } catch (Exception e) {
-      crashExceptionThrown = true;
-      Assert.assertTrue("Crash error contains the crash trace file details. " + e.getMessage(),
-                        e.getMessage().contains("The crash report can be found"));
+      assertTrue(e.getMessage().contains(ServerSideSession.StopCause.crash.name()));
+      throw e;
     }
-    Assert.assertTrue("App crash detected.", crashExceptionThrown);
   }
 
   @Test
@@ -129,8 +128,8 @@ public class CrashHandling {
       button.click();
     } catch (Exception e) {
       crashExceptionThrown = true;
-      Assert.assertTrue("Crash error contains the crash trace file details. " + e.getMessage(),
-                        e.getMessage().contains("The crash report can be found"));
+      System.out.println(e.getMessage());
+      assertTrue(e.getMessage().contains(ServerSideSession.StopCause.crash.name()));
     }
     return crashExceptionThrown;
   }
@@ -169,7 +168,7 @@ public class CrashHandling {
 //          e.getMessage().contains("It appears like the Simulator process has crashed"));
       // ios 7 : Fail: The target application appears to have died
     }
-    Assert.assertTrue("Simulator crash detected.", crashExceptionThrown);
+    assertTrue("Simulator crash detected.", crashExceptionThrown);
   }
 
   @Test
@@ -203,7 +202,7 @@ public class CrashHandling {
 //      Assert.assertTrue("Crash error contains Instruments as likely cause of problem. " + e.getMessage(), e.getMessage().contains("Instruments"));
       // IOS7  :Stopped: Script was stopped by the user
     }
-    Assert.assertTrue("Instruments crash detected.", crashExceptionThrown);
+    assertTrue("Instruments crash detected.", crashExceptionThrown);
   }
 
   @Test
@@ -233,10 +232,9 @@ public class CrashHandling {
 
       JSONObject json = tree.logElementTree(null, false);
 
-      Assert.assertNotNull("We can get the page source for a large tableview", json);
+      assertNotNull("We can get the page source for a large tableview", json);
     } catch (Exception e) {
-      Assert.fail(
-          "Exception caught while performing logElementTree on page with large TreeView. App crashed");
+      fail("Exception caught while performing logElementTree on page with large TreeView. App crashed");
     }
   }
 }

@@ -26,8 +26,8 @@ import org.uiautomation.ios.command.UIAScriptResponse;
 import org.uiautomation.ios.command.uiautomation.StopInstrumentsRunLoop;
 import org.uiautomation.ios.instruments.commandExecutor.CURLIAutomationCommandExecutor;
 import org.uiautomation.ios.instruments.commandExecutor.UIAutomationCommandExecutor;
+import org.uiautomation.ios.session.monitor.ApplicationCrashMonitor;
 import org.uiautomation.ios.utils.AppleMagicString;
-import org.uiautomation.ios.utils.ApplicationCrashListener;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.Command;
 
@@ -84,7 +84,7 @@ public class InstrumentsCommandLine implements Instruments {
     output = createTmpOutputFolder();
 
     instruments = createInstrumentCommand(scriptPath);
-    instruments.registerListener(new ApplicationCrashListener(session));
+    instruments.registerListener(new ApplicationCrashMonitor(session));
     instruments.setWorkingDirectory(output);
 
     channel = new CURLIAutomationCommandExecutor(session);
@@ -142,16 +142,11 @@ public class InstrumentsCommandLine implements Instruments {
 
   @Override
   public void stop() {
-    log.warning("stopping ICL 0");
     if (isProperlyStarted()) {
-      log.warning("stopping ICL 1");
 
       try {
-        log.warning("stopping ICL 1.1");
         new StopInstrumentsRunLoop(session).handle();
-        log.warning("stopping ICL 1.2");
         synchronized (this) {
-          log.warning("stopping ICL 1.3");
           properlyStarted = false;
         }
       } catch (Exception e) {
@@ -161,7 +156,6 @@ public class InstrumentsCommandLine implements Instruments {
       }
     }
     channel.stop();
-    log.warning("stopping ICL 2");
 
     if (session.getDevice() instanceof RealDevice) {
       try {
@@ -170,16 +164,12 @@ public class InstrumentsCommandLine implements Instruments {
         e.printStackTrace();
       }
     }
-    log.warning("stopping ICL 3");
     instruments.forceStop();
     try {
       ClassicCommands.kill(instrumentsPid);
     } catch (Exception e) {
-      if (!session.hasCrashed()) {
         log.warning("couldn't kill " + instrumentsPid);
-      }
     }
-    log.warning("stopping ICL 4");
   }
 
   private Command createInstrumentCommand(File script) {

@@ -31,7 +31,8 @@ import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.drivers.IOSDualDriver;
 import org.uiautomation.ios.instruments.InstrumentsFailedToStartException;
 import org.uiautomation.ios.logging.IOSLogManager;
-import org.uiautomation.ios.utils.ApplicationCrashDetails;
+import org.uiautomation.ios.session.monitor.MaxTimeBetween2CommandsMonitor;
+import org.uiautomation.ios.session.monitor.ServerSideSessionMonitor;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.IOSVersion;
 import org.uiautomation.ios.utils.ZipUtils;
@@ -55,8 +56,6 @@ public class ServerSideSession extends Session {
   private final DriverConfiguration configuration;
   private IOSRunningApplication application;
   private Device device;
-  private boolean sessionCrashed;
-  private ApplicationCrashDetails applicationCrashDetails;
   private final IOSLogManager logManager;
   private Response capabilityCachedResponse;
   private boolean decorated = false;
@@ -80,7 +79,7 @@ public class ServerSideSession extends Session {
   }
 
   public static enum StopCause {
-    normal, timeOutBetweenCommand;
+    normal, timeOutBetweenCommand, crash;
   }
 
   ServerSideSession(IOSServerManager server, IOSCapabilities desiredCapabilities,
@@ -96,9 +95,6 @@ public class ServerSideSession extends Session {
       ex.printStackTrace();
       throw new SessionNotCreatedException("Cannot create logManager", ex);
     }
-
-    this.sessionCrashed = false;
-    this.applicationCrashDetails = null;
 
     ensureLanguage();
     ensureLocale();
@@ -151,7 +147,7 @@ public class ServerSideSession extends Session {
     }
   }
 
-  public void setStopCause(StopCause cause) {
+  private void setStopCause(StopCause cause) {
     synchronized (this) {
       this.state = SessionState.stopped;
       this.stopCause = cause;
@@ -272,20 +268,6 @@ public class ServerSideSession extends Session {
 
   public IOSRunningApplication getApplication() {
     return application;
-  }
-
-  public boolean hasCrashed() {
-    return sessionCrashed;
-  }
-
-  public void sessionHasCrashed(String log) {
-    sessionCrashed = true;
-    applicationCrashDetails = new ApplicationCrashDetails(log);
-    stop();
-  }
-
-  public ApplicationCrashDetails getCrashDetails() {
-    return applicationCrashDetails;
   }
 
   public IOSServerManager getIOSServerManager() {
