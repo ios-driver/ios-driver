@@ -17,7 +17,6 @@ package org.uiautomation.ios;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 
-import org.uiautomation.ios.command.uiautomation.NewSessionNHandler;
 import org.uiautomation.ios.utils.ClassicCommands;
 
 import java.io.File;
@@ -38,10 +37,10 @@ import java.util.Set;
  */
 public class IOSServerConfiguration {
 
-   public static final int SESSION_START_TIME_OUT_SEC = 20;
-   public static final int SESSION_TIME_OUT_SEC = 10*60;
-   public static final int MAX_IDLE_TIME_BTWEEN_COMMAND_SEC = 60;
-   public static final int DEFAULT_PORT=5555;
+  public static final int SESSION_START_TIME_OUT_SEC = 20;
+  public static final int SESSION_TIME_OUT_SEC = 10 * 60;
+  public static final int MAX_IDLE_TIME_BTWEEN_COMMAND_SEC = 60;
+  public static final int DEFAULT_PORT = 5555;
 
 
   @Parameter(description = "enable beta feature.Might be unstable.", names = {"-beta", "-real"})
