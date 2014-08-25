@@ -100,7 +100,7 @@ public class IOSServlet extends DriverBasedServlet {
         String url = scheme + "://" + serverName + ":" + serverPort + contextPath;
         response.setHeader("location", url + "/session/" + session);
       }
-      // String s = toString(resp);
+
       BeanToJsonConverter converter = new BeanToJsonConverter();
       String s = converter.convert(resp);
 
@@ -138,12 +138,6 @@ public class IOSServlet extends DriverBasedServlet {
         Response response = new Response();
         response.setStatus(13);
         response.setValue(serializeException(e));
-        return response;
-      }
-      if (session.hasCrashed()) {
-        Response response = new Response();
-        response.setStatus(13);
-        response.setValue(session.getCrashDetails().toString());
         return response;
       }
     }
