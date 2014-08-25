@@ -246,12 +246,8 @@ public class IOSServerManager {
 
   public ServerSideSession getSession(String opaqueKey) throws SessionTimedOutException {
     // first, check if the session stopped already
-    /*ServerSideSession.StopCause cause = reasonByOpaqueKey.get(opaqueKey);
-    if (cause != null){
-      throw new WebDriverException(cause.name());
-    }*/
 
-    // check if the session is in the process of
+    // check if the session is in the process of stopping
     for (ServerSideSession session : sessions) {
       if (session.getSessionId().equals(opaqueKey)) {
         if (session.getSessionState() == ServerSideSession.SessionState.stopped) {

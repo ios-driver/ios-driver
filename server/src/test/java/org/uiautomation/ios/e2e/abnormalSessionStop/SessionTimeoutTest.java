@@ -26,6 +26,8 @@ import org.uiautomation.ios.IOSServer;
 import org.uiautomation.ios.IOSServerConfiguration;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.ServerSideSession;
+import org.uiautomation.ios.UIAModels.UIAElement;
+import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 import java.net.MalformedURLException;
@@ -133,5 +135,26 @@ public final class SessionTimeoutTest {
       return;
     }
     fail("should have timed out");
+  }
+
+
+  @Test
+  public void sessionTimeOut() throws InterruptedException {
+    driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
+    long started = System.currentTimeMillis();
+    long lastCommandStarted = 0;
+    try {
+      while (true) {
+        // check that we can't execute new command after the session has timed out.
+        lastCommandStarted = System.currentTimeMillis() - started;
+        driver.findElement(new TypeCriteria(UIAElement.class));
+        Thread.sleep(250);
+      }
+
+    } catch (WebDriverException e) {
+      Assert.assertTrue(e.getMessage().contains(ServerSideSession.StopCause.sessionTimeout.name()));
+      Assert.assertTrue(lastCommandStarted < ((sessionTimeoutInSec * 1000)+250),
+                        String.format("last command was started %d ms after the session was started", lastCommandStarted));
+    }
   }
 }

@@ -27,6 +27,7 @@ import org.uiautomation.ios.RealDevice;
 import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.command.UIAScriptRequest;
 import org.uiautomation.ios.instruments.commandExecutor.UIAutomationCommandExecutor;
+import org.uiautomation.ios.utils.CommandOutputListener;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -51,6 +52,11 @@ public class NoInstrumentsImplementationAvailable implements Instruments {
   @Override
   public boolean isCompatible(ServerSideSession session) {
     return session.isSafariRealDevice();
+  }
+
+  @Override
+  public void registerOutputListener(CommandOutputListener listener) {
+    // no op
   }
 
   public NoInstrumentsImplementationAvailable(ServerSideSession session)

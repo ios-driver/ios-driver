@@ -30,6 +30,7 @@ import org.uiautomation.ios.session.monitor.ApplicationCrashMonitor;
 import org.uiautomation.ios.utils.AppleMagicString;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.Command;
+import org.uiautomation.ios.utils.CommandOutputListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -84,14 +85,11 @@ public class InstrumentsCommandLine implements Instruments {
     output = createTmpOutputFolder();
 
     instruments = createInstrumentCommand(scriptPath);
-    instruments.registerListener(new ApplicationCrashMonitor(session));
     instruments.setWorkingDirectory(output);
 
     channel = new CURLIAutomationCommandExecutor(session);
 
     screenshotService = new InstrumentsAppleScreenshotService(this, sessionId);
-
-
   }
 
 
@@ -239,6 +237,15 @@ public class InstrumentsCommandLine implements Instruments {
       return false;
     } else {
       return true;
+    }
+  }
+
+  @Override
+  public void registerOutputListener(CommandOutputListener listener) {
+    if (instruments!=null){
+      instruments.registerListener(listener);
+    }else{
+      log.warning("trying to register an output listener on instruments, but instruments is null, not created yet.");
     }
   }
 

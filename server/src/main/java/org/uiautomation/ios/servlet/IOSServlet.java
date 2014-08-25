@@ -143,7 +143,7 @@ public class IOSServlet extends DriverBasedServlet {
     }
 
     // otherwise,forward to the driver to get the response.
-    Level level = Level.INFO;
+    Level level = Level.FINE;
     long startTime = System.currentTimeMillis();
     WebDriverLikeCommand wdlc = null;
     try {
