@@ -51,7 +51,7 @@ public class ApplicationCrashMonitor implements ServerSideSessionMonitor, Comman
 
   @Override
   public void startMonitoring() {
-
+      session.getDualDriver().getNativeDriver().getInstruments().registerOutputListener(this);
   }
 
   @Override

@@ -31,8 +31,10 @@ import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.drivers.IOSDualDriver;
 import org.uiautomation.ios.instruments.InstrumentsFailedToStartException;
 import org.uiautomation.ios.logging.IOSLogManager;
+import org.uiautomation.ios.session.monitor.ApplicationCrashMonitor;
 import org.uiautomation.ios.session.monitor.MaxTimeBetween2CommandsMonitor;
 import org.uiautomation.ios.session.monitor.ServerSideSessionMonitor;
+import org.uiautomation.ios.session.monitor.SessionTimeoutMonitor;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.IOSVersion;
 import org.uiautomation.ios.utils.ZipUtils;
@@ -40,6 +42,8 @@ import org.uiautomation.ios.utils.ZipUtils;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -59,7 +63,11 @@ public class ServerSideSession extends Session {
   private final IOSLogManager logManager;
   private Response capabilityCachedResponse;
   private boolean decorated = false;
+  private final List<ServerSideSessionMonitor> monitors = new ArrayList<>();
+
+
   private final long creationTime;
+  private long startedTime;
   private long lastCommandTime;
 
 
@@ -79,7 +87,7 @@ public class ServerSideSession extends Session {
   }
 
   public static enum StopCause {
-    normal, timeOutBetweenCommand, crash;
+    normal, timeOutBetweenCommand, sessionTimeout, crash;
   }
 
   ServerSideSession(IOSServerManager server, IOSCapabilities desiredCapabilities,
@@ -125,10 +133,16 @@ public class ServerSideSession extends Session {
     creationTime = System.currentTimeMillis();
     lastCommandTime = System.currentTimeMillis();
 
-    monitor = new MaxTimeBetween2CommandsMonitor(this);
+    monitors.add(new MaxTimeBetween2CommandsMonitor(this));
+    monitors.add(new SessionTimeoutMonitor(this));
+    monitors.add(new ApplicationCrashMonitor(this));
 
+    for (ServerSideSessionMonitor monitor : monitors) {
+      monitor.startMonitoring();
+    }
     setSessionState(SessionState.created);
-    monitor.startMonitoring();
+
+
   }
 
   public void updateLastCommandTime() {
@@ -160,6 +174,10 @@ public class ServerSideSession extends Session {
 
   public long getCreationTime() {
     return creationTime;
+  }
+
+  public long getSartedTime() {
+    return startedTime;
   }
 
   private void ensureLanguage() throws NoSuchLanguageCodeException {
@@ -284,7 +302,10 @@ public class ServerSideSession extends Session {
 
   public void start(long timeOut) throws InstrumentsFailedToStartException {
     driver.start(timeOut);
+
+    startedTime = System.currentTimeMillis();
     updateLastCommandTime();
+
     setSessionState(SessionState.running);
   }
 
@@ -293,7 +314,10 @@ public class ServerSideSession extends Session {
       return;
     }
     setStopCause(cause);
-    monitor.stopMonitoring();
+
+    for (ServerSideSessionMonitor monitor : monitors) {
+      monitor.stopMonitoring();
+    }
     if (device != null) {
       device.release();
     }
@@ -350,4 +374,13 @@ public class ServerSideSession extends Session {
     }
     return false;
   }
+
+  public boolean hasTimedOut() {
+    if (getSessionState() == SessionState.running) {
+      long deadLine = getSartedTime() + getOptions().getSessionTimeoutMillis();
+      return System.currentTimeMillis() > deadLine;
+    }
+    return false;
+  }
+
 }

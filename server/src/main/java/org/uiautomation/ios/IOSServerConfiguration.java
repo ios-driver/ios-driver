@@ -57,7 +57,8 @@ public class IOSServerConfiguration {
   private long newSessionTimeoutSec = SESSION_START_TIME_OUT_SEC;
 
   @Parameter(
-      description = "maximum session duration in seconds. Session will be forcefully terminated if it takes longer.",
+      description = "maximum session duration in seconds. Session will be forcefully terminated if it takes longer.The countdown starts after the "
+                    + "session has started.( ie session start time isn't included in the timeout )",
       names = "-sessionTimeout")
   private int sessionTimeoutSeconds = SESSION_TIME_OUT_SEC;
 
@@ -130,8 +131,7 @@ public class IOSServerConfiguration {
   }
 
   /**
-   * Returns a IOSServerConfiguration instance of the server configuration, from the given args
-   * parameters.<br>
+   * Returns a IOSServerConfiguration instance of the server configuration, from the given args parameters.<br>
    *
    * @return A configuration instance of the server.
    */

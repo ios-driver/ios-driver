@@ -69,7 +69,6 @@ public abstract class BaseUIAutomationCommandExecutor implements UIAutomationCom
   }
 
   public final void stop() {
-    System.out.println("marking the channel down");
     try {
       lock.lock();
       ready = false;
@@ -135,7 +134,6 @@ public abstract class BaseUIAutomationCommandExecutor implements UIAutomationCom
     long deadline = System.currentTimeMillis() + COMMAND_TIMEOUT_MILLIS;
 
     while (System.currentTimeMillis() < deadline) {
-      System.out.println("waiting for a UIAResponse");
       try {
         res = responseQueue.poll(1000, TimeUnit.MILLISECONDS);
       } catch (InterruptedException ignore) {

@@ -18,6 +18,7 @@ import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.command.UIAScriptRequest;
 import org.uiautomation.ios.instruments.commandExecutor.UIAutomationCommandExecutor;
+import org.uiautomation.ios.utils.CommandOutputListener;
 
 public class InstrumentsLibImobile implements Instruments/*, MessageHandler*/ {
 
@@ -61,6 +62,11 @@ public class InstrumentsLibImobile implements Instruments/*, MessageHandler*/ {
       return false;
     }
     return true;
+  }
+
+  @Override
+  public void registerOutputListener(CommandOutputListener listener) {
+    // get output ?
   }
 
 //  private static final Logger log = Logger.getLogger(InstrumentsLibImobile.class.getName());

@@ -92,9 +92,12 @@ public class CURLIAutomationCommandExecutor extends BaseUIAutomationCommandExecu
 
     private void sendNextCommand(HttpServletRequest request, HttpServletResponse response)
         throws Exception {
+      log.fine("sending command");
       UIAScriptRequest nextCommand = getCommunicationChannel(request).getNextCommand();
+      log.fine("got next command" + nextCommand);
       String script = nextCommand.getScript();
 
+      log.fine("sending request to script:" + script);
       response.setContentType("text/html");
       response.setCharacterEncoding("UTF-8");
       response.setStatus(200);

@@ -18,6 +18,8 @@ import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.command.UIAScriptRequest;
 import org.uiautomation.ios.instruments.commandExecutor.UIAutomationCommandExecutor;
+import org.uiautomation.ios.session.monitor.ApplicationCrashMonitor;
+import org.uiautomation.ios.utils.CommandOutputListener;
 
 public interface Instruments {
 
@@ -32,4 +34,6 @@ public interface Instruments {
   TakeScreenshotService getScreenshotService();
 
   boolean isCompatible(ServerSideSession session);
+
+  void registerOutputListener(CommandOutputListener listener);
 }
