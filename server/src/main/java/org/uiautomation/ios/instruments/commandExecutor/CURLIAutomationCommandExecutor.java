@@ -124,7 +124,10 @@ public class CURLIAutomationCommandExecutor extends BaseUIAutomationCommandExecu
               nativeDriver =
               getDriver().getSession(resp.getSessionId()).getDualDriver().getNativeDriver();
           nativeDriver.communication().registerUIAScript();
+        } else {
+          getCommunicationChannel(request).addResponse(r);
         }
+
         UIAScriptRequest nextCommand = getCommunicationChannel(request).getNextCommand();
         String script = nextCommand.getScript();
 
