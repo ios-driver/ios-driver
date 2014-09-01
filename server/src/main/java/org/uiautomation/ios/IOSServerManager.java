@@ -128,7 +128,6 @@ public class IOSServerManager {
   }
 
   public void stop() {
-    monitor.stop();
     for (ServerSideSession session : sessions) {
       session.stop();
     }
