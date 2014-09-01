@@ -43,6 +43,8 @@ public final class SessionTimeoutTest {
   private RemoteIOSDriver driver;
 
   private final int idleBetweenCommands = 2;
+  private final int sessionTimeoutInSec = 5;
+
 
   @BeforeClass
   public void startServer() throws Exception {

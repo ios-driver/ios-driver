@@ -28,6 +28,12 @@
             <artifactId>testng</artifactId>
             <version>${testngVersion}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.yaml</groupId>
+                    <artifactId>snakeyaml</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>selenium.test</groupId>
