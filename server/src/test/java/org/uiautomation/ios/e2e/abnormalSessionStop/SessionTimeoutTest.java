@@ -49,7 +49,7 @@ public final class SessionTimeoutTest {
   @BeforeClass
   public void startServer() throws Exception {
     String[] args = {"-port", "4444", "-host", "127.0.0.1",
-                     "-sessionTimeout", "20",
+                     "-sessionTimeout", String.format("%d",sessionTimeoutInSec),
                      "-aut", SampleApps.getUICatalogFile(),
                      "-maxIdleBetweenCommands", String.format("%d", idleBetweenCommands)};
     config = IOSServerConfiguration.create(args);
