@@ -13,6 +13,8 @@
  */
 package org.uiautomation.ios.inspector;
 
+import org.uiautomation.ios.IOSServer;
+import org.uiautomation.ios.IOSServerManager;
 import org.uiautomation.ios.inspector.controllers.IDECommandController;
 import org.uiautomation.ios.inspector.controllers.IDEController;
 import org.uiautomation.ios.inspector.controllers.NotImplementedIDEController;
@@ -24,14 +26,13 @@ import org.uiautomation.ios.inspector.controllers.WebViewContentController;
 import org.uiautomation.ios.inspector.model.Cache;
 import org.uiautomation.ios.inspector.model.CacheDefaultImpl;
 import org.uiautomation.ios.inspector.views.View;
-import org.uiautomation.ios.IOSServer;
-import org.uiautomation.ios.IOSServerManager;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
@@ -68,7 +69,7 @@ public class IDEServlet extends HttpServlet {
         log.warning("couldn't find the end point.");
       }
     } catch (MalformedURLException e) {
-      e.printStackTrace();
+      log.log(Level.SEVERE, "url format", e);
     }
     Cache cache = (Cache) getServletContext().getAttribute(Cache.KEY);
     if (cache == null) {
@@ -91,8 +92,7 @@ public class IDEServlet extends HttpServlet {
       View view = controller.handle(req);
       view.render(response);
     } catch (Exception e) {
-      e.printStackTrace();
-      log.warning(e.getMessage());
+      log.log(Level.SEVERE, "ide process error", e);
     }
   }
 

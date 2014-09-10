@@ -30,6 +30,7 @@ import java.nio.file.WatchService;
 import java.util.logging.Logger;
 
 public class FolderMonitor implements Runnable {
+
   private static final Logger log = Logger.getLogger(FolderMonitor.class.getName());
   private IOSServerManager iosServerManager;
   private IOSServerConfiguration iosServerConfiguration;
@@ -38,7 +39,8 @@ public class FolderMonitor implements Runnable {
   private boolean stopped;
   private Thread thread;
 
-  public FolderMonitor(IOSServerConfiguration iosServerConfiguration, IOSServerManager iosServerManager)
+  public FolderMonitor(IOSServerConfiguration iosServerConfiguration,
+                       IOSServerManager iosServerManager)
       throws IOException {
     this.iosServerConfiguration = iosServerConfiguration;
     this.iosServerManager = iosServerManager;
@@ -49,11 +51,12 @@ public class FolderMonitor implements Runnable {
     Path watchedFolder = Paths.get(iosServerConfiguration.getAppFolderToMonitor());
     try {
       watchedFolder.register(folderWatcher, StandardWatchEventKinds.ENTRY_CREATE,
-          StandardWatchEventKinds.ENTRY_MODIFY,
-          StandardWatchEventKinds.ENTRY_DELETE);
+                             StandardWatchEventKinds.ENTRY_MODIFY,
+                             StandardWatchEventKinds.ENTRY_DELETE);
     } catch (NoSuchFileException e) {
       stop();
-      log.warning("invalid location: " + new File(iosServerConfiguration.getAppFolderToMonitor()).getAbsolutePath());
+      log.warning("invalid location: " + new File(iosServerConfiguration.getAppFolderToMonitor())
+          .getAbsolutePath());
     }
   }
 
@@ -79,8 +82,7 @@ public class FolderMonitor implements Runnable {
         checkForChanges();
         try {
           stoppedLock.wait(1000, 0);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
+        } catch (InterruptedException ignore) {
         }
       }
     }
@@ -95,7 +97,8 @@ public class FolderMonitor implements Runnable {
         final WatchEvent.Kind<?> kind = watchEvent.kind();
         log.fine(kind + " : " + filePath);
         handleFileChange(kind,
-            new File(iosServerConfiguration.getAppFolderToMonitor(), filePath.getFileName().toString()));
+                         new File(iosServerConfiguration.getAppFolderToMonitor(),
+                                  filePath.getFileName().toString()));
       }
 
       boolean valid = key.reset();
@@ -169,8 +172,7 @@ public class FolderMonitor implements Runnable {
         thread.join();
         thread = null;
       }
-    } catch (InterruptedException e) {
-      e.printStackTrace();
+    } catch (InterruptedException ignore) {
     }
   }
 }

@@ -36,9 +36,12 @@ import org.uiautomation.ios.drivers.RemoteIOSWebDriver;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class LogElementTreeNHandler extends UIAScriptHandler {
 
+  private static final Logger log = Logger.getLogger(LogElementTreeNHandler.class.getName());
   private static final JSTemplate template = new JSTemplate(
       "var root = UIAutomation.cache.get('%:reference$s');" +
       "var result = root.tree(%:attachScreenshot$b);" +
@@ -61,7 +64,7 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
         addDecorator(new AddTranslationToLog(driver));
       }
     } catch (JSONException e) {
-      e.printStackTrace();
+      log.log(Level.SEVERE,"format error",e);
     }
 
     final String js;
@@ -93,7 +96,7 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
         Map<String, Object> rootNode = (Map<String, Object>) value.get("tree");
         addTranslation(rootNode, getAUT());
       } catch (Exception e) {
-        e.printStackTrace();
+        log.log(Level.SEVERE,"decoration: translation error",e);
       }
 
     }
@@ -175,8 +178,7 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
           String rawHTML = inspector.getPageSource();
           webView.put("source", rawHTML);
         } catch (Exception e) {
-
-          e.printStackTrace();
+          log.log(Level.SEVERE, "decoration error", e);
         }
 
       }

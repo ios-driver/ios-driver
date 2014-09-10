@@ -35,6 +35,7 @@ import org.uiautomation.ios.wkrdp.internal.WebKitRemoteDebugProtocol;
 
 import java.net.URL;
 import java.util.Timer;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class IOSDualDriver {
@@ -99,7 +100,7 @@ public class IOSDualDriver {
     try {
       deviceManager.teardown();
     } catch (Exception e) {
-      e.printStackTrace();
+      log.log(Level.WARNING,"device manager didn't stop properly",e);
     }
     if (webDriver != null) {
       try {

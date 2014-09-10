@@ -17,12 +17,15 @@ package org.uiautomation.ios.utils;
 import org.apache.commons.codec.binary.Base64;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.UIAModels.Orientation;
+import org.uiautomation.ios.instruments.Instruments;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
@@ -33,6 +36,7 @@ import javax.imageio.ImageIO;
  */
 public class InstrumentsGeneratedImage implements JSONWireImage {
 
+  private static final Logger log = Logger.getLogger(InstrumentsGeneratedImage.class.getName());
   private final File source;
   private final Orientation orientation;
   private final BufferedImage image;
@@ -62,7 +66,7 @@ public class InstrumentsGeneratedImage implements JSONWireImage {
       String s = Base64.encodeBase64String(img);
       return s;
     } catch (IOException e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      log.log(Level.SEVERE,"image parsing error",e);
       return null;
     }
   }

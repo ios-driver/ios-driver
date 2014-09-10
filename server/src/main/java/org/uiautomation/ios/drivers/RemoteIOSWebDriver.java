@@ -46,6 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class RemoteIOSWebDriver {
@@ -340,7 +341,7 @@ public class RemoteIOSWebDriver {
     try {
       currentInspector.forward();
     } catch (Exception e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      log.log(Level.SEVERE,"forward error",e);
     }
   }
 
@@ -348,7 +349,7 @@ public class RemoteIOSWebDriver {
     try {
       currentInspector.refresh();
     } catch (Exception e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      log.log(Level.SEVERE,"refresh error",e);
     }
   }
 

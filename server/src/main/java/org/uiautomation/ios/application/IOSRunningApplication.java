@@ -23,8 +23,12 @@ import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.communication.device.DeviceType;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class IOSRunningApplication {
+
+  private static final Logger log = Logger.getLogger(IOSRunningApplication.class.getName());
 
   private final AppleLanguage currentLanguage;
   private final APPIOSApplication underlyingApplication;
@@ -113,7 +117,7 @@ public class IOSRunningApplication {
         l10n.put("langs", langs);
 
       } catch (Exception e) {
-        e.printStackTrace();
+        log.log(Level.SEVERE,"cannot find translation",e);
       }
     }
     return l10n;

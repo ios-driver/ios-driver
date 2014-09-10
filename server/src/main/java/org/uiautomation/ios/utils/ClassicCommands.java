@@ -20,6 +20,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ClassicCommands {
@@ -62,7 +63,7 @@ public class ClassicCommands {
     try {
       return psgrep(processName).size() > 0;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.log(Level.WARNING,"isRunning?",e);
       return false;
     }
   }

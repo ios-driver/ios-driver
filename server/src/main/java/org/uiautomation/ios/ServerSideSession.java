@@ -45,6 +45,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ServerSideSession extends Session {
@@ -100,7 +101,7 @@ public class ServerSideSession extends Session {
     try {
       logManager = new IOSLogManager(capabilities.getLoggingPreferences());
     } catch (Exception ex) {
-      ex.printStackTrace();
+      log.log(Level.SEVERE,"log manager error",ex);
       throw new SessionNotCreatedException("Cannot create logManager", ex);
     }
 

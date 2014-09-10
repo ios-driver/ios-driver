@@ -14,12 +14,15 @@
 package org.uiautomation.ios.wkrdp.model;
 
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RemoteObjectIterator implements Iterator<Object> {
 
   private final RemoteObject underlyingObject;
   private int index = 0;
   private final int size;
+  private static final Logger log = Logger.getLogger(RemoteObjectIterator.class.getName());
 
   public RemoteObjectIterator(RemoteObject uro, int size) {
     this.underlyingObject = uro;
@@ -39,7 +42,7 @@ public class RemoteObjectIterator implements Iterator<Object> {
       index++;
       return res;
     } catch (Exception e) {
-      e.printStackTrace();
+      log.log(Level.SEVERE, "error",e);
     }
     return null;
 

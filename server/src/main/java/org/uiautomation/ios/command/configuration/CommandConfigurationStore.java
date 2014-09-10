@@ -20,17 +20,20 @@ import org.uiautomation.ios.UIAModels.configuration.CommandConfiguration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CommandConfigurationStore implements CommandConfiguration {
 
   private final JSONObject config = new JSONObject();
+  private static final Logger log = Logger.getLogger(CommandConfiguration.class.getName());
 
   @Override
   public void set(String key, Object value) {
     try {
       config.put(key, value);
     } catch (JSONException e) {
-      e.printStackTrace();
+      log.log(Level.SEVERE,"format error",e);
     }
 
   }

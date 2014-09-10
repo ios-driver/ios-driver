@@ -21,11 +21,15 @@ import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RemoteCommandConfiguration implements CommandConfiguration {
 
   private final WebDriverLikeCommand command;
   private final RemoteIOSDriver driver;
+  private static final Logger log = Logger.getLogger(RemoteCommandConfiguration.class.getName());
+
 
   public RemoteCommandConfiguration(WebDriverLikeCommand command, RemoteIOSDriver driver) {
     this.command = command;
@@ -43,7 +47,7 @@ public class RemoteCommandConfiguration implements CommandConfiguration {
       WebDriverLikeRequest request = new WebDriverLikeRequest("POST", p, payload);
       //driver.execute(request);
     } catch (Exception e) {
-      e.printStackTrace();
+      log.log(Level.SEVERE, "Configure failed.", e);
     }
 
   }

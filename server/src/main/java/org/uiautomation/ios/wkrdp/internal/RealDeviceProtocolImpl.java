@@ -21,11 +21,15 @@ import org.libimobiledevice.ios.driver.binding.services.WebInspectorService;
 import org.uiautomation.ios.wkrdp.ResponseFinder;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * WKRDP implementation for real device using a USB connection.
  */
 public class RealDeviceProtocolImpl extends WebKitRemoteDebugProtocol {
+
+  private static final Logger log = Logger.getLogger(RealDeviceProtocolImpl.class.getName());
 
   private final WebInspectorService inspector;
 
@@ -35,7 +39,7 @@ public class RealDeviceProtocolImpl extends WebKitRemoteDebugProtocol {
     try {
       device = DeviceService.get(uuid);
     } catch (SDKException e) {
-      e.printStackTrace();
+     log.log(Level.SEVERE,"SDK",e);
     }
     inspector = new WebInspectorService(device);
   }

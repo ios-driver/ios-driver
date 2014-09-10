@@ -13,6 +13,8 @@
  */
 package org.uiautomation.ios;
 
+import com.google.common.base.Throwables;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Formatter;
@@ -47,6 +49,9 @@ public class LogFormatter extends Formatter {
     // Get the formatted message (includes localization
     // and substitution of paramters) and add it to the buffer
     sb.append(formatMessage(record));
+    if (record.getThrown() != null) {
+      sb.append(Throwables.getStackTraceAsString(record.getThrown()));
+    }
     sb.append("\n");
 
     return sb.toString();

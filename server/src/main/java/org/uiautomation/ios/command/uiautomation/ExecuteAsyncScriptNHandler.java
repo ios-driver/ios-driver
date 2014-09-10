@@ -23,6 +23,7 @@ import org.uiautomation.ios.IOSServerManager;
 import org.uiautomation.ios.command.UIAScriptHandler;
 import org.uiautomation.ios.utils.JSTemplate;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ExecuteAsyncScriptNHandler extends UIAScriptHandler {
@@ -43,7 +44,7 @@ public class ExecuteAsyncScriptNHandler extends UIAScriptHandler {
       String js = template.generate(request.getSession(), f + "(" + arguments + ")");
       setJS(js);
     } catch (JSONException e) {
-      e.printStackTrace();
+      log.log(Level.SEVERE,"format error",e);
     }
   }
 

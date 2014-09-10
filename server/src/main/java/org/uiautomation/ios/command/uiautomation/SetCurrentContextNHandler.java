@@ -32,9 +32,12 @@ import org.uiautomation.ios.utils.IOSVersion;
 import org.uiautomation.ios.wkrdp.message.WebkitPage;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SetCurrentContextNHandler extends BaseNativeCommandHandler {
 
+  private static final Logger log = Logger.getLogger(SetCurrentContextNHandler.class.getName());
 
   public SetCurrentContextNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -124,7 +127,7 @@ public class SetCurrentContextNHandler extends BaseNativeCommandHandler {
       } catch (Exception e) {
         // dump out any exception, but ignore it as the primary concern is switching context
         // which has succeeded if we got here
-//        e.printStackTrace();
+        log.log(Level.WARNING,"set timout issue",e);
       }
     }
 

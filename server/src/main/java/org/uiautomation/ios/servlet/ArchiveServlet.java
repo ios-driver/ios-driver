@@ -22,15 +22,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class ArchiveServlet extends DriverBasedServlet {
 
-
-  private final
-  Map<String, ArchiveStatus>
+  private static final Logger log = Logger.getLogger(ArchiveServlet.class.getName());
+  private final Map<String, ArchiveStatus>
       statuses =
       new ConcurrentHashMap<String, ArchiveStatus>();
 
@@ -163,7 +164,7 @@ public class ArchiveServlet extends DriverBasedServlet {
         res.put("progress", progress);
         res.put("logId", logId);
       } catch (JSONException e) {
-        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        log.log(Level.SEVERE, "format error", e);
       }
       return res;
     }

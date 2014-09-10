@@ -28,6 +28,7 @@ import java.io.StringWriter;
 import java.text.Normalizer;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
@@ -75,8 +76,7 @@ public class CURLIAutomationCommandExecutor extends BaseUIAutomationCommandExecu
         log("sendNextCommand");
         sendNextCommand(request, response);
       } catch (Exception e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        log.log(Level.SEVERE,"error sending next command",e);
       }
     }
 

@@ -61,7 +61,6 @@ public class RemoteUIAScrollView extends RemoteUIAElement implements UIAScrollVi
     try {
       Thread.sleep(1000);                 //Need a delay after scroll
     } catch (InterruptedException e) {
-      e.printStackTrace();
     }
   }
 

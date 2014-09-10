@@ -16,12 +16,13 @@ package org.uiautomation.ios.inspector;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 import org.uiautomation.ios.application.APPIOSApplication;
+import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Model {
@@ -83,8 +84,7 @@ public class Model {
     try {
       return cache.getString("language");
     } catch (JSONException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      log.log(Level.SEVERE, "cannot find language : defaulting to English", e);
       return "English";
     }
   }

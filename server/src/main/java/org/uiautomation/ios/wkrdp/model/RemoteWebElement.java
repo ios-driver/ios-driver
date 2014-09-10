@@ -24,6 +24,7 @@ import org.uiautomation.ios.wkrdp.internal.IosAtoms;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class RemoteWebElement {
@@ -77,7 +78,7 @@ public class RemoteWebElement {
       getRemoteObject().call(
           ".selectionStart=this.value.length;this.selectionEnd=this.value.length;");
     } catch (Exception e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+     log.log(Level.SEVERE,"cursor to end",e);
     }
 
 
@@ -353,30 +354,6 @@ public class RemoteWebElement {
       res.add(ro.getWebElement());
     }
     return res;
-  }
-
-  public RemoteWebElement findElementByCSSSelectorOld(String selector) throws Exception {
-    try {
-
-      JSONArray args = new JSONArray();
-      args.put(new JSONObject().put("value", selector));
-
-      JSONObject
-          response =
-          getInspectorResponse("(function(arg) { var el = this.querySelector(arg);return el;})",
-                               args, false);
-      RemoteObject ro = inspector.cast(response);
-      if (ro == null) {
-        return null;
-      } else {
-        return ro.getWebElement();
-      }
-    } catch (Exception e) {
-      // e.printStackTrace();
-      System.err.println(e.getMessage());
-      return null;
-    }
-
   }
 
   public RemoteWebElement findElementByCSSSelector(String selector) {

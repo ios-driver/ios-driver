@@ -21,8 +21,12 @@ import org.uiautomation.ios.IOSServerManager;
 import org.uiautomation.ios.command.UIAScriptHandler;
 import org.uiautomation.ios.utils.JSTemplate;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class SetValueNHandler extends UIAScriptHandler {
 
+  private static final Logger log = Logger.getLogger(SetValueNHandler.class.getName());
   private static final JSTemplate template = new JSTemplate(
       "var parent = UIAutomation.cache.get(%:reference$s);" +
       "parent.sendKeys('%:value$s',%:useNativeEvents$b);" +
@@ -56,7 +60,7 @@ public class SetValueNHandler extends UIAScriptHandler {
           useNativeEvents);
       setJS(js);
     } catch (JSONException e) {
-      e.printStackTrace();
+      log.log(Level.SEVERE,"format error",e);
     }
   }
 

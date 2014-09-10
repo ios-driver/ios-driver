@@ -21,11 +21,15 @@ import org.uiautomation.ios.IOSCapabilities;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class CapabilitiesServlet extends DriverBasedServlet {
+
+  private static final Logger log = Logger.getLogger(CapabilitiesServlet.class.getName());
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse response) throws IOException {
@@ -55,7 +59,7 @@ public class CapabilitiesServlet extends DriverBasedServlet {
         JSONObject o = new JSONObject(json);
         b.append(o.toString(2));
       } catch (JSONException e) {
-        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        log.log(Level.SEVERE,"format error",e);
       }
       i++;
     }

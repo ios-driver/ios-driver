@@ -14,6 +14,8 @@
 
 package org.uiautomation.ios;
 
+import com.google.common.base.Throwables;
+
 import com.beust.jcommander.JCommander;
 
 import org.eclipse.jetty.server.Handler;
@@ -89,8 +91,11 @@ public class IOSServer {
       public void run() {
         try {
           server.stop();
+          if (server.getDriver() != null) {
+            server.getDriver().stop();
+          }
         } catch (Exception e) {
-          e.printStackTrace();
+         log.log(Level.SEVERE,"error in shutdown hook",e);
         }
       }
     });
@@ -98,10 +103,12 @@ public class IOSServer {
     try {
       server.start();
     } catch (Exception e) {
-      log.log(Level.SEVERE, "cannot start ios-driver server: " + e, e);
+      log.log(Level.SEVERE, "cannot start ios-driver server.",e);
       Runtime.getRuntime().exit(1);
     }
   }
+
+
 
   private void init() {
     initialized = true;
@@ -130,50 +137,53 @@ public class IOSServer {
       driver.addSupportedApplication(APPIOSApplication.createFrom(appFile));
     }
 
-    StringBuilder b = new StringBuilder();
-    b.append(String.format("\nBeta features enabled (enabled by -beta flag): %b",
-                           Configuration.BETA_FEATURE));
-    b.append(String.format("\nSimulator enabled : %b", Configuration.SIMULATORS_ENABLED));
-    b.append(String.format("\nInspector: http://0.0.0.0:%d/inspector/", options.getPort()));
-    b.append(String.format("\nTests can access the server at http://0.0.0.0:%d/wd/hub",
-                           options.getPort()));
-    b.append(String.format("\nServer status: http://0.0.0.0:%d/wd/hub/status", options.getPort()));
-    b.append(String.format("\nConnected devices: http://0.0.0.0:%d/wd/hub/devices/all",
-                           options.getPort()));
-    b.append(String.format("\nApplications: http://0.0.0.0:%d/wd/hub/applications/all",
-                           options.getPort()));
-    b.append(String.format("\nCapabilities: http://0.0.0.0:%d/wd/hub/capabilities/all",
-                           options.getPort()));
-    b.append(
-        String.format("\nMonitoring '%s' for new applications", options.getAppFolderToMonitor()));
-    b.append(String.format("\nArchived apps: %s",
-                           driver.getApplicationStore().getFolder().getAbsolutePath()));
-    b.append("\nBuild info: " + BuildInfo.toBuildInfoString());
-    b.append("\nRunning on: " + driver.getHostInfo().getOSInfo());
-    b.append("\nUsing java: " + driver.getHostInfo().getJavaVersion());
+    p(String.format("version:%s", BuildInfo.getAttribute("sha")));
+    p(String
+          .format("Beta features enabled (enabled by -real flag): %b", Configuration.BETA_FEATURE));
+    p(String.format("Simulator enabled : %b", Configuration.SIMULATORS_ENABLED));
+    p(String.format("Inspector: http://0.0.0.0:%d/inspector/", options.getPort()));
+    p(String.format("Tests can access the server at http://0.0.0.0:%d/wd/hub",
+                    options.getPort()));
+    p(String.format("Server status: http://0.0.0.0:%d/wd/hub/status", options.getPort()));
+    p(String.format("Connected devices: http://0.0.0.0:%d/wd/hub/devices/all",
+                    options.getPort()));
+    p(String.format("Applications: http://0.0.0.0:%d/wd/hub/applications/all",
+                    options.getPort()));
+    p(String.format("Capabilities: http://0.0.0.0:%d/wd/hub/capabilities/all",
+                    options.getPort()));
+    p(
+        String.format("Monitoring '%s' for new applications", options.getAppFolderToMonitor()));
+    p(String.format("Archived apps: %s",
+                    driver.getApplicationStore().getFolder().getAbsolutePath()));
+    p("Build info: " + BuildInfo.toBuildInfoString());
+    p("Running on: " + driver.getHostInfo().getOSInfo());
+    p("Using java: " + driver.getHostInfo().getJavaVersion());
     if (Configuration.SIMULATORS_ENABLED) {
-      addSimulatorDetails(b);
+      addSimulatorDetails();
     }
 
-    b.append("\n\nApplications :\n--------------- \n");
+    p("Applications :");
     for (APPIOSApplication app : driver.getSupportedApplications()) {
-      b.append("\t" + app + "\n");
+      p("\t" + app);
     }
-    log.info(b.toString());
+  }
+
+  private void p(String msg) {
+    System.out.println(msg);
+    log.fine(msg);
   }
 
   public IOSServerManager getDriver() {
     return driver;
   }
 
-  private void addSimulatorDetails(StringBuilder b) {
+  private void addSimulatorDetails() {
     File xcodeInstall = driver.getHostInfo().getXCodeInstall();
     String hostSDK = driver.getHostInfo().getSDK();
-    b.append(String.format("\nUsing Xcode install: %s",
-                           driver.getHostInfo().getXCodeInstall().getPath()));
-    b.append(
-        String.format("\nUsing instruments: %s", driver.getHostInfo().getInstrumentsVersion()));
-    b.append(String.format("\nUsing iOS version %s", hostSDK));
+    p(String.format("Using Xcode install: %s",
+                    driver.getHostInfo().getXCodeInstall().getPath()));
+    p(String.format("Using instruments: %s", driver.getHostInfo().getInstrumentsVersion()));
+    p(String.format("Using iOS version %s", hostSDK));
 
     boolean safari = false;
     // automatically add safari for host SDK and above as instruments starts simulator on host SDK version
@@ -185,9 +195,9 @@ public class IOSServer {
       }
     }
     if (safari) {
-      b.append("\niOS >= 6.0. Safari and hybrid apps are supported.");
+      p("iOS >= 6.0. Safari and hybrid apps are supported.");
     } else {
-      b.append("\niOS < 6.0. Safari and hybrid apps are NOT supported.");
+      p("iOS < 6.0. Safari and hybrid apps are NOT supported.");
     }
   }
 
@@ -273,7 +283,9 @@ public class IOSServer {
 
       String url = options.getRegistrationURL();
       URL hub = new URL(url);
-      org.openqa.grid.common.RegistrationRequest registrationRequest = new org.openqa.grid.common.RegistrationRequest();
+      org.openqa.grid.common.RegistrationRequest
+          registrationRequest =
+          new org.openqa.grid.common.RegistrationRequest();
 
       JSONObject status = new ServerStatusNHandler.StatusGenerator(driver).generate();
       JSONArray caps = status.getJSONArray(ServerStatusNHandler.SUPPORTED_APPS);
@@ -285,17 +297,22 @@ public class IOSServer {
         registrationRequest.addDesiredCapability(c2);
       }
 
-      registrationRequest.getConfiguration().put(org.openqa.grid.common.RegistrationRequest.AUTO_REGISTER, true);
-      registrationRequest.getConfiguration().put(org.openqa.grid.common.RegistrationRequest.REGISTER_CYCLE, 5000);
-      registrationRequest.getConfiguration().put(org.openqa.grid.common.RegistrationRequest.PROXY_CLASS, options.getProxy());
+      registrationRequest.getConfiguration()
+          .put(org.openqa.grid.common.RegistrationRequest.AUTO_REGISTER, true);
+      registrationRequest.getConfiguration()
+          .put(org.openqa.grid.common.RegistrationRequest.REGISTER_CYCLE, 5000);
+      registrationRequest.getConfiguration()
+          .put(org.openqa.grid.common.RegistrationRequest.PROXY_CLASS, options.getProxy());
 
       registrationRequest.getConfiguration()
           .put(org.openqa.grid.common.RegistrationRequest.HUB_HOST, hub.getHost());
       registrationRequest.getConfiguration()
           .put(org.openqa.grid.common.RegistrationRequest.HUB_PORT, hub.getPort());
       registrationRequest.getConfiguration()
-          .put(org.openqa.grid.common.RegistrationRequest.REMOTE_HOST, "http://" + options.getHost() + ":" + options.getPort());
-      registrationRequest.getConfiguration().put(org.openqa.grid.common.RegistrationRequest.MAX_SESSION, 1);
+          .put(org.openqa.grid.common.RegistrationRequest.REMOTE_HOST,
+               "http://" + options.getHost() + ":" + options.getPort());
+      registrationRequest.getConfiguration()
+          .put(org.openqa.grid.common.RegistrationRequest.MAX_SESSION, 1);
 
       remote = new StoppableRegisteringRemote(registrationRequest);
 

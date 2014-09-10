@@ -20,6 +20,8 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The WebDriver atoms are used to ensure consistent behaviour cross-browser.
@@ -66,13 +68,14 @@ public enum IosAtoms {
     return getValue();
   }
 
+
   IosAtoms(String fileLocation) {
     StringWriter sw = new StringWriter();
     try {
       IOUtils
           .copy(this.getClass().getClassLoader().getResourceAsStream("atoms/" + fileLocation), sw);
     } catch (IOException e) {
-      e.printStackTrace();
+      Logger.getLogger(IosAtoms.class.getName()).log(Level.SEVERE,"atoms",e);
     }
     this.value = sw.toString();
   }

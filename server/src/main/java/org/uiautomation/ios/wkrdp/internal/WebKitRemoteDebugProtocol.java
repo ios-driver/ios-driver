@@ -76,7 +76,7 @@ public abstract class WebKitRemoteDebugProtocol {
           }
 
         } catch (Exception e) {
-          e.printStackTrace();
+          log.log(Level.WARNING, "listener thread", e);
         } finally {
           readyToBeStopped = true;
         }

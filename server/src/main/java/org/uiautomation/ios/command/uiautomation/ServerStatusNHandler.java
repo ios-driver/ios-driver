@@ -30,10 +30,13 @@ import org.uiautomation.ios.utils.BuildInfo;
 import org.uiautomation.ios.utils.ClassicCommands;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ServerStatusNHandler extends BaseNativeCommandHandler {
 
   public static final String SUPPORTED_APPS = "supportedApps";
+  private static final Logger log = Logger.getLogger(ServerStatusNHandler.class.getName());
 
   public ServerStatusNHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
@@ -118,7 +121,7 @@ public class ServerStatusNHandler extends BaseNativeCommandHandler {
           app.put("resources", getAppResources(app));
           supportedApps.put(app);
         } catch (JSONException e) {
-          e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+          log.log(Level.SEVERE, "format error", e);
         }
       }
       return supportedApps;

@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.uiautomation.ios.IOSCapabilities.COMMAND_TIMEOUT_MILLIS;
@@ -36,14 +37,18 @@ import static org.uiautomation.ios.IOSCapabilities.COMMAND_TIMEOUT_MILLIS;
  */
 public abstract class BaseUIAutomationCommandExecutor implements UIAutomationCommandExecutor {
 
-  private static final Logger log = Logger.getLogger(BaseUIAutomationCommandExecutor.class.getName());
+  private static final Logger
+      log =
+      Logger.getLogger(BaseUIAutomationCommandExecutor.class.getName());
 
   protected final BlockingQueue<UIAScriptResponse> responseQueue = new ArrayBlockingQueue<>(1);
 
   private final Lock lock = new ReentrantLock();
   private final Condition condition = lock.newCondition();
   private final String STOP_RESPONSE = "exit from instruments loop ok";
-  private final String UNKNOWN_REASON = "The UI Automation Command executor stopped for an unknown reason";
+  private final String
+      UNKNOWN_REASON =
+      "The UI Automation Command executor stopped for an unknown reason";
   private volatile boolean ready = false;
   private final ServerSideSession session;
 
@@ -122,9 +127,9 @@ public abstract class BaseUIAutomationCommandExecutor implements UIAutomationCom
         log.warning("ALREADY PRESENT:" + responseQueue.take().getRaw());
         log.warning("TRY TO ADD:" + r.getRaw());
       } catch (InterruptedException e1) {
-        e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        log.log(Level.SEVERE, "error", e1);
       }
-      e.printStackTrace();
+      log.log(Level.SEVERE, "error", e);
     }
   }
 

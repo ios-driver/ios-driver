@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
@@ -53,8 +55,7 @@ public class IOSServerManager {
     while (getState() != expected) {
       try {
         Thread.sleep(150);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
+      } catch (InterruptedException ignore) {
       }
     }
   }
@@ -87,7 +88,8 @@ public class IOSServerManager {
     if (loggingConfigFile == null) {
       // do not use builtin ios-logging.properties if -Djava.util.logging.config.file set
       try {
-        LogManager.getLogManager().readConfiguration(IOSServerManager.class.getResourceAsStream("/ios-logging.properties"));
+        LogManager.getLogManager().readConfiguration(
+            IOSServerManager.class.getResourceAsStream("/ios-logging.properties"));
       } catch (Exception e) {
         System.err.println("Cannot configure logger.");
       }
@@ -103,7 +105,7 @@ public class IOSServerManager {
 
         DeviceService.INSTANCE.startDetection(devices);
       } catch (SDKException e) {
-        e.printStackTrace();
+        log.log(Level.SEVERE, "LIMD_SDK", e);
       }
     }
 
@@ -128,6 +130,11 @@ public class IOSServerManager {
   }
 
   public void stop() {
+    for (java.util.logging.Handler h : log.getHandlers()) {
+      if (h instanceof FileHandler) {
+        ((FileHandler) h).close();
+      }
+    }
     for (ServerSideSession session : sessions) {
       session.stop();
     }
@@ -137,7 +144,7 @@ public class IOSServerManager {
       try {
         DeviceService.INSTANCE.stopDetection();
       } catch (SDKException e) {
-        e.printStackTrace();
+        log.log(Level.SEVERE, "LIMD_SDK", e);
       }
     }
   }
@@ -259,7 +266,7 @@ public class IOSServerManager {
 
     // if the session isn't there anymore, try to give a helpful message on why it stopped
     ServerSideSession.StopCause cause = reasonByOpaqueKey.get(opaqueKey);
-    if (cause != null){
+    if (cause != null) {
       throw new WebDriverException(cause.name());
     }
     throw new WebDriverException("Cannot find session " + opaqueKey + " on the server.");

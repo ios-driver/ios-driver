@@ -24,6 +24,8 @@ import org.uiautomation.ios.communication.device.DeviceType;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class IPAShellApplication extends IPAApplication {
@@ -33,6 +35,8 @@ public class IPAShellApplication extends IPAApplication {
   private final String version;
   private final ApplicationInfo info;
   private String pathToApp;
+  private static final Logger log = Logger.getLogger(IPAShellApplication.class.getName());
+
 
   public IPAShellApplication(String bundleId, String version, ApplicationInfo info) {
     super(null, null);
@@ -42,7 +46,7 @@ public class IPAShellApplication extends IPAApplication {
     try {
       this.metadata = new JSONObject(new BeanToJsonConverter().convert(getCapabilities()));
     } catch (JSONException e) {
-      e.printStackTrace();
+     log.log(Level.SEVERE,"shell ipa metadata error",e);
     }
   }
 

@@ -18,11 +18,14 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.uiautomation.ios.inspector.model.Cache;
 
 import java.net.InetSocketAddress;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class IDEServer {
 
   private final Server server;
   private final ServletContextHandler servletContextHandler;
+  private static final Logger log = Logger.getLogger(IDEServer.class.getName());
 
   public static void main(String[] args) throws Exception {
     int port = 5555;
@@ -46,7 +49,7 @@ public class IDEServer {
         try {
           server.stop();
         } catch (Exception e) {
-          e.printStackTrace();
+          log.log(Level.SEVERE,"error in shutdown hook servlet context",e);
         }
       }
     });

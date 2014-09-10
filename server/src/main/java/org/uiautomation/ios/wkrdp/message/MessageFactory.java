@@ -64,7 +64,7 @@ public class MessageFactory {
         log.fine("Message: " + message);
       return message;
     } catch (Exception e1) {
-      e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      log.log(Level.SEVERE,"format error",e1);
     }
     return null;
   }

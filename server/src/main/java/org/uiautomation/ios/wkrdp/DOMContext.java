@@ -79,7 +79,7 @@ public class DOMContext {
       try {
         Thread.sleep(250);
       } catch (InterruptedException e) {
-        e.printStackTrace();
+        log.log(Level.FINE,"",e);
       }
     }
     return document;
@@ -126,7 +126,7 @@ public class DOMContext {
 
         return;
       } catch (Exception e) {
-        e.printStackTrace();
+        log.log(Level.SEVERE,"iframe",e);
       }
     }
     log.fine(
@@ -273,7 +273,7 @@ public class DOMContext {
         }
       }
     } catch (Exception ex) {
-      ex.printStackTrace();
+      log.log(Level.SEVERE,"",e);
     }
   }
 

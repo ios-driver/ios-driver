@@ -149,8 +149,6 @@ public class InstrumentsCommandLine implements Instruments {
         }
       } catch (Exception e) {
         // ignore. If we can't kill instruments properly, forcestop will do it.
-        // System.out.println(e.getMessage());
-        e.printStackTrace();
       }
     }
     channel.stop();

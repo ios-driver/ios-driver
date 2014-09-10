@@ -18,9 +18,14 @@ import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.command.UIAScriptRequest;
 import org.uiautomation.ios.command.UIAScriptResponse;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class MultiUIAutomationCommandExecutor extends BaseUIAutomationCommandExecutor {
 
   // private final InstrumentsService instruments;
+  private static final Logger log = Logger
+      .getLogger(MultiUIAutomationCommandExecutor.class.getName());
 
   public MultiUIAutomationCommandExecutor(int port, String aut, ServerSideSession session
                                                    /*InstrumentsService instruments*/) {
@@ -47,7 +52,7 @@ public class MultiUIAutomationCommandExecutor extends BaseUIAutomationCommandExe
       String script = String.format(templ, escaped);
       //instruments.executeScriptNonManaged(script);
     } catch (Exception e) {
-      e.printStackTrace();
+      log.log(Level.SEVERE,"TODO",e);
     }
   }
 
