@@ -306,7 +306,7 @@ public enum WebDriverLikeCommand {
         return command;
       }
     }
-    throw new WebDriverException("cannot find command for " + method + ", " + path);
+    throw new IllegalArgumentException("cannot find command for " + method + ", " + path);
   }
 
   private boolean isGenericFormOf(String method, String path) {
@@ -342,7 +342,7 @@ public enum WebDriverLikeCommand {
         return i;
       }
     }
-    throw new WebDriverException("cannot find the variable " + variable + " in " + path);
+    throw new IllegalArgumentException("cannot find the variable " + variable + " in " + path);
   }
 
   public boolean isSessionLess() {

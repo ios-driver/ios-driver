@@ -47,7 +47,7 @@ public class IOSServlet extends DriverBasedServlet {
     try {
       process(request, response);
     } catch (Exception e) {
-      log.warning(e.toString());
+      log.log(Level.WARNING,"error processing request",e);
     }
   }
 
@@ -57,7 +57,7 @@ public class IOSServlet extends DriverBasedServlet {
     try {
       process(request, response);
     } catch (Exception e) {
-      log.warning(e.toString());
+      log.log(Level.WARNING,"error processing request",e);
     }
   }
 
@@ -68,7 +68,7 @@ public class IOSServlet extends DriverBasedServlet {
     try {
       process(request, response);
     } catch (Exception e) {
-      log.warning(e.toString());
+      log.log(Level.WARNING,"error processing request",e);
     }
   }
 
