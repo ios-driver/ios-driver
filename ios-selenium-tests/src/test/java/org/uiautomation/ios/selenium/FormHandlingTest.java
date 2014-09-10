@@ -386,7 +386,7 @@ public class FormHandlingTest extends BaseSeleniumTest {
     assertEquals("2012-01-01", el.getAttribute("value"));
   }
 
-  @Test(timeOut = 600 * 1000) // takes 220secs on a mac pro
+  @Test(timeOut = 600 * 1000,enabled=false) // takes 220secs on a mac pro
   public void testShouldBeAbleToSendKeysFromAuxiliaryKeyboard() {
     driver.get(pages.formPage);
     WebElement input = driver.findElement(By.id("working"));
