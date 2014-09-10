@@ -153,11 +153,8 @@ public class IOSServlet extends DriverBasedServlet {
     } catch (WebDriverException we) {
       Response response = new Response();
 
-      if (we instanceof SessionNotCreatedException) {
-        response.setStatus(ErrorCodes.SESSION_NOT_CREATED);
-      } else {
-        response.setStatus(ErrorCodes.UNHANDLED_ERROR);
-      }
+      response.setStatus(errorCodes.toStatusCode(we));
+
       if (wdlc != null && wdlc.isSessionLess()) {
         response.setSessionId("");
       } else {
