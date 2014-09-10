@@ -207,6 +207,10 @@ public class IOSDualDriver {
   }
 
   public void setMode(WorkingMode mode) throws NoSuchWindowException {
+    if (mode == this.mode){
+        return;
+    }
+
     if (mode == WorkingMode.Web) {
       checkWebModeIsAvailable();
     }
@@ -217,14 +221,11 @@ public class IOSDualDriver {
     if (session.getApplication().isSafari()) {
       return;
     }
-    if (webDriver != null) {
-      return;
-    } else {
-      try {
+
+    try {
         getNativeDriver().findElement(By.className("UIAWebView"));
-      } catch (NoSuchElementException e) {
+    } catch (NoSuchElementException e) {
         throw new NoSuchWindowException("The app currently doesn't have a webview displayed.");
-      }
     }
   }
 
