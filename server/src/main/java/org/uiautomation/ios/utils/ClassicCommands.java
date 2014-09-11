@@ -105,15 +105,24 @@ public class ClassicCommands {
     cmd.add("-s");
     Command c = new Command(cmd, false);
 
-    Grep grep = new Grep("Automation.tracetemplate");
+    String templateName = "Automation.tracetemplate";
+    Grep grep = new Grep(templateName);
     c.registerListener(grep);
     c.executeAndWait();
     List<String> res = grep.getMatching();
-    if (res.size() == 0) {
-      throw new WebDriverException(
-          "expected 1 result for automation on instruments -s , got " + res);
+    String path;
+    if (res.size() != 0) {
+      path = res.get(0);
     }
-    String path = res.get(0);
+    else {
+      // on Xcode 6 and newer, 'instruments -s' lists the names of the templates, not their locations.
+      // so if it didn't tell us where the template is, search for it ourselves.
+      List<String> findResults = findAutomationTemplate(templateName);
+      if (findResults.size() == 0) {
+          throw new WebDriverException("Unable to find the instruments template " + templateName);
+      }
+      path = findResults.get(0);
+    }
     path = path.replaceFirst(",", "");
     path = path.replaceAll("\"", "");
     path = path.trim();
@@ -124,7 +133,22 @@ public class ClassicCommands {
     return f;
   }
 
-  private static List<String> installedSDKs;
+    private static List<String> findAutomationTemplate(String templateName) {
+        List<String> findArguments = new ArrayList<>();
+        File xcodeLocation = getXCodeInstall();
+        findArguments.add("find");
+        findArguments.add(xcodeLocation.getAbsolutePath());
+        findArguments.add("-name");
+        findArguments.add(templateName);
+        Command findCommand = new Command(findArguments, false);
+        Grep automationTemplateMatcher = new Grep(templateName);
+        findCommand.registerListener(automationTemplateMatcher);
+        findCommand.executeAndWait();
+        List<String> findResults = automationTemplateMatcher.getMatching();
+        return findResults;
+    }
+
+    private static List<String> installedSDKs;
 
   public synchronized static List<String> getInstalledSDKs() {
     if (installedSDKs == null) {
