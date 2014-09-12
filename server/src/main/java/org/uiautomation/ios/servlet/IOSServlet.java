@@ -35,6 +35,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static org.uiautomation.ios.communication.Helper.extractMessage;
+
 public class IOSServlet extends DriverBasedServlet {
 
   private static final Logger log = Logger.getLogger(IOSServlet.class.getName());
@@ -112,6 +114,10 @@ public class IOSServlet extends DriverBasedServlet {
         response.getWriter().print(s);
       }
     } catch (WebDriverException e) {
+      log.log(Level.WARNING,"error processing request ",e);
+      response.setStatus(400);
+      response.getWriter().print(serializeException(e));
+    } catch (Exception e) {
       response.setStatus(500);
       response.getWriter().print(serializeException(e));
       throw new WebDriverException("Error processing response." + e.getMessage(), e);
@@ -150,7 +156,7 @@ public class IOSServlet extends DriverBasedServlet {
       wdlc = request.getGenericCommand();
       Handler h = CommandMapping.get(wdlc).createHandler(getDriver(), request);
       return h.handleAndRunDecorators();
-    } catch (WebDriverException we) {
+    } catch (Exception we) {
       Response response = new Response();
 
       response.setStatus(errorCodes.toStatusCode(we));
@@ -169,10 +175,7 @@ public class IOSServlet extends DriverBasedServlet {
         log.warning(e.toString());
       }
       return response;
-    } catch (Exception e) {
-      level = Level.SEVERE;
-      throw new WebDriverException("bug." + e.getMessage(), e);
-    } finally {
+    }  finally {
       String message = String.format("%s  in %dms", request.toString(),
                                      System.currentTimeMillis() - startTime);
       log.log(level, message);
@@ -180,8 +183,9 @@ public class IOSServlet extends DriverBasedServlet {
   }
 
   private JSONObject serializeException(Throwable e) throws JSONException {
+    String clean = extractMessage(e);
     JSONObject res = new JSONObject();
-    res.put("message", e.getMessage());
+    res.put("message", clean);
     res.put("class", e.getClass().getCanonicalName());
     res.put("screen", JSONObject.NULL);
     res.put("stackTrace", serializeStackTrace(e.getStackTrace()));
@@ -190,6 +194,8 @@ public class IOSServlet extends DriverBasedServlet {
     }
     return res;
   }
+
+
 
   private JSONArray serializeStackTrace(StackTraceElement[] els) throws JSONException {
     JSONArray stacktace = new JSONArray();

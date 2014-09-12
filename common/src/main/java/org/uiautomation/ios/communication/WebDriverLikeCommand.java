@@ -16,6 +16,7 @@ package org.uiautomation.ios.communication;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.UnsupportedCommandException;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.html5.Location;
 import org.uiautomation.ios.UIAModels.Orientation;
@@ -306,7 +307,7 @@ public enum WebDriverLikeCommand {
         return command;
       }
     }
-    throw new IllegalArgumentException("cannot find command for " + method + ", " + path);
+    throw new UnsupportedCommandException("cannot find command for " + method + ", " + path);
   }
 
   private boolean isGenericFormOf(String method, String path) {
@@ -342,7 +343,7 @@ public enum WebDriverLikeCommand {
         return i;
       }
     }
-    throw new IllegalArgumentException("cannot find the variable " + variable + " in " + path);
+    throw new UnsupportedCommandException("cannot find the variable " + variable + " in " + path);
   }
 
   public boolean isSessionLess() {
