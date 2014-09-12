@@ -13,7 +13,16 @@ UIAAlert.prototype.dismiss = function () {
         log("cancel is not there,trying default.");
         button = this.defaultButton();
         if (button.type() === "UIAElementNil") {
-            throw new UIAutomationException("this alert doesn't have the normal buttons.", 7);
+            log("default button not found either, looking for an OK button.")
+            button = this.buttons().OK;
+            if (button.type() === "UIAElementNil") {
+                throw new UIAutomationException("this alert doesn't have the normal buttons.", 7);
+            }
+            else {
+                log("OK button found");
+            }
+        } else {
+            log("default button found");
         }
     } else {
         log("cancel found");
