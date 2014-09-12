@@ -44,8 +44,8 @@ UIAAlert.prototype.accept = function () {
         if (button.type() === "UIAElementNil") {
             throw new UIAutomationException("this alert doesn't have a default normal buttons.", 7);
         } else {
-                UIAutomation.cache.clearAlert();
-                log("OK button found");
+            UIAutomation.cache.clearAlert();
+            log("OK button found");
         }
     }
     button.tap();
