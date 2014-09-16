@@ -73,6 +73,7 @@ public enum DeviceVariation {
                                                  String sdkVersion) {
     deviceVariation = DeviceVariation.normalize(device, deviceVariation);
     boolean isSdk7OrNewer = (new IOSVersion(sdkVersion)).isGreaterOrEqualTo("7.0");
+    
     switch (device) {
       case iphone:
         switch (deviceVariation) {
@@ -80,6 +81,7 @@ public enum DeviceVariation {
             return !isSdk7OrNewer;
           case iPhoneRetina_4inch_64bit:
             return isSdk7OrNewer;
+          
         }
         break;
       case ipad:
@@ -94,11 +96,12 @@ public enum DeviceVariation {
   
   public static DeviceVariation getCompatibleVersion(DeviceType device, String sdkVersion) {
       boolean isSdk7OrNewer = (new IOSVersion(sdkVersion)).isGreaterOrEqualTo("7.0");
+      boolean isSdk8OrNewer = (new IOSVersion(sdkVersion)).isGreaterOrEqualTo("8.0");
       switch (device) {
         case iphone:
-          return isSdk7OrNewer? Retina4 : Regular;
+          return isSdk8OrNewer? iPhone5s : (isSdk7OrNewer? Retina4 : Regular);
         case ipad:
-          return isSdk7OrNewer? Retina : Regular;
+          return isSdk8OrNewer? iPad2 : (isSdk7OrNewer? Retina : Regular);
       }
       return Regular;
   }
