@@ -27,7 +27,7 @@ public class AppleMagicString {
     // 'iPad Retina (64-bit) - Simulator - iOS 7.1' or 'iPhone 5 (8.0 Simulator)' if Xcode 6 or later is being used
     IOSVersion iosVersion = new IOSVersion(desiredSDKVersion);
     String version = iosVersion.getMajor() + '.' + iosVersion.getMinor();
-    String name = getSimulateDeviceValue(device, variation, desiredSDKVersion);
+    String name = getSimulateDeviceValue(device, variation, desiredSDKVersion, instrumentsVersion);
     String specification;
     if (instrumentsVersion.getMajor() < 6) {
       specification = name + " - Simulator - iOS " + version;
@@ -37,8 +37,8 @@ public class AppleMagicString {
     return specification;
   }
 
-  public static  String getSimulateDeviceValue(DeviceType device, DeviceVariation variation,
-                                        String desiredSDKVersion)
+  public static String getSimulateDeviceValue(DeviceType device, DeviceVariation variation,
+                                        String desiredSDKVersion, InstrumentsVersion instrumentsVersion)
       throws WebDriverException {
     if (!DeviceVariation.compatibleWithSDKVersion(device, variation, desiredSDKVersion)) {
       DeviceVariation
@@ -46,9 +46,9 @@ public class AppleMagicString {
           DeviceVariation.getCompatibleVersion(device, desiredSDKVersion);
       throw new WebDriverException(
           String.format("%s variation incompatible with SDK %s, a compatible variation is %s",
-                        DeviceVariation.deviceString(device, variation),
+                        DeviceVariation.deviceString(device, variation, instrumentsVersion.getMajor()),
                         desiredSDKVersion, compatibleVariation));
     }
-    return DeviceVariation.deviceString(device, variation);
+    return DeviceVariation.deviceString(device, variation, instrumentsVersion.getMajor());
   }
 }
