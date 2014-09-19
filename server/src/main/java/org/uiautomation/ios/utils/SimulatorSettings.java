@@ -136,7 +136,7 @@ public class SimulatorSettings {
    */
   public void setVariation(DeviceType device, DeviceVariation variation, String desiredSDKVersion)
       throws WebDriverException {
-    deviceName = AppleMagicString.getSimulateDeviceValue(device, variation, desiredSDKVersion);
+    deviceName = AppleMagicString.getSimulateDeviceValue(device, variation, desiredSDKVersion, instrumentsVersion);
     setDefaultSimulatorPreference("SimulateDevice", deviceName);
 
     String subfolder = getSDKSubfolder(desiredSDKVersion);

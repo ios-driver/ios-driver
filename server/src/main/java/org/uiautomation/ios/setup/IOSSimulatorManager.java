@@ -80,9 +80,8 @@ public class IOSSimulatorManager implements IOSDeviceManager {
 
     boolean putDefaultFirst = instrumentsIs50OrHigher;
 
-
-    simulatorSettings.setVariation(deviceType, variation, desiredSDKVersion);
     simulatorSettings.setInstrumentsVersion(info.getInstrumentsVersion());
+    simulatorSettings.setVariation(deviceType, variation, desiredSDKVersion);
     simulatorSettings.setSimulatorScale(caps.getSimulatorScale());
 
     application.setDefaultDevice(deviceType, putDefaultFirst);
