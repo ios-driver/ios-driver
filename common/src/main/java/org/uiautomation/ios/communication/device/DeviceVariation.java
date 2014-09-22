@@ -117,9 +117,10 @@ public enum DeviceVariation {
   
   public static DeviceVariation getCompatibleVersion(DeviceType device, String sdkVersion) {
       boolean isSdk7OrNewer = (new IOSVersion(sdkVersion)).isGreaterOrEqualTo("7.0");
+      boolean isSdk8OrNewer = (new IOSVersion(sdkVersion)).isGreaterOrEqualTo("8.0");
       switch (device) {
         case iphone:
-          return isSdk7OrNewer? Retina4 : Regular;
+          return isSdk8OrNewer? iPhone5s : (isSdk7OrNewer? Retina4 : Regular);
         case ipad:
           return isSdk7OrNewer? Retina : Regular;
       }
