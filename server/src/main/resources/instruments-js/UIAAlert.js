@@ -35,7 +35,7 @@ UIAAlert.prototype.accept = function () {
     var button = this.defaultButton();
     if (button.type() === "UIAElementNil") {
         var buttons = this.buttons();
-        button = buttons[OK];
+        button = buttons["OK"];
         if (button.type() === "UIAElementNil" && buttons.length > 0) {
             button = buttons[buttons.length - 1];
             if (button.type() === "UIAElementNil") {
