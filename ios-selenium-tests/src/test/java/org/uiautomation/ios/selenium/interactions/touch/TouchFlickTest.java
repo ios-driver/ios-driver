@@ -22,12 +22,11 @@ import org.openqa.selenium.NeedsFreshDriver;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
-import org.openqa.selenium.interactions.touch.FlickAction;
 import org.openqa.selenium.interactions.touch.TouchActions;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.selenium.BaseSeleniumTest;
 
-import static org.junit.Assert.assertTrue;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Tests the basic flick operations on touch enabled devices.
@@ -70,7 +69,7 @@ public class TouchFlickTest extends BaseSeleniumTest {
 
     int newX = link.getLocation().x;
     // After flicking, the element should now be visible on the screen.
-    assertTrue("Expected x < " + originalX + ", but got x = " + newX, newX < originalX);
+    assertTrue(newX < originalX, "Expected x < " + originalX + ", but got x = " + newX);
   }
 
   @NeedsFreshDriver
@@ -88,7 +87,7 @@ public class TouchFlickTest extends BaseSeleniumTest {
     flick.perform();
     int newX = link.getLocation().x;
     // After flicking, the element should now be visible on the screen.
-    assertTrue("Expected x < " + originalX + ", but got x = " + newX, newX < originalX);
+    assertTrue(newX < originalX, "Expected x < " + originalX + ", but got x = " + newX);
   }
 
   @NeedsFreshDriver
@@ -105,7 +104,7 @@ public class TouchFlickTest extends BaseSeleniumTest {
     flick.perform();
     int newX = link.getLocation().x;
     // After flicking, the element should now be visible on the screen.
-    assertTrue("Expected x < " + originalX + ", but got x = " + newX, newX < originalX);
+    assertTrue(newX < originalX, "Expected x < " + originalX + ", but got x = " + newX);
   }
 
   @NeedsFreshDriver
@@ -121,7 +120,7 @@ public class TouchFlickTest extends BaseSeleniumTest {
     flick.perform();
     int newX = link.getLocation().x;
     // After flicking, the element should now be visible on the screen.
-    assertTrue("Expected x < " + originalX + ", but got x = " + newX, newX < originalX);
+    assertTrue(newX < originalX, "Expected x < " + originalX + ", but got x = " + newX);
   }
 
   @NeedsFreshDriver
@@ -139,7 +138,7 @@ public class TouchFlickTest extends BaseSeleniumTest {
     flick.perform();
     int newY = link.getLocation().y;
     // After flicking, the element should now be visible on the screen.
-    assertTrue("Expected y < " + originalY + ", but got y = " + newY, newY < originalY);
+    assertTrue(newY < originalY, "Expected y < " + originalY + ", but got y = " + newY);
   }
 
   @NeedsFreshDriver
@@ -157,7 +156,7 @@ public class TouchFlickTest extends BaseSeleniumTest {
     flick.perform();
     int newY = link.getLocation().y;
     // After flicking, the element should now be visible on the screen.
-    assertTrue("Expected y < " + originalY + ", but got y = " + newY, newY < originalY);
+    assertTrue(newY < originalY, "Expected y < " + originalY + ", but got y = " + newY);
   }
 
   @NeedsFreshDriver
@@ -174,7 +173,7 @@ public class TouchFlickTest extends BaseSeleniumTest {
     int newY = link.getLocation().y;
 
     // After flicking, the element should now be visible on the screen.
-    assertTrue("Expected y < " + originalY + ", but got y = " + newY, newY < originalY);
+    assertTrue(newY < originalY, "Expected y < " + originalY + ", but got y = " + newY);
   }
 
   @NeedsFreshDriver
@@ -190,7 +189,7 @@ public class TouchFlickTest extends BaseSeleniumTest {
     flick.perform();
     int newY = link.getLocation().y;
     // After flicking, the element should now be visible on the screen.
-    assertTrue("Expected y < " + originalY + ", but got y = " + newY, newY < originalY);
+    assertTrue(newY < originalY, "Expected y < " + originalY + ", but got y = " + newY);
   }
 
 }

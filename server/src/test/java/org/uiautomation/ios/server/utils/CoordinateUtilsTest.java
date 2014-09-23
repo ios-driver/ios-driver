@@ -16,9 +16,9 @@ package org.uiautomation.ios.server.utils;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
-import junit.framework.Assert;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.remote.Response;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.utils.CoordinateUtils;
 
@@ -44,6 +44,6 @@ public class CoordinateUtilsTest {
     Point expectedPoint = new Point(105, 210);
     Point actualPoint = CoordinateUtils.getCenterPointFromResponse(response);
 
-    Assert.assertEquals("Point should be center of response rectangle", expectedPoint, actualPoint);
+    Assert.assertEquals( expectedPoint, actualPoint,"Point should be center of response rectangle");
   }
 }

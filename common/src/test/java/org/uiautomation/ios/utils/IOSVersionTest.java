@@ -14,7 +14,7 @@
 
 package org.uiautomation.ios.utils;
 
-import org.junit.Assert;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class IOSVersionTest {
