@@ -13,7 +13,11 @@ UIAAlert.prototype.dismiss = function () {
         log("cancel is not there,trying default.");
         button = this.defaultButton();
         if (button.type() === "UIAElementNil") {
-            throw new UIAutomationException("this alert doesn't have the normal buttons.", 7);
+            log("default button missing, trying zeroth button");
+            button = this.buttons()[0];
+            if (button.type() === "UIAElementNil") {
+                throw new UIAutomationException("this alert doesn't have the normal buttons.", 7);
+            }
         }
     } else {
         log("cancel found");
@@ -30,7 +34,14 @@ UIAAlert.prototype.dismiss = function () {
 UIAAlert.prototype.accept = function () {
     var button = this.defaultButton();
     if (button.type() === "UIAElementNil") {
-        throw new UIAutomationException("this alert doesn't have a default normal buttons.", 7);
+        var buttons = this.buttons();
+        button = buttons["OK"];
+        if (button.type() === "UIAElementNil" && buttons.length > 0) {
+            button = buttons[buttons.length - 1];
+            if (button.type() === "UIAElementNil") {
+                throw new UIAutomationException("this alert doesn't have a default normal buttons.", 7);
+            }
+        }
     }
     button.tap();
     UIATarget.localTarget().delay(0.5);
