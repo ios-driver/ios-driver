@@ -74,6 +74,9 @@ public class InstrumentsNoDelayLoader {
     extractFromJar("instruments");
     extractFromJar("InstrumentsShim.dylib");
     extractFromJar("ScriptAgentShim.dylib");
+    if (version.getMajor() >= 6) {
+      extractFromJar("DTMobileISShim.dylib");
+    }
     extractFromJar("SimShim.dylib");
     extractFromJar("README");
     File instruments = new File(workingDirectory, "instruments");
