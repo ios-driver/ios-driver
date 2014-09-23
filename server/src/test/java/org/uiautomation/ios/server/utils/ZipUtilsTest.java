@@ -18,8 +18,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import junit.framework.Assert;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.SampleApps;
 import org.uiautomation.ios.utils.ZipUtils;
@@ -30,7 +30,7 @@ public final class ZipUtilsTest {
   public void canExtractAppFromURL() throws IOException {
     URL url = SampleApps.getUICatalogZipURL();
     File appFile = ZipUtils.extractAppFromURL(url);
-    Assert.assertTrue(appFile.getAbsolutePath(), appFile.getName().endsWith("UICatalog.app"));
+    Assert.assertTrue(appFile.getName().endsWith("UICatalog.app"),appFile.getAbsolutePath());
     Assert.assertTrue(new File(appFile, "Info.plist").exists());
   }
 }

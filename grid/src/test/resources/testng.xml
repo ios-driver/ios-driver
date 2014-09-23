@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="ios-selenium-tests" parallel="false">
+    <test name="grid regression" preserve-order="true" verbose="2">
+        <packages>
+            <package name="org.uiautomation.ios.grid.*"/>
+        </packages>
+
+    </test>
+</suite>
