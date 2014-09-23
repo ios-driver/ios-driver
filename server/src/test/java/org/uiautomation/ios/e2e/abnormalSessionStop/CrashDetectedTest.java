@@ -35,9 +35,9 @@ import org.uiautomation.ios.utils.ClassicCommands;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static org.junit.Assert.assertTrue;
 import static org.testng.Assert.fail;
-import static org.testng.AssertJUnit.assertNotNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertNotNull;
 
 
 public class CrashDetectedTest {
@@ -168,7 +168,7 @@ public class CrashDetectedTest {
 //          e.getMessage().contains("It appears like the Simulator process has crashed"));
       // ios 7 : Fail: The target application appears to have died
     }
-    assertTrue("Simulator crash detected.", crashExceptionThrown);
+    assertTrue( crashExceptionThrown ,"Simulator crash detected.");
   }
 
   @Test
@@ -202,7 +202,7 @@ public class CrashDetectedTest {
 //      Assert.assertTrue("Crash error contains Instruments as likely cause of problem. " + e.getMessage(), e.getMessage().contains("Instruments"));
       // IOS7  :Stopped: Script was stopped by the user
     }
-    assertTrue("Instruments crash detected.", crashExceptionThrown);
+    assertTrue( crashExceptionThrown, "Instruments crash detected.");
   }
 
   @Test
@@ -232,7 +232,7 @@ public class CrashDetectedTest {
 
       JSONObject json = tree.logElementTree(null, false);
 
-      assertNotNull("We can get the page source for a large tableview", json);
+      assertNotNull( json, "We can get the page source for a large tableview");
     } catch (Exception e) {
       fail("Exception caught while performing logElementTree on page with large TreeView. App crashed");
     }
