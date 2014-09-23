@@ -15,15 +15,13 @@ limitations under the License.
  */
 package org.uiautomation.ios.selenium;
 
-import org.openqa.selenium.*;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 
 import java.util.concurrent.Callable;
 
-import static org.junit.Assert.*;
-import static org.openqa.selenium.TestWaiter.waitFor;
+import static org.testng.Assert.assertEquals;
 
 public class RenderedWebElementTest extends BaseSeleniumTest {
 
@@ -34,12 +32,12 @@ public class RenderedWebElementTest extends BaseSeleniumTest {
     WebElement element = driver.findElement(By.id("green-parent"));
     String backgroundColour = element.getCssValue("background-color");
 
-    assertEquals("rgba(0, 128, 0, 1)", backgroundColour);
+    assertEquals(backgroundColour,"rgba(0, 128, 0, 1)");
 
     element = driver.findElement(By.id("red-item"));
     backgroundColour = element.getCssValue("background-color");
 
-    assertEquals("rgba(255, 0, 0, 1)", backgroundColour);
+    assertEquals(backgroundColour,"rgba(255, 0, 0, 1)");
   }
 
   @Test
@@ -48,11 +46,11 @@ public class RenderedWebElementTest extends BaseSeleniumTest {
 
     WebElement element = driver.findElement(By.id("namedColor"));
     String backgroundColour = element.getCssValue("background-color");
-    assertEquals("rgba(0, 128, 0, 1)", backgroundColour);
+    assertEquals(backgroundColour,"rgba(0, 128, 0, 1)");
 
     element = driver.findElement(By.id("rgb"));
     backgroundColour = element.getCssValue("background-color");
-    assertEquals("rgba(0, 128, 0, 1)", backgroundColour);
+    assertEquals(backgroundColour,"rgba(0, 128, 0, 1)");
 
   }
 
@@ -73,7 +71,7 @@ public class RenderedWebElementTest extends BaseSeleniumTest {
     WebElement element = driver.findElement(By.id("green-item"));
     String height = element.getCssValue("height");
 
-    assertEquals("30px", height);
+    assertEquals(height, "30px");
   }
 
   @Test
@@ -83,7 +81,7 @@ public class RenderedWebElementTest extends BaseSeleniumTest {
     WebElement element = driver.findElement(By.tagName("a"));
     String height = element.getCssValue("text-decoration");
 
-    assertEquals("underline", height);
+    assertEquals(height, "underline");
   }
 
   private boolean fuzzyPositionMatching(int expectedX, int expectedY, String locationTouple) {

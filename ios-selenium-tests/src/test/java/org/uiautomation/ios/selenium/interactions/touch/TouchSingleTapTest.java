@@ -22,7 +22,7 @@ import org.openqa.selenium.interactions.touch.TouchActions;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.selenium.BaseSeleniumTest;
 
-import static org.junit.Assert.assertTrue;
+import static org.testng.Assert.assertTrue;
 import static org.openqa.selenium.TestWaiter.waitFor;
 
 /**

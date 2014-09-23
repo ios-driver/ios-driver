@@ -26,7 +26,7 @@ import org.openqa.selenium.interactions.touch.TouchActions;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.selenium.BaseSeleniumTest;
 
-import static org.junit.Assert.assertTrue;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Tests the basic scroll operations on touch enabled devices..
@@ -46,7 +46,7 @@ public class TouchScrollTest extends BaseSeleniumTest {
     int y = link.getLocation().y;
     // The element is located at the right of the page,
     // so it is not initially visible on the screen.
-    assertTrue("Expected y > 4200, but got y = " + y, y > 4200);
+    assertTrue(y > 4200, "Expected y > 4200, but got y = " + y);
 
     WebElement toScroll = driver.findElement(By.id("imagestart"));
     Action scroll = getBuilder(driver).scroll(toScroll, 0, -800).build();
@@ -54,7 +54,7 @@ public class TouchScrollTest extends BaseSeleniumTest {
 
     y = link.getLocation().y;
     // After scrolling, the location of the element should change accordingly.
-    assertTrue("Expected y < 3500, but got y = " + y, y < 3500);
+    assertTrue(y < 3500,"Expected y < 3500, but got y = " + y);
   }
 
   @NeedsFreshDriver
@@ -66,7 +66,7 @@ public class TouchScrollTest extends BaseSeleniumTest {
     int x = link.getLocation().x;
     // The element is located at the right of the page,
     // so it is not initially visible on the screen.
-    assertTrue("Expected x > 1500, but got x = " + x, x > 1500);
+    assertTrue(x > 1500, "Expected x > 1500, but got x = " + x);
 
     WebElement toScroll = driver.findElement(By.id("imagestart"));
     Action scroll = getBuilder(driver).scroll(toScroll, -100, 0).build();
@@ -74,7 +74,7 @@ public class TouchScrollTest extends BaseSeleniumTest {
 
     x = link.getLocation().x;
     // After scrolling, the location of the element should change accordingly.
-    assertTrue("Expected x < 1500, but got x = " + x, x < 1500);
+    assertTrue(x < 1500, "Expected x < 1500, but got x = " + x);
   }
 
   @NeedsFreshDriver
@@ -105,14 +105,14 @@ public class TouchScrollTest extends BaseSeleniumTest {
     int x = link.getLocation().x;
     // The element is located at the right of the page,
     // so it is not initially visible on the screen.
-    assertTrue("Expected x > 1500, but got x = " + x, x > 1500);
+    assertTrue(x > 1500, "Expected x > 1500, but got x = " + x);
 
     Action scrollDown = getBuilder(driver).scroll(400, 0).build();
     scrollDown.perform();
 
     x = link.getLocation().y;
     // After scrolling, the location of the element should change accordingly.
-    assertTrue("Expected x < 1500, but got x = " + x, x < 1500);
+    assertTrue(x < 1500, "Expected x < 1500, but got x = " + x);
   }
 
 }
