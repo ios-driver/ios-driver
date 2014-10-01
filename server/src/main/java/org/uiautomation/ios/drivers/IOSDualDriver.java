@@ -178,8 +178,9 @@ public class IOSDualDriver {
         break;
       }
     }
+
     if (!ok) {
-      throw new SessionNotCreatedException(
+      throw new RecoverableCrashException(
           "coudln't find the about:blank button after " + retry + " retries.");
     }
     setMode(WorkingMode.Web);
