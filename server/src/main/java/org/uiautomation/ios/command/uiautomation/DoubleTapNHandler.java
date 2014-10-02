@@ -53,7 +53,7 @@ public class DoubleTapNHandler extends UIAScriptHandler {
     } else {
       Dimension screenSize = getNativeDriver().getScreenSize();
       RemoteWebNativeBackedElement element = (RemoteWebNativeBackedElement) getWebDriver().createElement(elementId);
-      Point tapPoint = element.getLocation();
+      Point tapPoint = element.getLocation(true);
       tapPoint = CoordinateUtils.forcePointOnScreen(tapPoint, screenSize);
       setJS(nativeTemplate.generate(request.getSession(), tapPoint.getX(), tapPoint.getY()));
     }

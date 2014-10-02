@@ -38,7 +38,7 @@ public class GetLocationHandler extends BaseWebCommandHandler {
   public Response handle() throws Exception {
     String ref = getRequest().getVariableValue(":reference");
     RemoteWebNativeBackedElement element = (RemoteWebNativeBackedElement) getWebDriver().createElement(ref);
-    Point location = element.getLocation();
+    Point location = element.getLocation(false);
     Response res = new Response();
     res.setSessionId(getSession().getSessionId());
     res.setStatus(0);

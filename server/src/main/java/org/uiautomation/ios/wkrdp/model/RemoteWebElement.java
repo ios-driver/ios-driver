@@ -134,7 +134,7 @@ public class RemoteWebElement {
   }
 
 
-  public Point getLocation() throws Exception {
+  public Point getLocation(Boolean center) throws Exception {
     String
             f =
             "(function(arg) { " + "var loc = " + IosAtoms.GET_LOCATION_IN_VIEW + "(arg);"

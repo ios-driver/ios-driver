@@ -83,7 +83,7 @@ public class ScrollNHandler extends UIAScriptHandler {
   private void nativeScrollFromElement(WebDriverLikeRequest request, Dimension screenSize, String elementId,
                                        Point offset) throws Exception {
     RemoteWebNativeBackedElement element = (RemoteWebNativeBackedElement) getWebDriver().createElement(elementId);
-    Point fromPoint = element.getLocation();
+    Point fromPoint = element.getLocation(true);
     fromPoint = CoordinateUtils.forcePointOnScreen(fromPoint, screenSize);
     Point toPoint = new Point(
         fromPoint.getX() + offset.getX(),

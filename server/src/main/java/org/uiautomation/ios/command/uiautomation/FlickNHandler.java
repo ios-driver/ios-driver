@@ -101,7 +101,7 @@ public class FlickNHandler extends UIAScriptHandler {
   private void nativeFlickFromElement(WebDriverLikeRequest request, Dimension screenSize, Point offset, double speed,
                                       String elementId) throws Exception {
     RemoteWebNativeBackedElement element = (RemoteWebNativeBackedElement) getWebDriver().createElement(elementId);
-    Point fromPoint = element.getLocation();
+    Point fromPoint = element.getLocation(true);
     Point toPoint = new Point(fromPoint.getX() + offset.getX(), fromPoint.getY() + offset.getY());
     fromPoint = CoordinateUtils.forcePointOnScreen(fromPoint, screenSize);
     toPoint = CoordinateUtils.forcePointOnScreen(toPoint, screenSize);
