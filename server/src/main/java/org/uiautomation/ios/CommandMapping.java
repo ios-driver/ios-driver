@@ -112,6 +112,7 @@ public enum CommandMapping {
   DISPLAYED(IsVisibleNHandler.class, IsDisplayedHandler.class),
   ENABLED(IsEnabledNHandler.class, IsEnabledHandler.class),
   LOCATION(null, null, GetLocationHandler.class),
+  ELEMENT_SIZE(null, GetElementSizeNHandler.class, GetElementSizeHandler.class),
 
   LOG(NotImplementedNativeHandler.class, LogHandler.class),
   LOG_TYPES(NotImplementedNativeHandler.class, LogTypesHandler.class),
