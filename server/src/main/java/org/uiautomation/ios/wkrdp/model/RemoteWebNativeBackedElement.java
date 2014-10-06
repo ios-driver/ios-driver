@@ -134,8 +134,8 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
       }
       case CENTER: {
         Dimension size = getSize();
-        script.append("var top = (" + top + " + " + size.getHeight() + " / 2) * ratioX);");
-        script.append("var left = (" + left + " + " + size.getWidth() + " / 2) * ratioY);");
+        script.append("var top = (" + top + " + " + size.getHeight() + " / 2) * ratioX;");
+        script.append("var left = (" + left + " + " + size.getWidth() + " / 2) * ratioY;");
         break;
       }
     }
