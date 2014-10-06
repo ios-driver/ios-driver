@@ -75,7 +75,7 @@ public class CoordinateUtils {
   }
 
   public static Point getCenterPointFromElement(RemoteWebElement element) throws Exception {
-    Point location = element.getLocation(false);
+    Point location = element.getLocation(RemoteWebElement.ElementPosition.TOP_LEFT);
     Dimension size = element.getSize();
     return getCenterPoint(location.getX(), location.getY(), size.getWidth(), size.getHeight());
   }

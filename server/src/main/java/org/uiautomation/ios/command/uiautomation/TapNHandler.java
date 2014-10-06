@@ -25,6 +25,7 @@ import org.uiautomation.ios.utils.CoordinateUtils;
 import org.uiautomation.ios.utils.JSTemplate;
 import org.uiautomation.ios.drivers.RemoteIOSWebDriver;
 import org.uiautomation.ios.wkrdp.model.NodeId;
+import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
 import org.uiautomation.ios.wkrdp.model.RemoteWebNativeBackedElement;
 
 public class TapNHandler extends UIAScriptHandler {
@@ -53,7 +54,7 @@ public class TapNHandler extends UIAScriptHandler {
     } else {
       Dimension screenSize = getNativeDriver().getScreenSize();
       RemoteWebNativeBackedElement element = (RemoteWebNativeBackedElement) getWebDriver().createElement(elementId);
-      Point tapPoint = element.getLocation(true);
+      Point tapPoint = element.getLocation(RemoteWebElement.ElementPosition.CENTER);
       tapPoint = CoordinateUtils.forcePointOnScreen(tapPoint, screenSize);
       setJS(nativeTemplate.generate(request.getSession(), tapPoint.getX(), tapPoint.getY()));
     }

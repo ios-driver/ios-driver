@@ -25,6 +25,7 @@ import org.uiautomation.ios.utils.CoordinateUtils;
 import org.uiautomation.ios.utils.JSTemplate;
 import org.uiautomation.ios.drivers.RemoteIOSWebDriver;
 import org.uiautomation.ios.wkrdp.model.NodeId;
+import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
 import org.uiautomation.ios.wkrdp.model.RemoteWebNativeBackedElement;
 
 public class ScrollNHandler extends UIAScriptHandler {
@@ -83,7 +84,7 @@ public class ScrollNHandler extends UIAScriptHandler {
   private void nativeScrollFromElement(WebDriverLikeRequest request, Dimension screenSize, String elementId,
                                        Point offset) throws Exception {
     RemoteWebNativeBackedElement element = (RemoteWebNativeBackedElement) getWebDriver().createElement(elementId);
-    Point fromPoint = element.getLocation(true);
+    Point fromPoint = element.getLocation(RemoteWebElement.ElementPosition.CENTER);
     fromPoint = CoordinateUtils.forcePointOnScreen(fromPoint, screenSize);
     Point toPoint = new Point(
         fromPoint.getX() + offset.getX(),

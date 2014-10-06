@@ -25,6 +25,7 @@ import org.uiautomation.ios.utils.CoordinateUtils;
 import org.uiautomation.ios.utils.JSTemplate;
 import org.uiautomation.ios.drivers.RemoteIOSWebDriver;
 import org.uiautomation.ios.wkrdp.model.NodeId;
+import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
 import org.uiautomation.ios.wkrdp.model.RemoteWebNativeBackedElement;
 
 public class FlickNHandler extends UIAScriptHandler {
@@ -101,7 +102,7 @@ public class FlickNHandler extends UIAScriptHandler {
   private void nativeFlickFromElement(WebDriverLikeRequest request, Dimension screenSize, Point offset, double speed,
                                       String elementId) throws Exception {
     RemoteWebNativeBackedElement element = (RemoteWebNativeBackedElement) getWebDriver().createElement(elementId);
-    Point fromPoint = element.getLocation(true);
+    Point fromPoint = element.getLocation(RemoteWebElement.ElementPosition.CENTER);
     Point toPoint = new Point(fromPoint.getX() + offset.getX(), fromPoint.getY() + offset.getY());
     fromPoint = CoordinateUtils.forcePointOnScreen(fromPoint, screenSize);
     toPoint = CoordinateUtils.forcePointOnScreen(toPoint, screenSize);
