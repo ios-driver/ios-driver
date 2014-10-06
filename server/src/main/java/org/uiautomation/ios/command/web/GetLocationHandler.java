@@ -21,6 +21,7 @@ import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.IOSServerManager;
 import org.uiautomation.ios.command.BaseWebCommandHandler;
+import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
 import org.uiautomation.ios.wkrdp.model.RemoteWebNativeBackedElement;
 
 public class GetLocationHandler extends BaseWebCommandHandler {
@@ -38,7 +39,7 @@ public class GetLocationHandler extends BaseWebCommandHandler {
   public Response handle() throws Exception {
     String ref = getRequest().getVariableValue(":reference");
     RemoteWebNativeBackedElement element = (RemoteWebNativeBackedElement) getWebDriver().createElement(ref);
-    Point location = element.getLocation(false);
+    Point location = element.getLocation(RemoteWebElement.ElementPosition.TOP_LEFT);
     Response res = new Response();
     res.setSessionId(getSession().getSessionId());
     res.setStatus(0);

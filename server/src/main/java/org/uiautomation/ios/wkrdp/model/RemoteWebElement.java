@@ -22,12 +22,17 @@ import org.uiautomation.ios.wkrdp.RemoteExceptionException;
 import org.uiautomation.ios.wkrdp.command.DOM;
 import org.uiautomation.ios.wkrdp.internal.IosAtoms;
 
+import javax.lang.model.element.Element;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class RemoteWebElement {
+
+  public enum ElementPosition {
+      TOP_LEFT, CENTER
+  }
 
   private static final Logger log = Logger.getLogger(RemoteWebElement.class.getName());
   private final BaseWebInspector inspector;
@@ -134,7 +139,7 @@ public class RemoteWebElement {
   }
 
 
-  public Point getLocation(Boolean center) throws Exception {
+  public Point getLocation(ElementPosition position) throws Exception {
     String
             f =
             "(function(arg) { " + "var loc = " + IosAtoms.GET_LOCATION_IN_VIEW + "(arg);"

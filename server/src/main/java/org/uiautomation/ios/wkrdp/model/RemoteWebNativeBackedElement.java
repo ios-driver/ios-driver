@@ -101,7 +101,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
   }
 
   @Override
-  public Point getLocation(Boolean center)
+  public Point getLocation(ElementPosition position)
       throws Exception {
     // web stuff.
     //scrollIntoViewIfNeeded();
@@ -126,13 +126,18 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     // switch +1 to +2 in next, with +1 some clicks in text fields didn't bring up the
     // keyboard, the text field would get focus, but the keyboard would not launch
     // also with this change 17 miscellaneous selenium tests got fixed
-    if (center) {
-      Dimension size = getSize();
-      script.append("var top = (" + top + " + " + size.getHeight() + " / 2) * ratioX);");
-      script.append("var left = (" + left + " + " + size.getWidth() + " / 2) * ratioY);");
-    } else {
-      script.append("var top = (" + top + "*ratioX);");
-      script.append("var left = (" + left + "*ratioY);");
+    switch (position) {
+      case TOP_LEFT: {
+        script.append("var top = (" + top + "*ratioX);");
+        script.append("var left = (" + left + "*ratioY);");
+        break;
+      }
+      case CENTER: {
+        Dimension size = getSize();
+        script.append("var top = (" + top + " + " + size.getHeight() + " / 2) * ratioX);");
+        script.append("var left = (" + left + " + " + size.getWidth() + " / 2) * ratioY);");
+        break;
+      }
     }
 
     script.append("var x = left;");
@@ -201,7 +206,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
   private String getNativeElementClickOnIt() throws Exception {
     // web stuff.
     scrollIntoViewIfNeeded();
-    Point location = getLocation(true);
+    Point location = getLocation(ElementPosition.CENTER);
     return "UIATarget.localTarget().tap({'x':" + location.getX() + ",'y':" + location.getY() + "});";
   }
 
