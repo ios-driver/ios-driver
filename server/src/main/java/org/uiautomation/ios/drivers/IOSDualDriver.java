@@ -180,6 +180,7 @@ public class IOSDualDriver {
     }
 
     if (!ok) {
+      log.warning("Couldn't find button after "+retry+"retries.");
       throw new RecoverableCrashException(
           "coudln't find the about:blank button after " + retry + " retries.");
     }
