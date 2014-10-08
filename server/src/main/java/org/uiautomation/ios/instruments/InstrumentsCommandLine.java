@@ -119,7 +119,6 @@ public class InstrumentsCommandLine implements Instruments {
 
       // let the process spawn
       Thread.sleep(2000);
-
       instrumentsPid = ClassicCommands.getHighestPidForName("instruments");
 
       log.fine("waiting for registration request");
