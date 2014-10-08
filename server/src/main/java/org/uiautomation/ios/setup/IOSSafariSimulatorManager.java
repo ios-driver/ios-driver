@@ -102,10 +102,7 @@ public class IOSSafariSimulatorManager extends IOSSimulatorManager {
       if (!howToMoveSafariBackMessageGiven) {
         howToMoveSafariBackMessageGiven = true;
         String to = safariFolder.getAbsolutePath();
-        log.info(
-            "temporarily moving MobileSafari out of the install directory, if you need to restore it yourself use:\n$ cp -rf "
-            + copy + ' ' + to);
-      }
+        log.info("temporarily moving MobileSafari out of the install directory, if you need to restore it yourself use: $ cp -rf " + copy + ' ' + to);}
     } catch (IOException e) {
       log.log(Level.SEVERE,
               "----------------------------------------------------------------------------");

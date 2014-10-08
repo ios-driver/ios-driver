@@ -1,6 +1,8 @@
 package org.uiautomation.ios;
 
 
+import org.uiautomation.ios.communication.Helper;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Formatter;
@@ -38,7 +40,8 @@ public class LogstashFormatter extends Formatter {
     // add the exception if there is one
     Throwable t = record.getThrown();
     if (t != null) {
-      sb.append(EX_START + t.getMessage());
+      record.setMessage(Helper.extractMessage(t));
+      sb.append(EX_START + Helper.extractMessage(t) + SEPARATOR);
       sb.append(getStackAsString(t, null));
       sb.append(EX_STOP);
     }
@@ -56,7 +59,7 @@ public class LogstashFormatter extends Formatter {
       buff = new StringBuffer();
     }
     for (StackTraceElement el : t.getStackTrace()) {
-      buff.append(el.toString()+SEPARATOR);
+      buff.append(el.toString() + SEPARATOR);
     }
     Throwable cause = t.getCause();
     if (cause != null) {

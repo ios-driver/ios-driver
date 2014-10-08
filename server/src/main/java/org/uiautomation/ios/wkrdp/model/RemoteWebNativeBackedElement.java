@@ -101,7 +101,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
   }
 
   @Override
-  public Point getLocation()
+  public Point getLocation(ElementPosition position)
       throws Exception {
     // web stuff.
     //scrollIntoViewIfNeeded();
@@ -119,25 +119,44 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
     script.append("var root = UIAutomation.cache.get('1');");
     script.append("var webview = root.element(-1," + json + ");");
     script.append("var webviewSize = webview.rect();");
-    script.append("var ratio = webviewSize.size.width / " + dim.getWidth() + ";");
+    script.append("var ratioX = 1.0 * webviewSize.size.width / " + dim.getWidth() + ";");
+    script.append("var ratioY = 1.0 * webviewSize.size.height / " + dim.getHeight() + ";");
     int top = po.getY();
     int left = po.getX();
     // switch +1 to +2 in next, with +1 some clicks in text fields didn't bring up the
     // keyboard, the text field would get focus, but the keyboard would not launch
     // also with this change 17 miscellaneous selenium tests got fixed
-    script.append("var top = (" + top + "*ratio)+2;");
-    script.append("var left = (" + left + "*ratio)+2;");
+    switch (position) {
+      case TOP_LEFT: {
+        script.append("var top = (" + top + "*ratioX);");
+        script.append("var left = (" + left + "*ratioY);");
+        break;
+      }
+      case CENTER: {
+        Dimension size = getSize();
+        script.append("var top = (" + top + " + " + size.getHeight() + " / 2) * ratioX;");
+        script.append("var left = (" + left + " + " + size.getWidth() + " / 2) * ratioY;");
+        break;
+      }
+    }
 
     script.append("var x = left;");
     boolean ipad = session.getCapabilities().getDevice() == DeviceType.ipad;
     boolean ios7 = new IOSVersion(session.getCapabilities().getSDKVersion()).isGreaterOrEqualTo("7.0");
+    boolean ios8 = new IOSVersion(session.getCapabilities().getSDKVersion()).isGreaterOrEqualTo("8.0");
 
-    if (ios7) {
+    if (ios8) {
+      if (isSafari()) {
+        // the first button in the second view for iOS8 safari is the height of the address bar
+        script.append("top += root.elements()[1].elements()[0].rect().size.height;");
+      }
+      script.append("var y = top;");
+    } else if (ios7) {
       script.append("var y = webviewSize.origin.y + top;");
       if (isSafari()) {
         script.append("var orientation = UIATarget.localTarget().deviceOrientation();");
         script.append("var plus = orientation == UIA_DEVICE_ORIENTATION_LANDSCAPELEFT || orientation == UIA_DEVICE_ORIENTATION_PORTRAIT_UPSIDEDOWN;");
-          // TODO: why is the webView shifted by 20
+        // TODO: why is the webView shifted by 20
         script.append("y += plus? 20 : -20;");
       }
     } else {
@@ -187,7 +206,7 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
   private String getNativeElementClickOnIt() throws Exception {
     // web stuff.
     scrollIntoViewIfNeeded();
-    Point location = getLocation();
+    Point location = getLocation(ElementPosition.CENTER);
     return "UIATarget.localTarget().tap({'x':" + location.getX() + ",'y':" + location.getY() + "});";
   }
 
@@ -216,7 +235,8 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
 
 
     StringBuilder script = new StringBuilder();
-    script.append("var keyboard = UIAutomation.cache.get('1').keyboard();");
+    script.append("var keyboard; var waiter = 10; while(waiter-- > 0){try{ " +
+            "keyboard = UIAutomation.cache.get('1').keyboard(); break;}catch(e){UIATarget.localTarget().delay(1);}}; ");
 
     Boolean keyboardResigned = false;
     boolean ios7 = new IOSVersion(session.getCapabilities().getSDKVersion()).isGreaterOrEqualTo("7.0");

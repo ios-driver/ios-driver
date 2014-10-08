@@ -82,6 +82,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
 
     simulatorSettings.setInstrumentsVersion(info.getInstrumentsVersion());
     simulatorSettings.setVariation(deviceType, variation, desiredSDKVersion);
+    simulatorSettings.setInstrumentsVersion(info.getInstrumentsVersion());
     simulatorSettings.setSimulatorScale(caps.getSimulatorScale());
 
     application.setDefaultDevice(deviceType, putDefaultFirst);

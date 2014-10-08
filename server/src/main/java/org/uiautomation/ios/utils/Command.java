@@ -24,10 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,9 +43,11 @@ public class Command {
   private volatile Process process;
   private List<Thread> threads = new ArrayList<Thread>();
   private File workingDir = null;
+  private Map<String, String> environment;
 
   public Command(List<String> args, boolean logToConsole) {
     this.args = args;
+    environment = new Hashtable<>();
     if (logToConsole) {
       listeners.add(new DefaultCommandListener(commandString()));
     }
@@ -88,6 +87,10 @@ public class Command {
     ProcessBuilder builder = new ProcessBuilder(args);
     if (workingDir != null) {
       builder.directory(workingDir);
+    }
+    if (!environment.isEmpty()) {
+      Map<String, String> env = builder.environment();
+      env.putAll(environment);
     }
 
     try {
@@ -214,5 +217,9 @@ public class Command {
    */
   public void setWorkingDirectory(File output) {
     this.workingDir = output;
+  }
+
+  public void addEnvironment(String key, String value) {
+    environment.put(key, value);
   }
 }

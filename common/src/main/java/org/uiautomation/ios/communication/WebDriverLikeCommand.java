@@ -16,6 +16,7 @@ package org.uiautomation.ios.communication;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.UnsupportedCommandException;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.html5.Location;
 import org.uiautomation.ios.UIAModels.Orientation;
@@ -91,7 +92,7 @@ public enum WebDriverLikeCommand {
   LOCATION("GET", "/session/:sessionId/element/:reference/location", String.class),
   // GET /session/:sessionId/element/:id/location
   // GET /session/:sessionId/element/:id/location_in_view
-  // GET /session/:sessionId/element/:id/size
+  ELEMENT_SIZE("GET", "/session/:sessionId/element/:reference/size", String.class),
   CSS("GET", "/session/:sessionId/element/:reference/css/:name", String.class),
   SET_ORIENTATION("POST", "/session/:sessionId/orientation", Void.class),
   GET_ORIENTATION("GET", "/session/:sessionId/orientation", Orientation.class),
@@ -306,7 +307,7 @@ public enum WebDriverLikeCommand {
         return command;
       }
     }
-    throw new WebDriverException("cannot find command for " + method + ", " + path);
+    throw new UnsupportedCommandException("cannot find command for " + method + ", " + path);
   }
 
   private boolean isGenericFormOf(String method, String path) {
@@ -342,7 +343,7 @@ public enum WebDriverLikeCommand {
         return i;
       }
     }
-    throw new WebDriverException("cannot find the variable " + variable + " in " + path);
+    throw new UnsupportedCommandException("cannot find the variable " + variable + " in " + path);
   }
 
   public boolean isSessionLess() {

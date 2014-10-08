@@ -25,6 +25,16 @@ import java.io.StringWriter;
 
 public class Helper {
 
+  // Webdriver exception have debug info for the client. polluting server side.
+  public static String extractMessage(Throwable e) {
+    if (e instanceof WebDriverException){
+      String base = e.getMessage();
+      return base.split("\n")[0];
+    }else{
+      return e.getMessage();
+    }
+  }
+
   public static JSONObject extractObject(HttpResponse resp) {
     String str = "";
     try {
