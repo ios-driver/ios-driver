@@ -19,6 +19,7 @@ server/ss.png
 instrumentscli*
 server/src/test/resources/fr.json
 ios-driver.log*
+logstash-ios-driver.log*
 /java/*
 ide/src/test/java/org/uiautomation/ios/ide/pages/begin/SafariTests.java
 ide/src/test/java/org/uiautomation/ios/ide/pages/begin/eBayTests.java
