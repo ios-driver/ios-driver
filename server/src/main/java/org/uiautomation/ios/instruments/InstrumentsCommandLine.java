@@ -106,7 +106,13 @@ public class InstrumentsCommandLine implements Instruments {
         //    '<bundle name>'"
         // So we need to launch instruments twice.
 
+        long startTime = System.currentTimeMillis();
         instruments.waitFor(10000);
+        long endTime = System.currentTimeMillis();
+        if (endTime - startTime >= 10000) {
+          throw new WebDriverException("Wait for instruments timed out. It probably means Apple has fixed this issue "
+              + "and we can just get rid of the parent if block.");
+        }
         instruments.start();
 
         // Another alternate way would be to run
