@@ -171,6 +171,9 @@ public class ClassicCommands {
       } catch (Exception e) {
         installedSDKs = new ArrayList<>();
       }
+      if (l.isNeedToFirstLaunchXcode()) {
+        throw new RuntimeException("Please launch Xcode first and agree to the terms and conditions!");
+      }
     }
     return installedSDKs;
   }

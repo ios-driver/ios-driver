@@ -26,7 +26,6 @@ import org.uiautomation.ios.command.UIAScriptResponse;
 import org.uiautomation.ios.command.uiautomation.StopInstrumentsRunLoop;
 import org.uiautomation.ios.instruments.commandExecutor.CURLIAutomationCommandExecutor;
 import org.uiautomation.ios.instruments.commandExecutor.UIAutomationCommandExecutor;
-import org.uiautomation.ios.session.monitor.ApplicationCrashMonitor;
 import org.uiautomation.ios.utils.AppleMagicString;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.Command;
@@ -98,6 +97,29 @@ public class InstrumentsCommandLine implements Instruments {
     boolean success = false;
     try {
       instruments.start();
+
+      if (version.getMajor() >= 6 && caps.getReuseContentAndSettings()) {
+        // If we launch instruments w/o clearing the content and settings folder in xcode 6, the 1st launch just
+        // launches the simulator but fails to launch the app with the following error
+        //    "Instruments Trace Error : Target failed to run: The operation couldn’t be completed.
+        //    (FBSOpenApplicationErrorDomain error 8.) : Failed to launch process with bundle identifier
+        //    '<bundle name>'"
+        // So we need to launch instruments twice.
+
+        long startTime = System.currentTimeMillis();
+        instruments.waitFor(10000);
+        long endTime = System.currentTimeMillis();
+        if (endTime - startTime >= 10000) {
+          throw new WebDriverException("Wait for instruments timed out. It probably means Apple has fixed this issue "
+              + "and we can just get rid of the parent if block.");
+        }
+        instruments.start();
+
+        // Another alternate way would be to run
+        //       xcrun simctl launch <uuid> <bundle name> [<args>]
+        // We will also have to update the instruments js to respond back after the app comes to foreground
+      }
+
       // for the no delay instruments, the command launches a script that in turn launches instruments.
       // need to keep the pid of intruments itself to be able to kill it.
 

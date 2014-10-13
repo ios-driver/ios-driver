@@ -72,7 +72,7 @@ public class PerformanceListener implements MessageListener, ConnectListener {
     JSONObject inspectorMessageJson = appDataMessage.getMessage();
     JSONObject wdLogMessageJson = new JSONObject();
     try {
-      wdLogMessageJson.put("message", inspectorMessageJson.toString());
+      wdLogMessageJson.put("message", inspectorMessageJson);
       wdLogMessageJson.put("webview", pageKey);
     } catch (JSONException ex) {
       throw new WebDriverException(ex);

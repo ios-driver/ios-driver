@@ -96,7 +96,11 @@ public class RemoteIOSWebDriver {
       session.getLogManager().onProtocolCreated(protocol);
     }
 
-    protocol.register();
+    try {
+      protocol.register();
+    } catch (WebDriverException wde) {
+      log.warning("protocol already registered with connectionId: " + protocol.getConnectionId());
+    }
     sync.waitForSimToRegister();
     sync.waitForSimToSendApps();
 
@@ -104,6 +108,8 @@ public class RemoteIOSWebDriver {
 
     if (applications.size() == 1) {
       connect(applications.get(0).getBundleId());
+    } else if (applications.size() == 2) {
+      connect(applications.get(1).getBundleId());
     } else {
       showWarning();
     }
@@ -251,6 +257,9 @@ public class RemoteIOSWebDriver {
   }
 
   public int getCurrentPageID() {
+    if (currentInspector == null) {
+      return -1;
+    }
     return currentInspector.getPageIdentifier();
   }
 

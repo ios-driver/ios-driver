@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 eBay Software Foundation and ios-driver committers
+ * Copyright 2014 eBay Software Foundation and ios-driver committers
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -16,17 +16,17 @@ package org.uiautomation.ios.command.web;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.remote.Response;
-import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.IOSServerManager;
 import org.uiautomation.ios.command.BaseWebCommandHandler;
-import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
+import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.wkrdp.model.RemoteWebNativeBackedElement;
 
-public class GetLocationHandler extends BaseWebCommandHandler {
+public class GetElementSizeHandler extends BaseWebCommandHandler {
 
-  public GetLocationHandler(IOSServerManager driver, WebDriverLikeRequest request) {
+  public GetElementSizeHandler(IOSServerManager driver, WebDriverLikeRequest request) {
     super(driver, request);
   }
 
@@ -39,11 +39,11 @@ public class GetLocationHandler extends BaseWebCommandHandler {
   public Response handle() throws Exception {
     String ref = getRequest().getVariableValue(":reference");
     RemoteWebNativeBackedElement element = (RemoteWebNativeBackedElement) getWebDriver().createElement(ref);
-    Point location = element.getLocation(RemoteWebElement.ElementPosition.TOP_LEFT);
+    Dimension size = element.getSize();
     Response res = new Response();
     res.setSessionId(getSession().getSessionId());
     res.setStatus(0);
-    res.setValue(location);
+    res.setValue(size);
     return res;
   }
 }

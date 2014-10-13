@@ -24,6 +24,7 @@ import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.SessionNotInitializedException;
 import org.uiautomation.ios.command.BaseNativeCommandHandler;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
+import org.uiautomation.ios.drivers.RecoverableCrashException;
 import org.uiautomation.ios.instruments.InstrumentsFailedToStartException;
 import org.uiautomation.ios.utils.ServerIsShutingDownException;
 
@@ -98,7 +99,7 @@ public final class NewSessionNHandler extends BaseNativeCommandHandler {
     } catch (SessionNotInitializedException e) {
       log.info("The server cannot run " + cap + " at the moment." + e.getMessage());
       throw new SessionNotCreatedException("The server cannot run " + cap + " at the moment." + e.getMessage());
-    } catch (InstrumentsFailedToStartException e) {
+    } catch (InstrumentsFailedToStartException|RecoverableCrashException e) {
       log.warning("Instruments failed to start in the allocated time ( " + timeOut + "sec):" + e
           .getMessage());
       if (session != null) {
