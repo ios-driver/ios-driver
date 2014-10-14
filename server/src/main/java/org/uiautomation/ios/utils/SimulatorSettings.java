@@ -232,15 +232,13 @@ public class SimulatorSettings {
         simctlArgs = Arrays.asList("xcrun", "simctl", "shutdown", uuid);
         simctlCmd = new Command(simctlArgs, true);
 
-        // Handle errors thrown by command 'xcrun simctl shutdown <uuid>'
-        // and kill any open iOS simulator windows
-        exitCode = simctlCmd.executeAndWait(false);
-        ClassicCommands.killall("iOS Simulator");
+        // Run command 'xcrun simctl shutdown <uuid>'
+        simctlCmd.executeAndWait(false);
 
         // Retry 'xcrun simctl erase <uuid>'
         simctlArgs = Arrays.asList("xcrun", "simctl", "erase", uuid);
         simctlCmd = new Command(simctlArgs, true);
-        exitCode = simctlCmd.executeAndWait(false);
+        simctlCmd.executeAndWait(false);
       } else if (exitCode != 0) {
         throw new WebDriverException("execution failed. Exit code =" + exitCode + " , command was: "
             + simctlCmd.commandString());
