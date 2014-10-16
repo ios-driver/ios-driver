@@ -29,6 +29,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -222,7 +223,26 @@ public class SimulatorSettings {
       simctlArgs.add("erase");
       simctlArgs.add(uuid);
       Command simctlCmd = new Command(simctlArgs, true);
-      simctlCmd.executeAndWait();
+      
+      // if the device is still in booted state erase returns with error code 146
+      int exitCode = simctlCmd.executeAndWait(true);
+      if (exitCode == 146) {
+        log.log(Level.WARNING, "Reset content and settings exit code = " + exitCode
+            + ", possibly device is in booted state, shutdown device = " + uuid);
+        simctlArgs = Arrays.asList("xcrun", "simctl", "shutdown", uuid);
+        simctlCmd = new Command(simctlArgs, true);
+
+        // Run command 'xcrun simctl shutdown <uuid>'
+        simctlCmd.executeAndWait(false);
+
+        // Retry 'xcrun simctl erase <uuid>'
+        simctlArgs = Arrays.asList("xcrun", "simctl", "erase", uuid);
+        simctlCmd = new Command(simctlArgs, true);
+        simctlCmd.executeAndWait(false);
+      } else if (exitCode != 0) {
+        throw new WebDriverException("execution failed. Exit code =" + exitCode + " , command was: "
+            + simctlCmd.commandString());
+      }
     }
   }
 
