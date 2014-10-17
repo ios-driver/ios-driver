@@ -178,7 +178,9 @@ public class APPIOSApplication {
         JSONObject content = res.readContentFromBinaryFile(f);
         res.addJSONContent(content);
       } catch (Exception e) {
-        throw new WebDriverException("Error loading content for l10n for file: " + f.getAbsolutePath(), e);
+        log.warning(
+          "Error loading content for l10n for file: " + f.getAbsolutePath() + ", exception: " + e.getMessage() + "\n" +
+          e.getStackTrace());
       }
     }
     List<LanguageDictionary> dicts = new ArrayList<>(languageNameMap.values());
