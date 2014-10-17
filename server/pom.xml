@@ -96,8 +96,7 @@
         <dependency>
             <groupId>com.googlecode.plist</groupId>
             <artifactId>dd-plist</artifactId>
-            <version>1.3</version>
-            <!-- corresponds to r73 -->
+            <version>1.8</version> <!-- corresponds to r108 -->
         </dependency>
     </dependencies>
 
