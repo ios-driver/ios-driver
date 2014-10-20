@@ -46,7 +46,12 @@ UIAAlert.prototype.accept = function () {
             }
         }
     }
-    button.tap();
+
+    // Apple's [UIAElement tap] implementation can wait for animations which we need to do in this case.
+    // Furthermore, it seems impossible to determine if the element is in an alert before tapping, so we
+    // directly call the original implementation here.
+    button.tap_original();
+    UIAutomation.cache.clearAlert();
     UIATarget.localTarget().delay(0.5);
 }
 
