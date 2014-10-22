@@ -226,43 +226,12 @@ UIAElement.prototype.scrollToVisible = function () {
     }
 }
 /**
- * can't find a way to detect stale object. CheckIsValid doesn't do it properly.
- * Trying to scroll to the element seems like a valid approximation.
+ * can't find a way to detect stale object. CheckIsValid doesn't do it properly but all the other APIs are broken as
+ * well. (scrollToVisible throws errors when something isn't on screen but when something is on screen it can mess with
+ * them.)
  */
 UIAElement.prototype.isStale = function () {
-    if (this.checkIsValid() == false) {
-        return true;
-    } else {
-        try {
-            this.scrollToVisible();
-            // tmp fix for safari and big web views.
-            if (this.type() === "UIAWebView") {
-                return false;
-            }
-            /*if (this.isVisible()) {
-             return false;
-             } else {
-             return true;
-             }*/
-            var parent = this.parent();
-            /*while (parent.parent() && parent.parent().type() !== "UIAElementNil") {
-             parent = parent.parent();
-             log("parent  " + parent.type() + ", " + parent.name());
-
-             }*/
-            return false;
-        } catch (err) {
-            if (err.message && err.message.indexOf('scrollToVisible cannot be used') != -1) {
-                log("F");
-                return true;
-            } else {
-                log("NI");
-                log(err)
-            }
-        }
-    }
-    log("G");
-    return false;
+    return !this.checkIsValid();
 }
 
 UIAElement.prototype.element_or = function (depth, criteria) {
