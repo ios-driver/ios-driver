@@ -10,6 +10,9 @@
     </parent>
     <artifactId>ios-grid</artifactId>
 
+    <properties>
+        <maven.build.timestamp.format>yyyy-MM-dd'T'HHmmssZ</maven.build.timestamp.format> 
+    </properties>
 
     <dependencies>
         <dependency>
