@@ -18,6 +18,7 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSServer;
 import org.uiautomation.ios.utils.ClassicCommands;
+import org.uiautomation.ios.utils.IOSVersion;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +45,11 @@ public class MobileSafariLocator {
   public static APPIOSApplication locateSafariInstall(String sdkVersion) {
     APPIOSApplication res = safariCopies.get(sdkVersion);
     if (res == null) {
-      res = copyOfSafari(xcode, sdkVersion);
+      if (new IOSVersion(sdkVersion).isGreaterOrEqualTo("8.0")) {
+        res = APPIOSApplication.findSafariApp(xcode, sdkVersion);
+      } else {
+        res = copyOfSafari(xcode, sdkVersion);
+      }
       safariCopies.put(sdkVersion, res);
     }
     return res;
