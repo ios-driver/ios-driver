@@ -75,8 +75,8 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     DeviceVariation variation = caps.getDeviceVariation();
     String locale = caps.getLocale();
     String language = caps.getLanguage();
-    String instrumentsVersion = info.getInstrumentsVersion().getVersion();
-    boolean instrumentsIs50OrHigher = new IOSVersion(instrumentsVersion).isGreaterOrEqualTo("5.0");
+    IOSVersion instrumentsVersion = new IOSVersion(info.getInstrumentsVersion().getVersion());
+    boolean instrumentsIs50OrHigher = instrumentsVersion.isGreaterOrEqualTo("5.0");
 
     boolean putDefaultFirst = instrumentsIs50OrHigher;
 
@@ -85,7 +85,9 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     simulatorSettings.setInstrumentsVersion(info.getInstrumentsVersion());
     simulatorSettings.setSimulatorScale(caps.getSimulatorScale());
 
-    application.setDefaultDevice(deviceType, putDefaultFirst);
+    if (!instrumentsVersion.isGreaterOrEqualTo("6.0")) {
+      application.setDefaultDevice(deviceType, putDefaultFirst);
+    }
 
     if (!caps.getReuseContentAndSettings()) {
       simulatorSettings.resetContentAndSettings();

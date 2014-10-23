@@ -49,8 +49,10 @@ public class IOSSafariSimulatorManager extends IOSSimulatorManager {
 
   @Override
   public void setup(){
-    copySafariToAllowInstallByInstruments();
-    setFavorite();
+    if (!new IOSVersion(session.getCapabilities().getSDKVersion()).isGreaterOrEqualTo("8.0")) {
+      copySafariToAllowInstallByInstruments();
+      setFavorite();
+    }
 
     super.setup();
     simulatorSettings.setMobileSafariOptions();
