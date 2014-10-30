@@ -15,6 +15,7 @@
 package org.uiautomation.ios.instruments.commandExecutor;
 
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.logging.LogLevelMapping;
 import org.openqa.selenium.remote.BeanToJsonConverter;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.ServerSideSession;
@@ -51,9 +52,15 @@ public abstract class BaseUIAutomationCommandExecutor implements UIAutomationCom
       "The UI Automation Command executor stopped for an unknown reason";
   private volatile boolean ready = false;
   private final ServerSideSession session;
+  
+  // Holds the running state of BaseUIAutomationCommandExecutor
+  private boolean stopped;
 
   public BaseUIAutomationCommandExecutor(ServerSideSession session) {
     this.session = session;
+    
+    // Initial state 
+    this.stopped = false;
   }
 
   protected final String getSessionId() {
@@ -67,7 +74,14 @@ public abstract class BaseUIAutomationCommandExecutor implements UIAutomationCom
       if (ready) {
         return true;
       }
-      return condition.await(timeOut, TimeUnit.SECONDS);
+      
+      // Check for stop called externally while registration is still
+      // in progress
+      boolean success = (condition.await(timeOut, TimeUnit.SECONDS) && !stopped);
+      if (log.isLoggable(Level.FINE)) {
+        log.fine("UIAutomationCommandExecutor is stopped? = " + stopped);
+      }
+      return success;
     } finally {
       lock.unlock();
     }
@@ -77,6 +91,13 @@ public abstract class BaseUIAutomationCommandExecutor implements UIAutomationCom
     try {
       lock.lock();
       ready = false;
+      
+      // Change the state to stopped and notify UIScriptRegistration
+      // process if its in wait mode
+      if (!stopped) {
+        stopped = true;
+      }
+      condition.signal();
     } finally {
       lock.unlock();
     }
