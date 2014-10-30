@@ -128,13 +128,14 @@ public class InstrumentsCommandLine implements Instruments {
       instrumentsPid = ClassicCommands.getHighestPidForName("instruments");
 
       log.fine("waiting for registration request");
+      long waitStartTime = System.currentTimeMillis();
       success = channel.waitForUIScriptToBeStarted(timeout);
       synchronized (this) {
         properlyStarted = success;
       }
       log.fine("registration request received" + session.getCachedCapabilityResponse());
       if (!success) {
-        log.warning("instruments crashed (" + timeout + " sec)".toUpperCase());
+        log.warning("instruments crashed (" + ((System.currentTimeMillis() - waitStartTime) / 1000) + " sec)".toUpperCase());
         throw new InstrumentsFailedToStartException(
             "Didn't get the capability back.Most likely, instruments crashed at startup.");
       }
