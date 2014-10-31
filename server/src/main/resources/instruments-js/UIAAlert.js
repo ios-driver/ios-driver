@@ -80,6 +80,8 @@ UIAAlert.prototype.getText = function () {
     var texts = this.elements2(-1, criteria);
     if (texts.length > 1) {
         return texts[1].name();
+    } else if (texts.length == 1) {
+        return texts[0].name();
     } else {
         throw new UIAutomationException("this alert doesn't have any text."+this.tree(false));
     }
