@@ -16,6 +16,7 @@ package org.uiautomation.ios.instruments;
 
 import org.apache.commons.io.IOUtils;
 import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.IOSServer;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,8 +32,7 @@ public class InstrumentsNoDelayLoader {
 
   private InstrumentsNoDelayLoader(InstrumentsVersion version) {
     this.version = version;
-    this.workingDirectory =
-        new File(System.getProperty("java.io.tmpdir") + pathForVersion(version));
+    this.workingDirectory = new File(IOSServer.getTmpIOSFolder().getAbsoluteFile(),pathForVersion(version));
 
     this.workingDirectory.mkdirs();
     if (!this.workingDirectory.exists()) {
