@@ -63,7 +63,9 @@ public class IOSSimulatorManager implements IOSDeviceManager {
 
     xcodeInstall = ClassicCommands.getXCodeInstall();
     boolean is64bit = DeviceVariation.is64bit(caps.getDeviceVariation());
-    simulatorSettings = new SimulatorSettings(info, desiredSDKVersion, is64bit);
+    DeviceType deviceType = caps.getDevice();
+    DeviceVariation variation = caps.getDeviceVariation();
+    simulatorSettings = new SimulatorSettings(info, desiredSDKVersion, is64bit, deviceType, variation);
     bundleId = caps.getBundleId();
   }
 
@@ -72,7 +74,6 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   public void setup() {
     DeviceType deviceType = caps.getDevice();
     IOSRunningApplication application = session.getApplication();
-    DeviceVariation variation = caps.getDeviceVariation();
     String locale = caps.getLocale();
     String language = caps.getLanguage();
     IOSVersion instrumentsVersion = new IOSVersion(info.getInstrumentsVersion().getVersion());
@@ -80,9 +81,6 @@ public class IOSSimulatorManager implements IOSDeviceManager {
 
     boolean putDefaultFirst = instrumentsIs50OrHigher;
 
-    simulatorSettings.setInstrumentsVersion(info.getInstrumentsVersion());
-    simulatorSettings.setVariation(deviceType, variation, desiredSDKVersion);
-    simulatorSettings.setInstrumentsVersion(info.getInstrumentsVersion());
     simulatorSettings.setSimulatorScale(caps.getSimulatorScale());
 
     if (!instrumentsVersion.isGreaterOrEqualTo("6.0")) {
