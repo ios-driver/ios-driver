@@ -50,14 +50,21 @@ public class SimulatorSettings {
   private final File contentAndSettingsFolder;
   private final File globalPreferencePlist;
   private final HostInfo info;
+  private String deviceUUID;
   private String deviceName;
 
   private InstrumentsVersion instrumentsVersion;
 
-  public SimulatorSettings(HostInfo info, String sdkVersion, boolean is64bit) {
+  public SimulatorSettings(HostInfo info, String sdkVersion, boolean is64bit, DeviceType device,
+                           DeviceVariation variation) {
     this.exactSdkVersion = sdkVersion;
     this.is64bit = is64bit;
     this.info = info;
+    this.instrumentsVersion = info.getInstrumentsVersion();
+    setVariation(device, variation, sdkVersion);
+    if (instrumentsVersion.getMajor() >= 6) {
+      deviceUUID = determineDeviceUUID();
+    }
     this.contentAndSettingsFolder = getContentAndSettingsFolder();
     this.globalPreferencePlist = getGlobalPreferenceFile();
   }
@@ -158,12 +165,18 @@ public class SimulatorSettings {
     return SDK_LOCATION + "iPhoneSimulator" + suffix + ".sdk";
   }
 
-  public InstrumentsVersion getInstrumentsVersion() {
-    return instrumentsVersion;
+  private String determineDeviceUUID() {
+    DeviceUUIDsMap uuidsMap = new DeviceUUIDsMap();
+    uuidsMap.loadData();
+    String uuid = uuidsMap.getUUID(exactSdkVersion, deviceName);
+    if (uuid == null) {
+      System.err.println("Unable to get UUID for device " + deviceName + " with SDK " + exactSdkVersion);
+    }
+    return uuid;
   }
 
-  public void setInstrumentsVersion(InstrumentsVersion instrumentsVersion) {
-    this.instrumentsVersion = instrumentsVersion;
+  public InstrumentsVersion getInstrumentsVersion() {
+    return instrumentsVersion;
   }
 
   public void setSimulatorScale(String scale) {
@@ -211,32 +224,26 @@ public class SimulatorSettings {
       }
     } else {
       // Starting with Xcode 6 and later, we can use simctl to do the hard work for us.
-      DeviceUUIDsMap uuidsMap = new DeviceUUIDsMap();
-      uuidsMap.loadData();
-      String uuid = uuidsMap.getUUID(exactSdkVersion, deviceName);
-      if (uuid == null) {
-        System.err.println("Unable to get UUID for device " + deviceName + " with SDK " + exactSdkVersion);
-      }
       List<String> simctlArgs = new ArrayList<>();
       simctlArgs.add("xcrun");
       simctlArgs.add("simctl");
       simctlArgs.add("erase");
-      simctlArgs.add(uuid);
+      simctlArgs.add(deviceUUID);
       Command simctlCmd = new Command(simctlArgs, true);
       
       // if the device is still in booted state erase returns with error code 146
       int exitCode = simctlCmd.executeAndWait(true);
       if (exitCode == 146) {
         log.log(Level.WARNING, "Reset content and settings exit code = " + exitCode
-            + ", possibly device is in booted state, shutdown device = " + uuid);
-        simctlArgs = Arrays.asList("xcrun", "simctl", "shutdown", uuid);
+            + ", possibly device is in booted state, shutdown device = " + deviceUUID);
+        simctlArgs = Arrays.asList("xcrun", "simctl", "shutdown", deviceUUID);
         simctlCmd = new Command(simctlArgs, true);
 
         // Run command 'xcrun simctl shutdown <uuid>'
         simctlCmd.executeAndWait(false);
 
         // Retry 'xcrun simctl erase <uuid>'
-        simctlArgs = Arrays.asList("xcrun", "simctl", "erase", uuid);
+        simctlArgs = Arrays.asList("xcrun", "simctl", "erase", deviceUUID);
         simctlCmd = new Command(simctlArgs, true);
         simctlCmd.executeAndWait(false);
       } else if (exitCode != 0) {
@@ -260,15 +267,25 @@ public class SimulatorSettings {
 
   private File getContentAndSettingsParentFolder() {
     String home = System.getProperty("user.home");
-    return new File(home, "Library/Application Support/iPhone Simulator");
+    String subdir = (instrumentsVersion.getMajor() < 6) ?
+      "Library/Application Support/iPhone Simulator" :
+      "Library/Developer/CoreSimulator/Devices/";
+
+    return new File(home, subdir);
   }
 
   private File getContentAndSettingsFolder() {
-    String folder = exactSdkVersion;
-    if (is64bit) {
-      folder += "-64";
+    String deviceDir;
+    if (instrumentsVersion.getMajor() < 6) {
+      String folder = exactSdkVersion;
+      if (is64bit) {
+        folder += "-64";
+      }
+      deviceDir = folder;
+    } else {
+      deviceDir = deviceUUID + "/data";
     }
-    return new File(getContentAndSettingsParentFolder(), folder);
+    return new File(getContentAndSettingsParentFolder(), deviceDir);
   }
 
   private boolean deleteRecursive(File folder) {
