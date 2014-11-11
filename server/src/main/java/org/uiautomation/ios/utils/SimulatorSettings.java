@@ -106,6 +106,35 @@ public class SimulatorSettings {
     }
   }
 
+  /**
+   * Set the Accessibility preferences. Overrides the values in 'com.apple.Accessibility.plist' file.
+   */
+  public void setAccessibilityOptions() {
+    
+    // Not enabling ApplicationAccessibility may cause intruments to fail with the error 
+    // ScriptAgent[1170:2f07] Failed to enable accessiblity, kAXErrorServerNotFound
+    // The above error is more prominent in Xcode5.1.1 when tested under OSX 10.9.5
+    // Setting ApplicationAccessibilityEnabled for Xcode6.0
+    File folder = new File(contentAndSettingsFolder + "/Library/Preferences/");
+    File preferenceFile = new File(folder, "com.apple.Accessibility.plist");
+    try {
+      JSONObject preferences = new JSONObject();
+      if (instrumentsVersion.getMajor() < 6) {
+        
+        // ex: <key>ApplicationAccessibilityEnabled</key><true/>
+        preferences.put("ApplicationAccessibilityEnabled", true);
+      } else {
+        
+        // Xcode6.0 has integer datatype for ApplicationAccessibilityEnabled
+        // ex: <key>ApplicationAccessibilityEnabled</key><integer>1</integer>
+        preferences.put("ApplicationAccessibilityEnabled", 1);
+      }
+      writeOnDisk(preferences, preferenceFile);
+    } catch (Exception e) {
+      throw new WebDriverException("cannot set options in " + preferenceFile.getAbsolutePath(), e);
+    }
+  }
+
   public void setMobileSafariOptions() {
     File preferenceFile = getMobileSafariPreferencesFile();
     try {
