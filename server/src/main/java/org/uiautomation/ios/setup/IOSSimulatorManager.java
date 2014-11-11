@@ -96,6 +96,9 @@ public class IOSSimulatorManager implements IOSDeviceManager {
     simulatorSettings.setL10N(locale, language);
     simulatorSettings.setKeyboardOptions();
     simulatorSettings.setLocationPreference(/*whitelist*/true, bundleId);
+    
+    // Setting the Accessibility Preferences
+    simulatorSettings.setAccessibilityOptions();
   }
 
   @Override
