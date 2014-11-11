@@ -25,6 +25,7 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.ServerSideSession;
+import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.wkrdp.BaseWebInspector;
 import org.uiautomation.ios.wkrdp.DOMContext;
 import org.uiautomation.ios.wkrdp.MessageListener;
@@ -124,6 +125,8 @@ public class RemoteIOSWebDriver {
         if (protocol instanceof RealDeviceProtocolImpl) {
           throw new WebDriverException("is Safari started and with the focus ? ");
         } else {
+          // kill left over.
+          ClassicCommands.killall("xpcproxy_sim");
           throw new WebDriverException("session created but application size=" + applications.size()
                                        + ".The simulator wasn't closed properly.Try restarting your computer.");
         }
