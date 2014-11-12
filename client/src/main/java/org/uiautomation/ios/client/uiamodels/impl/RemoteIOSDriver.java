@@ -139,6 +139,14 @@ public class RemoteIOSDriver extends RemoteWebDriver
     return ioscap;
   }
 
+  public IOSCapabilities getRequestedCapabilities() {
+    if (requestedCapabilities == null) {
+        return null;
+    }
+    IOSCapabilities ioscap = new IOSCapabilities(requestedCapabilities);
+    return ioscap;
+  }
+
   @Override
   protected WebElement findElement(String by, String using) {
     if (using == null) {
