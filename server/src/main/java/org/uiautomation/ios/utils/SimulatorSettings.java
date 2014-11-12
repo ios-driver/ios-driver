@@ -254,15 +254,50 @@ public class SimulatorSettings {
   }
 
   public void writeContentFile(String path, byte[] fileContents) {
-    File newFile = new File(getContentAndSettingsFolder(), path);
-    newFile.getParentFile().mkdirs();
-    try {
-      newFile.createNewFile();
-      FileOutputStream out = new FileOutputStream(newFile);
-      out.write(fileContents);
-    } catch (IOException e) {
-      System.err.println("could not create " + path);
-    }
+      if (instrumentsVersion.getMajor() >= 6 && path.startsWith("Media/DCIM/100APPLE")) {
+          // this is a photo, we're on Xcode 6, let simctl push it into place
+          try {
+              // the simulator needs to be booted first
+              List<String> bootInvocation = Arrays.asList("xcrun", "simctl", "boot", deviceUUID);
+              Command bootCommand = new Command(bootInvocation, true);
+              int simCtlResult = bootCommand.executeAndWait(false);
+              if (simCtlResult != 0 && simCtlResult != 146) {
+                  throw new WebDriverException("image copy failed. Couldn't boot simulator, exit code = " + simCtlResult);
+              }
+              File photo = File.createTempFile("photo", ".jpg");
+              FileOutputStream photoWriter = new FileOutputStream(photo);
+              photoWriter.write(fileContents);
+              photoWriter.close();
+              // usage: xcrun simctl addphoto <uuid> <path>
+              List<String> addPhotoInvocation = Arrays.asList("xcrun", "simctl", "addphoto", deviceUUID, photo.getAbsolutePath());
+              Command addPhotoCommand = new Command(addPhotoInvocation, true);
+              simCtlResult = addPhotoCommand.executeAndWait(false);
+              photo.delete();
+              if (simCtlResult != 0) {
+                  throw new WebDriverException("image copy failed. Exit code =" + simCtlResult +", command was: "
+                  + addPhotoCommand.toString());
+              }
+              //now shut the sim back down, or Bad Things Happen™
+              List<String> shutdownInvocation = Arrays.asList("xcrun", "simctl", "shutdown", deviceUUID);
+              Command shutdownCommand = new Command(shutdownInvocation, true);
+              simCtlResult = shutdownCommand.executeAndWait(false);
+              if (simCtlResult != 0) {
+                  System.err.println("simctl didn't shut down cleanly. Exit code =" + simCtlResult);
+              }
+          } catch (IOException e) {
+              throw new WebDriverException("image copy failed. Could not write image " + path);
+          }
+      } else {
+          File newFile = new File(getContentAndSettingsFolder(), path);
+          newFile.getParentFile().mkdirs();
+          try {
+              newFile.createNewFile();
+              FileOutputStream out = new FileOutputStream(newFile);
+              out.write(fileContents);
+          } catch (IOException e) {
+              System.err.println("could not create " + path);
+          }
+      }
   }
 
   private File getContentAndSettingsParentFolder() {
