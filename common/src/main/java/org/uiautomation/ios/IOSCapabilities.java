@@ -90,6 +90,7 @@ public class IOSCapabilities extends DesiredCapabilities {
   public static final String INSTRUMENTS = "instruments";
   public static final String PROVISIONNED = "provisionnedDevices";
 
+  public static final String SHOW_KEYBOARD_AFTER_CLICK_AND_TYPE = "showKeyboardAfterClickAndType";
 
   // private final Map<String, Object> raw = new HashMap<String, Object>();
 
@@ -294,6 +295,10 @@ public class IOSCapabilities extends DesiredCapabilities {
 
   public boolean isTimeHack() {
     return getBooleanCapability(TIME_HACK);
+  }
+
+  public boolean isShowKeyboardAfterClickAndType() {
+      return getBooleanCapability(SHOW_KEYBOARD_AFTER_CLICK_AND_TYPE);
   }
 
   private List<String> getList(String key) {
