@@ -288,9 +288,16 @@ public class RemoteWebNativeBackedElement extends RemoteWebElement {
       script.append(getKeyboardTypeStringSegement(current.toString()));
     }
 
-    if (!keyboardResigned) {
-      script.append("keyboard.hide();");
+      //check to see if the user wants to keep the keyboard after typing in text
+    Boolean showKeyboardAfterClickAndType = Boolean.TRUE.equals(session.getCapabilities()
+            .getCapability((IOSCapabilities.SHOW_KEYBOARD_AFTER_CLICK_AND_TYPE)));
+
+    if (!showKeyboardAfterClickAndType) {
+      if (!keyboardResigned) {
+          script.append("keyboard.hide();");
+      }
     }
+
     return script.toString();
   }
 
