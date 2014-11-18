@@ -35,7 +35,9 @@ public class WebkitApplication {
   public String getBundleId() {
     return WIRApplicationIdentifierKey;
   }
-
+  public String getApplicationName() {
+	return WIRApplicationNameKey;
+  }
   @Override
   public String toString() {
     return getBundleId();
