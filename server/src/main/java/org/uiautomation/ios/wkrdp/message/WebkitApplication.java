@@ -32,6 +32,10 @@ public class WebkitApplication {
     WIRIsApplicationProxyKey = o.boolValue();
   }
 
+  public String getApplicationName() {
+    return WIRApplicationNameKey;
+  }
+
   public String getBundleId() {
     return WIRApplicationIdentifierKey;
   }
