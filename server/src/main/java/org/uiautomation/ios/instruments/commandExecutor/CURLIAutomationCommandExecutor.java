@@ -130,6 +130,7 @@ public class CURLIAutomationCommandExecutor extends BaseUIAutomationCommandExecu
         }else if (writer.toString().endsWith(FINAL_PART_IDENTIFIER)){
             sessionUUID = writer.toString().substring(0, UUID_LENGTH);
             json =  ((String)jsonMap.get(sessionUUID)).concat(writer.toString().substring(UUID_LENGTH, writer.toString().length() - FINAL_PART_IDENTIFIER.length()));
+            jsonMap.remove(sessionUUID);
         }else{
             json = writer.toString();
         }
