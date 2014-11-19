@@ -113,6 +113,12 @@ public class IOSServerConfiguration {
   @Parameter(description = "supported real device uuid to whitelist", names = "-uuid")
   private List<String> uuidWhitelist = new ArrayList<String>();
 
+  @Parameter(
+      required = false, arity = 1,
+      names = "-skipLoggerConfiguration",
+      description = "if specified allows user not to load a default logger")
+  private boolean skipLoggerConfiguration = false;
+
   public String getRegistrationURL() {
     return registrationURL;
   }
@@ -215,5 +221,13 @@ public class IOSServerConfiguration {
 
   public void setMaxIdleTimeBetween2CommandsInSeconds(int maxIdleTimeBetween2CommandsInSeconds) {
     this.maxIdleTimeBetween2CommandsInSeconds = maxIdleTimeBetween2CommandsInSeconds;
+  }
+
+  public boolean getSkipLoggerConfiguration() {
+    return skipLoggerConfiguration;
+  }
+
+  public void setSkipLoggerConfiguration(boolean skipLoggerConfiguration) {
+    this.skipLoggerConfiguration = skipLoggerConfiguration;
   }
 }

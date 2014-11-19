@@ -76,6 +76,9 @@ public class IOSServerManager {
     this.options = options;
     TIME_OUT_FOR_SESSION = options.getSessionTimeoutMillis();
 
+    //check if skipLoggingConfiguration is set to true
+    boolean skipLogging = options.getSkipLoggerConfiguration();
+
     // setup logging
     String loggingConfigFile = System.getProperty("java.util.logging.config.file");
     if (loggingConfigFile != null) {
@@ -85,8 +88,9 @@ public class IOSServerManager {
         loggingConfigFile = null; // to revert to builtin one
       }
     }
-    if (loggingConfigFile == null) {
+    if (loggingConfigFile == null && !skipLogging) {
       // do not use builtin ios-logging.properties if -Djava.util.logging.config.file set
+      // or if skipLoggingConfiguration is set to true
       try {
         LogManager.getLogManager().readConfiguration(
             IOSServerManager.class.getResourceAsStream("/ios-logging.properties"));
