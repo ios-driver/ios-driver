@@ -14,8 +14,12 @@
 
 package org.uiautomation.ios;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.uiautomation.ios.application.APPIOSApplication;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Device {
@@ -34,8 +38,8 @@ public abstract class Device {
 
       String requestSDK = desiredCapabilities.getSDKVersion();
       if (requestSDK != null) {
-        List<String> supported = (List<String>) deviceCapability.getCapability(IOSCapabilities.UI_SDK_VERSION_ALT);
-        if (!supported.contains(requestSDK)) {
+        List<String> supported = toList(deviceCapability.getCapability(IOSCapabilities.UI_SDK_VERSION_ALT));
+        if (supported == null || !supported.contains(requestSDK)) {
           return false;
         }
       }
@@ -80,4 +84,37 @@ public abstract class Device {
   public final boolean isBusy() {
     return busy;
   }
+
+  /**
+   * Helper method to convert a various type object to {@link List}
+   *
+   * @param object - object to convert to {@link List}
+   * @return - {@link List} or <code>null</code> on error
+   */
+  @SuppressWarnings("unchecked")
+  private static List<String> toList(Object object) {
+    List<String> list = new ArrayList<String>();
+
+    if (object == null || object == JSONObject.NULL) {
+      return null;
+    }
+
+    if (object instanceof List) {
+      return ((List<String>) object);
+    } else if (object instanceof JSONArray) {
+      for (int i = 0; i < ((JSONArray) object).length(); i++) {
+        try {
+          list.add(String.valueOf((((JSONArray) object).get(i))));
+        } catch (JSONException ex) {
+          //issue converting the list. return null
+          return null;
+        }
+      }
+    } else {
+      list.add(object.toString());
+    }
+
+    return list;
+  }
+
 }
