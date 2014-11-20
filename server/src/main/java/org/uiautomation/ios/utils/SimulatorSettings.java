@@ -230,7 +230,7 @@ public class SimulatorSettings {
       simctlArgs.add("erase");
       simctlArgs.add(deviceUUID);
       Command simctlCmd = new Command(simctlArgs, true);
-      
+
       // if the device is still in booted state erase returns with error code 146
       int exitCode = simctlCmd.executeAndWait(true);
       if (exitCode == 146) {
@@ -239,15 +239,13 @@ public class SimulatorSettings {
         simctlArgs = Arrays.asList("xcrun", "simctl", "shutdown", deviceUUID);
         simctlCmd = new Command(simctlArgs, true);
 
-        // Handle errors thrown by command 'xcrun simctl shutdown <uuid>'
-        // and kill any open iOS simulator windows
-        exitCode = simctlCmd.executeAndWait(false);
-        ClassicCommands.killall("iOS Simulator");
+        // Run command 'xcrun simctl shutdown <uuid>'
+        simctlCmd.executeAndWait(false);
 
         // Retry 'xcrun simctl erase <uuid>'
         simctlArgs = Arrays.asList("xcrun", "simctl", "erase", deviceUUID);
         simctlCmd = new Command(simctlArgs, true);
-        exitCode = simctlCmd.executeAndWait(false);
+        simctlCmd.executeAndWait(false);
       } else if (exitCode != 0) {
         throw new WebDriverException("execution failed. Exit code =" + exitCode + " , command was: "
             + simctlCmd.commandString());
