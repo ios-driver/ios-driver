@@ -482,12 +482,6 @@ public class APPIOSApplication {
 
   public static boolean canRun(IOSCapabilities desiredCapabilities, IOSCapabilities appCapability) {
 
-    // check if the app can run the requested SDK
-    String sdk = desiredCapabilities.getSDKVersion();
-    if (sdk != null) {
-      List<String> supported = (List<String>) appCapability.getCapability(IOSCapabilities.UI_SDK_VERSION_ALT);
-    }
-
     if (desiredCapabilities.getCapability(IOSCapabilities.SIMULATOR) != null &&
         desiredCapabilities.isSimulator() != appCapability.isSimulator()) {
       return false;
