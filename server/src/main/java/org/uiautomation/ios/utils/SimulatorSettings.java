@@ -224,33 +224,52 @@ public class SimulatorSettings {
       }
     } else {
       // Starting with Xcode 6 and later, we can use simctl to do the hard work for us.
-      List<String> simctlArgs = new ArrayList<>();
-      simctlArgs.add("xcrun");
-      simctlArgs.add("simctl");
-      simctlArgs.add("erase");
-      simctlArgs.add(deviceUUID);
-      Command simctlCmd = new Command(simctlArgs, true);
-
-      // if the device is still in booted state erase returns with error code 146
-      int exitCode = simctlCmd.executeAndWait(true);
-      if (exitCode == 146) {
-        log.log(Level.WARNING, "Reset content and settings exit code = " + exitCode
-            + ", possibly device is in booted state, shutdown device = " + deviceUUID);
+      // If it fails, we have to turn the device off first.
+      if (!eraseSimulator()) {
+        log.log(Level.WARNING, "Reset content and settings failed, " +
+            "possibly device is in booted state, shutdown device = " + deviceUUID);
+        List<String> simctlArgs = new ArrayList<>();
         simctlArgs = Arrays.asList("xcrun", "simctl", "shutdown", deviceUUID);
-        simctlCmd = new Command(simctlArgs, true);
+        Command simctlCmd = new Command(simctlArgs, true);
 
         // Run command 'xcrun simctl shutdown <uuid>'
         simctlCmd.executeAndWait(false);
 
-        // Retry 'xcrun simctl erase <uuid>'
-        simctlArgs = Arrays.asList("xcrun", "simctl", "erase", deviceUUID);
-        simctlCmd = new Command(simctlArgs, true);
-        simctlCmd.executeAndWait(false);
-      } else if (exitCode != 0) {
-        throw new WebDriverException("execution failed. Exit code =" + exitCode + " , command was: "
-            + simctlCmd.commandString());
+        // Retry
+        eraseSimulator();
       }
     }
+  }
+
+  private boolean eraseSimulator() {
+    assert instrumentsVersion.getMajor() >= 6;
+
+    // Starting with Xcode 6 and later, we can use simctl to do the hard work for us.
+    List<String> simctlArgs = new ArrayList<>();
+    simctlArgs.add("xcrun");
+    simctlArgs.add("simctl");
+    simctlArgs.add("erase");
+    simctlArgs.add(deviceUUID);
+    Command simctlCmd = new Command(simctlArgs, true);
+
+    // if the device is still in booted state erase returns with error code 146
+    int exitCode = simctlCmd.executeAndWait(true);
+    if (exitCode == 146) {
+      return false;
+    } else if (exitCode != 0) {
+      throw new WebDriverException("execution failed. Exit code =" + exitCode + " , command was: "
+        + simctlCmd.commandString());
+    }
+
+    // Wipe the system.log, since simctl doesn't do it.
+    String deviceLogDir = System.getProperty("user.home") +
+      "/Library/Logs/CoreSimulator/" + deviceUUID;
+    File deviceLog = new File(deviceLogDir, "system.log");
+    if (deviceLog.exists()) {
+      deviceLog.delete();
+    }
+
+    return true;
   }
 
   public void writeContentFile(String path, byte[] fileContents) {
