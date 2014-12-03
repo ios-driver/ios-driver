@@ -31,9 +31,12 @@ UIATarget.prototype.setDeviceOrientation_original = UIATarget.prototype.setDevic
  */
 UIATarget.prototype.setDeviceOrientation = function (orientation) {
     this.setDeviceOrientation_original(orientation);
-    var timeNeededForTheRotationAnimationToComplete = 0.8; // seconds.
-    this.delay(timeNeededForTheRotationAnimationToComplete);
-    var newOrientation = UIATarget.localTarget().frontMostApp().interfaceOrientation();
+    var startDate = new Date();
+    do {
+      // Delay here to cause the run loop to run, but also keep trying for 5 seconds.
+      this.delay(0.1);
+      var newOrientation = UIATarget.localTarget().frontMostApp().interfaceOrientation();
+    } while ((newOrientation !== orientation) && (((new Date()) - startDate) < 5000));
     if (newOrientation !== orientation) {
         throw new UIAutomationException("The orientation specified is not supported by the application."
                                             + newOrientation + " !== " + orientation);
