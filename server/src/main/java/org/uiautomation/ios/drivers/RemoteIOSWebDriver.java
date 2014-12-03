@@ -26,7 +26,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.utils.ClassicCommands;
-import org.uiautomation.ios.utils.IOSVersion;
 import org.uiautomation.ios.wkrdp.BaseWebInspector;
 import org.uiautomation.ios.wkrdp.DOMContext;
 import org.uiautomation.ios.wkrdp.MessageListener;
@@ -108,25 +107,15 @@ public class RemoteIOSWebDriver {
 
     log.fine("connectionKey=" + connectionKey);
 
-    boolean newerSDK8 = (new IOSVersion(session.getCapabilities().getSDKVersion())).isGreaterOrEqualTo("8.0");
-    if (newerSDK8) {
-      for (int index = 0; index < applications.size(); index++) {
-        if (!applications.get(index).getApplicationName().equalsIgnoreCase("Safari")) {
-          connect(applications.get(index).getBundleId());
-          isStarted = true;
-          return;
-        }
-      }
+    if (applications.size() == 1) {
+      connect(applications.get(0).getBundleId());
+    } else if (applications.size() == 2) {
+      connect(applications.get(1).getBundleId());
     } else {
-      if (applications.size() == 1) {
-        connect(applications.get(0).getBundleId());
-      }
-      else {
-        showWarning();
-      }
+      showWarning();
     }
-  
     isStarted = true;
+
   }
 
   private void showWarning() {
