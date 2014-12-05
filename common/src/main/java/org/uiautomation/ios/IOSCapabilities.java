@@ -20,6 +20,7 @@ import com.google.common.collect.Lists;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.CapabilityType;
@@ -28,6 +29,7 @@ import org.uiautomation.ios.communication.device.DeviceType;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 
 import javax.xml.bind.DatatypeConverter;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
@@ -98,6 +100,9 @@ public class IOSCapabilities extends DesiredCapabilities {
     setCapability(TIME_HACK, false);
     setCapability(SIMULATOR, true);
     setCapability(INSTRUMENTS, true);
+    
+    // Set the platform to MAC
+    setCapability(CapabilityType.PLATFORM, Platform.MAC);
   }
 
   public IOSCapabilities(JSONObject json) throws JSONException {
