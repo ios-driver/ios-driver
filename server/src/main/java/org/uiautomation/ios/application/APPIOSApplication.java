@@ -15,7 +15,6 @@
 package org.uiautomation.ios.application;
 
 import com.google.common.collect.ImmutableList;
-
 import com.dd.plist.BinaryPropertyListWriter;
 import com.dd.plist.NSArray;
 import com.dd.plist.NSDictionary;
@@ -26,6 +25,7 @@ import com.dd.plist.PropertyListParser;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.grid.common.RegistrationRequest;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.IOSCapabilities;
@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.uiautomation.ios.IOSCapabilities.BUNDLE_ICONS;
@@ -477,6 +478,26 @@ public class APPIOSApplication {
         throw new WebDriverException("cannot get metadata", e);
       }
     }
+
+    // Set 'browserName' to the string retrieved by 'CFBundleName' for native apps.
+    // 'CFBundleName' does not seem to return values for Safari app so setting
+    // 'browserName' to 'CFBundleDisplayName', converted to lower case as the
+    // icons in the Selenium grid are mapped to lower case.
+    String bundleName = metadata.optString(IOSCapabilities.BUNDLE_NAME);
+    String bundleDisplayName = metadata.optString(IOSCapabilities.BUNDLE_DISPLAY_NAME);
+    if (bundleName != null && bundleName.trim().length() > 0) {
+      cap.setBrowserName(bundleName.trim());
+    } else if (bundleDisplayName != null && bundleDisplayName.trim().length() > 0) {
+      cap.setBrowserName(bundleDisplayName.trim().toLowerCase());
+    } else {
+      log.log(Level.WARNING, "Empty string received for 'CFBundleName' / 'CFBundleDisplayName' meta data for app "
+          + this.app.getAbsolutePath());
+    }
+
+    // Fixes the below warning during Selenium grid registration
+    // org.openqa.grid.internal.BaseRemoteProxy <init>
+    // WARNING: Max instance not specified. Using default = 1 instance
+    cap.setCapability(RegistrationRequest.MAX_INSTANCES, "1");
     return cap;
   }
 
