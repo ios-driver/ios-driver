@@ -32,9 +32,11 @@ var UIAutomation = {
      * @param {string} sessionId the session currently controlling instruments.
      * @param {number} status the response status. 0 for ok.
      * @param {Object} value the response value
+     * @param {bool} opt_skipStale An optional flag indicating whether the cache should skip its check for stale
+     *               elements when it's consulted in preparing the response.
      * @return {string} the response value, stringified.
      */
-    createJSONResponse: function (sessionId, status, value) {
+    createJSONResponse: function (sessionId, status, value, opt_skipStale) {
         var result = {};
         result.sessionId = sessionId;
         result.status = status;
@@ -70,7 +72,11 @@ var UIAutomation = {
             } else if (value && value.type) {
                 // check if the element is in an alert to throw the unexpected alert exception if needed
                 try {
-                    this.cache.get(value.reference());
+                    var skipStale = false;
+                    if (opt_skipStale === true) {
+                        skipStale = true;
+                    }
+                    this.cache.get(value.reference(), !skipStale);
                     res.ELEMENT = "" + value.reference();
                     res.type = value.type();
                 } catch (err) {
