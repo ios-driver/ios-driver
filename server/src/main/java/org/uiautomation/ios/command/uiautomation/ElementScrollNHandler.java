@@ -27,33 +27,33 @@ public class ElementScrollNHandler extends UIAScriptHandler {
   private static final JSTemplate scrollUpTemplate = buildJSTemplate(
       "var element = UIAutomation.cache.get(%:reference$s);" +
       "element.scrollUp();" +
-      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')");
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'', true)");
   private static final JSTemplate scrollDownTemplate = buildJSTemplate(
       "var element = UIAutomation.cache.get(%:reference$s);" +
       "element.scrollDown();" +
-      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')");
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'', true)");
   private static final JSTemplate scrollLeftTemplate = buildJSTemplate(
       "var element = UIAutomation.cache.get(%:reference$s);" +
       "element.scrollLeft();" +
-      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')");
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'', true)");
   private static final JSTemplate scrollRightTemplate = buildJSTemplate(
       "var element = UIAutomation.cache.get(%:reference$s);" +
       "element.scrollRight();" +
-      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')");
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'', true)");
   private static final JSTemplate scrollToNameTemplate = buildJSTemplate(
       "var element = UIAutomation.cache.get(%:reference$s);" +
       "element.scrollToElementWithName('%:name$s');" +
-      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')",
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'', true)",
       "name");
   private static final JSTemplate scrollToPredicateTemplate = buildJSTemplate(
       "var element = UIAutomation.cache.get(%:reference$s);" +
       "element.scrollToElementWithPredicate(\"%:predicateString$s\");" +
-      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')",
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'', true)",
       "predicateString");
   private static final JSTemplate scrollToVisibleTemplate = buildJSTemplate(
       "var element = UIAutomation.cache.get(%:reference$s);" +
       "element.scrollToVisible();" +
-      "UIAutomation.createJSONResponse('%:sessionId$s',0,'')");
+      "UIAutomation.createJSONResponse('%:sessionId$s',0,'', true)");
 
   private static JSTemplate buildJSTemplate(String template, String... extraArgs) {
     String[] args = {"sessionId", "reference"};
