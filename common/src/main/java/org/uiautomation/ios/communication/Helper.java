@@ -27,12 +27,8 @@ public class Helper {
 
   // Webdriver exception have debug info for the client. polluting server side.
   public static String extractMessage(Throwable e) {
-    if (e instanceof WebDriverException){
-      String base = e.getMessage();
-      return base.split("\n")[0];
-    }else{
-      return e.getMessage();
-    }
+    String msg = e.getMessage();
+    return msg == null ? "" : (e instanceof WebDriverException) ? msg.split("\n")[0] : msg;
   }
 
   public static JSONObject extractObject(HttpResponse resp) {

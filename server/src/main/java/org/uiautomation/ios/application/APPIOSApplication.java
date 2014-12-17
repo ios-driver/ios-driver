@@ -38,6 +38,7 @@ import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -180,7 +181,7 @@ public class APPIOSApplication {
       } catch (Exception e) {
         log.warning(
           "Error loading content for l10n for file: " + f.getAbsolutePath() + ", exception: " + e.getMessage() + "\n" +
-          e.getStackTrace());
+          Arrays.asList(e.getStackTrace()));
       }
     }
     List<LanguageDictionary> dicts = new ArrayList<>(languageNameMap.values());
