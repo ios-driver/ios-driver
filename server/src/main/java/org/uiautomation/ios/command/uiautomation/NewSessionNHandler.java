@@ -84,7 +84,7 @@ public final class NewSessionNHandler extends BaseNativeCommandHandler {
   }
 
   private ServerSideSession safeStart(long timeOut, IOSCapabilities cap)
-      throws InstrumentsFailedToStartException {
+      throws InstrumentsFailedToStartException, ApplicationCrashedOnStartException {
     ServerSideSession session = null;
     try {
       // init session
@@ -109,6 +109,7 @@ public final class NewSessionNHandler extends BaseNativeCommandHandler {
     } catch (ApplicationCrashedOnStartException e) {
       log.warning("Application crashed while instruments was launching:" + e);
       session.stop(ServerSideSession.StopCause.crash);
+      throw e;
     } catch (Exception e) {
       log.warning("Error starting the session." + e.getMessage());
       if (session != null) {
