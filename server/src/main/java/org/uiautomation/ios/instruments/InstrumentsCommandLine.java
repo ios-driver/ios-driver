@@ -136,8 +136,8 @@ public class InstrumentsCommandLine implements Instruments {
       log.fine("registration request received" + session.getCachedCapabilityResponse());
       if (!success) {
         log.warning("instruments crashed (" + ((System.currentTimeMillis() - waitStartTime) / 1000) + " sec)".toUpperCase());
-        instruments.waitFor(-1);
-        if (instruments.getExitStatus() == 0) {
+        int exitStatus = instruments.waitFor((int)timeout*1000);
+        if (exitStatus == 0) {
           //instruments successfully completed, which means the app terminated rather than instruments crashing.
           throw new ApplicationCrashedOnStartException("Instruments did not start a session because the application crashed.");
         } else {
