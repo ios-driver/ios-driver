@@ -93,7 +93,7 @@ public class InstrumentsCommandLine implements Instruments {
 
 
   @Override
-  public void start(long timeout) throws InstrumentsFailedToStartException {
+  public void start(long timeout) throws InstrumentsFailedToStartException, ApplicationCrashedOnStartException {
     boolean success = false;
     try {
       instruments.start();
@@ -136,8 +136,14 @@ public class InstrumentsCommandLine implements Instruments {
       log.fine("registration request received" + session.getCachedCapabilityResponse());
       if (!success) {
         log.warning("instruments crashed (" + ((System.currentTimeMillis() - waitStartTime) / 1000) + " sec)".toUpperCase());
-        throw new InstrumentsFailedToStartException(
-            "Didn't get the capability back.Most likely, instruments crashed at startup.");
+        int exitStatus = instruments.waitFor((int)timeout*1000);
+        if (exitStatus == 0) {
+          //instruments successfully completed, which means the app terminated rather than instruments crashing.
+          throw new ApplicationCrashedOnStartException("Instruments did not start a session because the application crashed.");
+        } else {
+          throw new InstrumentsFailedToStartException(
+                  "Didn't get the capability back.Most likely, instruments crashed at startup.");
+        }
       }
     } catch (InterruptedException e) {
       throw new InstrumentsFailedToStartException("instruments was interrupted while starting.");

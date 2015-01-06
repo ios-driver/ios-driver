@@ -25,6 +25,7 @@ import org.uiautomation.ios.SessionNotInitializedException;
 import org.uiautomation.ios.command.BaseNativeCommandHandler;
 import org.uiautomation.ios.communication.WebDriverLikeRequest;
 import org.uiautomation.ios.drivers.RecoverableCrashException;
+import org.uiautomation.ios.instruments.ApplicationCrashedOnStartException;
 import org.uiautomation.ios.instruments.InstrumentsFailedToStartException;
 import org.uiautomation.ios.utils.ServerIsShutingDownException;
 
@@ -83,7 +84,7 @@ public final class NewSessionNHandler extends BaseNativeCommandHandler {
   }
 
   private ServerSideSession safeStart(long timeOut, IOSCapabilities cap)
-      throws InstrumentsFailedToStartException {
+      throws InstrumentsFailedToStartException, ApplicationCrashedOnStartException {
     ServerSideSession session = null;
     try {
       // init session
@@ -101,10 +102,14 @@ public final class NewSessionNHandler extends BaseNativeCommandHandler {
       throw new SessionNotCreatedException("The server cannot run " + cap + " at the moment." + e.getMessage());
     } catch (InstrumentsFailedToStartException|RecoverableCrashException e) {
       log.warning("Instruments failed to start in the allocated time ( " + timeOut + "sec):" + e
-          .getMessage());
+              .getMessage());
       if (session != null) {
         session.stop();
       }
+    } catch (ApplicationCrashedOnStartException e) {
+      log.warning("Application crashed while instruments was launching:" + e);
+      session.stop(ServerSideSession.StopCause.crash);
+      throw e;
     } catch (Exception e) {
       log.warning("Error starting the session." + e.getMessage());
       if (session != null) {
