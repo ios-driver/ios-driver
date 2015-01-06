@@ -16,6 +16,7 @@ package org.uiautomation.ios.drivers;
 
 import org.openqa.selenium.remote.SessionId;
 import org.uiautomation.ios.ServerSideSession;
+import org.uiautomation.ios.instruments.ApplicationCrashedOnStartException;
 import org.uiautomation.ios.instruments.commandExecutor.UIAutomationCommandExecutor;
 import org.uiautomation.ios.instruments.Instruments;
 import org.uiautomation.ios.instruments.TakeScreenshotService;
@@ -41,11 +42,11 @@ public class RemoteIOSNativeDriver extends ServerSideNativeDriver {
     };
   }
 
-  public void start(long timeOut) throws InstrumentsFailedToStartException {
+  public void start(long timeOut) throws InstrumentsFailedToStartException, ApplicationCrashedOnStartException {
     try {
       instruments.start(timeOut);
       Runtime.getRuntime().addShutdownHook(shutdownHook);
-    } catch (InstrumentsFailedToStartException e) {
+    } catch (InstrumentsFailedToStartException|ApplicationCrashedOnStartException e) {
       stop();
       throw e;
     }

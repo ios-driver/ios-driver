@@ -23,7 +23,7 @@ import org.uiautomation.ios.utils.CommandOutputListener;
 
 public interface Instruments {
 
-  void start(long timeOut) throws InstrumentsFailedToStartException;
+  void start(long timeOut) throws InstrumentsFailedToStartException, ApplicationCrashedOnStartException;
   int waitForProcessToDie();
   void stop();
 

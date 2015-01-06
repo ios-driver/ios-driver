@@ -222,4 +222,20 @@ public class Command {
   public void addEnvironment(String key, String value) {
     environment.put(key, value);
   }
+
+  /**
+   * Return this command's exit status.
+   * Throws WebDriverException if called before the process has terminated (including if it hasn't even started).
+   */
+  public int getExitStatus() {
+    if (process == null) {
+      throw new WebDriverException("attempt to get exit status before starting a command");
+    }
+    try {
+      return process.exitValue();
+    }
+    catch (IllegalThreadStateException e) {
+      throw new WebDriverException(e);
+    }
+  }
 }

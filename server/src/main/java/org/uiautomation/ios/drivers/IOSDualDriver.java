@@ -22,10 +22,7 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.UIAModels.configuration.WorkingMode;
-import org.uiautomation.ios.instruments.Instruments;
-import org.uiautomation.ios.instruments.InstrumentsFactory;
-import org.uiautomation.ios.instruments.InstrumentsFailedToStartException;
-import org.uiautomation.ios.instruments.NoInstrumentsImplementationAvailable;
+import org.uiautomation.ios.instruments.*;
 import org.uiautomation.ios.setup.IOSDeviceManager;
 import org.uiautomation.ios.setup.IOSDeviceManagerFactory;
 import org.uiautomation.ios.setup.IOSSafariSimulatorManager;
@@ -120,7 +117,7 @@ public class IOSDualDriver {
     }
   }
 
-  public void start(long timeOut) throws InstrumentsFailedToStartException {
+  public void start(long timeOut) throws InstrumentsFailedToStartException, ApplicationCrashedOnStartException {
     deviceManager.setup();
 
     try {
@@ -128,7 +125,7 @@ public class IOSDualDriver {
       if (deviceManager instanceof IOSSafariSimulatorManager) {
         ((IOSSafariSimulatorManager) deviceManager).tmpFix();
       }
-    } catch (InstrumentsFailedToStartException e) {
+    } catch (InstrumentsFailedToStartException|ApplicationCrashedOnStartException e) {
       deviceManager.teardown();
       throw e;
     }
