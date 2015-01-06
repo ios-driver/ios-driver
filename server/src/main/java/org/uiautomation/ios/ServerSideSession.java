@@ -29,6 +29,7 @@ import org.uiautomation.ios.command.configuration.DriverConfigurationStore;
 import org.uiautomation.ios.communication.WebDriverLikeCommand;
 import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.drivers.IOSDualDriver;
+import org.uiautomation.ios.instruments.ApplicationCrashedOnStartException;
 import org.uiautomation.ios.instruments.InstrumentsFailedToStartException;
 import org.uiautomation.ios.logging.IOSLogManager;
 import org.uiautomation.ios.session.monitor.ApplicationCrashMonitor;
@@ -301,7 +302,7 @@ public class ServerSideSession extends Session {
     return driver;
   }
 
-  public void start(long timeOut) throws InstrumentsFailedToStartException {
+  public void start(long timeOut) throws InstrumentsFailedToStartException, ApplicationCrashedOnStartException {
     driver.start(timeOut);
 
     startedTime = System.currentTimeMillis();
