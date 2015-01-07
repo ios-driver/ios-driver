@@ -141,7 +141,8 @@ UIAElement.prototype.tap = function (opt_XFactor, opt_YFactor) {
     if (opt_YFactor) {
         yFactor = opt_YFactor;
     }
-    if (this.isVisible()) {
+    // UIALink sometimes returns false for isVisible but is yet tappable
+    if (this.isVisible() || this.type() == "UIALink") {
         var rect = this.rect();
         var x = rect.origin.x + (rect.size.width * xFactor);
         var y = rect.origin.y + (rect.size.height * yFactor);
