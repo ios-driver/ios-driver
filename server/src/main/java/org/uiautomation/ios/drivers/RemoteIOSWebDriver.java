@@ -60,7 +60,7 @@ public class RemoteIOSWebDriver {
   private final ServerSideSession session;
   private final String connectionKey;
   private BaseWebInspector currentInspector;
-  private Map<Integer, BaseWebInspector> inspectors = new HashMap<>();
+  private final Map<Integer, BaseWebInspector> inspectors = new HashMap<>();
   private static final Logger log = Logger.getLogger(RemoteIOSWebDriver.class.getName());
   private List<WebkitPage> pages = new ArrayList<>();
   private final WebKitSynchronizer sync;
