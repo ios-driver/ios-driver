@@ -109,12 +109,19 @@ public class RemoteIOSWebDriver {
 
     if (applications.size() == 1) {
       connect(applications.get(0).getBundleId());
-    } else if (applications.size() == 2) {
-      connect(applications.get(1).getBundleId());
+      isStarted = true;
     } else {
+      for (int index = 0; index < applications.size(); index++) {
+        if (!applications.get(index).getApplicationName().equalsIgnoreCase("Safari")) {
+          connect(applications.get(index).getBundleId());
+          isStarted = true;
+          break;
+        }
+      }
+    }
+    if (!isStarted) {
       showWarning();
     }
-    isStarted = true;
 
   }
 
