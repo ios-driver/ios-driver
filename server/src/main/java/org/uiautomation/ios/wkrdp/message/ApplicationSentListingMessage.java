@@ -35,7 +35,10 @@ public class ApplicationSentListingMessage extends BaseIOSWebKitMessage {
 
     for (String key : keys) {
       NSDictionary page = (NSDictionary) list.objectForKey(key);
-      pages.add(new WebkitPage(page));
+      String pageType = page.objectForKey("WIRTypeKey").toString();
+      if (pageType != null && pageType.equals("WIRTypeWeb")) {
+        pages.add(new WebkitPage(page));
+      }
     }
     if (log.isLoggable(Level.FINE))
       log.fine("got: " + this);
