@@ -188,10 +188,14 @@ public class RemoteIOSWebDriver {
         protocol.connect(bundleId);
         sync.waitForSimToSendPages();
         log.fine("bundleId=" + bundleId);
-        switchTo(Collections.max(getPages()));
-        if (getPages().size() > 1) {
-          log.warning("Application started, but already have " + getPages().size()
-                      + " webviews. Connecting to the one with highest page id.");
+        if (getPages() != null && getPages().size() > 0) {
+          switchTo(Collections.max(getPages()));
+          if (getPages().size() > 1) {
+            log.warning("Application started, but already have " + getPages().size()
+                + " webviews. Connecting to the one with highest page id.");
+          }
+        } else {
+            log.warning("Application started, but doesn't have any page.");
         }
         return;
       }
