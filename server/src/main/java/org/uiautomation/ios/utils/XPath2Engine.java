@@ -16,9 +16,11 @@ package org.uiautomation.ios.utils;
 
 import com.google.common.collect.ImmutableMap;
 
+import net.sf.saxon.Configuration;
 import net.sf.saxon.dom.DOMNodeList;
 import net.sf.saxon.lib.NamespaceConstant;
 
+import net.sf.saxon.xpath.XPathFactoryImpl;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,18 +58,37 @@ public class XPath2Engine {
     JSONObject logElementTree = driver.logElementTree(null, false);
     JSONObject tree = logElementTree.optJSONObject("tree");
     try {
-      return new XPath2Engine(new JSONToXMLConverter(tree).asXML());
+      String locale = driver.getCapabilities().getLocale();
+      locale = (locale != null) ? locale.replace('_', '-') : null;
+      return new XPath2Engine(new JSONToXMLConverter(tree).asXML(), locale);
     } catch (Exception e) {
       throw new WebDriverException(e);
     }
   }
 
-  public XPath2Engine(String xml) throws Exception {
+  public XPath2Engine(String xml, String locale) throws Exception {
     this.xml = xml;
     String objectModel = NamespaceConstant.OBJECT_MODEL_SAXON;
     System.setProperty("javax.xml.xpath.XPathFactory:" + objectModel,
                        "net.sf.saxon.xpath.XPathFactoryImpl");
-    XPathFactory xpathFactory = XPathFactory.newInstance(objectModel);
+    XPathFactoryImpl xpathFactory = (XPathFactoryImpl) XPathFactory.newInstance(objectModel);
+    // For certain locales 'th-TH', certain characters have redundant representation. So a code point match may return
+    // false for a different representation of the same character. Eg  ํา can be represented as a single unicode point
+    // (0xe33) or as 2 unicode points  ํ (0xe4d) า (0xe32). A code point matching algorithm isEqual(0xe33, 0xe4d0xe32)
+    // will return false. We need a matching algorithm which does canonical equivalence. Java has a class called
+    // Collator (RuleBasedCollator) which can handle such cases. We can tune saxon parser to configure our
+    // RuleBasedCollator. I am using both full decomposition and locale. For thai it seems, just the locale is
+    // sufficient in JDK 8 but we need both in JDK 7.
+    //
+    // Full decomposition may slow down string comparisons. So just avoiding it in en-US. If required we may avoid it in
+    // most locales (I believe).
+     if (locale != null && !locale.contentEquals("en-US")) {
+      Configuration configuration = Configuration.newConfiguration();
+      configuration.getCollationMap().setDefaultCollationName("http://saxon.sf.net/collation?decomposition=full&lang="
+          + locale);
+      xpathFactory.setConfiguration(configuration);
+    }
+
     /*XPathEvaluator xpath2 = new XPathEvaluator();
     net.sf.saxon.Configuration c = new Configuration();
     c.getCharacterSetFactory().setCharacterSetImplementation(encoding, charSet)*/
