@@ -55,8 +55,8 @@ public class XpathTreeFinderTest {
     tree = new JSONObject(uiCatalog1).getJSONObject("tree");
     treeIntl = new JSONObject(intlMountainZH);
 
-    parserIntl = new XPath2Engine(new JSONToXMLConverter(treeIntl).asXML());
-    parser = new XPath2Engine(new JSONToXMLConverter(tree).asXML());
+    parserIntl = new XPath2Engine(new JSONToXMLConverter(treeIntl).asXML(), null);
+    parser = new XPath2Engine(new JSONToXMLConverter(tree).asXML(), null);
 
   }
 
