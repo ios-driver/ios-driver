@@ -247,6 +247,15 @@ public class SimulatorSettings {
           System.err.println("cannot delete content and settings folder " + contentAndSettingsFolder);
         }
       }
+
+      // Wipe the system.log.
+      String deviceLogDir = System.getProperty("user.home") +
+          "/Library/Logs/iOS Simulator/" + exactSdkVersion + ((is64bit) ? "-64" : "");
+      File deviceLog = new File(deviceLogDir, "system.log");
+      if (deviceLog.exists()) {
+        deviceLog.delete();
+      }
+
       boolean ok = contentAndSettingsFolder.mkdirs();
       if (!ok) {
         System.err.println("couldn't re-create: " + contentAndSettingsFolder);
