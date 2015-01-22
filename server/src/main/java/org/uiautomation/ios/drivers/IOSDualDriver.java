@@ -120,14 +120,9 @@ public class IOSDualDriver {
   public void start(long timeOut) throws InstrumentsFailedToStartException, ApplicationCrashedOnStartException {
     deviceManager.setup();
 
-    try {
-      nativeDriver.start(timeOut);
-      if (deviceManager instanceof IOSSafariSimulatorManager) {
-        ((IOSSafariSimulatorManager) deviceManager).tmpFix();
-      }
-    } catch (InstrumentsFailedToStartException|ApplicationCrashedOnStartException e) {
-      deviceManager.teardown();
-      throw e;
+    nativeDriver.start(timeOut);
+    if (deviceManager instanceof IOSSafariSimulatorManager) {
+      ((IOSSafariSimulatorManager) deviceManager).tmpFix();
     }
 
     if (session.getApplication().isSafari()) {
