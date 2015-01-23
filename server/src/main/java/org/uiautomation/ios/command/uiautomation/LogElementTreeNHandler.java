@@ -170,15 +170,22 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
       Map<String, Object> value = (Map<String, Object>) response.getValue();
       Map<String, Object> tree = (Map<String, Object>) value.get("tree");
 
-      Map<String, Object> webView = (Map<String, Object>) getWebView(tree);
+      Map<String, Object> webView = getWebView(tree);
       if (webView != null) {
-        ServerSideSession session = getDriver().getSession(getRequest().getSession());
+        getDriver().getSession(getRequest().getSession());
         RemoteIOSWebDriver inspector = getWebDriver();
         try {
-          String rawHTML = inspector.getPageSource();
+          String rawHTML = null;
+          if (inspector == null) {
+            log.severe("cannot decorate null webDriver");
+            rawHTML = "<inspector is null>";
+          } else {
+            rawHTML = inspector.getPageSource();
+          }
+          rawHTML = (rawHTML == null ? "<page source is null>" : rawHTML);
           webView.put("source", rawHTML);
         } catch (Exception e) {
-          log.log(Level.SEVERE, "decoration error", e);
+          log.log(Level.SEVERE, "decoration error ", e);
         }
 
       }
