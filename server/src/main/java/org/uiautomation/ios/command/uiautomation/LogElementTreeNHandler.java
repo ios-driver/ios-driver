@@ -175,7 +175,14 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
         getDriver().getSession(getRequest().getSession());
         RemoteIOSWebDriver inspector = getWebDriver();
         try {
-          String rawHTML = inspector.getPageSource();
+          String rawHTML = null;
+          if (inspector == null) {
+            log.severe("cannot decorate null webDriver");
+            rawHTML = "<inspector is null>";
+          } else {
+            rawHTML = inspector.getPageSource();
+          }
+          rawHTML = (rawHTML == null ? "<page source is null>" : rawHTML);
           webView.put("source", rawHTML);
         } catch (Exception e) {
           log.log(Level.SEVERE, "decoration error ", e);
