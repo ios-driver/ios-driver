@@ -16,6 +16,7 @@ package org.uiautomation.ios.wkrdp.message;
 
 
 import com.dd.plist.NSDictionary;
+import com.dd.plist.NSObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +36,8 @@ public class ApplicationSentListingMessage extends BaseIOSWebKitMessage {
 
     for (String key : keys) {
       NSDictionary page = (NSDictionary) list.objectForKey(key);
-      String pageType = page.objectForKey("WIRTypeKey").toString();
-      if (pageType != null && pageType.equals("WIRTypeWeb")) {
+      NSObject pageType = page.objectForKey("WIRTypeKey");
+      if (pageType != null && pageType.toString().equals("WIRTypeWeb")) {
         pages.add(new WebkitPage(page));
       }
     }
