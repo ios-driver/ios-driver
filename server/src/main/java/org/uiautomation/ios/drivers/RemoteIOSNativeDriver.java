@@ -28,24 +28,16 @@ import java.util.logging.Logger;
 public class RemoteIOSNativeDriver extends ServerSideNativeDriver {
 
   private final Instruments instruments;
-  private final Thread shutdownHook;
   private static final Logger log = Logger.getLogger(RemoteIOSNativeDriver.class.getName());
 
   public RemoteIOSNativeDriver(URL url, ServerSideSession session,Instruments impl) {
     super(url, new SessionId(session.getSessionId()));
     this.instruments = impl;
-    shutdownHook = new Thread() {
-      @Override
-      public void run() {
-        //instruments.stop();
-      }
-    };
   }
 
   public void start(long timeOut) throws InstrumentsFailedToStartException, ApplicationCrashedOnStartException {
     try {
       instruments.start(timeOut);
-      Runtime.getRuntime().addShutdownHook(shutdownHook);
     } catch (InstrumentsFailedToStartException|ApplicationCrashedOnStartException e) {
       stop();
       throw e;
@@ -54,7 +46,6 @@ public class RemoteIOSNativeDriver extends ServerSideNativeDriver {
 
   public void stop() {
     instruments.stop();
-    Runtime.getRuntime().removeShutdownHook(shutdownHook);
   }
 
   public UIAutomationCommandExecutor communication() {
