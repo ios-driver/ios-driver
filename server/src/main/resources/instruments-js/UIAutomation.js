@@ -113,7 +113,7 @@ var UIAutomation = {
 
             while (jsonRemainder.length > maxPartLength){
                 jsonPart =  sessionUUID + jsonRemainder.substring(0,maxPartLength) + partialIdentifier;
-                jsonRemainder = jsonRemainder.substring(maxPartLength, Number.MAX_VALUE);
+                jsonRemainder = jsonRemainder.substring(maxPartLength);
                 log("posting response : " + jsonPart);
                 nextCommand = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.COMMAND,
                                                                                         "--data-binary",
