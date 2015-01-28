@@ -23,17 +23,17 @@ import org.uiautomation.ios.command.UIAScriptResponse;
 import org.uiautomation.ios.drivers.RemoteIOSNativeDriver;
 import org.uiautomation.ios.servlet.DriverBasedServlet;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.Normalizer;
+import java.util.HashMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 public class CURLIAutomationCommandExecutor extends BaseUIAutomationCommandExecutor {
 
@@ -68,6 +68,10 @@ public class CURLIAutomationCommandExecutor extends BaseUIAutomationCommandExecu
 
     private static final Logger log = Logger.getLogger(UIAScriptServlet.class.getName());
     private static final long serialVersionUID = 41227429706998662L;
+    private final int UUID_LENGTH = 36;
+    private final String PARTIAL_IDENTIFIER = "b94b2b80-4330-11e4-916c-0800200c9a66-PARTIAL";
+    private final String FINAL_PART_IDENTIFIER = "b94b2b80-4330-11e4-916c-0800200c9a66-FINAL";
+    private HashMap jsonMap = new HashMap();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -112,7 +116,24 @@ public class CURLIAutomationCommandExecutor extends BaseUIAutomationCommandExecu
       if (request.getInputStream() != null) {
         StringWriter writer = new StringWriter();
         IOUtils.copy(request.getInputStream(), writer, "UTF-8");
-        String json = writer.toString();
+        String json = null;
+        String sessionUUID = null;
+        String jsonConcatenated = "";
+        if (writer.toString().endsWith(PARTIAL_IDENTIFIER)){
+            sessionUUID = writer.toString().substring(0, UUID_LENGTH);
+            if (jsonMap.get(sessionUUID) != null){
+                jsonConcatenated = (String)jsonMap.get(sessionUUID);
+            }
+            jsonConcatenated =  jsonConcatenated.concat(writer.toString().substring(UUID_LENGTH, writer.toString().length() - PARTIAL_IDENTIFIER.length()));
+            jsonMap.put(sessionUUID, jsonConcatenated);
+            return;
+        }else if (writer.toString().endsWith(FINAL_PART_IDENTIFIER)){
+            sessionUUID = writer.toString().substring(0, UUID_LENGTH);
+            json =  ((String)jsonMap.get(sessionUUID)).concat(writer.toString().substring(UUID_LENGTH, writer.toString().length() - FINAL_PART_IDENTIFIER.length()));
+            jsonMap.remove(sessionUUID);
+        }else{
+            json = writer.toString();
+        }
         json = Normalizer.normalize(json, LanguageDictionary.form);
         UIAScriptResponse r = new UIAScriptResponse(json);
         log.fine("content : " + r);

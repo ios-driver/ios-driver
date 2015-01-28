@@ -104,11 +104,42 @@ var UIAutomation = {
      * using eval().
      */
     postResponseWithCURLAndGetNextCommand: function (jsonResponse) {
-        log("posting response : " + jsonResponse);
-        var nextCommand = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.COMMAND,
+        var nextCommand;
+        var maxPartLength = 200000;
+        if (jsonResponse.length > maxPartLength){
+            var sessionId = "sessionId";
+            var partialIdentifier = "b94b2b80-4330-11e4-916c-0800200c9a66-PARTIAL";
+            var endIdentifier = "b94b2b80-4330-11e4-916c-0800200c9a66-FINAL"
+            var uuidLength = 36;
+            var jsonPart;
+            var index = 0;
+            var jsonRemainder = jsonResponse;
+            var startPos = jsonResponse.indexOf(sessionId) + sessionId.length + 3;
+            var sessionUUID = jsonResponse.substring(startPos, startPos + uuidLength);
+
+            while (jsonRemainder.length > maxPartLength){
+                jsonPart =  sessionUUID + jsonRemainder.substring(0,maxPartLength) + partialIdentifier;
+                jsonRemainder = jsonRemainder.substring(maxPartLength, Number.MAX_VALUE);
+                log("posting response : " + jsonPart);
+                nextCommand = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.COMMAND,
+                                                                                        "--data-binary",
+                                                                                        jsonPart],
+                                                                                        600);
+            }
+            jsonRemainder = sessionUUID + jsonRemainder + endIdentifier
+            log("posting response : " + jsonRemainder);
+            nextCommand = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.COMMAND,
+                                                                                    "--data-binary",
+                                                                                    jsonRemainder],
+                                                                                    600);
+        }else{
+            log("posting response : " + jsonResponse);
+            nextCommand = this.HOST.performTaskWithPathArgumentsTimeout(this.CURL, [this.COMMAND,
                                                                                     "--data-binary",
                                                                                     jsonResponse],
-                                                                        600);
+                                                                                    600);
+        }
+
         if (nextCommand.exitCode != 0) {
             throw new UIAutomationException("error getting new command. exit code : " + result
                 .exitCode);
