@@ -85,6 +85,7 @@ public enum CommandMapping {
 
   // UIAApplication
   KEYBOARD(".keyboard()"),
+  DEACTIVATE_APP(DeactivateAppHandler.class),
 
   RECT(GetElementSizeNHandler.class, NotImplementedWebHandler.class),
 
