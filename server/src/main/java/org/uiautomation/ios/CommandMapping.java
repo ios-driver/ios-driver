@@ -81,34 +81,19 @@ public enum CommandMapping {
 
   SCREENSHOT(TakeScreenshotNHandler.class),
 
-  //FONT_MOST_APP(".frontMostApp()"),
   SELECTED((String) null, IsSelectedHandler.class),
 
   // UIAApplication
-  //MAIN_WINDOW(".mainWindow()"),
-  //WINDOWS(".windows()"),
   KEYBOARD(".keyboard()"),
-  //KEYBOARD_KEYS(".keys()"),
-  //KEYBOARD_BUTTONS(".buttons()"),
-  //TYPE_STRING(".typeString(:string)"),
-  // UIAHost
-  //PERFORM_TASK_WITH_PATH_ARGUMENTS_TIMEOUT(null),
+  DEACTIVATE_APP(DeactivateAppHandler.class),
 
-  // UIAElement
-  //HIT_POINT(NotImplementedNativeHandler.class, NotImplementedWebHandler.class),
   RECT(GetElementSizeNHandler.class, NotImplementedWebHandler.class),
-
-  //PARENT(NotImplementedNativeHandler.class, NotImplementedWebHandler.class),
 
   ELEMENT_ROOT(FindElementNHandler.class, FindElementHandler.class),
   ELEMENTS_ROOT(FindElementsRoot.class, FindElementsHandler.class),
 
   ELEMENT(FindElementNHandler.class, FindElementHandler.class),
   ELEMENTS(FindElementsRoot.class, FindElementsHandler.class),
-
-  //ELEMENT(".element(:depth,:criteria)"),
-  //ELEMENTS(".elements2(:depth,:criteria)"),
-  //ANCESTRY(NotImplementedNativeHandler.class, NotImplementedWebHandler.class),
 
   DISPLAYED(IsVisibleNHandler.class, IsDisplayedHandler.class),
   ENABLED(IsEnabledNHandler.class, IsEnabledHandler.class),
@@ -128,7 +113,6 @@ public enum CommandMapping {
 
   CLICK(".tap()", ClickHandler.class),
 
-  //GET_LOCATION(GetLocationNHandler.class),
   SET_LOCATION(SetLocationNHandler.class),
 
   NATIVE_TOUCH_AND_HOLD(TouchAndHoldNHandler.class),
@@ -142,19 +126,6 @@ public enum CommandMapping {
   TOUCH_DOWN(TouchDownHandler.class),
   TOUCH_UP(TouchUpHandler.class),
   TOUCH_MOVE(TouchMoveHandler.class),
-
-  // UIAElementArray
-  //GET(".toArray()[:index]"),
-  //FIRST_WITH_NAME(".firstWithName(:name)"),
-  //FIRST_WITH_PREDICATE(".firstWithPredicate()"),
-  //FIRST_WITH_VALUE_FOR_KEY(NotImplementedHandler.class),
-  //ARRAY_WITH_NAME(".withName(:name)"),
-  //ARRAY_WITH_PREDICATE(NotImplementedHandler.class),
-  //ARRAY_WITH_VALUE_FOR_KEY(NotImplementedHandler.class),
-
-  //UIANavigationBar
-  //LEFT_BUTTON(".leftButton()"),
-  //RIGHT_BUTTON(".rightButton()"),
 
   // UIATextField
   SET_VALUE(SetValueNHandler.class, SetValueHandler.class),
