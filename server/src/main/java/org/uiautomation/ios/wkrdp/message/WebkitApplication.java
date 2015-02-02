@@ -14,47 +14,56 @@
 
 package org.uiautomation.ios.wkrdp.message;
 
-import com.dd.plist.NSDictionary;
-import com.dd.plist.NSNumber;
+/**
+ * <code>WebkitApplication</code> class encapsulates information passed inside the element WIRApplicationDictionaryKey
+ * of a {@link ReportConnectedApplicationsMessage} or as arguments of {@link ApplicationConnectedMessage}
+ * 
+ */
+public interface WebkitApplication {
 
-public class WebkitApplication {
+  public static final String WIRAPPLICATIONIDENTIFIERKEY = "WIRApplicationIdentifierKey";
 
+  public static final String WIRAPPLICATIONNAMEKEY = "WIRApplicationNameKey";
 
-  private final String WIRApplicationIdentifierKey;
-  private final String WIRApplicationNameKey;
-  private final boolean WIRIsApplicationProxyKey;
+  public static final String WIRISAPPLICATIONPROXYKEY = "WIRIsApplicationProxyKey";
 
-  public WebkitApplication(NSDictionary dict) {
+  public static final String WIRAPPLICATIONBUNDLEIDENTIFIERKEY = "WIRApplicationBundleIdentifierKey";
 
-    WIRApplicationIdentifierKey = dict.objectForKey("WIRApplicationIdentifierKey").toString();
-    WIRApplicationNameKey = dict.objectForKey("WIRApplicationNameKey").toString();
-    NSNumber o = (NSNumber) dict.objectForKey("WIRIsApplicationProxyKey");
-    WIRIsApplicationProxyKey = o.boolValue();
-  }
+  public static final String WIRISAPPLICATIONACTIVEKEY = "WIRIsApplicationActiveKey";
 
-  public String getBundleId() {
-    return WIRApplicationIdentifierKey;
-  }
+  public static final String SAFARI = "Safari";
 
-  public String getApplicationName() {
-    return WIRApplicationNameKey;
-  }
+  public static final String SAFARIBUNDLEIDENTIFIER = "com.apple.mobilesafari";
 
-  @Override
-  public String toString() {
-    return getBundleId();
-  }
+  public static final String WEBKITBUNDLEIDENTIFIER = "com.apple.WebKit.WebContent";
+
+  /**
+   * Returns the information represented by the key 'WIRApplicationIdentifierKey';
+   * 
+   * @return Application identifier
+   */
+  String getBundleId();
+
+  /**
+   * Returns the information represented by the key 'WIRApplicationNameKey'
+   * 
+   * @return Application name
+   */
+  String getApplicationName();
+
+  /**
+   * Returns true if the application is an instance of Safari
+   * 
+   * @return true if Safari, false otherwise.
+   */
+  boolean isSafari();
+
+  /**
+   * Returns true if this application can be connected by the WebKitRemoteDebug protocol. Implementation can override
+   * the behavior for decision making capabilities of upper layers
+   * 
+   * @return true if allowed by WebKitRemoteDebug protocol, false otherwise
+   */
+  boolean isConnectableByWkrdProtocol();
+
 }
-
-/*
-
-  <key>com.apple.mobilesafari</key>
-  <dict>
-          <key>WIRApplicationIdentifierKey</key>
-          <string>com.apple.mobilesafari</string>
-          <key>WIRApplicationNameKey</key>
-          <string>Safari</string>
-          <key>WIRIsApplicationProxyKey</key>
-          <false/>
-  </dict>
-*/

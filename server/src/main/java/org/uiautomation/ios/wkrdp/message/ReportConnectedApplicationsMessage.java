@@ -14,62 +14,63 @@
 
 package org.uiautomation.ios.wkrdp.message;
 
-import com.dd.plist.NSDictionary;
-
-import java.util.ArrayList;
 import java.util.List;
 
-public class ReportConnectedApplicationsMessage extends BaseIOSWebKitMessage {
+import org.openqa.selenium.WebDriverException;
 
+/**
+ * <code>ReportConnectedApplicationsMessage</code> encapsulates information received through WebKitRemoteDebug protocol whose
+ * 'selector' key has the string value '_rpc_reportConnectedApplicationList:'.
+ * <pre>
+ * {@code
+ * <?xml version="1.0" encoding="UTF-8"?>
+ * <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+ * <plist version="1.0">
+ * <dict>
+ * <key>__argument</key>
+ * <dict>
+ *   <key>WIRApplicationDictionaryKey</key>
+ *   <dict>
+ *     <key>com.apple.mobilesafari</key>
+ *     <dict>
+ *       <key>WIRApplicationNameKey</key>
+ *       <string>Safari</string>
+ *       <key>WIRIsApplicationProxyKey</key>
+ *       <false/>
+ *       <key>WIRApplicationIdentifierKey</key>
+ *       <string>com.apple.mobilesafari</string>
+ *     </dict>
+ *   </dict>
+ * </dict>
+ * <key>__selector</key>
+ * <string>_rpc_reportConnectedApplicationList:</string>
+ * </dict>
+ * </plist>
+ * }
+ * </pre>
+ */
+public interface ReportConnectedApplicationsMessage {
 
-  private final List<WebkitApplication> apps = new ArrayList<WebkitApplication>();
+  static final String SELECTOR = "_rpc_reportConnectedApplicationList:";
 
-  public ReportConnectedApplicationsMessage(String rawMessage) throws Exception {
-    super(rawMessage);
-    NSDictionary list = (NSDictionary) arguments.objectForKey("WIRApplicationDictionaryKey");
-    String[] keys = list.allKeys();
-    for (String key : keys) {
-      NSDictionary app = (NSDictionary) list.objectForKey(key);
-      WebkitApplication application = new WebkitApplication(app);
-      apps.add(application);
-    }
-  }
+  static final String WIRAPPLICATIONDICTIONARYKEY = "WIRApplicationDictionaryKey";
 
-  public List<WebkitApplication> getApplications() {
-    return apps;
-  }
+  /**
+   * Returns a {@link List} of {@link WebkitApplication} represented by the key 'WIRApplicationDictionaryKey'
+   * 
+   * @return {@link List} of {@link WebkitApplication}
+   */
+  List<WebkitApplication> getApplications();
 
+  /**
+   * Returns the {@link WebkitApplication} for the given applications identifier.
+   * 
+   * @param applicationIdentifier
+   *          Application identifier of the sought application
+   * @return {@link WebkitApplication} of the provided application identifier
+   * @throws WebDriverException
+   *           if {@link WebkitApplication} is not found
+   */
+  WebkitApplication getApplication(String applicationIdentifier);
 
-  @Override
-  protected String toString(NSDictionary args) {
-    return apps.toString();
-  }
 }
- /*
-
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>__selector</key>
-	<string>_rpc_reportConnectedApplicationList:</string>
-	<key>__argument</key>
-	<dict>
-		<key>WIRApplicationDictionaryKey</key>
-		<dict>
-			<key>com.apple.mobilesafari</key>
-			<dict>
-				<key>WIRApplicationIdentifierKey</key>
-				<string>com.apple.mobilesafari</string>
-				<key>WIRApplicationNameKey</key>
-				<string>Safari</string>
-				<key>WIRIsApplicationProxyKey</key>
-				<false/>
-			</dict>
-		</dict>
-	</dict>
-</dict>
-</plist>
-
-
-  */

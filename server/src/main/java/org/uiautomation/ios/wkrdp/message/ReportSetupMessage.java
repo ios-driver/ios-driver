@@ -14,28 +14,40 @@
 
 package org.uiautomation.ios.wkrdp.message;
 
-import com.dd.plist.NSDictionary;
+/**
+ * <code>ReportSetupMessage</code> encapsulates information received through WebKitRemoteDebug protocol whose
+ * 'selector' key has the string value '_rpc_reportSetup:'.
+ * <pre>
+ * {@code
+ * <?xml version="1.0" encoding="UTF-8"?>
+ * <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+ * <plist version="1.0">
+ * <dict>
+ * <key>__argument</key>
+ * <dict>
+ *   <key>WIRSimulatorBuildKey</key>
+ *   <string>12B411</string>
+ *   <key>WIRSimulatorProductVersionKey</key>
+ *   <string>8.1</string>
+ *   <key>WIRSimulatorNameKey</key>
+ *   <string>iPhone Simulator</string>
+ * </dict>
+ * <key>__selector</key>
+ * <string>_rpc_reportSetup:</string>
+ * </dict>
+ * </plist>
+ * }
+ * </pre>
+ */
+public interface ReportSetupMessage {
 
-public class ReportSetupMessage extends BaseIOSWebKitMessage {
+  static final String SELECTOR = "_rpc_reportSetup:";
 
-  // TODO freynaud list here when USB is supported.
-  private final WebkitDevice device;
-
-  public ReportSetupMessage(String rawMessage) throws Exception {
-    super(rawMessage);
-    device = new WebkitDevice(arguments);
-
-  }
-
-  public WebkitDevice getDevice() {
-    return device;
-  }
-
-  protected String toString(NSDictionary args) {
-    return device.toString();
-  }
+  /**
+   * Returns a {@link WebkitDevice} instance of the data represented by the key '__argument'
+   * 
+   * @return {@link WebkitDevice} instance
+   */
+  WebkitDevice getDevice();
 
 }
-
-
-

@@ -14,24 +14,43 @@
 
 package org.uiautomation.ios.wkrdp.message;
 
-import com.dd.plist.NSDictionary;
+/**
+ * <code>ApplicationDisconnectedMessage</code> encapsulates information received through WebKitRemoteDebug protocol whose
+ * 'selector' key has the string value '_rpc_applicationDisconnected:'.
+ * <pre>
+ * {@code
+ * <?xml version="1.0" encoding="UTF-8"?>
+ * <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+ * <plist version="1.0">
+ * <dict>
+ * <key>__selector</key>
+ * <string>_rpc_applicationDisconnected:</string>
+ * <key>__argument</key>
+ * <dict>
+ *   <key>WIRApplicationBundleIdentifierKey</key>
+ *   <string>com.apple.mobilesafari</string>
+ *   <key>WIRApplicationNameKey</key>
+ *   <string>Safari</string>
+ *   <key>WIRIsApplicationProxyKey</key>
+ *   <false/>
+ *   <key>WIRIsApplicationActiveKey</key>
+ *   <integer>1</integer>
+ *   <key>WIRApplicationIdentifierKey</key>
+ *   <string>PID:966</string>
+ * </dict>
+ * </dict>
+ * </plist>
+ * }
+ * </pre>
+ */
+public interface ApplicationDisconnectedMessage {
 
-public class ApplicationDisconnectedMessage extends BaseIOSWebKitMessage {
+  static final String SELECTOR = "_rpc_applicationDisconnected:";
 
-  private final WebkitApplication app;
+  /**
+   * Returns a {@link WebkitApplication} instance of data represented the key '_argument'
+   * @return {@link WebkitApplication}
+   */
+  WebkitApplication getApplication();
 
-
-  public ApplicationDisconnectedMessage(String rawMessage) throws Exception {
-    super(rawMessage);
-    app = new WebkitApplication(arguments);
-  }
-
-  public WebkitApplication getApplication() {
-    return app;
-  }
-
-  @Override
-  public String toString(NSDictionary d) {
-    return app.getBundleId();
-  }
 }

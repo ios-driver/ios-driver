@@ -14,44 +14,48 @@
 
 package org.uiautomation.ios.wkrdp.message;
 
-import com.dd.plist.NSDictionary;
+/**
+ * <code>WebkitDevice</code> class encapsulates information passed inside the key '__argument' of a
+ * {@link ReportSetupMessage
+ * <pre>
+ * {@code
+ * <dict>
+ *   <key>WIRSimulatorBuildKey</key>
+ *   <string>11D167</string>
+ *   <key>WIRSimulatorProductVersionKey</key>
+ *   <string>7.1</string>
+ *   <key>WIRSimulatorNameKey</key>
+ *   <string>iPhone Simulator</string>
+ * </dict>
+ * } 
+ */
+public interface WebkitDevice {
 
-public class WebkitDevice {
+  static final String WIRSIMULATORBUILDKEY = "WIRSimulatorBuildKey";
 
-  //private final String WIRSimulatorNameKey;
-  //private final String WIRSimulatorBuildKey;
+  static final String WIRSIMULATORPRODUCTVERSIONKEY = "WIRSimulatorProductVersionKey";
 
-  public WebkitDevice(NSDictionary dict) {
-    //WIRSimulatorNameKey = dict.objectForKey("WIRSimulatorNameKey").toString();
-    //WIRSimulatorBuildKey = dict.objectForKey("WIRSimulatorBuildKey").toString();
-  }
+  static final String WIRSIMULATORNAMEKEY = "WIRSimulatorNameKey";
 
+  /**
+   * Returns the simulator build ID represented by key 'WIRSimulatorBuildKey'
+   * 
+   * @return Simulator build ID.
+   */
+  String getSimulatorBuild();
 
-  @Override
-  public String toString() {
-    //return WIRSimulatorNameKey + ",build=" + WIRSimulatorBuildKey;
-    return "TODO";
-  }
+  /**
+   * Returns the simulator product version represented by the key 'WIRSimulatorProductVersionKey'
+   * 
+   * @return Simulator product version
+   */
+  String getSimulatorProductVersion();
+
+  /**
+   * Returns the simulator name represented by the key 'WIRSimulatorNameKey'
+   * 
+   * @return Simulator name
+   */
+  String getSimulatorName();
 
 }
-
-/*
-
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>__selector</key>
-	<string>_rpc_reportSetup:</string>
-	<key>__argument</key>
-	<dict>
-		<key>WIRSimulatorNameKey</key>
-		<string>iPhone Simulator</string>
-		<key>WIRSimulatorBuildKey</key>
-		<string>10B5105c</string>
-	</dict>
-</dict>
-</plist>
-
-
- */
