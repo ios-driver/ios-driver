@@ -50,6 +50,7 @@ public class IOSServerManager {
   private State state = State.stopped;
   private Map<String, ServerSideSession.StopCause> reasonByOpaqueKey = new ConcurrentHashMap<>();
 
+  private static final String SAFARI_BUNDLE_NAME = "Safari";
 
   public void waitForState(State expected) {
     while (getState() != expected) {
@@ -212,7 +213,9 @@ public class IOSServerManager {
                                            + ".\n    Available apps: "
                                            + getSupportedApplications());
     }
-    // if more than one matches it returns the last in the list (highest version for MobileSafari)
+
+    // If more than one matches it returns the last in the list (highest version for MobileSafari
+    // if not requested with a particular version of SDK)
     APPIOSApplication app = matchingApps.get(matchingApps.size() - 1);
     AppleLanguage lang = AppleLanguage.create(desiredCapabilities.getLanguage());
     return app.createInstance(lang);
@@ -220,7 +223,13 @@ public class IOSServerManager {
 
   public List<APPIOSApplication> findAllMatchingApplications(IOSCapabilities desiredCapabilities) {
     List<APPIOSApplication> matchingApps = new ArrayList<>();
-
+    if (isSafariRequestedWithSDKVersion(desiredCapabilities)) {
+      if (log.isLoggable(Level.INFO)) {
+        log.log(Level.INFO, "Safari application requested for SDK version: " + desiredCapabilities.getSDKVersion());
+      }
+      matchingApps.add(getSafariForSdkVersion(desiredCapabilities.getSDKVersion()));
+      return matchingApps;
+    }
     for (APPIOSApplication app : getApplicationStore().getApplications()) {
       IOSCapabilities appCapabilities = app.getCapabilities();
       if (APPIOSApplication.canRun(desiredCapabilities, appCapabilities)) {
@@ -230,6 +239,20 @@ public class IOSServerManager {
     return matchingApps;
   }
 
+  private boolean isSafariRequestedWithSDKVersion(IOSCapabilities desiredCapabilities) {
+    return desiredCapabilities.getSDKVersion() != null && !desiredCapabilities.getSDKVersion().isEmpty()
+        && SAFARI_BUNDLE_NAME.equalsIgnoreCase(desiredCapabilities.getBundleName());
+  }
+
+  private APPIOSApplication getSafariForSdkVersion(String sdkVersion) {
+    for (APPIOSApplication application : getApplicationStore().getApplications()) {
+      if (application.isSafari() && sdkVersion.equalsIgnoreCase(application.getSafariSDKVersion())) {
+        return application;
+      }
+    }
+    throw new WebDriverException("Cannot find Safari for SDK version: " + sdkVersion);
+  }
+  
   public Device findAndReserveMatchingDevice(IOSCapabilities desiredCapabilities) {
     List<Device> devices = getDeviceStore().getDevices();
     for (Device device : devices) {

@@ -14,24 +14,10 @@
 
 package org.uiautomation.ios.application;
 
-import com.google.common.collect.ImmutableList;
-import com.dd.plist.BinaryPropertyListWriter;
-import com.dd.plist.NSArray;
-import com.dd.plist.NSDictionary;
-import com.dd.plist.NSNumber;
-import com.dd.plist.NSObject;
-import com.dd.plist.PropertyListParser;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.openqa.grid.common.RegistrationRequest;
-import org.openqa.selenium.SessionNotCreatedException;
-import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.communication.device.DeviceType;
-import org.uiautomation.ios.utils.IOSVersion;
-import org.uiautomation.ios.utils.PlistFileUtils;
+import static org.uiautomation.ios.IOSCapabilities.BUNDLE_ICONS;
+import static org.uiautomation.ios.IOSCapabilities.DEVICE_FAMILLY;
+import static org.uiautomation.ios.IOSCapabilities.ICON;
+import static org.uiautomation.ios.IOSCapabilities.MAGIC_PREFIX;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -47,11 +33,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import static org.uiautomation.ios.IOSCapabilities.BUNDLE_ICONS;
-import static org.uiautomation.ios.IOSCapabilities.DEVICE_FAMILLY;
-import static org.uiautomation.ios.IOSCapabilities.ICON;
-import static org.uiautomation.ios.IOSCapabilities.MAGIC_PREFIX;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.openqa.grid.common.RegistrationRequest;
+import org.openqa.selenium.SessionNotCreatedException;
+import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.IOSCapabilities;
+import org.uiautomation.ios.communication.device.DeviceType;
+import org.uiautomation.ios.utils.IOSVersion;
+import org.uiautomation.ios.utils.PlistFileUtils;
+
+import com.dd.plist.BinaryPropertyListWriter;
+import com.dd.plist.NSArray;
+import com.dd.plist.NSDictionary;
+import com.dd.plist.NSNumber;
+import com.dd.plist.NSObject;
+import com.dd.plist.PropertyListParser;
+import com.google.common.collect.ImmutableList;
 
 public class APPIOSApplication {
 
@@ -61,6 +63,12 @@ public class APPIOSApplication {
   private final File app;
   private final ImmutableList<LanguageDictionary> dictionaries;
   private final ImmutableList<AppleLanguage> languages;
+
+  // Pattern to match '7.1' in the text '/Users/unclejohn/.ios-driver/safariCopies/safari-7.1.app'
+  // or '8.1' in the text
+  // '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator8.1.sdk/Applications/MobileSafari.app'
+  private static final Pattern SAFARI_SDK_VERSION = Pattern
+      .compile("\\S+safari-([\\d\\.]+)\\.app|\\S+iPhoneSimulator([\\d\\.]+).sdk\\S+/MobileSafari.app");
 
   /**
    * @param pathToApp
@@ -602,6 +610,32 @@ public class APPIOSApplication {
       return new APPIOSApplication(app.getAbsolutePath());
     } else {
       return null;
+    }
+  }
+
+  /**
+   * Returns the Safari SDK version from the location of the application, will throw {@link WebDriverException} if
+   * called on a Non Safari application.
+   * 
+   * @return Safari SDK version
+   */
+  public String getSafariSDKVersion() {
+    validateSafariSDKVersionMethodCall();
+    Matcher sdkVersionMatcher = SAFARI_SDK_VERSION.matcher(app.getAbsolutePath());
+    if (sdkVersionMatcher.matches()) {
+      return sdkVersionMatcher.group(1) != null ? sdkVersionMatcher.group(1) : sdkVersionMatcher.group(2);
+    } else {
+      throw new WebDriverException("Cannot identify the version of Safari from application: " + app.getAbsolutePath());
+    }
+  }
+
+  private void validateSafariSDKVersionMethodCall() {
+    if (!isSafari()) {
+      throw new UnsupportedOperationException("SDK version cannot be determined for non-safari app");
+    }
+    if (!app.exists()) {
+      throw new WebDriverException("Application: " + app.getAbsolutePath()
+          + " does not exist in the specified location");
     }
   }
 }
