@@ -40,6 +40,10 @@ public class BaseIOSWebKitMessage implements IOSMessage {
     return selector;
   }
 
+  public NSDictionary getArguments() {
+    return arguments;
+  }
+  
   @Override
   public String toString() {
     return this.getClass().getSimpleName() + "\n\tArguments:\n\t" + toString(arguments);

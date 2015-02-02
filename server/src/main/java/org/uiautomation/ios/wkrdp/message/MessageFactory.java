@@ -14,59 +14,184 @@
 
 package org.uiautomation.ios.wkrdp.message;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.apache.commons.io.IOUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 
-import java.lang.reflect.Constructor;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
- * Created with IntelliJ IDEA. User: freynaud Date: 17/01/2013 Time: 15:08 To change this template
- * use File | Settings | File Templates.
+ * Created with IntelliJ IDEA. User: freynaud Date: 17/01/2013 Time: 15:08 To change this template use File | Settings |
+ * File Templates.
  */
 public class MessageFactory {
 
-  private static final Logger log = Logger.getLogger(MessageFactory.class.getName());
-  private final
-  Map<String, Class<? extends BaseIOSWebKitMessage>>
-      types =
-      new HashMap<String, Class<? extends BaseIOSWebKitMessage>>();
+  private static final Logger LOG = Logger.getLogger(MessageFactory.class.getName());
+
+  private static final List<String> DEFAULT = Arrays.asList("Default");
+
+  private static final List<String> IOS7_TYPES = Arrays.asList("7.0.3", "7.1");
+
+  private static final List<String> IOS8_TYPES = Arrays.asList("8.0", "8.1");
+
+  private final Map<List<String>, Map<String, Class<? extends BaseIOSWebKitMessage>>> iOSTypesMap;
+
+  private String iOSVersion;
+
+  private ReentrantLock versionDeterminingLock;
+
+  private Condition determiningVersion;
 
   public MessageFactory() {
-    types.put("_rpc_reportSetup:", ReportSetupMessage.class);
-    types.put("_rpc_reportConnectedApplicationList:", ReportConnectedApplicationsMessage.class);
-    types.put("_rpc_applicationSentListing:", ApplicationSentListingMessage.class);
-    types.put("_rpc_applicationSentData:", ApplicationDataMessage.class);
-    types.put("_rpc_applicationConnected:", ApplicationConnectedMessage.class);
-    types.put("_rpc_applicationDisconnected:", ApplicationDisconnectedMessage.class);
+    iOSTypesMap = new HashMap<>();
+    versionDeterminingLock = new ReentrantLock();
+    determiningVersion = versionDeterminingLock.newCondition();
+    populateDefaultTypes();
+    populateIOS7Types();
+    populateIOS8Types();
+  }
+
+  private void populateDefaultTypes() {
+    Map<String, Class<? extends BaseIOSWebKitMessage>> types = new HashMap<>();
+    types.put("_rpc_reportSetup:", org.uiautomation.ios.wkrdp.message.ReportSetupMessageImpl.class);
+    types.put("_rpc_applicationSentData:", org.uiautomation.ios.wkrdp.message.ApplicationDataMessageImpl.class);
+    iOSTypesMap.put(DEFAULT, types);
+  }
+
+  private void populateIOS7Types() {
+    Map<String, Class<? extends BaseIOSWebKitMessage>> types = new HashMap<>();
+    types.put("_rpc_reportConnectedApplicationList:",
+        org.uiautomation.ios.wkrdp.message.ios7.ReportConnectedApplicationsMessageImpl.class);
+    types.put("_rpc_applicationSentListing:",
+        org.uiautomation.ios.wkrdp.message.ios7.ApplicationSentListingMessageImpl.class);
+    types.put("_rpc_applicationConnected:",
+        org.uiautomation.ios.wkrdp.message.ios7.ApplicationConnectedMessageImpl.class);
+    types.put("_rpc_applicationDisconnected:",
+        org.uiautomation.ios.wkrdp.message.ios7.ApplicationDisconnectedMessageImpl.class);
+    iOSTypesMap.put(IOS7_TYPES, types);
+  }
+
+  private void populateIOS8Types() {
+    Map<String, Class<? extends BaseIOSWebKitMessage>> types = new HashMap<>();
+    types.put("_rpc_reportConnectedApplicationList:",
+        org.uiautomation.ios.wkrdp.message.ios8.ReportConnectedApplicationsMessageImpl.class);
+    types.put("_rpc_applicationSentListing:",
+        org.uiautomation.ios.wkrdp.message.ios8.ApplicationSentListingMessageImpl.class);
+    types.put("_rpc_applicationConnected:",
+        org.uiautomation.ios.wkrdp.message.ios8.ApplicationConnectedMessageImpl.class);
+    types.put("_rpc_applicationDisconnected:",
+        org.uiautomation.ios.wkrdp.message.ios8.ApplicationDisconnectedMessageImpl.class);
+    iOSTypesMap.put(IOS8_TYPES, types);
   }
 
   public IOSMessage create(String rawMessage) {
     try {
+      if (LOG.isLoggable(Level.FINE)) {
+        LOG.log(Level.FINE, "Raw message:   " + rawMessage);
+      }
       BaseIOSWebKitMessage m = new BaseIOSWebKitMessage(rawMessage);
-      Class<? extends BaseIOSWebKitMessage> impl = types.get(m.getSelector());
-
-      if (impl == null) {
+      waitOnVersionDetermination(m);
+      Class<? extends BaseIOSWebKitMessage> implementationClass = getImplementationClassFor(m);
+      if (implementationClass == null) {
         throw new RuntimeException("NI " + m.getSelector());
       }
-      Object[] args = new Object[]{rawMessage};
-      Class<?>[] argsClass = new Class[]{String.class};
-
-      Constructor<?> c = impl.getConstructor(argsClass);
-      IOSMessage message = (IOSMessage) c.newInstance(args);
-      if (log.isLoggable(Level.FINEST))
-        log.fine("Message: " + message);
-      return message;
+      IOSMessage iOSMessage = createObjectOf(implementationClass, rawMessage);
+      return iOSMessage;
     } catch (Exception e1) {
-      log.log(Level.SEVERE,"format error",e1);
+      LOG.log(Level.SEVERE, "format error", e1);
     }
     return null;
+  }
+
+  private void waitOnVersionDetermination(BaseIOSWebKitMessage baseIOSWebKitMessage) {
+    try {
+      versionDeterminingLock.lock();
+      if (isWaitingRequiredFor(baseIOSWebKitMessage)) {
+        try {
+          determiningVersion.await(50, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+        }
+      }
+    } finally {
+      versionDeterminingLock.unlock();
+    }
+  }
+
+  private boolean isWaitingRequiredFor(BaseIOSWebKitMessage baseIOSWebKitMessage) {
+    return !ReportSetupMessage.SELECTOR.equals(baseIOSWebKitMessage.selector) && iOSVersion == null;
+  }
+  private Class<? extends BaseIOSWebKitMessage> getImplementationClassFor(BaseIOSWebKitMessage baseIOSWebKitMessage) {
+    if (iOSVersion == null) {
+      determineIOSVersion(baseIOSWebKitMessage);
+    }
+    if (isImplementationClassDistinctFor(baseIOSWebKitMessage)) {
+      return searchSpecificListFor(baseIOSWebKitMessage);
+    } else {
+      return searchDefaultFor(baseIOSWebKitMessage);
+    }
+  }
+
+  private boolean isImplementationClassDistinctFor(BaseIOSWebKitMessage baseIOSWebKitMessage) {
+    if (ReportSetupMessage.SELECTOR.equals(baseIOSWebKitMessage.selector)
+        || ApplicationDataMessage.SELECTOR.equals(baseIOSWebKitMessage.selector)) {
+      return false;
+    }
+    return true;
+  }
+
+  private Class<? extends BaseIOSWebKitMessage> searchDefaultFor(BaseIOSWebKitMessage baseIOSWebKitMessage) {
+    return iOSTypesMap.get(DEFAULT).get(baseIOSWebKitMessage.selector);
+  }
+
+  private Class<? extends BaseIOSWebKitMessage> searchSpecificListFor(BaseIOSWebKitMessage baseIOSWebKitMessage) {
+    List<String> iOSTypeList = getIOSTypeList();
+    return iOSTypesMap.get(iOSTypeList).get(baseIOSWebKitMessage.selector);
+  }
+
+  private List<String> getIOSTypeList() {
+    if (IOS8_TYPES.contains(iOSVersion)) {
+      return IOS8_TYPES;
+    } else {
+      return IOS7_TYPES;
+    }
+  }
+
+  private void determineIOSVersion(BaseIOSWebKitMessage baseIOSWebkitMesssage) {
+    try {
+      versionDeterminingLock.lock();
+      iOSVersion = baseIOSWebkitMesssage.arguments.objectForKey(WebkitDevice.WIRSIMULATORPRODUCTVERSIONKEY).toString();
+      determiningVersion.signal();
+      if (LOG.isLoggable(Level.FINE)) {
+        LOG.log(Level.FINE, "IOS version determined = " + iOSVersion);
+      }
+    } finally {
+      versionDeterminingLock.unlock();
+    }
+  }
+
+  private IOSMessage createObjectOf(Class<? extends BaseIOSWebKitMessage> implementationClass, String argument)
+      throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException,
+      IllegalArgumentException, InvocationTargetException {
+    Object[] args = new Object[] { argument };
+    Class<?>[] argsClass = new Class[] { String.class };
+    Constructor<?> c = implementationClass.getConstructor(argsClass);
+    IOSMessage iOSMessage = (IOSMessage) c.newInstance(args);
+    if (LOG.isLoggable(Level.FINE)) {
+      LOG.fine("IOS Message: " + iOSMessage);
+    }
+    return iOSMessage;
   }
 
   private Document getDocument(String rawMessage) throws DocumentException {

@@ -14,23 +14,45 @@
 
 package org.uiautomation.ios.wkrdp.message;
 
-import com.dd.plist.NSDictionary;
+/**
+ * <code>ApplicationConnectedMessage</code> encapsulates information received through WebKitRemoteDebug protocol whose
+ * 'selector' key has the string value '_rpc_applicationConnected:'.
+ * <pre>
+ * {@code
+ * <?xml version="1.0" encoding="UTF-8"?>
+ *<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+ *<plist version="1.0">
+ *<dict>
+ * <key>__argument</key>
+ * <dict>
+ *   <key>WIRApplicationIdentifierKey</key>
+ *   <string>PID:11460</string>
+ *   <key>WIRIsApplicationProxyKey</key>
+ *   <true/>
+ *   <key>WIRApplicationNameKey</key>
+ *   <string></string>
+ *   <key>WIRApplicationBundleIdentifierKey</key>
+ *   <string>com.apple.WebKit.WebContent</string>
+ *   <key>WIRIsApplicationActiveKey</key>
+ *   <integer>0</integer>
+ *   <key>WIRHostApplicationIdentifierKey</key>
+ *   <string>PID:11449</string>
+ * </dict>
+ * <key>__selector</key>
+ * <string>_rpc_applicationConnected:</string>
+ *</dict>
+ *</plist>
+ * }
+ * </pre>
+ */
+public interface ApplicationConnectedMessage {
 
-public class ApplicationConnectedMessage extends BaseIOSWebKitMessage {
+  static final String SELECTOR = "_rpc_applicationConnected:";
 
-  private final WebkitApplication app;
+  /**
+   * Returns a {@link WebkitApplication} instance of data represented the key '_argument'
+   * @return {@link WebkitApplication}
+   */
+  WebkitApplication getApplication();
 
-  public ApplicationConnectedMessage(String rawMessage) throws Exception {
-    super(rawMessage);
-    app = new WebkitApplication(arguments);
-  }
-
-  public WebkitApplication getApplication() {
-    return app;
-  }
-
-  @Override
-  public String toString(NSDictionary d) {
-    return app.getBundleId();
-  }
 }

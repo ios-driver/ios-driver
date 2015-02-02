@@ -14,50 +14,73 @@
 
 package org.uiautomation.ios.wkrdp.message;
 
-
-import com.dd.plist.NSDictionary;
-import com.dd.plist.NSObject;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-public class ApplicationSentListingMessage extends BaseIOSWebKitMessage {
+/**
+ * <code>ApplicationSentListingMessage</code> encapsulates information received through WebKitRemoteDebug protocol whose
+ * 'selector' key has the string value '_rpc_applicationSentListing:'.
+ * <pre>
+ * {@code
+ * <?xml version="1.0" encoding="UTF-8"?>
+ * <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+ * <plist version="1.0">
+ * <dict>
+ * <key>__argument</key>
+ * <dict>
+ *   <key>WIRApplicationIdentifierKey</key>
+ *   <string>com.apple.mobilesafari</string>
+ *   <key>WIRListingKey</key>
+ *   <dict>
+ *     <key>1</key>
+ *     <dict>
+ *       <key>WIRPageIdentifierKey</key>
+ *       <integer>1</integer>
+ *       <key>WIRTitleKey</key>
+ *       <string></string>
+ *       <key>WIRURLKey</key>
+ *       <string>about:blank</string>
+ *     </dict>
+ *   </dict>
+ * </dict>
+ * <key>__selector</key>
+ * <string>_rpc_applicationSentListing:</string>
+ * </dict>
+ * </plist>
+ * }
+ * </pre>
+ */
+public interface ApplicationSentListingMessage {
 
-  private final List<WebkitPage> pages = new ArrayList<WebkitPage>();
-  private static final Logger log = Logger.getLogger(ApplicationSentListingMessage.class.getName());
+  static final String SELECTOR = "_rpc_applicationSentListing:";
 
-  public ApplicationSentListingMessage(String rawMessage) throws Exception {
-    super(rawMessage);
+  static final String WIRLISTINGKEY = "WIRListingKey";
 
-    NSDictionary list = (NSDictionary) arguments.objectForKey("WIRListingKey");
-    String[] keys = list.allKeys();
+  static final String WIRAPPLICATIONIDENTIFIERKEY = "WIRApplicationIdentifierKey";
 
-    for (String key : keys) {
-      NSDictionary page = (NSDictionary) list.objectForKey(key);
-      NSObject pageType = page.objectForKey("WIRTypeKey");
-      if (pageType != null && pageType.toString().equals("WIRTypeWeb")) {
-        pages.add(new WebkitPage(page));
-      }
-    }
-    if (log.isLoggable(Level.FINE))
-      log.fine("got: " + this);
-  }
+  static final String WIRTYPEKEY = "WIRTypeKey";
 
-  public List<WebkitPage> getPages() {
-    return pages;
-  }
+  static final String WIRTYPEWEB = "WIRTypeWeb";
 
-  @Override
-  protected String toString(NSDictionary args) {
-    StringBuilder builder = new StringBuilder();
-    builder.append(pages.size() + " pages.\n\t");
-    for (WebkitPage p : pages) {
-      builder.append(
-          "[" + p.getPageId() + "],title:" + p.getTitle() + ",url:" + p.getURL() + "\t\tConnection:"
-          + p.getConnection() + "\n\t");
-    }
-    return builder.toString();
-  }
+  /**
+   * Returns true if the number pages received under the key "WIRListingKey" of an ApplicationSentListing message is
+   * greater than zero
+   * 
+   * @return true if there are non zero pages , false otherwise.
+   */
+  boolean isPagesAvailable();
+
+  /**
+   * Returns the value of the key 'WIRApplicationIdentifierKey'
+   * 
+   * @return Application identifier
+   */
+  String getApplicationIdentifier();
+
+  /**
+   * Returns a {@link List} of {@link WebkitPage}s represented by the key 'WIRListingKey'
+   * 
+   * @return {@link List} of {@link WebkitPage}s
+   */
+  List<WebkitPage> getPages();
+
 }

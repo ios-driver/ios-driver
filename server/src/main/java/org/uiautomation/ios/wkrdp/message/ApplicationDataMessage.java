@@ -14,46 +14,58 @@
 
 package org.uiautomation.ios.wkrdp.message;
 
-import com.dd.plist.NSData;
-import com.dd.plist.NSDictionary;
-import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+/**
+ * <code>ApplicationDataMessage</code> encapsulates information received through WebKitRemoteDebug protocol whose
+ * 'selector' key has the string value '_rpc_applicationSentData:'.
+ * <pre>
+ * {@code
+ *<?xml version="1.0" encoding="UTF-8"?>
+ *<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+ *<plist version="1.0">
+ *<dict>
+ * <key>__argument</key>
+ * <dict>
+ *   <key>WIRDestinationKey</key>
+ *   <string>E0F4C128-F4FF-4D45-A538-BA382CD66001</string>
+ *   <key>WIRMessageDataKey</key>
+ *   <data>
+ *     eyJyZXN1bHQiOnt9LCJpZCI6Mn0=
+ *   </data>
+ *   <key>WIRApplicationIdentifierKey</key>
+ *   <string>com.apple.mobilesafari</string>
+ * </dict>
+ * <key>__selector</key>
+ * <string>_rpc_applicationSentData:</string>
+ *</dict>
+ *</plist>
+ * }
+ * </pre>
+ */
+public interface ApplicationDataMessage {
 
+  static final String SELECTOR = "_rpc_applicationSentData:";
 
-public class ApplicationDataMessage extends BaseIOSWebKitMessage {
+  static final String WIRDDESTINATIONKEY = "WIRDestinationKey";
 
-  private static final Logger log = Logger.getLogger(ApplicationDataMessage.class.getName());
-  private final String destinationKey;
-  private final JSONObject message;
+  static final String WIRMESSAGEDATAKEY = "WIRMessageDataKey";
 
-  public ApplicationDataMessage(String rawMessage) throws Exception {
-    super(rawMessage);
-    NSData data = (NSData) arguments.objectForKey("WIRMessageDataKey");
-    String encoded = data.getBase64EncodedData();
-    byte[] bytes = Base64.decodeBase64(encoded);
-    String s = new String(bytes);
-    message = new JSONObject(s);
-    destinationKey = arguments.objectForKey("WIRDestinationKey").toString();
-    if (log.isLoggable(Level.FINEST)) {
-      log.finest("got : " + rawMessage + "\n\tContent :" + message);
-    }
-  }
+  static final String WIRAPPPLICATIONIDENTIFIERKEY = "WIRApplicationIdentifierKey";
 
-  public JSONObject getMessage() {
-    return message;
-  }
+  /**
+   * Returns a {@link JSONObject} instance of the data represented by the key 'WIRMessageDataKey' after decoding the
+   * data.
+   * 
+   * @return {@link JSONObject} instance of the data.
+   */
+  JSONObject getMessage();
 
-  public String getDestinationKey() {
-    return destinationKey;
-  }
+  /**
+   * Returns the string represented by the key 'WIRDestinationKey'
+   * 
+   * @return Destination key.
+   */
+  String getDestinationKey();
 
-  @Override
-  protected String toString(NSDictionary args) {
-    return message.toString();
-  }
 }
-
-

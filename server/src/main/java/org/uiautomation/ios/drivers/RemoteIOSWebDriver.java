@@ -14,7 +14,14 @@
 
 package org.uiautomation.ios.drivers;
 
-import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,14 +48,7 @@ import org.uiautomation.ios.wkrdp.model.NodeId;
 import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
 import org.uiautomation.ios.wkrdp.model.RemoteWebNativeBackedElement;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.google.common.collect.ImmutableList;
 
 public class RemoteIOSWebDriver {
 
@@ -71,10 +71,8 @@ public class RemoteIOSWebDriver {
     connectionKey = UUID.randomUUID().toString();
     sync = new WebKitSynchronizer(this);
     this.protocol = protocol;
-
     MessageListener messageListener = new WebKitNotificationListener(this, sync, session);
     protocol.addListener(messageListener);
-
   }
 
   public void setPages(List<WebkitPage> pages) {
@@ -85,18 +83,15 @@ public class RemoteIOSWebDriver {
     return pages;
   }
 
-
   public boolean isStarted() {
     return isStarted;
   }
 
   public void start() {
     protocol.start();
-
     if (session != null) {
       session.getLogManager().onProtocolCreated(protocol);
     }
-
     try {
       protocol.register();
     } catch (WebDriverException wde) {
@@ -104,25 +99,19 @@ public class RemoteIOSWebDriver {
     }
     sync.waitForSimToRegister();
     sync.waitForSimToSendApps();
-
-    log.fine("connectionKey=" + connectionKey);
-
-    if (applications.size() == 1) {
-      connect(applications.get(0).getBundleId());
-      isStarted = true;
-    } else {
-      for (int index = 0; index < applications.size(); index++) {
-        if (!applications.get(index).getApplicationName().equalsIgnoreCase("Safari")) {
-          connect(applications.get(index).getBundleId());
-          isStarted = true;
-          break;
-        }
+    if (log.isLoggable(Level.FINE)) {
+      log.log(Level.FINE, "connectionKey=" + connectionKey);
+    }
+    for (WebkitApplication application : applications) {
+      if (application.isConnectableByWkrdProtocol()) {
+        connect(application.getBundleId());
+        isStarted = true;
+        break;
       }
     }
     if (!isStarted) {
       showWarning();
     }
-
   }
 
   private void showWarning() {
@@ -412,4 +401,5 @@ public class RemoteIOSWebDriver {
   public synchronized WebkitDevice getDevice() {
     return device;
   }
+
 }
