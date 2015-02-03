@@ -26,7 +26,8 @@ public class AppleMagicString {
                                        String desiredSDKVersion, InstrumentsVersion instrumentsVersion) {
     // 'iPad Retina (64-bit) - Simulator - iOS 7.1' or 'iPhone 5 (8.0 Simulator)' if Xcode 6 or later is being used
     IOSVersion iosVersion = new IOSVersion(desiredSDKVersion);
-    String version = iosVersion.getMajor() + '.' + iosVersion.getMinor();
+    String version = iosVersion.getMajor() + '.' + iosVersion.getMinor() + (iosVersion.getIncremental() != null ? ("."
+        + iosVersion.getIncremental()) : "");
     String name = getSimulateDeviceValue(device, variation, desiredSDKVersion, instrumentsVersion);
     String specification;
     if (instrumentsVersion.getMajor() < 6) {
