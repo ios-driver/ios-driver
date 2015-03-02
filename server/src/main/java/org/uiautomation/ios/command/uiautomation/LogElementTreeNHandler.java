@@ -180,7 +180,9 @@ public class LogElementTreeNHandler extends UIAScriptHandler {
             log.severe("cannot decorate null webDriver");
             rawHTML = "<inspector is null>";
           } else {
-            rawHTML = inspector.getPageSource();
+            if (inspector.getCurrentPageID() != -1) {
+              rawHTML = inspector.getPageSource();
+            }
           }
           rawHTML = (rawHTML == null ? "<page source is null>" : rawHTML);
           webView.put("source", rawHTML);
