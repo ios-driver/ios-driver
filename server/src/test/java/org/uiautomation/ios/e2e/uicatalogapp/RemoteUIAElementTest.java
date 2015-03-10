@@ -38,7 +38,7 @@ import java.util.List;
 
 public class RemoteUIAElementTest extends BaseIOSDriverTest {
 
-  private String buttonsName = "Buttons, Various uses of UIButton";
+  private String buttonsName = "Buttons";
   private Criteria c1 = new TypeCriteria(UIATableCell.class);
   private Criteria c2 = new NameCriteria(buttonsName);
   private Criteria c = new AndCriteria(c1, c2);
@@ -46,6 +46,7 @@ public class RemoteUIAElementTest extends BaseIOSDriverTest {
   @BeforeClass
   public void startDriver() {
     driver = getDriver(SampleApps.uiCatalogCap());
+    driver.findElement(By.xpath("//UIAButton[@name='UICatalog']")).click();
   }
 
   @Test
@@ -117,7 +118,7 @@ public class RemoteUIAElementTest extends BaseIOSDriverTest {
     Assert.assertTrue(text.isDisplayed(), "nav bar text");
   }
 
-  @Test//(dependsOnMethods ="isVisibleTests")
+  @Test(enabled = false)//(dependsOnMethods ="isVisibleTests")
   public void canOnlyClickVisibleElement() {
     WebElement navBar = driver.findElement(By.tagName("UIANavigationBar"));
     Assert.assertTrue(navBar.isDisplayed(), "nav bar");

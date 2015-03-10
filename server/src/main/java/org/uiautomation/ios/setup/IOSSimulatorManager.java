@@ -25,6 +25,7 @@ import org.uiautomation.ios.utils.IOSVersion;
 import org.uiautomation.ios.utils.SimulatorSettings;
 
 import java.io.File;
+import java.io.NotActiveException;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -54,7 +55,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   /**
    * manages a single instance of the instruments process. Only 1 process can run at a given time.
    */
-  public IOSSimulatorManager(ServerSideSession session) {
+  public IOSSimulatorManager(ServerSideSession session) throws NotActiveException {
     this.session = session;
     this.info = session.getIOSServerManager().getHostInfo();
     this.sdks = ClassicCommands.getInstalledSDKs();

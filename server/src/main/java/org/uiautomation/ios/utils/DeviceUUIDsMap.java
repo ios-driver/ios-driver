@@ -1,5 +1,7 @@
 package org.uiautomation.ios.utils;
 
+import org.openqa.selenium.WebDriverException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,19 +9,19 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.openqa.selenium.WebDriverException;
-
 public class DeviceUUIDsMap implements CommandOutputListener {
 
   private static final Pattern iOSPattern = Pattern.compile("-- iOS (.*) --");
 
   private static final Pattern simulatorPattern = Pattern
-      .compile("    (.*) \\((\\w{8}-\\w{4}-\\w{4}-\\w{4}-\\w{12})\\) \\(\\w*\\)");
+      .compile("    (.*) \\((\\w{8}-\\w{4}-\\w{4}-\\w{4}-\\w{12})\\) \\((\\w*\\s?\\w*)\\)");
 
   private static final Pattern iOSToSdkPattern = Pattern
       .compile("iOS ([\\d\\.]+) \\(([\\d\\.]+) - (\\S+)\\) \\(com.apple.CoreSimulator.SimRuntime.iOS-\\d-\\d\\)");
 
   private Map<String, String> simulatorToUUID = new HashMap<>();
+
+  private Map<String, String> simulatorState = new HashMap<>();
 
   private Map<String, SdkVersionBuildInfo> iOSToSdkMap = new HashMap<String, SdkVersionBuildInfo>();
 
@@ -95,7 +97,10 @@ public class DeviceUUIDsMap implements CommandOutputListener {
     if (simulatorMatcher.matches()) {
       String device = simulatorMatcher.group(1);
       String uuid = simulatorMatcher.group(2);
-      simulatorToUUID.put(iOSToSdkMap.get(iOSUnderScan).getSdkVersion() + "," + device, uuid);
+      String state = simulatorMatcher.group(3);
+      String SimulatorName = iOSToSdkMap.get(iOSUnderScan).getSdkVersion() + "," + device;
+      simulatorToUUID.put(SimulatorName, uuid);
+      simulatorState.put(SimulatorName, state);
     }
   }
 
@@ -105,6 +110,10 @@ public class DeviceUUIDsMap implements CommandOutputListener {
 
   public String getUUID(String sdkVersion, String deviceName) {
     return simulatorToUUID.get(sdkVersion + "," + deviceName);
+  }
+
+  public String getState(String sdkVersion, String deviceName) {
+    return simulatorState.get(sdkVersion + "," + deviceName);
   }
 
   /**

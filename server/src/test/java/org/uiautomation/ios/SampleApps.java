@@ -88,7 +88,7 @@ public class SampleApps {
   }
 
   public static IOSCapabilities uiCatalogCap() {
-    IOSCapabilities c = IOSCapabilities.iphone("UICatalog", "2.10");
+    IOSCapabilities c = IOSCapabilities.iphone("UICatalog", "11.3");
     if (sdkVersion != null) {
       log.info("SET SDK to " + sdkVersion);
       c.setSDKVersion(sdkVersion);
@@ -124,7 +124,7 @@ public class SampleApps {
   }
 
   public static IOSCapabilities intlMountainsCap(String lang) {
-    IOSCapabilities c = IOSCapabilities.iphone("InternationalMountains", "1.1");
+    IOSCapabilities c = IOSCapabilities.iphone("InternationalMountains", "1.3");
     c.setLanguage(lang);
     if (sdkVersion != null) {
       log.info("SET SDK to " + sdkVersion);
