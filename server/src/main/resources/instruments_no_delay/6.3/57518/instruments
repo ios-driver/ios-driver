@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+# Use this script in place of /usr/bin/instruments and the
+# 1 second delay will go away.
+
+LIB_PATH=$(cd `dirname $0`; pwd)
+XCODE_PATH=$(xcode-select --print-path)
+
+DYLD_INSERT_LIBRARIES="$LIB_PATH/InstrumentsShim.dylib" \
+LIB_PATH=$LIB_PATH \
+"$XCODE_PATH"/usr/bin/instruments "$@"
+
+# vim: set tabstop=4 shiftwidth=4 filetype=sh:
