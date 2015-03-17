@@ -208,7 +208,7 @@ public class SimulatorSettings {
     int countingTries = 0;
     String state = uuidsMap.getState(exactSdkVersion, deviceName);
     while (countingTries < NUMBER_TRIES_GETTING_UUID && state.equals("Shutting Down")) {
-      System.err.println("Device is shutting down. Wait 2 seconds.");
+      log.info(String.format("Device is shutting down. Wait %d milliseconds.", SLEEP_TIME_BETWEEN_TRIES));
       try {
         Thread.sleep(SLEEP_TIME_BETWEEN_TRIES);
       } catch (InterruptedException e) {
