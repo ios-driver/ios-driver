@@ -14,7 +14,7 @@ public class DeviceUUIDsMap implements CommandOutputListener {
   private static final Pattern iOSPattern = Pattern.compile("-- iOS (.*) --");
 
   private static final Pattern simulatorPattern = Pattern
-      .compile("    (.*) \\((\\w{8}-\\w{4}-\\w{4}-\\w{4}-\\w{12})\\) \\((\\w*\\s?\\w*)\\)");
+      .compile("    (.*) \\((\\w{8}-\\w{4}-\\w{4}-\\w{4}-\\w{12})\\) \\(([^)]*)\\)");
 
   private static final Pattern iOSToSdkPattern = Pattern
       .compile("iOS ([\\d\\.]+) \\(([\\d\\.]+) - (\\S+)\\) \\(com.apple.CoreSimulator.SimRuntime.iOS-\\d-\\d\\)");
