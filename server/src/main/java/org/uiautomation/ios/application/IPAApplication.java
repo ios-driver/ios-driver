@@ -156,9 +156,10 @@ public class IPAApplication extends APPIOSApplication {
     try {
       ProvisioningProfileInfo info = ProvisioningService.getProfile(getEmbeddedProfile());
       res.setCapability(IOSCapabilities.PROVISIONNED,info.getDevices());
-      return res;
     } catch (Exception e) {
-      throw new WebDriverException("Cannot extract probile. corrupted ipa ?");
+      log.warning("Cannot extract profile. corrupted ipa ?");
+    } finally {
+      return res;
     }
   }
 }
