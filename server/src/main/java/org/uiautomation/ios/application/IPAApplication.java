@@ -158,7 +158,8 @@ public class IPAApplication extends APPIOSApplication {
       res.setCapability(IOSCapabilities.PROVISIONNED,info.getDevices());
     } catch (Exception e) {
       log.warning("Cannot extract profile. corrupted ipa ?");
+    } finally {
+      return res;
     }
-    return res;
   }
 }
