@@ -14,9 +14,8 @@
 
 package org.uiautomation.ios.e2e.uicatalogapp;
 
-import java.util.List;
-
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -30,23 +29,24 @@ import org.uiautomation.ios.UIAModels.predicate.Criteria;
 import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
 import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 
+import java.util.List;
+
 public class WebDriverKeyboardTest extends BaseIOSDriverTest {
 
   @BeforeClass
   public void startDriver() {
     driver = getDriver(SampleApps.uiCatalogCap());
+    driver.findElement(By.xpath("//UIAButton[@name='UICatalog']")).click();
   }
   
   private UIATextField getTextField() {
-    String name = "TextFields, Uses of UITextField";
+    String name = "Text Fields";
     Criteria c1 = new TypeCriteria(UIATableCell.class);
     Criteria c2 = new NameCriteria(name);
     Criteria c = new AndCriteria(c1, c2);
     UIAElement element = driver.findElement(c);
     element.tap();
-    Criteria
-        fieldC =
-        new AndCriteria(new TypeCriteria(UIATextField.class), new NameCriteria("Normal"));
+    Criteria fieldC = new TypeCriteria(UIATextField.class);
     UIATextField textfield = (UIATextField) driver.findElement(fieldC);
     return textfield;
   }

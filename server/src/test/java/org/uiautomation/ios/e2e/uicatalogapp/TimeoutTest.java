@@ -41,7 +41,8 @@ public class TimeoutTest extends BaseIOSDriverTest {
   @Test
   public void getElement() throws InterruptedException {
     driver = getDriver(SampleApps.uiCatalogCap());
-    String name = "Buttons, Various uses of UIButton2";
+    driver.findElement(By.xpath("//UIAButton[@name='UICatalog']")).click();
+    String name = "Buttons2";
 
     Criteria c1 = new TypeCriteria(UIATableCell.class);
     Criteria c2 = new NameCriteria(name);
@@ -68,9 +69,10 @@ public class TimeoutTest extends BaseIOSDriverTest {
   @Test
   public void getElementByXPathUsesImplicitWait() {
     driver = getDriver(SampleApps.uiCatalogCap());
+    driver.findElement(By.xpath("//UIAButton[@name='UICatalog']")).click();
     // TODO freynaud fic SetImplicitWaitTimeoutNHandler.Timeout.
     driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
-    String name = "Buttons, Various uses of UIButton2";
+    String name = "Buttons2";
 
     // single
     driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);

@@ -14,6 +14,7 @@
 
 package org.uiautomation.ios.e2e.uicatalogapp;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.interactions.Keyboard;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -35,6 +36,7 @@ public class UIAKeyboardSmokeTest extends BaseIOSDriverTest {
   @BeforeClass
   public void startDriver() {
     driver = getDriver(SampleApps.uiCatalogCap());
+    driver.findElement(By.xpath("//UIAButton[@name='UICatalog']")).click();
   }
 
   @Test
@@ -43,15 +45,13 @@ public class UIAKeyboardSmokeTest extends BaseIOSDriverTest {
   }
 
   private UIATextField getTextField() {
-    String name = "TextFields, Uses of UITextField";
+    String name = "Text Fields";
     Criteria c1 = new TypeCriteria(UIATableCell.class);
     Criteria c2 = new NameCriteria(name);
     Criteria c = new AndCriteria(c1, c2);
     UIAElement element = driver.findElement(c);
     element.tap();
-    Criteria
-        fieldC =
-        new AndCriteria(new TypeCriteria(UIATextField.class), new NameCriteria("Normal"));
+    Criteria fieldC = new TypeCriteria(UIATextField.class);
     textfield = (UIATextField) driver.findElement(fieldC);
     return textfield;
   }
