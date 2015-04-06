@@ -34,17 +34,18 @@ import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
 
 public class ActionSheetTest extends BaseIOSDriverTest {
 
-  private static final String actionOk = "(//UIAStaticText[@name='Show Simple'])[1]";
-  private static final String actionOKCancel = "(//UIAStaticText[@name='Show OK-Cancel'])[1]";
+  private static final String actionOk = "(//UIAStaticText[@name='Simple'])[1]";
+  private static final String actionOKCancel = "(//UIAStaticText[@name='Okay / Cancel'])[1]";
 
   @BeforeClass
   public void startDriver() {
     driver = getDriver(SampleApps.uiCatalogCap());
+    driver.findElement(By.xpath("//UIAButton[@name='UICatalog']")).click();
     goToAlertScreen();
   }
 
   private void goToAlertScreen() {
-    String name = "Alerts";
+    String name = "Alert Controller";
     Criteria c1 = new TypeCriteria(UIATableCell.class);
     Criteria c2 = new NameCriteria(name, MatchingStrategy.starts);
     Criteria c = new AndCriteria(c1, c2);

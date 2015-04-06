@@ -14,22 +14,8 @@
 
 package org.uiautomation.ios.e2e.uicatalogapp;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriverException;
@@ -40,24 +26,27 @@ import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
 import org.uiautomation.ios.SampleApps;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
+import java.io.IOException;
+import java.util.*;
+
+import static org.testng.Assert.*;
 
 public class ExecuteNativeScriptsTest extends BaseIOSDriverTest {
 
   @BeforeClass
   public void startDriver() {
     driver = getDriver(SampleApps.uiCatalogCap());
+    driver.findElement(By.xpath("//UIAButton[@name='UICatalog']")).click();
   }
 
-  private static final String buttonsName = "Buttons, Various uses of UIButton";
+  private static final String buttonsName = "Buttons";
 
   @Test
   public void testShouldBeAbleToExecuteSimpleJavascriptAndReturnAString() {
     Object result = executeScript("return  UIATarget.localTarget().frontMostApp().bundleID();");
 
     assertTrue(result instanceof String);
-    assertEquals(result, "com.yourcompany.UICatalog");
+    assertEquals(result, "com.example.apple-samplecode.UICatalog");
   }
 
   @Test
