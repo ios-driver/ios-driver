@@ -14,6 +14,7 @@
 
 package org.uiautomation.ios.e2e.uicatalogapp;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriverException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -36,11 +37,12 @@ public class UIAKeyboardTest extends BaseIOSDriverTest {
   @BeforeClass
   public void startDriver() throws InterruptedException {
     driver = getDriver(SampleApps.uiCatalogCap());
+    driver.findElement(By.xpath("//UIAButton[@name='UICatalog']")).click();
     textview = getTextView();
   }
 
   private UIATextView getTextView() {
-    String name = "TextView, Use of UITextField";
+    String name = "Text View";
     Criteria c1 = new TypeCriteria(UIATableCell.class);
     Criteria c2 = new NameCriteria(name);
     Criteria c = new AndCriteria(c1, c2);
@@ -53,6 +55,7 @@ public class UIAKeyboardTest extends BaseIOSDriverTest {
 
   @Test
   public void capital() throws InterruptedException {
+    Thread.sleep(200); // wait for keyboard to appear
     String v = "aBC";
     textview.clear();
     textview.sendKeys(v);

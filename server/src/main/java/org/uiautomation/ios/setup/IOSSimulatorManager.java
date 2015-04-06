@@ -14,12 +14,12 @@
 package org.uiautomation.ios.setup;
 
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.communication.device.DeviceType;
-import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.HostInfo;
+import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.application.IOSRunningApplication;
+import org.uiautomation.ios.communication.device.DeviceType;
+import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.IOSVersion;
 import org.uiautomation.ios.utils.SimulatorSettings;
