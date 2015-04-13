@@ -14,6 +14,7 @@
 
 package org.uiautomation.ios.e2e.uicatalogapp;
 
+import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -35,9 +36,10 @@ public class CriteriaTest extends BaseIOSDriverTest {
   @BeforeClass
   public void startDriver() throws InterruptedException {
     driver = getDriver(SampleApps.uiCatalogCap());
+    driver.findElement(By.xpath("//UIAButton[@name='UICatalog']")).click();
   }
 
-  private static final String buttonName = "Buttons, Various uses of UIButton";
+  private static final String buttonName = "Buttons";
 
   @Test
   public void exactMatch() {
@@ -51,7 +53,7 @@ public class CriteriaTest extends BaseIOSDriverTest {
 
   @Test
   public void regexMatch() throws InterruptedException {
-    String regex = "Buttons, V[a-z]* uses of UIButton";
+    String regex = "But[a-z]*";
     Criteria c1 = new TypeCriteria(UIATableCell.class);
     PropertyEqualCriteria c2 = new NameCriteria(regex, MatchingStrategy.regex);
     Criteria c = new AndCriteria(c1, c2);

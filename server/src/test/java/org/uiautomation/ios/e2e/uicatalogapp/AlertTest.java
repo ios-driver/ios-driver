@@ -15,52 +15,36 @@
 package org.uiautomation.ios.e2e.uicatalogapp;
 
 import org.json.JSONObject;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.InvalidElementStateException;
-import org.openqa.selenium.NoAlertPresentException;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.UnhandledAlertException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.uiautomation.ios.BaseIOSDriverTest;
 import org.uiautomation.ios.SampleApps;
-import org.uiautomation.ios.UIAModels.UIAAlert;
-import org.uiautomation.ios.UIAModels.UIAButton;
-import org.uiautomation.ios.UIAModels.UIAElement;
-import org.uiautomation.ios.UIAModels.UIAStaticText;
-import org.uiautomation.ios.UIAModels.UIATableCell;
-import org.uiautomation.ios.UIAModels.predicate.AndCriteria;
-import org.uiautomation.ios.UIAModels.predicate.Criteria;
-import org.uiautomation.ios.UIAModels.predicate.MatchingStrategy;
-import org.uiautomation.ios.UIAModels.predicate.NameCriteria;
-import org.uiautomation.ios.UIAModels.predicate.TypeCriteria;
-import org.uiautomation.ios.client.uiamodels.impl.RemoteIOSDriver;
+import org.uiautomation.ios.UIAModels.*;
+import org.uiautomation.ios.UIAModels.predicate.*;
 import org.uiautomation.ios.utils.IOSVersion;
 
 
 public class AlertTest extends BaseIOSDriverTest {
 
-  private static final String actionSheet = "(//UIAStaticText[@name='Show Simple'])[1]";
-  private static final String alertOK = "(//UIAStaticText[@name='Show Simple'])[2]";
-  private static final String alertOKCancel = "(//UIAStaticText[@name='Show OK-Cancel'])[2]";
-  private static final String alert3Buttons = "//UIAStaticText[@name='Show Custom']";
-  private static final String alertPassword = "//UIAStaticText[@name='Secure Text Input']";
+  private static final String alertOK = "(//UIAStaticText[@name='Simple'])[1]";
+  private static final String alertOKCancel = "(//UIAStaticText[@name='Okay / Cancel'])[1]";
+  private static final String alert3Buttons = "(//UIAStaticText[@name='Other'])[1]";
+  private static final String alertPassword = "//UIAStaticText[@name='Secure Text Entry']";
+  private static final String alertEntry = "//UIAStaticText[@name='Text Entry']";
 
   @BeforeClass
   public void startDriver() {
     driver = getDriver(SampleApps.uiCatalogCap());
+    driver.findElement(By.xpath("//UIAButton[@name='UICatalog']")).click();
     goToAlertScreen();
   }
 
   private void goToAlertScreen() {
-    String name = "Alerts";
+    String name = "Alert Controller";
     Criteria c1 = new TypeCriteria(UIATableCell.class);
     Criteria c2 = new NameCriteria(name, MatchingStrategy.starts);
     Criteria c = new AndCriteria(c1, c2);
@@ -75,7 +59,7 @@ public class AlertTest extends BaseIOSDriverTest {
     el.click();
 
     Alert alert = waitForAlert(driver);
-    Assert.assertEquals(alert.getText(), "<Alert message>");
+    Assert.assertEquals(alert.getText(), "A message should be a short, complete sentence.");
     alert.dismiss();
     waitForAlertToBeGone();
   }
@@ -89,8 +73,8 @@ public class AlertTest extends BaseIOSDriverTest {
   public void cannotInteractWithAppWhenAlertOpen() throws Exception {
     Criteria
         c =
-        new AndCriteria(new TypeCriteria(UIAStaticText.class), new NameCriteria("Show Simple"));
-    UIAElement el = driver.findElements(c).get(1);
+        new AndCriteria(new TypeCriteria(UIAStaticText.class), new NameCriteria("Simple"));
+    UIAElement el = driver.findElements(c).get(0);
     // opens an alert.
     el.tap();
     try {
@@ -106,8 +90,8 @@ public class AlertTest extends BaseIOSDriverTest {
   public void canFindElementInAlertIfAlertOpened() throws Exception {
     Criteria
         c =
-        new AndCriteria(new TypeCriteria(UIAStaticText.class), new NameCriteria("Show Simple"));
-    UIAElement el = driver.findElements(c).get(1);
+        new AndCriteria(new TypeCriteria(UIAStaticText.class), new NameCriteria("Simple"));
+    UIAElement el = driver.findElements(c).get(0);
     // opens an alert.
     el.tap();
 
@@ -134,8 +118,8 @@ public class AlertTest extends BaseIOSDriverTest {
     RemoteWebDriver d = (RemoteWebDriver) driver;
     Criteria
         c =
-        new AndCriteria(new TypeCriteria(UIAStaticText.class), new NameCriteria("Show Simple"));
-    UIAElement el = driver.findElements(c).get(1);
+        new AndCriteria(new TypeCriteria(UIAStaticText.class), new NameCriteria("Simple"));
+    UIAElement el = driver.findElements(c).get(0);
     try {
       d.findElement(By.className("UIAAlert"));
       Assert.fail("should not find alert when there isn't any");
@@ -154,12 +138,7 @@ public class AlertTest extends BaseIOSDriverTest {
     String version = driver.getCapabilities().getSDKVersion();
     IOSVersion v = new IOSVersion(version);
 
-    By selector;
-    if (v.isGreaterOrEqualTo("7")) {
-      selector = By.className("UIATableCell");
-    } else {
-      selector = By.className("UIAButton");
-    }
+    By selector = By.className("UIAButton");
 
     WebElement element = rwe.findElement(selector);
     element.click();
@@ -170,7 +149,7 @@ public class AlertTest extends BaseIOSDriverTest {
   @Test
   public void switchToAlert() throws Exception {
     RemoteWebDriver d = (RemoteWebDriver) driver;
-    By b = By.xpath("//UIAStaticText[@name='Secure Text Input']");
+    By b = By.xpath("//UIAStaticText[@name='Secure Text Entry']");
     WebElement el = driver.findElement(b);
     try {
       d.switchTo().alert();
@@ -180,7 +159,7 @@ public class AlertTest extends BaseIOSDriverTest {
     }
     el.click();
     Alert alert = d.switchTo().alert();
-    alert.sendKeys("test");
+    alert.sendKeys("test1");
     alert.accept();
   }
 
@@ -191,7 +170,7 @@ public class AlertTest extends BaseIOSDriverTest {
         {alertOK},
         {alertOKCancel},
         {alert3Buttons},
-        {alertPassword},
+        {alertEntry},
     };
   }
 
@@ -267,8 +246,9 @@ public class AlertTest extends BaseIOSDriverTest {
     Alert alert = waitForAlert(driver);
     WebElement field = driver.findElement(By.xpath("//UIAAlert//UIASecureTextField"));
     Assert.assertEquals(field.getAttribute("value"), "");
-    alert.sendKeys("test");
-    Assert.assertEquals(field.getAttribute("value"), "••••");
+    // password must have length >=5
+    alert.sendKeys("test1");
+    Assert.assertEquals(field.getAttribute("value"), "•••••");
     alert.accept();
 
     try {
@@ -285,25 +265,21 @@ public class AlertTest extends BaseIOSDriverTest {
 
     Criteria
         c =
-        new AndCriteria(new TypeCriteria(UIAStaticText.class), new NameCriteria("Show Simple"));
-    UIAElement el = driver.findElements(c).get(1);
+        new AndCriteria(new TypeCriteria(UIAStaticText.class), new NameCriteria("Simple"));
+    UIAElement el = driver.findElements(c).get(0);
     // opens an alert.
     el.tap();
 
     UIAAlert alert = driver.findElement(new TypeCriteria(UIAAlert.class));
 
     // check the alert has all its elements
-    alert.findElement(UIAStaticText.class, new NameCriteria("UIAlertView"));
-    alert.findElement(UIAStaticText.class, new NameCriteria("<Alert message>"));
+    alert.findElement(UIAStaticText.class, new NameCriteria("A Short Title Is Best"));
+    alert.findElement(UIAStaticText.class, new NameCriteria("A message should be a short, complete sentence."));
 
     String version = driver.getCapabilities().getSDKVersion();
     IOSVersion v = new IOSVersion(version);
     Class type;
-    if (v.isGreaterOrEqualTo("7")) {
-      type = UIATableCell.class;
-    } else {
-      type = UIAButton.class;
-    }
+    type = UIAButton.class;
 
     UIAElement ok = alert.findElement(type, new NameCriteria("OK"));
 

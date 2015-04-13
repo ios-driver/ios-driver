@@ -39,9 +39,10 @@ public class FindElementTest extends BaseIOSDriverTest {
   @BeforeClass
   public void startDriver() {
     driver = getDriver(SampleApps.uiCatalogCap());
+    driver.findElement(By.xpath("//UIAButton[@name='UICatalog']")).click();
   }
 
-  private static final String buttonsName = "Buttons, Various uses of UIButton";
+  private static final String buttonsName = "Buttons";
 
   @Test
   public void findElementByCriteria() throws InterruptedException {
@@ -55,20 +56,20 @@ public class FindElementTest extends BaseIOSDriverTest {
   @Test
   public void findElementByTagName() throws InterruptedException, JSONException {
     WebElement element = driver.findElement(By.tagName("UIATableCell"));
-    Assert.assertEquals(element.getAttribute("name"), buttonsName);
+    Assert.assertEquals(element.getAttribute("name"), "Activity Indicators");
   }
 
   @Test
   public void findElementsCriteria() throws InterruptedException {
     Criteria cell = new TypeCriteria(UIATableCell.class);
     List<UIAElement> elements = driver.findElements(cell);
-    Assert.assertEquals(elements.size(), 12);
+    Assert.assertEquals(elements.size(), 17);
   }
 
   @Test
   public void findElementsByTagName() throws InterruptedException {
     List<WebElement> elements = driver.findElements(By.tagName("UIATableCell"));
-    Assert.assertEquals(elements.size(), 12);
+    Assert.assertEquals(elements.size(), 17);
   }
 
   @Test(expectedExceptions = NoSuchElementException.class)
@@ -101,7 +102,7 @@ public class FindElementTest extends BaseIOSDriverTest {
   public void findElementOnElementTagName() throws InterruptedException {
     UIAApplication app = (UIAApplication) driver.findElement(By.tagName("UIAApplication"));
     WebElement element = app.findElement(By.tagName("UIATableCell"));
-    Assert.assertEquals(element.getAttribute("name"), buttonsName);
+    Assert.assertEquals(element.getAttribute("name"), "Activity Indicators");
     Assert.assertTrue(element instanceof UIATableCell);
   }
 
@@ -109,33 +110,33 @@ public class FindElementTest extends BaseIOSDriverTest {
   public void findElementsOnElementTagName() throws InterruptedException {
     UIAApplication app = (UIAApplication) driver.findElement(By.tagName("UIAApplication"));
     List<WebElement> elements = app.findElements(By.tagName("UIATableCell"));
-    Assert.assertEquals(elements.size(), 12);
+    Assert.assertEquals(elements.size(), 17);
   }
 
   @Test
   public void findElementsOnElementCriteria() throws InterruptedException {
     UIAApplication app = (UIAApplication) driver.findElement(By.tagName("UIAApplication"));
     List<UIAElement> elements = app.findElements(new TypeCriteria(UIATableCell.class));
-    Assert.assertEquals(elements.size(), 12);
+    Assert.assertEquals(elements.size(), 17);
   }
 
   @Test
   public void findElementsOnElementNoResult() throws InterruptedException {
     UIAWindow window = (UIAWindow) driver.findElement(By.tagName("UIAWindow"));
     List<WebElement> elements = window.findElements(By.tagName("UIAButton"));
-    Assert.assertEquals(elements.size(), 0);
+    Assert.assertEquals(elements.size(), 1);
   }
 
   @Test
   public void findElementXpath() throws InterruptedException {
     WebElement element = driver.findElement(By.xpath("//UIATableCell"));
-    Assert.assertEquals(element.getAttribute("name"), "Buttons, Various uses of UIButton");
+    Assert.assertEquals(element.getAttribute("name"), "Activity Indicators");
   }
 
   @Test
   public void findElementsXpath() throws InterruptedException {
     List<WebElement> elements = driver.findElements(By.xpath("//UIATableCell"));
-    Assert.assertEquals(elements.size(), 12);
+    Assert.assertEquals(elements.size(), 17);
   }
 
 }

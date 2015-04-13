@@ -18,11 +18,12 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.communication.device.DeviceType;
-import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.HostInfo;
 import org.uiautomation.ios.command.uiautomation.NewSessionNHandler;
+import org.uiautomation.ios.communication.device.DeviceType;
+import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.instruments.InstrumentsVersion;
 
 import java.io.*;
@@ -45,6 +46,9 @@ public class SimulatorSettings {
       SDK_LOCATION =
       "Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/";
 
+  private static final int NUMBER_TRIES_GETTING_UUID = 3;
+  private static final int SLEEP_TIME_BETWEEN_TRIES = 2000;
+
   private final String exactSdkVersion;
   private final boolean is64bit;
   private final File contentAndSettingsFolder;
@@ -56,7 +60,7 @@ public class SimulatorSettings {
   private InstrumentsVersion instrumentsVersion;
 
   public SimulatorSettings(HostInfo info, String sdkVersion, boolean is64bit, DeviceType device,
-                           DeviceVariation variation) {
+                           DeviceVariation variation)  {
     this.exactSdkVersion = sdkVersion;
     this.is64bit = is64bit;
     this.info = info;
@@ -194,12 +198,33 @@ public class SimulatorSettings {
     return SDK_LOCATION + "iPhoneSimulator" + suffix + ".sdk";
   }
 
-  private String determineDeviceUUID() {
+  private String determineDeviceUUID() throws DeviceNotAvailableException {
     DeviceUUIDsMap uuidsMap = new DeviceUUIDsMap();
     uuidsMap.loadData();
     String uuid = uuidsMap.getUUID(exactSdkVersion, deviceName);
     if (uuid == null) {
-      System.err.println("Unable to get UUID for device " + deviceName + " with SDK " + exactSdkVersion);
+      String message = "Couldn't find UUID for device " + deviceName + " with SDK " + exactSdkVersion;
+      log.warning(message);
+      throw new NotFoundException(message);
+    }
+    int countingTries = 0;
+    String state = uuidsMap.getState(exactSdkVersion, deviceName);
+    while ((countingTries < NUMBER_TRIES_GETTING_UUID) && (state.equals("Shutting Down"))) {
+      log.info(String.format("Device is shutting down. Wait %d milliseconds.", SLEEP_TIME_BETWEEN_TRIES));
+      try {
+        Thread.sleep(SLEEP_TIME_BETWEEN_TRIES);
+      } catch (InterruptedException e) {
+        // ignored
+      }
+      uuidsMap.loadData();
+      state = uuidsMap.getState(exactSdkVersion, deviceName);
+      countingTries += 1;
+    }
+    if (state.equals("Shutting down")) {
+      String message = "UUID for device " + deviceName + " with SDK " + exactSdkVersion
+              + " is not available to use. Current state:" + state;
+      log.warning(message);
+      throw new DeviceNotAvailableException(message);
     }
     return uuid;
   }
