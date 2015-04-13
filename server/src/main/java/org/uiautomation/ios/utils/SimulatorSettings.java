@@ -60,7 +60,7 @@ public class SimulatorSettings {
   private InstrumentsVersion instrumentsVersion;
 
   public SimulatorSettings(HostInfo info, String sdkVersion, boolean is64bit, DeviceType device,
-                           DeviceVariation variation) throws NotActiveException {
+                           DeviceVariation variation)  {
     this.exactSdkVersion = sdkVersion;
     this.is64bit = is64bit;
     this.info = info;
@@ -198,28 +198,34 @@ public class SimulatorSettings {
     return SDK_LOCATION + "iPhoneSimulator" + suffix + ".sdk";
   }
 
-  private String determineDeviceUUID() throws NotActiveException {
+  private String determineDeviceUUID() throws DeviceNotAvailableException {
     DeviceUUIDsMap uuidsMap = new DeviceUUIDsMap();
     uuidsMap.loadData();
     String uuid = uuidsMap.getUUID(exactSdkVersion, deviceName);
     if (uuid == null) {
-      throw new NotFoundException("Couldn't find UUID for device " + deviceName + " with SDK " + exactSdkVersion);
+      String message = "Couldn't find UUID for device " + deviceName + " with SDK " + exactSdkVersion;
+      log.warning(message);
+      throw new NotFoundException(message);
     }
     int countingTries = 0;
     String state = uuidsMap.getState(exactSdkVersion, deviceName);
-    while (countingTries < NUMBER_TRIES_GETTING_UUID && state.equals("Shutting Down")) {
+    while ((countingTries < NUMBER_TRIES_GETTING_UUID) && (state.equals("Shutting Down"))) {
       log.info(String.format("Device is shutting down. Wait %d milliseconds.", SLEEP_TIME_BETWEEN_TRIES));
       try {
         Thread.sleep(SLEEP_TIME_BETWEEN_TRIES);
       } catch (InterruptedException e) {
+        // ignored
       }
       uuidsMap.loadData();
       state = uuidsMap.getState(exactSdkVersion, deviceName);
-      ++countingTries;
+      countingTries += 1;
     }
-    if (state.equals("Shutting down"))
-      throw new NotActiveException("UUID for device " + deviceName + " with SDK " + exactSdkVersion
-              + " is not " + "available to use. " + "Current state:" + state);
+    if (state.equals("Shutting down")) {
+      String message = "UUID for device " + deviceName + " with SDK " + exactSdkVersion
+              + " is not available to use. Current state:" + state;
+      log.warning(message);
+      throw new DeviceNotAvailableException(message);
+    }
     return uuid;
   }
 

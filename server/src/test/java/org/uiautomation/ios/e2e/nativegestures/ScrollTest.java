@@ -44,53 +44,33 @@ public class ScrollTest extends BaseIOSDriverTest {
     driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.ppNQASampleAppCap());
   }
 
-  private void findElement(String name) {
-    Criteria c1 = new TypeCriteria(UIAStaticText.class);
-    Criteria c2 = new NameCriteria(name, MatchingStrategy.starts);
-    Criteria c = new AndCriteria(c1, c2);
-    UIAElement element = driver.findElement(c);
+  // determines whether the element exists
+  private boolean elementExists(String name) {
+    // we cannot use findElementByXPath() because it catches the
+    // exception and shuts down the server when the element is not found
+    try {
+      Criteria c1 = new TypeCriteria(UIAStaticText.class);
+      Criteria c2 = new NameCriteria(name, MatchingStrategy.starts);
+      Criteria c = new AndCriteria(c1, c2);
+      UIAElement element = driver.findElement(c);
+      return element != null;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
   }
 
   @Test
   public void testVerticalScrollingDown() {
     Assert.assertTrue(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Vertical View 1')]").isDisplayed());
-
-    // no Vertical View 2
-    try {
-      findElement(verView2);
-      Assert.fail("shouldn't find element" + verView2);
-    } catch (NoSuchElementException e) {
-      // expected
-    }
-
-    // no Vertical View 3
-    try {
-      findElement(verView3);
-      Assert.fail("shouldn't find element" + verView3);
-    } catch (NoSuchElementException e) {
-      // expected
-    }
+    Assert.assertFalse(elementExists(verView2));
+    Assert.assertFalse(elementExists(verView3));
 
     ((RemoteUIAScrollView) driver.findElementByXPath("//UIAScrollView[contains(@name, 'Vertical Name')]")).scroll(ScrollDirection.DOWN);
 
     waitForElement(driver, By.xpath("//UIAStaticText[contains(@name, 'Vertical View 2')]"), 6);
     Assert.assertTrue(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Vertical View 2')]").isDisplayed());
-
-    // no Vertical View 1
-    try {
-      findElement(verView1);
-      Assert.fail("shouldn't find element" + verView1);
-    } catch (NoSuchElementException e) {
-      // expected
-    }
-
-    // no Vertical View 3
-    try {
-      findElement(verView3);
-      Assert.fail("shouldn't find element" + verView3);
-    } catch (NoSuchElementException e) {
-      // expected
-    }
+    Assert.assertFalse(elementExists(verView1));
+    Assert.assertFalse(elementExists(verView3));
 
     ((RemoteUIAScrollView) driver.findElementByXPath("//UIAScrollView[contains(@name, 'Vertical Name')]")).scroll(ScrollDirection.UP);
   }
@@ -100,22 +80,8 @@ public class ScrollTest extends BaseIOSDriverTest {
   @Test
   public void testVerticalScrollingUp() {
     Assert.assertTrue(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Vertical View 1')]").isDisplayed());
-
-    // no Vertical View 2
-    try {
-      findElement(verView2);
-      Assert.fail("shouldn't find element" + verView2);
-    } catch (NoSuchElementException e) {
-      // expected
-    }
-
-    // no Vertical View 3
-    try {
-      findElement(verView3);
-      Assert.fail("shouldn't find element" + verView3);
-    } catch (NoSuchElementException e) {
-      // expected
-    }
+    Assert.assertFalse(elementExists(verView2));
+    Assert.assertFalse(elementExists(verView3));
 
     ((RemoteUIAScrollView) driver.findElementByXPath("//UIAScrollView[contains(@name, 'Vertical Name')]")).scroll(ScrollDirection.DOWN);
     ((RemoteUIAScrollView) driver.findElementByXPath("//UIAScrollView[contains(@name, 'Vertical Name')]")).scroll(ScrollDirection.DOWN);
@@ -123,22 +89,8 @@ public class ScrollTest extends BaseIOSDriverTest {
 
     waitForElement(driver, By.xpath("//UIAStaticText[contains(@name, 'Vertical View 2')]"), 6);
     Assert.assertTrue(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Vertical View 2')]").isDisplayed());
-
-    // no Vertical View 1
-    try {
-      findElement(verView1);
-      Assert.fail("shouldn't find element" + verView1);
-    } catch (NoSuchElementException e) {
-      // expected
-    }
-
-    // no Vertical View 3
-    try {
-      findElement(verView3);
-      Assert.fail("shouldn't find element" + verView3);
-    } catch (NoSuchElementException e) {
-      // expected
-    }
+    Assert.assertFalse(elementExists(verView1));
+    Assert.assertFalse(elementExists(verView3));
 
     ((RemoteUIAScrollView) driver.findElementByXPath("//UIAScrollView[contains(@name, 'Vertical Name')]")).scroll(ScrollDirection.UP);
   }
@@ -146,44 +98,16 @@ public class ScrollTest extends BaseIOSDriverTest {
   @Test
   public void testHorizontalScrollingRight() {
     Assert.assertTrue(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Horizontal View 1')]").isDisplayed());
-
-    // no Horizontal View 2
-    try {
-      findElement(horView2);
-      Assert.fail("shouldn't find element" + horView2);
-    } catch (NoSuchElementException e) {
-      // expected
-    }
-
-    // no Horizontal View 3
-    try {
-      findElement(horView3);
-      Assert.fail("shouldn't find element" + horView3);
-    } catch (NoSuchElementException e) {
-      // expected
-    }
+    Assert.assertFalse(elementExists(horView2));
+    Assert.assertFalse(elementExists(horView3));
 
     ((RemoteUIAScrollView) driver.findElementByXPath("//UIAScrollView[contains(@name, 'Horizontal Name')]")).scroll(ScrollDirection.RIGHT);
 
     waitForElement(driver, By.xpath("//UIAStaticText[contains(@name, 'Horizontal View 2')]"), 6);
 
     Assert.assertTrue(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Horizontal View 2')]").isDisplayed());
-
-    // no Horizontal View 1
-    try {
-      findElement(horView1);
-      Assert.fail("shouldn't find element" + horView1);
-    } catch (NoSuchElementException e) {
-      // expected
-    }
-
-    // no Horizontal View 3
-    try {
-      findElement(horView3);
-      Assert.fail("shouldn't find element" + horView3);
-    } catch (NoSuchElementException e) {
-      // expected
-    }
+    Assert.assertFalse(elementExists(horView1));
+    Assert.assertFalse(elementExists(horView3));
 
     ((RemoteUIAScrollView) driver.findElementByXPath("//UIAScrollView[contains(@name, 'Horizontal Name')]")).scroll(ScrollDirection.LEFT);
   }
@@ -191,22 +115,8 @@ public class ScrollTest extends BaseIOSDriverTest {
   @Test
   public void testHorizontalScrollingLeft() {
     Assert.assertTrue(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Horizontal View 1')]").isDisplayed());
-
-    // no Horizontal View 2
-    try {
-      findElement(horView2);
-      Assert.fail("shouldn't find element" + horView2);
-    } catch (NoSuchElementException e) {
-      // expected
-    }
-
-    // no Horizontal View 3
-    try {
-      findElement(horView3);
-      Assert.fail("shouldn't find element" + horView3);
-    } catch (NoSuchElementException e) {
-      // expected
-    }
+    Assert.assertFalse(elementExists(horView2));
+    Assert.assertFalse(elementExists(horView3));
 
     ((RemoteUIAScrollView) driver.findElementByXPath("//UIAScrollView[contains(@name, 'Horizontal Name')]")).scroll(ScrollDirection.RIGHT);
     ((RemoteUIAScrollView) driver.findElementByXPath("//UIAScrollView[contains(@name, 'Horizontal Name')]")).scroll(ScrollDirection.RIGHT);
@@ -215,21 +125,8 @@ public class ScrollTest extends BaseIOSDriverTest {
     waitForElement(driver, By.xpath("//UIAStaticText[contains(@name, 'Horizontal View 2')]"), 6);
 
     Assert.assertTrue(driver.findElementByXPath("//UIAStaticText[contains(@name, 'Horizontal View 2')]").isDisplayed());
-    // no Horizontal View 1
-    try {
-      findElement(horView1);
-      Assert.fail("shouldn't find element" + horView1);
-    } catch (NoSuchElementException e) {
-      // expected
-    }
-
-    // no Horizontal View 3
-    try {
-      findElement(horView3);
-      Assert.fail("shouldn't find element" + horView3);
-    } catch (NoSuchElementException e) {
-      // expected
-    }
+    Assert.assertFalse(elementExists(horView1));
+    Assert.assertFalse(elementExists(horView3));
 
     ((RemoteUIAScrollView) driver.findElementByXPath("//UIAScrollView[contains(@name, 'Horizontal Name')]")).scroll(ScrollDirection.LEFT);
   }

@@ -24,7 +24,6 @@ import org.uiautomation.ios.utils.IOSVersion;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.NotActiveException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,7 +38,7 @@ public class IOSSafariSimulatorManager extends IOSSimulatorManager {
   private final File safariFolder;
   private boolean howToMoveSafariBackMessageGiven;
 
-  public IOSSafariSimulatorManager(ServerSideSession session) throws NotActiveException {
+  public IOSSafariSimulatorManager(ServerSideSession session) {
 
     super(session);
     this.desiredSDKVersion = session.getCapabilities().getSDKVersion();

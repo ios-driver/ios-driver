@@ -14,18 +14,17 @@
 package org.uiautomation.ios.setup;
 
 import org.openqa.selenium.WebDriverException;
-import org.uiautomation.ios.IOSCapabilities;
-import org.uiautomation.ios.communication.device.DeviceType;
-import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.HostInfo;
+import org.uiautomation.ios.IOSCapabilities;
 import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.application.IOSRunningApplication;
+import org.uiautomation.ios.communication.device.DeviceType;
+import org.uiautomation.ios.communication.device.DeviceVariation;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.IOSVersion;
 import org.uiautomation.ios.utils.SimulatorSettings;
 
 import java.io.File;
-import java.io.NotActiveException;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -55,7 +54,7 @@ public class IOSSimulatorManager implements IOSDeviceManager {
   /**
    * manages a single instance of the instruments process. Only 1 process can run at a given time.
    */
-  public IOSSimulatorManager(ServerSideSession session) throws NotActiveException {
+  public IOSSimulatorManager(ServerSideSession session) {
     this.session = session;
     this.info = session.getIOSServerManager().getHostInfo();
     this.sdks = ClassicCommands.getInstalledSDKs();

@@ -19,12 +19,10 @@ import org.libimobiledevice.ios.driver.binding.exceptions.SDKException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.ServerSideSession;
 
-import java.io.NotActiveException;
-
 public class IOSDeviceManagerFactory {
 
 
-  public static IOSDeviceManager create(ServerSideSession session) throws NotActiveException {
+  public static IOSDeviceManager create(ServerSideSession session) {
     boolean sim = session.getCapabilities().isSimulator();
     boolean safari = session.getApplication().isSafari();
 
