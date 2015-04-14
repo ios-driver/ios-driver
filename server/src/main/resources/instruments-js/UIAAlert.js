@@ -78,10 +78,8 @@ UIAAlert.prototype.sendKeys = function (value) {
 UIAAlert.prototype.getText = function () {
     var criteria = {"l10n": "none", "expected": "UIAStaticText", "matching": "exact", "method": "type"};
     var texts = this.elements2(-1, criteria);
-    if (texts.length > 1) {
-        return texts[1].name();
-    } else if (texts.length == 1) {
-        return texts[0].name();
+    if (texts.length > 0) {
+        return texts[texts.length - 1].name();
     } else {
         throw new UIAutomationException("this alert doesn't have any text."+this.tree(false));
     }
