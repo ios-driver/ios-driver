@@ -293,6 +293,11 @@ public class SimulatorSettings {
     }
   }
 
+  /**
+   * Try N times to erase the device (sleeping in between each attempt).
+   * If that fails, try shutting down the device and then erase again.
+   * If none of that worked, throw a WebDriverException with a detailed message.
+   */
   private void tryToEraseSimulator() {
     int numTries = 0;
     boolean successfulReset = false;
@@ -333,8 +338,7 @@ public class SimulatorSettings {
   }
 
   private boolean shutdownDevice() {
-    List<String> simctlArgs;
-    simctlArgs = Arrays.asList("xcrun", "simctl", "shutdown", deviceUUID);
+    List<String> simctlArgs = Arrays.asList("xcrun", "simctl", "shutdown", deviceUUID);
     Command simctlCmd = new Command(simctlArgs, true);
     int exitCode = simctlCmd.executeAndWait(true);
 
@@ -356,8 +360,7 @@ public class SimulatorSettings {
     assert instrumentsVersion.getMajor() >= 6;
 
     // Starting with Xcode 6 and later, we can use simctl to do the hard work for us.
-    List<String> simctlArgs;
-    simctlArgs = Arrays.asList("xcrun", "simctl", "erase", deviceUUID);
+    List<String> simctlArgs = Arrays.asList("xcrun", "simctl", "erase", deviceUUID);
     Command simctlCmd = new Command(simctlArgs, false);
 
     // if the device is still in booted state erase returns with error code 146
