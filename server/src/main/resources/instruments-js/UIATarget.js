@@ -39,7 +39,7 @@ UIATarget.prototype.setDeviceOrientation = function (orientation) {
     } while ((newOrientation !== orientation) && (((new Date()) - startDate) < 5000));
     if (newOrientation !== orientation) {
         throw new UIAutomationException("The orientation specified is not supported by the application."
-                                            + newOrientation + " !== " + orientation);
+                                            + newOrientation + " !== " + orientation, 777);
     }
 }
 
