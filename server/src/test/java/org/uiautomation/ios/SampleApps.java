@@ -15,6 +15,7 @@ package org.uiautomation.ios;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.logging.Logger;
 
@@ -37,10 +38,13 @@ public class SampleApps {
   private static File getFromClassPath(String resource) {
     URL url = SampleApps.class.getResource(resource);
     File res = null;
-    if (url.toExternalForm().startsWith("file:")) {
-      res = new File(url.toExternalForm().replace("file:", ""));
+    try {
+      // Decode escaped chars in path (%20 - space)
+      res = new File(url.toURI().getPath());
     }
-
+    catch (URISyntaxException e) {
+      log.info("Incorrectly formed path to " + url.getPath());
+    }
     if (res == null || !res.exists()) {
       throw new RuntimeException("Cannot load test app from " + url);
     }
