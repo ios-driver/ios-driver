@@ -31,7 +31,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SimulatorSettings {
@@ -47,6 +46,8 @@ public class SimulatorSettings {
 
   private static final int NUMBER_TRIES_GETTING_UUID = 3;
   private static final int SLEEP_TIME_BETWEEN_TRIES = 2000;
+  private static final int NUMBER_TRIES_RESET_DEVICE = 3;
+  private static final int SLEEP_TIME_BETWEEN_RESET_TRIES = 1000;
 
   private final String exactSdkVersion;
   private final boolean is64bit;
@@ -285,47 +286,95 @@ public class SimulatorSettings {
         System.err.println("couldn't re-create: " + contentAndSettingsFolder);
       }
     } else {
-      // Starting with Xcode 6 and later, we can use simctl to do the hard work for us.
-      // If it fails, we have to turn the device off first.
       if (!eraseSimulator()) {
-        log.log(Level.WARNING, "Reset content and settings failed, " +
-            "possibly device is in booted state, shutdown device = " + deviceUUID);
-        List<String> simctlArgs = new ArrayList<>();
-        simctlArgs = Arrays.asList("xcrun", "simctl", "shutdown", deviceUUID);
-        Command simctlCmd = new Command(simctlArgs, true);
-
-        // Run command 'xcrun simctl shutdown <uuid>'
-        simctlCmd.executeAndWait(false);
-
-        // Retry
-        eraseSimulator();
+        log.info("Erase contents and settings failed on this device: " + deviceUUID);
+        tryToEraseSimulator();
       }
     }
+  }
+
+  /**
+   * Try N times to erase the device (sleeping in between each attempt).
+   * If that fails, try shutting down the device and then erase again.
+   * If none of that worked, throw a WebDriverException with a detailed message.
+   */
+  private void tryToEraseSimulator() {
+    int numTries = 0;
+    boolean successfulReset = false;
+    while ((!successfulReset) && (numTries < NUMBER_TRIES_RESET_DEVICE)) {
+      log.info("Wait " + SLEEP_TIME_BETWEEN_RESET_TRIES + " milliseconds before reattempt.");
+      try {
+        Thread.sleep(SLEEP_TIME_BETWEEN_RESET_TRIES);
+      } catch (InterruptedException e) {
+        // ignored
+      }
+      successfulReset = eraseSimulator();
+      numTries += 1;
+    }
+    if (!successfulReset) {
+      int totalWaitTime = SLEEP_TIME_BETWEEN_RESET_TRIES * NUMBER_TRIES_RESET_DEVICE;
+      String message = "Erase contents and settings still failed. Total waiting time: "
+              + totalWaitTime
+              + ". Now try to shutdown device: " + deviceUUID;
+      log.warning(message);
+
+      Boolean successfulShutdown = shutdownDevice();
+      if (successfulShutdown) {
+        successfulReset = eraseSimulator();
+      }
+
+      if (!successfulReset) {
+        message = "Unable to erase contents and settings of this device: " + deviceUUID;
+        log.warning(message);
+        // add more information to exception message
+        message += ". Tried " + NUMBER_TRIES_RESET_DEVICE + " times with with a waiting period of " + SLEEP_TIME_BETWEEN_RESET_TRIES
+                + " millisecond between each attempt. ";
+        if (!successfulShutdown) {
+          message += "Also unable to shut down the device.";
+        }
+        throw new WebDriverException(message);
+      }
+    }
+  }
+
+  private boolean shutdownDevice() {
+    List<String> simctlArgs = Arrays.asList("xcrun", "simctl", "shutdown", deviceUUID);
+    Command simctlCmd = new Command(simctlArgs, true);
+    int exitCode = simctlCmd.executeAndWait(true);
+
+    // check for success codes
+    if (exitCode == 146) {
+      log.info("This device shuts down already: " + deviceUUID);
+      return true;
+    } else if (exitCode == 0) {
+      log.info("Successfully shut down the device: " + deviceUUID);
+      return true;
+    }
+
+    log.warning("Failed to shut down the device: " + deviceUUID
+            + ". Command was used: " + simctlCmd.commandString());
+    return false;
   }
 
   private boolean eraseSimulator() {
     assert instrumentsVersion.getMajor() >= 6;
 
     // Starting with Xcode 6 and later, we can use simctl to do the hard work for us.
-    List<String> simctlArgs = new ArrayList<>();
-    simctlArgs.add("xcrun");
-    simctlArgs.add("simctl");
-    simctlArgs.add("erase");
-    simctlArgs.add(deviceUUID);
-    Command simctlCmd = new Command(simctlArgs, true);
+    List<String> simctlArgs = Arrays.asList("xcrun", "simctl", "erase", deviceUUID);
+    Command simctlCmd = new Command(simctlArgs, false);
 
     // if the device is still in booted state erase returns with error code 146
     int exitCode = simctlCmd.executeAndWait(true);
     if (exitCode == 146) {
       return false;
     } else if (exitCode != 0) {
-      throw new WebDriverException("execution failed. Exit code =" + exitCode + " , command was: "
-        + simctlCmd.commandString());
+      throw new WebDriverException("Failed to erase contents and settings of this device: " + deviceUUID
+              + ". Exit code =" + exitCode + " , command was: "
+              + simctlCmd.commandString());
     }
 
     // Wipe the system.log, since simctl doesn't do it.
-    String deviceLogDir = System.getProperty("user.home") +
-      "/Library/Logs/CoreSimulator/" + deviceUUID;
+    String deviceLogDir = System.getProperty("user.home") + "/Library/Logs/CoreSimulator/" + deviceUUID;
     File deviceLog = new File(deviceLogDir, "system.log");
     if (deviceLog.exists()) {
       deviceLog.delete();
