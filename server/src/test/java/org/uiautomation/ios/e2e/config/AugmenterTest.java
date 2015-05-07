@@ -40,6 +40,9 @@ public class AugmenterTest extends BaseIOSDriverTest {
   @BeforeClass
   public void startDriver() {
     driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
+    // the UICatalog button must be clicked before every test because the updated app opens to a menu that
+    // contains the UICatalog page being tested
+    driver.findElement(By.xpath("//UIAButton[@name='UICatalog']")).click();
   }
 
   @Test
@@ -50,7 +53,7 @@ public class AugmenterTest extends BaseIOSDriverTest {
     Assert.assertEquals(conf.get("ok"), true);
   }
 
-  private static final String buttonName = "Buttons, Various uses of UIButton";
+  private static final String buttonName = "Buttons";
 
   @Test
   public void iosSearchContext() {
