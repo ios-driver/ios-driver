@@ -6,6 +6,7 @@
         <a href="#sysreq" class="list-group-item">System requirements</a>
         <a href="#testapp" class="list-group-item">Getting a test application</a>
         <a href="#launch" class="list-group-item">Launching ios-driver</a>
+        <a href="#environment" class="list-group-item">Setting up an environment</a>
         <!--<a href="#cli" class="list-group-item">Command Line Parameters</a>-->
         <!--<a href="#real" class="list-group-item">Real Devices</a>-->
     </div>
@@ -239,6 +240,125 @@ Applications :
 
 
 </code></pre>
+</div>
+
+<div class="col-12 col-sm-12 col-lg-12">
+    <a id="environment" class="anchor"></a>
+    <h2>Setting Up Your Environment (IntelliJ)</h2>
+
+    <p>
+        <p>Currently the versions I am using are:</p>
+        <pre>
+    build: 0.6.6-snapshot
+    os: mac os x, 10.10.1
+    iOS: 8.1
+    java: 1.7
+    xcode: 6.1</pre>
+
+        <p>Software used:</p>
+        <pre>
+    IntelliJ Community Edition (https://www.jetbrains.com/idea/download/)
+    Sample Test: https://gist.github.com/derekngo/1b5c1221a2d64e489585</pre>
+
+        <p>Requirements:</p>
+        <pre>
+    Java 1.7 (or higher)
+    Xcode 6.1 (or higher)
+    Junit
+    Selenium</pre>
+
+
+    <h3>Setting up an environment:</h3>
+    <p>*Assumes fresh download of IntelliJ</p>
+
+        Once downloaded:
+            <ul>
+                <li>Open ios-driver (for the purpose of setting up IntelliJ):</li>
+                <ul>
+                    <li>open IntelliJ</li>
+                    <li>navigate to the root folder where you forked ios-driver</li>
+                    <li>open the root folder</li>
+                </ul>
+            </ul>
+        Set up SDK:
+            <ul>
+                <li>Right click root folder of ios-driver project in navigation window > click ‘Open Module Settings F4’</li>
+                <li>In the Project Structure Window, on the left side, click ‘SDKs’</li>
+                <li>Press ‘+’, under ‘Add new SDK’, select ‘JDKs’</li>
+                <li>It should default to /Library/Java/JavaVirtualMachines/jdk1.x.x_xx.jdk/Contents/Home (ex: jdk1.7.0.51.jdk)</li>
+            </ul>
+        If a notification pops up with auto-import, select ‘enable auto-import’
+
+    <h3>Once your environment is set up:</h3>
+    <h4>Creating a simple WebView test (in IntelliJ)</h4>
+
+        File > New Project
+            <ul>
+                <li>Select Maven on the left hand side &amp; Under Project SDK: ‘1.7 (java version)’ or ‘1.8 (java version)’</li>
+                <li>create anything for GroupId and ArtifactId (Ex: GroupId: 'me.<insert your name here>', artifactId: ‘testing’)</li>
+            </ul>
+
+        Once project is created, write your test:
+            <ul>
+                <li>Under pom.xml, insert selenium and junit dependencies (IntelliJ/Maven should automatically download the dependencies if necessary)</li> 
+                    <ul>
+                        <li>Example here: https://gist.github.com/derekngo/45b64a29fa6d2ddf4a6f</li>
+                    </ul>
+                <li>In the project under src/test/java, create a new class called SampleTest.java</li>
+                <ul>
+                    <li>
+                        To do in IntelliJ, right click the java folder (src/test/java), select “New” > “Java Class” and label it “SampleTest”
+                    </li>
+                </ul>
+                <li>Copy and paste: https://gist.github.com/derekngo/1b5c1221a2d64e489585</li>
+            </ul>
+
+        Run your test:
+            <ul>
+                <li>Start the server:</li>
+                <ul>
+                    <li>in command line:</li>
+                    <ul>
+                        <li> > java -jar {path_to_jar_here_from_source} -port 5555</li>
+                        <li>port is optional, will default to 5555</li>
+                    </ul>
+                    <li>in intellij:</li>
+                    <ul>
+                        <li>to set up:</li>
+                        <ul>
+                            <li>open the ios-driver project in IntelliJ</li>
+                            <li>click ‘run’ > ‘edit configurations’</li>
+                        </ul>
+                        <li>in Run/Debug Configurations, click ‘+’ > ‘Applications’</li>
+                        <li>Name: ‘iOS-driver-server’</li>
+                        <li>Main class: Click ‘…’, in ‘Choose main class’, click ‘IOSServer’</li>
+                        <li>Use class path of module: in the dropdown, click ‘iso-server'</li>
+                    </ul>
+                    <li>once set up, click run in the top right next to ‘iOS-driver-server’</li>
+                </ul>
+
+                <li>Once the server is started:</li>
+                <ul>
+                    <li>go to the sample test project created above</li>
+                    <li>make sure on this line that the port matches the server port</li>
+                    <ul>
+                        <li>iosDriver = new RemoteWebDriver(new URL("http://localhost:5555/wd/hub"), caps_ios);</li>
+                    </ul>
+                    <li>run the test</li>
+                    <ul>
+                        <li>output of the console should be:</li>
+                        <ul>
+                            <li>ios driver's title: Home | The University of Texas at Austin</li>
+                        </ul>
+                    </ul>
+                </ul>
+            </ul>
+        Special HotKeys:
+            <ul>
+                <li>Cmd+*click* => navigates to the class clicked on</li>
+                <li>Cmd+’n’ => search for a class in the project</li>
+            </ul>
+    </p>
 </div>
 </div>
 </div>
