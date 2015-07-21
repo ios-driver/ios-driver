@@ -32,6 +32,8 @@ import org.dom4j.DocumentException;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 
+import org.uiautomation.ios.ServerSideSession;
+
 /**
  * Created with IntelliJ IDEA. User: freynaud Date: 17/01/2013 Time: 15:08 To change this template use File | Settings |
  * File Templates.
@@ -59,7 +61,9 @@ public class MessageFactory {
 
   private Condition determiningVersion;
 
-  public MessageFactory() {
+  public MessageFactory(ServerSideSession session) {
+    iOSVersion = session.getDevice().getCapability().getSDKVersion();
+    LOG.info("GOT VERSION OF SESSION: " + iOSVersion);
     iOSTypesMap = new HashMap<>();
     versionDeterminingLock = new ReentrantLock();
     determiningVersion = versionDeterminingLock.newCondition();
@@ -176,8 +180,11 @@ public class MessageFactory {
   private void determineIOSVersion(BaseIOSWebKitMessage baseIOSWebkitMesssage) {
     try {
       versionDeterminingLock.lock();
-      iOSVersion = baseIOSWebkitMesssage.arguments.objectForKey(WebkitDevice.WIRSIMULATORPRODUCTVERSIONKEY).toString();
-      determiningVersion.signal();
+      try {
+        iOSVersion = baseIOSWebkitMesssage.arguments.objectForKey(WebkitDevice.WIRSIMULATORPRODUCTVERSIONKEY).toString();
+      } finally {
+        determiningVersion.signal();
+      }
       if (LOG.isLoggable(Level.FINE)) {
         LOG.log(Level.FINE, "IOS version determined = " + iOSVersion);
       }

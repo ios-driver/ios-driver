@@ -15,6 +15,7 @@
 package org.uiautomation.ios.wkrdp;
 
 import org.uiautomation.ios.RealDevice;
+import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.drivers.RemoteIOSNativeDriver;
 import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.command.configuration.Configuration;
@@ -42,10 +43,10 @@ public class WebKitRemoteDebugProtocolFactory {
         Configuration.off();
       }
       String uuid = ((RealDevice) session.getDevice()).getUuid();
-      return new RealDeviceProtocolImpl(uuid, finders);
+      return new RealDeviceProtocolImpl(uuid, finders, session);
 
     } else {
-      return new SimulatorProtocolImpl(finders);
+      return new SimulatorProtocolImpl(finders, session);
     }
   }
 }

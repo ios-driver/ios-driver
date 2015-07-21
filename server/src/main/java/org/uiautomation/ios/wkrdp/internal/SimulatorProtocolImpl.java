@@ -15,6 +15,7 @@ package org.uiautomation.ios.wkrdp.internal;
 
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.utils.PlistManager;
 import org.uiautomation.ios.wkrdp.ResponseFinder;
 
@@ -41,8 +42,8 @@ public class SimulatorProtocolImpl extends WebKitRemoteDebugProtocol {
   private final String LOCALHOST_IPV6 = "::1";
   private final int port = 27753;
 
-  public SimulatorProtocolImpl(List<ResponseFinder> finders) {
-    super(finders);
+  public SimulatorProtocolImpl(List<ResponseFinder> finders, ServerSideSession session) {
+    super(finders, session);
   }
 
 

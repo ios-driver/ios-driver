@@ -15,6 +15,7 @@
 package org.uiautomation.ios.wkrdp.message;
 
 import com.dd.plist.NSDictionary;
+import com.dd.plist.NSObject;
 
 public class WebkitDeviceImpl implements WebkitDevice {
 
@@ -25,9 +26,14 @@ public class WebkitDeviceImpl implements WebkitDevice {
   protected final String wirSimulatorName;
 
   public WebkitDeviceImpl(NSDictionary nSDictionary) {
-    wirSimulatorBuild = nSDictionary.objectForKey(WIRSIMULATORBUILDKEY).toString();
-    wirSimulatorProductVersion = nSDictionary.objectForKey(WIRSIMULATORPRODUCTVERSIONKEY).toString();
-    wirSimulatorName = nSDictionary.objectForKey(WIRSIMULATORNAMEKEY).toString();
+    NSObject wirSimulatorBuildObj = nSDictionary.objectForKey(WIRSIMULATORBUILDKEY);
+    NSObject wirSimulatorProductVersionObj = nSDictionary.objectForKey(WIRSIMULATORPRODUCTVERSIONKEY);
+    NSObject wirSimulatorNameObj = nSDictionary.objectForKey(WIRSIMULATORNAMEKEY);
+	// If these fields are blank, this is a physical device
+	// Leave the fields as null
+    wirSimulatorBuild = (wirSimulatorBuildObj != null) ? wirSimulatorBuildObj.toString() : "";
+    wirSimulatorProductVersion = (wirSimulatorProductVersionObj != null) ? wirSimulatorProductVersionObj.toString() : "";
+    wirSimulatorName = (wirSimulatorNameObj != null) ? wirSimulatorNameObj.toString() : "";
   }
 
   @Override

@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableMap;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriverException;
+import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.utils.PlistManager;
 import org.uiautomation.ios.wkrdp.MessageHandler;
 import org.uiautomation.ios.wkrdp.MessageListener;
@@ -86,9 +87,8 @@ public abstract class WebKitRemoteDebugProtocol {
     listen.start();
   }
 
-
-  public WebKitRemoteDebugProtocol(List<ResponseFinder> finders) {
-    this.handler = new DefaultMessageHandler(finders);
+  public WebKitRemoteDebugProtocol(List<ResponseFinder> finders, ServerSideSession session) {
+    this.handler = new DefaultMessageHandler(finders, session);
   }
 
   public void addListener(MessageListener listener) {
