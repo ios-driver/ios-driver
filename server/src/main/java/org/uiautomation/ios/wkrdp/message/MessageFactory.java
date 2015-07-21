@@ -42,9 +42,14 @@ public class MessageFactory {
 
   private static final List<String> DEFAULT = Arrays.asList("Default");
 
-  private static final List<String> IOS7_TYPES = Arrays.asList("7.0.3", "7.1");
+  private static final List<String> IOS7_TYPES = Arrays.asList(
+    "7.0", "7.0.1", "7.0.2", "7.0.3", "7.0.4", "7.0.5", "7.0.6", 
+    "7.1", "7.1.1", "7.1.2");
 
-  private static final List<String> IOS8_TYPES = Arrays.asList("8.0", "8.1");
+  private static final List<String> IOS8_TYPES = Arrays.asList(
+    "8.0", "8.0.1", "8.0.2", 
+    "8.1", "8.1.1", "8.1.2", "8.1.3", 
+    "8.2", "8.3", "8.4", "8.4.1");
 
   private final Map<List<String>, Map<String, Class<? extends BaseIOSWebKitMessage>>> iOSTypesMap;
 
