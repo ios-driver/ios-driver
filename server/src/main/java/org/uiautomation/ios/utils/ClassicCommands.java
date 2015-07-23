@@ -69,14 +69,15 @@ public class ClassicCommands {
   }
 
   public static void killall(String processName) {
-    if (isRunning(processName)) {
-      List<String> s = new ArrayList<>();
-      s.add("killall");
-      s.add(processName);
-
-      Command com = new Command(s, false);
-      com.executeAndWait(true);
+    if (!isRunning(processName)) {
+      return;
     }
+
+    List<String> s = new ArrayList<>();
+    s.add("killall");
+    s.add(processName);
+    Command com = new Command(s, false);
+    com.executeAndWait(true);
   }
 
   public static File getXCodeInstall() {
