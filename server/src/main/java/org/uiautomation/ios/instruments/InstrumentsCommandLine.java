@@ -14,20 +14,6 @@
 
 package org.uiautomation.ios.instruments;
 
-import static org.uiautomation.ios.instruments.commandExecutor.CommunicationMode.CURL;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.Response;
 import org.uiautomation.ios.Device;
@@ -44,6 +30,16 @@ import org.uiautomation.ios.utils.AppleMagicString;
 import org.uiautomation.ios.utils.ClassicCommands;
 import org.uiautomation.ios.utils.Command;
 import org.uiautomation.ios.utils.CommandOutputListener;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.uiautomation.ios.instruments.commandExecutor.CommunicationMode.CURL;
 
 public class InstrumentsCommandLine implements Instruments {
 
@@ -226,6 +222,12 @@ public class InstrumentsCommandLine implements Instruments {
   }
 
   private String getInstrumentsClient() {
+    // There is currently no working solution to get past the kernel protection for inserting libraries
+    // in the simulator process http://bit.ly/1SE14SM to enable instruments-without-delay
+    // This leaves the insertion of the dynamic library of DTServiceHub as an exercise for the developer (for now).
+    if (this.version.getMajor() > 6) {
+      return "instruments";
+    }
     return InstrumentsNoDelayLoader.getInstance(version).getInstruments().getAbsolutePath();
   }
 
