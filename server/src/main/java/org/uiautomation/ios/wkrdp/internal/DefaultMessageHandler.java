@@ -15,6 +15,7 @@ package org.uiautomation.ios.wkrdp.internal;
 
 import org.json.JSONObject;
 import org.openqa.selenium.TimeoutException;
+import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.wkrdp.WebInspector;
 import org.uiautomation.ios.wkrdp.ConnectListener;
 import org.uiautomation.ios.wkrdp.MessageHandler;
@@ -42,13 +43,14 @@ public class DefaultMessageHandler implements MessageHandler {
   private boolean stopped;
   private static final Logger log = Logger.getLogger(DefaultMessageHandler.class.getName());
   private List<ResponseFinder> extraFinders = new ArrayList<ResponseFinder>();
-  private final MessageFactory factory = new MessageFactory();
+  private final MessageFactory factory;
   private final
   DefaultWebKitResponseFinder
       defaultFinder =
       new DefaultWebKitResponseFinder(timeoutInMs);
 
-  public DefaultMessageHandler(List<ResponseFinder> finders) {
+  public DefaultMessageHandler(List<ResponseFinder> finders, ServerSideSession session) {
+    factory = new MessageFactory(session);
     this.extraFinders.addAll(finders);
   }
 
