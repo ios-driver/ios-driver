@@ -359,18 +359,31 @@ public class SimulatorSettings {
   private boolean eraseSimulator() {
     assert instrumentsVersion.getMajor() >= 6;
 
-    // Starting with Xcode 6 and later, we can use simctl to do the hard work for us.
+    // In Xcode 7 and later we will get error 159 if the device is already booted.
+    if (instrumentsVersion.getMajor() >= 7) {
+      shutdownDevice();
+    }
+
+    // In Xcode 6 and later, we can use simctl to do the hard work for us.
     List<String> simctlArgs = Arrays.asList("xcrun", "simctl", "erase", deviceUUID);
     Command simctlCmd = new Command(simctlArgs, false);
 
     // if the device is still in booted state erase returns with error code 146
     int exitCode = simctlCmd.executeAndWait(true);
-    if (exitCode == 146) {
-      return false;
-    } else if (exitCode != 0) {
-      throw new WebDriverException("Failed to erase contents and settings of this device: " + deviceUUID
-              + ". Exit code =" + exitCode + " , command was: "
-              + simctlCmd.commandString());
+    switch (exitCode) {
+      case 0:
+        break;
+      case 146:
+        return false;
+      case 159:
+        // "Unable to erase contents and settings in current state: Booted"
+        // In Xcode 7 we need to kill the Simulator.app process before using simctl.
+        throw new WebDriverException("Failed to erase contents and settings of this device: " + deviceUUID
+                + " as it is booted and could not be shutdown");
+      default:
+        throw new WebDriverException("Failed to erase contents and settings of this device: " + deviceUUID
+                + ". Exit code =" + exitCode + " , command was: "
+                + simctlCmd.commandString());
     }
 
     // Wipe the system.log, since simctl doesn't do it.
@@ -381,6 +394,22 @@ public class SimulatorSettings {
     }
 
     return true;
+  }
+
+  public void killAllSimulatorApps() {
+    String simulatorName = this.getSimulatorAppName();
+    ClassicCommands.killall(simulatorName);
+  }
+
+  private String getSimulatorAppName() {
+    int majorVersion = info.getInstrumentsVersion().getMajor();
+    if (majorVersion < 6) {
+      return "iPhone Simulator";
+    }
+    if (majorVersion < 7) {
+      return "iOS Simulator";
+    }
+    return "Simulator";
   }
 
   public void writeContentFile(String path, byte[] fileContents) {

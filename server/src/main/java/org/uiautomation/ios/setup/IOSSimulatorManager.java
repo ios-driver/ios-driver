@@ -41,7 +41,6 @@ public class IOSSimulatorManager implements IOSDeviceManager {
 
   private static final Logger log = Logger.getLogger(IOSSimulatorManager.class.getName());
 
-  public static final String SIMULATOR_PROCESS_NAME = "iPhone Simulator";
   private final List<String> sdks;
   private final String bundleId;
   private final File xcodeInstall;
@@ -103,10 +102,8 @@ public class IOSSimulatorManager implements IOSDeviceManager {
 
   @Override
   public void teardown() {
-    String simulatorName = info.getInstrumentsVersion().getMajor() < 6 ? SIMULATOR_PROCESS_NAME : "iOS Simulator";
-    ClassicCommands.killall(simulatorName);
+    simulatorSettings.killAllSimulatorApps();
   }
-
 
   private String validateSDK(String sdk) {
     if (!sdks.contains(sdk)) {
