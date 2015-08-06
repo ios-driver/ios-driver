@@ -28,6 +28,7 @@ import org.uiautomation.ios.drivers.RemoteIOSWebDriver;
 import org.uiautomation.ios.wkrdp.internal.WebKitSynchronizer;
 import org.uiautomation.ios.wkrdp.message.ApplicationConnectedMessage;
 import org.uiautomation.ios.wkrdp.message.ApplicationSentListingMessage;
+import org.uiautomation.ios.wkrdp.message.ApplicationUpdatedMessage;
 import org.uiautomation.ios.wkrdp.message.IOSMessage;
 import org.uiautomation.ios.wkrdp.message.ReportConnectedApplicationsMessage;
 import org.uiautomation.ios.wkrdp.message.ReportSetupMessage;
@@ -67,6 +68,7 @@ public class WebKitNotificationListener implements MessageListener {
     handleApplicationSentListingMessage(message);
     handleApplicationDataMessage(message);
     handleApplicationConnectedMessage(message);
+    handleApplicationUpdatedMessage(message);
   }
 
   private void handleReportSetupMessage(IOSMessage message) {
@@ -133,10 +135,46 @@ public class WebKitNotificationListener implements MessageListener {
     try {
       applicationRegistrationLock.lock();
       ApplicationConnectedMessage applicationConnectedMessage = ApplicationConnectedMessage.class.cast(message);
-      registeredApplications.add(applicationConnectedMessage.getApplication());
+      WebkitApplication connectedApplication = applicationConnectedMessage.getApplication();
+      boolean applicationIsNew = true;
+      for (WebkitApplication app : registeredApplications) {
+        if (app.getBundleId().equals(connectedApplication.getBundleId()))  {
+          applicationIsNew = false;
+        }
+      }
+      if (applicationIsNew) {
+        registeredApplications.add(connectedApplication);
+      }
       if (!isDriverSuccessfullyNotified()) {
         log.log(Level.WARNING,
             "No connectable applications found in ApplicationConnectedMessage will wait before signaling driver");
+      }
+    } finally {
+      applicationRegistrationLock.unlock();
+    }
+  }
+
+  private void handleApplicationUpdatedMessage(IOSMessage message) {
+    if (!(message instanceof ApplicationUpdatedMessage)) {
+      return;
+    }
+    try {
+      applicationRegistrationLock.lock();
+      ApplicationUpdatedMessage applicationUpdatedMessage = ApplicationUpdatedMessage.class.cast(message);
+      WebkitApplication updatedApplication = applicationUpdatedMessage.getApplication();
+      boolean applicationIsNew = true;
+      for (WebkitApplication app : registeredApplications) {
+        if (app.getBundleId().equals(updatedApplication.getBundleId()))  {
+          applicationIsNew = false;
+        }
+      }
+      if (applicationIsNew) {
+        registeredApplications.add(updatedApplication);
+        log.warning("Application updated without first being registered.");
+      }
+      if (!isDriverSuccessfullyNotified()) {
+        log.log(Level.WARNING,
+            "No connectable applications found in ApplicationUpdatedMessage will wait before signaling driver");
       }
     } finally {
       applicationRegistrationLock.unlock();
@@ -322,5 +360,4 @@ public class WebKitNotificationListener implements MessageListener {
     } catch (InterruptedException ignore) {
     }
   }
-
 }
