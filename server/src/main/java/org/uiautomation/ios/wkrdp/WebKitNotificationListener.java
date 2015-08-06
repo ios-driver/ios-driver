@@ -25,7 +25,6 @@ import java.util.logging.Logger;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.drivers.RemoteIOSWebDriver;
-import org.uiautomation.ios.wkrdp.internal.WebKitSynchronizer;
 import org.uiautomation.ios.wkrdp.message.ApplicationConnectedMessage;
 import org.uiautomation.ios.wkrdp.message.ApplicationSentListingMessage;
 import org.uiautomation.ios.wkrdp.message.ApplicationUpdatedMessage;
@@ -44,18 +43,15 @@ public class WebKitNotificationListener implements MessageListener {
 
   private final ServerSideSession session;
 
-  private final WebKitSynchronizer sync;
-
   private List<WebkitApplication> registeredApplications;
 
   private Lock applicationRegistrationLock;
 
   private Lock pagesProcessLock;
 
-  public WebKitNotificationListener(RemoteIOSWebDriver driver, WebKitSynchronizer syncronizer, ServerSideSession session) {
+  public WebKitNotificationListener(RemoteIOSWebDriver driver, ServerSideSession session) {
     this.driver = driver;
     this.session = session;
-    this.sync = syncronizer;
     this.registeredApplications = new ArrayList<>();
     this.applicationRegistrationLock = new ReentrantLock();
     this.pagesProcessLock = new ReentrantLock();
@@ -77,7 +73,6 @@ public class WebKitNotificationListener implements MessageListener {
     }
     ReportSetupMessage reportSetupMessage = ReportSetupMessage.class.cast(message);
     driver.setDevice(reportSetupMessage.getDevice());
-    sync.signalSimRegistered();
   }
 
   private void handleReportConnectedApplicationsMessage(IOSMessage message) {
@@ -105,11 +100,12 @@ public class WebKitNotificationListener implements MessageListener {
     try {
       pagesProcessLock.lock();
       ApplicationSentListingMessage applicationSentListingMessage = ApplicationSentListingMessage.class.cast(message);
-      boolean pagesSimilar = arePagesNotChanged(applicationSentListingMessage);
+      boolean pagesSimilar = !driver.hasPages() || !arePagesNotChanged(applicationSentListingMessage);
       if (log.isLoggable(Level.FINE)) {
         log.fine("pages " + (pagesSimilar ? "are equal " : "have changed ") + ": " + driver.getPages() + "-> "
             + applicationSentListingMessage.getPages() + ": " + applicationSentListingMessage);
       }
+
       if (pagesSimilar) {
         driver.setPages(applicationSentListingMessage.getPages()); // Update the titles.
         return;
@@ -125,7 +121,7 @@ public class WebKitNotificationListener implements MessageListener {
   }
 
   private void handleApplicationDataMessage(IOSMessage message) {
-    // TODO to be implemented 
+    // TODO to be implemented
   }
 
   private void handleApplicationConnectedMessage(IOSMessage message) {
@@ -185,7 +181,6 @@ public class WebKitNotificationListener implements MessageListener {
     for (WebkitApplication application : registeredApplications) {
       if (application.isConnectableByWkrdProtocol()) {
         driver.setApplications(registeredApplications);
-        sync.signalSimSentApps();
         return true;
       }
     }
@@ -273,22 +268,21 @@ public class WebKitNotificationListener implements MessageListener {
     } else {
       processRemovedPages(applicationSentListingMessage);
     }
-    sync.signalSimSentPages();
   }
 
   private boolean arePagesNotChanged(ApplicationSentListingMessage applicationSentListingMessage) {
-    return WebkitPage.equals(applicationSentListingMessage.getPages(), driver.getPages());
+    return WebkitPage.equals(applicationSentListingMessage.getPages(), driver.waitForPages());
   }
 
   private boolean isPagesAdded(ApplicationSentListingMessage applicationSentListingMessage) {
-    return applicationSentListingMessage.getPages().size() - driver.getPages().size() > 0;
+    return !driver.hasPages() ||
+      applicationSentListingMessage.getPages().size() - driver.waitForPages().size() > 0;
   }
 
   private void processAddedPages(ApplicationSentListingMessage applicationSentListingMessage) {
-    List<WebkitPage> pages = new ArrayList<WebkitPage>(driver.getPages());
-
+    List<WebkitPage> pages = new ArrayList<WebkitPage>(driver.waitForPages());
     // Remove all the pages we already know of from the message
-    for (WebkitPage p : driver.getPages()) {
+    for (WebkitPage p : pages) {
       applicationSentListingMessage.getPages().remove(p);
     }
 
@@ -296,7 +290,7 @@ public class WebKitNotificationListener implements MessageListener {
     WebkitPage newOne = Collections.max(applicationSentListingMessage.getPages());
     pages.addAll(applicationSentListingMessage.getPages());
     driver.setPages(pages);
-    if (driver.getPages().size() > 0 && !newOne.isITunesAd()) {
+    if (driver.waitForPages().size() > 0 && !newOne.isITunesAd()) {
       WebkitPage focus = newOne;
       if (session != null) {
         waitForWindowSwitchingAnimation();
@@ -308,7 +302,7 @@ public class WebKitNotificationListener implements MessageListener {
   }
 
   private void processRemovedPages(ApplicationSentListingMessage applicationSentListingMessage) {
-    List<WebkitPage> old = new ArrayList<WebkitPage>(driver.getPages());
+    List<WebkitPage> old = new ArrayList<WebkitPage>(driver.waitForPages());
     for (WebkitPage p : applicationSentListingMessage.getPages()) {
       old.remove(p);
     }
@@ -337,12 +331,11 @@ public class WebKitNotificationListener implements MessageListener {
       if (session != null) {
         waitForWindowSwitchingAnimation();
       }
-      WebkitPage focus = selectPage(driver.getPages());
+      WebkitPage focus = selectPage(driver.waitForPages());
       if (focus != null) {
         driver.switchTo(focus);
       }
     }
-    sync.signalSimSentPages();
   }
 
   private WebkitPage selectPage(List<WebkitPage> pages) {

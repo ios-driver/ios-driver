@@ -43,7 +43,7 @@ public class GetWindowHandlesNHandler extends BaseNativeCommandHandler {
     RemoteIOSNativeDriver nativeDriver = getNativeDriver();
     if ((nativeDriver.getInstruments() instanceof NoInstrumentsImplementationAvailable) ||
         (nativeDriver.findElements(new TypeCriteria(UIAWebView.class)).size() > 0)) {
-      for (WebkitPage page : getWebDriver().getPages()) {
+      for (WebkitPage page : getWebDriver().waitForPages()) {
         handles.add(WorkingMode.Web + "_" + page.getPageId());
       }
     }
