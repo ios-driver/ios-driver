@@ -111,6 +111,7 @@ public class DeviceStore extends DeviceCallBack {
     } catch (SDKException | WebDriverException e) {
       if (d != null) {
         reals.remove(d);
+        log.warning("Error mounting " + uuid + ". Removing from device pool. Missing SDK?");
       }
     }
   }
