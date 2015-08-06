@@ -24,11 +24,13 @@ import org.uiautomation.ios.utils.PlistManager;
 import org.uiautomation.ios.wkrdp.MessageHandler;
 import org.uiautomation.ios.wkrdp.MessageListener;
 import org.uiautomation.ios.wkrdp.RemoteExceptionException;
-import org.uiautomation.ios.wkrdp.ResponseFinder;
 
-import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -62,7 +64,6 @@ public abstract class WebKitRemoteDebugProtocol {
 
   protected abstract void sendMessage(String message);
 
-
   protected void startListenerThread() {
     listen = new Thread(new Runnable() {
 
@@ -87,8 +88,8 @@ public abstract class WebKitRemoteDebugProtocol {
     listen.start();
   }
 
-  public WebKitRemoteDebugProtocol(List<ResponseFinder> finders, ServerSideSession session) {
-    this.handler = new DefaultMessageHandler(finders, session);
+  public WebKitRemoteDebugProtocol(ServerSideSession session) {
+    this.handler = new DefaultMessageHandler(session);
   }
 
   public void addListener(MessageListener listener) {
@@ -166,8 +167,14 @@ public abstract class WebKitRemoteDebugProtocol {
       for (String key : var.keySet()) {
         xml = xml.replace(key, var.get(key));
       }
+      Future<JSONObject> future = this.handler.createMessageFuture(commandId);
       sendMessage(xml);
-      JSONObject response = handler.getResponse(command.getInt("id"));
+      JSONObject response;
+      try {
+        response = future.get(60, TimeUnit.SECONDS);
+      } catch (TimeoutException | InterruptedException | ExecutionException e) {
+        throw new WebDriverException("Problem getting webdriver command response", e);
+      }
       JSONObject error = response.optJSONObject("error");
       if (error != null) {
         throw new RemoteExceptionException(error, command);

@@ -17,7 +17,6 @@ import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.utils.PlistManager;
-import org.uiautomation.ios.wkrdp.ResponseFinder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -26,7 +25,6 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -42,10 +40,9 @@ public class SimulatorProtocolImpl extends WebKitRemoteDebugProtocol {
   private final String LOCALHOST_IPV6 = "::1";
   private final int port = 27753;
 
-  public SimulatorProtocolImpl(List<ResponseFinder> finders, ServerSideSession session) {
-    super(finders, session);
+  public SimulatorProtocolImpl(ServerSideSession session) {
+    super(session);
   }
-
 
   public void start() {
     try {

@@ -14,47 +14,41 @@
 package org.uiautomation.ios.wkrdp.internal;
 
 import org.json.JSONObject;
-import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriverException;
 import org.uiautomation.ios.ServerSideSession;
 import org.uiautomation.ios.wkrdp.WebInspector;
 import org.uiautomation.ios.wkrdp.ConnectListener;
 import org.uiautomation.ios.wkrdp.MessageHandler;
 import org.uiautomation.ios.wkrdp.MessageListener;
-import org.uiautomation.ios.wkrdp.ResponseFinder;
-import org.uiautomation.ios.wkrdp.ResponseFinderList;
 import org.uiautomation.ios.wkrdp.message.ApplicationDataMessage;
 import org.uiautomation.ios.wkrdp.message.IOSMessage;
 import org.uiautomation.ios.wkrdp.message.MessageFactory;
 
-import java.util.ArrayList;
+import com.google.common.util.concurrent.SettableFuture;
+
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import java.util.NoSuchElementException;
 
 public class DefaultMessageHandler implements MessageHandler {
 
-  private final static long timeoutInMs = 10 * 1000;
   private final List<MessageListener> listeners = new CopyOnWriteArrayList<MessageListener>();
   private Set<Thread> threads = new HashSet<Thread>();
   private boolean stopped;
   private static final Logger log = Logger.getLogger(DefaultMessageHandler.class.getName());
-  private List<ResponseFinder> extraFinders = new ArrayList<ResponseFinder>();
   private final MessageFactory factory;
-  private final
-  DefaultWebKitResponseFinder
-      defaultFinder =
-      new DefaultWebKitResponseFinder(timeoutInMs);
-
-  public DefaultMessageHandler(List<ResponseFinder> finders, ServerSideSession session) {
-    factory = new MessageFactory(session);
-    this.extraFinders.addAll(finders);
-  }
-
+  private final Map<Integer, SettableFuture<JSONObject>> futureResponses = new HashMap<>();
   private static int threadCount;
+
+  public DefaultMessageHandler(ServerSideSession session) {
+    factory = new MessageFactory(session);
+  }
 
   @Override
   public synchronized void handle(final String msg) {
@@ -82,38 +76,29 @@ public class DefaultMessageHandler implements MessageHandler {
 
     if (message instanceof ApplicationDataMessage) {
       JSONObject content = ((ApplicationDataMessage) message).getMessage();
-      if ((content.optInt("id", -1) != -1)) {
-        defaultFinder.addResponse(content);
+      int id = content.optInt("id", -1);
+      if (id != -1) {
+        SettableFuture<JSONObject> response = futureResponses.remove(id);
+        if (response == null) {
+          throw new NoSuchElementException("command id: " + id);
+        } else if (response.isDone()) {
+          throw new IllegalArgumentException("The command id " + id + " has already received "
+              + "a corresponding reply");
+        }
+        response.set(content);
       }
     }
   }
 
-  @Override
-  public JSONObject getResponse(int id) throws TimeoutException {
-    // there can be 2 things happening here.
-    // 1) the response is received.
-    // 2) the response is never received because there is an alert.
-
-    long start = System.currentTimeMillis();
-
-    List<ResponseFinder> finders = new ArrayList<ResponseFinder>();
-    finders.add(defaultFinder);
-    finders.addAll(extraFinders);
-
-    ResponseFinderList all = new ResponseFinderList(finders, timeoutInMs);
-    try {
-      JSONObject res = all.findResponse(id);
-      if (log.isLoggable(Level.FINE)) {
-        log.fine(
-            "response " + id + " , " + (System.currentTimeMillis() - start) + "ms. " + res);
-      }
-
-      return res;
-    } catch (RuntimeException e) {
-      throw e;
+  public SettableFuture<JSONObject> createMessageFuture(int commandId) {
+    Integer id = new Integer(commandId);
+    if (futureResponses.containsKey(id)) {
+      throw new IllegalArgumentException("Command id already used");
     }
+    SettableFuture<JSONObject> res = SettableFuture.create();
+    futureResponses.put(id, res);
+    return res;
   }
-
 
   @Override
   public void addListener(MessageListener listener) {
@@ -134,15 +119,14 @@ public class DefaultMessageHandler implements MessageHandler {
 
   @Override
   public synchronized void stop() {
-    defaultFinder.stop();
-    for (ResponseFinder f : extraFinders){
-      f.stop();
+    if (!futureResponses.isEmpty()) {
+      throw new WebDriverException("No response received for commands before stop: "
+          + futureResponses.keySet());
     }
     stopped = true;
     for (Thread t : threads) {
       t.interrupt();
     }
   }
-
 
 }
