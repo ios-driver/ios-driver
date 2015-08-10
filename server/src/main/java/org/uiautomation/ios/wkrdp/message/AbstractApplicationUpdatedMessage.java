@@ -28,7 +28,7 @@ public abstract class AbstractApplicationUpdatedMessage extends BaseIOSWebKitMes
 
   @Override
   public String toString(NSDictionary d) {
-    return application.getBundleId();
+    return application.getApplicationIdentifier();
   }
 
   @Override

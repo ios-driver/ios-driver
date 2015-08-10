@@ -94,7 +94,7 @@ public class WebKitNotificationListener implements MessageListener {
   }
 
   private void handleApplicationSentListingMessage(IOSMessage message) {
-    if (!isValidForProcessing(message)) {
+    if (!isValidAppListingForProcessing(message)) {
       return;
     }
     try {
@@ -178,81 +178,62 @@ public class WebKitNotificationListener implements MessageListener {
   }
 
   private boolean isDriverSuccessfullyNotified() {
-    for (WebkitApplication application : registeredApplications) {
-      if (application.isConnectableByWkrdProtocol()) {
-        driver.setApplications(registeredApplications);
-        return true;
-      }
+    WebkitApplication target = getApplicationForBundleId(session.getTargetBundleId());
+    if (target != null) {
+      driver.setApplications(registeredApplications);
+      return true;
     }
     return false;
   }
 
-  private boolean isValidForProcessing(IOSMessage message) {
+  private boolean isValidAppListingForProcessing(IOSMessage message) {
     if (!(message instanceof ApplicationSentListingMessage)) {
       return false;
     }
     ApplicationSentListingMessage applicationSentListingMessage = ApplicationSentListingMessage.class.cast(message);
-    if (!applicationSentListingMessage.isPagesAvailable()) {
+    String appIdentifier = applicationSentListingMessage.getApplicationIdentifier();
+    WebkitApplication app = getApplicationForAppIdentifier(appIdentifier);
+    if (app == null) {
       if (log.isLoggable(Level.INFO)) {
-        log.log(Level.INFO,
-            "ApplicationSentListingMessage '_rpc_applicationSentListing:' received with no pages skipping process");
+        log.log(Level.INFO, "Application id: " + appIdentifier
+            + " does not yet have a corresponding application instance");
       }
       return false;
     }
-    if (!isConnectableByWkrdProtocol(applicationSentListingMessage.getApplicationIdentifier())) {
+    String appBundleId = app.getBundleId();
+    String sessionBundleId = session.getTargetBundleId();
+    if (sessionBundleId != null && !sessionBundleId.equals(appBundleId)) {
       if (log.isLoggable(Level.INFO)) {
-        log.log(Level.INFO, "Application id: " + applicationSentListingMessage.getApplicationIdentifier()
-            + " not allowed for processing");
+        log.log(Level.INFO, "Ignoring message from application id: " + appIdentifier);
+      }
+      return false;
+    }
+    if (!applicationSentListingMessage.isPagesAvailable()) {
+      if (log.isLoggable(Level.INFO)) {
+        log.log(Level.INFO,
+          "ApplicationSentListingMessage '_rpc_applicationSentListing:' received with no pages skipping process");
       }
       return false;
     }
     return true;
   }
 
-  private boolean isConnectableByWkrdProtocol(String applicationIdentifier) {
-    int attempts = 2;
-    try {
-      return checkForAvailabilityIn(applicationIdentifier, attempts)
-          && getApplication(applicationIdentifier).isConnectableByWkrdProtocol();
-    } catch (InterruptedException e) {
-      if (log.isLoggable(Level.FINE)) {
-        log.log(Level.FINE, "InterruptedException occured while checking availability of application in list of registered applications.");
-      }
-    } catch (IllegalStateException illegalStateException) {
-      log.log(Level.WARNING, "Unknown error, application with identifier: " + applicationIdentifier
-          + " is not retrievable from the list of registered applications");
-    }
-    return false;
-  }
-
-  private boolean checkForAvailabilityIn(String applicationIdentifier, int times) throws InterruptedException {
-    while (times > 0) {
-      for (WebkitApplication application : registeredApplications) {
-        if (application.getBundleId().equals(applicationIdentifier)) {
-          if (log.isLoggable(Level.FINE)) {
-            log.log(Level.FINE, "Application available in the list of registered applications");
-          }
-          return true;
-        }
-      }
-      if (--times == 0) {
-        break;
-      }
-      if (log.isLoggable(Level.FINE)) {
-        log.log(Level.FINE, "Sleeping for 10 ms in checking availability...");
-      }
-      Thread.sleep(10);
-    }
-    return false;
-  }
-
-  private WebkitApplication getApplication(String applicationIdentifier) {
+  private WebkitApplication getApplicationForBundleId(String bundleId) {
     for (WebkitApplication application : registeredApplications) {
-      if (applicationIdentifier.equals(application.getBundleId())) {
+      if (bundleId.equals(application.getBundleId())) {
         return application;
       }
     }
-    throw new IllegalStateException("Call getApplication() only if checkForAvailabilityIn() returns true");
+    return null;
+  }
+
+  private WebkitApplication getApplicationForAppIdentifier(String applicationIdentifier) {
+    for (WebkitApplication application : registeredApplications) {
+      if (applicationIdentifier.equals(application.getApplicationIdentifier())) {
+        return application;
+      }
+    }
+    return null;
   }
 
   private void processPagesForSafariApp(ApplicationSentListingMessage applicationSentListingMessage) {

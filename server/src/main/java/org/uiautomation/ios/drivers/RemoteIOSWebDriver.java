@@ -73,11 +73,9 @@ public class RemoteIOSWebDriver {
   };
   private final Monitor.Guard targetApplicationGuard =  new Monitor.Guard(monitor) {
     public boolean isSatisfied() {
-      if (applications.isEmpty()) { return false; }
-      String target = session.getCapabilities().getBundleId();
-      if (target == null) { return true; }
+      String target = session.getTargetBundleId();
       for (WebkitApplication app : applications) {
-        if (target.equals(app.getBundleId())) { return true; }
+        if (target == null || target.equals(app.getBundleId())) { return true; }
       }
       return false;
     }
@@ -112,7 +110,7 @@ public class RemoteIOSWebDriver {
     try {
       boolean success = monitor.enterWhen(pagesGuard, timeInUnits, unit);
       if (!success) {
-        throw new WebDriverException("Timeout waiting for device");
+        throw new WebDriverException("Timeout waiting for pages");
       }
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
@@ -144,44 +142,7 @@ public class RemoteIOSWebDriver {
       log.warning("protocol already registered with connectionId: " + protocol.getConnectionId());
     }
     waitForDevice();
-    List<WebkitApplication> loadedApps = waitForTargetApplicationList();
-    if (log.isLoggable(Level.FINE)) {
-      log.log(Level.FINE, "connectionKey=" + connectionKey);
-    }
-    for (WebkitApplication application : loadedApps) {
-      if (application.isConnectableByWkrdProtocol()) {
-        connect(application.getBundleId());
-        isStarted = true;
-        break;
-      }
-    }
-    if (!isStarted) {
-      showWarning(loadedApps);
-    }
-  }
-
-  private void showWarning(List<WebkitApplication> apps) {
-    // Safari.
-    int numApps = apps.size();
-    if (session.getApplication().isSafari()) {
-      if (numApps == 0) {
-        if (protocol instanceof RealDeviceProtocolImpl) {
-          throw new WebDriverException("is Safari started and with the focus ? ");
-        } else {
-          // kill left over.
-          ClassicCommands.killall("xpcproxy_sim");
-          throw new WebDriverException("session created but application size=" + numApps
-                                       + ".The simulator wasn't closed properly.Try restarting your computer.");
-        }
-      } else {
-        throw new WebDriverException("session created but application size=" + numApps
-                                     + ".It should be 1. Do you have multiple tabs opened ?");
-      }
-      // Native app
-    } else {
-      log.warning("session created but application size=" + numApps
-                  + ".Does the app have a webview ?");
-    }
+    connect();
   }
 
   public void stop() {
@@ -216,28 +177,36 @@ public class RemoteIOSWebDriver {
     }
   }
 
-  public void connect(String bundleId) {
+  private void connect() {
+    String bundleId = session.getTargetBundleId();
     List<WebkitApplication> knownApps = waitForTargetApplicationList();
-    for (WebkitApplication app : knownApps) {
-      if (bundleId.equals(app.getBundleId())) {
-        protocol.connect(bundleId);
-        log.fine("bundleId=" + bundleId);
-        List<WebkitPage> loadedPages = waitForPages();
-        if (loadedPages.size() > 0) {
-          switchTo(Collections.max(loadedPages));
-
-          if (loadedPages.size() > 1) {
-            log.warning("Application started, but already have " + loadedPages.size()
-                + " webviews. Connecting to the one with highest page id.");
-          }
-        } else {
-            log.warning("Application started, but doesn't have any page.");
-        }
-        return;
+    if (log.isLoggable(Level.FINE)) {
+      log.log(Level.FINE, "connectionKey=" + connectionKey);
+    }
+    WebkitApplication targetApp = null;
+    for (WebkitApplication application : knownApps) {
+      if (bundleId == null || bundleId.equals(application.getBundleId())) {
+        targetApp = application;
+        break;
       }
     }
-    throw new WebDriverException(bundleId + " not in the list " + knownApps
-                                 + ".Either it's not started, or it has no webview to connect to.");
+    if (targetApp == null) {
+      // kill left over to start with a clean slate.
+      ClassicCommands.killall("xpcproxy_sim");
+      throw new WebDriverException("App not started");
+    }
+    protocol.connect(targetApp.getApplicationIdentifier());
+    List<WebkitPage> loadedPages = waitForPages();
+    if (loadedPages.size() > 0) {
+      switchTo(Collections.max(getPages()));
+      if (loadedPages.size() > 1) {
+        log.warning("Application started, but already have " + getPages().size()
+            + " webviews. Connecting to the one with highest page id.");
+      }
+    } else {
+        log.warning("Application started, but doesn't have any page.");
+    }
+    isStarted = true;
   }
 
   public void setApplications(List<WebkitApplication> applications) {
@@ -478,7 +447,7 @@ public class RemoteIOSWebDriver {
       }
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
-      throw new WebDriverException("Unable to get pages", e);
+      throw new WebDriverException("Unable to get device", e);
     }
     try {
       return device;

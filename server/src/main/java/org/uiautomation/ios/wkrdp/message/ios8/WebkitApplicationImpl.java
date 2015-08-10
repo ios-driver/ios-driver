@@ -68,16 +68,15 @@ public class WebkitApplicationImpl extends AbstractWebkitApplication {
   }
 
   @Override
-  public boolean isConnectableByWkrdProtocol() {
-    return !isSafariApp();
-  }
-
-  @Override
   protected boolean isSafariApp() {
     if (SAFARI.equals(wirApplicationName) && SAFARIBUNDLEIDENTIFIER.equals(wirApplicationBundleIdentifier)) {
       return true;
     }
     return false;
+  }
+
+  public String getBundleId() {
+    return wirApplicationBundleIdentifier;
   }
 
   public boolean isProxyApplication() {

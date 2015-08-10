@@ -273,6 +273,30 @@ public class ServerSideSession extends Session {
     return false;
   }
 
+  public String getTargetBundleId() {
+    if (isSafariRealDevice()) {
+      if (getVersionInt() >= 8) {
+        // For versions iOS8+, both Safari and WebContent launch,
+        // But the one that is connectable and contains tabs
+        // Is WebContent
+        return "com.apple.WebKit.WebContent";
+      } else {
+        // For older versions, we can communicate directly with safari
+        return "com.apple.mobilesafari";
+      }
+    }
+    return getCapabilities().getBundleId();
+  }
+
+  private int getVersionInt() {
+    String sdk = getDevice().getCapability().getSDKVersion();
+    try {
+      return Integer.valueOf(sdk.substring(0, sdk.indexOf(".")));
+    } catch (IndexOutOfBoundsException | NumberFormatException e) {
+      throw new WebDriverException("Invalid SDK version: " + sdk, e);
+    }
+  }
+
   public IOSCapabilities getCapabilities() {
     return capabilities;
   }

@@ -28,7 +28,7 @@ public abstract class AbstractApplicationDisconnectedMessage extends BaseIOSWebK
 
   @Override
   public String toString(NSDictionary d) {
-    return application.getBundleId();
+    return application.getApplicationIdentifier();
   }
 
   @Override

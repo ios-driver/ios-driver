@@ -36,7 +36,7 @@ public abstract class AbstractWebkitApplication implements WebkitApplication {
   }
 
   @Override
-  public String getBundleId() {
+  public String getApplicationIdentifier() {
     return wirApplicationIdentifier;
   }
 
