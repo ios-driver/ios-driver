@@ -14,8 +14,13 @@
 
 package org.uiautomation.ios.drivers;
 
+import java.lang.Thread;
+
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.TimeUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +45,6 @@ import org.uiautomation.ios.wkrdp.WebInspector;
 import org.uiautomation.ios.wkrdp.WebKitNotificationListener;
 import org.uiautomation.ios.wkrdp.internal.RealDeviceProtocolImpl;
 import org.uiautomation.ios.wkrdp.internal.WebKitRemoteDebugProtocol;
-import org.uiautomation.ios.wkrdp.internal.WebKitSynchronizer;
 import org.uiautomation.ios.wkrdp.message.WebkitApplication;
 import org.uiautomation.ios.wkrdp.message.WebkitDevice;
 import org.uiautomation.ios.wkrdp.message.WebkitPage;
@@ -49,38 +53,78 @@ import org.uiautomation.ios.wkrdp.model.RemoteWebElement;
 import org.uiautomation.ios.wkrdp.model.RemoteWebNativeBackedElement;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.util.concurrent.Monitor;
 
 public class RemoteIOSWebDriver {
 
-  private String bundleId;
-
   private final WebKitRemoteDebugProtocol protocol;
-  private WebkitDevice device;
-  private List<WebkitApplication> applications = new ArrayList<>();
+  private WebkitDevice device = null;
+  private ImmutableList<WebkitApplication> applications = ImmutableList.of();
   private final ServerSideSession session;
   private final String connectionKey;
   private BaseWebInspector currentInspector;
   private final Map<Integer, BaseWebInspector> inspectors = new HashMap<>();
   private static final Logger log = Logger.getLogger(RemoteIOSWebDriver.class.getName());
-  private List<WebkitPage> pages = new ArrayList<>();
-  private final WebKitSynchronizer sync;
+  private ImmutableList<WebkitPage> pages = ImmutableList.of();
   private boolean isStarted = false;
+  private final Monitor monitor = new Monitor();
+  private final Monitor.Guard deviceGuard =  new Monitor.Guard(monitor) {
+    public boolean isSatisfied() { return device != null; }
+  };
+  private final Monitor.Guard targetApplicationGuard =  new Monitor.Guard(monitor) {
+    public boolean isSatisfied() {
+      String target = session.getTargetBundleId();
+      for (WebkitApplication app : applications) {
+        if (target == null || target.equals(app.getBundleId())) { return true; }
+      }
+      return false;
+    }
+  };
+  private final Monitor.Guard pagesGuard =  new Monitor.Guard(monitor) {
+    public boolean isSatisfied() { return !pages.isEmpty(); }
+  };
 
   public RemoteIOSWebDriver(ServerSideSession session, WebKitRemoteDebugProtocol protocol) {
     this.session = session;
     connectionKey = UUID.randomUUID().toString();
-    sync = new WebKitSynchronizer(this);
     this.protocol = protocol;
-    MessageListener messageListener = new WebKitNotificationListener(this, sync, session);
+    MessageListener messageListener = new WebKitNotificationListener(this, session);
     protocol.addListener(messageListener);
   }
 
   public void setPages(List<WebkitPage> pages) {
+    monitor.enter();
     this.pages = ImmutableList.copyOf(pages);
+    monitor.leave();
   }
 
-  public List<WebkitPage> getPages() {
+  public ImmutableList<WebkitPage> getPages() {
     return pages;
+  }
+
+  public ImmutableList<WebkitPage> waitForPages() {
+    return waitForPages(15, TimeUnit.SECONDS);
+  }
+
+  public ImmutableList<WebkitPage> waitForPages(int timeInUnits, TimeUnit unit) {
+    try {
+      boolean success = monitor.enterWhen(pagesGuard, timeInUnits, unit);
+      if (!success) {
+        throw new WebDriverException("Timeout waiting for pages");
+      }
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new WebDriverException("Unable to get pages", e);
+    }
+    try {
+      return pages;
+    } finally {
+      monitor.leave();
+    }
+  }
+
+  public boolean hasPages() {
+    return !pages.isEmpty();
   }
 
   public boolean isStarted() {
@@ -97,44 +141,8 @@ public class RemoteIOSWebDriver {
     } catch (WebDriverException wde) {
       log.warning("protocol already registered with connectionId: " + protocol.getConnectionId());
     }
-    sync.waitForSimToRegister();
-    sync.waitForSimToSendApps();
-    if (log.isLoggable(Level.FINE)) {
-      log.log(Level.FINE, "connectionKey=" + connectionKey);
-    }
-    for (WebkitApplication application : applications) {
-      if (application.isConnectableByWkrdProtocol()) {
-        connect(application.getBundleId());
-        isStarted = true;
-        break;
-      }
-    }
-    if (!isStarted) {
-      showWarning();
-    }
-  }
-
-  private void showWarning() {
-    // Safari.
-    if (session.getApplication().isSafari()) {
-      if (applications.size() == 0) {
-        if (protocol instanceof RealDeviceProtocolImpl) {
-          throw new WebDriverException("is Safari started and with the focus ? ");
-        } else {
-          // kill left over.
-          ClassicCommands.killall("xpcproxy_sim");
-          throw new WebDriverException("session created but application size=" + applications.size()
-                                       + ".The simulator wasn't closed properly.Try restarting your computer.");
-        }
-      } else {
-        throw new WebDriverException("session created but application size=" + applications.size()
-                                     + ".It should be 1. Do you have multiple tabs opened ?");
-      }
-      // Native app
-    } else {
-      log.warning("session created but application size=" + applications.size()
-                  + ".Does the app have a webview ?");
-    }
+    waitForDevice();
+    connect();
   }
 
   public void stop() {
@@ -169,41 +177,67 @@ public class RemoteIOSWebDriver {
     }
   }
 
-  public void connect(String bundleId) {
-    List<WebkitApplication> knownApps = getApplications();
-    for (WebkitApplication app : knownApps) {
-      if (bundleId.equals(app.getBundleId())) {
-        this.bundleId = bundleId;
-        protocol.connect(bundleId);
-        sync.waitForSimToSendPages();
-        log.fine("bundleId=" + bundleId);
-        if (getPages() != null && getPages().size() > 0) {
-          switchTo(Collections.max(getPages()));
-          if (getPages().size() > 1) {
-            log.warning("Application started, but already have " + getPages().size()
-                + " webviews. Connecting to the one with highest page id.");
-          }
-        } else {
-            log.warning("Application started, but doesn't have any page.");
-        }
-        return;
+  private void connect() {
+    String bundleId = session.getTargetBundleId();
+    List<WebkitApplication> knownApps = waitForTargetApplicationList();
+    if (log.isLoggable(Level.FINE)) {
+      log.log(Level.FINE, "connectionKey=" + connectionKey);
+    }
+    WebkitApplication targetApp = null;
+    for (WebkitApplication application : knownApps) {
+      if (bundleId == null || bundleId.equals(application.getBundleId())) {
+        targetApp = application;
+        break;
       }
     }
-    throw new WebDriverException(bundleId + " not in the list " + knownApps
-                                 + ".Either it's not started, or it has no webview to connect to.");
+    if (targetApp == null) {
+      // kill left over to start with a clean slate.
+      ClassicCommands.killall("xpcproxy_sim");
+      throw new WebDriverException("App not started");
+    }
+    protocol.connect(targetApp.getApplicationIdentifier());
+    List<WebkitPage> loadedPages = waitForPages();
+    if (loadedPages.size() > 0) {
+      switchTo(Collections.max(getPages()));
+      if (loadedPages.size() > 1) {
+        log.warning("Application started, but already have " + getPages().size()
+            + " webviews. Connecting to the one with highest page id.");
+      }
+    } else {
+        log.warning("Application started, but doesn't have any page.");
+    }
+    isStarted = true;
   }
 
-  public synchronized void setApplications(List<WebkitApplication> applications) {
-    this.applications = applications;
+  public void setApplications(List<WebkitApplication> applications) {
+    monitor.enter();
+    this.applications = ImmutableList.copyOf(applications);
+    monitor.leave();
   }
 
-  // TODO freynaud return a copy.
-  public synchronized List<WebkitApplication> getApplications() {
-    return applications;
+  public ImmutableList<WebkitApplication> waitForTargetApplicationList() {
+    return waitForTargetApplicationList(10, TimeUnit.SECONDS);
+  }
+
+  public ImmutableList<WebkitApplication> waitForTargetApplicationList(int timeInUnits, TimeUnit unit) {
+    try {
+      boolean success = monitor.enterWhen(targetApplicationGuard, timeInUnits, unit);
+      if (!success) {
+        throw new WebDriverException("Timeout waiting for target application");
+      }
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new WebDriverException("Unable to get target application", e);
+    }
+    try {
+      return applications;
+    } finally {
+      monitor.leave();
+    }
   }
 
   public void switchTo(String pageId) {
-    for (WebkitPage p : getPages()) {
+    for (WebkitPage p : waitForPages()) {
       if ((p.getPageId() + "").equals(pageId)) {
         switchTo(p);
         return;
@@ -219,7 +253,7 @@ public class RemoteIOSWebDriver {
   }
 
   private BaseWebInspector connect(WebkitPage webkitPage) {
-    for (WebkitPage page : getPages()) {
+    for (WebkitPage page : waitForPages()) {
       if (page.equals(webkitPage)) {
         protocol.attachToPage(page.getPageId());
 
@@ -299,7 +333,7 @@ public class RemoteIOSWebDriver {
   }
 
   public List<WebkitPage> getWindowHandles() {
-    return getPages();
+    return waitForPages();
   }
 
   public String getWindowHandle() {
@@ -308,9 +342,10 @@ public class RemoteIOSWebDriver {
 
   public int getWindowHandleIndex() {
     int pageId = currentInspector.getPageIdentifier();
-    for (WebkitPage p : getPages()) {
+    List<WebkitPage> loadedPages = waitForPages();
+    for (WebkitPage p : loadedPages) {
       if (p.getPageId() == pageId) {
-        return getPages().indexOf(p);
+        return loadedPages.indexOf(p);
       }
     }
     throw new WebDriverException("Cannot find current page.");
@@ -318,7 +353,7 @@ public class RemoteIOSWebDriver {
 
   public int getWindowHandleIndexDifference(String pageId) {
     // first, sort pages.
-    List<WebkitPage> pages = getPages();
+    List<WebkitPage> pages = waitForPages();
     int currentIndex = -1;
     for (WebkitPage p : pages) {
       if (p.getPageId() == currentInspector.getPageIdentifier()) {
@@ -394,12 +429,30 @@ public class RemoteIOSWebDriver {
     return currentInspector.getLoadedFlag();
   }
 
-  public synchronized void setDevice(WebkitDevice device) {
+  public void setDevice(WebkitDevice device) {
+    monitor.enter();
     this.device = device;
+    monitor.leave();
   }
 
-  public synchronized WebkitDevice getDevice() {
-    return device;
+  public WebkitDevice waitForDevice() {
+    return waitForDevice(10, TimeUnit.SECONDS);
   }
 
+  public WebkitDevice waitForDevice(int timeInUnits, TimeUnit unit) {
+    try {
+      boolean success = monitor.enterWhen(deviceGuard, timeInUnits, unit);
+      if (!success) {
+        throw new WebDriverException("Timeout waiting for device");
+      }
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new WebDriverException("Unable to get device", e);
+    }
+    try {
+      return device;
+    } finally {
+      monitor.leave();
+    }
+  }
 }

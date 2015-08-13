@@ -19,9 +19,7 @@ import org.libimobiledevice.ios.driver.binding.services.DeviceService;
 import org.libimobiledevice.ios.driver.binding.services.IOSDevice;
 import org.libimobiledevice.ios.driver.binding.services.WebInspectorService;
 import org.uiautomation.ios.ServerSideSession;
-import org.uiautomation.ios.wkrdp.ResponseFinder;
 
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,8 +32,8 @@ public class RealDeviceProtocolImpl extends WebKitRemoteDebugProtocol {
 
   private final WebInspectorService inspector;
 
-  public RealDeviceProtocolImpl(String uuid, List<ResponseFinder> finders, ServerSideSession session) {
-    super(finders, session);
+  public RealDeviceProtocolImpl(String uuid, ServerSideSession session) {
+    super(session);
     IOSDevice device = null;
     try {
       device = DeviceService.get(uuid);

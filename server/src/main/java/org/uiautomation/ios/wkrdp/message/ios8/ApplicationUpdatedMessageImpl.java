@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 eBay Software Foundation and ios-driver committers
+ * Copyright 2012-2015 eBay Software Foundation and ios-driver committers
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -11,22 +11,20 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.uiautomation.ios.wkrdp;
 
+package org.uiautomation.ios.wkrdp.message.ios8;
 
-import org.json.JSONObject;
+import org.uiautomation.ios.wkrdp.message.AbstractApplicationUpdatedMessage;
 
-/**
- * built to allow several ResponseFinders in parallel. The first one finding a response wins, the
- * others are interrupted and stopped gracefully.
- */
-public interface ResponseFinder {
+public class ApplicationUpdatedMessageImpl extends AbstractApplicationUpdatedMessage {
 
-  public void startSearch(int responseId) throws InterruptedException;
+  public ApplicationUpdatedMessageImpl(String rawMessage) throws Exception {
+    super(rawMessage);
+  }
 
-  public void interruptSearch();
+  @Override
+  protected void populateApplication() {
+    application = new WebkitApplicationImpl(arguments);
+  }
 
-  public JSONObject getResponse();
-
-  public void stop();
 }

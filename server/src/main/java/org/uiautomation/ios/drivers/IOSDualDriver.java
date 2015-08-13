@@ -234,8 +234,7 @@ public class IOSDualDriver {
     int currentPageID = webDriver.getCurrentPageID();
     webDriver.stop();
     WebKitRemoteDebugProtocol p = WebKitRemoteDebugProtocolFactory.create(session, nativeDriver);
-    
-    List<WebkitApplication> applications = webDriver.getApplications();
+    List<WebkitApplication> applications = webDriver.waitForTargetApplicationList();
     webDriver = new RemoteIOSWebDriver(session, p);
     webDriver.setApplications(applications);
     webDriver.start();

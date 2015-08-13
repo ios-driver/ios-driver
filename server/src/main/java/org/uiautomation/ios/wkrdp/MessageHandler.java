@@ -13,17 +13,27 @@
  */
 package org.uiautomation.ios.wkrdp;
 
-
 import org.json.JSONObject;
-import org.openqa.selenium.TimeoutException;
+
+import java.util.concurrent.Future;
 
 public interface MessageHandler {
 
   public void handle(String msg);
 
-  public JSONObject getResponse(int id) throws TimeoutException;
-
   public void stop();
 
   void addListener(MessageListener listener);
+
+  /**
+  * Prepares for an incoming response to a WebDriver command under the given commandId.
+  * Returns a future, which will provide a JSONObject as soon as the corresponding response
+  * from the simulator or device has been processed.
+  *
+  * @param commandId for which a response is expected
+  * @return A future which will return a JSONObject as soon as an incoming response
+  *     to that commandId has been processed
+  */
+  Future<JSONObject> createMessageFuture(int commandId);
+
 }

@@ -16,12 +16,12 @@ package org.uiautomation.ios.wkrdp.message;
 
 import com.dd.plist.NSDictionary;
 
-public abstract class AbstractApplicationDisconnectedMessage extends BaseIOSWebKitMessage implements
-    ApplicationDisconnectedMessage {
+public abstract class AbstractApplicationUpdatedMessage extends BaseIOSWebKitMessage implements
+    ApplicationUpdatedMessage {
 
   protected WebkitApplication application;
 
-  public AbstractApplicationDisconnectedMessage(String rawMessage) throws Exception {
+  public AbstractApplicationUpdatedMessage(String rawMessage) throws Exception {
     super(rawMessage);
     populateApplication();
   }

@@ -41,9 +41,8 @@ public class WebkitApplicationImpl extends AbstractWebkitApplication {
     super(dict);
   }
 
-  @Override
-  public boolean isConnectableByWkrdProtocol() {
-    return true;
+  public String getBundleId() {
+    return wirApplicationIdentifier;
   }
 
   @Override

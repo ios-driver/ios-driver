@@ -17,7 +17,7 @@ package org.uiautomation.ios.wkrdp.message;
 /**
  * <code>WebkitApplication</code> class encapsulates information passed inside the element WIRApplicationDictionaryKey
  * of a {@link ReportConnectedApplicationsMessage} or as arguments of {@link ApplicationConnectedMessage}
- * 
+ *
  */
 public interface WebkitApplication {
 
@@ -38,32 +38,33 @@ public interface WebkitApplication {
   public static final String WEBKITBUNDLEIDENTIFIER = "com.apple.WebKit.WebContent";
 
   /**
+   * Returns the Apple Bundle Id for the given app
+   * Ex com.apple.mobilesafari, com.apple.WebKit.WebContent
+   *
+   * @return Application Bundle Id
+   */
+   String getBundleId();
+
+  /**
    * Returns the information represented by the key 'WIRApplicationIdentifierKey';
-   * 
+   * This provides a unique identifier for a given application, on both iOS7 and iOS8
+   *
    * @return Application identifier
    */
-  String getBundleId();
+  String getApplicationIdentifier();
 
   /**
    * Returns the information represented by the key 'WIRApplicationNameKey'
-   * 
+   *
    * @return Application name
    */
   String getApplicationName();
 
   /**
    * Returns true if the application is an instance of Safari
-   * 
+   *
    * @return true if Safari, false otherwise.
    */
   boolean isSafari();
-
-  /**
-   * Returns true if this application can be connected by the WebKitRemoteDebug protocol. Implementation can override
-   * the behavior for decision making capabilities of upper layers
-   * 
-   * @return true if allowed by WebKitRemoteDebug protocol, false otherwise
-   */
-  boolean isConnectableByWkrdProtocol();
 
 }

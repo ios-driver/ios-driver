@@ -76,8 +76,7 @@ public class SetCurrentContextNHandler extends BaseNativeCommandHandler {
                     "new SafariPageNavigator().enter().goToWebView(" + delta + ");");
                 break;
               case "7":
-                List<WebkitPage> pages = getWebDriver().getPages();
-
+                List<WebkitPage> pages = getWebDriver().waitForPages();
                 WebkitPage desired = null;
                 for (WebkitPage page : pages) {
                   if (pageId.equals(String.format("%d", page.getPageId()))) {

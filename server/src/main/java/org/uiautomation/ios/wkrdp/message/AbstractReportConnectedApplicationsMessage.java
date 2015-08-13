@@ -38,7 +38,7 @@ public abstract class AbstractReportConnectedApplicationsMessage extends BaseIOS
   @Override
   public WebkitApplication getApplication(String applicationIdentifier) {
     for (WebkitApplication application : applications) {
-      if (application.getBundleId().equals(applicationIdentifier)) {
+      if (application.getApplicationIdentifier().equals(applicationIdentifier)) {
         return application;
       }
     }

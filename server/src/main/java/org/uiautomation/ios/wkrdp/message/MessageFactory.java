@@ -63,7 +63,6 @@ public class MessageFactory {
 
   public MessageFactory(ServerSideSession session) {
     iOSVersion = session.getDevice().getCapability().getSDKVersion();
-    LOG.info("GOT VERSION OF SESSION: " + iOSVersion);
     iOSTypesMap = new HashMap<>();
     versionDeterminingLock = new ReentrantLock();
     determiningVersion = versionDeterminingLock.newCondition();
@@ -89,6 +88,8 @@ public class MessageFactory {
         org.uiautomation.ios.wkrdp.message.ios7.ApplicationConnectedMessageImpl.class);
     types.put("_rpc_applicationDisconnected:",
         org.uiautomation.ios.wkrdp.message.ios7.ApplicationDisconnectedMessageImpl.class);
+    types.put("_rpc_applicationUpdated:",
+        org.uiautomation.ios.wkrdp.message.ios7.ApplicationUpdatedMessageImpl.class);
     iOSTypesMap.put(IOS7_TYPES, types);
   }
 
@@ -102,6 +103,8 @@ public class MessageFactory {
         org.uiautomation.ios.wkrdp.message.ios8.ApplicationConnectedMessageImpl.class);
     types.put("_rpc_applicationDisconnected:",
         org.uiautomation.ios.wkrdp.message.ios8.ApplicationDisconnectedMessageImpl.class);
+    types.put("_rpc_applicationUpdated:",
+        org.uiautomation.ios.wkrdp.message.ios8.ApplicationUpdatedMessageImpl.class);
     iOSTypesMap.put(IOS8_TYPES, types);
   }
 

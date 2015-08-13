@@ -12,30 +12,21 @@
  * the License.
  */
 
-package org.uiautomation.ios.wkrdp.message;
+package org.uiautomation.ios.wkrdp.message.ios7;
 
-import com.dd.plist.NSDictionary;
+import org.uiautomation.ios.wkrdp.message.AbstractApplicationUpdatedMessage;
 
-public abstract class AbstractApplicationDisconnectedMessage extends BaseIOSWebKitMessage implements
-    ApplicationDisconnectedMessage {
+public class ApplicationUpdatedMessageImpl extends AbstractApplicationUpdatedMessage {
 
-  protected WebkitApplication application;
-
-  public AbstractApplicationDisconnectedMessage(String rawMessage) throws Exception {
+  public ApplicationUpdatedMessageImpl(String rawMessage) throws Exception {
     super(rawMessage);
-    populateApplication();
   }
 
   @Override
-  public String toString(NSDictionary d) {
-    return application.getApplicationIdentifier();
+  protected void populateApplication() {
+    if (application == null) {
+      application = new WebkitApplicationImpl(arguments);
+    }
   }
-
-  @Override
-  public WebkitApplication getApplication() {
-    return application;
-  }
-
-  protected abstract void populateApplication();
 
 }
