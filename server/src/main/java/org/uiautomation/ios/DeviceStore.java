@@ -97,6 +97,13 @@ public class DeviceStore extends DeviceCallBack {
       IPAShellApplication ipa = new IPAShellApplication(id, v, safari);
       apps.add(ipa);
 
+      for (ApplicationInfo deviceApp : d.getApplications()) {
+        id = deviceApp.getApplicationId();
+        v = (String) deviceApp.getProperty("CFBundleVersion");
+        ipa = new IPAShellApplication(id, v, deviceApp);
+        apps.add(ipa);
+      }
+
       InformationService i = new InformationService(device);
       if (!i.isDevModeEnabled()) {
         log.warning(
