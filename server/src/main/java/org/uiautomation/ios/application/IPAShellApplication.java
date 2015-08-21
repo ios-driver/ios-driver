@@ -77,9 +77,10 @@ public class IPAShellApplication extends IPAApplication {
 
   @Override
   public IOSCapabilities getCapabilities() {
-    IOSCapabilities res = IOSCapabilities.iphone("Safari");
+    String bundleName = bundleId.equals("com.apple.mobilesafari")
+        ? "Safari" : (String) info.getProperty(IOSCapabilities.BUNDLE_NAME);
+    IOSCapabilities res = IOSCapabilities.iphone(bundleName, version);
     res.setBundleId(bundleId);
-    res.setBundleName("Safari");
     res.setSupportedLanguages(getSupportedLanguagesCodes());
     List<DeviceType> supported = new ArrayList<>();
     supported.add(DeviceType.iphone);
@@ -104,8 +105,7 @@ public class IPAShellApplication extends IPAApplication {
 
   @Override
   public File getApplicationPath() {
-    // getting the safari app for real device isn't relevant without insturments.
-    return new File("");
+    return new File((String) (info.getProperty("Path")));
   }
 
 
