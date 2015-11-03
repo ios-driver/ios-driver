@@ -51,7 +51,7 @@ public class MessageFactory {
   private static final List<String> IOS8_TYPES = Arrays.asList(
     "8.0", "8.0.1", "8.0.2", 
     "8.1", "8.1.1", "8.1.2", "8.1.3", 
-    "8.2", "8.3", "8.4", "8.4.1");
+    "8.2", "8.3", "8.4", "8.4.1", "9.1");
 
   private final Map<List<String>, Map<String, Class<? extends BaseIOSWebKitMessage>>> iOSTypesMap;
 
