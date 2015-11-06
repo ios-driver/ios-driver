@@ -50,6 +50,7 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
     driver = new RemoteIOSDriver(getRemoteURL(), safari);
     Set<String> handles = driver.getWindowHandles();
     Assert.assertEquals(handles.size(), 1);
+    driver.findElement(By.xpath("//UIAButton[@name='UICatalog']")).click();
 
     try {
       driver.switchTo().window("Web");
@@ -91,6 +92,7 @@ public class DriverCanSwitchBetweenNativeAndWeb extends BaseIOSDriverTest {
     driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
     Set<String> handles = driver.getWindowHandles();
     Assert.assertEquals(handles.size(), 1);
+    driver.findElement(By.xpath("//UIAButton[@name='UICatalog']")).click();
     UIAElement webCell =
         driver.findElement(new AndCriteria(new TypeCriteria(UIATableCell.class), new NameCriteria(
             "Web", MatchingStrategy.starts)));
