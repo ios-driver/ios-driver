@@ -54,14 +54,14 @@ public class NewSessionTest extends BaseIOSDriverTest {
   @Test
   public void base() {
     driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
-    IOSCapabilities cap = IOSCapabilities.iphone("UICatalog", "2.10");
+    IOSCapabilities cap = IOSCapabilities.iphone("UICatalog", "11.3");
     String sdk = cap.getSDKVersion();
     if (sdk == null) {
       sdk = ClassicCommands.getDefaultSDK();
     }
     IOSCapabilities actual = driver.getCapabilities();
-    Assert.assertEquals(actual.getBundleId(), "com.yourcompany.UICatalog");
-    Assert.assertEquals(actual.getBundleVersion(), "2.10");
+    Assert.assertEquals(actual.getBundleId(), "com.example.apple-samplecode.UICatalog");
+    Assert.assertEquals(actual.getBundleVersion(), "11.3");
     Assert.assertEquals(actual.getSDKVersion(), sdk);
   }
 
@@ -70,8 +70,8 @@ public class NewSessionTest extends BaseIOSDriverTest {
     driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.uiCatalogCap());
 
     IOSCapabilities actual = driver.getCapabilities();
-    Assert.assertEquals(actual.getBundleId(), "com.yourcompany.UICatalog");
-    Assert.assertEquals(actual.getBundleVersion(), "2.10");
+    Assert.assertEquals(actual.getBundleId(), "com.example.apple-samplecode.UICatalog");
+    Assert.assertEquals(actual.getBundleVersion(), "11.3");
   }
 
   @Test
@@ -79,7 +79,7 @@ public class NewSessionTest extends BaseIOSDriverTest {
     driver = new RemoteIOSDriver(getRemoteURL(), SampleApps.noContentCap());
     IOSCapabilities actual = driver.getCapabilities();
     Assert.assertEquals(actual.getBundleId(), "freynaud.testNoContent");
-    Assert.assertEquals(actual.getBundleVersion(), "1.0");
+    Assert.assertEquals(actual.getBundleVersion(), "1");
 
     try {
       driver.findElement(By.xpath("//*[@name=l10n('test')]"));
@@ -213,8 +213,8 @@ public class NewSessionTest extends BaseIOSDriverTest {
     cap.setCapability(IOSCapabilities.MAGIC_PREFIX + "CFBundleDevelopmentRegion", "en");
     driver = new RemoteIOSDriver(getRemoteURL(), cap);
     IOSCapabilities actual = driver.getCapabilities();
-    Assert.assertEquals(actual.getBundleId(), "com.yourcompany.UICatalog");
-    Assert.assertEquals(actual.getBundleVersion(), "2.10");
+    Assert.assertEquals(actual.getBundleId(), "com.example.apple-samplecode.UICatalog");
+    Assert.assertEquals(actual.getBundleVersion(), "11.3");
   }
 
 
