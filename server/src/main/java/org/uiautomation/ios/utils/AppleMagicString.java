@@ -32,10 +32,8 @@ public class AppleMagicString {
     String specification;
     if (instrumentsVersion.getMajor() < 6) {
       specification = name + " - Simulator - iOS " + version;
-    } else if (instrumentsVersion.getMajor() < 7) {
-      specification = name + " (" + version + " Simulator)";
     } else {
-      specification = name + " (" + version + ")";
+      specification = name + " (" + version + " Simulator)";
     }
     return specification;
   }
