@@ -127,7 +127,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <testngVersion>6.8.8</testngVersion>
-        <seleniumVersion>2.42.2</seleniumVersion>
+        <seleniumVersion>2.45.0</seleniumVersion>
     </properties>
 </project>
 
