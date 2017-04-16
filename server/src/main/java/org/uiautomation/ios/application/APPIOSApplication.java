@@ -238,10 +238,11 @@ public class APPIOSApplication {
   }
 
   private String getFirstIconFile(String bundleIcons) {
-    if (!metadata.has(bundleIcons)) {
-      return "";
-    }
-    try {
+      try {
+        if (!metadata.has(bundleIcons) || ((HashMap) metadata.get(bundleIcons)).size() == 0) {
+            return "";
+        }
+
       HashMap icons = (HashMap) metadata.get(bundleIcons);
       HashMap primaryIcon = (HashMap) icons.get("CFBundlePrimaryIcon");
       ArrayList iconFiles = (ArrayList) primaryIcon.get("CFBundleIconFiles");
